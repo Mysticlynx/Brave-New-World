@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="UI2DDiplomaticActionsPopups" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<object type="UI2DDeclareWar" name="objDeclareWar" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DDeclareWar">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DOfferPeace" name="objOfferPeace" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DOfferPeace">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DTerritorialTransfer" name="objTerritorialTransfer" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DTerritorialTransfer">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DDeclareEmbargo" name="objDeclareEmbargo" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DDeclareEmbargo">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>			
+		
+		<object type="UI2DEndEmbargo" name="objEndEmbargo" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DEndEmbargo">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>		
+		
+		<object type="UI2DAllianceTreaty" name="objAllianceTreaty" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DAllianceTreaty">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>		
+		
+		<object type="UI2DEndAlliance" name="objEndAlliance" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DEndAlliance">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DMilitaryAccessTreaty" name="objMilitaryAccessTreaty" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DMilitaryAccessTreaty">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>		
+		
+		<object type="UI2DGrantMilitaryAccessTreaty" name="objGrantMilitaryAccess" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DGrantMilitaryAccessTreaty">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DCancelMilitaryAccess" name="objCancelMilitaryAccess" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DCancelMilitaryAccess">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DTradeAgreement" name="objTradeAgreement" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DTradeAgreement">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DGatherIntelligence" name="objGatherIntelligence" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DGatherIntelligence">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DDeploySurveillance" name="objDeploySurveillance" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DDeploySurveillance">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DFundOpposition" name="objFundOpposition" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DFundOpposition">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DSabotageRegion" name="objSabotageRegion" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DSabotageRegion">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DSabotageCity" name="objSabotageCity" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DSabotageCity">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DChangePuppetStatus" name="objChangePuppetStatus" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DChangePuppetStatus">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DMoneyTransferRcvd" name="objMoneyTransferProposed" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DMoneyTransferRcvd">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DSupportGovernment" name="objSupportGovernment" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DSupportGovernment">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<!---->
+		<!--<object type="UI2DFundOpposition" name="objTradeAgreement" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DTradeAgreement">-->
+		<!--	<property name="objNation" from="def.objNation"/>-->
+		<!--	<property name="nWidth" from="def.nWidth"/>-->
+		<!--	<property name="nHeight" from="def.nHeight"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="UI2DFundCoup" name="objTradeAgreement" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DTradeAgreement">-->
+		<!--	<property name="objNation" from="def.objNation"/>-->
+		<!--	<property name="nWidth" from="def.nWidth"/>-->
+		<!--	<property name="nHeight" from="def.nHeight"/>-->
+		<!--</object>-->
+		
+		<!-- placeholder --><object type="UI2DTradeAgreementRcvd" name="objTradeAgreementRcvd" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DTradeAgreementRcvd">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DPeaceTreaty" name="objPeaceTreaty" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DPeaceTreaty">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<!-- placeholder --><object type="UI2DTreaty" name="objTreaty" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DTreaty">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<!-- placeholder --><object type="UI2DWarDeclaration" name="objWarDeclaration" existsWhile="mh2data.otDiplomaticActionsPopup == UI2DWarDeclaration">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+    </objectDef>
+	
+	<objectDef type="UI2DInternalActionsPopups" superType="mlui.UI2DElement">
+		<object type="UI2DPropaganda" name="objPropaganda" existsWhile="mh2data.otInternalActionsPopup == UI2DPropaganda">
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+	</objectDef>
+</locust>

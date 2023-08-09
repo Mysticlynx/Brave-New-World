@@ -1,0 +1,1001 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI2DElementMask" superType="mlui.UI2DElement">	
+	</objectDef>
+	
+	<objectDef type="UI2DSelectMask" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objGO" type="Object"/>
+		
+		<object type="mlui.UI2DButton" name="objButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>			
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="def.nWidth"/>
+			<property name="nDefaultHeight" from="def.nHeight"/>
+			<property name="strToolTip" from="locale.SID.UI.Select"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.setSelectedObject(def.objGO);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>		
+	</objectDef>
+	
+	<!-- ID Icons -->
+	<objectDef type="UI2DIDIcon" superType="mlui.UI2DElement">
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="nBGWidth" type="int"/>
+		<propertyDef name="nIconX" type="int"/>
+		<propertyDef name="nIconY" type="int"/>
+		<propertyDef name="strText" type="String"/>
+    <propertyDef name="bInfoBar" type="bool"/>
+		
+		<object type="mlui.UI2DImage" name="objBG" existsWhile="def.bInfoBar">
+			<property name="tmplImage" value="skin.ImgIDIconBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nBGWidth"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.tmplImage"/>
+			<property name="nX" from="def.nIconX"/>
+			<property name="nY" from="def.nIconY"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objText" existsWhile="self.strText != null">
+      <property name="tmplTextStyle">
+        if(def.bInfoBar, 'locale.TxtStyleArialWhite12Center', 'locale.TxtStyleArialBlue12Center')
+      </property>
+			<!--<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Center"/>-->
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" from="def.nBGWidth"/>
+			<property name="nHeight" value="10"/>
+		</object>
+	</objectDef>	
+	
+	<objectDef type="UI2DInfoBubbleSq" superType="mlui.UI2DElement">
+		<propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="strText" type="String"/>
+		<property name="nWidth" value="28"/>
+		<property name="nHeight" value="28"/>
+		
+		<object type="mlui.UI2DImage" name="objElements">
+			<property name="tmplImage" value="skin.ImgIDIconBlank"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objElements">
+			<property name="tmplImage" from="def.tmplIcon"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Center"/>
+            <property name="strText">
+				def.strText
+			</property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="-1"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DSOLargeMinimizeButton" superType="mlui.UI2DButton">
+		<property name="nWidth" from="28"/>
+		<property name="nHeight" from="28"/>
+        <property name="strToolTip" from="locale.SID.UI.Minimize" />
+		
+		<property name="tmplButtonStyle" value="skin.BtnMinimize"/>
+	</objectDef>
+	
+	<objectDef type="UI2DSOMaximizeButton" superType="mlui.UI2DButton">
+		<property name="nWidth" from="28"/>
+		<property name="nHeight" from="28"/>
+        <property name="strToolTip" from="locale.SID.UI.Maximize" />
+		
+		<property name="tmplButtonStyle" value="skin.BtnMaximize"/>
+	</objectDef>
+	
+	<objectDef type="UI2DLargeCloseButton" superType="mlui.UI2DButton">
+		<property name="nWidth" from="28"/>
+		<property name="nHeight" from="28"/>
+		
+		<property name="tmplButtonStyle" value="skin.BtnClose"/>
+        <property name="strToolTip" from="locale.SID.UI.Minimize" />
+	</objectDef>
+	
+	<!-- Nation -->
+	<objectDef type="UI2DNationFlag256x128" superType="mlui.UI2DElement">
+		<propertyDef name="tmplNation" type="TemplateRef" restriction="gs_tbg.NationTemplate"/>
+		<propertyDef name="tmplIdeology" type="TemplateRef" restriction="gs_tbg.IdeologyTemplate"/>
+		<propertyDef name="strToolTip" type="String"/>
+		
+		<object type="LookupNationIcons" name="objLookupNationIcons">
+			<property name="tmplNation" from="def.tmplNation"/>
+			<property name="tmplIdeology" from="def.tmplIdeology"/>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objFlag">
+			<property name="tmplImage" from="def.objLookupNationIcons.tmplFlag256x128"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="256"/>
+			<property name="nHeight" value="128"/>
+			<property name="strToolTip" from="def.strToolTip"/>
+		</object>		
+	</objectDef>
+
+    <objectDef type="UI2DNationFlag46x24" superType="mlui.UI2DElement">
+        <propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+        <propertyDef name="bSelectable" type="bool" default="true"/>
+
+        <object type="LookupNationIcons" name="objLookupNationIcons">
+            <property name="tmplNation" from="def.objNation.tmplNation"/>
+            <property name="tmplIdeology" from="def.objNation.tmplIdeology"/>
+        </object>
+
+        <object type="mlui.UI2DImage" name="objFlag">
+            <property name="tmplImage" from="def.objLookupNationIcons.tmplFlag46x24"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nWidth" value="46"/>
+            <property name="nHeight" value="24"/>
+        </object>
+
+        <object type="mlui.UI2DButton" name="objButton">
+            <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nDefaultWidth" value="46"/>
+            <property name="nDefaultHeight" value="24"/>
+            <property name="strToolTip" from="locale.SID.UI.Select + ' ' + def.objNation.strDisplayName"/>
+
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript">
+                        <![CDATA[
+						function handle(event, owner)
+						{
+							if(def.bSelectable)
+							{
+								mh2data.objMapData.selectNation(def.objNation)
+							}
+						}
+					]]>
+                    </script>
+                </object>
+            </object>
+        </object>
+    </objectDef>
+
+    <objectDef type="UI2DNationFlag46x24NS" superType="mlui.UI2DElement">
+        <propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+        <propertyDef name="bSelectable" type="bool" default="true"/>
+
+        <object type="LookupNationIcons" name="objLookupNationIcons">
+            <property name="tmplNation" from="def.objNation.tmplNation"/>
+            <property name="tmplIdeology" from="def.objNation.tmplIdeology"/>
+        </object>
+
+        <object type="mlui.UI2DImage" name="objFlag">
+            <property name="tmplImage" from="def.objLookupNationIcons.tmplFlag46x24"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nWidth" value="46"/>
+            <property name="nHeight" value="24"/>
+        </object>
+
+        <object type="mlui.UI2DButton" name="objButton">
+            <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nDefaultWidth" value="46"/>
+            <property name="nDefaultHeight" value="24"/>
+            <property name="strToolTip" from="def.objNation.strDisplayName"/>
+
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript">
+                        <![CDATA[
+					        function handle(event, owner)
+					        {
+						        var city = gs_tbg.getCapitalCity(mh2data.objAvatar, mh2data.objNation)
+						        mh2data.setSelectedObject(city);
+						        mh2data.objMapData.lookAt(city.vecPosition);
+						        spdata.objCityData.showMinInfo(city)
+					        }
+					]]>
+                    </script>
+                </object>
+            </object>
+        </object>
+    </objectDef>
+
+    <objectDef type="UI2DNationIcon" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<object type="LookupNationIcons" name="objLookupNationIcons">
+			<property name="tmplNation" from="def.objNation.tmplNation"/>
+			<property name="tmplIdeology" from="def.objNation.tmplIdeology"/>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+      <property name="strToolTip" from="def.objNation.getNationalityTemplate().strDisplayName + ' ' + locale.SID.UI.Nationality"/>
+		</object>	
+	</objectDef>
+
+  <objectDef type="UI2DControllerIcon" superType="mlui.UI2DElement">
+    <propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+    <object type="LookupNationIcons" name="objLookupNationIcons">
+      <property name="tmplNation" from="def.objNation.tmplNation"/>
+      <property name="tmplIdeology" from="def.objNation.tmplIdeology"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objIcon">
+      <property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28"/>
+      <property name="nX" value="0"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+      <property name="strToolTip" from="def.objNation.getNationalityTemplate().strDisplayName  + ' ' + locale.SID.UI.Controlled"/>
+    </object>
+  </objectDef>
+	
+    <objectDef type="UI2DAllianceIcon" superType="UI2DNationIcon">
+        <propertyDef name="objTeamID" type="Object"/>
+        <property name="strToolTip" from="if(self.objTeamID.instanceOf(gs_tbg.Alliance),locale.FSID.Notification.AllianceNoun.format('alliance',self.objTeamID.strDisplayName),self.objNation.getNationalityTemplate().strDisplayName + ' ' + locale.SID.UI.Nationality)"/>
+	</objectDef>
+	
+	<!-- Region -->
+	<objectDef type="UI2DTerrainIcon" superType="mlui.UI2DElement">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		
+		<object type="LookupTerrainIcon" name="objLookupTerrainIcon">
+			<property name="tmplTerrain" from="def.objRegion.tmplTerrain"/>
+		</object>
+		
+		<propertyDef name="objTerrainTemplate" type="gs_tbg.TerrainTemplate"/>
+		<property name="objTerrainTemplate" from="self.objRegion.tmplTerrain.resolve()"/>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objLookupTerrainIcon.tmplIcon22x22"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="22"/>
+			<property name="strToolTip" from="def.objTerrainTemplate.strDisplayName"/>
+		</object>	
+        
+        
+		<object type="mlui.UI2DButton" name="objButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>			
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="def.nWidth"/>
+			<property name="nDefaultHeight" from="def.nHeight"/>
+			<property name="strToolTip" from="def.objTerrainTemplate.strDisplayName"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							encydata.objEncyclopediaData.showEncyclopedia();		
+                            encydata.objEncyclopediaData.showCombatModifiers();
+                            encydata.objEncyclopediaData.objSelected = CombatModEntry.create({
+                                "strDisplayName" : locale.SID.UI.encTerrain,
+                                "eCombatModType" : CombatModCategories.TERRAIN
+                            });
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>		
+        
+	</objectDef>	
+    
+	<objectDef type="UI2DTerrainIconWithBackground" superType="mlui.UI2DElement">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		
+		<object type="mlui.UI2DImage" name="objElements">
+			<property name="tmplImage" value="skin.ImgIDIconBlank"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="UI2DTerrainIcon" name="objTerrainIcon">
+			<property name="objRegion" from="def.objRegion"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>	
+        
+	</objectDef>	
+	
+	<!-- Bubbles -->
+	<objectDef type="UI2DListBubbleGrayBlueCenter" superType="mlui.UI2DElement">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="nWidth" type="int"/>
+		<propertyDef name="nRow" type="int"/>
+		<propertyDef name="nIndex" type="int"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>	
+	</objectDef>
+	
+	<objectDef type="UI2DListBubbleGrayBlueLeft" superType="mlui.UI2DElement">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="nWidth" type="int"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" from="def.nWidth - 5"/>
+			<property name="nHeight" value="14"/>
+		</object>	
+	</objectDef>
+	<objectDef type="UI2DListBubbleGrayBlueDefault" superType="mlui.UI2DElement">
+		<propertyDef name="objElement" type="Object" storesChildren="true"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<property name="nWidth" from="self.objElement.nWidth + 2"/>
+		<property name="nHeight" from="self.objElement.nHeight + 2"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		
+	</objectDef>
+	
+	<!-- Resources -->
+	<objectDef type="UI2DResourceIcon" superType="mlui.UI2DElement">
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+
+		<object type="LookupResourceIcons" name="objLookupResourceIcons">
+			<property name="tmplResource" from="def.tmplResource"/>
+		</object>
+		
+		<propertyDef name="objResourceTemplate" type="gs_tbg.ResourceTemplate"/>
+		<property name="objResourceTemplate" from="self.tmplResource.resolve()"/>	
+		<property name="strToolTip" from="self.objResourceTemplate.strDisplayName"/>	
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objLookupResourceIcons.tmplIcon32x32"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="32"/>
+		</object>
+	</objectDef>	
+	
+	<objectDef type="UI2DResourceRequirements" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objResourceRequirement" type="gs_tbg.ResourceRequirement"/>
+		<property name="nWidth" from="self.objOrderSupplies.nX + self.objOrderSupplies.nWidth"/>
+
+		<object type="LookupResourceIcons" name="objLookupResourceIcons">
+			<property name="tmplResource" from="def.objResourceRequirement.tmplResource"/>
+		</object>
+		
+		<propertyDef name="bCanAfford" type="bool">
+			self.objResourceRequirement.nAmount LTE gs_tbg.getNationResource(
+				mh2data.objAvatar, mh2data.objNation, self.objResourceRequirement.tmplResource).nAmount
+		</propertyDef>
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objLookupResourceIcons.tmplIcon21x21"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="21"/>
+			<property name="nHeight" value="21"/>
+			<property name="strToolTip" from="def.objResourceRequirement.tmplResource.resolve().strDisplayName
+				+ ' ' + locale.SID.UI.Required"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objOrderSupplies">
+			<property name="tmplTextStyle">
+				if(def.bCanAfford, 'locale.TxtStyleArialBlue12LeftFIT', 'locale.TxtStyleArialRed12LeftFIT')
+			</property>	
+			<property name="strText" from="def.objResourceRequirement.nAmount"/>
+			<property name="nX" value="23"/>
+			<property name="nY" value="4"/>
+			<property name="nHeight" value="12"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DRegionResourceAmount" superType="mlui.UI2DElement">
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate" default="locale.TxtStyleArialBlue16Left"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+		
+		<object type="LookupResourceImprovements" name="objLookupResourceImprovements">
+			<property name="objRegion" from="spdata.objRegionData.objRegion"/>
+			<property name="tmplResource" from="def.tmplResource"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objResourceAmount">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objLookupResourceImprovements.nTotalOutput"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+	</objectDef>	
+	
+	<!-- Status Gauges -->
+	<objectDef type="UI2DStatusGaugeGreen" superType="mlui.UI2DElement">
+		<propertyDef name="nStatus" type="int"/>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeGreen" existsWhile="self.nStatus GTE 90">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeGreen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeGreen" existsWhile="self.nStatus GTE 80">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeGreen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeGreen">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeGreen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeGreen">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeGreen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeGreen">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeGreen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeGreen">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeGreen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeGreen">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeGreen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="13"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeGreen">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeGreen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeGreen">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeGreen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeGreen">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeGreen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="19"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DStatusGaugeYellow" superType="mlui.UI2DElement">
+		<propertyDef name="nStatus" type="int"/>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeYellow" existsWhile="self.nStatus GTE 60">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeYellow"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeYellow" existsWhile="self.nStatus GTE 50">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeYellow"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeYellow" existsWhile="self.nStatus GTE 40">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeYellow"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeYellow">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeYellow"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="13"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeYellow">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeYellow"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeYellow">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeYellow"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeYellow">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeYellow"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="19"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DStatusGaugeRed" superType="mlui.UI2DElement">
+		<propertyDef name="nStatus" type="int"/>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeRed" existsWhile="self.nStatus GTE 20">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeRed"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeRed" existsWhile="self.nStatus GTE 10">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeRed"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStatusGaugeRed">
+			<property name="tmplImage" value="skin.ImgGroupPanelGaugeRed"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="19"/>
+			<property name="nWidth" value="9"/>
+			<property name="nHeight" value="1"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DCenteredIcon" superType="mlui.UI2DElement" >
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate" />
+		
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true" />
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.tmplImage" />
+			<property name="nX" from="(def.nWidth - self.nWidth) / 2" />
+			<property name="nY" from="(def.nHeight - self.nHeight) / 2" />
+			<property name="nWidth" from="self.tmplImage.resolve().nImageWidth" />
+			<property name="nHeight" from="self.tmplImage.resolve().nImageHeight" />
+		</object>
+	</objectDef>
+	
+	<!-- ScrollPane Wrapper-->
+	
+	<objectDef type="UI2DScrollPane" superType="mlui.UI2DScrollPane" >
+		
+		<object type="mlui.UI2DImage" name="objPanelSliderBG">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+		
+		<object type="mlui.SliderInfo" name="objHorizInfo">
+			<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+			<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+			<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>				
+			
+			<property name="nThickness" value="11"/>
+			<property name="nLength" from="def.nWidth"/>				
+			
+			<property name="nButtonLength" value="0"/>
+			<property name="nMinKnobLength" value="16"/>
+			<property name="nMaxKnobLength" value="16"/>				
+			
+			<property name="fMinorIncrement" value="1.0"/>
+			<property name="fMajorIncrement" value="5.0"/>			
+		</object>
+		
+		<object type="mlui.SliderInfo" name="objVertInfo">
+			<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+			<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+			<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+			<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+			<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+			
+			<property name="nThickness" value="12"/>
+			<property name="nLength" from="def.nHeight"/>				
+			
+			<property name="nButtonLength" value="1"/>
+			<property name="nMinKnobLength" value="37"/>
+			<property name="nMaxKnobLength" value="37"/>				
+			
+			<property name="fMinorIncrement" value="1.0"/>
+			<property name="fMajorIncrement" value="5.0"/>				
+		</object>
+			
+	</objectDef>
+	
+	<!-- DynamicList Wrapper-->
+	
+	<objectDef type="UI2DDynamicList" superType="mlui.UI2DDynamicList" >
+		
+		<object type="mlui.UI2DImage" name="objPanelSliderBG">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+		
+		<object type="mlui.SliderInfo" name="objScrollBarInfo">
+			<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+			<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+			<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+			<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+			<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+			
+			<property name="nThickness" value="12"/>
+			<property name="nLength" from="def.nHeight"/>				
+			
+			<property name="nButtonLength" value="1"/>
+			<property name="nMinKnobLength" value="37"/>
+			<property name="nMaxKnobLength" value="37"/>				
+			
+			<property name="fMinorIncrement" value="1.0"/>
+			<property name="fMajorIncrement" value="5.0"/>				
+		</object>
+		
+	</objectDef>
+	
+	
+	
+	<objectDef type="UI2DSeasonIcon" superType="mlui.UI2DElement">
+		<!-- input -->
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+
+		<propertyDef name="objSeason" type="gs_tbg.Season" >
+			gs_tbg.getRegionSeason(mh2data.objAvatar, self.objRegion)
+		</propertyDef>
+		
+		<!-- season icon -->
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" >			
+				mh2data.objSeasonDisplayTable.getEntryForRegion(mh2data.objAvatar, def.objSeason).tmplSeasonIcon
+			</property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="32"/>
+			<property name="strToolTip" from="def.objSeason.strDisplayName"/>
+		</object>
+
+	</objectDef>	
+	
+	<objectDef type="UI2DEngagementBar" superType="mlui.UI2DElement">
+		
+		<object type="mlui.UI2DImage" name="objHealthBarBG">
+			<property name="tmplImage" value="skin.ImgHealthBarBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" from="16"/>
+		</object>
+		
+		<propertyDef name="objEngagement" type="gs_tbg.Engagement"/>
+		<property name="objEngagement" from="mh2data.objMapData.objSelectedObject"/>
+
+        <propertyDef name="nAttackerPercent" type="int">
+            if (self.objEngagement.nAttackerUtility == 0 AND self.objEngagement.nDefenderUtility == 0, .5,
+            (self.objEngagement.nAttackerUtility * 100) / (self.objEngagement.nAttackerUtility + self.objEngagement.nDefenderUtility))
+        </propertyDef>
+
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+                if(def.nAttackerPercent LTE 0.3, #7FFF00FF,
+                    if(def.nAttackerPercent LTE 0.7, #FFE303FF, #C4DF9BFF))
+            </property>	
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" from="def.nAttackerPercent"/>
+			<property name="nHeight" value="13"/>
+           <property name="strToolTip" from="def.nAttackerPercent.formatNumber(0, true) + '%'"/>
+        </object>
+
+	</objectDef>	
+	
+	
+	<objectDef type="UI2DSuppliesNeeded" superType="mlui.UI2DElement">
+		<propertyDef name="nBuffer" type="int" default="1" />
+		
+	  <object type="mlui.UI2DImage" name="objRedBorder">
+		  <property name="tmplImage" value="skin.ImgOffWhite"/>
+		  <property name="colColor">
+				  #C7B299FF
+		  </property>	
+		  <property name="nX" from="0" />
+		  <property name="nY" from="0" />
+		  <property name="nWidth" from="def.nWidth"/>
+		  <property name="nHeight" from="def.nHeight"/>
+	  </object>
+		
+	  <object type="mlui.UI2DImage" name="objWhiteInterior">
+		  <property name="tmplImage" value="skin.ImgOffWhite"/>
+		  <property name="nX" from="def.nBuffer" />
+		  <property name="nY" from="def.nBuffer" />
+		  <property name="nWidth" from="def.nWidth-def.nBuffer*2"/>
+		  <property name="nHeight" from="def.nHeight-def.nBuffer*2"/>
+	  </object>
+		
+		<object type="mlui.UI2DText" name="objText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBloodRed13Center"/>
+			<property name="strText" from="locale.SID.UI.SuppliesNeeded"/>
+			<property name="nX" value="0"/>
+			<property name="nY" from="def.nHeight/2 - self.nHeight/2"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	
+	<objectDef type="UI2DResearchIcon" superType="mlui.UI2DElement">
+		<propertyDef name="objResearchProject" type="gs_tbg.ResearchProject"/>					
+		<object type="mlui.UI2DImage" name="objFlag">
+			 <property name="tmplImage">
+				mh2data.objResearchCategoryIconTable.getEntry(def.objResearchProject.tmplResearchTopic.resolve().tmplCategory).tmplIcon
+			</property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="strToolTip" from="def.objResearchProject.tmplResearchTopic.resolve().strDisplayName"/>
+		</object>		
+	</objectDef>	
+	
+	
+<!-- Table Header -->
+	<objectDef type="TableData" class="CMLObject">
+		<propertyDef name="eColm" type="Enum"/>
+		<propertyDef name="bAsc" type="bool" default="true"/>
+	</objectDef>
+
+	<objectDef type="UI2DTableHeaderButton" superType="mlui.UI2DButton">
+		<propertyDef name="objData" type="TableData"/>
+		<propertyDef name="eSortBy" type="Enum"/>
+		<propertyDef name="bAsc" type="bool" default="true"/>
+		
+		<property name="tmplButtonStyle" value="skin.BtnStyleInvisible"/>
+		
+		<object type="mlui.UI2DImage" name="objBG" existsWhile="self.objData.eColm == self.eSortBy">
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="tmplImage" value="skin.ImgWhite"/>
+			<property name="colColor" value="#FBE2BEFF"/>
+		</object>
+		
+		<propertyDef name="objArrow" storesChildren="true">
+			switch{
+				case self.objData.eColm == self.eSortBy AND self.objData.bAsc:
+					<object type="mlui.UI2DImage">
+						<property name="nDepth" value="100"/>
+						<property name="haXAlign" value="RIGHT"/>
+						<property name="vaYAlign" value="MIDDLE"/>
+						<property name="nX" value="100"/>
+						<property name="tmplImage" value="skin.ImgDownArrowOrange"/>
+					</object>
+				case self.objData.eColm == self.eSortBy AND !self.objData.bAsc:
+					<object type="mlui.UI2DImage">
+						<property name="nDepth" value="100"/>
+						<property name="haXAlign" value="RIGHT"/>
+						<property name="vaYAlign" value="MIDDLE"/>
+						<property name="nX" value="100"/>
+						<property name="tmplImage" value="skin.ImgUpArrowOrange"/>
+					</object>
+			}
+		</propertyDef>
+		
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventButtonClicked"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if(def.eSortBy.equals(def.objData.eColm)){
+							def.objData.bAsc = !def.objData.bAsc;
+						}
+						else{
+							def.objData.eColm = def.eSortBy;
+							def.objData.bAsc = def.bAsc;
+						}
+					}
+				]]></script>
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DTableHeaderTextButton" superType="UI2DTableHeaderButton">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate" default="locale.TxtStyleArialDarkerBrown10CenterWrap"/>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="strText" from="def.strText"/>
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="nDepth" value="150"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DTableHeaderText" superType="mlui.UI2DElement">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate" default="locale.TxtStyleArialDarkerBrown10CenterWrap"/>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="strText" from="def.strText"/>
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="nDepth" value="150"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DTableHeaderGenericButton" superType="UI2DTableHeaderButton">
+		<propertyDef name="objElement" type="mlui.UI2DElement" storesChildren="true"/>
+	</objectDef>
+	
+	<objectDef type="UI2DTableHeaderGeneric" superType="mlui.UI2DElement">
+		<propertyDef name="objElement" type="mlui.UI2DElement" storesChildren="true"/>
+	</objectDef>
+	
+	<objectDef type="UI2DReportTab" superType="mlui.UI2DButton">
+		<propertyDef name="bSelected" type="bool" default="false"/>
+		<propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="strText" type="String"/>
+		
+		<property name="nHeight" value="35"/>
+		<property name="nWidth">
+			self.objIcon.nX + self.objIcon.nWidth + self.objValue.nWidth + 9
+		</property>
+		
+		<property name="tmplButtonStyle">
+				if(self.bSelected,
+					'skin.BtnReportTabSelected',
+					'skin.BtnReportTab'
+				)
+		</property>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="33"/>
+			<property name="tmplImage" from="def.tmplIcon"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12LeftSizeToFit"/>
+            <property name="strText">
+				def.strText
+			</property>
+			<property name="nX">
+				def.objIcon.nX + def.objIcon.nWidth + 1
+			</property>
+			<property name="nY" value="1"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+	</objectDef>
+	
+</locust>

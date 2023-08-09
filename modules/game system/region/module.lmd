@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="game system"
+	name="region"
+	version="1.0"
+	locustVersion="2.11"
+>
+
+    <!-- this module moved to turn based game -->
+	<import module="ml:game system:turn based game:1.0" default="true"/>
+
+</locustModule>

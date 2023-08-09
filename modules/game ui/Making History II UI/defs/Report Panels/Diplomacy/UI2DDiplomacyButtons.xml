@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI2DGenericTabIcon" superType="mlui.UI2DButton">
+		<propertyDef name="objIcon" type="mlui.UI2DElement" storesChildren="true"/>
+		
+		<property name="tmplButtonStyle" from="if(reportdata.objDiplomacyData.otTab != UI2DDiplomacyTabInfo,
+			skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlank'),
+			skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlankC'))
+		"/>
+			
+	</objectDef>
+	
+	<objectDef type="UI2DDiplomacyButtons" superType="mlui.UI2DElement">
+		<property name="nWidth" from="self.objTabs.nWidth"/>
+		<property name="nHeight" from="self.objTabs.nHeight"/>
+		
+		<object type="common_ui.UI2DListHorz" name="objTabs">
+			<property name="nSpacing" value="1"/>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.Wars"/>
+				<property name="tmplIcon" value="skin.ImgWarsIcon"/>
+				<property name="bSelected">
+                    reportdata.objDiplomacyData.otTab == UI2DDiplomacyTabWars
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objDiplomacyData.showWarsInfo(mh2data.objSelectedObject)
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+
+            <object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.Ideologies"/>
+                <property name="tmplIcon" value="skin.ImgIdeology"/>
+                <property name="bSelected">
+                    reportdata.objDiplomacyData.otTab == UI2DDiplomacyTabIdeologies
+                </property>
+
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript">
+                            <![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objDiplomacyData.showWorldIdeologies(mh2data.objSelectedObject)
+							}
+						]]>
+                        </script>
+                    </object>
+                </object>
+            </object>
+
+            <object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.Alliances"/>
+				<property name="tmplIcon" value="skin.ImgStarIcon"/>
+				<property name="bSelected">
+                    reportdata.objDiplomacyData.otTab == UI2DDiplomacyTabAlliances
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objDiplomacyData.showAllianceInfo(mh2data.objSelectedObject)
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.WorldNations"/>
+				<property name="tmplIcon" value="skin.ImgWorldIcon"/>
+				<property name="bSelected">
+                    reportdata.objDiplomacyData.otTab == UI2DDiplomacyTabWorldNations
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objDiplomacyData.showWorldNationInfo(mh2data.objSelectedObject)
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+		</object>
+	</objectDef>
+</locust>

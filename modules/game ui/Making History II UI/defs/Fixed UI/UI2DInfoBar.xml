@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="NationalityData" class="CMLObject">
+		<propertyDef name="objNationality" type="gs_tbg.NationTemplate"/>
+
+		<propertyDef name="objRegions" type="gs_tbg.Region" variable="true" >
+			filter(?{region: region.refColony != null AND region.tmplNation == self.objNationality},
+				gs_tbg.getControlledRegions(mh2data.objAvatar, mh2data.objNation))
+		</propertyDef>
+		<propertyDef name="nMPUs" type="int">
+			sum(map(?{region: region.nUnemployedMPUs }, self.objRegions))
+		</propertyDef>
+
+	</objectDef>
+
+	<objectDef type="UI2DNationalityMPUToolTip" superType="mlui.UI2DToolTip">
+		<property name="nWidth">
+			if(self.objYou.nWidth GT self.objList.nWidth,
+				self.objYou.nWidth + 6,
+				self.objList.nWidht + 6
+			)
+		</property>
+		<property name="nHeight" from="self.objList.nHeight + self.objYou.nHeight + 6"/>
+
+		<propertyDef name="objColonyNationalities" type="TemplateRef" restriction="gs_tbg.NationTemplate" variable="true" >
+			filter(?{nationality: nationality != null},
+				map(?{region:
+						if(region.refColony != null,
+							if(!self.objColonyNationalities.contains(region.tmplNation),
+								region.tmplNation,
+								null
+							),
+							null
+						)
+					},
+					gs_tbg.getControlledRegions(mh2data.objAvatar, mh2data.objNation)
+				)
+			)
+		</propertyDef>
+
+		<object type="NationalityData" name="objNationalityData" tiedTo="self.objColonyNationalities">
+			<property name="objNationality" from="tiedTo"/>
+		</object>
+
+		<propertyDef name="objRegions" type="gs_tbg.Region" variable="true" >
+			filter(?{region: region.refColony == null},
+				gs_tbg.getControlledRegions(mh2data.objAvatar, mh2data.objNation))
+		</propertyDef>
+		<propertyDef name="nMPUs" type="int">
+			sum(map(?{region: region.nUnemployedMPUs }, self.objRegions))
+		</propertyDef>
+
+		<object type="mlui.UI2DImage" name="objBorder">
+			<property name="tmplImage" value="default_media.ImgToolTipBorder"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="0"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="default_media.ImgToolTipBackground"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth"  from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nDepth" value="1"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objYou">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12LeftHFit"/>
+			<property name="strText" from="mh2data.objNation.tmplNation.resolve().strDisplayName + ' - ' + def.nMPUs"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="13"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nDepth" value="2"/>
+		</object>
+
+		<object type="common_ui.UI2DList" name="objList">
+			<property name="nY" from="def.objYou.nY + def.objYou.nHeight + 3"/>
+			<property name="nX" value="3"/>
+			<property name="nSpacing" value="3"/>
+			<property name="nDepth" value="3"/>
+			<object type="mlui.UI2DText" name="objElements" tiedTo="def.objNationalityData">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12LeftHFit"/>
+				<property name="strText" from="tiedTo.objNationality.strDisplayName + ' - ' + tiedTo.nMPUs"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="2"/>
+				<property name="nHeight" value="13"/>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+				<property name="bVisible">
+					tiedTo.nMPUs > 0
+				</property>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DInfoBarBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="strValue" type="String"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgPanel"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" from="def.nWidth - 4"/>
+			<property name="nHeight" from="def.nHeight - 4"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objNationFlagForeground">
+			<property name="tmplImage" value="skin.ImgPanelBorder"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nDepth" value="-99"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objValue">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strValue"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="13"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nDepth" value="1"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DInfoBar" superType="mlui.UI2DElement">
+
+		<property name="nWidth" from="self.objBubbles.nWidth"/>
+		<property name="nHeight" value="53"/>
+
+		<object type="InfoBarResourceData" name="objResourceData">
+			<property name="objNation" from="mh2data.objNation"/>
+		</object>
+
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="3"/>
+			<object type="UI2DInfoBarBubble" name="objElements">
+				<property name="tmplTextStyle">
+					if(float(mh2data.objNation.nStability) LT 25, 'locale.TxtStyleArialRed13Center', 'locale.TxtStyleArialWhite13Center')
+				</property>
+				<property name="strToolTip" from="locale.SID.UI.Stability"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" from="def.nHeight"/>
+				<property name="strValue" from="mh2data.objNation.nStability + '%'"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage" value="skin.ImgInfoIconStability"/>
+					<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					<property name="nX" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="nY" value="4"/>
+					<property name="nWidth" value="40"/>
+					<property name="nHeight" value="48"/>
+				</object>
+			</object>
+
+			<object type="UI2DInfoBarBubble" name="objElements">
+				<property name="tmplTextStyle">
+					if(float(mh2data.objNation.objFinance.n64Money) LTE 0, 'locale.TxtStyleArialRed13Center', 'locale.TxtStyleArialWhite13Center')
+				</property>
+				<property name="strToolTip">
+					locale.SID.UI.Money + '&#010;   ' + locale.SID.UI.ProjectedCityRevenue + ': ' +
+					'$' + def.objResourceData.n64GoodsProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				</property>
+				<property name="nWidth" value="118"/>
+				<property name="nHeight" from="def.nHeight"/>
+				<property name="strValue" from="'$' + mh2data.objNation.objFinance.n64Money.formatNumber(0, true)"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage" value="skin.ImgInfoIconFinancial"/>
+					<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					<property name="nX" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="nY" value="4"/>
+					<property name="nWidth" value="40"/>
+					<property name="nHeight" value="48"/>
+				</object>
+			</object>
+
+			<object type="UI2DInfoBarBubble" name="objElements">
+				<property name="tmplTextStyle">
+					if(float(mh2data.objNation.nMPUs) LTE 0, 'locale.TxtStyleArialRed13Center', 'locale.TxtStyleArialWhite13Center')
+				</property>
+				<property name="nWidth" value="55"/>
+				<property name="nHeight" from="def.nHeight"/>
+				<property name="strValue" from="mh2data.objNation.nMPUs.formatNumber(0, true)"/>
+				<property name="strToolTip" from="locale.SID.UI.AvailableManpower
+					+ '&#010;   ' + locale.SID.UI.NationalMPUGrowth + ': '
+					+ sum(map(?{region: region.fMPUGrowthRate}, gs_tbg.getAllControlledRegions(mh2data.objAvatar, mh2data.objNation))).formatNumber(2, true)
+						"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage" value="skin.ImgInfoIconMPU"/>
+					<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					<property name="nX" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="nY" value="2"/>
+					<property name="nWidth" value="40"/>
+					<property name="nHeight" value="48"/>
+				</object>
+			</object>
+
+			<object type="UI2DInfoBarBubble" name="objElements">
+				<property name="tmplTextStyle">
+					if(float(mh2data.objNation.nIPUs) LTE 0, 'locale.TxtStyleArialRed13Center', 'locale.TxtStyleArialWhite13Center')
+				</property>
+				<property name="strToolTip" from="locale.SID.UI.IndustrialProductionPoints"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" from="def.nHeight"/>
+				<property name="strValue" from="mh2data.objNation.nIPUs.formatNumber(0, true)"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage" value="skin.ImgInfoIconIPU"/>
+					<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					<property name="nX" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="nY" value="6"/>
+					<property name="nWidth" value="40"/>
+					<property name="nHeight" value="48"/>
+				</object>
+			</object>
+
+			<object type="UI2DInfoBarBubble" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialWhite13Center"/>
+				<property name="strToolTip" from="locale.SID.UI.NationalResearchPoints"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" from="def.nHeight"/>
+				<property name="strValue">
+					sum(map(?{city: city.nRPUs}, gs_tbg.getNationCities(mh2data.objAvatar, mh2data.objNation)))
+				</property>
+					value="00"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage" value="skin.ImgInfoIconTechLrg"/>
+					<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					<property name="nX" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="nY" value="4"/>
+					<property name="nWidth" value="40"/>
+					<property name="nHeight" value="48"/>
+				</object>
+			</object>
+
+			<object type="UI2DInfoBarBubble" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialWhite13Center"/>
+				<property name="strToolTip" from="locale.SID.UI.AtomicBombs"/>
+				<property name="nWidth" value="55"/>
+				<property name="nHeight" from="def.nHeight"/>
+				<property name="strValue" from="gs_tbg.getNationResource(mh2data.objAvatar, mh2data.objNation, sd.getTemplateRef(gs_tbg.ResourceTemplate, 'AtomicBombs')).nAmount.formatNumber(0, true)"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage" value="skin.ImgInfoIconNuclear"/>
+					<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					<property name="nX" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="nY" value="4"/>
+					<property name="nWidth" value="40"/>
+					<property name="nHeight" value="48"/>
+				</object>
+			</object>
+
+			<object type="UI2DInfoBarBubble" name="objElements">
+				<property name="tmplTextStyle">
+					if(float(self.strValue) LTE 10, 'locale.TxtStyleArialRed13Center', 'locale.TxtStyleArialWhite13Center')
+				</property>
+				<property name="strToolTip" from="locale.SID.UI.MilitarySupplyPercentage"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" from="def.nHeight"/>
+				<property name="strValue">
+					if((sum(map(?{group: group.nArmsCarry}, gs_tbg.getNationGroups(mh2data.objAvatar, mh2data.objNation)))) == 0, 100,
+					((sum(map(?{group: group.nArms}, gs_tbg.getNationGroups(mh2data.objAvatar, mh2data.objNation)))) * 100) /
+						?{denom:
+							if(denom == 0, 1, denom)
+						}((sum(map(?{group: group.nArmsCarry}, gs_tbg.getNationGroups(mh2data.objAvatar, mh2data.objNation)))))
+					) + '%'
+				</property>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage" value="skin.ImgInfoIconSuppy"/>
+					<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					<property name="nX" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="nY" value="4"/>
+					<property name="nWidth" value="40"/>
+					<property name="nHeight" value="48"/>
+				</object>
+			</object>
+
+			<object type="UI2DInfoBarSupplies" name="objElements">
+				<property name="nWidth" value="392"/>
+				<property name="nHeight" from="def.nHeight"/>
+			</object>
+
+		</object>
+
+	</objectDef>
+
+	<objectDef type="InfoBarResourceData" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objNationResources" type="gs_tbg.NationResource" storesChildren="true" variable="true">
+			gs_tbg.getNationResources(mh2data.objAvatar, self.objNation)
+		</propertyDef>
+
+		<propertyDef name="objSupplyAndDemand" type="gs_tbg.SupplyAndDemand" storesChildren="true" variable="true">
+			gs_tbg.getAllSupplyAndDemand(mh2data.objAvatar)
+		</propertyDef>
+
+		<propertyDef name="objNationRegions" type="gs_tbg.Region" storesChildren="true" variable="true">
+			gs_tbg.getAllControlledRegions(mh2data.objAvatar, self.objNation)
+		</propertyDef>
+
+		<propertyDef name="objNationCities" type="gs_tbg.City" storesChildren="true" variable="true">
+			gs_tbg.getNationCities(mh2data.objAvatar, self.objNation)
+		</propertyDef>
+
+		<propertyDef name="objArmsData" type="gs_tbg.NationResource">
+			find(?{NatRes: NatRes.objResourceTemplate == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Arms')},
+				self.objNationResources)
+		</propertyDef>
+
+		<propertyDef name="nArmsProd" type="int">
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput ==
+				sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Arms'), city.nIPUs, 0)},
+					self.objNationCities))
+		</propertyDef>
+
+		<propertyDef name="n64GoodsProd" type="int64">
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'Goods',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'Automobiles',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'Textiles',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'WroughtIron',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'Petroleum',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'Appliances',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'CannedGoods',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'FishProducts',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities))
+		</propertyDef>
+
+		<propertyDef name="objMetalsData" type="gs_tbg.NationResource">
+			find(?{NatRes: NatRes.objResourceTemplate == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')},
+				self.objNationResources)
+		</propertyDef>
+
+		<propertyDef name="nMetalsProd" type="int">
+			sum(map(?{region: find(?{rCap: rCap.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')},
+				region.objResourceCapacities).nBaseProduction}, self.objNationRegions)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'MetalRecycling',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities))
+		</propertyDef>
+
+		<propertyDef name="objCoalData" type="gs_tbg.NationResource">
+			find(?{NatRes: NatRes.objResourceTemplate == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')},
+				self.objNationResources)
+		</propertyDef>
+
+		<propertyDef name="nCoalProd" type="int">
+			sum(map(?{region: find(?{rCap: rCap.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')},
+				region.objResourceCapacities).nBaseProduction}, self.objNationRegions)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'Coal',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities))
+		</propertyDef>
+
+		<propertyDef name="objOilData" type="gs_tbg.NationResource">
+			find(?{NatRes: NatRes.objResourceTemplate == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')},
+				self.objNationResources)
+		</propertyDef>
+
+		<propertyDef name="nOilProd" type="int">
+			sum(map(?{region: find(?{rCap: rCap.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')},
+				region.objResourceCapacities).nBaseProduction}, self.objNationRegions)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'Oil',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities))
+		</propertyDef>
+
+		<propertyDef name="objFoodData" type="gs_tbg.NationResource">
+			find(?{NatRes: NatRes.objResourceTemplate == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')},
+				self.objNationResources)
+		</propertyDef>
+
+		<propertyDef name="nFoodProd" type="int">
+			sum(map(?{region: find(?{rCap: rCap.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')},
+				region.objResourceCapacities).nBaseProduction + ((float(region.tmplTerrain.resolve().nFoodProductionModifier)/100.0) *
+					float(find(?{rCap: rCap.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')},
+						region.objResourceCapacities).nBaseProduction))
+							}, self.objNationRegions)) +
+			sum(map(?{city: if(city.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'Bread',
+					(city.nIPUs * city.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount), 0)},
+						self.objNationCities))
+		</propertyDef>
+
+	</objectDef>
+
+	<objectDef type="UI2DInfoBarSupplies" superType="mlui.UI2DElement">
+
+		<object type="InfoBarResourceData" name="objResourceData">
+			<property name="objNation" from="mh2data.objNation"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSuppliesBackground">
+			<property name="tmplImage" value="skin.ImgPanel"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="323"/>
+			<property name="nHeight" value="48"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objArmsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconArmsGlow"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" value="29"/>
+			<property name="strToolTip" from="locale.SID.UI.Arms + ': ' + def.objResourceData.objArmsData.nAmount.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceProducing + ': ' + def.objResourceData.nArmsProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				+ '&#010;   ' + locale.SID.UI.ResourceConsumed + ': ' + def.objResourceData.objArmsData.nConsumed.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceStockpile + ': ' + def.objResourceData.objArmsData.nDesiredStockpile.formatNumber(0, true)
+				"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objArmsValue">
+			<property name="tmplTextStyle">
+				if(float(self.strText) == 0, 'locale.TxtStyleArialRed13Center', 'locale.TxtStyleArialWhite13Center')
+			</property>
+			<property name="strText">
+				def.objResourceData.objArmsData.nAmount.formatNumber(0, true)
+			</property>
+			<property name="nX" value="3"/>
+			<property name="nY" value="36"/>
+			<property name="nWidth" value="64"/>
+			<property name="nHeight" value="13"/>
+			<property name="strToolTip" from="locale.SID.UI.Arms + ': ' + def.objResourceData.objArmsData.nAmount.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceProducing + ': ' + def.objResourceData.nArmsProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				+ '&#010;   ' + locale.SID.UI.ResourceConsumed + ': ' + def.objResourceData.objArmsData.nConsumed.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceStockpile + ': ' + def.objResourceData.objArmsData.nDesiredStockpile.formatNumber(0, true)
+				"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMetalsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMetalsGlow"/>
+			<property name="nX" value="83"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="31"/>
+			<property name="nHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.Metals + ': ' + def.objResourceData.objMetalsData.nAmount.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceProducing + ': ' + def.objResourceData.nMetalsProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				+ '&#010;   ' + locale.SID.UI.ResourceConsumed + ': ' + def.objResourceData.objMetalsData.nConsumed.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceStockpile + ': ' + def.objResourceData.objMetalsData.nDesiredStockpile.formatNumber(0, true)
+				"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMetalsValue">
+			<property name="tmplTextStyle">
+				if(float(self.strText) == 0, 'locale.TxtStyleArialRed13Center', 'locale.TxtStyleArialWhite13Center')
+			</property>
+			<property name="strText">
+				gs_tbg.getNationResource(mh2data.objAvatar, mh2data.objNation, sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Metals')).nAmount.formatNumber(0, true)
+			</property>
+			<property name="nX" value="67"/>
+			<property name="nY" value="36"/>
+			<property name="nWidth" value="64"/>
+			<property name="nHeight" value="13"/>
+			<property name="strToolTip" from="locale.SID.UI.Metals + ': ' + def.objResourceData.objMetalsData.nAmount.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceProducing + ': ' + def.objResourceData.nMetalsProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				+ '&#010;   ' + locale.SID.UI.ResourceConsumed + ': ' + def.objResourceData.objMetalsData.nConsumed.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceStockpile + ': ' + def.objResourceData.objMetalsData.nDesiredStockpile.formatNumber(0, true)
+				"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objCoalIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconCoalGlow"/>
+			<property name="nX" value="147"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.Coal + ': ' + def.objResourceData.objCoalData.nAmount.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceProducing + ': ' + def.objResourceData.nCoalProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				+ '&#010;   ' + locale.SID.UI.ResourceConsumed + ': ' + def.objResourceData.objCoalData.nConsumed.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceStockpile + ': ' + def.objResourceData.objCoalData.nDesiredStockpile.formatNumber(0, true)
+				"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objCoalValue">
+			<property name="tmplTextStyle">
+				if(float(self.strText) == 0, 'locale.TxtStyleArialRed13Center', 'locale.TxtStyleArialWhite13Center')
+			</property>
+			<property name="strText">
+				gs_tbg.getNationResource(mh2data.objAvatar, mh2data.objNation, sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Coal')).nAmount.formatNumber(0, true)
+			</property>
+			<property name="nX" value="131"/>
+			<property name="nY" value="36"/>
+			<property name="nWidth" value="64"/>
+			<property name="nHeight" value="13"/>
+			<property name="strToolTip" from="locale.SID.UI.Coal + ': ' + def.objResourceData.objCoalData.nAmount.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceProducing + ': ' + def.objResourceData.nCoalProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				+ '&#010;   ' + locale.SID.UI.ResourceConsumed + ': ' + def.objResourceData.objCoalData.nConsumed.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceStockpile + ': ' + def.objResourceData.objCoalData.nDesiredStockpile.formatNumber(0, true)
+				"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objOilIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconOilGlow"/>
+			<property name="nX" value="218"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="18"/>
+			<property name="nHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.Oil + ': ' + def.objResourceData.objOilData.nAmount.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceProducing + ': ' + def.objResourceData.nOilProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				+ '&#010;   ' + locale.SID.UI.ResourceConsumed + ': ' + def.objResourceData.objOilData.nConsumed.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceStockpile + ': ' + def.objResourceData.objOilData.nDesiredStockpile.formatNumber(0, true)
+				"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objOilValue">
+			<property name="tmplTextStyle">
+				if(float(self.strText) == 0, 'locale.TxtStyleArialRed13Center', 'locale.TxtStyleArialWhite13Center')
+			</property>
+			<property name="strText">
+				gs_tbg.getNationResource(mh2data.objAvatar, mh2data.objNation, sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Oil')).nAmount.formatNumber(0, true)
+			</property>
+			<property name="nX" value="195"/>
+			<property name="nY" value="36"/>
+			<property name="nWidth" value="64"/>
+			<property name="nHeight" value="13"/>
+			<property name="strToolTip" from="locale.SID.UI.Oil + ': ' + def.objResourceData.objOilData.nAmount.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceProducing + ': ' + def.objResourceData.nOilProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				+ '&#010;   ' + locale.SID.UI.ResourceConsumed + ': ' + def.objResourceData.objOilData.nConsumed.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceStockpile + ': ' + def.objResourceData.objOilData.nDesiredStockpile.formatNumber(0, true)
+				"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objFoodIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconFoodGlow"/>
+			<property name="nX" value="280"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="21"/>
+			<property name="nHeight" value="32"/>
+			<property name="strToolTip" from="locale.SID.UI.Food + ': ' + def.objResourceData.objFoodData.nAmount.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceProducing + ': ' + def.objResourceData.nFoodProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				+ '&#010;   ' + locale.SID.UI.ResourceConsumed + ': ' + def.objResourceData.objFoodData.nConsumed.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceStockpile + ': ' + def.objResourceData.objFoodData.nDesiredStockpile.formatNumber(0, true)
+        + '&#010;   ' + locale.SID.UI.FoodDemand + ': ' + def.objResourceData.objFoodData.nDemand.formatNumber(0, true)
+				"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objFoodValue">
+			<property name="tmplTextStyle">
+				if(float(self.strText) == 0, 'locale.TxtStyleArialRed13Center', 'locale.TxtStyleArialWhite13Center')
+			</property>
+			<property name="strText">
+				gs_tbg.getNationResource(mh2data.objAvatar, mh2data.objNation, sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Food')).nAmount.formatNumber(0, true)
+			</property>
+			<property name="nX" value="259"/>
+			<property name="nY" value="36"/>
+			<property name="nWidth" value="64"/>
+			<property name="nHeight" value="13"/>
+			<property name="strToolTip" from="locale.SID.UI.Food + ': ' + def.objResourceData.objFoodData.nAmount.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceProducing + ': ' + def.objResourceData.nFoodProd.formatNumber(0, true) + ' ' + locale.SID.UI.PerTurn
+				+ '&#010;   ' + locale.SID.UI.ResourceConsumed + ': ' + def.objResourceData.objFoodData.nConsumed.formatNumber(0, true)
+				+ '&#010;   ' + locale.SID.UI.ResourceStockpile + ': ' + def.objResourceData.objFoodData.nDesiredStockpile.formatNumber(0, true)
+				"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSuppliesForeground">
+			<property name="tmplImage" value="skin.ImgPanelBorder"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="326"/>
+			<property name="nHeight" value="52"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nDepth" value="100"/>
+		</object>
+	</objectDef>
+</locust>

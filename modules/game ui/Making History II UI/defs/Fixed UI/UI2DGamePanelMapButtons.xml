@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI2DGamePanelMapButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		
+		<property name="nX" value="3"/>
+		<property name="nY" value="74"/>
+		<property name="nWidth" value="89"/>
+		<property name="nHeight" value="119"/>
+		
+		<object type="mlui.UI2DButton" name="objMapControlsDefaultView">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewStandard'),
+					'skin.BtnStyleMapButtonDefaultC', 'skin.BtnStyleMapButtonDefault')
+			</property>	
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewStandard"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewStandard'));
+							mh2data.closeMapToggle();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objMapControlsPolitical">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewController'),
+					'skin.BtnStyleMapButtonPoliticalC', 'skin.BtnStyleMapButtonPolitical')
+			</property>	
+			<property name="nX" value="31"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewPolitical"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewController'));
+							mh2data.closeMapToggle();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objMapControlsEmpireView">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewEmpire'),
+					'skin.BtnStyleMapButtonEmpireC', 'skin.BtnStyleMapButtonEmpire')
+			</property>
+			<property name="nX" value="60"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" value="26"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewEmpire"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewEmpire'));
+							mh2data.closeMapToggle();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objMapControlsNationality">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewNationality') OR
+					mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewCulture') OR
+					mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewEthnicity') OR
+					mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewReligion'),
+					'skin.BtnStyleMapButtonNationalityC', 'skin.BtnStyleMapButtonNationality')
+			</property>	
+			<property name="nX" value="2"/>
+			<property name="nY" value="31"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewDemographics"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewNationality'));
+							mh2data.openMapToggle(UI2DDemographicToggle);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objMapControlsStability">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewRevoltRisk'),
+					'skin.BtnStyleMapButtonStabilityC', 'skin.BtnStyleMapButtonStability')
+			</property>
+			<property name="nX" value="31"/>
+			<property name="nY" value="31"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewRevoltRisk"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewRevoltRisk'));
+							mh2data.closeMapToggle();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objMapControlsIdeology">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewIdeology'),
+					'skin.BtnStyleMapButtonIdeologyC', 'skin.BtnStyleMapButtonIdeology')
+			</property>
+			<property name="nX" value="60"/>
+			<property name="nY" value="31"/>
+			<property name="nDefaultWidth" value="26"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewIdeology"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewIdeology'));
+							mh2data.closeMapToggle();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objMapControlsTerrain">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTerrainType'),
+					'skin.BtnStyleMapButtonTerrainC', 'skin.BtnStyleMapButtonTerrain')
+			</property>	
+			<property name="nX" value="2"/>
+			<property name="nY" value="60"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewTerrain"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTerrainType'));
+							mh2data.closeMapToggle();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objMapControlsRegion">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewAADefense') OR
+					mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewCoastalDefense') OR
+					mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTransportationImprovement') OR
+					mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewFortifications'),
+					'skin.BtnStyleMapButtonRegionC', 'skin.BtnStyleMapButtonRegion')
+			</property>	
+			<property name="nX" value="31"/>
+			<property name="nY" value="60"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewImprovements"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewAADefense'));
+							mh2data.openMapToggle(UI2DRegionToggle);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objMapControlsTrade">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTrade'),
+					'skin.BtnStyleMapButtonTradeC', 'skin.BtnStyleMapButtonTrade')
+			</property>
+			<property name="nX" value="60"/>
+			<property name="nY" value="60"/>
+			<property name="nDefaultWidth" value="26"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewTrade"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTrade'));
+							mh2data.closeMapToggle();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objMapControlsSupply">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewSupply'),
+					'skin.BtnStyleMapButtonSupplyC', 'skin.BtnStyleMapButtonSupply')
+			</property>
+			<property name="nX" value="2"/>
+			<property name="nY" value="89"/>
+			<property name="nDefaultWidth" value="26"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewSupply"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewSupply'));
+							mh2data.closeMapToggle();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<!-- placeholder --><object type="mlui.UI2DButton" name="objMapControlsWeather">
+			<property name="tmplButtonStyle">
+				if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewWeather'),
+					'skin.BtnStyleMapButtonWeatherC', 'skin.BtnStyleMapButtonWeather')
+			</property>
+			<property name="nX" value="31"/>
+			<property name="nY" value="89"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.MapViewWeather"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewWeather'));
+							mh2data.closeMapToggle();
+						}
+					]]></script>
+				</object>					
+			</object>		
+		</object>
+		
+		<propertyDef name="objMapViewVictory" type="mlui.UI2DButton" storesChildren="true">
+			switch{
+				case gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).bUseNationSpecificVCs == true:
+					<object type="mlui.UI2DButton">
+						<property name="tmplButtonStyle">
+							if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewRegionPoints'),
+								'skin.BtnStyleMapButtonPointsC', 'skin.BtnStyleMapButtonPoints')
+						</property>
+						<property name="nX" value="60"/>
+						<property name="nY" value="89"/>
+						<property name="nDefaultWidth" value="27"/>
+						<property name="nDefaultHeight" value="27"/>
+						<property name="strToolTip" from="locale.SID.UI.MapViewVictoryCondition"/>
+						<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+							<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+								<property name="otEventType" value="mlui.EventButtonClicked"/>
+								<script type="application/javascript"><![CDATA[
+									function handle(event, owner)
+									{
+										mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewVictoryCondition'));
+										mh2data.closeMapToggle();
+									}
+								]]></script>
+							</object>					
+						</object>
+					</object>
+				default:
+					<object type="mlui.UI2DButton">
+						<property name="tmplButtonStyle">
+							if(mh2data.objMapData.tmplMapView == mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewRegionPoints'),
+								'skin.BtnStyleMapButtonPointsC', 'skin.BtnStyleMapButtonPoints')
+						</property>
+						<property name="nX" value="60"/>
+						<property name="nY" value="89"/>
+						<property name="nDefaultWidth" value="27"/>
+						<property name="nDefaultHeight" value="27"/>
+						<property name="strToolTip" from="locale.SID.UI.MapViewRegionPoints"/>
+						<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+							<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+								<property name="otEventType" value="mlui.EventButtonClicked"/>
+								<script type="application/javascript"><![CDATA[
+									function handle(event, owner)
+									{
+										mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewRegionPoints'));
+										mh2data.closeMapToggle();
+									}
+								]]></script>
+							</object>					
+						</object>
+					</object>
+			}
+		</propertyDef>
+	</objectDef>
+</locust>

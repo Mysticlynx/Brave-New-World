@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="AnyArmyElement">
+        <property name="eUnitCategories" value="Infantry"/>
+        <property name="eUnitCategories" value="Armored"/>
+        <property name="eUnitCategories" value="Artillery"/>
+        <property name="eUnitCategories" value="MobileInfantry"/>
+	    <property name="eUnitCategories" value="MissileLaunchers"/>
+        <property name="eUnitCategories" value="Militia"/>
+        <property name="eUnitCategories" value="Engineer"/>
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="EmergencyArmyElement">
+        <property name="eUnitCategories" value="Infantry"/>
+        <property name="eUnitCategories" value="Armored"/>
+        <property name="eUnitCategories" value="Artillery"/>
+        <property name="eUnitCategories" value="MobileInfantry"/>
+        <property name="eUnitCategories" value="Militia"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="DefaultArmyElement">
+        <property name="eUnitCategories" value="Infantry"/>
+        <property name="eUnitCategories" value="Armored"/>
+        <property name="eUnitCategories" value="Artillery"/>
+        <property name="eUnitCategories" value="MobileInfantry"/>
+	    <property name="eUnitCategories" value="MissileLaunchers"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="MinimalDefensiveArmyElement">
+        <property name="eUnitCategories" value="Militia"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="ModerateDefensiveArmyElement">
+        <property name="eUnitCategories" value="Infantry"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="HeavyDefensiveArmyElement">
+        <property name="eUnitCategories" value="Armored"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="DefensiveArmyElement">
+        <property name="eUnitCategories" value="Infantry"/>
+        <property name="eUnitCategories" value="Armored"/>
+        <property name="eUnitCategories" value="Artillery"/>
+        <property name="eUnitCategories" value="MobileInfantry"/>
+	    <property name="eUnitCategories" value="MissileLaunchers"/>
+        <property name="eUnitCategories" value="Militia"/>
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="EngineerElement">
+        <property name="eUnitCategories" value="Engineer"/>
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="ArmoredElement">
+        <property name="eUnitCategories" value="Armored"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="ArtilleryElement">
+        <property name="eUnitCategories" value="Artillery"/>
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="MobileInfantryElement">
+        <property name="eUnitCategories" value="MobileInfantry"/>
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="SlowerDefensiveArmyElement">
+        <property name="eUnitCategories" value="Infantry"/>
+        <property name="eUnitCategories" value="Artillery"/>
+	    <property name="eUnitCategories" value="MissileLaunchers"/>
+        <property name="eUnitCategories" value="Militia"/>
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="AnyNavyElement">
+	    <property name="eUnitCategories" value="Carriers"/>
+	    <property name="eUnitCategories" value="Battleships"/>
+	    <property name="eUnitCategories" value="Destroyers"/>
+	    <property name="eUnitCategories" value="Cruisers"/>
+	    <!--<property name="eUnitCategories" value="Submarines"/>-->
+	    <property name="eUnitCategories" value="Transport"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="TransportElement">
+	    <property name="eUnitCategories" value="Transport"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="NavyEscortElement">
+	    <property name="eUnitCategories" value="Battleships"/>
+	    <property name="eUnitCategories" value="Destroyers"/>
+	    <property name="eUnitCategories" value="Cruisers"/>
+	    <!--<property name="eUnitCategories" value="Submarines"/>-->
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="BattleshipElement">
+	    <property name="eUnitCategories" value="Battleships"/>
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="CruiserElement">
+	    <property name="eUnitCategories" value="Cruisers"/>
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="DestroyerElement">
+	    <property name="eUnitCategories" value="Destroyers"/>
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="SubmarineElement">
+	    <property name="eUnitCategories" value="Submarines"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="CarrierElement">
+	    <property name="eUnitCategories" value="Carriers"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="AnyNavyAttackElement">
+	    <property name="eUnitCategories" value="Battleships"/>
+	    <property name="eUnitCategories" value="Destroyers"/>
+	    <property name="eUnitCategories" value="Cruisers"/>
+	    <!--<property name="eUnitCategories" value="Submarines"/>-->
+    </template>
+
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="AnyAirElement">
+	    <property name="eUnitCategories" value="Fighters"/>
+	    <property name="eUnitCategories" value="Bombers"/>
+	    <property name="eUnitCategories" value="AirRecon"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="BomberElement">
+	    <property name="eUnitCategories" value="Bombers"/>
+    </template>
+    
+    <template type="gs_tbg.AIUnitGroupCompositionElementTemplate" name="FighterElement">
+	    <property name="eUnitCategories" value="Fighters"/>
+    </template>
+    
+    <!-- default composition -->	
+    <template type="gs_tbg.AIUnitGroupCompositionTemplate" name="DefaultCompositionTemplate">
+
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="DefensiveArmy"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="DefensiveArmyElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+                <property name="nMinPercent" value="90"/>
+                <property name="nDesiredPercent" value="95"/>
+                <property name="nMaxPercent" value="100"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="EngineerElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+                <property name="nMinPercent" value="0"/>
+                <property name="nDesiredPercent" value="5"/>
+                <property name="nMaxPercent" value="10"/>
+            </object>
+        </object>
+    
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="MinimalDefensiveArmy"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="MinimalDefensiveArmyElement"/>
+                <property name="nMinPercent" value="0"/>
+                <property name="nDesiredPercent" value="5"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="ModerateDefensiveArmyElement"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="95"/>
+                <property name="nMaxPercent" value="100"/>               
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+        </object>
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="ModerateDefensiveArmy"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="MinimalDefensiveArmyElement"/>
+                <property name="nMinPercent" value="0"/>
+                <property name="nDesiredPercent" value="0"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="ModerateDefensiveArmyElement"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="70"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="ArtilleryElement"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="20"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>               
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="HeavyDefensiveArmyElement"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="10"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>               
+            </object>            
+        </object>
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="ModerateDefensiveArmyNoArmor"/><!-- fallback if can't build armor yet  -->
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="MinimalDefensiveArmyElement"/>
+                <property name="nMinPercent" value="0"/>
+                <property name="nDesiredPercent" value="0"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="ModerateDefensiveArmyElement"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="75"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="ArtilleryElement"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="25"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>               
+            </object>
+        </object>
+        
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="HeavyDefensiveArmy"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="MinimalDefensiveArmyElement"/>
+                <property name="nMinPercent" value="0"/>
+                <property name="nDesiredPercent" value="0"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>               
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="ModerateDefensiveArmyElement"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="50"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>               
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="ArtilleryElement"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="25"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>               
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="HeavyDefensiveArmyElement"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="25"/>
+                <property name="nMaxPercent" value="100"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>               
+            </object>
+        </object>
+    
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="DefaultArmy"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="DefaultArmyElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+                <property name="nMinPercent" value="90"/>
+                <property name="nDesiredPercent" value="95"/>
+                <property name="nMaxPercent" value="100"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="EngineerElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+                <property name="nMinPercent" value="0"/>
+                <property name="nDesiredPercent" value="5"/>
+                <property name="nMaxPercent" value="10"/>
+            </object>
+        </object>
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="AnyArmy"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="AnyArmyElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+        </object>
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="EmergencyArmy"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="EmergencyArmyElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+        </object>
+
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="ArmoredGroup"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="ArmoredElement"/>
+                <property name="nMinPercent" value="10"/>
+                <property name="nDesiredPercent" value="25"/>
+                <property name="nMaxPercent" value="50"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="MobileInfantryElement"/>
+                <property name="nMinPercent" value="50"/>
+                <property name="nDesiredPercent" value="75"/>
+                <property name="nMaxPercent" value="90"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+        </object>
+
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="DefensiveInfantryGroup"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="SlowerDefensiveArmyElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+        </object>
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="FastArmyGroup"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="MobileInfantryElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+        </object>
+        
+
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="BomberGroup"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="BomberElement"/>
+                <property name="nMinPercent" value="40"/>
+                <property name="nDesiredPercent" value="50"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="FighterElement"/>
+                <property name="nDesiredPercent" value="50"/>
+            </object>
+        </object>
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="AirSupport"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="AnyAirElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_AIR"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SURFACE"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SUBMERGED"/>
+            </object>
+        </object>
+
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="AirPatrol"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="FighterElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_AIR"/>
+            </object>
+        </object>
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="InvasionFleet"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="AnyArmyElement"/>
+                <property name="objElementWhichCarriesTemplate" value="TransportElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapTransportable"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="TransportElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCanTransport"/>
+                <property name="bCarriesOtherElements" value="true"/>
+                <property name="bCountTowardsCompositionPower" value="false"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="NavyEscortElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_AIR"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SURFACE"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SUBMERGED"/>
+            </object>
+            <!--<object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="CarrierElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCarrier"/>
+                <property name="bCarriesOtherElements" value="true"/>
+                <property name="bCountTowardsCompositionPower" value="false"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="FighterElement"/>
+                <property name="objElementWhichCarriesTemplate" value="CarrierElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCarrierPlane"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_AIR"/>
+            </object>-->
+        </object><!-- InvasionFleet -->
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="InvasionFleetWithAirSupport"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="AnyArmyElement"/>
+                <property name="objElementWhichCarriesTemplate" value="TransportElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapTransportable"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="TransportElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCanTransport"/>
+                <property name="bCarriesOtherElements" value="true"/>
+                <property name="bCountTowardsCompositionPower" value="false"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="NavyEscortElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SURFACE"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SUBMERGED"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="CarrierElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCarrier"/>
+                <property name="bCarriesOtherElements" value="true"/>
+                <property name="bCountTowardsCompositionPower" value="false"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="FighterElement"/>
+                <property name="objElementWhichCarriesTemplate" value="CarrierElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCarrierPlane"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_AIR"/>
+            </object>
+        </object><!-- InvasionFleetWithAirSupport -->
+        
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="ParatrooperGroup"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="AnyArmyElement"/>
+                <property name="objElementWhichCarriesTemplate" value="AnyAirElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapTransportable"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapParatrooper"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="AnyAirElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCanTransport"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapDropParatrooper"/>
+                <property name="bCarriesOtherElements" value="true"/>
+                <property name="bCountTowardsCompositionPower" value="false"/>
+            </object>
+        </object><!-- ParatrooperGroup -->
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="BombardShoreGroup"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="AnyNavyElement"/>
+                <property name="nMinPercent" value="50"/>
+                <property name="nDesiredPercent" value="80"/>
+        	    <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SURFACE"/>
+        	    <property name="eCombatStrengths" value="COMBAT_PROPERTY_INFRASTRUCTURE"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapShoreBombardment"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="DestroyerElement"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="20"/>
+        	    <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SURFACE"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapDetectSubmersible"/>
+            </object>
+        </object><!-- BombardShoreGroup -->
+        
+
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="BombardShoreCarrierGroup"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="CarrierElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCarrier"/>
+                <property name="bCarriesOtherElements" value="true"/>
+                <property name="bCountTowardsCompositionPower" value="false"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="FighterElement"/>
+                <property name="objElementWhichCarriesTemplate" value="CarrierElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCarrierPlane"/>
+        	    <property name="eCombatStrengths" value="COMBAT_PROPERTY_AIR"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="BomberElement"/>
+                <property name="objElementWhichCarriesTemplate" value="CarrierElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCarrierPlane"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapBombRegion"/>
+        	    <property name="eCombatStrengths" value="COMBAT_PROPERTY_LAND_ATTACK"/>
+        	    <property name="eCombatStrengths" value="COMBAT_PROPERTY_INFRASTRUCTURE"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="BattleshipElement"/>
+                <property name="nDesiredPercent" value="40"/>
+        	    <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SURFACE"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="CruiserElement"/>
+                <property name="nDesiredPercent" value="25"/>
+        	    <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SURFACE"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="DestroyerElement"/>
+                <property name="nDesiredPercent" value="35"/>
+        	    <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SURFACE"/>
+            </object>
+        </object><!-- BombardShoreCarrierGroup -->
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="NavyPatrol"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="DestroyerElement"/>
+            </object>
+        </object><!-- NavyPatrol -->
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="AnyNavyGroup"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="AnyNavyElement"/>
+            </object>
+        </object><!-- AnyNavyGroup -->
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="FerryGroup"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="TransportElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapCanTransport"/>
+                <property name="bCarriesOtherElements" value="true"/>
+                <property name="bCountTowardsCompositionPower" value="false"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="NavyEscortElement"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_AIR"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SURFACE"/>
+                <property name="eCombatStrengths" value="COMBAT_PROPERTY_SEA_SUBMERGED"/>
+            </object>
+        </object><!-- FerryGroup -->
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="SubmarineGroup"/>
+                <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="SubmarineElement"/>
+            </object>           
+        </object> <!-- SubmarineGroup -->
+        
+        <object name="objCompositions" type="gs_tbg.AIUnitGroupComposition">
+    		<property name="strName" value="NavyAttackFleet"/>
+            <property name="nRating" value="1"/>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="AnyNavyAttackElement"/>
+                <property name="nDesiredPercent" value="75"/>
+            </object>
+            <object name="objElements" type="gs_tbg.AIUnitGroupCompositionElement">
+                <property name="objElementTemplate" value="AnyNavyElement"/>
+                <property name="otRequiredUnitCaps" value="gs_tbg.UnitCapDetectSubmersible"/>
+                <property name="nMinPercent" value="1"/>
+                <property name="nDesiredPercent" value="25"/>
+            </object>
+        </object><!-- NavyAttackFleet-->
+        
+    </template><!-- DefaultCompositionTemplate -->
+        
+	<template type="gs_tbg.DefenderCompositionsTemplate" name="DefaultDefenderCompositions">
+        <object name="objDefenderCompositions" type="gs_tbg.DefenderCompositionItem">
+		    <property name="strName" value="MinimalDefensiveArmy"/>
+            <property name="nIPUs" value="0"/>
+        </object>
+        <object name="objDefenderCompositions" type="gs_tbg.DefenderCompositionItem">
+		    <property name="strName" value="ModerateDefensiveArmy"/>
+            <property name="nIPUs" value="30"/>
+        </object>
+        <object name="objDefenderCompositions" type="gs_tbg.DefenderCompositionItem">
+		    <property name="strName" value="HeavyDefensiveArmy"/>
+            <property name="nIPUs" value="50"/>
+        </object>
+        
+        <!-- fallbacks-->
+        <object name="objDefenderCompositions" type="gs_tbg.DefenderCompositionItem">
+		    <property name="strName" value="ModerateDefensiveArmyNoArmor"/>
+            <property name="nIPUs" value="30"/>
+        </object>                
+    </template>
+    
+
+	<template type="gs_tbg.AIFortificationTemplate" name="DefaultFortifications">
+		<object type="gs_tbg.AIFortificationWeight" name="objFortificationWeights">
+	        <property name="objFortificationImprovementTemplate" value="sd.Earthworks"/>
+		    <property name="fWeight" value="0.25"/>
+		</object>
+		<object type="gs_tbg.AIFortificationWeight" name="objFortificationWeights">
+	        <property name="objFortificationImprovementTemplate" value="sd.ConcreteFortifications"/>
+		    <property name="fWeight" value="0.5"/>
+		</object>
+		<object type="gs_tbg.AIFortificationWeight" name="objFortificationWeights">
+	        <property name="objFortificationImprovementTemplate" value="sd.FortifiedDefenseLine"/>
+		    <property name="fWeight" value="0.75"/>
+		</object>
+	</template>
+
+	<template type="gs_tbg.AIMilitaryStrategyTemplate" name="DefaultStrategy">
+		<property name="objCompositionsTemplate" value="DefaultCompositionTemplate"/>
+		<property name="objFortificationsTemplate" value="DefaultFortifications"/>
+		<property name="fOffensePriority" value="0.5"/>
+		<property name="fDefensePriority" value="0.5"/>
+		<property name="fFortificationPriority" value="0.5"/>
+		<object type="gs_tbg.AIMilitaryTacticWeight" name="objTacticWeights">
+			<property name="eTactic" value="SoftenUpShoreDefenses"/>
+			<property name="nWeight" value="50"/>
+		</object>
+	</template>
+
+	<template type="gs_tbg.AIMilitaryStrategyTemplate" name="TrenchWarfare">
+		<property name="objCompositionsTemplate" value="DefaultCompositionTemplate"/>
+		<property name="objFortificationsTemplate" value="DefaultFortifications"/>
+		<property name="fOffensePriority" value="0.25"/>
+		<property name="fDefensePriority" value="1.0"/>
+		<property name="fFortificationPriority" value="1.0"/>
+		<object type="gs_tbg.AIMilitaryTacticWeight" name="objTacticWeights">
+			<property name="eTactic" value="SoftenUpShoreDefenses"/>
+			<property name="nWeight" value="50"/>
+		</object>
+	</template>
+
+	<template type="gs_tbg.AIMilitaryStrategyTemplate" name="Blitzkrieg">
+		<property name="objCompositionsTemplate" value="DefaultCompositionTemplate"/>
+		<property name="objFortificationsTemplate" value="DefaultFortifications"/>
+		<property name="fOffensePriority" value="1.0"/>
+		<property name="fDefensePriority" value="0.25"/>
+		<property name="fFortificationPriority" value="0.1"/>
+		<object type="gs_tbg.AIMilitaryTacticWeight" name="objTacticWeights">
+			<property name="eTactic" value="CaptureCitiesFirst"/>
+			<property name="nWeight" value="100"/>
+		</object>
+		<object type="gs_tbg.AIMilitaryTacticWeight" name="objTacticWeights">
+			<property name="eTactic" value="SoftenUpShoreDefenses"/>
+			<property name="nWeight" value="50"/>
+		</object>
+	</template>
+
+</locust>

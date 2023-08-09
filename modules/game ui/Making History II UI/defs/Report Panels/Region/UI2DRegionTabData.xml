@@ -1,0 +1,759 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+
+	<enumDef name="RegionalStatisticSort">
+    <value name="NAME"/>
+		<value name="STATUS"/>
+		<value name="LOCATION"/>
+		<value name="UNITDECAL"/>
+		<value name="CULTURE"/>
+		<value name="RELIGION"/>
+		<value name="ETHNICITY"/>
+		<value name="REVOLTRISK"/>
+		<value name="POPULATION"/>
+		<value name="IDLE_MPU"/>
+		<value name="GROWTH"/>
+		<value name="POWERPOINTS"/>
+    </enumDef>
+
+  <objectDef type="RegionalStatisticsData" class="CMLObject" >
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+        
+        <propertyDef name="strName" type="String" >
+            self.objRegion.strDisplayName
+        </propertyDef>
+        <propertyDef name="strStatus" type="String" >
+            if(self.objRegion.refColony != null, 'a' + self.strName, if (self.objRegion.refController == self.objRegion.refOwner, 'b' + self.strName, 'c' + self.strName))
+        </propertyDef>
+        <propertyDef name="strLocation" type="String" >
+           self.objRegion.strAreaDisplayName 
+        </propertyDef>
+        <propertyDef name="objOwner" type="gs_tbg.Nation" >
+            self.objRegion.refOwner.resolve(mh2data.objAvatar)
+        </propertyDef>
+
+        <propertyDef name="objRegionNationality" type="String">
+          if(self.objRegion.tmplNation == mh2data.objNation.tmplNation,
+          <!--this sorts the owners nationality to the top/bottom-->
+          'Zzzz',
+          self.objRegion.tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName
+          )
+        </propertyDef>
+
+    <propertyDef name="strDecal" type="String" >
+            self.objOwner.strName
+        </propertyDef>
+        <propertyDef name="strCulture" type="String" >
+            self.objRegion.tmplCulture.resolve().strDisplayName
+        </propertyDef>
+        <propertyDef name="strReligion" type="String" >
+            self.objRegion.tmplReligion.resolve().strDisplayName
+        </propertyDef>
+        <propertyDef name="strEthnicity" type="String" >
+            self.objRegion.tmplEthnicity.resolve().strDisplayName
+        </propertyDef>
+        <propertyDef name="tmplRegionStability" type="Template" restriction="gs_tbg.RegionStabilityTemplate" >
+            if( self.objRegion != null, gs_tbg.getGameSysNationRelations(mh2data.objAvatar).getRegionStabilityTemplate(self.objRegion.nRegionStability), null)
+        </propertyDef>
+        <propertyDef name="nRegionStability" type="int" >
+            self.objRegion.nRegionStability
+        </propertyDef>
+        <propertyDef name="nPopulation" type="int64" >
+            self.objRegion.nPopulation
+        </propertyDef>
+        <propertyDef name="nUnemployedMPUs" type="int" >
+            self.objRegion.nUnemployedMPUs
+        </propertyDef>
+        <propertyDef name="fMPUGrowthRate" type="float" >
+            self.objRegion.fMPUGrowthRate
+        </propertyDef>
+        <propertyDef name="nTotalPoints" type="int" >
+            self.objRegion.objPowerPoints.nTotalPoints
+        </propertyDef>
+        
+    </objectDef>
+    
+    
+	<objectDef type="UI2DRegionTabData" superType="mlui.UI2DElement">
+<!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objCityTitleSorter">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12LeftWrap"/>
+			<property name="strText" >
+			switch
+				{
+				case def.eColm == RegionSort.ALL:
+					locale.SID.UI.AllRegions
+				case def.eColm == RegionSort.BASE:
+					locale.SID.UI.NationalRegions
+				case def.eColm == RegionSort.COLONIES:
+					def.objColony.strDisplayName
+				}
+			</property>
+			<property name="nX" value="18"/>
+			<property name="nY" value="105"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRegionSortArrow">
+			<property name="tmplImage" value="skin.ImgDownArrowOrange"/>
+			<property name="nX" value="200"/>
+			<property name="nY" value="107"/>
+			<property name="nWidth" value="10"/>
+			<property name="nHeight" value="9"/>
+		</object>
+
+		<object type="EventRegionAssetSortChosen" name="eSortALL" >
+			<property name="eColm" value="ALL" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;
+				}
+			]]></script>
+		</object>
+
+		<object type="EventRegionAssetSortChosen" name="eSortBASE" >
+			<property name="eColm" value="BASE" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;
+				}
+			]]></script>
+		</object>
+
+		<propertyDef name="objColony" type="gs_tbg.Colony" />
+		<propertyDef name="objColonies" type="gs_tbg.Colony" variable="true" >
+			gs_tbg.getColonies(mh2data.objAvatar, mh2data.objNation)
+		</propertyDef>
+        
+		<object type="EventRegionAssetSortChosen" name="eSortCOLONIES" tiedTo="def.objColonies">
+			<property name="objColony" from="tiedTo"/>
+			<property name="eColm" value="COLONIES" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;
+					def.objColony = self.objColony;
+				}
+			]]></script>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objProjectButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="18"/>
+			<property name="nY" value="105"/>
+			<property name="nDefaultWidth" from="def.objCityTitleSorter.nWidth"/>
+			<property name="nDefaultHeight" from="def.objCityTitleSorter.nHeight"/>
+			<property name="nDepth" value="5" />
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							menuX = def.nScreenX + 13;
+							menuY = def.nScreenY + 120;
+
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": def.objProjectButton.nDefaultWidth,
+								"nDefaultItemHeight": def.objProjectButton.nDefaultHeight + 6
+							});
+
+							var menuitem;
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.AllRegions,
+								"objExecuteObject": def.eSortALL
+							});
+							menudata.objItems.add(menuitem);
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.NationalRegions,
+								"objExecuteObject": def.eSortBASE
+							});
+							menudata.objItems.add(menuitem);
+
+							for(var i = 0; i < def.eSortCOLONIES.length; i++)
+							{
+								menuitem = common_elements.MenuItem.create({
+									"strDisplayName": def.eSortCOLONIES[i].objColony.strDisplayName,
+									"objExecuteObject": def.eSortCOLONIES[i]
+								});
+								menudata.objItems.add(menuitem);
+							}
+
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]></script>
+				</object>
+		    </object>
+		</object>
+
+        <object type="mlui.UI2DImage" name="objBubble">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" value="12"/>
+			<property name="nY" value="99"/>
+			<property name="nWidth" from="def.objCityTitleSorter.nWidth + 10"/>
+			<property name="nHeight" from="def.objCityTitleSorter.nHeight + 12"/>
+		</object>
+	<!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objRegionDataLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.RegionalStatistics"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+       <!--  <object type="TableData" name="objTableData">
+			<property name="eColm" from="RegionalStatisticSort.NAME"/>
+		</object> -->
+        
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.UNITDECAL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="35"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMapIconDemographics"/>
+                    <property name="nWidth" value="26"/>
+                    <property name="nHeight" value="24"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Name"/>
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.NAME"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="127"/>
+                <property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Status"/>
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.STATUS"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="35"/>
+                <property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Location"/>
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.LOCATION"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="125"/>
+                <property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Culture"/>
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.CULTURE"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="107"/>
+                <property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" value=""/>
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.RELIGION"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="35"/>
+                <property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Ethnicity"/>
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.ETHNICITY"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="97"/>
+                <property name="nHeight" value="23"/>
+			</object>            
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.REVOLTRISK"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="35"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconStabilitySm"/>
+                    <property name="nWidth" value="26"/>
+                    <property name="nHeight" value="23"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Population"/>
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.POPULATION"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="78"/>
+                <property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.IdleMPUs"/>
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.IDLE_MPU"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="53"/>
+                <property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.GROWTH"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+                <property name="nHeight" value="23"/>                
+                <object type="mlui.UI2DText" name="objText">
+                    <property name="nY" value="1"/>
+                    <property name="nWidth" from="42"/>
+                    <property name="nHeight" from="23"/>
+                    <property name="strText" from="locale.SID.UI.GrowthRate"/>
+                    <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterWrap"/>
+                    <property name="nDepth" value="150"/>
+                </object>
+			</object>       
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionalStatisticTableData"/>
+				<property name="eSortBy" from="RegionalStatisticSort.POWERPOINTS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="46"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconPointsSm"/>
+                    <property name="nWidth" value="26"/>
+                    <property name="nHeight" value="26"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+		</object>
+        
+        <object type="mlui.UI2DText" name="objReligionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterWrap"/>
+			<property name="strText" from="locale.SID.UI.Religion"/>
+			<property name="nX" value="432"/>
+			<property name="nY" value="162"/>
+			<property name="nWidth" value="42"/>
+			<property name="nHeight" value="25"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<propertyDef name="eColm" type="Enum" restriction="RegionSort" />
+       <propertyDef name="objDataRows" type="RegionalStatisticsData" variable="true" storesChildren="true"/>
+        <property name="objDataRows">
+            map(?{region:
+					<object type="RegionalStatisticsData">
+						<property name="objRegion" from="region"/>
+					</object>
+				}
+                ,
+                switch  
+                {
+                    case self.eColm == RegionSort.ALL:
+                        gs_tbg.getControlledRegions(mh2data.objAvatar, mh2data.objNation)
+
+                    case self.eColm == RegionSort.BASE:
+                        filter(
+                            ?{region: region.refColony == null},
+                                gs_tbg.getControlledRegions(mh2data.objAvatar, mh2data.objNation)
+                        )
+
+                    case self.eColm == RegionSort.COLONIES:
+                        filter(?
+                            {region:
+                                region.refColony.resolve(mh2data.objAvatar) == self.objColony
+                            }, gs_tbg.getControlledRegions(mh2data.objAvatar, mh2data.objNation)
+                        )
+                }            
+            )
+		</property>
+        
+        <object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="9"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				 switch{
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.NAME:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.strName}, def.objDataRows),
+							sortDescending(?{data: data.strName}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.STATUS:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.strStatus}, def.objDataRows),
+							sortDescending(?{data: data.strStatus}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.LOCATION:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.strLocation}, def.objDataRows),
+							sortDescending(?{data: data.strLocation}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.UNITDECAL:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.objRegionNationality}, def.objDataRows),
+							sortDescending(?{data: data.objRegionNationality}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.CULTURE:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.strCulture}, def.objDataRows),
+							sortDescending(?{data: data.strCulture}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.RELIGION:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.strReligion}, def.objDataRows),
+							sortDescending(?{data: data.strReligion}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.ETHNICITY:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.strEthnicity}, def.objDataRows),
+							sortDescending(?{data: data.strEthnicity}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.REVOLTRISK:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.nRegionStability}, def.objDataRows),
+							sortDescending(?{data: data.nRegionStability}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.POPULATION:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.nPopulation}, def.objDataRows),
+							sortDescending(?{data: data.nPopulation}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.IDLE_MPU:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.nUnemployedMPUs}, def.objDataRows),
+							sortDescending(?{data: data.nUnemployedMPUs}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.GROWTH:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.fMPUGrowthRate}, def.objDataRows),
+							sortDescending(?{data: data.fMPUGrowthRate}, def.objDataRows)
+						)
+					case mh2data.objRegionalStatisticTableData.eColm == RegionalStatisticSort.POWERPOINTS:
+						if(mh2data.objRegionalStatisticTableData.bAsc,
+							sortAscending(?{data: data.nTotalPoints}, def.objDataRows),
+							sortDescending(?{data: data.nTotalPoints}, def.objDataRows)
+						)
+                    
+
+
+                    default:
+                        LinkedList(def.objDataRows)
+                }
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DRegionStatsListBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+        
+        
+	</objectDef>
+
+	<objectDef type="UI2DRegionStatsRowBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int" default="0"/>
+
+		<property name="nHeight" value="30"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+	</objectDef>
+
+	<!-- Bubble Defs -->
+	<objectDef type="UI2DRegionStatsListBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int"/>
+		<propertyDef name="objData" type="RegionalStatisticsData"/>
+
+    <object type="LookupNationIcons" name="objLookupNationIcons">
+      <property name="tmplNation" from="def.objData.objRegion.tmplNation"/>
+      <property name="tmplIdeology" from="def.objData.objRegion.refController.resolve(mh2data.objAvatar).tmplIdeology"/>
+    </object>
+
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+
+				<!-- Unit Icon -->
+				<object type="UI2DRegionStatsIconBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="nWidth" value="35"/>
+
+          <object type="mlui.UI2DImage" name="objIcon">
+            <property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+            <property name="nWidth" value="28"/>
+            <property name="nHeight" value="28"/>
+          </object>
+          <property name="strToolTip" from="def.objData.objRegion.tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName + ' ' + locale.SID.UI.Nationality"/>
+				</object>
+
+      <!-- Name -->
+				<object type="UI2DRegionStatsTextNameBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="objRegion" from="def.objData.objRegion"/>
+					<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+					<property name="strText" from="def.objData.strName"/>
+					<property name="nWidth" value="129"/>
+				</object>
+
+				<!-- Status -->
+				<object type="UI2DRegionStatsIconBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="nWidth" value="35"/>
+					<object type="mlui.UI2DImage" name="objIcon">
+            <property name="tmplImage">
+              if(def.objData.objRegion.refOwner != mh2data.objNation, 'skin.ImgInfoIconOccupationSm',
+                if(def.objData.objRegion.refColony != null, 'skin.ImgGovColony', 'skin.ImgInfoIconGovernmentSm')
+              )
+            </property>
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="nWidth" value="24"/>
+						<property name="nHeight" value="24"/>
+						<property name="haXAlign" value="CENTER"/>
+						<property name="vaYAlign" value="MIDDLE"/>
+            <property name="strToolTip">
+              if(def.objData.objRegion.refOwner != mh2data.objNation, locale.SID.UI.OccupiedTerritory,
+                if(def.objData.objRegion.refColony != null, locale.SID.UI.ColonialTerritory, locale.SID.UI.NationalTerritory)
+              )
+            </property>
+					</object>
+				</object>
+
+				<!-- Location -->
+				<object type="UI2DRegionStatsTextBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+					<property name="strText" from="def.objData.strLocation"/>
+					<property name="nWidth" value="125"/>
+				</object>
+
+				<!-- Culture -->
+				<object type="UI2DRegionStatsTextBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+					<property name="strText" from="def.objData.strCulture"/>
+					<property name="nWidth" value="107"/>
+				</object>
+
+				<!-- Religion -->
+				<object type="UI2DRegionStatsIconBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="nWidth" value="35"/>
+					<object type="mlui.UI2DImage" name="objIcon">
+						<property name="tmplImage" from="mh2data.objReligionDisplayTable.getEntry(def.objData.objRegion.tmplReligion).tmplImage"/>
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="nWidth" value="23"/>
+						<property name="nHeight" value="23"/>
+						<property name="haXAlign" value="CENTER"/>
+						<property name="vaYAlign" value="MIDDLE"/>
+						<property name="strToolTip" from="def.objData.strReligion"/>
+					</object>
+				</object>
+
+				<!-- Ethnicity -->
+				<object type="UI2DRegionStatsTextBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+					<property name="strText" from="def.objData.strEthnicity"/>
+					<property name="nWidth" value="97"/>
+				</object>
+
+				<!-- Revolt Risk -->
+				<object type="UI2DRegionStatsIconBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="nWidth" value="35"/>
+					<object type="mlui.UI2DImage" name="objIcon">
+						<property name="tmplImage">
+                            ?{template:
+                            switch{
+                            case template == sd.getTemplateRef(gs_tbg.RegionStabilityTemplate, 'RevoltRiskNone'):
+                                skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconRevoltRiskNone')
+                            case template == sd.getTemplateRef(gs_tbg.RegionStabilityTemplate, 'RevoltRiskLow'):
+                                skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconRevoltRiskLow')
+                            case template == sd.getTemplateRef(gs_tbg.RegionStabilityTemplate, 'RevoltRiskElevated'):
+                                skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconRevoltRiskElevated')
+                            case template == sd.getTemplateRef(gs_tbg.RegionStabilityTemplate, 'RevoltRiskHigh'):
+                                skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconRevoltRiskHigh')
+                            case template == sd.getTemplateRef(gs_tbg.RegionStabilityTemplate, 'RevoltRiskSevere'):
+                                skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconRevoltRiskSevere')
+                            }
+                            }(def.objData.tmplRegionStability)
+                        </property>
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="nWidth" value="24"/>
+						<property name="nHeight" value="25"/>
+						<property name="haXAlign" value="CENTER"/>
+						<property name="vaYAlign" value="MIDDLE"/>
+            <property name="strToolTip">
+              ?{template:
+              switch{
+                  case template == sd.getTemplateRef(gs_tbg.RegionStabilityTemplate, 'RevoltRiskNone'):
+                    locale.SID.UI.RevoltRisk + ': ' + locale.SID.UI.None
+                  case template == sd.getTemplateRef(gs_tbg.RegionStabilityTemplate, 'RevoltRiskLow'):
+                    locale.SID.UI.RevoltRisk + ': ' + locale.SID.UI.Low
+                  case template == sd.getTemplateRef(gs_tbg.RegionStabilityTemplate, 'RevoltRiskElevated'):
+                    locale.SID.UI.RevoltRisk + ': ' + locale.SID.UI.Elevated
+                  case template == sd.getTemplateRef(gs_tbg.RegionStabilityTemplate, 'RevoltRiskHigh'):
+                    locale.SID.UI.RevoltRisk + ': ' + locale.SID.UI.High
+                  case template == sd.getTemplateRef(gs_tbg.RegionStabilityTemplate, 'RevoltRiskSevere'):
+                    locale.SID.UI.RevoltRisk + ': ' + locale.SID.UI.Severe
+              }
+              }(def.objData.tmplRegionStability) 
+               + '&#010;' + locale.SID.UI.RegionStability + ': ' + def.objData.objRegion.nRegionStability
+            </property>
+					</object>
+
+				</object>
+
+				<!-- Population -->
+				<object type="UI2DRegionStatsTextBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+					<property name="strText" from="def.objData.nPopulation.formatNumber(0, true)"/>
+					<property name="nWidth" value="78"/>
+				</object>
+
+				<!-- Idle MPUs -->
+				<object type="UI2DRegionStatsTextBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+					<property name="strText" from="def.objData.nUnemployedMPUs.formatNumber(0, true)"/>
+					<property name="nWidth" value="53"/>
+				</object>
+
+				<!-- Growth Rate -->
+				<object type="UI2DRegionStatsTextBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+					<property name="strText" from="def.objData.fMPUGrowthRate.formatNumber(2, true)"/>
+					<property name="nWidth" value="42"/>
+				</object>
+
+				<!-- Power Points -->
+				<object type="UI2DRegionStatsTextBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+					<property name="strText" from="def.objData.nTotalPoints"/>
+					<property name="nWidth" value="46"/>
+				</object>
+
+				<!-- Blank -->
+				<object type="UI2DRegionStatsTextBubble" name="objElements">
+					<property name="nRow" from="def.nRow"/>
+					<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+					<property name="nWidth" value="53"/>
+				</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DRegionStatsIconBubble" superType="UI2DRegionStatsRowBubble">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="objDecal" type="UI2DNationIcon" storesChildren="true"/>
+    <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+	</objectDef>
+
+	<objectDef type="UI2DRegionStatsTextBubble" superType="UI2DRegionStatsRowBubble">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DRegionStatsTextNameBubble" superType="UI2DRegionStatsRowBubble">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objCitySelect">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="129"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="nDepth" value="5"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.objMapData.lookAt(def.objRegion.vecPositions[0]);
+							<!--mh2data.objMapData.zoomToClosest();-->
+							spdata.objRegionData.showRegion(def.objRegion);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+</locust>

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysUnit" class="CMLOGameSysUnit" superType="mlgame.GameSystem">
+        <propertyDef name="objUnits" type="Unit" variable="true" storesChildren="true"/>
+        <propertyDef name="objUnitGroups" type="UnitGroup" variable="true" storesChildren="true"/>
+        <propertyDef name="objPatrollerDatas" type="PatrollerData" variable="true" storesChildren="true"/>
+        <propertyDef name="objNavalBases" type="NavalBase" variable="true" storesChildren="true"/>
+		<propertyDef name="objSeasonCombatModifiers" type="SeasonCombatModifier" variable="true" storesChildren="true"/>
+		<propertyDef name="objSeasonDataCombatModifiers" type="SeasonDataCombatModifier" variable="true" storesChildren="true"/>
+        <propertyDef name="objAmphibiousCombatModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+        <propertyDef name="objMarineAmphibCombatModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+        <propertyDef name="objRiverCrossingCombatModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+        <propertyDef name="nRiverCrossingMovementPenalty" type="int" default="25"/>
+        <propertyDef name="tmplUnitExperienceLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+		<propertyDef name="tmplUnitMoraleLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+        <propertyDef name="tmplUnitGroupCommandLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+        <propertyDef name="tmplUnitUpgradeTrackTemplateList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="objUnitTemplateObsolescenceTemplate" type="UnitTemplateObsolescenceTemplate"/>
+        <propertyDef name="objRebelUnitTemplate" type="UnitTemplate"/>
+        <propertyDef name="nMaxRebelUnits" type="int" default="10"/>        
+        <propertyDef name="nMinHitPercent" type="int" default="1"/>
+        <propertyDef name="nMaxHitPercent" type="int" default="99"/>
+        <propertyDef name="nMinResistPercent" type="int" default="0"/>
+        <propertyDef name="nMaxResistPercent" type="int" default="65"/>
+        <propertyDef name="nUnitRepairRate" type="int" default="1"/>
+        <propertyDef name="nArmsPenaltyPercent" type="int" default="75"/>
+        <propertyDef name="nOilPenaltyPercent" type="int" default="75"/>
+        <propertyDef name="randGen" type="Random" value="seedFromTime"/>
+
+        <propertyDef name="objUnitNamers" type="UnitNamer" variable="true" storesChildren="true"/>
+        <propertyDef name="objUnitGroupNamers" type="UnitGroupNamer" variable="true" storesChildren="true"/>
+
+		<script type="application/javascript"><![CDATA[
+
+			function handleGameStarted(game,eventGameStarted)
+			{
+				setRandomSeed(eventGameStarted.nSeed);
+			}
+
+            function setRandomSeed(nSeed)
+			{
+				var strSeed = "seed:" + nSeed
+				self.randGen = strSeed;
+				log("DEBUG: GameSysUnit randGen " + strSeed);
+			}
+			
+			function checkUnitNamerFormatString(gameroot,namer)
+			{
+				// make sure it has a fmtString
+				var fmtString = namer.fmtString;
+				if (fmtString == null)
+				{
+                    var namingClass = namer.strNamingClass;			
+				    var nation = namer.refNation.resolve(gameroot);
+				    if (nation != null)
+				    {
+					    var fsidNationBase = locale.FSID.UnitNamer[nation.strName];
+					    if (fsidNationBase != undefined)
+					    {
+						    fmtString = fsidNationBase[namingClass];
+					    }
+					}
+
+					if (fmtString == null)
+					{
+						fmtString = locale.FSID.UnitNamer.Default[namingClass];
+
+						if (fmtString == null)
+						{
+							log("WARN(4): No format string for Unit naming class " + namingClass);
+							fmtString = new FormatString("@Number@@Suffix@");
+						}
+					}
+					namer.fmtString = fmtString;
+				}
+			}
+
+
+			// expected method. creates a UnitNamer and adds it to objUnitNamers
+			function createUnitNamer(gameroot,nation,objUnitTemplate)
+			{
+				var namingClass = objUnitTemplate.strNamingClass;
+				var namerProps = {"refNation":nation,"strNamingClass":namingClass};
+				var namer = self.objUnitNamers.find(namerProps);
+				if (namer != null)
+				{
+				    logWarn("UnitNamer already exists.");
+				}
+				else
+				{
+				    // create a namer for this nation and naming class
+				    namer = UnitNamer.create(namerProps);
+				    self.objUnitNamers.add(namer);
+				}
+				
+                checkUnitNamerFormatString(gameroot,namer);
+
+                return namer;
+			} // createUnitNamer
+
+			function checkUnitGroupNamerFormatString(gameroot,namer)
+			{
+				// make sure it has a fmtString
+				var fmtString = namer.fmtString;
+				if (fmtString == null)
+				{
+                    var namingClass = namer.tmplUnitBranch.resolve().strName;
+				    var nation = namer.refNation.resolve(gameroot);
+				    if (nation != null)
+				    {
+					    var fsidNationBase = locale.FSID.UnitGroupNamer[nation.strName];
+					    if (fsidNationBase != undefined)
+					    {
+						    fmtString = fsidNationBase[namingClass];
+					    }
+					}
+
+					if (fmtString == null)
+					{
+						fmtString = locale.FSID.UnitGroupNamer.Default[namingClass];
+
+						if (fmtString == null)
+						{
+							log("WARN(4): No format string for UnitGroup naming class " + namingClass);
+							fmtString = new FormatString("@Number@@Suffix@");
+						}
+					}
+					namer.fmtString = fmtString;
+				}
+			}
+			
+			// expected method. creates a UnitGroup namer and adds it to objUnitGroupNamers
+			function createUnitGroupNamer(gameroot,nation,objUnitBranchTemplate)
+			{
+				var namingClass = objUnitBranchTemplate.strName;
+				var namerProps = {"refNation":nation,"tmplUnitBranch":objUnitBranchTemplate};
+				var namer = self.objUnitGroupNamers.find(namerProps);
+				if (namer != null)
+				{
+				    logWarn("UnitGroupNamer already exists.");
+				}
+				else
+				{
+				    // create a namer for this nation and naming class
+				    namer = UnitGroupNamer.create(namerProps);
+				    self.objUnitGroupNamers.add(namer);
+				}
+
+                checkUnitGroupNamerFormatString(gameroot,namer);
+				
+				return namer;
+			} // createUnitGroupNamer
+			
+			
+			function handleNationDestroyed(gameroot,nation)
+			{
+                var namers = self.objUnitGroupNamers.filter({"refNation":nation});
+                for (var i in namers)
+                {
+                    var namer = namers[i];
+                    var index = self.objUnitGroupNamers.indexOf(namer);
+                    delete self.objUnitGroupNamers[index];
+                }
+                
+                var unitNamers = self.objUnitNamers.filter({"refNation":nation});
+                for (var i in unitNamers)
+                {
+                    var namer = unitNamers[i];
+                    var index = self.objUnitNamers.indexOf(namer);
+                    delete self.objUnitNamers[index];
+                }
+            }			
+
+		]]></script>
+
+    	<script type="application/x-locust-query">
+		    getUnitsByUnitCategory = ?{unit_category:
+			    filter(?{unit: unit.objUnitTemplate.eUnitCategory == unit_category}, self.objUnits)
+		    }
+    	
+		    getNationGroups = ?{controller:
+			    filter(?{group: group.refController == controller}, self.objUnitGroups)
+		    }
+		    
+		    getNationUnits = ?{controller:
+			    filter(?{unit: unit.refController == controller}, self.objUnits)
+		    }
+		    
+		    getAllUnitGroupsOnUnit = ?{unit:
+			    filter(?{unit_group: unit_group.refLocation == unit}, self.objUnitGroups)
+		    }
+		    
+		    getGroupsAtLocation = ?{location:
+			    filter(?{unitGroup: unitGroup.refLocation == location}, self.objUnitGroups)
+		    }
+		    
+		    getAllUnitsAtRegionPosition = ?{region, index:
+			    filter(?{unit_group: unit_group.refLocation == region AND unit_group.nPosIndex == index}, self.objUnitGroups)
+		    }
+		    
+		    getUnitsAtLocation = ?{gameroot, location:
+			    filter(?{unit: unit.refUnitGroup.resolve(gameroot).refLocation == location}, self.objUnits)
+		    }
+		    
+		    getGroupUnits = ?{group:
+			    filter(?{unit: unit.refUnitGroup == group}, self.objUnits)
+		    }
+		    		    
+		    getGroupUnitsByUnitTemplate = ?{group,unit_template:
+				filter(?{unit: unit.refUnitGroup == group AND unit.objUnitTemplate == unit_template}, self.objUnits)
+		    }
+		    
+    	</script>
+
+    </objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysUnit = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysUnit)
+		}
+
+		getAllUnits = ?{gameroot:
+			getGameSysUnit(gameroot).objUnits
+		}
+		
+		getAllUnitGroups = ?{gameroot:
+			getGameSysUnit(gameroot).objUnitGroups
+		}
+
+		getAllUnitBases = ?{gameroot:
+			getGameSysUnit(gameroot).objUnitBases
+		}
+
+		getAllNavalBases = ?{gameroot:
+			getGameSysUnit(gameroot).objNavalBases
+		}
+
+		getUnitsByUnitCategory = ?{gameroot, unit_category:
+		    getGameSysUnit(gameroot).getUnitsByUnitCategory(unit_category)
+		}
+
+		getGroupsAtLocation = ?{gameroot, location:
+		    getGameSysUnit(gameroot).getGroupsAtLocation(location)
+		}
+
+		getNationGroups = ?{gameroot, controller:
+		    getGameSysUnit(gameroot).getNationGroups(controller)
+		}
+
+		getNationUnits = ?{gameroot, controller:
+		    getGameSysUnit(gameroot).getNationUnits(controller)
+		}
+
+		getAllUnitGroupsOnUnit = ?{gameroot, unit:
+		    getGameSysUnit(gameroot).getAllUnitGroupsOnUnit(unit)
+		}
+
+		getAllUnitsAtRegionPosition = ?{gameroot, region, index:
+		    getGameSysUnit(gameroot).getAllUnitsAtRegionPosition(region, index)
+		}
+		
+		getUnitsAtLocation = ?{gameroot, location:
+		    getGameSysUnit(gameroot).getUnitsAtLocation(gameroot,location)
+		}
+
+	</script>
+
+</locust>

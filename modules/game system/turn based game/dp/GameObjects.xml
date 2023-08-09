@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="DecisionPoint" class="CMLODecisionPoint" desc="A decision point">
+        <goDef gameSystem="GameSysDecisionPoint" storageProperty="objDecisionPoints">
+            <keyProperty name="strID"/>
+        </goDef>
+		<propertyDef name="strID" type="String"/>
+        <propertyDef name="objAvatar" type="mlgame.Avatar"/>
+        <propertyDef name="strText" type="String"/>
+        <propertyDef name="objAnswers" type="DecisionPointAnswer" variable="true" storesChildren="true"/>
+        <propertyDef name="nTurnAdded" type="int" default="-1"/>        
+	</objectDef>
+
+</locust>

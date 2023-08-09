@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="NationalProgramSet" class="CMLONationalProgramSet" desc="A nation's set of national programs">
+        <goDef gameSystem="GameSysNationalPrograms" storageProperty="objNationalProgramSets">
+            <keyProperty name="refNation"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objNationalPrograms" type="Object" restriction="NationalProgram" variable="true" storesChildren="true"/>
+    </objectDef>
+
+</locust>

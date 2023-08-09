@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="UI2DFinanceTabTreasury" superType="UI2DFinancePanel">
+		<propertyDef name="objNationFinance" type="gs_tbg.NationFinance"/>
+		
+		<object type="mlui.UI2DText" name="objNationalBudgetLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.NationalBudget"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objTreasuryReportLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.TreasuryReport"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="20"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="UI2DNationalFinancesExpenses" name="objExpenses">
+			
+			<property name="objNationFinance" from="mh2data.objNation.objFinance"/>
+			<property name="nX" value="192"/>
+			<property name="nY" value="30"/>
+			<property name="nWidth" from="360"/>
+			<property name="nHeight" from="400"/>
+		</object>		
+	</objectDef>
+	
+	<objectDef type="ProjectedSpending" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<propertyDef name="nResearchProjects" type="int64" default="0"/>
+			<property name="nResearchProjects">
+				sum(map
+					(?{city: city.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject.resolve(mh2data.objAvatar).tmplResearchTopic.resolve().nPerTurnCost},
+						gs_tbg.getNationCities(mh2data.objAvatar, mh2data.objNation)
+					)
+				)
+			</property>
+		
+		<propertyDef name="nImports" type="int64" default="0"/>
+			<property name="nImports">
+				sum(map(?{import: import.nAmount * (import.tmplResource.resolve().nPrice *
+						(find(?{snd: snd.tmplResource == import.tmplResource},
+							gs_tbg.getAllSupplyAndDemand(mh2data.objAvatar))).tmplPriceAdjust.resolve().fPriceAdjust)},
+					filter(?{agreements: agreements.bAid != true},
+						filter(?{agreement: agreement.eStatus == gs_tbg.TradeAgreementStatus.ACCEPTED},
+							filter(?{importta: importta.refDestNation == self.objNation},
+								gs_tbg.getAllTradeAgreements(mh2data.objAvatar)
+							)
+						)
+					)
+				))
+			</property>
+	</objectDef>
+	
+	<objectDef type="UI2DNationalFinancesExpenses" superType="mlui.UI2DElement">
+		<propertyDef name="objNationFinance" type="gs_tbg.NationFinance"/>
+		
+		<object type="ProjectedSpending" name="objProjectedSpending">
+			<property name="objNation" from="mh2data.objNation"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objSourceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Source"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objProjectedExpendituresLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.ProjectedExpenditures"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<!-- Maintenance Costs -->
+		<object type="mlui.UI2DImage" name="objMaintenanceLeft">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="13"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMaintenanceCostsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMaintenanceCosts"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="22"/>
+			<property name="nDepth" value="50"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objMaintenanceCosts">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.MaintenanceCosts"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="147"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMaintenanceRight">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="13"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+		
+		<object type="InfrastructureCosts" name="objCosts">
+			<property name="objNation" from="mh2data.objNation"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objMaintenanceValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Right"/>
+			<property name="strText" from="'$' + def.objCosts.nTotalCosts.formatNumber(0, true)"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="175"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<!-- Imports -->
+		<object type="mlui.UI2DImage" name="objImportsLeft">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="74"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objImportsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconImports"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="79"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="22"/>
+			<property name="nDepth" value="50"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objImports">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.ImportAgreements"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="82"/>
+			<property name="nWidth" value="147"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objImportsRight">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="74"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objImportsValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Right"/>
+			<property name="strText" from="'$' + def.objProjectedSpending.nImports.formatNumber(0, true)"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="84"/>
+			<property name="nWidth" value="175"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<!-- Covert Activity -->
+		<object type="mlui.UI2DImage" name="objCovertLeft">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="105"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCovertActivityIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconInternalAffairs"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="109"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="22"/>
+			<property name="nDepth" value="50"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCovertActivity">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.CovertActivity"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="113"/>
+			<property name="nWidth" value="147"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCovertRight">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="105"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCoveryActivityValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Right"/>
+			<property name="strText" from="'$' + def.objNationFinance.n64EspionageExpense.formatNumber(0, true)"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="115"/>
+			<property name="nWidth" value="175"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<!-- Spending Last Turn -->
+		<object type="mlui.UI2DImage" name="objSpendingIcon">
+			<property name="tmplImage" value="skin.ImgTradeFinanceSpending"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="137"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objSpending">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.SpendingThisTurn"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="145"/>
+			<property name="nWidth" value="147"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSpendingBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="136"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+		
+		<propertyDef name="nTotalSpending" type="int64" default="0"/>
+			<property name="nTotalSpending">
+				int64(self.objProjectedSpending.nImports) +
+				int64(self.objProjectedSpending.nResearchProjects) +
+				int64(self.objCosts.nTotalCosts)
+			</property>
+		
+		<object type="mlui.UI2DText" name="objSpendingValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialRed14Right"/>
+			<property name="strText" from="'$' + def.nTotalSpending.formatNumber(0, true)"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="146"/>
+			<property name="nWidth" value="175"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<!-- Income Last Turn -->
+		<object type="mlui.UI2DImage" name="objIncomeIcon">
+			<property name="tmplImage" value="skin.ImgTradeFinanceIncome"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="177"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objIncome">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.IncomeLastTurn"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="186"/>
+			<property name="nWidth" value="147"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIncomeBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="177"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+		
+		<propertyDef name="nLastTurnIncome" type="int64" default="0"/>
+			<property name="nLastTurnIncome">
+				int64(self.objNationFinance.n64ExportRevenue) +
+				int64(self.objNationFinance.n64GoodsRevenue) +
+				int64(self.objNationFinance.n64FoodRevenue)
+			</property>
+		
+		<object type="mlui.UI2DText" name="objIncomeValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGreen14Right"/>
+			<property name="strText" from="'$' + def.nLastTurnIncome.formatNumber(0, true)"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="175"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<!-- Net Balance -->
+		<object type="mlui.UI2DImage" name="objBalanceIcon">
+			<property name="tmplImage" value="skin.ImgTradeFinanceBalance"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="218"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objBalance">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.NetBalance"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="228"/>
+			<property name="nWidth" value="147"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBalanceBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="218"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objBalanceValue">
+			<property name="tmplTextStyle">
+                if(def.nLastTurnIncome LTE def.nTotalSpending,"locale.TxtStyleArialRed14Right", "locale.TxtStyleArialGreen14Right")
+            </property>
+			<property name="strText" from="'$' + (def.nLastTurnIncome - def.nTotalSpending).formatNumber(0, true)"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="228"/>
+			<property name="nWidth" value="175"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		
+		<!-- Treasury -->
+		<object type="mlui.UI2DImage" name="objTreasuryIcon">
+			<property name="tmplImage" value="skin.ImgTradeFinanceTreasury"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="259"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objTreasury">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.Treasury"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="267"/>
+			<property name="nWidth" value="147"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objTreasuryBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="259"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objTreasuryValue">
+			<property name="tmplTextStyle">
+				if(
+					(
+						mh2data.objNation.objFinance.n64Money +
+						(def.nLastTurnIncome - def.nTotalSpending)
+					) LTE 0, "locale.TxtStyleArialRed14Right", "locale.TxtStyleArialBlue14Right")
+			</property>
+			<property name="strText" from="'$' + (mh2data.objNation.objFinance.n64Money + (def.nLastTurnIncome - def.nTotalSpending)).formatNumber(0, true)"/>
+			<property name="nX" value="180"/>
+			<property name="nY" value="269"/>
+			<property name="nWidth" value="175"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+	</objectDef>
+    
+    
+	<objectDef type="InfrastructureCosts" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation" />
+	</objectDef>
+    
+</locust>

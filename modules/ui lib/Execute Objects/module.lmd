@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="ui lib"
+	name="Execute Objects"
+	version="1.0"
+	locustVersion="2.11"
+>
+	<import module="mlcore" default="true"/>
+	<import module="script:javascript" as="mljs"/>
+	<import module="lib:mlui" as="mlui"/>
+	<import module="lib:3d_world" as="ml3dworld"/>
+	<import module="lib:mlgame" as="mlgame"/>
+	<import module="lib:mlevent" as="mlevent"/>
+	<import module="lib:media" as="mlmedia"/>
+	<import module="ui lib:Common Elements" as="common_elements"/>
+	<import module="ui lib:Map UI" as="mapui"/>
+	<import module="game system:turn based game" as="gs_tbg"/>
+
+	<include>
+		defs/MapEO.xml
+		defs/UnitGroupEO.xml
+	</include>
+</locustModule>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DSummaryPanelChat" superType="UI2DSummaryPanel">
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="326"/>		
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineR">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="def.nHeight - def.objInput.nHeight - 2"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineL">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="def.nHeight - def.objInput.nHeight - 2"/>
+		</object>
+		
+		<object type="UI2DScrollPane" name="objNotificationBubbles">
+			<property name="nX" value="3"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth - 4"/>
+			<property name="nHeight" from="def.nHeight - def.objInput.nHeight - 2"/>
+			<property name="bReverseVertical" value="true"/>
+			
+			<object type="common_ui.UI2DList" name="objScrollable">
+				<object type="mlui.UI2DText" name="objElements" tiedTo="def.objSummaryPanelExtraData.objMessages">
+					<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12LeftWrap"/>
+					<property name="strText" from="tiedTo.strRecipient + ': ' + tiedTo.strMessage"/>
+					<property name="nWidth" value="227"/>
+				</object>
+			</object>
+		</object>
+		
+		<object type="UI2DSummaryPanelChatInput" name="objInput">
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="objMH2Data" from="def.objSummaryPanelExtraData.objMH2Data"/>
+		</object>
+		
+	</objectDef>
+	
+	
+	<objectDef type="UI2DSummaryPanelChatInput" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		
+		<property name="nHeight" value="31"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage" value="skin.ImgChatBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objTextAreaBG">
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage" value="skin.ImgChatTextBox"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" from="def.nWidth - 8"/>
+			<property name="nHeight" from="def.nHeight - 5"/>
+		</object>
+				
+		<object type="mlui.UI2DEditableText" name="objEditableText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlack14Editable"/>
+			<property name="nX" from="def.objTextAreaBG.nX + 4"/>
+			<property name="nY" from="if(self.strText == '',def.objTextAreaBG.nY+5,def.objTextAreaBG.nY)"/><!-- workaround for cursor position issue when empty -->
+			<property name="nWidth" from="def.objTextAreaBG.nWidth"/>
+			<property name="nHeight" from="def.objTextAreaBG.nHeight"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_ESCAPE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_RETURN"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_GRAVE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_TAB"/>
+			
+			<object type="mlui.KeyBindList" name="objKeyBindList">
+				<object type="mlui.KeyBindMethod" name="objKeyBinds">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<property name="eKey" value="KEY_CODE_RETURN"/>
+					<script type="application/javascript"><![CDATA[
+						function notifyTriggered(owner) {
+							if(def.objEditableText.strText != ''){
+								var action = gs_tbg.GActSendChatMessage.create({
+									"strMessage": def.objEditableText.strText,
+									"strRecipient": def.objMH2Data.objNation.strDisplayName + '(' + def.objMH2Data.objAvatar.strIdentity + ')'
+								});
+							def.objMH2Data.objAvatar.sendAction(action);
+							def.objEditableText.strText = '';
+							}
+							else
+							{
+								spdata.objSummaryPanelData.clearPanel();
+							}
+						}
+					]]></script>
+				</object>
+		        <object type="mlui.KeyBindMethod" name="objKeyBinds">
+			        <property name="otEventType" value="mlui.EventKeyPressed"/>
+			        <property name="eKey" value="KEY_CODE_ESCAPE"/>
+			        <script type="application/javascript"><![CDATA[
+				        function notifyTriggered(owner) {
+					        //mlui.ActClearKeyboardFocus.execute({"objElement": owner});
+					        owner.clearTextBox();
+				        }
+			        ]]></script>
+		        </object>
+			</object>
+			<script type="application/javascript"><![CDATA[
+				function notifyAddedToUI()
+				{
+					mlui.ActSetKeyboardFocus.execute({"objElement": self});
+				}
+				
+				function clearTextBox(owner)
+				{
+    				self.strText = '';
+				}
+			]]></script>
+		</object>
+	</objectDef>
+
+</locust>

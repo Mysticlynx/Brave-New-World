@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="TreatyTerm" class="CMLOTreatyTerm" desc="Term within a treaty">
+		<propertyDef name="eType" type="Enum" restriction="TreatyTermType"/>
+        <propertyDef name="refNationAffected" type="GORef" restriction="Nation"/>
+	</objectDef>
+
+	<objectDef type="TerritorialTransferTerm" class="CMLOTerritorialTransferTerm" superType="TreatyTerm" desc="A territorial transfer treaty term">
+        <property name="eType" value="TERRITORIAL_TRANSFER"/>
+		<propertyDef name="objRegions" type="Object" restriction="Region" variable="true"/>
+        <propertyDef name="objTransferer" type="Object" restriction="Nation"/>
+	</objectDef>
+
+    <objectDef type="DiplomaticRelationsTemplate" class="CMLODiplomaticRelationsTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+    </objectDef>
+    
+	<enumDef name="EnumNationRelation">
+		<value name="SELF"/>
+		<value name="ALLY"/>
+		<value name="ENEMY"/>
+		<value name="NONE"/>
+	</enumDef>
+	
+    <objectDef type="InternationalPositionValuePair" class="CMLObject">
+        <propertyDef name="objAIInternationalPositionTemplate" type="AIInternationalPositionTemplate"/>
+        <propertyDef name="nValue" type="int"/>
+    </objectDef>
+    
+    <objectDef type="WarDeclarationsEffectItem" class="CMLObject">
+        <propertyDef name="eRelation" type="Enum" restriction="EnumNationRelation"/>
+        <propertyDef name="objRelationsLevelTemplate" type="DiplomaticRelationsTemplate"/>
+        <propertyDef name="objIntlPositionValuePairs" type="InternationalPositionValuePair" variable="true" storesChildren="true"/>
+    </objectDef>
+    
+    <objectDef type="WarDeclarationEffectsTemplate" superType="Template" templateBase="true"><!-- deprecated -->
+        <propertyDef name="objItem" type="WarDeclarationsEffectItem" variable="true" storesChildren="true"/>
+    </objectDef>
+    
+    <objectDef type="TreatyDiplomaticEffectItem" class="CMLObject">
+        <propertyDef name="otEvent" type="ObjectType" desc="treaty event type (i.e. EventTreatyRatified, EventTreatyRejected)"/>
+        <propertyDef name="eTreatyType" type="Enum" restriction="TreatyType"/>
+        <propertyDef name="eRelation" type="Enum" restriction="EnumNationRelation"/>
+        <propertyDef name="objRelationsLevelTemplate" type="DiplomaticRelationsTemplate"/>
+        <propertyDef name="objIntlPositionValuePairs" type="InternationalPositionValuePair" variable="true" storesChildren="true"/>
+    </objectDef>
+    
+    <objectDef type="EmbargoDiplomaticEffectItem" class="CMLObject">
+        <propertyDef name="otEvent" type="ObjectType" desc="embargo event type"/>
+        <propertyDef name="eRelation" type="Enum" restriction="EnumNationRelation"/>
+        <propertyDef name="objRelationsLevelTemplate" type="DiplomaticRelationsTemplate"/>
+        <propertyDef name="objIntlPositionValuePairs" type="InternationalPositionValuePair" variable="true" storesChildren="true"/>
+    </objectDef>
+    
+    <objectDef type="TradeDiplomaticEffectItem" class="CMLObject">
+        <propertyDef name="otEvent" type="ObjectType" desc="trade event type i.e. EventTradeAgreementAccepted, EventMoneyTransferOccurred"/>
+        <propertyDef name="bAid" type="bool" desc="Is this an aid agreement (to the recipient)?"/>
+        <propertyDef name="nCap" type="int" desc="Max number of points of movement per turn"/>
+        <propertyDef name="objResourceTemplate" type="ResourceTemplate" desc="Resource, if applicable"/>
+        <propertyDef name="objIntlPositionValuePairs" type="InternationalPositionValuePair" variable="true" storesChildren="true"/>
+    </objectDef>
+    
+    <objectDef type="NationStatusChangeDiplomaticEffectItem" class="CMLObject">
+        <propertyDef name="otEvent" type="ObjectType" desc="status change event type i.e. EventNationAnnexed, EventNationLiberated"/>
+        <propertyDef name="otStatus" type="ObjectType" desc="actual statusi.e. NationStatusIndependent, NationStatusPuppet, or null"/>
+        <propertyDef name="eRelation" type="Enum" restriction="EnumNationRelation"/>
+        <propertyDef name="objRelationsLevelTemplate" type="DiplomaticRelationsTemplate"/>
+        <propertyDef name="objIntlPositionValuePairs" type="InternationalPositionValuePair" variable="true" storesChildren="true"/>
+    </objectDef>
+    
+        
+    <objectDef type="DiplomaticEffectsTemplate" superType="Template" templateBase="true">
+        <propertyDef name="objWarItems" type="WarDeclarationsEffectItem" variable="true" storesChildren="true"/>
+        <propertyDef name="objTreatyItems" type="TreatyDiplomaticEffectItem" variable="true" storesChildren="true"/>
+        <propertyDef name="objEmbargoItems" type="EmbargoDiplomaticEffectItem" variable="true" storesChildren="true"/>
+        <propertyDef name="objTradeItems" type="TradeDiplomaticEffectItem" variable="true" storesChildren="true"/>
+        <propertyDef name="objNationStatusChangeItems" type="NationStatusChangeDiplomaticEffectItem" variable="true" storesChildren="true"/>
+    </objectDef>
+
+	<objectDef type="RegionStabilityTemplate" class="CMLORegionStabilityTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="colColor" type="Color" default="#FFFFFFFF"/>
+		<propertyDef name="nHighMoraleChance" type="int" default="0"/>
+		<propertyDef name="nRevoltRisk" type="int" default="0"/>
+        <propertyDef name="nCivilWarRisk" type="int" default="0"/>
+        <propertyDef name="nMPUGrowthModifier" type="int" default="0"/>
+    </objectDef>
+
+    <objectDef type="War" class="CMLOWar" desc="War between two groups">
+        <propertyDef name="objAttackers" type="Object" restriction="Nation" variable="true" key="strName"/>
+        <propertyDef name="objDefenders" type="Object" restriction="Nation" variable="true" key="strName"/>
+        <propertyDef name="eJustification" type="Enum" restriction="WarJustification" default="None"/>
+    </objectDef>
+
+	<enumDef name="WarJustification">
+        <value name="None"/> <!-- default if not specified. Must be first -->
+        <value name="Liberate"/>
+        <value name="DefendAlly"/>
+	</enumDef>
+
+</locust>

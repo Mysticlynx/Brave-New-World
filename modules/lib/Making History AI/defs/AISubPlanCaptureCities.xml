@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- subplan intented to be used as part of a larger invasion -->
+    <objectDef type="AISubPlanCaptureCities" superType="gs_tbg.AIMilitaryPlan">
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        <propertyDef name="objParentPlan" type="gs_tbg.AIMilitaryPlan"/>
+        <propertyDef name="objMilitaryAI" type="gs_tbg.NationMilitaryAI"/>
+        <propertyDef name="nPhase" type="int" default="0"/>
+        <propertyDef name="strLandComposition" type="String" default="DefaultArmy"/>
+        
+        <propertyDef name="bOkToAttack" type="bool" default="false"/>
+        <propertyDef name="objInvasionPaths" type="gs_tbg.RegionPathResult" variable="true" storesChildren="true"/>
+
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <propertyDef name="objGameSysCity" type="gs_tbg.GameSysCity"/>
+        <propertyDef name="objGameSysRegion" type="gs_tbg.GameSysRegion"/>
+        <propertyDef name="objGameSysNation" type="gs_tbg.GameSysNation"/>
+        <propertyDef name="objGameSysNationRelations" type="gs_tbg.GameSysNationRelations"/>
+        <propertyDef name="objGameSysUnit" type="gs_tbg.GameSysUnit"/>
+
+        <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+        <property name="objGameSysTurnBasedGame" from="self.objParentAI.objGameSysTurnBasedGame"/>
+        <property name="objGameSysCity" from="self.objParentAI.objGameSysCity"/>
+        <property name="objGameSysRegion" from="self.objParentAI.objGameSysRegion"/>
+        <property name="objGameSysNation" from="self.objParentAI.objGameSysNation"/>
+        <property name="objGameSysNationRelations" from="self.objParentAI.objGameSysNationRelations"/>
+        <property name="objGameSysUnit" from="self.objParentAI.objGameSysUnit"/>
+
+        <property name="strPreferredComposition" value="ArmoredGroup"/>
+
+        <!-- expected methods (called by parent plan):
+            cancel
+            setCanAttack(avatar,bValue)
+        -->
+
+        <object type="gs_tbg.RegionPathResult" name="objInvasionPath"/>
+
+        <script type="application/javascript"><![CDATA[
+        
+        // enum for phases
+        var AttackPhase =
+        {
+            Start:0,
+            PlanRoutes:1,
+            Buildup:2,
+            Advance:3,
+            CheckForCities:4,
+            Success:5,
+            Failure:6,
+        }
+
+        // javascript object which contains commonly used
+        // cached variables and local functions
+        function TempContext(avatar)
+        {
+            this.avatar = avatar;
+            this.turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+            this.nation = self.refNation.resolve(avatar);
+            this.pad = getPAD(avatar,PADMakingHistoryAI);
+
+            this.setStatus = function(status,reason)
+            {
+                this.avatar.sendAction(
+                    gs_tbg.GActSetAIMilitaryPlanStatus.create({
+                        "objPlan": self,
+                        "eStatus": status,
+                        "strReason": reason,
+                        "nTurn": this.turn
+                        }) );
+            }
+
+            this.setPhase = function(phase,reason)
+            {
+                if (reason == undefined)
+                    reason = "";
+                if (self.nPhase != phase)
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: " + self + " changing to phase " + phase + " " + reason);
+                    self.nPhase = phase;
+
+                    // set plan status if applicable
+                    switch(self.nPhase)
+                    {
+                        case AttackPhase.Success:
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_SUCCEEDED,reason);
+                            break;
+
+                        case AttackPhase.Failure:
+                            log("DEBUG: " + self + " failed " + reason);
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_FAILED, reason);
+                            break;
+                    }
+                }
+            }
+
+            this.updatePathRequirements = function(path,attackRatio)
+            {
+                var maxEnemyLandCombatStrength = 1;
+
+                for (var r in path.refRegions)
+                {
+                    var region = path.refRegions[r].resolve(this.avatar);
+                    var enemyLandCombatStrength = 0;
+
+                    var groups = new Array();
+                    self.objMilitaryAI.getInvasionEnemyUnitGroupsInRegion(this.avatar, region, groups);
+                    for (var g in groups)
+                    {
+                        var group = groups[g];
+	                    var defenseStrength = group.getEffectiveCombatStrength(this.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_DEFENSE);
+                        enemyLandCombatStrength += defenseStrength;
+                    }
+                    
+                    maxEnemyLandCombatStrength = Math.max(maxEnemyLandCombatStrength,enemyLandCombatStrength);
+                }
+
+                var region = path.refSourceRegion.resolve(this.avatar);
+                var reqs = self.getOrCreateUnitRegionRequirements(region,self.strComposition);
+                reqs.setCombatStrengthNeeded(this.avatar,self,maxEnemyLandCombatStrength * attackRatio);
+                reqs.nLastUpdateTurn = this.turn;
+                reqs.fAddPriority = 1.0;
+                reqs.fKeepPriority = 1.0;
+                reqs.nTurnsUntilNeeded = 5;
+                reqs.nLastUpdateTurn = this.turn;
+            }
+
+            this.updateBuildupRequirements = function()
+            {
+                var attackRatio = self.objMilitaryAI.fDesiredAttackRatio;
+                for (var p in self.objInvasionPaths)
+                {
+                    // determine the strongest enemy presence along our path
+                    var path = self.objInvasionPaths[p];
+                    if (!path.bFound)
+                        continue;
+
+                    this.updatePathRequirements(path,attackRatio);
+                } // for paths 
+            } // updateBuildupRequirements
+
+            this.updateAdvanceRequirements = function()
+            {
+                var attackRatio = self.objMilitaryAI.fDesiredAttackRatio;
+                for (var p in self.objInvasionPaths)
+                {
+                    // determine the strongest enemy presence along our path
+                    var path = self.objInvasionPaths[p];
+                    if (!path.bFound)
+                        continue;
+
+                    var region = path.refSourceRegion.resolve(this.avatar);
+                    var group = self.getCompleteComposition(this.avatar, region, self.strComposition);
+                    if (group != null)
+                    {
+                        // just maintain their status.
+                        var reqs = self.getOrCreateUnitRegionRequirements(region,self.strComposition);
+                        reqs.nLastUpdateTurn = this.turn;
+                    }
+                    else
+                    {
+                        this.updatePathRequirements(path,attackRatio);
+                    }
+                } // for paths 
+            }
+
+            this.handleStartPhase = function()
+            {
+                this.setPhase(AttackPhase.PlanRoutes);
+                this.advancePlanRoutesPhase();
+            }
+
+            this.advancePlanRoutesPhase = function()
+            {
+                if (self.objParentPlan.objStartLandRegion == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"Parent plan has no start region.");
+                    return;
+                }
+                
+                if (!this.nation.equals(self.objParentPlan.objStartLandRegion.refController))
+                {
+                    this.setPhase(AttackPhase.Failure,"Parent plan start region not ours.");
+                    return;
+                }
+
+                self.objMilitaryAI.calculateMultipleCityInvasionPaths( this.avatar, self.objParentPlan.objStartLandRegion, self.objInvasionPaths )
+                if (self.objInvasionPaths.size == 0)
+                {
+                    this.setPhase(AttackPhase.CheckForCities,"No paths calculated.");
+                    return;
+                }
+
+                this.setPhase(AttackPhase.Buildup);
+            }
+
+            this.checkPaths = function(bDeclareWar)
+            {
+                var numValidPaths = 0;
+                var numBadPaths = 0;
+                var numCompleteCompositions = 0;
+
+                // remove any paths that are invalid
+                var attackRatio = self.objMilitaryAI.fDesiredAttackRatio;
+                for (var p in self.objInvasionPaths)
+                {
+                    // determine the strongest enemy presence along our path
+                    var path = self.objInvasionPaths[p];
+                    if (!path.bFound)
+                    {
+                        numBadPaths++;
+                        delete path;
+                        continue;
+                    }
+
+                    var region = path.refTargetRegion.resolve(this.avatar);
+                    if (!self.objParentPlan.objRegionsToConquer.contains(region))
+                    {
+                        numBadPaths++;
+                        delete path;
+                        continue;
+                    }
+                    
+                    var foundBystander = null;
+                    var undeclaredEnemies = new Object();
+                    
+                    // check controllers of regions along our path
+                    for (var r in path.refRegions)
+                    {
+                        var pathRegion = path.refRegions[r].resolve(this.avatar);
+                        if (self.objGameSysNationRelations.hasLandAccess(this.avatar,this.nation,pathRegion))
+                            continue;
+                            
+                        var pathController = pathRegion.refController.resolve(this.avatar);
+                        if (self.objMilitaryAI.isDesignatedOrActualEnemy(this.avatar,pathController))
+                        {
+                            if (!self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,pathController,true))
+                            {
+                                undeclaredEnemies[pathController.strName] = pathController;
+                            }
+                        }
+                        else
+                        {
+                            foundBystander = pathController;
+                            break;
+                        }
+                    }
+                    
+                    if (foundBystander)
+                    {
+                        numBadPaths++;
+                        delete path;
+                        continue;
+                    }
+                    
+                    if (bDeclareWar)
+                    {
+                        var problemNation = null;
+                        for (var enemyName in undeclaredEnemies)
+                        {
+                            var enemyNation = undeclaredEnemies[enemyName];
+                            if (!self.objParentAI.notifyAdvanceStarted(this.avatar,self,enemyNation))
+                            {
+                                problemNation = enemyNation;
+                                break;
+                            }
+                        }
+                        
+                        if (problemNation != null)
+                        {
+                            log("DEBUG: " + this.nation.strName + " encountered trouble advancing against " + problemNation.strName);
+                            numBadPaths++;
+                            delete path;
+                            continue;
+                        }
+                    }
+
+                    numValidPaths++;
+
+                    // see if this path is active
+                    var region = path.refSourceRegion.resolve(this.avatar);
+                    var group = self.getCompleteComposition(this.avatar, region, self.strComposition);
+                    if (group != null)
+                    {
+                        numCompleteCompositions++;
+                    }
+                }
+                if (numValidPaths == 0)
+                    return false;
+
+                if (numBadPaths > 0)
+                {
+                    if (numCompleteCompositions == 0)
+                        return false;
+                }
+
+                return true;
+            }
+
+            this.advanceBuildupPhase = function()
+            {
+                if (!this.checkPaths(false))
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: " + self + " going back to PlanRoutes phase.");
+                    this.setPhase(AttackPhase.PlanRoutes);
+                    this.advancePlanRoutesPhase();
+                    return;
+                }
+
+                //if (!self.bOkToAttack)
+                //	return;
+
+                if (this.pad.bWantMilitaryAILog)
+                    log("DEBUG: " + this.nation.strName + " " + self + " proceeding to attack phase");
+
+                this.setPhase(AttackPhase.Advance);
+                this.advanceAttackPhase();
+            }
+
+            this.advanceAttackPhase = function()
+            {
+                if (!this.checkPaths(true))
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: " + self + " going back to PlanRoutes phase.");
+                    this.setPhase(AttackPhase.PlanRoutes);
+                    this.advancePlanRoutesPhase();
+                    return;
+                }
+
+                // check for completed groups and give them orders to follow the path
+                for (var p in self.objInvasionPaths)
+                {
+                    // determine the strongest enemy presence along our path
+                    var path = self.objInvasionPaths[p];
+                    if (!path.bFound)
+                        continue;
+
+                    var region = path.refSourceRegion.resolve(this.avatar);
+                    var group = self.getCompleteComposition(this.avatar, region, self.strComposition);
+                    if (group != null)
+                    {
+                        if (group.objUnitOrder == null)
+                        {
+                            var destRegion = path.refTargetRegion.resolve(this.avatar);
+                            var groupRegion = group.getRegion(this.avatar);
+                            if (!groupRegion.equals(destRegion))
+                            {
+                                if (this.pad.bWantMilitaryAILog)
+                                    log("DEBUG: telling " + group.strName + " to keep going along path to " + destRegion.strName);
+                                if (self.objMilitaryAI.orderToMoveOnPath(this.avatar, group, path) == false)
+                                {
+                                    // path apparently crosses a nation we don't have access to
+                                    log("DEBUG: abandoning path " + path);
+                                    path.bFound = false;
+                                }
+                            }
+                        }
+
+                        continue;
+                    }
+
+                    var arrivedGroups = new Array();
+                    var enRouteGroups = new Array();
+                    var percentArrivedPower = self.getAssignedUnitGroups(this.avatar, region, self.strComposition, arrivedGroups, enRouteGroups);
+                    
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        if (enRouteGroups.length > 0)
+                        {
+                            log("DEBUG: AISubPlanCaptureCities enRouteGroups:");
+                            for (var g in enRouteGroups)
+                            {
+                                var group = enRouteGroups[g];
+                                self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar, group, true); 
+                            }
+                        }
+                        
+                        if (arrivedGroups.length > 0)
+                        {
+                            log("DEBUG: AISubPlanCaptureCities arrivedGroups:");
+                            for (var g in arrivedGroups)
+                            {
+                                var group = arrivedGroups[g];
+                                self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar, group, true); 
+                            }
+                        }
+                    }// if this.pad.bWantMilitaryAILog
+                                        
+                    if (percentArrivedPower > 95)
+                    {
+                        // merge all our arrived groups
+                        var firstGroup = null;
+                        
+                        // merge land groups together
+                        if (arrivedGroups.length > 1)
+                        {
+                            var mergeOrder = gs_tbg.GActMergeUnitGroups.create();
+                            for (var i in arrivedGroups)
+                            {
+                                var group = arrivedGroups[i];
+                                if (firstGroup == null)
+                                {
+                                    firstGroup = group;
+                                    mergeOrder.refUnitGroupToMergeInto = firstGroup;
+                                }
+                                else
+                                {
+                                    mergeOrder.refUnitGroupsToMerge.add(group);
+                                }
+                            }
+                            this.avatar.sendAction(mergeOrder);
+                        }
+                        else
+                        {
+                            firstGroup = arrivedGroups[0];
+                        }
+
+                        if (!self.bOkToAttack)
+                        {
+                            if (!self.objParentPlan.declareWarIfNeeded(this.avatar, this.nation))
+                            {
+                                this.setPhase(AttackPhase.Failure,"declareWarIfNeeded failed.");
+                                return;
+                            }
+                        }
+
+                        self.setCompleteComposition(this.avatar, region, self.strComposition, firstGroup);
+                        if (self.objMilitaryAI.orderToMoveOnPath(this.avatar, firstGroup, path) == false)
+                        {
+                            // should have been found out by in checkPaths.
+                            
+                            log("ERROR(1): "  + this.nation + " UnitGroup " + firstGroup.strName + " had unexpected problem following path:"); 
+                            for (var r in path.refRegions)
+                            {
+                                var region = path.refRegions[r].resolve(this.avatar);
+                                var controllerName = "nobody";
+                                var otherNation = region.refController.resolve(this.avatar);
+                                if (otherNation != null)
+                                    controllerName = otherNation.strName;
+                                    
+                                log("region " + r + " " + region.strName + " controlled by " + controllerName);
+                            }
+                            
+                            this.setPhase(AttackPhase.Failure,"bad path");
+                            return;
+                        }
+
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: ordered " + firstGroup.strName + " to move along path from " + region.strName + " to " + path.refTargetRegion.resolve(this.avatar).strName );
+                        }
+
+                    } // if we have enough strength to proceed
+                    else
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: " + this.nation.strName + " buildup in " + region.strName + " at " + percentArrivedPower + "%");
+                        }
+                    }
+
+                } // for paths
+
+            } // this.advanceAttackPhase
+
+            this.advanceCheckForCitiesPhase = function()
+            {
+                // see if there are any cities we might be able to path to
+                for (var r in self.objParentPlan.objRegionsToConquer)
+                {
+                    var region = self.objParentPlan.objRegionsToConquer[r];
+                    var anyCity = self.objGameSysCity.objCities.find({ "refRegion": region});
+                    if (anyCity == null)
+                        continue;
+
+                    this.setPhase(AttackPhase.PlanRoutes,"found a city");
+                    this.advancePlanRoutesPhase();
+                    return;
+                }
+            }
+
+        } // TempContext
+
+        // expected methods
+        function advance(avatar)
+        {
+            var data = new TempContext(avatar);
+
+            switch(self.nPhase)
+            {
+                case AttackPhase.Start:
+                    data.handleStartPhase();
+                    break;
+
+                case AttackPhase.PlanRoutes:
+                    data.advancePlanRoutesPhase();
+                    break;
+
+                case AttackPhase.Buildup:
+                    data.advanceBuildupPhase();
+                    break;
+
+                case AttackPhase.Advance:
+                    data.advanceAttackPhase();
+                    break;
+
+                case AttackPhase.CheckForCities:
+                    data.advanceCheckForCitiesPhase();
+                    break;
+            }
+        }
+
+        // expected method
+        function updateUnitRequirements(avatar)
+        {
+            var data = new TempContext(avatar);
+
+            switch(self.nPhase)
+            {
+                case AttackPhase.Start:
+                case AttackPhase.PlanRoutes:
+                    // no requirements for this phase
+                    break;
+                    
+                case AttackPhase.Buildup:
+                    data.updateBuildupRequirements();
+                    break;
+                    
+                case AttackPhase.Advance:
+                    data.updateAdvanceRequirements();
+                    break;
+                    
+                case AttackPhase.CheckForCities:
+                    // no requirements
+                    break;
+
+                default:
+                    throw "Bad nPhase value";
+                    break;
+            }
+        }
+        
+        // expected method
+        function cancel(avatar)
+        {
+            var data = new TempContext(avatar);
+            data.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_CANCELLED,"cancelled");
+            self.objParentPlan = null;
+            self.objMilitaryAI = null;
+        }
+        
+        // expected method
+        function detachFromParent(avatar)
+        {
+            self.bDetachedFromParentPlan = true;
+        }
+        
+        // expected method - indicates we can move into enemy regions
+        function setCanAttack(avatar,bCanAttack)
+        {
+            // log("DEBUG: " + this.nation.strName + " " + self + " notified ok to attack.");
+            self.bOkToAttack = bCanAttack;
+        }
+        
+        function cleanup()
+        {
+            self.objParentAI = null;
+            self.objParentPlan = null;
+            self.objMilitaryAI = null;
+        }
+
+        ]]></script>
+    </objectDef>
+    
+</locust>

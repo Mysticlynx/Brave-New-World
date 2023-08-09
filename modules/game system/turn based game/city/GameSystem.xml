@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysCity" class="CMLOGameSysCity" superType="mlgame.GameSystem">
+		<propertyDef name="objCities" type="City" variable="true" storesChildren="true"/>
+        <propertyDef name="objCapitalCityNations" type="CapitalCityNation" variable="true" storesChildren="true"/>
+		<propertyDef name="objHistoricCapitalCities" type="HistoricCapitalCity" variable="true" storesChildren="true"/>
+        <propertyDef name="tmplFactoryOutputList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="nHistoricCapitalBonus" type="int" default="50"/>
+        <propertyDef name="tmplDefaultBuild" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+		<propertyDef name="tmplBuildingDamageLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+		<propertyDef name="nBuildingRepairRate" type="int" default="1"/>
+        <propertyDef name="tmplTextilesOutput" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+        <propertyDef name="tmplWroughtIronOutput" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+        <propertyDef name="tmplPetroleumOutput" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+        <propertyDef name="tmplAppliancesOutput" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+        <propertyDef name="tmplAutomobilesOutput" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+        <propertyDef name="tmplCannedGoodsOutput" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+        <propertyDef name="tmplFishProductsOutput" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+        <!-- builtin methods: 
+            getNumControlledCities(gameroot,nation)
+            getControlledCities(gameroot,nation,controlledCities) <- Note: there is also a query ( getControlledCitiesQuery )
+            dumpFactoryOutputCounts(gameroot)
+        -->
+    	<script type="application/x-locust-query">
+		    getNationCities = ?{nation:
+			    filter(?{city: city.objController == nation}, self.objCities)
+		    }
+		    
+            getOwnedCities = ?{gameroot,nation:
+			    filter(?{city: city.refRegion.resolve(gameroot).refOwner == nation}, self.objCities )
+		    }
+		    
+		    getControlledCitiesQuery = ?{nation:
+			    filter(?{city: city.objController == nation}, self.objCities)
+		    }		    
+    	</script>
+
+        <script type="application/javascript"><![CDATA[
+
+			function setWorkOrderRepeating(workOrder)
+			{
+				workOrder.bRepeating = !workOrder.bRepeating;
+			}
+		]]></script>
+    </objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysCity = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysCity)
+		}
+
+		getAllFactoryOutputs = ?{gameroot:
+			map(?{ref: ref.resolve()}, getGameSysCity(gameroot).tmplFactoryOutputList.resolve().tmplRefs)
+		}
+
+        getFactoryOutputForResource = ?{gameroot,resource:
+            find(?{tmplOutput: tmplOutput.instanceOf(FactoryOutputResourceTemplate)
+				AND tmplOutput.tmplResource == resource }, getAllFactoryOutputs(gameroot))
+        }
+
+		getAllCities = ?{gameroot:
+			getGameSysCity(gameroot).objCities
+		}
+
+		getCapitalCity = ?{gameroot, nation:
+			nation.getGOExtension(CapitalCityNation, gameroot).refCapitalCity.resolve(gameroot)
+		}
+
+		getCapitalRegion = ?{gameroot, nation:
+			getCapitalCity(gameroot, nation).refRegion.resolve(gameroot)
+		}
+
+		getNationCities = ?{gameroot, nation:
+		    getGameSysCity(gameroot).getNationCities(nation)
+		}
+		getOwnedCities = ?{gameroot, nation:
+		    getGameSysCity(gameroot).getOwnedCities(gameroot,nation)
+		}
+		getControlledCities = ?{gameroot, nation:
+		    getGameSysCity(gameroot).getControlledCitiesQuery(gameroot,nation)
+		}
+
+	</script>
+
+</locust>

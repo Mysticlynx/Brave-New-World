@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<object type="mlgame.GameSysAI" name="objGameSysAI">
+		<object type="mlgame.AI" name="objAIs" >
+			<property name="strName" value="AI|Default"/>
+			<object type="makinghistory_ai.MHAISysScript" name="objAISystems">
+				<property name="objDefaultAIPersonalityTemplate" value="sd.DefaultPersonality"/>
+                <property name="objDefaultAIInternationalPositionTemplate" value="sd.StatusQuo"/>
+                <property name="objDefaultAIMilitaryStrategyTemplate" value="ai_sd.DefaultStrategy"/>
+				<property name="objAIUsVersusThemTemplate" value="sd.DefaultUsVersusThemTemplate"/>
+                <property name="objAIDiplomaticLevelsTemplate" value="ai_sd.AIDefaultDiplomaticLevels"/>
+                <property name="objPowerDifferentialRangedTemplateList" value="sd.PowerDifferentialRangedTemplateList"/>
+                <property name="objTerritorialIntegrityRangedTemplateList" value="sd.TerritorialIntegrityRangedTemplateList"/>
+			</object>
+		</object>
+    </object>
+</locust>

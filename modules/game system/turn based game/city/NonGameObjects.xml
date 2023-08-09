@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="WorkOrder" class="CMLOWorkOrder" desc="A work order">
+        <replicationRule>
+            ?{avatar, game:
+            game.isRegionVisible(avatar, self.objRegion)
+            }
+        </replicationRule>
+        <propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="tmplFactoryOutput" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+        <propertyDef name="nNumPaidFor" type="int" default="0"/>
+        <propertyDef name="nPriority" type="int"/>
+        <propertyDef name="nIPUs" type="int" default="0"/>
+        <propertyDef name="bCompleted" type="bool" default="false"/>
+        <propertyDef name="bRepeating" type="bool" default="false"/>
+        <propertyDef name="objAIDesiredFactoryOutput" type="Object" restriction="FactoryOutputTemplate" desc="For AI use"/>        
+    </objectDef>
+
+    <objectDef type="CityBuilding" class="CMLOCityBuilding" desc="A city building">
+        <propertyDef name="tmplCityBuilding" type="TemplateRef" restriction="CityBuildingTemplate"/>
+        <propertyDef name="nHitPoints" type="int" default="100"/>
+        <!-- status? Operational, disabled, ? -->
+    </objectDef>
+
+    <!-- City Building Templates -->
+    <objectDef type="CityBuildingTemplate" superType="Template" class="CMLOCityBuildingTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="strEncyclopediaDescription" type="String"/>
+		<propertyDef name="strShortDescription" type="String"/>
+        <propertyDef name="nHitPoints" type="int" default="100"/>
+        <propertyDef name="nIPUs" type="int" default="0"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0"/>
+        <propertyDef name="nMPUs" type="int" default="0"/>
+        <propertyDef name="bMultiple" type="bool" default="true"/>
+    </objectDef>
+
+    <objectDef type="FactoryOutputCategoryTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+    </objectDef>
+
+    <!-- Factory Output Templates -->
+    <objectDef type="FactoryOutputTemplate" superType="Template" class="CMLOFactoryOutputTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="strEncyclopediaDescription" type="String"/>
+		<propertyDef name="strShortDescription" type="String"/>
+        <propertyDef name="tmplCategory" type="TemplateRef" restriction="FactoryOutputCategoryTemplate"/>
+		<propertyDef name="eBuildingGroup" type="Enum" restriction="BuildingGroup"/>
+        <propertyDef name="nIPUs" type="int"/>
+        <propertyDef name="bMultiple" type="bool" default="false"/>
+        <propertyDef name="objResourceRequirements" type="ResourceRequirement" variable="true" storesChildren="true"/>
+        <propertyDef name="objFactoryRequirements" type="FactoryRequirement" variable="true" storesChildren="true"/>
+        <propertyDef name="objFactoryVetos" type="FactoryRequirement" variable="true" storesChildren="true"/>
+        <propertyDef name="nMPURequirement" type="int" default="0"/>
+
+        <!-- builtin method signatures:
+			bool meetsRequirements(gameroot, city, callback)
+            enumUnmetRequirements(gameroot, city, callback)
+            enumMetRequirements(gameroot, city, callback)
+            enumAllRequirements(gameroot, city, callback)
+            -->
+    </objectDef>
+	
+	<enumDef name="BuildingGroup">
+		<value name="Factory"/>
+		<value name="Research"/>
+		<value name="Shipyard"/>
+	</enumDef>
+
+    <objectDef type="FactoryOutputCityBuildingTemplate" class="CMLOFactoryOutputCityBuildingTemplate" superType="FactoryOutputTemplate">
+        <propertyDef name="tmplCityBuilding" type="TemplateRef" restriction="CityBuildingTemplate"/>
+        <propertyDef name="tmplCityBuildingToUpgrade" type="TemplateRef" restriction="CityBuildingTemplate"/>
+    </objectDef>
+
+    <objectDef type="FactoryOutputResearchCenterBuildingTemplate" class="CMLOFactoryOutputResearchCenterBuildingTemplate" superType="FactoryOutputTemplate">
+        <propertyDef name="tmplResearchCenterBuilding" type="TemplateRef" restriction="ResearchCenterBuildingTemplate"/>
+        <propertyDef name="tmplResearchCenterBuildingToUpgrade" type="TemplateRef" restriction="ResearchCenterBuildingTemplate"/>
+    </objectDef>
+
+    <objectDef type="FactoryOutputResourceTemplate" class="CMLOFactoryOutputResourceTemplate" superType="FactoryOutputTemplate">
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nAmount" type="int" default="1"/>
+    </objectDef>
+
+    <objectDef type="FactoryOutputMoneyTemplate" class="CMLOFactoryOutputMoneyTemplate" superType="FactoryOutputTemplate">
+        <propertyDef name="nAmount" type="int" default="1"/>
+    </objectDef>
+
+    <objectDef type="FactoryRequirement" class="CMLOFactoryRequirement" desc="A factory requirement">
+        <!-- builtin method signatures:
+			bool isMetBy(tmplFactoryOutput)
+		-->
+    </objectDef>
+
+    <objectDef type="FactoryRequirementCityBuilding" superType="FactoryRequirement" class="CMLOFactoryRequirementCityBuilding" desc="A city building factory requirement">
+        <propertyDef name="tmplCityBuilding" type="TemplateRef" restriction="CityBuildingTemplate"/>
+    </objectDef>
+
+    <objectDef type="FactoryRequirementResearchProject" superType="FactoryRequirement" class="CMLOFactoryRequirementResearchProject" desc="A research project factory requirement">
+        <propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="ResearchTopicTemplate"/>
+    </objectDef>
+
+    <objectDef type="FactoryRequirementResearchCenterBuilding" superType="FactoryRequirement" class="CMLOFactoryRequirementResearchCenterBuilding" desc="A research center building factory requirement">
+        <propertyDef name="tmplResearchCenterBuilding" type="TemplateRef" restriction="ResearchCenterBuildingTemplate"/>
+    </objectDef>
+
+    <objectDef type="FactoryRequirementPortCity" superType="FactoryRequirement" class="CMLOFactoryRequirementPortCity" desc="A port city factory requirement">
+    </objectDef>
+    
+    <objectDef type="DPDestroyCityBuilding" class="CMLODPDestroyCityBuilding" superType="DecisionPoint" >
+		<propertyDef name="objCityBuilding" type="CityBuilding"/>        
+    </objectDef>
+    
+    <objectDef type="DPDestroyResearchBuilding" class="CMLODPDestroyResearchBuilding" superType="DecisionPoint" >
+		<propertyDef name="objCity" type="City"/>        
+		<propertyDef name="objResearchBuilding" type="ResearchCenterBuilding"/>        
+    </objectDef>
+    
+    
+
+</locust>

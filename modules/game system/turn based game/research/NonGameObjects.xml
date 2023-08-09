@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Research Topic Templates -->
+	<objectDef type="ResearchTopicTemplate" superType="Template" class="CMLOResearchTopicTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="strEncyclopediaDescription" type="String"/>
+		<propertyDef name="strShortDescription" type="String"/>
+        <propertyDef name="tmplCategory" type="TemplateRef" restriction="ResearchCategoryTemplate"/>
+        <propertyDef name="tmplPreReqs" type="TemplateRef" restriction="ResearchTopicTemplate" variable="true"/>
+        <propertyDef name="tmplRequiredBuildings" type="TemplateRef" restriction="ResearchCenterBuildingTemplate" variable="true"/>
+        <propertyDef name="nPointsRequired" type="int"/>
+        <propertyDef name="nPerTurnCost" type="int"/>
+        <propertyDef name="nTopLevel" type="int" default="-1" desc="For top level topics only, starting at 0 (otherwise -1)"/>
+       
+		<!-- builtin method signatures:
+			bool meetsPreReqs(gameroot,researchProgram)
+			bool hasRequiredBuildings(gameroot,researchCenter)
+		-->
+    </objectDef>
+
+    <objectDef type="ResearchCategoryTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+    </objectDef>
+
+    <objectDef type="ResearchCenterBuilding" class="CMLOResearchCenterBuilding">
+        <propertyDef name="tmplBuilding" type="TemplateRef" restriction="ResearchCenterBuildingTemplate"/>
+        <propertyDef name="nHitPoints" type="int" default="100"/>
+    </objectDef>
+
+    <!-- Research Center Building Templates -->
+    <objectDef type="ResearchCenterBuildingTemplate" superType="Template" class="CMLOResearchCenterBuildingTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="strEncyclopediaDescription" type="String"/>
+		<propertyDef name="strShortDescription" type="String"/>
+        <propertyDef name="nHitPoints" type="int" default="100"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0"/>
+        <propertyDef name="nMPUs" type="int" default="0"/>
+        <propertyDef name="nRPUs" type="int" default="0"/>
+    </objectDef>
+
+</locust>

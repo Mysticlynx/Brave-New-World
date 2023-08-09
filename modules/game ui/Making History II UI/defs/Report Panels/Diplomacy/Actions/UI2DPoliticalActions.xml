@@ -1,0 +1,1690 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DGatherIntelligence" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSupportGovernmentIcon">
+			<property name="tmplImage" value="skin.ImgEspionageStealResearch"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="27"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objGatherIntelLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.StealResearch"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objGatherIntelBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10LeftWrap"/>
+			<property name="strText" from="locale.SID.UI.GatherIntelBlurb"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>		
+		
+         <object type="mlui.UI2DText" name="objOperatingBudgetLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.OperatingCost"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="60"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		<object type="mlui.UI2DText" name="objOperatingBudget">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="'$' + def.objNationalPrograms.nStealResearchCost.formatNumber(0, true)"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="75"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objDurationLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Duration"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="105"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		<object type="mlui.UI2DText" name="objDuration">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="def.objNationalPrograms.nStealResearchTime + ' ' + locale.SID.UI.Turns"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="120"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        <object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="250"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objStealResearchAction">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.DeploySpies + '!'"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="261"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActStartStealResearch.create({
+								"refNation": mh2data.objNation,
+								"refTargetNation": def.objNation
+							});
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<propertyDef name="objNationalPrograms" type="Object">
+			gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar)
+		</propertyDef>
+        
+        <object type="UI2DPoliticalActionsOutcomes" name="objOutcomes">
+			<property name="nDiscovery" from="def.objNationalPrograms.nStealResearchDiscoveryPercent"/>
+			<property name="nSuccess" from="def.objNationalPrograms.nStealResearchPercent"/>
+			<property name="nRelationsIfCaught" from="(def.objNationalPrograms.nStealResearchRelationsPenalty * -1)"/>
+			<property name="strImpact" from="'1-40' + locale.SID.UI.RPUs"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="150"/>
+			<property name="nWidth" from="def.nWidth" />
+			<property name="nHeight" value="100"/>
+		</object>   
+        
+	</objectDef>
+	
+	<objectDef type="UI2DDeploySurveillance" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+        
+        <propertyDef name="objRegions" type="gs_tbg.Region" variable="true" >
+            gs_tbg.getControlledRegions(mh2data.objAvatar, self.objNation)
+        </propertyDef>
+        
+		<object type="EventReportRegionChanged" name="objEventReportRegionChanged" tiedTo="def.objRegions">
+			<property name="objRegion" from="tiedTo"/>
+            <script type="application/javascript"><![CDATA[
+                function execute(event, owner)
+                {
+                    def.objSelectedRegion =  self.objRegion;
+                }
+            ]]></script>
+		</object>
+        
+        <propertyDef name="objSelectedRegion" type="gs_tbg.Region" >
+            gs_tbg.getCapitalCity(mh2data.objAvatar, self.objNation).refRegion.resolve(mh2data.objAvatar)
+        </propertyDef>
+        
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSurveillanceIcon">
+			<property name="tmplImage" value="skin.ImgEspionageSpy"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="21"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.Surveillance"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10LeftWrap"/>
+			<property name="strText" from="locale.SID.UI.SurveillanceBlurb"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+    <object type="mlui.UI2DText" name="objRegionLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.Select + ' ' + locale.SID.UI.Region"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="58"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DTextButton" name="objChangeRegionButton">
+      <property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleTanSand"/>
+      <property name="strText" from="def.objSelectedRegion.strDisplayName"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="71"/>
+      <property name="nDefaultWidth" value="228"/>
+      <property name="nDefaultHeight" value="26"/>
+      <property name="nDepth" value="50"/>
+      <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+          <property name="otEventType" value="mlui.EventButtonClicked"/>
+          <script type="application/javascript">
+            <![CDATA[
+						function handle(event, owner)
+						{
+                            regions = def.objEventReportRegionChanged;
+                           
+                            menuX = def.nScreenX;
+							menuY = def.nScreenY + 71;
+                            
+							
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": def.nWidth - 80,
+								"nDefaultItemHeight": 24
+							});
+							
+							var menuitem;
+							
+							for(var i = 0; i < regions.length; i++)
+							{
+								menuitem = common_elements.MenuItem.create({
+									"strDisplayName": regions[i].objRegion.strDisplayName,
+									"objExecuteObject": regions[i]
+								});
+								menudata.objItems.add(menuitem);							
+							}
+							
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]>
+          </script>
+        </object>
+      </object>
+    </object>
+
+		<object type="mlui.UI2DText" name="objOperatingBudgetLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.OperatingCost"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="120"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		<object type="mlui.UI2DText" name="objOperatingBudget">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="'$' + def.objNationalPrograms.nRegionSurveillanceCost.formatNumber(0, true)"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="135"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objDurationLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Duration"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="165"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		<object type="mlui.UI2DText" name="objDuration">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="def.objNationalPrograms.nRegionSurveillanceTime + ' ' + locale.SID.UI.Turns"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="180"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        <object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="305"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+        
+		<object type="mlui.UI2DTextButton" name="objSurveillanceAction">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.DeploySurveillance + '!'"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="316"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActStartRegionSurveillance.create({
+								"refNation": mh2data.objNation,
+								"refTargetRegion": def.objSelectedRegion
+							});
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<propertyDef name="objNationalPrograms" type="Object">
+			gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar)
+		</propertyDef>
+
+		<object type="UI2DPoliticalActionsOutcomes" name="objOutcomes">
+			<property name="nDiscovery" from="def.objNationalPrograms.nRegionSurveillanceDiscoveryPercent"/>
+			<property name="nSuccess" from="def.objNationalPrograms.nDeploymentSurveillancePercent"/>
+			<property name="nRelationsIfCaught" from="(def.objNationalPrograms.nRegionSurveillanceRelationsPenalty * -1)"/>
+			<property name="strImpact" from="locale.SID.UI.NA"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="210"/>
+			<property name="nWidth" from="def.nWidth" />
+			<property name="nHeight" value="100"/>
+		</object>    
+         
+	</objectDef>
+
+  <objectDef type="UI2DPoliticalSystemSelection" superType="mlui.UI2DElement">
+    <propertyDef name="objGovSystem" type="gs_tbg.IdeologyTemplate"/>
+    <propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+    <property name="nWidth" from="self.objOptions.nWidth"/>
+    <property name="nHeight" from="self.objOptions.nHeight"/>
+
+    <object type="common_ui.UI2DList" name="objOptions">
+      <property name="nSpacing" value="1"/>
+      
+      <object type="UI2DPoliticalSystemOption" name="objElements" tiedTo="sd.getTemplate(TemplateList, 'IdeologyTemplateTemplateList').tmplRefs">
+        <property name="objGovSystem" from="tiedTo"/>
+        <property name="bSelected" from="tiedTo == def.objGovSystem"/>
+        <property name="objNation" from="def.objNation"/>
+
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+          <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+            <property name="otEventType" value="mlui.EventButtonClicked"/>
+            <script type="application/javascript">
+              <![CDATA[
+							function handle(event, owner)
+							{
+								def.objGovSystem = tiedTo;
+							}
+						]]>
+            </script>
+          </object>
+        </object>
+      </object>
+    </object>
+    
+  </objectDef>
+  
+  <objectDef type="UI2DPoliticalSystemOption" superType="mlui.UI2DButton">
+    <propertyDef name="objGovSystem" type="gs_tbg.IdeologyTemplate"/>
+    <propertyDef name="objNation" type="gs_tbg.Nation"/>
+    <propertyDef name="bSelected" type="bool"/>
+    
+    <property name="nWidth" value="247"/>
+    <property name="nHeight" value="30"/>
+    <property name="tmplButtonStyle" value="skin.BtnStyleInvisible"/>
+
+    <object type="mlui.UI2DImage" name="objButtonIcon">
+      <property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+      <property name="nX" value="0"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="31"/>
+      <property name="nHeight" value="30"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objTargetIcon" existsWhile="def.objNation.tmplIdeology != def.objGovSystem">
+      <property name="tmplImage" value="skin.ImgTarget"/>
+      <property name="nX" value="6"/>
+      <property name="nY" value="6"/>
+      <property name="nWidth" value="31"/>
+      <property name="nHeight" value="30"/>
+      <property name="bVisible" from="def.bSelected"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objIdeology">
+      <property name="tmplTextStyle" from="if(def.objNation.tmplIdeology != def.objGovSystem, 'locale.TxtStyleArialBlue14LeftFIT', 'locale.TxtStyleArialGray14LeftFIT')"/>
+      <property name="strText" from="def.objGovSystem.strDisplayName"/>
+      <property name="nX" value="64"/>
+      <property name="nY" value="10"/>
+      <property name="nHeight" value="15"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objIdeologyPercent" tiedTo="def.objNation.objIdeologies">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14RightFIT"/>
+      <property name="strText" from="if(tiedTo.tmplIdeology == def.objGovSystem, String(tiedTo.nLevel) + '%', '')"/>
+      <property name="nX" value="165"/>
+      <property name="nY" value="10"/>
+      <property name="nHeight" value="15"/>
+    </object>
+
+  </objectDef>
+  
+	<objectDef type="UI2DFundOpposition" superType="mlui.UI2DElement">
+    <propertyDef name="objGovSystem" type="gs_tbg.IdeologyTemplate"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSurveillanceIcon">
+			<property name="tmplImage" value="skin.ImgEspionageFund"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="26"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.FundPoliticalOpposition"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10LeftWrap"/>
+			<property name="strText" from="locale.SID.UI.FundOppositionBlurb"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+    <object type="mlui.UI2DText" name="objGovernmentSystemLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.SelectPoliticalFaction"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="60"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="UI2DPoliticalSystemSelection" name="objOptions">
+			<property name="nX" value="33"/>
+			<property name="nY" value="73"/>
+			<property name="objGovSystem" from="def.objNation.tmplIdeology"/>
+      <property name="objNation" from="def.objNation"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objDemocracyIcon">
+      <property name="tmplImage" value="skin.ImgInfoIconDemocracySm"/>
+      <property name="nX" value="68"/>
+      <property name="nY" value="74"/>
+      <property name="nWidth" value="26"/>
+      <property name="nHeight" value="26"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objCommunistIcon">
+      <property name="tmplImage" value="skin.ImgInfoIconCommunistSm"/>
+      <property name="nX" value="68"/>
+      <property name="nY" value="105"/>
+      <property name="nWidth" value="26"/>
+      <property name="nHeight" value="26"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objFascistIcon">
+      <property name="tmplImage" value="skin.ImgInfoIconFascistSm"/>
+      <property name="nX" value="68"/>
+      <property name="nY" value="136"/>
+      <property name="nWidth" value="26"/>
+      <property name="nHeight" value="26"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objAuthoritarianIcon">
+      <property name="tmplImage" value="skin.ImgInfoIconAuthoritarianSm"/>
+      <property name="nX" value="68"/>
+      <property name="nY" value="167"/>
+      <property name="nWidth" value="26"/>
+      <property name="nHeight" value="26"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objOperatingBudgetLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.OperatingCost"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="220"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+    
+		<object type="mlui.UI2DText" name="objOperatingBudget">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="'$' + def.objNationalPrograms.nOppositionSupportCost.formatNumber(0, true)"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="235"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objDurationLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Duration"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="265"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		<object type="mlui.UI2DText" name="objDuration">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="def.objNationalPrograms.nOppositionSupportTime + ' ' + locale.SID.UI.Turns"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="280"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objActionLabel" existsWhile="def.objOptions.objGovSystem != def.objNation.tmplIdeology">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="409"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objSurveillanceAction" existsWhile="def.objOptions.objGovSystem != def.objNation.tmplIdeology">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.FundPoliticalOpposition + '!'"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="420"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActStartOppositionSupport.create({
+								"refNation": mh2data.objNation,
+								"refTargetNation": def.objNation,
+								"tmplIdeology": def.objOptions.objGovSystem,
+								"nSuccessPercent": def.nSuccessPercent
+							});
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<propertyDef name="objNationalPrograms" type="Object">
+			gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar)
+		</propertyDef>
+
+        <propertyDef name="nSuccessPercent" type="int">
+            if ((self.objNationalPrograms.nOppositionSupportPercent - (self.objNation.n64Population / self.objNationalPrograms.nPopSizeDivisor)) LTE self.objNationalPrograms.nMinSuccessPercent,
+            self.objNationalPrograms.nMinSuccessPercent,
+            self.objNationalPrograms.nOppositionSupportPercent - (self.objNation.n64Population / self.objNationalPrograms.nPopSizeDivisor)
+            )
+        </propertyDef>
+
+        <object type="UI2DPoliticalActionsOutcomes" name="objOutcomes">
+			<property name="nDiscovery" from="def.objNationalPrograms.nOppositionSupportDiscoveryPercent"/>
+			<property name="nSuccess" from="def.nSuccessPercent"/>
+			<property name="nRelationsIfCaught" from="(def.objNationalPrograms.nOppositionSupportRelationsPenalty * -1)"/>
+      <property name="strImpact" from="def.objNationalPrograms.nOppositionSupportMinPoints + '-' + def.objNationalPrograms.nOppositionSupportMaxPoints"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="320"/>
+			<property name="nWidth" from="def.nWidth" />
+			<property name="nHeight" value="100"/>
+		</object>
+
+    <object type="mlui.UI2DText" name="objActionLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftWrap"/>
+      <property name="strText" from="locale.SID.UI.IdeologyShift"/>
+      <property name="nX" value="56"/>
+      <property name="nY" value="332"/>
+      <property name="nWidth" value="110"/>
+      <property name="nHeight" value="28"/>
+    </object>
+    
+	</objectDef>
+	
+	<objectDef type="UI2DSupportGovernment" superType="mlui.UI2DElement">
+    
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSurveillanceIcon">
+			<property name="tmplImage" value="skin.ImgEspionageFund"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="26"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.SupportGovernment"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10LeftWrap"/>
+			<property name="strText" from="locale.SID.UI.SupportGovernmentBlurb"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="60"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objOperatingBudgetLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.OperatingCost"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="60"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objOperatingBudget">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="'$' + def.objNationalPrograms.nPoliticalSupportCost.formatNumber(0, true)"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="75"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objDurationLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Duration"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="105"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objDuration">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="def.objNationalPrograms.nPoliticalSupportTime + ' ' + locale.SID.UI.Turns"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="120"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="263"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objSupportAction">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.SupportGovernment"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="274"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActStartPoliticalSupport.create({
+								"refNation": mh2data.objNation,
+								"refTargetNation": def.objNation,
+                                "nSuccessPercent" : def.nSuccessPercent
+							});
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<propertyDef name="objNationalPrograms" type="Object">
+			gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar)
+		</propertyDef>
+
+        <propertyDef name="nSuccessPercent" type="int">
+            if ((self.objNationalPrograms.nPoliticalSupportPercent - (self.objNation.n64Population / self.objNationalPrograms.nPopSizeDivisor)) LTE self.objNationalPrograms.nMinSuccessPercent,
+            self.objNationalPrograms.nMinSuccessPercent,
+            self.objNationalPrograms.nPoliticalSupportPercent - (self.objNation.n64Population / self.objNationalPrograms.nPopSizeDivisor)
+            )
+        </propertyDef>
+
+        <object type="UI2DPoliticalActionsOutcomes" name="objOutcomes">
+      <property name="bPenalty" value="false"/>
+      <property name="nDiscovery" value="0"/>
+      <property name="nSuccess" from="def.nSuccessPercent"/>
+      <property name="nRelationsIfCaught" value="0"/>
+      <property name="strImpact" from="def.objNationalPrograms.nPoliticalSupportMinPoints + '-' + def.objNationalPrograms.nPoliticalSupportMaxPoints"/>
+      <property name="nX" value="0"/>
+      <property name="nY" value="160"/>
+      <property name="nWidth" from="def.nWidth" />
+      <property name="nHeight" value="100"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objAddOnLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftWrap"/>
+      <property name="strText" from="locale.SID.UI.IdeologyShift"/>
+      <property name="nX" value="56"/>
+      <property name="nY" value="172"/>
+      <property name="nWidth" value="110"/>
+      <property name="nHeight" value="28"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objBonusLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.AdditionalAffects"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="210"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="10"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objBonusValueLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Left"/>
+      <property name="strText" from="locale.SID.UI.ImproveDiplomaticRelations"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="220"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="40"/>
+    </object>
+
+	</objectDef>
+   
+	<objectDef type="UI2DSabotageRegion" superType="mlui.UI2DElement">       
+        <propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+        <propertyDef name="objRegions" type="gs_tbg.Region" variable="true" >
+            gs_tbg.getControlledRegions(mh2data.objAvatar, self.objNation)
+        </propertyDef>
+        
+		<object type="EventReportRegionChanged" name="objEventReportRegionChanged" tiedTo="def.objRegions">
+			<property name="objRegion" from="tiedTo"/>
+            <script type="application/javascript"><![CDATA[
+                function execute(event, owner)
+                {
+                    def.objSelectedRegion =  self.objRegion;
+                }
+            ]]></script>
+		</object>
+        
+        <propertyDef name="objSelectedRegion" type="gs_tbg.Region" >
+            gs_tbg.getCapitalCity(mh2data.objAvatar, self.objNation).refRegion.resolve(mh2data.objAvatar)
+        </propertyDef>
+        
+        <propertyDef name="eSabotage" type="Enum" restriction="gs_tbg.SabotageRegionParam" >
+            gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_RESOURCES
+        </propertyDef>
+        
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSurveillanceIcon">
+			<property name="tmplImage" value="skin.ImgEspionageSabotage"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="26"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.SabotageARegion"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10LeftWrap"/>
+			<property name="strText" from="locale.SID.UI.SabotageRegionBlurb"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="30"/>
+		</object>
+        
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+    <object type="mlui.UI2DText" name="objRegionLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.Select + ' ' + locale.SID.UI.Region"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="58"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DTextButton" name="objChangeRegionButton">
+      <property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleTanSand"/>
+      <property name="strText" from="def.objSelectedRegion.strDisplayName"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="71"/>
+      <property name="nDefaultWidth" value="228"/>
+      <property name="nDefaultHeight" value="26"/>
+      <property name="nDepth" value="50"/>
+      <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+          <property name="otEventType" value="mlui.EventButtonClicked"/>
+          <script type="application/javascript">
+            <![CDATA[
+						function handle(event, owner)
+						{
+              regions = def.objEventReportRegionChanged;
+              menuX = def.nScreenX;
+							menuY = def.nScreenY + 91;
+                            
+							
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": def.nWidth - 80,
+								"nDefaultItemHeight": 24
+							});
+							
+							var menuitem;
+							
+							for(var i = 0; i < regions.length; i++)
+							{
+								menuitem = common_elements.MenuItem.create({
+									"strDisplayName": regions[i].objRegion.strDisplayName,
+									"objExecuteObject": regions[i]
+								});
+								menudata.objItems.add(menuitem);							
+							}
+							
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]>
+          </script>
+        </object>
+      </object>
+    </object>
+
+    <object type="mlui.UI2DText" name="objTargetLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.Target"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="110"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="common_ui.UI2DList" name="objOptions">
+      <property name="nSpacing" value="1"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="122"/>
+			
+			<object type="UI2DPoliticalSystemSelectionButton" name="objElements" >
+				<property name="strDisplayName" from="locale.SID.UI.ResourceProduction"/>
+				<property name="bSelected" value="true" />	        
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+                                def.objOptions.reset(self.parent.parent);
+                                def.eSabotage = gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_RESOURCES;
+							}
+						]]></script>
+					</object>
+				</object>				
+			</object>     
+			<object type="UI2DPoliticalSystemSelectionButton" name="objElements" >
+				<property name="strDisplayName" from="locale.SID.UI.Transportation"/>
+                <property name="bSelectable" >
+                    def.objSelectedRegion.objTransportationImprovement != null
+                </property>                
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+                                def.objOptions.reset(self.parent.parent);
+                                def.eSabotage = gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_TRANSPORTATION;
+							}
+						]]></script>
+					</object>
+				</object>				
+			</object>     
+			<object type="UI2DPoliticalSystemSelectionButton" name="objElements" >
+				<property name="strDisplayName" from="locale.SID.UI.Fortification"/>
+                <property name="bSelectable" >
+                    def.objSelectedRegion.objFortificationImprovement != null
+                </property>                
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+                                def.objOptions.reset(self.parent.parent);
+                                def.eSabotage = gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_FORTIFICATIONS;
+							}
+						]]></script>
+					</object>
+				</object>				
+			</object>     
+			<object type="UI2DPoliticalSystemSelectionButton" name="objElements" >
+				<property name="strDisplayName" from="locale.SID.UI.AntiAirDefenses"/>
+                <property name="bSelectable" >
+                    def.objSelectedRegion.objAADefenseImprovement != null
+                </property>                
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+                                def.objOptions.reset(self.parent.parent);
+                                def.eSabotage = gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_AA_DEFENSE;
+							}
+						]]></script>
+					</object>
+				</object>				
+			</object>     
+			<object type="UI2DPoliticalSystemSelectionButton" name="objElements" >
+				<property name="strDisplayName" from="locale.SID.UI.CoastalDefense"/>
+                <property name="bSelectable" >
+                    def.objSelectedRegion.objCoastalDefenseImprovement != null
+                </property>                
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+                                def.objOptions.reset(self.parent.parent);
+                                def.eSabotage = gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_COASTAL_DEFENSE;
+							}
+						]]></script>
+					</object>
+				</object>				
+			</object>     
+			<object type="UI2DPoliticalSystemSelectionButton" name="objElements" >
+				<property name="strDisplayName" from="locale.SID.UI.Airbase"/>
+                <property name="bSelectable" >
+                    def.objSelectedRegion.objAirbaseImprovement != null
+                </property>                
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+                                def.objOptions.reset(self.parent.parent);
+                                def.eSabotage = gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_AIRBASE;
+							}
+						]]></script>
+					</object>
+				</object>				
+			</object>     
+            <script type="application/javascript"><![CDATA[
+                function reset(object)
+                {
+                    objects = def.objOptions.objElements;
+                    for(i = 0; i<objects.length; i++)
+                    {
+                        objects[i].bSelected = false;
+                    }
+                    object.bSelected = true;
+                }
+            ]]></script>	
+		</object>
+
+    <object type="mlui.UI2DText" name="objOperatingBudgetLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.OperatingCost"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="290"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+    
+		<object type="mlui.UI2DText" name="objOperatingBudget">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="'$' + def.objNationalPrograms.nSabotageCost.formatNumber(0, true)"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="305"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objDurationLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Duration"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="330"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+    
+		<object type="mlui.UI2DText" name="objDuration">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="def.objNationalPrograms.nSabotageTime + ' ' + locale.SID.UI.Turns"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="345"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        <object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="465"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+        
+		<object type="mlui.UI2DTextButton" name="objSurveillanceAction">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.SabotageRegion"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="476"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActStartSabotageRegion.create({
+								"refNation": mh2data.objNation,
+								"refTargetRegion": def.objSelectedRegion,
+								"eSabotageRegionParam": def.eSabotage
+							});
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>   
+        
+		<propertyDef name="objNationalPrograms" type="Object">
+			gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar)
+		</propertyDef>
+		
+		<object type="UI2DPoliticalActionsOutcomes" name="objOutcomes">
+			<property name="nDiscovery" from="def.objNationalPrograms.nSabotageDiscoveryPercent"/>
+			<property name="nSuccess" from="def.objNationalPrograms.nSabotagePercent"/>
+			<property name="nRelationsIfCaught" from="(def.objNationalPrograms.nSabotageRelationsPenalty * -1)"/>
+			<property name="strImpact" from="def.objNationalPrograms.nSabotageMinDamage + '-' +
+				def.objNationalPrograms.nSabotageMaxDamage"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="378"/>
+			<property name="nWidth" from="def.nWidth" />
+			<property name="nHeight" value="100"/>
+		</object>
+
+    <object type="mlui.UI2DText" name="objActionLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftWrap"/>
+      <property name="strText" from="locale.SID.UI.Damage"/>
+      <property name="nX" value="70"/>
+      <property name="nY" value="390"/>
+      <property name="nWidth" value="110"/>
+      <property name="nHeight" value="28"/>
+    </object>
+        
+	</objectDef>
+  
+  	<objectDef type="UI2DSabotageCity" superType="mlui.UI2DElement">
+        <propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+        <propertyDef name="objCities" type="gs_tbg.City" variable="true" >
+            gs_tbg.getNationCities(mh2data.objAvatar, self.objNation)
+        </propertyDef>
+        
+		<object type="EventReportCityChanged" name="objEventReportCityChanged" tiedTo="def.objCities">
+			<property name="objCity" from="tiedTo"/>
+            <script type="application/javascript"><![CDATA[
+                function execute(event, owner)
+                {
+                    def.objSelectedCity =  self.objCity;
+                }
+            ]]></script>
+		</object>
+        
+        <propertyDef name="objSelectedCity" type="gs_tbg.City" >
+            gs_tbg.getCapitalCity(mh2data.objAvatar, self.objNation)
+        </propertyDef>
+        
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSurveillanceIcon">
+			<property name="tmplImage" value="skin.ImgEspionageSabotage"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="26"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.SabotageACity"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10LeftWrap"/>
+			<property name="strText" from="locale.SID.UI.SabotageCityBlurb"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+      <object type="mlui.UI2DText" name="objCityLabel">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+        <property name="strText" from="locale.SID.UI.SelectCity"/>
+        <property name="nX" value="33"/>
+        <property name="nY" value="58"/>
+        <property name="nWidth" value="250"/>
+        <property name="nHeight" value="12"/>
+      </object>
+
+      <object type="mlui.UI2DTextButton" name="objChangeCityButton">
+        <property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleTanSand"/>
+        <property name="strText" from="def.objSelectedCity.strDisplayName"/>
+        <property name="nX" value="33"/>
+        <property name="nY" value="71"/>
+        <property name="nDefaultWidth" value="228"/>
+        <property name="nDefaultHeight" value="26"/>
+        <property name="nDepth" value="50"/>
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+          <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+            <property name="otEventType" value="mlui.EventButtonClicked"/>
+            <script type="application/javascript">
+              <![CDATA[
+						function handle(event, owner)
+						{
+                            cities = def.objEventReportCityChanged;
+                           
+                            menuX = def.nScreenX;
+							menuY = def.nScreenY + 91;
+                            
+							
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": def.nWidth - 80,
+								"nDefaultItemHeight": 24
+							});
+							
+							var menuitem;
+							
+							for(var i = 0; i < cities.length; i++)
+							{
+								menuitem = common_elements.MenuItem.create({
+									"strDisplayName": cities[i].objCity.strDisplayName,
+									"objExecuteObject": cities[i]
+								});
+								menudata.objItems.add(menuitem);							
+							}
+							
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]>
+            </script>
+          </object>
+        </object>
+      </object>
+
+      <object type="mlui.UI2DText" name="objTargetLabel">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+        <property name="strText" from="locale.SID.UI.Target"/>
+        <property name="nX" value="33"/>
+        <property name="nY" value="110"/>
+        <property name="nWidth" value="250"/>
+        <property name="nHeight" value="12"/>
+      </object>
+		        
+		<object type="common_ui.UI2DList" name="objOptions">
+			<property name="nSpacing" value="1"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="122"/>
+			
+			<object type="UI2DPoliticalSystemSelectionButton" name="objElements" >
+				<property name="strDisplayName" from="locale.SID.UI.IndustrialProduction"/>
+				<property name="bSelected" value="true" />				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+                                def.objOptions.reset(self.parent.parent);
+							}
+						]]></script>
+					</object>
+				</object>				
+			</object>
+      
+			<object type="UI2DPoliticalSystemSelectionButton" name="objElements" >
+				<property name="strDisplayName" from="locale.SID.UI.ResearchFacilities"/>	
+				<property name="bSelectable" value="false" />					
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+                                def.objOptions.reset(self.parent.parent);
+							}
+						]]></script>
+					</object>
+				</object>				
+			</object>           
+            <script type="application/javascript"><![CDATA[
+                function reset(object)
+                {
+                    objects = def.objOptions.objElements;
+                    for(i = 0; i<objects.length; i++)
+                    {
+                        objects[i].bSelected = false;
+                    }
+                    object.bSelected = true;
+                }
+            ]]></script>	
+		</object>
+      
+		<object type="mlui.UI2DText" name="objOperatingBudgetLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.OperatingCost"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="195"/>
+			<property name="nWidth" value="270"/>
+			<property name="nHeight" value="12"/>
+		</object>
+      
+		<object type="mlui.UI2DText" name="objOperatingBudget">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="'$' + def.objNationalPrograms.nSabotageCost.formatNumber(0, true)"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="210"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="16"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objDurationLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Duration"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="245"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		<object type="mlui.UI2DText" name="objDuration">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="def.objNationalPrograms.nSabotageTime + ' ' + locale.SID.UI.Turns"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="260"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+        
+		<object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="390"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		<object type="mlui.UI2DTextButton" name="objSurveillanceAction">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.SabotageCity"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="401"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActStartSabotageRegion.create({
+								"refNation": mh2data.objNation,
+								"refTargetRegion": def.objSelectedCity.refRegion.resolve(mh2data.objAvatar),
+								"eSabotageRegionParam": gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_CITY
+							});
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+        
+		<propertyDef name="objNationalPrograms" type="Object">
+			gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar)
+		</propertyDef>
+		        
+		<object type="UI2DPoliticalActionsOutcomes" name="objOutcomes">
+			<property name="nDiscovery" from="def.objNationalPrograms.nSabotageDiscoveryPercent"/>
+			<property name="nSuccess" from="def.objNationalPrograms.nSabotagePercent"/>
+			<property name="nRelationsIfCaught" from="(def.objNationalPrograms.nSabotageRelationsPenalty * -1)"/>
+			<property name="strImpact" from="def.objNationalPrograms.nSabotageMinDamage + '-' +
+				def.objNationalPrograms.nSabotageMaxDamage"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="295"/>
+			<property name="nWidth" from="def.nWidth" />
+			<property name="nHeight" value="100"/>
+		</object>
+
+      <object type="mlui.UI2DText" name="objActionLabel">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftWrap"/>
+        <property name="strText" from="locale.SID.UI.Damage"/>
+        <property name="nX" value="70"/>
+        <property name="nY" value="307"/>
+        <property name="nWidth" value="110"/>
+        <property name="nHeight" value="28"/>
+      </object>
+        
+	</objectDef>
+       
+    <objectDef type="EventReportCityChanged" superType="mlevent.Event" >
+		<propertyDef name="objCity" type="gs_tbg.City" />
+		<script type="application/javascript"><![CDATA[
+			function execute(event, owner)
+			{
+                log("event fired without an action" );
+                log( " event " + event) ;
+                log( " owner " + owner) ;
+                log(" self " + self);
+                log(" self.objCity " + self.objCity);
+			}
+		]]></script>
+    </objectDef>
+    
+    <objectDef type="EventReportRegionChanged" superType="mlevent.Event" >
+		<propertyDef name="objRegion" type="gs_tbg.Region" />
+		<script type="application/javascript"><![CDATA[
+			function execute(event, owner)
+			{
+                log("event fired without an action" );
+                log( " event " + event) ;
+                log( " owner " + owner) ;
+                log(" self " + self);
+                log(" self.objRegion " + self.objRegion);
+			}
+		]]></script>
+    </objectDef>
+    
+  	<objectDef type="UI2DPoliticalSystemSelectionButton" superType="mlui.UI2DButton">
+      <propertyDef name="bSelected" type="bool" default="false" />
+      <propertyDef name="strDisplayName" type="String" />
+      <propertyDef name="bSelectable" type="bool" default="true" />
+      <property name="eMouseBehavior" from="if(self.bSelectable, mlui.MouseBehavior.MOUSE_BHVR_NORMAL, mlui.MouseBehavior.MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN)"/>
+          
+      <property name="nWidth" value="267"/>
+      <property name="nHeight" value="24"/>
+      <property name="tmplButtonStyle" value="skin.BtnStyleInvisible"/>
+  		
+      <object type="mlui.UI2DImage" name="objButtonSelected">
+	      <property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate, if(def.bSelected,
+		      'ImgDiplomacyButtonDown', 'ImgDiplomacyButtonUp'))"/>
+	      <property name="nX" value="0"/>
+	      <property name="nY" value="0"/>
+	      <property name="nWidth" value="31"/>
+	      <property name="nHeight" value="24"/>
+      </object>
+        
+		  <object type="mlui.UI2DText" name="objIdeology">
+			  <property name="tmplTextStyle" from="if(def.bSelectable, 'locale.TxtStyleArialBlue14LeftFIT', 'locale.TxtStyleArialGray14LeftFIT')"/>
+			  <property name="strText" from="def.strDisplayName"/>
+			  <property name="nX" value="36"/>
+			  <property name="nY" value="7"/>
+			  <property name="nHeight" value="18"/>
+		  </object>		
+	</objectDef>
+    
+	<objectDef type="UI2DPoliticalActionsOutcomes" superType="mlui.UI2DElement">
+       <propertyDef name="nDiscovery" type="int" />
+       <propertyDef name="nSuccess" type="int" />
+       <propertyDef name="nRelationsIfCaught" type="int" />
+       <propertyDef name="strImpact" type="String" />
+       <propertyDef name="bPenalty" type="bool" default="true"/>
+       
+       
+		<object type="mlui.UI2DText" name="objPotentialDamageLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.PotentialImpact"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+    
+		<object type="mlui.UI2DText" name="objPotentialDamage">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftWrap"/>
+			<property name="strText" from="def.strImpact"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="125"/>
+			<property name="nHeight" value="30"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objSuccessChanceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ChanceofSuccess"/>
+			<property name="nX" value="170"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		<object type="mlui.UI2DText" name="objSuccessChance">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftWrap"/>
+			<property name="strText" >
+                if(def.nSuccess != 0, def.nSuccess+'%', 'NA')
+            </property>
+			<property name="nX" value="170"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="105"/>
+			<property name="nHeight" value="30"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objIfCaughtLabel" existsWhile="def.bPenalty">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.IfCaught"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="45"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object> 
+    
+		<object type="mlui.UI2DText" name="objIfCaught" existsWhile="def.bPenalty">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialRed14Left"/>
+			<property name="strText" from="def.nRelationsIfCaught"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="55"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="18"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objRelations" existsWhile="def.bPenalty">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialRed12Left"/>
+      <property name="strText" from="' ' + locale.SID.UI.Relations"/>
+      <property name="nX" value="53"/>
+      <property name="nY" value="57"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="18"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objDangerLabel" existsWhile="def.bPenalty">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.DangerofDiscovery"/>
+			<property name="nX" value="170"/>
+			<property name="nY" value="45"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>        
+		<object type="mlui.UI2DText" name="objDanger" existsWhile="def.bPenalty">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialRed14Left"/>
+			<property name="strText" from="def.nDiscovery + '%'"/>
+			<property name="nX" value="170"/>
+			<property name="nY" value="55"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+        
+	</objectDef>
+       
+  
+
+</locust>

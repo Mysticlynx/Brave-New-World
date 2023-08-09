@@ -1,0 +1,2180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+<!-- Invisible Button --> 
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleHighlight">
+		<property name="tmplUpImage" value="ImgInvisible"/>
+		<property name="tmplDownImage" value="ImgHighlight"/>
+		<property name="tmplOverImage" value="ImgHighlight"/>
+	</template>		
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleHighlightC">
+		<property name="tmplUpImage" value="ImgHighlight"/>
+		<property name="tmplDownImage" value="ImgHighlight"/>
+		<property name="tmplOverImage" value="ImgHighlight"/>
+	</template>		
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleBubbleHighlight">
+		<property name="tmplUpImage" value="ImgBubbleHighlight"/>
+		<property name="tmplDownImage" value="ImgBubbleHighlight"/>
+		<property name="tmplOverImage" value="ImgBubbleHighlight"/>
+	</template>		
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleInvisible">
+		<property name="tmplUpImage" value="ImgInvisible"/>
+		<property name="tmplDownImage" value="ImgInvisible"/>
+		<property name="tmplOverImage" value="ImgInvisible"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleColmHeader">
+		<property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterMiddle"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterMiddle"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterMiddle"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleColmHeaderWrap">
+		<property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterWrap"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterWrap"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterWrap"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleHighlight">
+		<property name="tmplButtonStyle" value="BtnStyleHighlight"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleHighlightBrown">
+		<property name="tmplButtonStyle" value="BtnStyleHighlight"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleHighlightBlue">
+		<property name="tmplButtonStyle" value="BtnStyleHighlight"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+	</template>	
+
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleBubbleHighlightWhiteCenterMiddleFIT">
+		<property name="tmplButtonStyle" value="BtnStyleBubbleHighlight"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialWhite13CenterMiddleFIT"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialWhite13CenterMiddleFIT"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialWhite13CenterMiddleFIT"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleBrown12Left">
+		<property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleBrown12LeftCenter">
+		<property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBrown12LeftCenter"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialBrown12LeftCenter"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialBrown12LeftCenter"/>
+	</template>
+
+  <template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleRed12LeftCenter">
+    <property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+    <property name="tmplUpTextStyle" value="locale.TxtStyleArialRed12LeftCenter"/>
+    <property name="tmplDownTextStyle" value="locale.TxtStyleArialRed12LeftCenter"/>
+    <property name="tmplOverTextStyle" value="locale.TxtStyleArialRed12LeftCenter"/>
+  </template>
+
+  <!-- Highlight Text Buttons -->
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleBlue13LeftHighlight">
+		<property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBlue13Left"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialHighlight13Left"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialHighlight13Left"/>
+	</template>
+  
+  <template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleBlue14LeftHighlight">
+    <property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+    <property name="tmplUpTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+    <property name="tmplDownTextStyle" value="locale.TxtStyleArialHighlight14Left"/>
+    <property name="tmplOverTextStyle" value="locale.TxtStyleArialHighlight14Left"/>
+  </template>
+  
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleBlueLite14LeftHighlight">
+		<property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBlueLite14Left"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialBlueLite14Left"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialBlueLite14Left"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleBlue12LeftHighlight">
+		<property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialHighlight12Left"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialHighlight12Left"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleBlue12LeftHighlightCenter">
+		<property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBlue12LeftCenterFIT"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialHighlight12LeftCenter"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialHighlight12LeftCenter"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleBlue18LeftHighlight">
+		<property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBlue18Left"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialHighlight18Left"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialHighlight18Left"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleWhite16Left">
+		<property name="tmplButtonStyle" value="BtnStyleInvisible"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialWhite16Left"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialWhite16Left"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialWhite16Left"/>
+	</template>
+
+  <!-- Sliders -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStylePanelSlider">
+		<property name="tmplUpImage" value="ImgPanelSlider"/>
+		<property name="tmplDownImage" value="ImgPanelSlider"/>
+		<property name="tmplOverImage" value="ImgPanelSlider"/>
+	</template>
+	
+<!-- Common Panel --> 
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStylePanelButtonEmpty">
+		<property name="tmplUpImage" value="ImgPanelButtonEmpty"/>
+		<property name="tmplDownImage" value="ImgPanelButtonEmptyB"/>
+		<property name="tmplOverImage" value="ImgPanelButtonEmptyB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStylePanelClose">
+		<property name="tmplUpImage" value="ImgPanelClose"/>
+		<property name="tmplDownImage" value="ImgPanelCloseB"/>
+		<property name="tmplOverImage" value="ImgPanelCloseB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStylePanelTopBG">
+		<property name="tmplUpImage" value="ImgPanelTopBG"/>
+		<property name="tmplDownImage" value="ImgPanelTopBGB"/>
+		<property name="tmplOverImage" value="ImgPanelTopBGB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStylePanelTopBGD">
+		<property name="tmplUpImage" value="ImgPanelTopBG"/>
+		<property name="tmplDownImage" value="ImgPanelTopBG"/>
+		<property name="tmplOverImage" value="ImgPanelTopBG"/>
+	</template>		
+
+<!-- Trade Amount Button -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonTradeClose">
+		<property name="tmplUpImage" value="ImgReportButtonTradeClose"/>
+		<property name="tmplDownImage" value="ImgReportButtonTradeCloseB"/>
+		<property name="tmplOverImage" value="ImgReportButtonTradeCloseB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonTradeAmount">
+		<property name="tmplUpImage" value="ImgReportButtonTradeAmount"/>
+		<property name="tmplDownImage" value="ImgReportButtonTradeAmountB"/>
+		<property name="tmplOverImage" value="ImgReportButtonTradeAmountB"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleBlue10CenterHighlight">
+		<property name="tmplButtonStyle" value="BtnStyleReportButtonTradeAmount"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBlue10Center"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialHighlight10Center"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialHighlight10Center"/>
+	</template>
+
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleRed10CenterHighlight">
+		<property name="tmplButtonStyle" value="BtnStyleReportButtonTradeAmount"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialRed10Center"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialHighlight10Center"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialHighlight10Center"/>
+	</template>
+	
+<!-- Report Panel Bubbles -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportBubbleTanWhite">
+		<property name="tmplUpImage" value="ImgReportBubbleTanWhite"/>
+		<property name="tmplDownImage" value="ImgReportBubbleTanSand"/>
+		<property name="tmplOverImage" value="ImgReportBubbleTanSand"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportBubbleBrown">
+		<property name="tmplUpImage" value="ImgReportBubbleBrown"/>
+		<property name="tmplDownImage" value="ImgReportBubbleBrownB"/>
+		<property name="tmplOverImage" value="ImgReportBubbleBrownB"/>
+	</template>			
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportBubbleTanSand">
+		<property name="tmplUpImage" value="ImgReportBubbleTanSand"/>
+		<property name="tmplDownImage" value="ImgReportBubbleTanSandB"/>
+		<property name="tmplOverImage" value="ImgReportBubbleTanSandB"/>
+	</template>		
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleReportBubbleTanSand">
+		<property name="tmplButtonStyle" value="BtnStyleReportBubbleTanSand"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBlue14CenterMiddle"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialBlue14CenterMiddle"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialBlue14CenterMiddle"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportBubbleTan">
+		<property name="tmplUpImage" value="ImgReportBubbleTan"/>
+		<property name="tmplDownImage" value="ImgReportBubbleTanB"/>
+		<property name="tmplOverImage" value="ImgReportBubbleTanB"/>
+	</template>		
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleReportBubbleTan">
+		<property name="tmplButtonStyle" value="BtnStyleReportBubbleTan"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialBlue14CenterMiddle"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialBlue14CenterMiddle"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialBlue14CenterMiddle"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportBubbleBrownBlue">
+		<property name="tmplUpImage" value="ImgReportBubbleBrownBlue"/>
+		<property name="tmplDownImage" value="ImgReportBubbleBrownBlueB"/>
+		<property name="tmplOverImage" value="ImgReportBubbleBrownBlueB"/>
+	</template>		
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleReportBubbleBrownBlue">
+		<property name="tmplButtonStyle" value="BtnStyleReportBubbleBrownBlue"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportBubbleBrownBlueGS">
+		<property name="tmplUpImage" value="ImgReportBubbleBrownBlueGS"/>
+		<property name="tmplDownImage" value="ImgReportBubbleBrownBlueGS"/>
+		<property name="tmplOverImage" value="ImgReportBubbleBrownBlueGS"/>
+	</template>		
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleReportBubbleBrownBlueGS">
+		<property name="tmplButtonStyle" value="BtnStyleReportBubbleBrownBlueGS"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialGray14CenterMiddle"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialGray14CenterMiddle"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialGray14CenterMiddle"/>
+	</template>		
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportBubbleGoldTan">
+		<property name="tmplUpImage" value="ImgReportBubbleGoldTan"/>
+		<property name="tmplDownImage" value="ImgReportBubbleGoldTanB"/>
+		<property name="tmplOverImage" value="ImgReportBubbleGoldTanB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportBubbleGoldTanD">
+		<property name="tmplUpImage" value="ImgReportBubbleGoldTanD"/>
+		<property name="tmplDownImage" value="ImgReportBubbleGoldTanD"/>
+		<property name="tmplOverImage" value="ImgReportBubbleGoldTanD"/>
+	</template>		
+
+<!-- Group Buttons -->
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonOpen">
+		<property name="tmplUpImage" value="ImgGroupButtonOpen"/>
+		<property name="tmplDownImage" value="ImgGroupButtonOpenB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonOpenC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonOpenDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonOpenDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonOpenDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonOpenDisabled"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonClose">
+		<property name="tmplUpImage" value="ImgGroupButtonClose"/>
+		<property name="tmplDownImage" value="ImgGroupButtonCloseB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonCloseC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonCloseDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonCloseDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonCloseDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonCloseDisabled"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonMerge">
+		<property name="tmplUpImage" value="ImgGroupButtonMerge"/>
+		<property name="tmplDownImage" value="ImgGroupButtonMergeB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonMergeC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonMergeDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonMergeDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonMergeDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonMergeDisabled"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonSplit">
+		<property name="tmplUpImage" value="ImgGroupButtonSplit"/>
+		<property name="tmplDownImage" value="ImgGroupButtonSplitB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonSplitC"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonSplitDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonSplitDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonSplitDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonSplitDisabled"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonReinforce">
+		<property name="tmplUpImage" value="ImgGroupButtonReinforce"/>
+		<property name="tmplDownImage" value="ImgGroupButtonReinforceB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonReinforceC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonReinforceDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonReinforceDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonReinforceDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonReinforceDisabled"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonHealing">
+		<property name="tmplUpImage" value="ImgGroupButtonHealing"/>
+		<property name="tmplDownImage" value="ImgGroupButtonHealingB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonHealingC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonRepair">
+		<property name="tmplUpImage" value="ImgGroupButtonRepair"/>
+		<property name="tmplDownImage" value="ImgGroupButtonRepairB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonRepairC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonRepairing">
+		<property name="tmplUpImage" value="ImgGroupButtonRepairing"/>
+		<property name="tmplDownImage" value="ImgGroupButtonRepairingB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonRepairingC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonRepairDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonRepairDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonRepairDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonRepairDisabled"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonDisband">
+		<property name="tmplUpImage" value="ImgGroupButtonDisband"/>
+		<property name="tmplDownImage" value="ImgGroupButtonDisbandB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonDisbandC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonAccept">
+		<property name="tmplUpImage" value="ImgGroupButtonAcceptA"/>
+		<property name="tmplDownImage" value="ImgGroupButtonAcceptB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonAcceptC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonReject">
+		<property name="tmplUpImage" value="ImgGroupButtonRejectA"/>
+		<property name="tmplDownImage" value="ImgGroupButtonRejectB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonRejectC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonDisbandDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonDisbandDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonDisbandDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonDisbandDisabled"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonCancelOrder">
+		<property name="tmplUpImage" value="ImgGroupButtonCancelOrder"/>
+		<property name="tmplDownImage" value="ImgGroupButtonCancelOrderB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonCancelOrderC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonCancelOrderDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonCancelOrderDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonCancelOrderDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonCancelOrderDisabled"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonCancel">
+		<property name="tmplUpImage" value="ImgGroupButtonCancel"/>
+		<property name="tmplDownImage" value="ImgGroupButtonCancelB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonCancelC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonNavalAir">
+		<property name="tmplUpImage" value="ImgGroupButtonNavalAir"/>
+		<property name="tmplDownImage" value="ImgGroupButtonNavalAirB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonNavalAirC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonNavalAirDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonNavalAirDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonNavalAirDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonNavalAirDisabled"/>
+	</template>		
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonNavalTransport">
+		<property name="tmplUpImage" value="ImgGroupButtonNavalTransport"/>
+		<property name="tmplDownImage" value="ImgGroupButtonNavalTransportB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonNavalTransportC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonNavalTransportDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonNavalTransportDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonNavalTransportDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonNavalTransportDisabled"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonUnload">
+		<property name="tmplUpImage" value="ImgGroupButtonUnload"/>
+		<property name="tmplDownImage" value="ImgGroupButtonUnloadB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonUnloadC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonUnloadDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonUnloadDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonUnloadDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonUnloadDisabled"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonAirTransport">
+		<property name="tmplUpImage" value="ImgGroupButtonAirTransport"/>
+		<property name="tmplDownImage" value="ImgGroupButtonAirTransportB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonAirTransportC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonAirTransportDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonAirTransportDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonAirTransportDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonAirTransportDisabled"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonParatrooper">
+		<property name="tmplUpImage" value="ImgGroupButtonParatrooper"/>
+		<property name="tmplDownImage" value="ImgGroupButtonParatrooperB"/>
+		<property name="tmplOverImage" value="ImgGroupButtonParatrooperB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupButtonParatrooperDisabled">
+		<property name="tmplUpImage" value="ImgGroupButtonParatrooperDisabled"/>
+		<property name="tmplDownImage" value="ImgGroupButtonParatrooperDisabled"/>
+		<property name="tmplOverImage" value="ImgGroupButtonParatrooperDisabled"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupRename">
+		<property name="tmplUpImage" value="ImgRenameGreen"/>
+		<property name="tmplDownImage" value="ImgRenameGreenB"/>
+		<property name="tmplOverImage" value="ImgRenameGreenB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupRenameCancel">
+		<property name="tmplUpImage" value="ImgRenameRed"/>
+		<property name="tmplDownImage" value="ImgRenameRedB"/>
+		<property name="tmplOverImage" value="ImgRenameRedB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupListRename">
+		<property name="tmplUpImage" value="ImgListRenameGreen"/>
+		<property name="tmplDownImage" value="ImgListRenameGreenB"/>
+		<property name="tmplOverImage" value="ImgListRenameGreenB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGroupListRenameCancel">
+		<property name="tmplUpImage" value="ImgListRenameRed"/>
+		<property name="tmplDownImage" value="ImgListRenameRedB"/>
+		<property name="tmplOverImage" value="ImgListRenameRedB"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleNationRename">
+		<property name="tmplUpImage" value="ImgRenameGreen18x14"/>
+		<property name="tmplDownImage" value="ImgRenameGreen18x14B"/>
+		<property name="tmplOverImage" value="ImgRenameGreen18x14B"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleNationRenameCancel">
+		<property name="tmplUpImage" value="ImgRenameRed18x14"/>
+		<property name="tmplDownImage" value="ImgRenameRed18x14B"/>
+		<property name="tmplOverImage" value="ImgRenameRed18x14B"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionRename">
+		<property name="tmplUpImage" value="ImgRenameGreen18x14"/>
+		<property name="tmplDownImage" value="ImgRenameGreen18x14B"/>
+		<property name="tmplOverImage" value="ImgRenameGreen18x14B"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionRenameCancel">
+		<property name="tmplUpImage" value="ImgRenameRed18x14"/>
+		<property name="tmplDownImage" value="ImgRenameRed18x14B"/>
+		<property name="tmplOverImage" value="ImgRenameRed18x14B"/>
+	</template>
+
+<!-- Unit Buttons -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonReinforce">
+		<property name="tmplUpImage" value="ImgUnitButtonReinforce"/>
+		<property name="tmplDownImage" value="ImgUnitButtonReinforceB"/>
+		<property name="tmplOverImage" value="ImgUnitButtonReinforceC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonReinforceDisabled">
+		<property name="tmplUpImage" value="ImgUnitButtonReinforceDisabled"/>
+		<property name="tmplDownImage" value="ImgUnitButtonReinforceDisabled"/>
+		<property name="tmplOverImage" value="ImgUnitButtonReinforceDisabled"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonUpgrade">
+		<property name="tmplUpImage" value="ImgUnitButtonUpgrade"/>
+		<property name="tmplDownImage" value="ImgUnitButtonUpgradeB"/>
+		<property name="tmplOverImage" value="ImgUnitButtonUpgradeB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonUpgradeDisabled">
+		<property name="tmplUpImage" value="ImgUnitButtonUpgradeDisabledB"/>
+		<property name="tmplDownImage" value="ImgUnitButtonUpgradeDisabledB"/>
+		<property name="tmplOverImage" value="ImgUnitButtonUpgradeDisabledB"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonOpen">
+		<property name="tmplUpImage" value="ImgUnitButtonOpenC"/>
+		<property name="tmplDownImage" value="ImgUnitButtonOpenB"/>
+		<property name="tmplOverImage" value="ImgUnitButtonOpenB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonRename">
+		<property name="tmplUpImage" value="ImgUnitButtonRename"/>
+		<property name="tmplDownImage" value="ImgUnitButtonRenameB"/>
+		<property name="tmplOverImage" value="ImgUnitButtonRenameB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonOpenDisabled">
+		<property name="tmplUpImage" value="ImgUnitButtonOpenDisabled"/>
+		<property name="tmplDownImage" value="ImgUnitButtonOpenDisabled"/>
+		<property name="tmplOverImage" value="ImgUnitButtonOpenDisabled"/>
+	</template>
+		
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonDisband">
+		<property name="tmplUpImage" value="ImgUnitButtonDisband"/>
+		<property name="tmplDownImage" value="ImgUnitButtonDisbandB"/>
+		<property name="tmplOverImage" value="ImgUnitButtonDisbandC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonDisbandDisabled">
+		<property name="tmplUpImage" value="ImgUnitButtonDisbandDisabled"/>
+		<property name="tmplDownImage" value="ImgUnitButtonDisbandDisabled"/>
+		<property name="tmplOverImage" value="ImgUnitButtonDisbandDisabled"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonCancel">
+		<property name="tmplUpImage" value="ImgUnitButtonCancel"/>
+		<property name="tmplDownImage" value="ImgUnitButtonCancelB"/>
+		<property name="tmplOverImage" value="ImgUnitButtonCancelC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleUnitButtonCancelDisabled">
+		<property name="tmplUpImage" value="ImgUnitButtonCancelDisabled"/>
+		<property name="tmplDownImage" value="ImgUnitButtonCancelDisabled"/>
+		<property name="tmplOverImage" value="ImgUnitButtonCancelDisabled"/>
+	</template>
+	
+<!-- Summary Panel -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleSummaryPanel">
+		<property name="tmplUpImage" value="ImgSummaryPanelBtn"/>
+		<property name="tmplDownImage" value="ImgSummaryPanelBtnDown"/>
+		<property name="tmplOverImage" value="ImgSummaryPanelBtnOver"/>
+	</template>	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleSummaryPanelSelected">
+		<property name="tmplUpImage" value="ImgSummaryPanelBtnDown"/>
+		<property name="tmplDownImage" value="ImgSummaryPanelBtnDown"/>
+		<property name="tmplOverImage" value="ImgSummaryPanelBtnDown"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleSummaryButtonDebug">
+		<property name="tmplUpImage" value="ImgSummaryButtonDebug"/>
+		<property name="tmplDownImage" value="ImgSummaryButtonDebugB"/>
+		<property name="tmplOverImage" value="ImgSummaryButtonDebugB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleSummaryButtonMin">
+		<property name="tmplUpImage" value="ImgSummaryButtonMin"/>
+		<property name="tmplDownImage" value="ImgSummaryButtonMinB"/>
+		<property name="tmplOverImage" value="ImgSummaryButtonMinB"/>
+	</template>	
+
+<!-- Game Controls -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsTurn">
+		<property name="tmplUpImage" value="ImgGameControlsTurn"/>
+		<property name="tmplDownImage" value="ImgGameControlsTurnB"/>
+		<property name="tmplOverImage" value="ImgGameControlsTurnB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsTurnDisabled">
+		<property name="tmplUpImage" value="ImgGameControlsTurnDisabled"/>
+		<property name="tmplDownImage" value="ImgGameControlsTurnDisabled"/>
+		<property name="tmplOverImage" value="ImgGameControlsTurnDisabled"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsTurnWaiting">
+		<property name="tmplUpImage" value="ImgGameControlsTurnWaiting"/>
+		<property name="tmplDownImage" value="ImgGameControlsTurnWaiting"/>
+		<property name="tmplOverImage" value="ImgGameControlsTurnWaiting"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsSearch">
+		<property name="tmplUpImage" value="ImgGameControlsSearch"/>
+		<property name="tmplDownImage" value="ImgGameControlsSearchB"/>
+		<property name="tmplOverImage" value="ImgGameControlsSearchB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsMilitary">
+		<property name="tmplUpImage" value="ImgGameControlsMilitary"/>
+		<property name="tmplDownImage" value="ImgGameControlsMilitaryB"/>
+		<property name="tmplOverImage" value="ImgGameControlsMilitaryB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsDiplomacy">
+		<property name="tmplUpImage" value="ImgGameControlsDiplomacy"/>
+		<property name="tmplDownImage" value="ImgGameControlsDiplomacyB"/>
+		<property name="tmplOverImage" value="ImgGameControlsDiplomacyB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsGovernment">
+		<property name="tmplUpImage" value="ImgGameControlsGovernment"/>
+		<property name="tmplDownImage" value="ImgGameControlsGovernmentB"/>
+		<property name="tmplOverImage" value="ImgGameControlsGovernmentB"/>
+	</template>		
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsCity">
+		<property name="tmplUpImage" value="ImgGameControlsCity"/>
+		<property name="tmplDownImage" value="ImgGameControlsCityB"/>
+		<property name="tmplOverImage" value="ImgGameControlsCityB"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsResearch">
+		<property name="tmplUpImage" value="ImgGameControlsResearch"/>
+		<property name="tmplDownImage" value="ImgGameControlsResearchB"/>
+		<property name="tmplOverImage" value="ImgGameControlsResearchB"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsTrade">
+		<property name="tmplUpImage" value="ImgGameControlsTrade"/>
+		<property name="tmplDownImage" value="ImgGameControlsTradeB"/>
+		<property name="tmplOverImage" value="ImgGameControlsTradeB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleGameControlsMenu">
+		<property name="tmplUpImage" value="ImgGameControlsMenu"/>
+		<property name="tmplDownImage" value="ImgGameControlsMenuB"/>
+		<property name="tmplOverImage" value="ImgGameControlsMenuB"/>
+	</template>
+	
+<!-- Map Controls -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsWorldSummary">
+		<property name="tmplUpImage" value="ImgMapControlsWorldSummary"/>
+		<property name="tmplDownImage" value="ImgMapControlsWorldSummaryB"/>
+		<property name="tmplOverImage" value="ImgMapControlsWorldSummaryB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsInSupply">
+		<property name="tmplUpImage" value="ImgMapControlsInSupply"/>
+		<property name="tmplDownImage" value="ImgMapControlsInSupplyB"/>
+		<property name="tmplOverImage" value="ImgMapControlsInSupplyB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsTrade">
+		<property name="tmplUpImage" value="ImgMapControlsTrade"/>
+		<property name="tmplDownImage" value="ImgMapControlsTradeB"/>
+		<property name="tmplOverImage" value="ImgMapControlsTradeB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsScroll">
+		<property name="tmplUpImage" value="ImgMapControlsScroll"/>
+		<property name="tmplDownImage" value="ImgMapControlsScrollB"/>
+		<property name="tmplOverImage" value="ImgMapControlsScrollB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsOperational">
+		<property name="tmplUpImage" value="ImgMapControlsOperational"/>
+		<property name="tmplDownImage" value="ImgMapControlsOperationalB"/>
+		<property name="tmplOverImage" value="ImgMapControlsOperationalB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsDiplomatic">
+		<property name="tmplUpImage" value="ImgMapControlsDiplomatic"/>
+		<property name="tmplDownImage" value="ImgMapControlsDiplomaticB"/>
+		<property name="tmplOverImage" value="ImgMapControlsDiplomaticB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsAgriculture">
+		<property name="tmplUpImage" value="ImgMapControlsAgriculture"/>
+		<property name="tmplDownImage" value="ImgMapControlsAgricultureB"/>
+		<property name="tmplOverImage" value="ImgMapControlsAgricultureB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsFortification">
+		<property name="tmplUpImage" value="ImgMapControlsFortification"/>
+		<property name="tmplDownImage" value="ImgMapControlsFortificationB"/>
+		<property name="tmplOverImage" value="ImgMapControlsFortificationB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsTransportation">
+		<property name="tmplUpImage" value="ImgMapControlsTransportation"/>
+		<property name="tmplDownImage" value="ImgMapControlsTransportationB"/>
+		<property name="tmplOverImage" value="ImgMapControlsTransportationB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsWeather">
+		<property name="tmplUpImage" value="ImgMapControlsWeather"/>
+		<property name="tmplDownImage" value="ImgMapControlsWeatherB"/>
+		<property name="tmplOverImage" value="ImgMapControlsWeatherB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsTerrain">
+		<property name="tmplUpImage" value="ImgMapControlsTerrain"/>
+		<property name="tmplDownImage" value="ImgMapControlsTerrainB"/>
+		<property name="tmplOverImage" value="ImgMapControlsTerrainB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapControlsWreath">
+		<property name="tmplUpImage" value="ImgMapControlsWreath"/>
+		<property name="tmplDownImage" value="ImgMapControlsWreathB"/>
+		<property name="tmplOverImage" value="ImgMapControlsWreathB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonDefault">
+		<property name="tmplUpImage" value="ImgMapButtonDefault"/>
+		<property name="tmplDownImage" value="ImgMapButtonDefaultC"/>
+		<property name="tmplOverImage" value="ImgMapButtonDefaultB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonDefaultC">
+		<property name="tmplUpImage" value="ImgMapButtonDefaultC"/>
+		<property name="tmplDownImage" value="ImgMapButtonDefaultC"/>
+		<property name="tmplOverImage" value="ImgMapButtonDefaultC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonEmpire">
+		<property name="tmplUpImage" value="ImgMapButtonEmpire"/>
+		<property name="tmplDownImage" value="ImgMapButtonEmpireC"/>
+		<property name="tmplOverImage" value="ImgMapButtonEmpireB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonEmpireC">
+		<property name="tmplUpImage" value="ImgMapButtonEmpireC"/>
+		<property name="tmplDownImage" value="ImgMapButtonEmpireC"/>
+		<property name="tmplOverImage" value="ImgMapButtonEmpireC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonIdeology">
+		<property name="tmplUpImage" value="ImgMapButtonIdeology"/>
+		<property name="tmplDownImage" value="ImgMapButtonIdeologyC"/>
+		<property name="tmplOverImage" value="ImgMapButtonIdeologyB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonIdeologyC">
+		<property name="tmplUpImage" value="ImgMapButtonIdeologyC"/>
+		<property name="tmplDownImage" value="ImgMapButtonIdeologyC"/>
+		<property name="tmplOverImage" value="ImgMapButtonIdeologyC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonSupply">
+		<property name="tmplUpImage" value="ImgMapButtonSupply"/>
+		<property name="tmplDownImage" value="ImgMapButtonSupplyC"/>
+		<property name="tmplOverImage" value="ImgMapButtonSupplyB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonSupplyC">
+		<property name="tmplUpImage" value="ImgMapButtonSupplyC"/>
+		<property name="tmplDownImage" value="ImgMapButtonSupplyC"/>
+		<property name="tmplOverImage" value="ImgMapButtonSupplyC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonNationality">
+		<property name="tmplUpImage" value="ImgMapButtonNationality"/>
+		<property name="tmplDownImage" value="ImgMapButtonNationalityC"/>
+		<property name="tmplOverImage" value="ImgMapButtonNationalityB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonNationalityC">
+		<property name="tmplUpImage" value="ImgMapButtonNationalityC"/>
+		<property name="tmplDownImage" value="ImgMapButtonNationalityC"/>
+		<property name="tmplOverImage" value="ImgMapButtonNationalityC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonPoints">
+		<property name="tmplUpImage" value="ImgMapButtonPoints"/>
+		<property name="tmplDownImage" value="ImgMapButtonPointsC"/>
+		<property name="tmplOverImage" value="ImgMapButtonPointsB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonPointsC">
+		<property name="tmplUpImage" value="ImgMapButtonPointsC"/>
+		<property name="tmplDownImage" value="ImgMapButtonPointsC"/>
+		<property name="tmplOverImage" value="ImgMapButtonPointsC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonPolitical">
+		<property name="tmplUpImage" value="ImgMapButtonPolitical"/>
+		<property name="tmplDownImage" value="ImgMapButtonPoliticalC"/>
+		<property name="tmplOverImage" value="ImgMapButtonPoliticalB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonPoliticalC">
+		<property name="tmplUpImage" value="ImgMapButtonPoliticalC"/>
+		<property name="tmplDownImage" value="ImgMapButtonPoliticalC"/>
+		<property name="tmplOverImage" value="ImgMapButtonPoliticalC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonRegion">
+		<property name="tmplUpImage" value="ImgMapButtonRegion"/>
+		<property name="tmplDownImage" value="ImgMapButtonRegionC"/>
+		<property name="tmplOverImage" value="ImgMapButtonRegionB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonRegionC">
+		<property name="tmplUpImage" value="ImgMapButtonRegionC"/>
+		<property name="tmplDownImage" value="ImgMapButtonRegionC"/>
+		<property name="tmplOverImage" value="ImgMapButtonRegionC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonGoldMedal">
+		<property name="tmplUpImage" value="ImgReportTabButtonGoldMedal"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonGoldMedalC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonGoldMedalB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonGoldMedalC">
+		<property name="tmplUpImage" value="ImgReportTabButtonGoldMedalC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonGoldMedalC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonGoldMedalC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonStability">
+		<property name="tmplUpImage" value="ImgMapButtonStability"/>
+		<property name="tmplDownImage" value="ImgMapButtonStabilityC"/>
+		<property name="tmplOverImage" value="ImgMapButtonStabilityB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonStabilityC">
+		<property name="tmplUpImage" value="ImgMapButtonStabilityC"/>
+		<property name="tmplDownImage" value="ImgMapButtonStabilityC"/>
+		<property name="tmplOverImage" value="ImgMapButtonStabilityC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonTerrain">
+		<property name="tmplUpImage" value="ImgMapButtonTerrain"/>
+		<property name="tmplDownImage" value="ImgMapButtonTerrainC"/>
+		<property name="tmplOverImage" value="ImgMapButtonTerrainB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonTerrainC">
+		<property name="tmplUpImage" value="ImgMapButtonTerrainC"/>
+		<property name="tmplDownImage" value="ImgMapButtonTerrainC"/>
+		<property name="tmplOverImage" value="ImgMapButtonTerrainC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonTrade">
+		<property name="tmplUpImage" value="ImgMapButtonTrade"/>
+		<property name="tmplDownImage" value="ImgMapButtonTradeC"/>
+		<property name="tmplOverImage" value="ImgMapButtonTradeB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonTradeC">
+		<property name="tmplUpImage" value="ImgMapButtonTradeC"/>
+		<property name="tmplDownImage" value="ImgMapButtonTradeC"/>
+		<property name="tmplOverImage" value="ImgMapButtonTradeC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonWeather">
+		<property name="tmplUpImage" value="ImgMapButtonWeather"/>
+		<property name="tmplDownImage" value="ImgMapButtonWeatherC"/>
+		<property name="tmplOverImage" value="ImgMapButtonWeatherB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleMapButtonWeatherC">
+		<property name="tmplUpImage" value="ImgMapButtonWeatherC"/>
+		<property name="tmplDownImage" value="ImgMapButtonWeatherC"/>
+		<property name="tmplOverImage" value="ImgMapButtonWeatherC"/>
+	</template>
+
+<!-- Trade Panel -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonNegotiate">
+		<property name="tmplUpImage" value="ImgTradeButtonNegotiate"/>
+		<property name="tmplDownImage" value="ImgTradeButtonNegotiateB"/>
+		<property name="tmplOverImage" value="ImgTradeButtonNegotiateB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonCancel">
+		<property name="tmplUpImage" value="ImgTradeButtonCancel"/>
+		<property name="tmplDownImage" value="ImgTradeButtonCancelB"/>
+		<property name="tmplOverImage" value="ImgTradeButtonCancelB"/>
+	</template>	
+	
+
+<!-- Trade Agreement Buttons -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonMoney">
+		<property name="tmplUpImage" value="ImgTradeButtonMoney"/>
+		<property name="tmplDownImage" value="ImgTradeButtonMoneyB"/>
+		<property name="tmplOverImage" value="ImgTradeButtonMoneyB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonMoneyC">
+		<property name="tmplUpImage" value="ImgTradeButtonMoneyC"/>
+		<property name="tmplDownImage" value="ImgTradeButtonMoneyC"/>
+		<property name="tmplOverImage" value="ImgTradeButtonMoneyC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonArms">
+		<property name="tmplUpImage" value="ImgTradeButtonArms"/>
+		<property name="tmplDownImage" value="ImgTradeButtonArmsB"/>
+		<property name="tmplOverImage" value="ImgTradeButtonArmsB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonArmsC">
+		<property name="tmplUpImage" value="ImgTradeButtonArmsC"/>
+		<property name="tmplDownImage" value="ImgTradeButtonArmsC"/>
+		<property name="tmplOverImage" value="ImgTradeButtonArmsC"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonGoods">
+		<property name="tmplUpImage" value="ImgTradeButtonGoods"/>
+		<property name="tmplDownImage" value="ImgTradeButtonGoodsB"/>
+		<property name="tmplOverImage" value="ImgTradeButtonGoodsB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonGoodsC">
+		<property name="tmplUpImage" value="ImgTradeButtonGoodsC"/>
+		<property name="tmplDownImage" value="ImgTradeButtonGoodsC"/>
+		<property name="tmplOverImage" value="ImgTradeButtonGoodsC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonMetals">
+		<property name="tmplUpImage" value="ImgTradeButtonMetals"/>
+		<property name="tmplDownImage" value="ImgTradeButtonMetalsB"/>
+		<property name="tmplOverImage" value="ImgTradeButtonMetalsB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonMetalsC">
+		<property name="tmplUpImage" value="ImgTradeButtonMetalsC"/>
+		<property name="tmplDownImage" value="ImgTradeButtonMetalsC"/>
+		<property name="tmplOverImage" value="ImgTradeButtonMetalsC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonCoal">
+		<property name="tmplUpImage" value="ImgTradeButtonCoal"/>
+		<property name="tmplDownImage" value="ImgTradeButtonCoalB"/>
+		<property name="tmplOverImage" value="ImgTradeButtonCoalB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonCoalC">
+		<property name="tmplUpImage" value="ImgTradeButtonCoalC"/>
+		<property name="tmplDownImage" value="ImgTradeButtonCoalC"/>
+		<property name="tmplOverImage" value="ImgTradeButtonCoalC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonOil">
+		<property name="tmplUpImage" value="ImgTradeButtonOil"/>
+		<property name="tmplDownImage" value="ImgTradeButtonOilB"/>
+		<property name="tmplOverImage" value="ImgTradeButtonOilB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonOilC">
+		<property name="tmplUpImage" value="ImgTradeButtonOilC"/>
+		<property name="tmplDownImage" value="ImgTradeButtonOilC"/>
+		<property name="tmplOverImage" value="ImgTradeButtonOilC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonFood">
+		<property name="tmplUpImage" value="ImgTradeButtonFood"/>
+		<property name="tmplDownImage" value="ImgTradeButtonFoodB"/>
+		<property name="tmplOverImage" value="ImgTradeButtonFoodB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleTradeButtonFoodC">
+		<property name="tmplUpImage" value="ImgTradeButtonFoodC"/>
+		<property name="tmplDownImage" value="ImgTradeButtonFoodC"/>
+		<property name="tmplOverImage" value="ImgTradeButtonFoodC"/>
+	</template>
+	
+<!-- City Button Row -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleCityNavalBase">
+		<property name="tmplUpImage" value="ImgCityButtonNavalBase"/>
+		<property name="tmplDownImage" value="ImgCityButtonNavalBaseB"/>
+		<property name="tmplOverImage" value="ImgCityButtonNavalBaseC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleCityCityPanel">
+		<property name="tmplUpImage" value="ImgCityButtonCityPanel"/>
+		<property name="tmplDownImage" value="ImgCityButtonCityPanelDown"/>
+		<property name="tmplOverImage" value="ImgCityButtonCityPanelOver"/>
+	</template>
+	
+<!-- Region buttons -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionBuildImprovement">
+		<property name="tmplUpImage" value="ImgRegionButtonBuildImprovement"/>
+		<property name="tmplDownImage" value="ImgRegionButtonBuildImprovement"/>
+		<property name="tmplOverImage" value="ImgRegionButtonBuildImprovement"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionSurveyImprovement">
+		<property name="tmplUpImage" value="ImgRegionButtonSurveyImprovement"/>
+		<property name="tmplDownImage" value="ImgRegionButtonSurveyImprovement"/>
+		<property name="tmplOverImage" value="ImgRegionButtonSurveyImprovement"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionAirBase">
+		<property name="tmplUpImage" value="ImgRegionAirBaseButton"/>
+		<property name="tmplDownImage" value="ImgRegionAirBaseButtonB"/>
+		<property name="tmplOverImage" value="ImgRegionAirBaseButtonB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionNaval">
+		<property name="tmplUpImage" value="ImgCityButtonNavalBase"/>
+		<property name="tmplDownImage" value="ImgCityButtonNavalBaseB"/>
+		<property name="tmplOverImage" value="ImgCityButtonNavalBaseB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionExpand">
+		<property name="tmplUpImage" value="ImgRegionExpandButton"/>
+		<property name="tmplDownImage" value="ImgRegionExpandButtonB"/>
+		<property name="tmplOverImage" value="ImgRegionExpandButtonB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleNationExpand">
+		<property name="tmplUpImage" value="ImgNationButtonExpand"/>
+		<property name="tmplDownImage" value="ImgNationButtonExpandB"/>
+		<property name="tmplOverImage" value="ImgNationButtonExpandB"/>
+	</template>
+	
+<!-- Report Tab Buttons -->
+
+  <template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonOn">
+    <property name="tmplUpImage" value="ImgReportButtonOn"/>
+    <property name="tmplDownImage" value="ImgReportButtonOn"/>
+		<property name="tmplOverImage" value="ImgReportButtonOn"/>
+  </template>
+
+  <template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleReportButtonOn">
+    <property name="tmplButtonStyle" value="BtnStyleReportButtonOn"/>
+    <property name="tmplUpTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+    <property name="tmplDownTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+    <property name="tmplOverTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+  </template>
+
+  <template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonSubTab">
+		<property name="tmplUpImage" value="ImgReportTabButtonSubTab"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonSubTabB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonSubTabB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonSubTabC">
+		<property name="tmplUpImage" value="ImgReportTabButtonSubTabC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonSubTabC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonSubTabC"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleReportTabButtonSubTab">
+		<property name="tmplButtonStyle" value="BtnStyleReportTabButtonSubTab"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleReportTabButtonSubTabC">
+		<property name="tmplButtonStyle" value="BtnStyleReportTabButtonSubTabC"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonSubTab2">
+		<property name="tmplUpImage" value="ImgReportTabButtonSubTab2"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonSubTab2B"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonSubTab2B"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonSubTab2C">
+		<property name="tmplUpImage" value="ImgReportTabButtonSubTab2C"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonSubTab2C"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonSubTab2C"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleReportTabButtonSubTab2">
+		<property name="tmplButtonStyle" value="BtnStyleReportTabButtonSubTab2"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleReportTabButtonSubTab2C">
+		<property name="tmplButtonStyle" value="BtnStyleReportTabButtonSubTab2C"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonBlank">
+		<property name="tmplUpImage" value="ImgReportTabButtonBlank"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonBlankB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonBlankB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonBlankC">
+		<property name="tmplUpImage" value="ImgReportTabButtonBlankC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonBlankC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonBlankC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonBlankWide">
+		<property name="tmplUpImage" value="ImgReportTabButtonBlankWide"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonBlankWideB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonBlankWideB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonBlankWideC">
+		<property name="tmplUpImage" value="ImgReportTabButtonBlankWideC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonBlankWideC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonBlankWideC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonLabor">
+		<property name="tmplUpImage" value="ImgReportTabButtonLabor"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonLaborB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonLaborB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonLaborC">
+		<property name="tmplUpImage" value="ImgReportTabButtonLaborC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonLaborC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonLaborC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionInfrastructure">
+		<property name="tmplUpImage" value="ImgRegionInfrastructure"/>
+		<property name="tmplDownImage" value="ImgRegionInfrastructureB"/>
+		<property name="tmplOverImage" value="ImgRegionInfrastructureB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionInfrastructureC">
+		<property name="tmplUpImage" value="ImgRegionInfrastructureC"/>
+		<property name="tmplDownImage" value="ImgRegionInfrastructureC"/>
+		<property name="tmplOverImage" value="ImgRegionInfrastructureC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabAir">
+		<property name="tmplUpImage" value="ImgReportTabAir"/>
+		<property name="tmplDownImage" value="ImgReportTabAirC"/>
+		<property name="tmplOverImage" value="ImgReportTabAirC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabAirC">
+		<property name="tmplUpImage" value="ImgReportTabAirB"/>
+		<property name="tmplDownImage" value="ImgReportTabAirB"/>
+		<property name="tmplOverImage" value="ImgReportTabAirB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonAirForce">
+		<property name="tmplUpImage" value="ImgReportTabAirForce"/>
+		<property name="tmplDownImage" value="ImgReportTabAirForceC"/>
+		<property name="tmplOverImage" value="ImgReportTabAirForceC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonAirForceC">
+		<property name="tmplUpImage" value="ImgReportTabAirForceB"/>
+		<property name="tmplDownImage" value="ImgReportTabAirForceB"/>
+		<property name="tmplOverImage" value="ImgReportTabAirForceB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabArmy">
+		<property name="tmplUpImage" value="ImgReportTabArmy"/>
+		<property name="tmplDownImage" value="ImgReportTabArmyC"/>
+		<property name="tmplOverImage" value="ImgReportTabArmyC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabArmyC">
+		<property name="tmplUpImage" value="ImgReportTabArmyB"/>
+		<property name="tmplDownImage" value="ImgReportTabArmyB"/>
+		<property name="tmplOverImage" value="ImgReportTabArmyB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonGeneral">
+		<property name="tmplUpImage" value="ImgReportTabGeneral"/>
+		<property name="tmplDownImage" value="ImgReportTabGeneralC"/>
+		<property name="tmplOverImage" value="ImgReportTabGeneralC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonGeneralC">
+		<property name="tmplUpImage" value="ImgReportTabGeneralB"/>
+		<property name="tmplDownImage" value="ImgReportTabGeneralB"/>
+		<property name="tmplOverImage" value="ImgReportTabGeneralB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonGround">
+		<property name="tmplUpImage" value="ImgReportTabGround"/>
+		<property name="tmplDownImage" value="ImgReportTabGroundC"/>
+		<property name="tmplOverImage" value="ImgReportTabGroundC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonGroundC">
+		<property name="tmplUpImage" value="ImgReportTabGroundB"/>
+		<property name="tmplDownImage" value="ImgReportTabGroundB"/>
+		<property name="tmplOverImage" value="ImgReportTabGroundB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonNational">
+		<property name="tmplUpImage" value="ImgReportTabNational"/>
+		<property name="tmplDownImage" value="ImgReportTabNationalB"/>
+		<property name="tmplOverImage" value="ImgReportTabNationalB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonNationalC">
+		<property name="tmplUpImage" value="ImgReportTabNationalC"/>
+		<property name="tmplDownImage" value="ImgReportTabNationalC"/>
+		<property name="tmplOverImage" value="ImgReportTabNationalC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabNaval">
+		<property name="tmplUpImage" value="ImgReportTabNaval"/>
+		<property name="tmplDownImage" value="ImgReportTabNavalC"/>
+		<property name="tmplOverImage" value="ImgReportTabNavalC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabNavalC">
+		<property name="tmplUpImage" value="ImgReportTabNavalB"/>
+		<property name="tmplDownImage" value="ImgReportTabNavalB"/>
+		<property name="tmplOverImage" value="ImgReportTabNavalB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabSub">
+		<property name="tmplUpImage" value="ImgReportTabSub"/>
+		<property name="tmplDownImage" value="ImgReportTabSubC"/>
+		<property name="tmplOverImage" value="ImgReportTabSubC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabSubC">
+		<property name="tmplUpImage" value="ImgReportTabSubB"/>
+		<property name="tmplDownImage" value="ImgReportTabSubB"/>
+		<property name="tmplOverImage" value="ImgReportTabSubB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabSubUnit">
+		<property name="tmplUpImage" value="ImgReportTabSubUnit"/>
+		<property name="tmplDownImage" value="ImgReportTabSubUnitC"/>
+		<property name="tmplOverImage" value="ImgReportTabSubUnitC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabSubUnitC">
+		<property name="tmplUpImage" value="ImgReportTabSubUnitB"/>
+		<property name="tmplDownImage" value="ImgReportTabSubUnitB"/>
+		<property name="tmplOverImage" value="ImgReportTabSubUnitB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonNavy">
+		<property name="tmplUpImage" value="ImgReportTabNavy"/>
+		<property name="tmplDownImage" value="ImgReportTabNavyC"/>
+		<property name="tmplOverImage" value="ImgReportTabNavyC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonNavyC">
+		<property name="tmplUpImage" value="ImgReportTabNavyB"/>
+		<property name="tmplDownImage" value="ImgReportTabNavyB"/>
+		<property name="tmplOverImage" value="ImgReportTabNavyB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionButtonKill">
+		<property name="tmplUpImage" value="ImgRegionButtonKill"/>
+		<property name="tmplDownImage" value="ImgRegionButtonKillB"/>
+		<property name="tmplOverImage" value="ImgRegionButtonKillB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionButtonPlus">
+		<property name="tmplUpImage" value="ImgRegionButtonPlus"/>
+		<property name="tmplDownImage" value="ImgRegionButtonPlusB"/>
+		<property name="tmplOverImage" value="ImgRegionButtonPlusB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleFinancePanelLeft">
+		<property name="tmplUpImage" value="ImgFinancePanelLeft"/>
+		<property name="tmplDownImage" value="ImgFinancePanelLeftB"/>
+		<property name="tmplOverImage" value="ImgFinancePanelLeftB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleFinancePanelLeftC">
+		<property name="tmplUpImage" value="ImgFinancePanelLeftC"/>
+		<property name="tmplDownImage" value="ImgFinancePanelLeftC"/>
+		<property name="tmplOverImage" value="ImgFinancePanelLeftC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonTerritory">
+		<property name="tmplUpImage" value="ImgReportTabButtonTerritory"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonTerritoryB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonTerritoryB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonTerritoryC">
+		<property name="tmplUpImage" value="ImgReportTabButtonTerritoryC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonTerritoryC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonTerritoryC"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonRegionInfrastructure">
+		<property name="tmplUpImage" value="ImgReportTabButtonRegionInfrastructure"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonRegionInfrastructureB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonRegionInfrastructureB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonRegionInfrastructureC">
+		<property name="tmplUpImage" value="ImgReportTabButtonRegionInfrastructureC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonRegionInfrastructureC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonRegionInfrastructureC"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonRegionProduction">
+		<property name="tmplUpImage" value="ImgReportTabButtonRegionProduction"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonRegionProductionB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonRegionProductionB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonRegionProductionC">
+		<property name="tmplUpImage" value="ImgReportTabButtonRegionProductionC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonRegionProductionC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonRegionProductionC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonResearch">
+		<property name="tmplUpImage" value="ImgReportTabButtonResearch"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonResearchB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonResearchB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonResearchC">
+		<property name="tmplUpImage" value="ImgReportTabButtonResearchC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonResearchC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonResearchC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonResearchTree">
+		<property name="tmplUpImage" value="ImgReportTabButtonResearchTree"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonResearchTreeB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonResearchTreeB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonResearchTreeC">
+		<property name="tmplUpImage" value="ImgReportTabButtonResearchTreeC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonResearchTreeC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonResearchTreeC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonCityIndustry">
+		<property name="tmplUpImage" value="ImgReportTabButtonIndustry"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonIndustryB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonIndustryB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonCityIndustryC">
+		<property name="tmplUpImage" value="ImgReportTabButtonIndustryC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonIndustryC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonIndustryC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonProjects">
+		<property name="tmplUpImage" value="ImgReportTabButtonProjects"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonProjectsB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonProjectsB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonProjectsC">
+		<property name="tmplUpImage" value="ImgReportTabButtonProjectsC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonProjectsC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonProjectsC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonRegion">
+		<property name="tmplUpImage" value="ImgReportTabButtonRegion"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonRegionB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonRegionB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonRegionC">
+		<property name="tmplUpImage" value="ImgReportTabButtonRegionC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonRegionC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonRegionC"/>
+	</template>		
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonWorld">
+		<property name="tmplUpImage" value="ImgReportTabButtonWorld"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonWorldB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonWorldB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonWorldC">
+		<property name="tmplUpImage" value="ImgReportTabButtonWorldC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonWorldC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonWorldC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonAlliance">
+		<property name="tmplUpImage" value="ImgReportTabButtonAlliance"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonAllianceB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonAllianceB"/>
+	</template>		
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonAllianceC">
+		<property name="tmplUpImage" value="ImgReportTabButtonAllianceC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonAllianceC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonAllianceC"/>
+	</template>		
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonWar">
+		<property name="tmplUpImage" value="ImgReportTabButtonWar"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonWarB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonWarB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonWarC">
+		<property name="tmplUpImage" value="ImgReportTabButtonWarC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonWarC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonWarC"/>
+	</template>		
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonRevolt">
+		<property name="tmplUpImage" value="ImgReportTabButtonRevolt"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonRevoltB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonRevoltB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonRevoltC">
+		<property name="tmplUpImage" value="ImgReportTabButtonRevoltC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonRevoltC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonRevoltC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonArmy">
+		<property name="tmplUpImage" value="ImgReportTabButtonArmy"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonArmyB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonArmyB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonArmyC">
+		<property name="tmplUpImage" value="ImgReportTabButtonArmyC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonArmyC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonArmyC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonArmyUnit">
+		<property name="tmplUpImage" value="ImgReportTabButtonArmyUnit"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonArmyUnitB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonArmyUnitB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonArmyUnitC">
+		<property name="tmplUpImage" value="ImgReportTabButtonArmyUnitC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonArmyUnitC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonArmyUnitC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonAir">
+		<property name="tmplUpImage" value="ImgReportTabButtonAir"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonAirB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonAirB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonAirC">
+		<property name="tmplUpImage" value="ImgReportTabButtonAirC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonAirC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonAirC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonAirUnit">
+		<property name="tmplUpImage" value="ImgReportTabButtonAirUnit"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonAirUnitB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonAirUnitB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonAirUnitC">
+		<property name="tmplUpImage" value="ImgReportTabButtonAirUnitC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonAirUnitC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonAirUnitC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonNaval">
+		<property name="tmplUpImage" value="ImgReportTabButtonNaval"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonNavalB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonNavalB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonNavalC">
+		<property name="tmplUpImage" value="ImgReportTabButtonNavalC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonNavalC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonNavalC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonNavalUnit">
+		<property name="tmplUpImage" value="ImgReportTabButtonNavalUnit"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonNavalUnitB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonNavalUnitB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonNavalUnitC">
+		<property name="tmplUpImage" value="ImgReportTabButtonNavalUnitC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonNavalUnitC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonNavalUnitC"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonStatus">
+		<property name="tmplUpImage" value="ImgReportTabButtonStatus"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonStatusB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonStatusB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonStatusC">
+		<property name="tmplUpImage" value="ImgReportTabButtonStatusC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonStatusC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonStatusC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonGovernment">
+		<property name="tmplUpImage" value="ImgReportTabButtonGovernment"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonGovernmentB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonGovernmentB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonGovernmentC">
+		<property name="tmplUpImage" value="ImgReportTabButtonGovernmentC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonGovernmentC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonGovernmentC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonMilitary">
+		<property name="tmplUpImage" value="ImgReportTabButtonMilitary"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonMilitaryB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonMilitaryB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonMilitaryC">
+		<property name="tmplUpImage" value="ImgReportTabButtonMilitaryC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonMilitaryC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonMilitaryC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonTechnology">
+		<property name="tmplUpImage" value="ImgReportTabButtonTechnology"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonTechnologyB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonTechnologyB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonTechnologyC">
+		<property name="tmplUpImage" value="ImgReportTabButtonTechnologyC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonTechnologyC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonTechnologyC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonProduction">
+		<property name="tmplUpImage" value="ImgReportTabButtonProduction"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonProductionB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonProductionB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonProductionC">
+		<property name="tmplUpImage" value="ImgReportTabButtonProductionC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonProductionC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonProductionC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonInfo">
+		<property name="tmplUpImage" value="ImgReportTabButtonInfo"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonInfoB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonInfoB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonInfoC">
+		<property name="tmplUpImage" value="ImgReportTabButtonInfoC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonInfoC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonInfoC"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonNationalities">
+		<property name="tmplUpImage" value="ImgReportTabButtonNationalities"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonNationalitiesB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonNationalitiesB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonNationalitiesC">
+		<property name="tmplUpImage" value="ImgReportTabButtonNationalitiesC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonNationalitiesC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonNationalitiesC"/>
+	</template>
+		
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonTradeDeal">
+		<property name="tmplUpImage" value="ImgReportTabButtonTradeDeal"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonTradeDealB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonTradeDealB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonTradeDealC">
+		<property name="tmplUpImage" value="ImgReportTabButtonTradeDealC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonTradeDealC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonTradeDealC"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonCrate">
+		<property name="tmplUpImage" value="ImgReportTabButtonCrate"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonCrateB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonCrateB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonCrateC">
+		<property name="tmplUpImage" value="ImgReportTabButtonCrateC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonCrateC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonCrateC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonWMarket">
+		<property name="tmplUpImage" value="ImgReportTabButtonWMarket"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonWMarketB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonWMarketB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonWMarketC">
+		<property name="tmplUpImage" value="ImgReportTabButtonWMarketC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonWMarketC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonWMarketC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonFinance">
+		<property name="tmplUpImage" value="ImgReportTabButtonFinance"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonFinanceB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonFinanceB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonFinanceC">
+		<property name="tmplUpImage" value="ImgReportTabButtonFinanceC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonFinanceC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonFinanceC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonCityList">
+		<property name="tmplUpImage" value="ImgReportTabButtonCityList"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonCityListB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonCityListB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportTabButtonCityListC">
+		<property name="tmplUpImage" value="ImgReportTabButtonCityListC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonCityListC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonCityListC"/>
+	</template>	
+	
+<!-- Order Buttons -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleOrderButton">
+		<property name="tmplUpImage" value="ImgOrderButton"/>
+		<property name="tmplDownImage" value="ImgOrderButtonB"/>
+		<property name="tmplOverImage" value="ImgOrderButtonB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleOrderButtonDisabled">
+		<property name="tmplUpImage" value="ImgOrderButtonDisabled"/>
+		<property name="tmplDownImage" value="ImgOrderButtonDisabled"/>
+		<property name="tmplOverImage" value="ImgOrderButtonDisabled"/>
+	</template>	
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleOrderButton">
+		<property name="tmplButtonStyle" value="BtnStyleOrderButton"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialWhite10Center"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialWhite10Center"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialWhite10Center"/>
+	</template>
+	
+	<template type="mlmedia.TextButtonStyleTemplate" name="TxtBtnStyleOrderButtonDisabled">
+		<property name="tmplButtonStyle" value="BtnStyleOrderButtonDisabled"/>
+		<property name="tmplUpTextStyle" value="locale.TxtStyleArialWhite10CenterDisabled"/>
+		<property name="tmplDownTextStyle" value="locale.TxtStyleArialWhite10CenterDisabled"/>
+		<property name="tmplOverTextStyle" value="locale.TxtStyleArialWhite10CenterDisabled"/>
+	</template>
+	
+<!-- Report Buttons -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonRegionDemographics">
+		<property name="tmplUpImage" value="ImgReportButtonRegionDemographics"/>
+		<property name="tmplDownImage" value="ImgReportButtonRegionDemographicsB"/>
+		<property name="tmplOverImage" value="ImgReportButtonRegionDemographicsB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonRegionDemographicsB">
+		<property name="tmplUpImage" value="ImgReportButtonRegionDemographicsB"/>
+		<property name="tmplDownImage" value="ImgReportButtonRegionDemographicsB"/>
+		<property name="tmplOverImage" value="ImgReportButtonRegionDemographicsB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonRegionProduction">
+		<property name="tmplUpImage" value="ImgReportButtonRegionProduction"/>
+		<property name="tmplDownImage" value="ImgReportButtonRegionProductionB"/>
+		<property name="tmplOverImage" value="ImgReportButtonRegionProductionB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonRegionProductionB">
+		<property name="tmplUpImage" value="ImgReportButtonRegionProductionB"/>
+		<property name="tmplDownImage" value="ImgReportButtonRegionProductionB"/>
+		<property name="tmplOverImage" value="ImgReportButtonRegionProductionB"/>
+	</template>		
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonRegionInfrastructure">
+		<property name="tmplUpImage" value="ImgReportButtonRegionInfrastructure"/>
+		<property name="tmplDownImage" value="ImgReportButtonRegionInfrastructureB"/>
+		<property name="tmplOverImage" value="ImgReportButtonRegionInfrastructureB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonRegionInfrastructureB">
+		<property name="tmplUpImage" value="ImgReportButtonRegionInfrastructureB"/>
+		<property name="tmplDownImage" value="ImgReportButtonRegionInfrastructureB"/>
+		<property name="tmplOverImage" value="ImgReportButtonRegionInfrastructureB"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonRegionOrders">
+		<property name="tmplUpImage" value="ImgReportButtonRegionOrders"/>
+		<property name="tmplDownImage" value="ImgReportButtonRegionOrdersB"/>
+		<property name="tmplOverImage" value="ImgReportButtonRegionOrdersB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonRegionOrdersB">
+		<property name="tmplUpImage" value="ImgReportButtonRegionOrdersB"/>
+		<property name="tmplDownImage" value="ImgReportButtonRegionOrdersB"/>
+		<property name="tmplOverImage" value="ImgReportButtonRegionOrdersB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonMilitary">
+		<property name="tmplUpImage" value="ImgReportButtonMilitary"/>
+		<property name="tmplDownImage" value="ImgReportButtonMilitaryB"/>
+		<property name="tmplOverImage" value="ImgReportButtonMilitaryB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonMilitaryB">
+		<property name="tmplUpImage" value="ImgReportButtonMilitaryB"/>
+		<property name="tmplDownImage" value="ImgReportButtonMilitaryB"/>
+		<property name="tmplOverImage" value="ImgReportButtonMilitaryB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonDiplomacy">
+		<property name="tmplUpImage" value="ImgReportButtonDiplomacy"/>
+		<property name="tmplDownImage" value="ImgReportButtonDiplomacyB"/>
+		<property name="tmplOverImage" value="ImgReportButtonDiplomacyB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonDiplomacyB">
+		<property name="tmplUpImage" value="ImgReportButtonDiplomacyB"/>
+		<property name="tmplDownImage" value="ImgReportButtonDiplomacyB"/>
+		<property name="tmplOverImage" value="ImgReportButtonDiplomacyB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonGovernment">
+		<property name="tmplUpImage" value="ImgReportButtonGovernment"/>
+		<property name="tmplDownImage" value="ImgReportButtonGovernmentB"/>
+		<property name="tmplOverImage" value="ImgReportButtonGovernmentB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonGovernmentB">
+		<property name="tmplUpImage" value="ImgReportButtonGovernmentB"/>
+		<property name="tmplDownImage" value="ImgReportButtonGovernmentB"/>
+		<property name="tmplOverImage" value="ImgReportButtonGovernmentB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonCity">
+		<property name="tmplUpImage" value="ImgReportButtonCity"/>
+		<property name="tmplDownImage" value="ImgReportButtonCityB"/>
+		<property name="tmplOverImage" value="ImgReportButtonCityB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonCityB">
+		<property name="tmplUpImage" value="ImgReportButtonCityB"/>
+		<property name="tmplDownImage" value="ImgReportButtonCityB"/>
+		<property name="tmplOverImage" value="ImgReportButtonCityB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonRegion">
+		<property name="tmplUpImage" value="ImgReportButtonRegion"/>
+		<property name="tmplDownImage" value="ImgReportButtonRegionB"/>
+		<property name="tmplOverImage" value="ImgReportButtonRegionB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonRegionB">
+		<property name="tmplUpImage" value="ImgReportButtonRegionB"/>
+		<property name="tmplDownImage" value="ImgReportButtonRegionB"/>
+		<property name="tmplOverImage" value="ImgReportButtonRegionB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonTrade">
+		<property name="tmplUpImage" value="ImgReportButtonTrade"/>
+		<property name="tmplDownImage" value="ImgReportButtonTradeB"/>
+		<property name="tmplOverImage" value="ImgReportButtonTradeB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonTradeB">
+		<property name="tmplUpImage" value="ImgReportButtonTradeB"/>
+		<property name="tmplDownImage" value="ImgReportButtonTradeB"/>
+		<property name="tmplOverImage" value="ImgReportButtonTradeB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonInfo">
+		<property name="tmplUpImage" value="ImgReportButtonInfo"/>
+		<property name="tmplDownImage" value="ImgReportButtonInfoB"/>
+		<property name="tmplOverImage" value="ImgReportButtonInfoB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonInfoB">
+		<property name="tmplUpImage" value="ImgReportButtonInfoB"/>
+		<property name="tmplDownImage" value="ImgReportButtonInfoB"/>
+		<property name="tmplOverImage" value="ImgReportButtonInfoB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonNation">
+		<property name="tmplUpImage" value="ImgReportButtonNation"/>
+		<property name="tmplDownImage" value="ImgReportButtonNationB"/>
+		<property name="tmplOverImage" value="ImgReportButtonNationB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonNationB">
+		<property name="tmplUpImage" value="ImgReportButtonNationB"/>
+		<property name="tmplDownImage" value="ImgReportButtonNationB"/>
+		<property name="tmplOverImage" value="ImgReportButtonNationB"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonNext">
+		<property name="tmplUpImage" value="ImgReportButtonNext"/>
+		<property name="tmplDownImage" value="ImgReportButtonNextB"/>
+		<property name="tmplOverImage" value="ImgReportButtonNextB"/>
+	</template>	
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonPrevious">
+		<property name="tmplUpImage" value="ImgReportButtonPrevious"/>
+		<property name="tmplDownImage" value="ImgReportButtonPreviousB"/>
+		<property name="tmplOverImage" value="ImgReportButtonPreviousB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonClose">
+		<property name="tmplUpImage" value="ImgReportButtonClose"/>
+		<property name="tmplDownImage" value="ImgReportButtonCloseB"/>
+		<property name="tmplOverImage" value="ImgReportButtonCloseB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleReportButtonCloseB">
+		<property name="tmplUpImage" value="ImgReportButtonCloseB"/>
+		<property name="tmplDownImage" value="ImgReportButtonCloseB"/>
+		<property name="tmplOverImage" value="ImgReportButtonCloseB"/>
+	</template>	
+	
+<!-- Queue Buttons -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonAdd">
+		<property name="tmplUpImage" value="ImgQueueButtonAdd"/>
+		<property name="tmplDownImage" value="ImgQueueButtonAddB"/>
+		<property name="tmplOverImage" value="ImgQueueButtonAddB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonAddDisabled">
+		<property name="tmplUpImage" value="ImgQueueButtonAddDisabled"/>
+		<property name="tmplDownImage" value="ImgQueueButtonAddDisabled"/>
+		<property name="tmplOverImage" value="ImgQueueButtonAddDisabled"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonRemove">
+		<property name="tmplUpImage" value="ImgQueueButtonRemove"/>
+		<property name="tmplDownImage" value="ImgQueueButtonRemoveB"/>
+		<property name="tmplOverImage" value="ImgQueueButtonRemoveB"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonRemoveDisabled">
+		<property name="tmplUpImage" value="ImgQueueButtonRemoveDisabled"/>
+		<property name="tmplDownImage" value="ImgQueueButtonRemoveDisabled"/>
+		<property name="tmplOverImage" value="ImgQueueButtonRemoveDisabled"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonIncrease">
+		<property name="tmplUpImage" value="ImgQueueButtonIncrease"/>
+		<property name="tmplDownImage" value="ImgQueueButtonIncreaseB"/>
+		<property name="tmplOverImage" value="ImgQueueButtonIncreaseB"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonIncreaseDisabled">
+		<property name="tmplUpImage" value="ImgQueueButtonIncreaseDisabled"/>
+		<property name="tmplDownImage" value="ImgQueueButtonIncreaseDisabled"/>
+		<property name="tmplOverImage" value="ImgQueueButtonIncreaseDisabled"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonDecrease">
+		<property name="tmplUpImage" value="ImgQueueButtonDecrease"/>
+		<property name="tmplDownImage" value="ImgQueueButtonDecreaseB"/>
+		<property name="tmplOverImage" value="ImgQueueButtonDecreaseB"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonDecreaseDisabled">
+		<property name="tmplUpImage" value="ImgQueueButtonDecreaseDisabled"/>
+		<property name="tmplDownImage" value="ImgQueueButtonDecreaseDisabled"/>
+		<property name="tmplOverImage" value="ImgQueueButtonDecreaseDisabled"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonHighest">
+		<property name="tmplUpImage" value="ImgQueueButtonHighest"/>
+		<property name="tmplDownImage" value="ImgQueueButtonHighestB"/>
+		<property name="tmplOverImage" value="ImgQueueButtonHighestB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonHighestDisabled">
+		<property name="tmplUpImage" value="ImgQueueButtonHighestDisabled"/>
+		<property name="tmplDownImage" value="ImgQueueButtonHighestDisabled"/>
+		<property name="tmplOverImage" value="ImgQueueButtonHighestDisabled"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonLowest">
+		<property name="tmplUpImage" value="ImgQueueButtonLowest"/>
+		<property name="tmplDownImage" value="ImgQueueButtonLowestB"/>
+		<property name="tmplOverImage" value="ImgQueueButtonLowestB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonLowestDisabled">
+		<property name="tmplUpImage" value="ImgQueueButtonLowestDisabled"/>
+		<property name="tmplDownImage" value="ImgQueueButtonLowestDisabled"/>
+		<property name="tmplOverImage" value="ImgQueueButtonLowestDisabled"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonPause">
+		<property name="tmplUpImage" value="ImgQueueButtonPause"/>
+		<property name="tmplDownImage" value="ImgQueueButtonPauseB"/>
+		<property name="tmplOverImage" value="ImgQueueButtonPauseB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonPauseDisabled">
+		<property name="tmplUpImage" value="ImgQueueButtonPauseDisabled"/>
+		<property name="tmplDownImage" value="ImgQueueButtonPauseDisabled"/>
+		<property name="tmplOverImage" value="ImgQueueButtonPauseDisabled"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonStop">
+		<property name="tmplUpImage" value="ImgQueueButtonStop"/>
+		<property name="tmplDownImage" value="ImgQueueButtonStopB"/>
+		<property name="tmplOverImage" value="ImgQueueButtonStopB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonStopDisabled">
+		<property name="tmplUpImage" value="ImgQueueButtonStopDisabled"/>
+		<property name="tmplDownImage" value="ImgQueueButtonStopDisabled"/>
+		<property name="tmplOverImage" value="ImgQueueButtonStopDisabled"/>
+	</template>	
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonStart">
+		<property name="tmplUpImage" value="ImgQueueButtonStart"/>
+		<property name="tmplDownImage" value="ImgQueueButtonStartB"/>
+		<property name="tmplOverImage" value="ImgQueueButtonStartB"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonStartDisabled">
+		<property name="tmplUpImage" value="ImgQueueButtonStartDisabled"/>
+		<property name="tmplDownImage" value="ImgQueueButtonStartDisabled"/>
+		<property name="tmplOverImage" value="ImgQueueButtonStartDisabled"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonRepeat">
+		<property name="tmplUpImage" value="ImgQueueButtonRepeat"/>
+		<property name="tmplDownImage" value="ImgQueueButtonRepeatB"/>
+		<property name="tmplOverImage" value="ImgQueueButtonRepeatB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleQueueButtonRepeatDisabled">
+		<property name="tmplUpImage" value="ImgQueueButtonRepeatDisabled"/>
+		<property name="tmplDownImage" value="ImgQueueButtonRepeatDisabled"/>
+		<property name="tmplOverImage" value="ImgQueueButtonRepeatDisabled"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleCityQueueButtonRemove">
+		<property name="tmplUpImage" value="ImgCityQueueButtonRemove"/>
+		<property name="tmplDownImage" value="ImgCityQueueButtonRemoveB"/>
+		<property name="tmplOverImage" value="ImgCityQueueButtonRemoveB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleCityQueueButtonInfo">
+		<property name="tmplUpImage" value="ImgCityQueueButtonInfo"/>
+		<property name="tmplDownImage" value="ImgCityQueueButtonInfoC"/>
+		<property name="tmplOverImage" value="ImgCityQueueButtonInfoB"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleCityQueueButtonPause">
+		<property name="tmplUpImage" value="ImgCityQueueButtonPause"/>
+		<property name="tmplDownImage" value="ImgCityQueueButtonPauseB"/>
+		<property name="tmplOverImage" value="ImgCityQueueButtonPauseC"/>
+	</template>
+	
+<!-- TIM - REGION -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionProjectsAddToQueue">
+		<property name="tmplUpImage" value="ImgRegionProjectsAddToQueue"/>
+		<property name="tmplDownImage" value="ImgRegionProjectsAddToQueueDown"/>
+		<property name="tmplOverImage" value="ImgRegionProjectsAddToQueueOver"/>
+	</template>
+<!-- REMOVE -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionProjectsQueueRemove">
+		<property name="tmplUpImage" value="ImgRegionProjectsQueueRemove"/>
+		<property name="tmplDownImage" value="ImgRegionProjectsQueueRemoveDown"/>
+		<property name="tmplOverImage" value="ImgRegionProjectsQueueRemoveOver"/>
+	</template>
+<!-- START -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionProjectsQueueStart">
+		<property name="tmplUpImage" value="ImgRegionProjectsQueueStart"/>
+		<property name="tmplDownImage" value="ImgRegionProjectsQueueStart"/>
+		<property name="tmplOverImage" value="ImgRegionProjectsQueueStartOver"/>
+	</template>
+<!-- CANCEL -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionProjectsQueueCancel">
+		<property name="tmplUpImage" value="ImgCityQueueButtonCancel"/>
+		<property name="tmplDownImage" value="ImgCityQueueButtonCancelB"/>
+		<property name="tmplOverImage" value="ImgCityQueueButtonCancelC"/>
+	</template>
+<!-- UP -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionProjectsQueueUp">
+		<property name="tmplUpImage" value="ImgRegionProjectsQueueUp"/>
+		<property name="tmplDownImage" value="ImgRegionProjectsQueueUp"/>
+		<property name="tmplOverImage" value="ImgRegionProjectsQueueUpOver"/>
+	</template>
+<!-- DOWN -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionProjectsQueueDown">
+		<property name="tmplUpImage" value="ImgRegionProjectsQueueDown"/>
+		<property name="tmplDownImage" value="ImgRegionProjectsQueueDown"/>
+		<property name="tmplOverImage" value="ImgRegionProjectsQueueDownOver"/>
+	</template>
+<!-- PAUSE -->
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleRegionProjectsQueuePause">
+		<property name="tmplUpImage" value="ImgCityQueueButtonPause"/>
+		<property name="tmplDownImage" value="ImgCityQueueButtonPauseB"/>
+		<property name="tmplOverImage" value="ImgCityQueueButtonPauseC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleProjectsQueueRepeat">
+		<property name="tmplUpImage" value="ImgProjectsQueueRepeat"/>
+		<property name="tmplDownImage" value="ImgProjectsQueueRepeatOver"/>
+		<property name="tmplOverImage" value="ImgProjectsQueueRepeatC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleBldgButtonRepair">
+		<property name="tmplUpImage" value="ImgBldgButtonRepair"/>
+		<property name="tmplDownImage" value="ImgBldgButtonRepairB"/>
+		<property name="tmplOverImage" value="ImgBldgButtonRepair"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleBldgButtonUpgrade">
+		<property name="tmplUpImage" value="TextureBldgButtonUpgrade"/>
+		<property name="tmplDownImage" value="TextureBldgButtonUpgrade"/>
+		<property name="tmplOverImage" value="TextureBldgButtonUpgrade"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleBldgButtonInfo">
+		<property name="tmplUpImage" value="ImgBldgButtonInfo"/>
+		<property name="tmplDownImage" value="ImgBldgButtonInfoB"/>
+		<property name="tmplOverImage" value="ImgBldgButtonInfo"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStyleBldgButtonDestroy">
+		<property name="tmplUpImage" value="ImgBldgButtonDestroy"/>
+		<property name="tmplDownImage" value="ImgBldgButtonDestroyB"/>
+		<property name="tmplOverImage" value="ImgBldgButtonDestroy"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnMinimize">
+		<property name="tmplUpImage" value="ImgMinimize"/>
+		<property name="tmplDownImage" value="ImgMinimize"/>
+		<property name="tmplOverImage" value="ImgMinimizeOver"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnMaximize">
+		<property name="tmplUpImage" value="ImgMaximize"/>
+		<property name="tmplDownImage" value="ImgMaximize"/>
+		<property name="tmplOverImage" value="ImgMaximizeOver"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnClose">
+		<property name="tmplUpImage" value="ImgClose"/>
+		<property name="tmplDownImage" value="ImgClose"/>
+		<property name="tmplOverImage" value="ImgCloseOver"/>
+	</template>
+
+  <template type="mlmedia.ButtonStyleTemplate" name="BtnFullClose">
+    <property name="tmplUpImage" value="ImgFullClose"/>
+    <property name="tmplDownImage" value="ImgFullClose"/>
+    <property name="tmplOverImage" value="ImgFullCloseOver"/>
+  </template>
+
+  <template type="mlmedia.ButtonStyleTemplate" name="BtnCloseNotification">
+		<property name="tmplUpImage" value="ImgNotificationClose"/>
+		<property name="tmplDownImage" value="ImgNotificationClose"/>
+		<property name="tmplOverImage" value="ImgNotificationCloseOver"/>
+	</template>
+
+  <template type="mlmedia.ButtonStyleTemplate" name="BtnJumpNotification">
+    <property name="tmplUpImage" value="ImgNotificationJumpTarget"/>
+    <property name="tmplDownImage" value="ImgNotificationJumpTarget"/>
+    <property name="tmplOverImage" value="ImgNotificationJumpTargetOver"/>
+  </template>
+
+  <template type="mlmedia.ButtonStyleTemplate" name="BtnEndGame">
+		<property name="tmplUpImage" value="ImgEndGameButton"/>
+		<property name="tmplDownImage" value="ImgEndGameButton"/>
+		<property name="tmplOverImage" value="ImgEndGameButtonOver"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnReportTabButtonEspionage">
+		<property name="tmplUpImage" value="ImgReportTabButtonEspionage"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonEspionageB"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonEspionageB"/>
+	</template>
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnReportTabButtonEspionageB">
+		<property name="tmplUpImage" value="ImgReportTabButtonEspionageC"/>
+		<property name="tmplDownImage" value="ImgReportTabButtonEspionageC"/>
+		<property name="tmplOverImage" value="ImgReportTabButtonEspionageC"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnReportDiplomacyPeaceActions">
+		<property name="tmplUpImage" value="ImgDiplomacyButtonUp"/>
+		<property name="tmplDownImage" value="ImgDiplomacyButtonDown"/>
+		<property name="tmplOverImage" value="ImgDiplomacyButtonUp"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnStockpileOption">
+		<property name="tmplUpImage" value="ImgStockpileButton"/>
+		<property name="tmplDownImage" value="ImgStockpileButton"/>
+		<property name="tmplOverImage" value="ImgStockpileButtonOver"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnResearchTreeFullscreen">
+		<property name="tmplUpImage" value="ImgResearchFullscreen"/>
+		<property name="tmplDownImage" value="ImgResearchFullscreen"/>
+		<property name="tmplOverImage" value="ImgResearchFullscreenOver"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnResearchTreeMinscreen">
+		<property name="tmplUpImage" value="ImgResearchMinscreen"/>
+		<property name="tmplDownImage" value="ImgResearchMinscreen"/>
+		<property name="tmplOverImage" value="ImgResearchMinscreenOver"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnSelectionPanelLower">
+		<property name="tmplUpImage" value="ImgBtnReportPanelLowerUp"/>
+		<property name="tmplDownImage" value="ImgBtnReportPanelLowerUp"/>
+		<property name="tmplOverImage" value="ImgBtnReportPanelLowerDown"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnMainMenuNotificationsChecked">
+		<property name="tmplUpImage" value="ImgBtnBoxCheckedUp"/>
+		<property name="tmplDownImage" value="ImgBtnBoxCheckedUp"/>
+		<property name="tmplOverImage" value="ImgBtnBoxCheckedDown"/>
+	</template>	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnMainMenuNotificationsUnchecked">
+		<property name="tmplUpImage" value="ImgBtnBoxUncheckedUp"/>
+		<property name="tmplDownImage" value="ImgBtnBoxUncheckedUp"/>
+		<property name="tmplOverImage" value="ImgBtnBoxUncheckedDown"/>
+	</template>
+
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnReportTab">
+		<property name="tmplUpImage" value="ImgReportTab"/>
+		<property name="tmplDownImage" value="ImgReportTabOver"/>
+		<property name="tmplOverImage" value="ImgReportTabOver"/>
+	</template>
+	
+	<template type="mlmedia.ButtonStyleTemplate" name="BtnReportTabSelected">
+		<property name="tmplUpImage" value="ImgReportTabSelected"/>
+		<property name="tmplDownImage" value="ImgReportTabSelected"/>
+		<property name="tmplOverImage" value="ImgReportTabSelected"/>
+	</template>
+</locust>

@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="UI3DLayerTrade" superType="mlui.UI3DLayer">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>    
+        
+		<object type="ml3dworld.TransformTranslate" name="objTransform">
+			<property name="vecTranslation">
+				Vec3D(0, 0, 0.27)
+			</property>
+		</object>                        
+    
+        <object type="UI3DTradeDetails" name="objDetails" existsWhile="self.objMapData.tmplMapView.resolve().bShowTradeRoutes">
+            <property name="objAvatar" from="def.objMapData.objAvatar"/>
+            <property name="objMapData" from="def.objMapData"/>
+        </object>
+    </objectDef>
+    
+    <objectDef type="UI3DLayerInterdiction" superType="mlui.UI3DLayer">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>    
+    
+		<object type="ml3dworld.TransformTranslate" name="objTransform">
+			<property name="vecTranslation">
+				Vec3D(0, 0, 0.27)
+			</property>
+		</object>                        
+    
+        <object type="UI3DInterdictions" name="objDetails" >
+            <property name="objAvatar" from="def.objMapData.objAvatar"/>
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objNation" from="def.objMapData.objNation"/>
+        </object>
+    </objectDef>
+    
+    <objectDef type="UI3DInterdictions" superType="mlui.UI3DElement">
+        <!-- Inputs -->
+        <propertyDef name="objAvatar" type="mlgame.Avatar"/>
+        <propertyDef name="objMapData" type="MapData"/>
+        <propertyDef name="objNation" type="gs_tbg.Nation" />
+        
+        <!-- Internal -->        
+        <propertyDef name="objSelectedNationTradeRecords" type="gs_tbg.TradeRecord" variable="true">
+            union(filter(?{record: record.refSourceNation == self.objNation}, gs_tbg.getGameSysTrade(self.objAvatar).objTradeRecords),
+                    filter(?{record: record.refDestNation == self.objNation}, gs_tbg.getGameSysTrade(self.objAvatar).objTradeRecords))
+        </propertyDef>
+        <propertyDef name="objSelectedNationTradeRegions" type="gs_tbg.TradeRegion" variable="true">
+            flattenSet(map(?{record: record.objTradeRegions}, self.objSelectedNationTradeRecords))
+        </propertyDef>
+        <propertyDef name="objInterdictionTradeRegions" type="gs_tbg.TradeRegion" variable="true">
+            filter(?{traderegion: traderegion.nInterdiction GT 0}, self.objSelectedNationTradeRegions)
+        </propertyDef>
+        
+        <object name="objTradeInterdictionModels" type="UI3DTradeInterdiction" tiedTo="self.objInterdictionTradeRegions">
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objTradeRegion" from="tiedTo"/>
+            <property name="objTradeRecord" from="def.getTradeRecord(tiedTo)"/>
+        </object>
+        
+        <script type="application/x-locust-query"> <![CDATA[
+            getTradeRecord = ?{regionTradeRegion:
+                find(?{traderecord: find(?{region: region == regionTradeRegion}, traderecord.objTradeRegions) != null}, self.objSelectedNationTradeRecords)
+            }
+        ]]></script>          
+    </objectDef>
+    
+    
+    <objectDef type="UI3DTradeDetails" superType="mlui.UI3DElement">
+        <!-- Inputs -->
+        <propertyDef name="objAvatar" type="mlgame.Avatar"/>
+        <propertyDef name="objMapData" type="MapData"/>
+        
+        <!-- Internal -->
+        <propertyDef name="objSelectedNation" type="gs_tbg.Nation">
+            switch{
+                case self.objMapData.objSelectedObject.instanceOf(gs_tbg.Nation):
+                    self.objMapData.objSelectedObject
+                case self.objMapData.objSelectedObject.instanceOf(gs_tbg.City):
+                    self.objMapData.objSelectedObject.refRegion.resolve(self.objAvatar).refController.resolve(self.objAvatar)
+                case self.objMapData.objSelectedObject.refController == null:
+                    self.objMapData.objNation
+                default:
+                    self.objMapData.objSelectedObject.refController.resolve(self.objAvatar)
+            }
+        </propertyDef>
+        
+        <propertyDef name="objSelectedNationTradeRecords" type="gs_tbg.TradeRecord" variable="true">
+            union(filter(?{record: record.refSourceNation == self.objSelectedNation}, gs_tbg.getGameSysTrade(self.objAvatar).objTradeRecords),
+                    filter(?{record: record.refDestNation == self.objSelectedNation}, gs_tbg.getGameSysTrade(self.objAvatar).objTradeRecords))
+        </propertyDef>
+                
+        <object name="objTradeArrows" type="UI3DTradeArrow" tiedTo="self.objSelectedNationTradeRecords">
+            <property name="objAvatar" from="def.objAvatar"/>
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objTradeRecord" from="tiedTo"/>
+            <property name="objDisplayNation" from="def.objSelectedNation"/>
+        </object>
+        
+        <propertyDef name="objSelectedNationTradeRegions" type="gs_tbg.TradeRegion" variable="true">
+            flattenSet(map(?{record: record.objTradeRegions}, self.objSelectedNationTradeRecords))
+        </propertyDef>
+        <propertyDef name="objInterdictionTradeRegions" type="gs_tbg.TradeRegion" variable="true">
+            filter(?{traderegion: traderegion.nInterdiction GT 0}, self.objSelectedNationTradeRegions)
+        </propertyDef>
+        
+        <object name="objTradeInterdictionModels" type="UI3DTradeInterdiction" tiedTo="self.objInterdictionTradeRegions">
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objTradeRegion" from="tiedTo"/>
+            <property name="objTradeRecord" from="def.getTradeRecord(tiedTo)"/>
+        </object>
+        
+        <script type="application/x-locust-query"> <![CDATA[
+            getTradeRecord = ?{regionTradeRegion:
+                find(?{traderecord: find(?{region: region == regionTradeRegion}, traderecord.objTradeRegions) != null}, self.objSelectedNationTradeRecords)
+            }
+        ]]></script>          
+    </objectDef>
+    
+    <objectDef type="UI3DTradeInterdiction" superType="UI3DMapModelGO">
+        <!-- inputs -->
+		<propertyDef name="objMapData" type="MapData"/>
+        <propertyDef name="objTradeRegion" type="gs_tbg.TradeRegion"/>
+        <propertyDef name="objTradeRecord" type="gs_tbg.TradeRecord"/>
+        <!-- internal -->
+        <propertyDef name="objRegion" type="gs_tbg.Region" from="self.objTradeRegion.refRegion.resolve(self.objMapData.objAvatar)"/>
+        
+		<propertyDef name="objMapModel" type="MapModelTemplate">
+            self.objMapData.tmplInterdictionMapModel.resolve()
+        </propertyDef>
+        
+        <!-- UI3DModelGO Properties -->
+		<property name="objGO" from="self.objTradeRegion.refRegion.resolve(self.objMapData.objAvatar)"/>
+		<property name="tmplModel" from="self.objMapModel.tmplModel"/>
+        
+        <!-- UI3DMapModel properties -->
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		<property name="vecPosition" from="Vec3D(self.objRegion.vecPositions[2].x, self.objRegion.vecPositions[2].y, 0.0)" />
+		<object type="ml3dworld.TransformList" name="objLocalTransforms" >
+            <object type="ml3dworld.TransformTranslate" name="objTransforms">
+            </object>
+			<object type="ml3dworld.TransformList" name="objTransforms" >
+				<property name="objTransforms" from="def.objMapModel.objTransform" />
+			</object>
+		</object>
+		
+		<property name="strToolTip" from="InterdictionToolTip"/>
+		<propertyDef name="fInterdictedAmt" type="float" >
+            sum(map(?{record: (float(self.objTradeRegion.nInterdiction) / 100 * float(record.nTradeAmount)) }, self.objTradeRecord.objTradeResourceRecords))
+        </propertyDef>
+        <property name="bVisible" >
+           self.fInterdictedAmt.formatNumber(0, true) != '0'
+        </property>
+        
+    </objectDef>
+    
+    <objectDef type="UI3DTradeArrow" class="CUI3DTradeArrow" superType="mlui.UI3DElement">
+        <!-- Inputs -->
+        <propertyDef name="objAvatar" type="mlgame.Avatar"/>
+        <propertyDef name="objMapData" type="MapData"/>
+        <propertyDef name="fThickness" type="float" default="0.0675" />
+        <propertyDef name="objTradeRecord" type="gs_tbg.TradeRecord"/>
+        <propertyDef name="objDisplayNation" type="gs_tbg.Nation"/>
+        
+		<property name="strToolTip" from="TradeArrowToolTip"/>
+    </objectDef>
+    
+    <objectDef type="TradeArrowToolTip" superType="mlui.UI2DToolTip">
+        <propertyDef name="objTradeRecord" from="self.objElement.objTradeRecord"/>
+        <propertyDef name="objAvatar" type="mlgame.Avatar" from="self.objElement.objAvatar"/>
+        <propertyDef name="objMapData" from="self.objElement.objMapData"/>
+        <propertyDef name="objDisplayNation" from="self.objElement.objDisplayNation"/>
+        
+		<propertyDef name="nHorizPadding" type="int" default="14"/>
+		<propertyDef name="nVertPadding" type="int" default="4"/>
+        
+        <property name="nWidth" from="self.objList.nWidth + self.nHorizPadding"/>
+		<property name="nHeight" from="self.objList.nHeight + self.nVertPadding"/>
+		<property name="nOffsetX" value="32"/>
+		<property name="nOffsetY" value="32"/>
+        
+		<object type="mlui.UI2DImage" name="objBorder">
+			<property name="tmplImage" value="default_media.ImgToolTipBorder"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="0"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="default_media.ImgToolTipBackground"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth"  from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nDepth" value="1"/>
+		</object>
+		
+        <propertyDef name="objExportRecords" type="gs_tbg.TradeRecord" variable="true">
+            filter(?{record: record.refSourceNation == self.objDisplayNation}, gs_tbg.getGameSysTrade(self.objAvatar).objTradeRecords)
+        </propertyDef>
+        <propertyDef name="objImportRecords" type="gs_tbg.TradeRecord" variable="true">
+            filter(?{record: record.refDestNation == self.objDisplayNation}, gs_tbg.getGameSysTrade(self.objAvatar).objTradeRecords)
+        </propertyDef>
+            
+        <object type="common_ui.UI2DList" name="objList">
+            <property name="nDepth" value="3"/>
+            <property name="nX" value="8"/>
+            <object type="mlui.UI2DText" name="objElements">
+                <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                <property name="strText" from="def.objDisplayNation.strDisplayName"/>
+                <property name="nHeight" value="16"/>
+            </object>
+            <object type="common_ui.UI2DList" name="objElements" existsWhile="def.objExportRecords.size GT 0">
+                <object type="mlui.UI2DText" name="objElements">
+                    <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                    <property name="strText" from="locale.SID.UI.Exporting"/>
+                    <property name="nHeight" value="16"/>
+                </object>
+                <object type="TooltipTradeRecord" name="objElements" tiedTo="def.objExportRecords">
+                    <property name="objTradeRecord" from="tiedTo"/>
+                    <property name="objAvatar" from="def.objAvatar"/>
+                    <property name="bImport" value="false"/>
+                </object>            
+            </object>
+            <object type="common_ui.UI2DList" name="objElements" existsWhile="def.objImportRecords.size GT 0">
+                <object type="mlui.UI2DText" name="objElements">
+                    <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                    <property name="strText" from="locale.SID.UI.Importing"/>
+                    <property name="nHeight" value="16"/>
+                </object>
+                <object type="TooltipTradeRecord" name="objElements" tiedTo="def.objImportRecords">
+                    <property name="objTradeRecord" from="tiedTo"/>
+                    <property name="objAvatar" from="def.objAvatar"/>
+                    <property name="bImport" value="true"/>
+                </object>
+            </object>
+        </object>
+    </objectDef>
+    
+    
+    <objectDef type="InterdictionToolTip" superType="mlui.UI2DToolTip">
+        <propertyDef name="objTradeRecord" from="self.objElement.objTradeRecord"/>
+        <propertyDef name="objMapData" from="self.objElement.objMapData"/>
+        <propertyDef name="objTradeRegion" from="self.objElement.objTradeRegion"/>
+        
+		<propertyDef name="nHorizPadding" type="int" default="14"/>
+		<propertyDef name="nVertPadding" type="int" default="4"/>
+        
+        <property name="nWidth" from="self.objList.nWidth + self.nHorizPadding"/>
+		<property name="nHeight" from="self.objList.nHeight + self.nVertPadding"/>
+		<property name="nOffsetX" value="32"/>
+		<property name="nOffsetY" value="32"/>
+        
+		<object type="mlui.UI2DImage" name="objBorder">
+			<property name="tmplImage" value="default_media.ImgToolTipBorder"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="0"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="default_media.ImgToolTipBackground"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth"  from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nDepth" value="1"/>
+		</object>
+		
+        
+        <object type="common_ui.UI2DList" name="objList">
+            <property name="nDepth" value="3"/>
+            <property name="nX" value="8"/>
+            <object type="common_ui.UI2DList" name="objElements" >
+                <object type="mlui.UI2DText" name="objElements" tiedTo="def.objTradeRecord.objTradeResourceRecords">
+                    <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                    <property name="strText">
+                        locale.FSID.UI.InterdictionToolTip.format(
+                            'Amount', (float(def.objTradeRegion.nInterdiction) / 100 * float(tiedTo.nTradeAmount)).formatNumber(0, true),
+                            'Resource', tiedTo.tmplResource.resolve().strDisplayName,
+                            'SourceNation', def.objTradeRecord.refSourceNation.resolve(def.objMapData.objAvatar).strDisplayName,
+                            'DestNation',  def.objTradeRecord.refDestNation.resolve(def.objMapData.objAvatar).strDisplayName
+                            )
+                    </property>
+                    <property name="nHeight" value="16"/>
+                </object>
+            </object>
+        </object>
+    </objectDef>
+    
+    <objectDef type="TooltipTradeRecord" superType="mlui.UI2DElement">
+        <propertyDef name="objTradeRecord" type="gs_tbg.TradeRecord"/>
+        <propertyDef name="objAvatar" type="mlgame.Avatar" />
+        <propertyDef name="bImport" type="bool" default="true"/>
+        
+        <property name="nHeight" from="self.objList.nHeight"/>
+        <property name="nWidth">
+			sortDescending(?{text: text.nWidth}, self.objList.objElements).first.nWidth + 8
+		</property>
+        
+        <object type="common_ui.UI2DList" name="objList">
+            <property name="nX" value="4"/>
+            <object type="mlui.UI2DText" name="objElements" tiedTo="def.objTradeRecord.objTradeResourceRecords">
+                <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                <property name="strText">
+                    if(def.bImport,
+                        locale.FSID.UI.FromNation.format('Nation', def.objTradeRecord.refSourceNation.resolve(def.objAvatar).strDisplayName),
+                        locale.FSID.UI.ToNation.format('Nation', def.objTradeRecord.refDestNation.resolve(def.objAvatar).strDisplayName)
+                    ) +
+                    locale.FSID.UI.TradeRecordResourceAmount.format(
+                        'Promised', tiedTo.nPromisedAmount,
+                        'Resource', tiedTo.tmplResource.resolve().strDisplayName,
+                        'Delivered', tiedTo.nDeliveredAmount
+                    )
+                </property>
+                <property name="nHeight" value="16"/>
+            </object>
+        </object>
+    </objectDef>
+</locust>

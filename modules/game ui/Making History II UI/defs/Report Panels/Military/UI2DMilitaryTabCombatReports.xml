@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DMilitaryTabCombatReports" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		
+		<object type="LookupEngagements" name="objLookupEngagements">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objNation" from="def.objMH2Data.objNation"/>
+		</object>
+	
+	<!-- Combat Reports -->	
+		<object type="mlui.UI2DText" name="objCombatReportsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.CombatReports"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objLeftPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="447"/>
+			<property name="nHeight" value="520"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objLeftPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="443"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBattlesIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconCombat"/>
+			<property name="nX" value="14"/>
+			<property name="nY" value="165"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="27"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objBattlesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Battles"/>
+			<property name="nX" value="42"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBattlesBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="42"/>
+			<property name="nY" value="181"/>
+			<property name="nWidth" value="298"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>		
+		
+		<object type="mlui.UI2DText" name="objAttackerLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Attacker"/>
+			<property name="nX" value="42"/>
+			<property name="nY" value="189"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objDefenderLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Defender"/>
+			<property name="nX" value="141"/>
+			<property name="nY" value="189"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objRegionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Region"/>
+			<property name="nX" value="241"/>
+			<property name="nY" value="189"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="common_ui.UI2DList" name="objGroupListBubbles">
+			<property name="nX" value="42"/>
+			<property name="nY" value="207"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="1"/>
+
+			<object type="UI2DEngagementListBubble" name="objElements" tiedTo="def.objLookupEngagements.objAllEngagements">
+				<property name="objMH2Data" from="mh2data"/>
+				<property name="objEngagement" from="tiedTo"/>
+
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="298"/>
+				<property name="nHeight" value="30"/>
+			</object>
+		</object>
+	
+	<!-- Combat Summary -->	
+		<object type="mlui.UI2DText" name="objCombatSummaryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.CombatSummary"/>
+			<property name="nX" value="461"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRightPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBLSq"/>
+			<property name="nX" value="457"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="426"/>
+			<property name="nHeight" value="520"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="459"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="422"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>		
+	</objectDef>
+	
+	<objectDef type="UI2DEngagementListBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objEngagement" type="gs_tbg.Engagement"/>
+
+		<propertyDef name="objAttacker" type="gs_tbg.Nation"/>
+		<property name="objAttacker" from="self.objEngagement.refAttacker.resolve(mh2data.objAvatar)"/>
+		
+		<propertyDef name="objDefender" type="gs_tbg.Nation"/>
+		<property name="objDefender" from="self.objEngagement.refDefender.resolve(mh2data.objAvatar)"/>
+		
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<property name="objRegion" from="self.objEngagement.refRegion.resolve(mh2data.objAvatar)"/>
+
+	<!-- Attacker -->
+		<object type="UI2DListBubbleGrayBlueCenter" name="objAttackerName">
+			<property name="strText" from="def.objAttacker.strDisplayName"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="30"/>
+		</object>
+	
+	<!-- Defender -->	
+		<object type="UI2DListBubbleGrayBlueCenter" name="objDefenderName">
+			<property name="strText" from="def.objDefender.strDisplayName"/>
+			<property name="nX" value="99"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+	<!-- Region -->	
+		<object type="UI2DRegionNameBubble" name="objElements">
+			<property name="objRegion" from="def.objData.objRegion"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Center"/>
+			<property name="nRow" from="def.nRow"/>
+			<property name="nX" value="198"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="30"/>
+		</object>
+	</objectDef>
+</locust>

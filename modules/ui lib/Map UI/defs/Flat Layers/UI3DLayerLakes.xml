@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- Decorative Lakes -->
+	<objectDef type="UI3DLayerLakes" superType="mlui.UI3DLayer">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>    
+		<propertyDef name="objMap" type="gs_tbg.GameSysMap" from="gs_tbg.getGameSysMap(self.objGameRoot)"/>
+        
+		<object type="ml3dworld.TransformTranslate" name="objTransform">
+			<property name="vecTranslation">
+				Vec3D(0, 0, 0.27)
+			</property>
+		</object>                        
+    
+		<object type="UI3DLake" name="objLakes" tiedTo="gs_tbg.getGameSysMap(self.objGameRoot).objMapLakes">
+		    <property name="objMap" from="def.objMap"/>
+			<property name="tmplModel" from="tiedTo.tmplDisplayModel"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI3DLake" superType="UI3DMapModel">
+		<object type="mlui.UIDataMaterial" name="objMaterial">
+			<object type="mlmedia.Material" name="objMaterial">
+				<property name="colEmission" value="#2a4c7eFF"/>
+			</object>
+		</object>
+	</objectDef>
+</locust>

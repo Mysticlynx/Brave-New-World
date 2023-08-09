@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="VisibilityList" class="CMLOVisibilityList" desc="The actual list of regions, ref-counted, visible to a nation">
+        <replicationRule>
+            ?{avatar, game: avatar.getAttribValue("Nation") == self.refNation}
+        </replicationRule>
+        <goDef gameSystem="GameSysFogging" storageProperty="objVisibilityLists">
+            <keyProperty name="refNation"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objRegionCounts" type="RegionCount" variable="true" storesChildren="true"/><!-- DEPRECATED -->
+        <propertyDef name="strEncodedRegionCounts" type="String"/>
+        <propertyDef name="objNations" type="Nation" variable="true"/>
+        
+        <!-- builtin queries:
+            getRegionIsUnfogged(region)
+	        getRegionHasDetector(region)
+        -->
+    </objectDef>
+
+    <!-- DEPRECATED -->
+    <objectDef type="RegionCount" class="CMLORegionCount" desc="An object for reference counting a region ref">
+        <propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="nRegionCount" type="int"/>
+		<propertyDef name="nDetectorCount" type="int" default="0"/>
+    </objectDef>
+
+</locust>

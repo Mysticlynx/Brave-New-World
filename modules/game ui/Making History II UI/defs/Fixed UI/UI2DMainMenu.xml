@@ -1,0 +1,1292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+	<objectDef type="CMLOShowNotifications" class="CMLObject" >
+		<propertyDef name="bShow" type="bool" default="true" />
+        <propertyDef name="tmplNotifications" type="Template" restriction="gs_notify.NotificationTemplate" variable="true" />
+        
+        <script type="application/javascript"><![CDATA[
+            function remove(template)
+            {
+                for(var i in self.tmplNotifications)
+                {
+                    if (template.equals(self.tmplNotifications[i]))
+                    {
+                        delete self.tmplNotifications[i];
+                        return;
+                    }
+                }
+                return;
+            }
+            function checkAdd(template)
+            {
+               
+                self.remove(template);
+                self.add(template);
+            }
+            function add(template)
+            {
+                self.tmplNotifications.add(template);
+            }
+        ]]></script>
+        
+	</objectDef>
+	
+	<objectDef type="UI2DMainMenu" superType="mlui.UI2DElement">
+		<object name="objSaveData" type="SaveData">
+		</object>
+		<propertyDef name="bDoneSaving" type="bool" default="false" />
+		<propertyDef name="nSaveID" type="int" />
+		<propertyDef name="objShowNotifications" type="CMLOShowNotifications" />
+		
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor" value="#FFFFFF75"/>	
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DMainMenuElement" name="objMenu" existsWhile="mh2data.otMainMenu == UI2DMainMenuElement">
+			<property name="objSaveData" from="def.objSaveData"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="370"/>
+		</object>
+		
+		<object type="UI2DQuitElement" name="objQuit" existsWhile="mh2data.otMainMenu == UI2DQuitElement">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="370"/>
+		</object>
+		
+		<object type="UI2DQuitToDesktopMenuElement" name="objQuitToDesktopMenu" existsWhile="mh2data.otMainMenu == UI2DQuitToDesktopMenuElement">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="370"/>
+		</object>
+		
+		<object type="UI2DQuitToMainMenuMenuElement" name="objQuitToMainMenuMenu" existsWhile="mh2data.otMainMenu == UI2DQuitToMainMenuMenuElement">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="370"/>
+		</object>
+        
+		
+		<object type="UI2DOptionsMenuElement" name="objOptions" existsWhile="mh2data.otMainMenu == UI2DOptionsMenuElement">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="510"/>
+			<property name="objShowNotifications" from="def.objShowNotifications" />
+		</object>
+		
+		<object name="objUI2DSaveMenuElement" type="UI2DSaveMenuElement" existsWhile="mh2data.otMainMenu == UI2DSaveMenuElement">
+			<property name="objSaveData" from="def.objSaveData"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="393"/>
+			<property name="nHeight" value="170"/>
+		</object>
+				
+		<object name="objUI2DGameSavingElement" type="UI2DGameSavingElement" existsWhile="mh2data.otMainMenu == UI2DSaveMenuElement">
+			<property name="bVisible" from="def.objUI2DSaveMenuElement.bSavingGame AND !def.bDoneSaving" />
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="200"/>
+		</object>
+		
+		<object name="objUI2DGameSavedElement" type="UI2DGameSavedElement" existsWhile="mh2data.otMainMenu == UI2DSaveMenuElement">
+			<property name="bVisible" from="def.objUI2DSaveMenuElement.bSavingGame AND def.bDoneSaving" />
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="200"/>
+		</object>
+		
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="bBroadcast" value="true"/>
+				<property name="otEventType" value="mlgame.EventGameSaveFinished"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if(def.nSaveID != event.nSaveID)
+							return;
+						def.objUI2DGameSavedElement.eResult = event.eResult;
+						def.bDoneSaving = true;
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="bBroadcast" value="true"/>
+				<property name="otEventType" value="mlgame.EventGameSaveStarted"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.nSaveID = event.nSaveID;
+					}
+				]]></script>
+			</object>
+		</object>	
+		
+	</objectDef>
+	
+	<objectDef type="UI2DQuitElement" superType="mlui.UI2DElement">
+        <object type="mlui.UI2DImage" name="objMainMenu">
+			<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="200"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMH2Logo">
+			<property name="tmplImage" value="skin.ImgMH2Logo"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="20"/>
+			<property name="nWidth" value="347"/>
+			<property name="nHeight" value="56"/>
+			<property name="nDepth" value="251"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objReturnText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.ExitingGame"/>
+			<property name="nX" from="125"/>
+			<property name="nY" from="110"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="25"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DQuitMenuElement" superType="mlui.UI2DElement">
+        <propertyDef name="nExitCode" type="int" default="0"/>
+        <propertyDef name="strExitText" type="String"/>
+        <object type="mlui.UI2DImage" name="objMainMenu">
+			<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="200"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMH2Logo">
+			<property name="tmplImage" value="skin.ImgMH2Logo"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="20"/>
+			<property name="nWidth" value="347"/>
+			<property name="nHeight" value="56"/>
+			<property name="nDepth" value="251"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objAreYouSure">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite16Center"/>
+			<property name="strText" from="locale.SID.UI.AreYouSure"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="90"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objAreYouSure">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach16CenterMiddleFIT"/>
+			<property name="strText" from="locale.SID.UI.UnsavedProgress"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="110"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBackBubble">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="150"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="27"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objBackText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.Back"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="150"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="27"/>
+		</object>
+		
+        <object type="mlui.UI2DButton" name="objBackButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="150"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="27"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openMainMenu();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objExitGame">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" from="215"/>
+			<property name="nY" from="150"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="25"/>
+		</object>
+        
+        <object type="mlui.UI2DText" name="objExitText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="def.strExitText"/>
+			<property name="nX" from="215"/>
+			<property name="nY" from="150"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="25"/>
+		</object>
+        
+        <object type="mlui.UI2DButton" name="objExitButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>			
+			<property name="nX" from="215"/>
+			<property name="nY" from="150"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            mh2data.mainMenuQuit(def.nExitCode);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+		
+	<objectDef type="UI2DQuitToMainMenuMenuElement" superType="UI2DQuitMenuElement">
+        <property name="nExitCode" value="3"/>
+        <property name="strExitText" from="locale.SID.UI.ExitToMainMenu"/>
+	</objectDef>
+		
+	<objectDef type="UI2DQuitToDesktopMenuElement" superType="UI2DQuitMenuElement">
+        <property name="nExitCode" value="0"/>
+        <property name="strExitText" from="locale.SID.UI.ExitGame"/>
+	</objectDef>
+	
+	<objectDef type="UI2DGameSavingElement" superType="mlui.UI2DElement">
+	
+        <object type="mlui.UI2DImage" name="objMainMenu">
+			<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="200"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMH2Logo">
+			<property name="tmplImage" value="skin.ImgMH2Logo"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="20"/>
+			<property name="nWidth" value="347"/>
+			<property name="nHeight" value="56"/>
+			<property name="nDepth" value="251"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objGameSavedText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.SavingGame"/>
+			<property name="nX" from="125"/>
+			<property name="nY" from="110"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DGameSavedElement" superType="mlui.UI2DElement">
+	
+        <propertyDef name="eResult" type="Enum" restriction="mlgame.SaveResult"/>
+		
+        <object type="mlui.UI2DImage" name="objMainMenu">
+			<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="200"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMH2Logo">
+			<property name="tmplImage" value="skin.ImgMH2Logo"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="20"/>
+			<property name="nWidth" value="347"/>
+			<property name="nHeight" value="56"/>
+			<property name="nDepth" value="251"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objGameSavedText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" >
+			switch{
+				case def.eResult == mlgame.SaveResult.FAILED:
+					locale.SID.UI.GameSavedFailed
+				default:
+					locale.SID.UI.GameSaved
+			}
+			</property>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nX" from="0"/>
+			<property name="nY" from="90"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		
+		
+		<object type="mlui.UI2DImage" name="objBackBubble">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" value="145"/>
+			<property name="nY" value="125"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="27"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objBackText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.Back"/>
+			<property name="nX" value="145"/>
+			<property name="nY" value="125"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="27"/>
+		</object>
+		
+        <object type="mlui.UI2DButton" name="objBackButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="145"/>
+			<property name="nY" value="125"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="27"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openMainMenu();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		
+	</objectDef>
+	
+	<objectDef type="UI2DMainMenuElement" superType="mlui.UI2DElement">
+		<propertyDef name="objSaveData" type="SaveData"/>
+		<propertyDef name="bSaved" type="bool" default="false"/>
+		
+        <object type="mlui.UI2DImage" name="objMainMenu">
+			<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="413"/>
+			<property name="nHeight" value="370"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMH2Logo">
+			<property name="tmplImage" value="skin.ImgMH2Logo"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="20"/>
+			<property name="nWidth" value="347"/>
+			<property name="nHeight" value="56"/>
+			<property name="nDepth" value="251"/>
+		</object>
+		
+       <object type="common_ui.UI2DList" name="objButtonsList">
+			<property name="nX" from="125"/>
+			<property name="nY" from="140"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="5"/>
+            
+			<object type="UI2DMenuBubble" name="objElements">
+                <property name="strText" from="locale.SID.UI.ReturnToGame"/>
+                
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+                        mh2data.closeMainMenu();
+                    }
+                ]]></script>
+            </object>
+            
+			<object type="UI2DMenuBubble" name="objElements" existsWhile="!gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.bStartedFromWeb">
+                <property name="strText" from="locale.SID.UI.ExitToMainMenu"/>
+                
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+                        mh2data.openQuitToMainMenuMenu();
+                    }
+                ]]></script>
+            </object>
+			<object type="UI2DMenuBubble" name="objElements" existsWhile="!gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.bStartedFromWeb">
+                <property name="strText" from="locale.SID.UI.ExitGame"/>
+                
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+                        mh2data.openQuitToDesktopMenu();
+                    }
+                ]]></script>
+            </object>
+			<object type="UI2DMenuBubble" name="objElements" existsWhile="!gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.bStartedFromWeb">
+                <property name="strText">
+                    if(def.bSaved,
+                        locale.SID.UI.GameSaved,
+                        locale.SID.UI.SaveGame)
+                </property>
+                
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+						def.objSaveData.strSavedGameName = locale.FSID.UI.SaveGameName.format(
+                            'Scenario', gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).getLocalizedScenarioAbbreviation(),
+                            'Nation', mh2data.objNation.strDisplayName, 
+                            'Turn', gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.nTurn)
+                        mh2data.openSaveMenu();
+                    }
+                ]]></script>
+            </object>
+            
+			<object type="UI2DMenuBubble" name="objElements">
+                <property name="strText" from="locale.SID.UI.Options"/>
+                
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+						mh2data.openOptionsMenu();
+                    }
+                ]]></script>
+            </object>
+			<object type="UI2DMenuBubble" name="objElements">
+                <property name="strText" from="locale.SID.UI.NationInfo"/>
+                
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+                        mh2data.showNationInfo();
+                    }
+                ]]></script>
+            </object>
+            
+        </object>
+        
+    </objectDef>
+	
+	<objectDef type="UI2DMenuBubble" superType="mlui.UI2DElement">
+        <propertyDef name="strText" type="String" />
+        <property name="nWidth" value="168"/>
+        <property name="nHeight" value="25"/>
+        
+		<object type="mlui.UI2DImage" name="objReturnToGame">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" from="0"/>
+			<property name="nY" from="0"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="25"/>
+		</object>
+        
+        <object type="mlui.UI2DText" name="objReturnText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" from="0"/>
+			<property name="nY" from="0"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="25"/>
+		</object>
+        
+        <object type="mlui.UI2DButton" name="objReturnButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>			
+			<property name="nX" from="0"/>
+			<property name="nY" from="0"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            def. handle(event, owner);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+    
+    
+    </objectDef>
+    
+	<objectDef type="UI2DSaveMenuElement" superType="mlui.UI2DElement">
+		<propertyDef name="objSaveData" type="SaveData"/>
+		<propertyDef name="bSavingGame" type="bool" default="false" />
+
+        <object type="mlui.UI2DImage" name="objMainMenu">
+			<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objSaveGameAsText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite18Left"/>
+			<property name="strText" from="locale.SID.UI.SaveGameAs"/>
+			<property name="nX" value="125"/>
+			<property name="nY" from="25"/>
+			<property name="nWidth" from="200"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSaveNameBubble">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="60"/>
+			<property name="nWidth" value="373"/>
+			<property name="nHeight" value="27"/>
+		</object>
+			
+		<object type="mlui.UI2DEditableText" name="objEditableText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddleFitForEditing"/>
+			<property name="nX" value="14"/>
+			<property name="nY" from="if(self.strText == '',65,60)"/><!-- workaround for cursor position issue when empty -->
+			<property name="nHeight" value="25"/>
+			<property name="nWidth" value="364"/>
+			<property name="nDepth" value="50"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_ESCAPE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_RETURN"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_GRAVE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_TAB"/>
+			<property name="strText" from="def.objSaveData.strSavedGameName"/>
+			<script type="application/javascript"><![CDATA[
+				function notifyAddedToUI()
+				{
+					mlui.ActSetKeyboardFocus.execute({"objElement": self});
+				}
+			]]></script>
+		</object>
+		
+        <object type="mlui.UI2DButton" name="objEditableTextBoxOverlay">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>			
+			<property name="nX" value="10"/>
+			<property name="nY" value="60"/>
+			<property name="nHeight" value="25"/>
+			<property name="nWidth" value="373"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mlui.ActSetKeyboardFocus.execute({"objElement": def.objEditableText});
+						}
+					]]></script>
+				</object>					
+			</object>			
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBackBubble">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" value="38"/>
+			<property name="nY" value="125"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="27"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objBackText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.Cancel"/>
+			<property name="nX" value="38"/>
+			<property name="nY" value="125"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="27"/>
+		</object>
+		
+        <object type="mlui.UI2DButton" name="objBackButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="38"/>
+			<property name="nY" value="125"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="27"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.cancel();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objConfirmBubble">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" value="226"/>
+			<property name="nY" value="125"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="27"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objConfirmText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.Confirm"/>
+			<property name="nX" value="226"/>
+			<property name="nY" value="125"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="27"/>
+		</object>
+		
+        <object type="mlui.UI2DButton" name="objConfirmButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="226"/>
+			<property name="nY" value="125"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="27"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.confirm();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.KeyBindList" name="objKeyBindList">
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_RETURN"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						def.confirm();
+					}
+				]]></script>
+			</object>
+		</object>
+		
+			
+		<script type="application/javascript"><![CDATA[
+			function confirm(){
+				self.objSaveData.bSaving = false;
+				var savename = self.objEditableText.strText;
+				var savedesc = locale.FSID.UI.SaveGameDesc.format(
+						'Nation', mh2data.objNation.strDisplayName, 
+						'Date', gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.dateCurrentDate);
+				
+				mh2data.objAvatar.sendAction(mlgame.GActSaveGame.create({
+					strSaveName: savename + "~" + savedesc}));
+				
+				log("" + savename + "~" + savedesc);
+				
+				self.bSavingGame = true;
+				self.bVisible = false;
+			}
+			
+			function cancel(){
+				mh2data.openMainMenu();
+			}
+		]]></script>
+	</objectDef>
+	
+    <objectDef type="UI2DOptionsMenuElement" superType="mlui.UI2DElement">
+	
+		<propertyDef name="objShowNotifications" type="CMLOShowNotifications" />
+	
+        <object type="mlui.UI2DImage" name="objMainMenu">
+			<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth" />
+			<property name="nHeight" from="def.nHeight" />
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMH2Logo">
+			<property name="tmplImage" value="skin.ImgMH2Logo"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="20"/>
+			<property name="nWidth" value="347"/>
+			<property name="nHeight" value="56"/>
+			<property name="nDepth" value="251"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objSoundVolumeText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.SoundVolume"/>
+			<property name="nX" from="40"/>
+			<property name="nY" from="100"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		<object type="UI2DVolumeSlider" name="objSoundSlider">
+			<property name="nX" from="190"/>
+			<property name="nY" from="106"/>
+			<property name="fSliderPosition" from="objRunnable.objRoot.fSoundVolume"/>
+			<property name="bSoundVolume" value="true"/>
+			<property name="bMusicVolume" value="false"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objMusicVolumeText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.MusicVolume"/>
+			<property name="nX" from="42"/>
+			<property name="nY" from="125"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		<object type="UI2DVolumeSlider" name="objMusicSlider">
+			<property name="nX" from="190"/>
+			<property name="nY" from="131"/>
+			<property name="fSliderPosition" from="objRunnable.objRoot.fMusicVolume"/>
+			<property name="bSoundVolume" value="false"/>
+			<property name="bMusicVolume" value="true"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objShadowsText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.Shadows"/>
+			<property name="nX" from="36"/>
+			<property name="nY" from="150"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		<object type="UI2DMHIIToggleButton" name="objShadowsCheckbox">
+			<property name="nX" from="190"/>
+			<property name="nY" from="156"/>
+            <property name="bIsOn" from="mh2data.bShadows"/>
+            <script type="application/javascript"><![CDATA[
+                function doToggle()
+                {
+                    mh2data.setShadowsEnabled(!self.bIsOn);
+                }
+            ]]></script>
+		</object>                
+        
+        <object type="mlui.UI2DText" name="objCompressedTerrainTexturesText" existsWhile="mh2data.bHasCompressedTexturesOption">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.CompressedTerrainTextures"/>
+			<property name="nX" from="40"/>
+			<property name="nY" from="176"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		<object type="UI2DMHIIToggleButton" name="objCompressedTerrainTexturesCheckbox" existsWhile="mh2data.bHasCompressedTexturesOption">
+			<property name="nX" from="205"/>
+			<property name="nY" from="181"/>
+            <property name="bIsOn" from="mh2data.bCompressedTerrainTextures"/>
+            <script type="application/javascript"><![CDATA[
+                function doToggle()
+                {
+                    mh2data.setCompressedTerrainTextures(!self.bIsOn);
+                }
+            ]]></script>
+		</object>                
+        
+		
+        <object type="mlui.UI2DText" name="objDismissNotificationsText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Center"/>
+			<property name="strText" from="locale.SID.UI.NotificationsOption"/>
+			<property name="nX" from="30"/>
+			<property name="nY" from="192"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="25"/>
+		</object>	
+        
+        <object type="UI2DOptionsMenuNotificationsElement" name="objNotifications">
+			<property name="nY" from="205"/>
+			<property name="nWidth" value="305"/>
+			<property name="nHeight" value="220"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="objShowNotifications" from="def.objShowNotifications" />
+		</object>	
+		
+		<object type="mlui.UI2DImage" name="objBack">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+            <property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="def.nHeight - 45"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="25"/>
+		</object>
+      
+        <object type="mlui.UI2DText" name="objBackText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText" from="locale.SID.UI.Back"/>
+            <property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="def.objBack.nY"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="25"/>
+		</object>
+      
+        <object type="mlui.UI2DButton" name="objBackButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+            <property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="def.objBack.nY"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            mh2data.openMainMenu();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+	</objectDef>	
+					
+	<objectDef type="UI2DVolumeSlider" superType="mlui.UI2DElement">
+        <propertyDef name="fSliderPosition" type="float" default="0.0" />
+        <propertyDef name="bUserDragging" type="bool" default="false" />
+		<propertyDef name="bSoundVolume" type="bool" default="false"/>
+		<propertyDef name="bMusicVolume" type="bool" default="false"/>
+        <property name="nWidth" value="127" />
+        <property name="nHeight" value="26" />
+				
+		<object type="mlui.UI2DImage" name="objSliderBackground">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				#8C8972FF
+			</property>	
+			<property name="nX" value="2"/>
+			<property name="nY" value="5"/>
+            <property name="nWidth" value="120" />
+            <property name="nHeight" value="7" />
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objInsideBG">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				#0B0B07FF
+			</property>	
+			<property name="nX" value="3"/>
+			<property name="nY" value="6"/>
+            <property name="nWidth" value="118" />
+            <property name="nHeight" value="5" />
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSlider">
+			<property name="tmplImage" value="skin.ImgSliderPointer"/>
+            <property name="nX" from="int(def.fSliderPosition * float(def.objSliderBackground.nWidth - 3))" />
+			<property name="nY" value="0"/>
+		</object>
+		
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap" overrideBehavior="extend">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonDown" />
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+						{
+                            proportion = float(event.objParams.nPosX - def.objSliderBackground.nScreenX) / float(def.objSliderBackground.nWidth);
+							if(proportion < 0.0)
+							{
+								proportion = 0.0;
+							}
+							if(proportion > 1.0)
+							{
+								proportion = 1.0;
+							}
+                            def.fSliderPosition = proportion;
+                            def.bUserDragging = true;
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonUp" />
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+						{
+                            def.bUserDragging = false;
+                            if(def.bSoundVolume == true)
+                            {
+                                gs_tbg.setSoundVolume(mh2data.objAvatar,def.fSliderPosition);
+                                objRunnable.objRoot.fSoundVolume = def.fSliderPosition;
+                            }
+                            if(def.bMusicVolume == true)
+                            {
+                                gs_tbg.setMusicVolume(mh2data.objAvatar,def.fSliderPosition);
+                                objRunnable.objRoot.fMusicVolume = def.fSliderPosition;
+                            }
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseMoved" />
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eMouseButtonsDown.contains(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+						{
+                            
+                            if(def.bUserDragging)
+                            {
+								proportion = float(event.objParams.nPosX - def.objSliderBackground.nScreenX) / float(def.objSliderBackground.nWidth);
+                                if(proportion < 0.0)
+                                {
+                                    proportion = 0.0;
+                                }
+                                if(proportion > 1.0)
+                                {
+                                    proportion = 1.0;
+                                }
+                                def.fSliderPosition = proportion;
+                            }
+                        
+						}
+					}
+				]]></script>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="SaveData" class="CMLObject">
+		<propertyDef name="bSaving" type="bool" default="false"/>
+		<propertyDef name="strSavedGameName" type="String"/>
+	</objectDef>   
+    
+	<objectDef type="UI2DOptionsMenuNotificationsElement" superType="mlui.UI2DElement">
+        
+		<propertyDef name="objShowNotifications" type="CMLOShowNotifications" />
+        
+        <object type="mlui.UI2DImage" name="objMainMenu">
+			<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+        
+		<object type="UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="0"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" from="def.nWidth- 4"/>
+			<property name="nHeight" from="def.nHeight - 9"/>
+
+			<object type="UI2DOptionsNotificationsList" name="objScrollable">
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="def.nWidth- 20" />
+				<property name="objShowNotifications" from="def.objShowNotifications" />
+			</object>
+		</object>
+        
+    </objectDef>
+    
+	<objectDef type="UI2DOptionsNotificationsList" superType="mlui.UI2DElement">
+        <property name="nHeight" from="self.objList.nHeight + 4" />
+		<propertyDef name="objShowNotifications" type="CMLOShowNotifications" />
+        <propertyDef name="otNotificationBases" type="ObjectType" variable="true" >        
+            [
+                gs_notify.NotificationTemplateEngagement,
+                gs_notify.NotificationTemplateDiplomatic,
+                gs_notify.NotificationTemplateGovernment,
+                gs_notify.NotificationTemplateTrade,
+                gs_notify.NotificationTemplateRegion,
+                gs_notify.NotificationTemplateCity,
+                gs_notify.NotificationTemplateResearch,
+                gs_notify.NotificationTemplateStability
+            ]
+        </propertyDef>
+    
+		<object type="common_ui.UI2DList" name="objList">
+			<property name="nX" value="4"/>
+			<property name="nY" value="4"/>
+			<property name="nSpacing" value="1"/>
+			<object type="UI2DOptionsNotificationTypeBubble" name="objElements" tiedTo="def.otNotificationBases" >
+				<property name="otNotification" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="def.nWidth-2"/>
+				<property name="objShowNotifications" from="def.objShowNotifications"/>
+			</object>
+		</object>
+        
+    </objectDef>
+    
+	<objectDef type="UI2DOptionsNotificationTypeBubble" superType="mlui.UI2DElement">
+        <propertyDef name="otNotification" type="ObjectType" />
+        <propertyDef name="bOpen" type="bool" default="false" />
+		<property name="nHeight" from="self.objMainBubble.nHeight + if(self.objList == null, 0, 2 + self.objList.nHeight)"/>
+		<propertyDef name="objShowNotifications" type="CMLOShowNotifications" />
+        
+        <object type="UI2DOptionsNotificationsBubble" name="objMainBubble" >
+            <property name="tmplNotification" from="def.getNotificationTemplate()"/>
+            <property name="nWidth" from="def.nWidth"/>
+            <property name="bOpen" from="def.bOpen"/>
+            <property name="bType" value="true" />
+            <property name="objShowNotifications" from="def.objShowNotifications" />
+        </object>
+            
+		<object type="common_ui.UI2DList" name="objList" existsWhile="def.bOpen">
+			<property name="nX" value="0"/>
+			<property name="nY" from="def.objMainBubble.nHeight + 2"/>
+			<property name="nSpacing" value="1"/>
+			<object type="UI2DOptionsNotificationsBubble" name="objElements" tiedTo="def.getNotifications()" >
+				<property name="tmplNotification" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="def.nWidth"/>
+                <property name="objShowNotifications" from="def.objShowNotifications" />
+			</object>
+		</object>
+        
+        <script type="application/x-locust-query"> <![CDATA[
+            getNotifications = ?{:
+                filter(?{tmpl: if(self.otNotification == null, false, tmpl.resolve().instanceOf(self.otNotification))}, sd.getTemplate(TemplateList, 'NotificationTemplateList').tmplRefs)
+            }
+            getNotificationTemplate = ?{:
+                switch
+                {
+                    case self.otNotification == gs_notify.NotificationTemplateEngagement:
+                        gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagement')
+                        
+                    case self.otNotification == gs_notify.NotificationTemplateDiplomatic:
+                        gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomatic')
+                        
+                    case self.otNotification == gs_notify.NotificationTemplateGovernment:
+                        gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateGovernment')
+                        
+                    case self.otNotification == gs_notify.NotificationTemplateTrade:
+                        gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTrade')
+                        
+                    case self.otNotification == gs_notify.NotificationTemplateRegion:
+                        gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegion')
+                        
+                    case self.otNotification == gs_notify.NotificationTemplateCity:
+                        gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateCity')
+                        
+                    case self.otNotification == gs_notify.NotificationTemplateResearch:
+                        gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateResearch')
+                        
+                    case self.otNotification == gs_notify.NotificationTemplateStability:
+                        gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateStability')
+                }
+            }
+        ]]></script>
+        
+    </objectDef>
+    
+	<objectDef type="UI2DMHIIToggleButton" superType="mlui.UI2DButton">
+        <propertyDef name="bIsOn" type="bool"/>    
+        
+        <property name="nWidth" value="127"/>
+        <property name="nHeight" value="25"/>        
+        <property name="tmplButtonStyle" from="if(self.bIsOn,'skin.BtnMainMenuNotificationsChecked','skin.BtnMainMenuNotificationsUnchecked')"/>        
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                <property name="otEventType" value="mlui.EventButtonClicked"/>
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+                        owner.doToggle();
+                    }
+                ]]></script>
+            </object>
+        </object>
+    </objectDef>
+    
+	<objectDef type="UI2DOptionsNotificationsBubble" superType="mlui.UI2DElement">
+        <propertyDef name="tmplNotification" type="Template" restriction="gs_notify.NotificationTemplate" />
+		<propertyDef name="objShowNotifications" type="CMLOShowNotifications" />
+        <propertyDef name="bType" type="bool" default="false" />
+        <propertyDef name="bOpen" type="bool" default="false" />
+        <propertyDef name="bOn" type="bool" >
+            self.isCurrentlyNotifying(self.tmplNotification)
+        </propertyDef>
+        <property name="nHeight" from="24"/>
+        
+        <script type="application/x-locust-query"> <![CDATA[
+            isCurrentlyNotifying = ?{tmplNotification:
+                find(?{tmpl:  tmpl == tmplNotification }, self.objShowNotifications.tmplNotifications) != null
+            }
+        ]]></script>
+         
+    <object type="mlui.UI2DImage" name="objBGBorder" existsWhile="def.bType">
+      <property name="tmplImage" value="skin.ImgBubbleGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth -6"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+    <object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite13Left"/>
+			<property name="strText" from="def.tmplNotification.strDisplayName"/>
+			<property name="nX" from="if(def.bType, 8, 10)"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+        
+     <object type="mlui.UI2DImage" name="objActiveOutline">
+			<!--<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>-->
+       <property name="tmplImage" value="skin.ImgGroupIconMoraleGray"/>
+			<property name="nX" value="224"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="25"/>
+			<property name="nHeight" from="16"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>
+      
+    <!--Option Toggle-->
+    <!--<object type="mlui.UI2DImage" name="objActive">
+      <property name="tmplImage" value="skin.ImgBubbleGray"/>
+      <property name="bVisible" from="def.bOn" />
+			<property name="nX" from="def.objActiveOutline.nX"/>
+			<property name="nY" from="def.objActiveOutline.nY"/>
+			<property name="nWidth" from="def.objActiveOutline.nWidth"/>
+			<property name="nHeight" from="def.objActiveOutline.nHeight - 1"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="colColor" value="#5CB57AFF"/>
+    </object>-->
+
+    <!--Option Toggle-->
+    <object type="mlui.UI2DImage" name="objActive">
+      <property name="tmplImage" value="skin.ImgGroupIconMoraleWhite"/>
+      <property name="bVisible" from="def.bOn" />
+			<property name="nX" from="def.objActiveOutline.nX"/>
+			<property name="nY" from="def.objActiveOutline.nY"/>
+			<property name="nWidth" from="def.objActiveOutline.nWidth"/>
+			<property name="nHeight" from="def.objActiveOutline.nHeight - 1"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>
+                
+		<object type="mlui.UI2DButton" name="objMainHighlightButton">
+		  <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="1"/>
+			<property name="nDefaultWidth" from="def.nWidth - 6"/>
+			<property name="nDefaultHeight" from="def.nHeight"/>			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.bType)
+                            {
+                                def.parent.bOpen = !def.parent.bOpen;
+                            }
+                            else if(!def.bOn)
+                            {                     
+                                def.objShowNotifications.add(def.tmplNotification);
+                                mh2data.setUserNotificationFlag(def.tmplNotification,true);
+                            }
+                            else
+                            {
+                                def.objShowNotifications.remove(def.tmplNotification);
+                                mh2data.setUserNotificationFlag(def.tmplNotification,false);
+                            }
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>		
+        
+		<object type="mlui.UI2DButton" name="objSecondaryHighlightButton" existsWhile="def.bType">
+			<!--<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>-->
+      <property name="nX" from="def.objActiveOutline.nX + 2"/>
+			<property name="nY" from="def.objActiveOutline.nY + 2"/>
+			<property name="nWidth" from="def.objActiveOutline.nWidth - 4"/>
+			<property name="nHeight" from="def.nHeight - 4"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            var allSubTemplates = def.parent.getNotifications();
+                            if(!def.bOn)
+                            {           
+                                for(var i=0; i< allSubTemplates.length; i++)
+                                {
+                                    var tmpl = allSubTemplates[i].resolve();
+                                    def.objShowNotifications.checkAdd(tmpl);
+                                    mh2data.setUserNotificationFlag(tmpl,true);
+                                }  
+                                def.objShowNotifications.add(def.tmplNotification);                          
+                                mh2data.setUserNotificationFlag(def.tmplNotification,true);
+                            }
+                            else
+                            {
+                                for(var i=0; i< allSubTemplates.length; i++)
+                                {
+                                    var tmpl = allSubTemplates[i].resolve();
+                                    def.objShowNotifications.remove(tmpl);
+                                    mh2data.setUserNotificationFlag(tmpl,false);
+                                }  
+                                def.objShowNotifications.remove(def.tmplNotification);
+                                mh2data.setUserNotificationFlag(def.tmplNotification,false);
+                            }
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>		
+        
+    </objectDef>
+    
+</locust>
+
+

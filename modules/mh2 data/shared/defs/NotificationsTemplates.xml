@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <template type="TemplateList" name="NotificationTemplateList">
+        <property name="otTemplateType" value="gs_notify.NotificationTemplate"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementBegan')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementEnded')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementUnitDamaged')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementUnitDestroyed')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementUnitRepaired')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementUnitGroupCommandChanged')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementUnitExperienceChanged')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementGenCityNuked')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateCityUnitProduced')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateCityFactoryOutputProduced')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateCityGenCity')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateCityGenCityBuildingDestroyed')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateCityGenResearchCenterBuildingDestroyed')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeAgreementAccepted')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeAgreementCancelled')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeMoneyTransferAccepted')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeMoneyTransferCancelled')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeMoneyTransferOccurred')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeOccurred')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticWarDeclared')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticAllianceCreated')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticAllianceJoined')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticAllianceLeft')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticNationDefeated')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticMilitaryAccessChanged')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticEmbargoPlaced')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticEmbargoLifted')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenRegionSeceded')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenCivilWarStarted')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenNationLiberated')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenIndependentNationFounded')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenResearchStolen')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenOppositionSupportConcluded')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenPoliticalSupportConcluded')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenRegionSurveillanceConcluded')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionOutputProduced')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionGenRegionResource')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionGenRegion')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionGenAirbaseDestroyed')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionGenAADefenseDestroyed')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionGenCoastalDefenseDestroyed')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionGenFortificationDestroyed')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionGenTransportationDestroyed')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionGenResourceImprovementDestroyed')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionGenRegionSabotaged')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionDamaged')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateStabilityUnitMoraleChanged')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateStabilityGenRegionChangedController')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateStabilityNationChanged')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateResearchProjectCompleted')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateResearchGenNationResearchTopic')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateResearchGenFactoryOutputProduced')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateGovernmentGenNationRevolt')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateGovernmentGenNation')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateGovernmentGenInternalSupportConcluded')"/>
+            <property name="tmplRefs" from="gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateGovernmentGenNationIdeology')"/>
+    </template>
+
+</locust>

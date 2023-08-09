@@ -1,0 +1,892 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+        
+    <objectDef type="UI2DGameStartNationInfo" superType="mlui.UI2DElement">
+		<property name="nWidth" value="616"/>
+		<property name="nHeight" value="414"/>
+		<property name="haXAlign" value="CENTER"/>
+		<property name="vaYAlign" value="MIDDLE"/>
+		
+		
+		<object type="mlui.UI2DImage" name="objPanelBGTop">
+			<property name="tmplImage" value="skin.ImgPanelBorderSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objDetailsBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleBrownTan"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" from="def.nWidth-self.nX*2"/>
+			<property name="nHeight" from="def.nHeight-self.nY*2"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objDetailsBG2">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" from="def.nWidth-self.nX*2"/>
+			<property name="nHeight" from="def.nHeight-self.nY*2"/>
+		</object>	
+				
+		<object type="mlui.UI2DImage" name="objInsideBG">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				#50504BFF
+			</property>	
+			<property name="nX" value="12"/>
+			<property name="nY" value="12"/>
+			<property name="nWidth" from="def.nWidth-self.nX*2"/>
+			<property name="nHeight" from="def.nHeight-self.nY*2-39"/>
+		</object>
+        
+        <object type="mlui.UI2DImage" name="objCountrySpecificBackground">
+			<property name="tmplImage" >
+                 switch
+                {
+                    case mh2data.objNation.strName == 'UnitedStates' :
+                        'skin.ImgStartUSA'
+                    case mh2data.objNation.strName == 'China' :
+                        'skin.ImgStartChina'
+                    case mh2data.objNation.strName == 'France' :
+                        'skin.ImgStartFrance'
+                    case mh2data.objNation.strName == 'Germany' :
+                        'skin.ImgStartGermany'
+                    case mh2data.objNation.strName == 'Italy' :
+                        'skin.ImgStartItaly'
+                    case mh2data.objNation.strName == 'Japan' :
+                        'skin.ImgStartJapan'
+                    case mh2data.objNation.strName == 'UnitedKingdom' :
+                        'skin.ImgStartUK'
+                    case mh2data.objNation.strName == 'USSR' :
+                        'skin.ImgStartUSSR'
+                    case mh2data.objNation.strName == 'Austria' :
+                        'skin.ImgStartAustria'
+                    case mh2data.objNation.strName == 'Hungary' :
+                        'skin.ImgStartHungary'
+                    case mh2data.objNation.strName == 'Belgium' :
+                        'skin.ImgStartBelgium'
+                    case mh2data.objNation.strName == 'Bulgaria' :
+                        'skin.ImgStartBulgaria'
+                    case mh2data.objNation.strName == 'Greece' :
+                        'skin.ImgStartGreece'
+                    case mh2data.objNation.strName == 'Manchuria' :
+                        'skin.ImgStartMongolia'
+                    case mh2data.objNation.strName == 'Romania' :
+                        'skin.ImgStartRomania'
+                    case mh2data.objNation.strName == 'Yugoslavia' :
+                        'skin.ImgStartSerbia'
+                    case mh2data.objNation.strName == 'Siam' :
+                        'skin.ImgStartSiam'
+                    case mh2data.objNation.strName == 'Turkey' :
+                        'skin.ImgStartTurkey'
+                    case mh2data.objNation.strName == 'Albania' :
+                        'skin.ImgStartAlbania'
+                    case mh2data.objNation.strName == 'Switzerland' :
+                        'skin.ImgStartSwitzerland'
+                    case mh2data.objNation.strName == 'Poland' :
+                        'skin.ImgStartPoland'
+                    case mh2data.objNation.strName == 'Afghanistan' :
+                        'skin.ImgStartAfghanistan'
+                    case mh2data.objNation.strName == 'Argentina' :
+                        'skin.ImgStartArgentina'
+                    case mh2data.objNation.strName == 'Bolivia' :
+                        'skin.ImgStartBolivia'
+                    case mh2data.objNation.strName == 'Australia' :
+                        'skin.ImgStartAustralia'
+                    default:
+                        'skin.ImgStartDefault'
+                }
+            </property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="-20"/>
+			<property name="nWidth" from="def.nWidth-self.nX*2"/>
+			<property name="nHeight" from="def.nHeight-self.nY*2-39"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+		</object>      
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>			
+		</object>
+		
+		<object type="mlui.UI2DText" name="objNationName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite18Left"/>
+			<property name="strText" from="mh2data.objNation.strDisplayName"/>
+			<property name="nX" value="74"/>
+			<property name="nY" value="25"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="media_tables.NationDescriptionTable" name="objNationDescriptionTable">
+			<proto name="uidata.NationDescriptionTable"/>
+		</object>
+		
+		<object type="UI2DTextToPages" name="objNationDescription">
+			<property name="strText" >
+                def.objNationDescriptionTable.getEntryForNation(mh2data.objAvatar, mh2data.objNation, gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).strScenarioAbbr).strDescription
+            </property>
+			<property name="nX" value="26"/>
+			<property name="nY" value="50"/>
+			<property name="nWidth" from="def.nWidth-52"/> 
+			<property name="nHeight" value="84"/>
+		</object>
+		
+		<!-- Nation -->
+		
+		<object type="mlui.UI2DText" name="objNationBubbleText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Left"/>
+			<property name="strText" from="locale.SID.UI.Nation"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="138"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objNationBubbleBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="155"/>
+			<property name="nWidth" from="def.objNationBubble.nWidth+15"/>
+			<property name="nHeight" value="32"/>
+		</object>		
+		
+		<object type="common_ui.UI2DListHorz" name="objNationBubble">
+			<property name="nX" value="28"/>
+			<property name="nY" value="157"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="nHeight" value="30"/>
+			<property name="nSpacing" value="4"/>
+			
+			<!-- World Power Place -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgInfoIconPointsSm"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Rank"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText" >
+					(find(?{
+						rank: rank.refNation == mh2data.objNation},
+							gs_tbg.getNationRanks(mh2data.objAvatar)
+						)).nTotalRank.formatNumber(0,true)+ '  ' 
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.Rank"/>
+			</object>
+			
+			<!-- Ideology -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgInfoIconGovernmentSm"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.GovernmentSystem"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText" from="mh2data.objNation.tmplIdeology.resolve().strDisplayName + '  ' "/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.GovernmentSystem"/>
+			</object>
+			
+			<!-- Capital -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgIDIconCapitalNoBackground"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Capital"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText" from="gs_tbg.getCapitalCity(mh2data.objAvatar, mh2data.objNation).strDisplayName+ '  ' "/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.Capital"/>
+			</object>
+			
+			<!-- Money money money money... mooonnnnneeeyy -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgInfoIconFinancialSm"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Treasury"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText" from="mh2data.objNation.objFinance.n64Money.formatNumber(0, true)"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.Treasury"/>
+			</object>	
+		</object>
+		
+		<!-- Cities -->
+		
+		<object type="mlui.UI2DText" name="objCitiesBubbleText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Left"/>
+			<property name="strText" from="locale.SID.UI.Cities"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="192"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCitiesBubbleBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="206"/>
+			<property name="nWidth" from="def.objCitiesBubble.nWidth+15"/>
+			<property name="nHeight" value="32"/>
+		</object>		
+		
+		<object type="common_ui.UI2DListHorz" name="objCitiesBubble">
+			<property name="nX" value="28"/>
+			<property name="nY" value="206"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="nHeight" value="32"/>
+			<property name="nSpacing" value="4"/>
+			
+			<!-- Num of Cities -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgKogIcon"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.NumberofCities"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText" >
+					gs_tbg.getOwnedCities(mh2data.objAvatar, mh2data.objNation).length.formatNumber(0, true)+ '  ' 
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="32"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.NumberofCities"/>
+			</object>
+			
+			
+			<!-- IPUs -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgInfoIconIPU"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.IPUs"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText">
+					sum(map(?{cities: cities.nIPUs}, gs_tbg.getOwnedCities(mh2data.objAvatar, mh2data.objNation))).formatNumber(0, true)+ '  ' 
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="32"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.IPUs"/>
+			</object>
+			
+			<!-- RPUs -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="32"/>
+				<property name="strToolTip" from="locale.SID.UI.RPUs"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText">
+					sum(map(?{city: city.nRPUs}, gs_tbg.getNationCities(mh2data.objAvatar, mh2data.objNation))).formatNumber(0, true)
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="32"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.RPUs"/>
+			</object>	
+		</object>
+	
+		
+		<!-- Regions -->
+		
+		<object type="mlui.UI2DText" name="objRegionsBubbleText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Left"/>
+			<property name="strText" from="locale.SID.UI.Regions"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="246"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objRegionsBubbleBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="260"/>
+			<property name="nWidth" from="def.objRegionsBubble.nWidth+15"/>
+			<property name="nHeight" value="32"/>
+		</object>		
+		
+		<object type="common_ui.UI2DListHorz" name="objRegionsBubble">
+			<property name="nX" value="28"/>
+			<property name="nY" value="260"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="nHeight" value="32"/>
+			<property name="nSpacing" value="4"/>
+			
+			<!-- Num of Regions -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgPickaxHammerIcon"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="-4"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.NumberofRegions"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText" >
+					gs_tbg.getAllControlledRegions(mh2data.objAvatar, mh2data.objNation).length.formatNumber(0, true)+ '  '    
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="32"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.NumberofRegions"/>
+			</object>
+            
+			<!-- Metals -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgInfoIconMetals"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="31"/>
+				<property name="nHeight" value="26"/>
+				<property name="strToolTip" from="locale.SID.UI.MetalsProduction"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+                <property name="strText" >					
+                    sum(map(?{region: find(?{rCap: rCap.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')},
+                        region.objResourceCapacities).nBaseProduction}, 
+                            gs_tbg.getAllControlledRegions(mh2data.objAvatar, mh2data.objNation))).formatNumber(0, true)+ '  ' 
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="32"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.MetalsProduction"/>
+			</object>
+			
+			<!-- Coal -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgInfoIconCoal"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.CoalProduction"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText" >					
+                    sum(map(?{region: find(?{rCap: rCap.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')},
+                        region.objResourceCapacities).nBaseProduction}, 
+                            gs_tbg.getAllControlledRegions(mh2data.objAvatar, mh2data.objNation))).formatNumber(0, true) + '  ' 
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="32"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.CoalProduction"/>
+			</object>	
+			
+			<!-- Oil -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgInfoIconOil"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.OilProduction"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText" >
+                    sum(map(?{region: find(?{rCap: rCap.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')},
+                        region.objResourceCapacities).nBaseProduction}, 
+                            gs_tbg.getAllControlledRegions(mh2data.objAvatar, mh2data.objNation))).formatNumber(0, true)+ '  '    
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="32"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.OilProduction"/>
+			</object>	
+			
+			<!-- Food -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgInfoIconFood"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.FoodProduction"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText" >
+                    sum(map(?{region: find(?{rCap: rCap.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')},
+                        region.objResourceCapacities).nBaseProduction + ((float(region.tmplTerrain.resolve().nFoodProductionModifier)/100.0) *
+                            float(find(?{rCap: rCap.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')},
+                                region.objResourceCapacities).nBaseProduction))
+                                    }, gs_tbg.getAllControlledRegions(mh2data.objAvatar, mh2data.objNation))).formatNumber(0, true)
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="32"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.FoodProduction"/>
+			</object>	
+			
+		</object>
+		
+		
+		<!-- Units -->
+		
+		<object type="mlui.UI2DText" name="objUnitsBubbleText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Left"/>
+			<property name="strText" from="locale.SID.UI.ArmyUnits"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="300"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objUnitsBubbleBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="313"/>
+			<property name="nWidth" from="def.objUnitsBubble.nWidth+15"/>
+			<property name="nHeight" value="32"/>
+		</object>		
+		
+		<object type="common_ui.UI2DListHorz" name="objUnitsBubble">
+			<property name="nX" value="28"/>
+			<property name="nY" value="315"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="nHeight" value="30"/>
+			<property name="nSpacing" value="4"/>
+						
+			<!-- Army -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgMilitaryTabGround"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="20"/>
+				<property name="nHeight" value="12"/>
+				<property name="strToolTip" from="locale.SID.UI.Infantry"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText" >
+					(filter(?{unit: unit.objUnitTemplate.eUnitCategory == gs_tbg.UnitCategory.Infantry},
+						gs_tbg.getNationUnits(mh2data.objAvatar, mh2data.objNation)).size +
+					filter(?{unit: unit.objUnitTemplate.eUnitCategory == gs_tbg.UnitCategory.MobileInfantry},
+						gs_tbg.getNationUnits(mh2data.objAvatar, mh2data.objNation)).size 
+                    ).formatNumber(0, true) + '  ' 
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>				
+				<property name="strToolTip" from="locale.SID.UI.Infantry"/>
+			</object>
+			
+			<!-- Artillery -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgMilitaryTabArtillery"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="27"/>
+				<property name="nHeight" value="14"/>
+				<property name="strToolTip" from="locale.SID.UI.Artillery"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText">
+					(filter(?{unit: unit.objUnitTemplate.eUnitCategory == gs_tbg.UnitCategory.Artillery},
+						gs_tbg.getNationUnits(mh2data.objAvatar, mh2data.objNation)).size).formatNumber(0, true) + '  ' 
+				</property>
+				<property name="strToolTip" from="locale.SID.UI.Artillery"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>
+			
+			<!-- Armor -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgMilitaryTabArmor"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="11"/>
+				<property name="strToolTip" from="locale.SID.UI.Armor"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText">
+					(filter(?{unit: unit.objUnitTemplate.eUnitCategory == gs_tbg.UnitCategory.Armored},
+						gs_tbg.getNationUnits(mh2data.objAvatar, mh2data.objNation)).size).formatNumber(0, true) + '  ' 
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="strToolTip" from="locale.SID.UI.Armor"/>
+			</object>
+			
+			<!-- Bombers -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgMilitaryTabBomber"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="27"/>
+				<property name="nHeight" value="14"/>
+				<property name="strToolTip" from="locale.SID.UI.Bombers"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText">
+					(filter(?{unit: unit.objUnitTemplate.eUnitCategory == gs_tbg.UnitCategory.Bombers},
+						gs_tbg.getNationUnits(mh2data.objAvatar, mh2data.objNation)).size).formatNumber(0, true) + '  ' 
+				</property>
+				<property name="strToolTip" from="locale.SID.UI.Bombers"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>	
+			
+			<!-- Fighters -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgMilitaryTabFighter"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="11"/>
+				<property name="strToolTip" from="locale.SID.UI.Fighters"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText">
+					(filter(?{unit: unit.objUnitTemplate.eUnitCategory == gs_tbg.UnitCategory.Fighters},
+						gs_tbg.getNationUnits(mh2data.objAvatar, mh2data.objNation)).size).formatNumber(0, true) + '  ' 
+				</property>
+				<property name="strToolTip" from="locale.SID.UI.Fighters"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>	
+            
+			<!-- Patrol/Transport -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgIDIconEscortLight"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="11"/>
+				<property name="strToolTip" from="locale.SID.UI.Escorts"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText">
+					sum(
+                        map(?{unitgroup:   
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'IroncladFrigate')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyDestroyers')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'FastAttackCraft')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'Destroyers')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'EscortDestroyers')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'Frigate')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'AdvancedDestroyer')).size		
+                            },
+                        gs_tbg.getNationGroups(mh2data.objAvatar, mh2data.objNation))
+                    ).formatNumber(0, true) + '  ' 
+				</property>
+				<property name="strToolTip" from="locale.SID.UI.Escorts"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>	
+            
+			<!-- Attackers -->
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgIDIconCapitalshipLighter"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="11"/>
+				<property name="strToolTip" from="locale.SID.UI.CapitalShips"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftCenterFIT"/>
+				<property name="strText">
+					sum(
+                        map(?{unitgroup:   
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'Battlecruiser')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'Dreadnought')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'LightCarrier')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'LightCruiser')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'HeavyCruiser')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'StandardBattleship')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'EscortCarrier')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'FastBattleships')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'FleetCarrier')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'LargeCruiser')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'AdvancedBattleship')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'SuperCarriers')).size +
+                            unitgroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'NuclearCarrier')).size	
+                            },
+						gs_tbg.getNationGroups(mh2data.objAvatar, mh2data.objNation))
+                    ).formatNumber(0, true)
+				</property>
+				<property name="strToolTip" from="locale.SID.UI.CapitalShips"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" value="30"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+			</object>	
+            
+		</object>
+		
+		<object type="mlui.UI2DTextButton" name="objStartButton">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.Start"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="370"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nDefaultWidth" value="128"/>
+			<property name="nDefaultHeight" value="28"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            mh2data.closeNationInfo();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+    </objectDef>	
+    
+    <objectDef  type="UI2DTextToPages" superType="mlui.UI2DElement">
+        <propertyDef name="strText" type="String" default="" />
+        <propertyDef name="nPages" type="int" >
+           float(self.objFakeScrollable.nHeight) /  (if(self.objScrollpane.nHeight == 0, 1, float(self.objScrollpane.nHeight)))
+        </propertyDef>
+        
+        
+        <object type="mlui.UI2DText" name="objFakeScrollable">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialWhite12LeftWrapCustomForIntro"/>
+            <property name="strText" from="def.strText" />
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nWidth" from="def.nWidth-20" />
+            <property name="nHeight"  from="def.nHeight" />
+            <property name="bVisible" value="false" />
+        </object>    
+        
+        
+		<object type="UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="10"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth - 20"/>
+			<property name="nHeight" from="70" />		
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN"/> 
+            
+            <object type="mlui.UI2DText" name="objScrollable">
+                <property name="tmplTextStyle" value="locale.TxtStyleArialWhite12LeftWrapNoReSize"/>
+                <property name="strText" from="def.strText" />
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" from="def.nWidth-20" />
+                <property name="nHeight"  from=" (def.objScrollpane.nHeight) * (def.nPages +1)" />
+            </object>    
+            
+            <object type="mlui.UI2DImage" name="objPanelSliderBG">
+                <property name="bVisible" value="false" />
+            </object>            
+            <object type="mlui.SliderInfo" name="objHorizInfo">
+                <property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+                <property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+                <property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+                <property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+                <property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>				
+                
+                <property name="nThickness" value="0"/>
+                <property name="nLength" from="def.nWidth"/>		
+                
+                <property name="nButtonLength" value="0"/>
+                <property name="nMinKnobLength" value="16"/>
+                <property name="nMaxKnobLength" value="16"/>		
+                
+                <property name="fMinorIncrement" value="1.0"/>
+                <property name="fMajorIncrement" value="5.0"/>			
+            </object>          
+            <object type="mlui.SliderInfo" name="objVertInfo">
+                <property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+                <property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+                <property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+                <property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+                <property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>				
+                
+                <property name="nThickness" value="0"/>
+                <property name="nLength" from="def.nHeight"/>		
+                
+                <property name="nButtonLength" value="0"/>
+                <property name="nMinKnobLength" value="16"/>
+                <property name="nMaxKnobLength" value="16"/>		
+                
+                <property name="fMinorIncrement" value="1.0"/>
+                <property name="fMajorIncrement" value="5.0"/>			
+            </object>
+		</object>
+    
+         <object type="common_ui.UI2DListHorz" name="objPageList">
+			<property name="nSpacing" value="10"/>
+            <property name="nY" value="1" />
+			<property name="nX" from="0"/>
+			<property name="nHeight" from="14"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="BOTTOM"/>
+			
+			<object type="UI2DPageButtons" name="objElements"  tiedTo="range(0, def.nPages + 1)" >
+				<property name="nPage" from="tiedTo" />
+                <property name="bSelected" from="def.objScrollpane.objVertSlider.fValue == self.fSetScollBarTo" />
+                <property name="fSetScollBarTo" >
+                    if(tiedTo == 0,
+                        0
+                        ,
+                       (def.objScrollpane.nHeight) * (tiedTo)
+                    )
+                </property>
+                <property name="nHeight" from="14"/>
+                <property name="nWidth" from="14"/>
+                <property name="objScroller" from="def.objScrollpane.objVertSlider"/>
+			</object>					
+		</object>
+    </objectDef>
+    
+    <objectDef type="UI2DPageButtons" superType="mlui.UI2DElement" >
+        <propertyDef name="nPage" type="int" default="0" />
+        <propertyDef name="bSelected" type="bool" default="false" /> 
+        <propertyDef name="fSetScollBarTo" type="float" default="0" />
+        <propertyDef name="objScroller" type="mlui.UI2DSlider"/>
+
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="vaYAlign" value="BOTTOM"/>		
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				if(def.bSelected, #ABCDEFFF, #123456FF)
+			</property>	
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" from="def.nHeight" />
+			<property name="nWidth" from="def.nWidth"/>
+		</object>        
+        
+        <object type="mlui.UI2DText" name="objElements"  >
+			<property name="nX" value="3"/>
+			<property name="nY" value="1"/>
+            <property name="strText" from="(def.nPage + 1).formatNumber(0, true)"/>
+            <property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddleFIT"/>
+			<property name="nHeight" from="def.nHeight" />
+			<property name="nWidth" from="def.nWidth"/>
+        </object>	
+        
+        <object type="mlui.UI2DButton" name="objForwardButton">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleHighlight')"/>
+			<property name="nX" from="0" />
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="def.nWidth" />
+			<property name="nDefaultHeight" from="def.nHeight" />
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            local.mlui.ActSetSliderValue.execute({							
+                                "objSlider" : def.objScroller,
+                                "fValue" : def.fSetScollBarTo
+                            });
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+    
+    </objectDef>
+    
+    
+</locust>

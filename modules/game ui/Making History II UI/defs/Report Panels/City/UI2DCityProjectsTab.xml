@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DCityProjectsTab" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupResearchData" type="LookupResearchData"/>
+		<propertyDef name="objResearchProjectListData" type="ResearchProjectListData"/>
+		<propertyDef name="strTabID" type="String"/>
+
+		<object type="UI2DResearchProjectList" name="objResearchProjectList">
+			<property name="objLookupResearchData" from="def.objLookupResearchData"/>
+			<property name="objResearchProjectListData" from="def.objResearchProjectListData"/>
+
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="385"/>
+		</object>
+	</objectDef>
+</locust>

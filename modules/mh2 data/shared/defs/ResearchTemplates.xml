@@ -1,0 +1,1447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Research Topic Templates -->
+    <template type="gs_tbg.ResearchTopicTemplate" name="SubsistenceEconomy">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.SubsistenceEconomy"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSubsistenceEconomy"/>
+        <property name="nPointsRequired" value="100"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Agriculture"/>
+        <property name="nTopLevel" value="0"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="CompulsoryMilitaryService">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.CompulsoryMilitaryService"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCompulsoryMilitaryService"/>
+        <property name="nPointsRequired" value="125"/>
+        <property name="nPerTurnCost" value="500000"/>
+        <property name="tmplCategory" value="Infantry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SubsistenceEconomy"/>
+        <property name="nTopLevel" value="1"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="SurfaceMining">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.SurfaceMining"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSurfaceMining"/>
+        <property name="nPointsRequired" value="150"/>
+        <property name="nPerTurnCost" value="500000"/>
+        <property name="tmplCategory" value="Infrastructure"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CompulsoryMilitaryService"/>
+        <property name="nTopLevel" value="2"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="CottageIndustries">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.CottageIndustries"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCottageIndustries"/>
+        <property name="nPointsRequired" value="175"/>
+        <property name="nPerTurnCost" value="500000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SubsistenceEconomy"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SurfaceMining"/>
+        <property name="nTopLevel" value="3"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="CropRotation">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.CropRotation"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCropRotation"/>
+        <property name="nPointsRequired" value="200"/>
+        <property name="nPerTurnCost" value="500000"/>
+        <property name="tmplCategory" value="Agriculture"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SubsistenceEconomy"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CottageIndustries"/>
+        <property name="nTopLevel" value="4"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AgrarianReform">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AgrarianReform"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAgrarianReform"/>
+        <property name="nPointsRequired" value="200"/>
+        <property name="nPerTurnCost" value="500000"/>
+        <property name="tmplCategory" value="Agriculture"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CropRotation"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="BasicTraining">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.BasicTraining"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionBasicTraining"/>
+        <property name="nPointsRequired" value="250"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="Infantry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CompulsoryMilitaryService"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CropRotation"/>
+        <property name="nTopLevel" value="5"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="SpecializedInfantry">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.SpecializedInfantry"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSpecializedInfantry"/>
+        <property name="nPointsRequired" value="250"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="Special"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::BasicTraining"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ProvingGrounds">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ProvingGrounds"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionProvingGrounds"/>
+        <property name="nPointsRequired" value="300"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="Artillery"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::BasicTraining"/>
+        <property name="nTopLevel" value="6"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="HowitzerBatteries">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.HowitzerBatteries"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionHowitzerBatteries"/>
+        <property name="nPointsRequired" value="300"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="Artillery"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ProvingGrounds"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="MechanizedIndustries">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.MechanizedIndustries"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMechanizedIndustries"/>
+        <property name="nPointsRequired" value="350"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ProvingGrounds"/>
+        <property name="nTopLevel" value="7"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ImprovedExcavationMethods">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ImprovedExcavationMethods"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionImprovedExcavationMethods"/>
+        <property name="nPointsRequired" value="250"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="Infrastructure"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SurfaceMining"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MechanizedIndustries"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="OilDrilling">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.OilDrilling"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionOilDrilling"/>
+        <property name="nPointsRequired" value="250"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="Infrastructure"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MechanizedIndustries"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="NavalInfrastructure">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.NavalInfrastructure"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNavalInfrastructure"/>
+        <property name="nPointsRequired" value="400"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MechanizedIndustries"/>
+        <property name="nTopLevel" value="8"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="BasicNavalArchitecture">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.BasicNavalArchitecture"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionBasicNavalArchitecture"/>
+        <property name="nPointsRequired" value="400"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::NavalInfrastructure"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ChemicalSciences">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ChemicalSciences"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionChemicalSciences"/>
+        <property name="nPointsRequired" value="450"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="Chemical"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::NavalInfrastructure"/>
+        <property name="nTopLevel" value="9"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="DeepOilExtraction">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.DeepOilExtraction"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionDeepOilExtraction"/>
+        <property name="nPointsRequired" value="450"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="Infrastructure"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::OilDrilling"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ChemicalSciences"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="InterchangeableParts">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.InterchangeableParts"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionInterchangeableParts"/>
+        <property name="nPointsRequired" value="500"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ChemicalSciences"/>
+        <property name="nTopLevel" value="10"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ElementaryFlagshipDesign">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ElementaryFlagshipDesign"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionElementaryFlagshipDesign"/>
+        <property name="nPointsRequired" value="500"/>
+        <property name="nPerTurnCost" value="750000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::InterchangeableParts"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="StandardIssuedRifles">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.StandardIssuedRifles"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionStandardIssuedRifles"/>
+        <property name="nPointsRequired" value="600"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Infantry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::InterchangeableParts"/>
+        <property name="nTopLevel" value="11"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="GroundAssaultTraining">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.GroundAssaultTraining"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionGroundAssaultTraining"/>
+        <property name="nPointsRequired" value="600"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Special"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::StandardIssuedRifles"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SpecializedInfantry"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="MeteoballisticSummator">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.MeteoballisticSummator"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMeteoballisticSummator"/>
+        <property name="nPointsRequired" value="800"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Artillery"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::HowitzerBatteries"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::StandardIssuedRifles"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="IntegratedResearchInfrastructure">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.IntegratedResearchInfrastructure"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionIntegratedResearchInfrastructure"/>
+        <property name="nPointsRequired" value="700"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Advanced"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::StandardIssuedRifles"/>
+        <property name="nTopLevel" value="12"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="Electromagnetism">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.Electromagnetism"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionElectromagnetism"/>
+        <property name="nPointsRequired" value="600"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Infrastructure"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ImprovedExcavationMethods"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::IntegratedResearchInfrastructure"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ChemicalFertilizers">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ChemicalFertilizers"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionChemicalFertilizers"/>
+        <property name="nPointsRequired" value="500"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Chemical"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::IntegratedResearchInfrastructure"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::ChemicalLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="StateHealthCare">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.StateHealthCare"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionStateHealthCare"/>
+        <property name="nPointsRequired" value="800"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::IntegratedResearchInfrastructure"/>
+        <property name="nTopLevel" value="13"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="OilDistilationProcess">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.OilDistilationProcess"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionOilDistilationProcess"/>
+        <property name="nPointsRequired" value="1000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Infrastructure"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::DeepOilExtraction"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::StateHealthCare"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="NautilusTorpedo">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.NautilusTorpedo"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNautilusTorpedo"/>
+        <property name="nPointsRequired" value="600"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::StateHealthCare"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="RigidAirshipConcept">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.RigidAirshipConcept"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionRigidAirshipConcept"/>
+        <property name="nPointsRequired" value="500"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::StateHealthCare"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="HeavyIndustries">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.HeavyIndustries"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionHeavyIndustries"/>
+        <property name="nPointsRequired" value="900"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MechanizedIndustries"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::StateHealthCare"/>
+        <property name="nTopLevel" value="14"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ConcreteFortifications">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ConcreteFortifications"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionConcreteFortifications"/>
+        <property name="nPointsRequired" value="800"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::HeavyIndustries"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="FarmMechanization">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.FarmMechanization"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFarmMechanization"/>
+        <property name="nPointsRequired" value="800"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Agriculture"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CropRotation"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::HeavyIndustries"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="CanningFactory">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.CanningFactory"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCanningFactory"/>
+        <property name="nPointsRequired" value="800"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::FarmMechanization"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AirInfrastructure">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AirInfrastructure"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAirInfrastructure"/>
+        <property name="nPointsRequired" value="1000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::HeavyIndustries"/>
+        <property name="nTopLevel" value="15"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="FundamentalAirForce">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.FundamentalAirForce"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFundamentalAirForce"/>
+        <property name="nPointsRequired" value="800"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AirInfrastructure"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="NavalPlatformConcept">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.NavalPlatformConcept"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNavalPlatformConcept"/>
+        <property name="nPointsRequired" value="1000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AirInfrastructure"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AutomotiveIndustry">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AutomotiveIndustry"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAutomotiveIndustry"/>
+        <property name="nPointsRequired" value="1250"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AirInfrastructure"/>
+        <property name="nTopLevel" value="16"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="EarlyTankPrototype">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.EarlyTankPrototype"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionEarlyTankPrototype"/>
+        <property name="nPointsRequired" value="800"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="TankWarfare"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AutomotiveIndustry"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::MilitaryAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="SupportVessels">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.SupportVessels"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSupportVessels"/>
+        <property name="nPointsRequired" value="1000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::BasicNavalArchitecture"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AutomotiveIndustry"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="MineMechanization">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.MineMechanization"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMineMechanization"/>
+        <property name="nPointsRequired" value="1000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Infrastructure"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ImprovedExcavationMethods"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AutomotiveIndustry"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="GrenadesAndSidearms">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.GrenadesAndSidearms"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionGrenadesAndSidearms"/>
+        <property name="nPointsRequired" value="1500"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Infantry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AutomotiveIndustry"/>
+        <property name="nTopLevel" value="17"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="DeepOperations">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.DeepOperations"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionDeepOperations"/>
+        <property name="nPointsRequired" value="1000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Special"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::GrenadesAndSidearms"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::GroundAssaultTraining"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ManeuverWarfare">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ManeuverWarfare"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionManeuverWarfare"/>
+        <property name="nPointsRequired" value="1500"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="VehicleLogistics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::GrenadesAndSidearms"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AnalogComputers">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AnalogComputers"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAnalogComputers"/>
+        <property name="nPointsRequired" value="1500"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Artillery"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MeteoballisticSummator"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ManeuverWarfare"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AirCarrierOperations">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AirCarrierOperations"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAirCarrierOperations"/>
+        <property name="nPointsRequired" value="1000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="AerialTactics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::FundamentalAirForce"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::GrenadesAndSidearms"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::AirForceAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="TarmacadamRoadways">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.TarmacadamRoadways"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionTarmacadamRoadways"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::GrenadesAndSidearms"/>
+        <property name="nTopLevel" value="18"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="LightTankDevelopment">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.LightTankDevelopment"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionLightTankDevelopment"/>
+        <property name="nPointsRequired" value="1600"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="TankWarfare"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::TarmacadamRoadways"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::EarlyTankPrototype"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::MilitaryAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="EarlyAirForces">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.EarlyAirForces"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionEarlyAirForces"/>
+        <property name="nPointsRequired" value="1200"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::FundamentalAirForce"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::TarmacadamRoadways"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="BattleshipHullDesign">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.BattleshipHullDesign"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionBattleshipHullDesign"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ElementaryFlagshipDesign"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::TarmacadamRoadways"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ArrestingGear">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ArrestingGear"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionArrestingGear"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::NavalPlatformConcept"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::BattleshipHullDesign"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AppliedPhysics">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AppliedPhysics"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAppliedPhysics"/>
+        <property name="nPointsRequired" value="2500"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Advanced"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::TarmacadamRoadways"/>
+        <property name="nTopLevel" value="19"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="FullMetalAircraft">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.FullMetalAircraft"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFullMetalAircraft"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::EarlyAirForces"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AppliedPhysics"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="EarlyCounterAirDefence">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.EarlyCounterAirDefence"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionEarlyCounterAirDefence"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Artillery"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AppliedPhysics"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="FischerTropschProcess">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.FischerTropschProcess"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFischerTropschProcess"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Chemical"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AppliedPhysics"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::ChemicalLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="Sonar">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.Sonar"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSonar"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::NautilusTorpedo"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AppliedPhysics"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="CoalFactories">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.CoalFactories"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCoalFactories"/>
+        <property name="nPointsRequired" value="3000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AppliedPhysics"/>
+        <property name="nTopLevel" value="20"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="NuclearChainReaction">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.NuclearChainReaction"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNuclearChainReaction"/>
+        <property name="nPointsRequired" value="5000"/>
+        <property name="nPerTurnCost" value="3000000"/>
+        <property name="tmplCategory" value="Nuclear"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CoalFactories"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NuclearLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="MediumClassTanks">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.MediumClassTanks"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMediumClassTanks"/>
+        <property name="nPointsRequired" value="2400"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="TankWarfare"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::LightTankDevelopment"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CoalFactories"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::MilitaryAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="CloseAirSupport">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.CloseAirSupport"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCloseAirSupport"/>
+        <property name="nPointsRequired" value="1500"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="AerialTactics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AirCarrierOperations"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CoalFactories"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::AirForceAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="EscortConvoys">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.EscortConvoys"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionEscortConvoys"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SupportVessels"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CoalFactories"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AdvancedInfrastructure">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AdvancedInfrastructure"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAdvancedInfrastructure"/>
+        <property name="nPointsRequired" value="4000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CoalFactories"/>
+        <property name="nTopLevel" value="21"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ResourceReclamation">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ResourceReclamation"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionResourceReclamation"/>
+        <property name="nPointsRequired" value="2500"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedInfrastructure"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="HeavyFighterConcept">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.HeavyFighterConcept"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionHeavyFighterConcept"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::FullMetalAircraft"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedInfrastructure"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ArmoredDecks">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ArmoredDecks"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionArmoredDecks"/>
+        <property name="nPointsRequired" value="3500"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ArrestingGear"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedInfrastructure"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="TorpedoBombers">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.TorpedoBombers"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionTorpedoBombers"/>
+        <property name="nPointsRequired" value="2500"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="AerialTactics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ArmoredDecks"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::AirForceAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="SemiAutomaticWeapons">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.SemiAutomaticWeapons"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSemiAutomaticWeapons"/>
+        <property name="nPointsRequired" value="5000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Infantry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedInfrastructure"/>
+        <property name="nTopLevel" value="22"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="GuerillaTactics">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.GuerillaTactics"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionGuerillaTactics"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Special"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SemiAutomaticWeapons"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::DeepOperations"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="HeavyArmoredPlating">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.HeavyArmoredPlating"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionHeavyArmoredPlating"/>
+        <property name="nPointsRequired" value="3600"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="TankWarfare"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SemiAutomaticWeapons"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MediumClassTanks"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::MilitaryAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="VehicleRadios">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.VehicleRadios"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionVehicleRadios"/>
+        <property name="nPointsRequired" value="3000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="VehicleLogistics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SemiAutomaticWeapons"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ManeuverWarfare"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AirborneAssault">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AirborneAssault"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAirborneAssault"/>
+        <property name="nPointsRequired" value="2000"/>
+        <property name="nPerTurnCost" value="1000000"/>
+        <property name="tmplCategory" value="Special"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SemiAutomaticWeapons"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AerospaceEngineering">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AerospaceEngineering"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAerospaceEngineering"/>
+        <property name="nPointsRequired" value="6000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="Rocketry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SemiAutomaticWeapons"/>
+        <property name="nTopLevel" value="23"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="FireControlSystems">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.FireControlSystems"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFireControlSystems"/>
+        <property name="nPointsRequired" value="3000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::BattleshipHullDesign"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AerospaceEngineering"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ImprovedAircraftEngines">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ImprovedAircraftEngines"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionImprovedAircraftEngines"/>
+        <property name="nPointsRequired" value="3000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::FullMetalAircraft"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AerospaceEngineering"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="LargeHulledAircraft">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.LargeHulledAircraft"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionLargeHulledAircraft"/>
+        <property name="nPointsRequired" value="3000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AerospaceEngineering"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AirTransport">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AirTransport"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAirTransport"/>
+        <property name="nPointsRequired" value="3000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::LargeHulledAircraft"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::AirForceAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AdvancedProduction">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AdvancedProduction"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAdvancedProduction"/>
+        <property name="nPointsRequired" value="7500"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AerospaceEngineering"/>
+        <property name="nTopLevel" value="24"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="BombingCountermeasures">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.BombingCountermeasures"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionBombingCountermeasures"/>
+        <property name="nPointsRequired" value="3500"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedInfrastructure"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedProduction"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="GuidedSystems">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.GuidedSystems"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionGuidedSystems"/>
+        <property name="nPointsRequired" value="6000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Rocketry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedProduction"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::RocketLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AssaultTankWeaponry">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AssaultTankWeaponry"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAssaultTankWeaponry"/>
+        <property name="nPointsRequired" value="5000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="TankWarfare"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedProduction"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::HeavyArmoredPlating"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::MilitaryAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="Snorkels">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.Snorkels"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSnorkels"/>
+        <property name="nPointsRequired" value="3000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::Sonar"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedProduction"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="EngineeringSciences">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.EngineeringSciences"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionEngineeringSciences"/>
+        <property name="nPointsRequired" value="9000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedProduction"/>
+        <property name="nTopLevel" value="25"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="Antibiotics">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.Antibiotics"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAntibiotics"/>
+        <property name="nPointsRequired" value="3500"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="Agriculture"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CropRotation"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::EngineeringSciences"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::ChemicalLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="PrecisionBombing">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.PrecisionBombing"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionPrecisionBombing"/>
+        <property name="nPointsRequired" value="5000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::LargeHulledAircraft"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::EngineeringSciences"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::AirForceAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AirSuperiority">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AirSuperiority"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAirSuperiority"/>
+        <property name="nPointsRequired" value="4000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::EngineeringSciences"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ImprovedAircraftEngines"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="NavalAirCommand">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.NavalAirCommand"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNavalAirCommand"/>
+        <property name="nPointsRequired" value="3000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="AerialTactics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::CloseAirSupport"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::EngineeringSciences"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::AirForceAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="DigitalComputers">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.DigitalComputers"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionDigitalComputers"/>
+        <property name="nPointsRequired" value="10500"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::EngineeringSciences"/>
+        <property name="nTopLevel" value="26"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="RocketArtilleryConcept">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.RocketArtilleryConcept"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionRocketArtilleryConcept"/>
+        <property name="nPointsRequired" value="5000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="Rocketry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MeteoballisticSummator"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::GuidedSystems"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::DigitalComputers"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::RocketLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="FlakCannons">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.FlakCannons"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFlakCannons"/>
+        <property name="nPointsRequired" value="3000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::DigitalComputers"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AdvancedNavalArchitecture">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AdvancedNavalArchitecture"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAdvancedNavalArchitecture"/>
+        <property name="nPointsRequired" value="7500"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::DigitalComputers"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::BattleshipHullDesign"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AntiSubmarineWarfare">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AntiSubmarineWarfare"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAntiSubmarineWarfare"/>
+        <property name="nPointsRequired" value="6000"/>
+        <property name="nPerTurnCost" value="1500000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::EscortConvoys"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedNavalArchitecture"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="SuperiorFlightDeck">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.SuperiorFlightDeck"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSuperiorFlightDeck"/>
+        <property name="nPointsRequired" value="10000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ArmoredDecks"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedNavalArchitecture"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="InfantryAntiTankWeapons">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.InfantryAntiTankWeapons"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionInfantryAntiTankWeapons"/>
+        <property name="nPointsRequired" value="12500"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Infantry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::DigitalComputers"/>
+        <property name="nTopLevel" value="27"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="FieldRadios">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.FieldRadios"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFieldRadios"/>
+        <property name="nPointsRequired" value="4000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Special"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::InfantryAntiTankWeapons"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::GuerillaTactics"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="Infiltration">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.Infiltration"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionInfiltration"/>
+        <property name="nPointsRequired" value="4000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Special"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::InfantryAntiTankWeapons"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AirborneAssault"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::MilitaryAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="MotorizedSupplyChain">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.MotorizedSupplyChain"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMotorizedSupplyChain"/>
+        <property name="nPointsRequired" value="4000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="VehicleLogistics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::InfantryAntiTankWeapons"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::VehicleRadios"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="NationalLaboratories">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.NationalLaboratories"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNationalLaboratories"/>
+        <property name="nPointsRequired" value="15000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::InfantryAntiTankWeapons"/>
+        <property name="nTopLevel" value="28"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="NavalRadarPicket">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.NavalRadarPicket"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNavalRadarPicket"/>
+        <property name="nPointsRequired" value="9000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::FireControlSystems"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::NationalLaboratories"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AcousticTorpedos">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AcousticTorpedos"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAcousticTorpedos"/>
+        <property name="nPointsRequired" value="7500"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::Snorkels"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::NationalLaboratories"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="UraniumEnrichment">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.UraniumEnrichment"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionUraniumEnrichment"/>
+        <property name="nPointsRequired" value="15000"/>
+        <property name="nPerTurnCost" value="4000000"/>
+        <property name="tmplCategory" value="Nuclear"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::NuclearChainReaction"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::NationalLaboratories"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NuclearLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="NuclearClassCarrier">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.NuclearClassCarrier"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNuclearClassCarrier"/>
+        <property name="nPointsRequired" value="15000"/>
+        <property name="nPerTurnCost" value="2500000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SuperiorFlightDeck"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::UraniumEnrichment"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="TurbojetTesting">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.TurbojetTesting"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionTurbojetTesting"/>
+        <property name="nPointsRequired" value="17500"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::NationalLaboratories"/>
+        <property name="nTopLevel" value="29"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ExperimentalJetEngines">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ExperimentalJetEngines"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionExperimentalJetEngines"/>
+        <property name="nPointsRequired" value="5000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::TurbojetTesting"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="LiquidFuelEngines">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.LiquidFuelEngines"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionLiquidFuelEngines"/>
+        <property name="nPointsRequired" value="9000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Rocketry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::GuidedSystems"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::TurbojetTesting"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::RocketLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AdvancedPhysics">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AdvancedPhysics"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAdvancedPhysics"/>
+        <property name="nPointsRequired" value="20000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::TurbojetTesting"/>
+        <property name="nTopLevel" value="30"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ExplosiveReactiveArmour">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ExplosiveReactiveArmour"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionExplosiveReactiveArmour"/>
+        <property name="nPointsRequired" value="7000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="TankWarfare"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedPhysics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AssaultTankWeaponry"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::MilitaryAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="CabinPressurization">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.CabinPressurization"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCabinPressurization"/>
+        <property name="nPointsRequired" value="7000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::PrecisionBombing"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedPhysics"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::AirForceAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="Air2AirMissiles">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.Air2AirMissiles"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAir2AirMissiles"/>
+        <property name="nPointsRequired" value="6000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ExperimentalJetEngines"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedPhysics"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::JetPropulsionLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="MilitaryIndustrialComplex">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.MilitaryIndustrialComplex"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMilitaryIndustrialComplex"/>
+        <property name="nPointsRequired" value="25000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedPhysics"/>
+        <property name="nTopLevel" value="31"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="SyntheticPesticides">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.SyntheticPesticides"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSyntheticPesticides"/>
+        <property name="nPointsRequired" value="7000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Agriculture"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::Antibiotics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MilitaryIndustrialComplex"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::ChemicalLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="NuclearFission">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.NuclearFission"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNuclearFission"/>
+        <property name="nPointsRequired" value="15000"/>
+        <property name="nPerTurnCost" value="5000000"/>
+        <property name="tmplCategory" value="Nuclear"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::UraniumEnrichment"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MilitaryIndustrialComplex"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NuclearLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="NuclearClassSubmarine">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.NuclearClassSubmarine"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNuclearClassSubmarine"/>
+        <property name="nPointsRequired" value="10000"/>
+        <property name="nPerTurnCost" value="3500000"/>
+        <property name="tmplCategory" value="NavalEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AcousticTorpedos"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::NuclearFission"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="FullyAutomaticInfantryWeapons">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.FullyAutomaticInfantryWeapons"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFullyAutomaticInfantryWeapons"/>
+        <property name="nPointsRequired" value="30000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Infantry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MilitaryIndustrialComplex"/>
+        <property name="nTopLevel" value="32"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="DeepDefense">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.DeepDefense"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionDeepDefense"/>
+        <property name="nPointsRequired" value="6000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Special"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::FullyAutomaticInfantryWeapons"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::FieldRadios"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="SpecialForces">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.SpecialForces"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSpecialForces"/>
+        <property name="nPointsRequired" value="6000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Special"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::FullyAutomaticInfantryWeapons"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::Infiltration"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="Astrophysics">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.Astrophysics"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAstrophysics"/>
+        <property name="nPointsRequired" value="40000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Advanced"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MilitaryIndustrialComplex"/>
+        <property name="nTopLevel" value="33"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="TransonicFlight">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.TransonicFlight"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionTransonicFlight"/>
+        <property name="nPointsRequired" value="9000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::Astrophysics"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::JetPropulsionLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="SupersonicAerodynamics">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.SupersonicAerodynamics"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSupersonicAerodynamics"/>
+        <property name="nPointsRequired" value="10000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="AerialEngineering"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::TransonicFlight"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::OrbitalScienceLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="GroundBasedAirDefence">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.GroundBasedAirDefence"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionGroundBasedAirDefence"/>
+        <property name="nPointsRequired" value="9000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Rocketry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::EarlyCounterAirDefence"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::Astrophysics"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::RocketLab"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ProgrammableComputers">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ProgrammableComputers"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionProgrammableComputers"/>
+        <property name="nPointsRequired" value="50000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Industrial"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::Astrophysics"/>
+        <property name="nTopLevel" value="34"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="AdvancedLogistics">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.AdvancedLogistics"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAdvancedLogistics"/>
+        <property name="nPointsRequired" value="6000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="VehicleLogistics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ProgrammableComputers"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::MotorizedSupplyChain"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="ModernTankSystems">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.ModernTankSystems"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionModernTankSystems"/>
+        <property name="nPointsRequired" value="9000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="TankWarfare"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::AdvancedLogistics"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ExplosiveReactiveArmour"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::MilitaryAcademy"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="SpaceAge">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.SpaceAge"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionSpaceAge"/>
+        <property name="nPointsRequired" value="60000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Advanced"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::ProgrammableComputers"/>
+        <property name="nTopLevel" value="35"/>
+    </template>
+    <template type="gs_tbg.ResearchTopicTemplate" name="StagedRockets">
+        <property name="strDisplayName" from="locale.SID.ResearchTopic.DisplayName.StagedRockets"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionStagedRockets"/>
+        <property name="nPointsRequired" value="12000"/>
+        <property name="nPerTurnCost" value="2000000"/>
+        <property name="tmplCategory" value="Rocketry"/>
+		<property name="tmplPreReqs" value="gs_tbg.ResearchTopicTemplate::SpaceAge"/>
+        <property name="tmplRequiredBuildings" value="gs_tbg.ResearchCenterBuildingTemplate::OrbitalScienceLab"/>
+    </template>
+
+    <!-- Research Category Templates -->
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Advanced">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Advanced"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Rocketry">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Rocketry"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Nuclear">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Nuclear"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Chemical">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Chemical"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Industrial">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Industrial"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Infrastructure">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Infrastructure"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Agriculture">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Agriculture"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="TankWarfare">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.TankWarfare"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="VehicleLogistics">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.VehicleLogistics"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Infantry">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Infantry"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Special">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Special"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Artillery">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Artillery"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="AerialEngineering">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.AerialEngineering"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="AerialTactics">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.AerialTactics"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="NavalEngineering">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.NavalEngineering"/>
+    </template>
+    <template type="gs_tbg.ResearchCategoryTemplate" name="Resources">
+        <property name="strDisplayName" from="locale.SID.ResearchCategory.DisplayName.Resources"/>
+    </template>
+
+    <!-- Ressearch Center Building Templates -->
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="PublicSchool">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.PublicSchool"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionPublicSchool"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionPublicSchool"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="75"/>
+        <property name="nRPUs" value="1"/>
+        <property name="nMaintenanceCost" value="500000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="University">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.University"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionUniversity"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionUniversity"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="100"/>
+        <property name="nRPUs" value="9"/>
+        <property name="nMaintenanceCost" value="5000000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="ResearchFacility">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.ResearchFacility"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionResearchFacility"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionResearchFacility"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="75"/>
+        <property name="nRPUs" value="18"/>
+        <property name="nMaintenanceCost" value="15000000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="MilitaryAcademy">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.MilitaryAcademy"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMilitaryAcademy"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionMilitaryAcademy"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="50"/>
+        <property name="nRPUs" value="1"/>
+        <property name="nMaintenanceCost" value="2500000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="NavalAcademy">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.NavalAcademy"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNavalAcademy"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionNavalAcademy"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="50"/>
+        <property name="nRPUs" value="1"/>
+        <property name="nMaintenanceCost" value="3500000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="MedicalCenter">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.MedicalCenter"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMedicalCenter"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionMedicalCenter"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="50"/>
+        <property name="nRPUs" value="0"/>
+        <property name="nMaintenanceCost" value="5000000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="ChemicalLab">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.ChemicalLab"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionChemicalLab"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionChemicalLab"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="50"/>
+        <property name="nRPUs" value="2"/>
+        <property name="nMaintenanceCost" value="7500000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="RocketLab">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.RocketLab"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionRocketLab"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionRocketLab"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="75"/>
+        <property name="nRPUs" value="3"/>
+        <property name="nMaintenanceCost" value="15000000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="JetPropulsionLab">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.JetPropulsionLab"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionJetPropulsionLab"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionJetPropulsionLab"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="75"/>
+        <property name="nRPUs" value="3"/>
+        <property name="nMaintenanceCost" value="20000000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="NuclearLab">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.NuclearLab"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionNuclearLab"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionNuclearLab"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="50"/>
+        <property name="nRPUs" value="5"/>
+        <property name="nMaintenanceCost" value="60000000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="AirForceAcademy">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.AirForceAcademy"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAirForceAcademy"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionAirForceAcademy"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="50"/>
+        <property name="nRPUs" value="1"/>
+        <property name="nMaintenanceCost" value="3000000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="TechnologyCenter">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.TechnologyCenter"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionTechnologyCenter"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionTechnologyCenter"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="100"/>
+        <property name="nRPUs" value="27"/>
+        <property name="nMaintenanceCost" value="30000000"/>
+    </template>
+    <template type="gs_tbg.ResearchCenterBuildingTemplate" name="OrbitalScienceLab">
+        <property name="strDisplayName" from="locale.SID.ResearchBuilding.DisplayName.OrbitalScienceLab"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionOrbitalScienceLab"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionOrbitalScienceLab"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nMPUs" value="100"/>
+        <property name="nRPUs" value="5"/>
+        <property name="nMaintenanceCost" value="30000000"/>
+    </template>
+
+    <!-- Research Topic Template List -->
+    <template type="TemplateList" name="ResearchTopicTemplateList">
+        <property name="otTemplateType" value="gs_tbg.ResearchTopicTemplate"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::SubsistenceEconomy"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::CompulsoryMilitaryService"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::SurfaceMining"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::CottageIndustries"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::CropRotation"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AgrarianReform"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::BasicTraining"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ProvingGrounds"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::SpecializedInfantry"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ImprovedExcavationMethods"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::OilDrilling"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::MechanizedIndustries"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::NavalInfrastructure"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::BasicNavalArchitecture"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ChemicalSciences"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::DeepOilExtraction"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::InterchangeableParts"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ElementaryFlagshipDesign"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::HowitzerBatteries"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::StandardIssuedRifles"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::GroundAssaultTraining"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::IntegratedResearchInfrastructure"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::Electromagnetism"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ChemicalFertilizers"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::StateHealthCare"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::OilDistilationProcess"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::NautilusTorpedo"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::HeavyIndustries"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::CanningFactory"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::MineMechanization"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::FarmMechanization"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ConcreteFortifications"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::SupportVessels"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AutomotiveIndustry"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::EarlyTankPrototype"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AirInfrastructure"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::FundamentalAirForce"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::RigidAirshipConcept"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::GrenadesAndSidearms"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::EarlyCounterAirDefence"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::DeepOperations"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::MeteoballisticSummator"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ManeuverWarfare"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::LightTankDevelopment"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::TarmacadamRoadways"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::EarlyAirForces"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::MediumClassTanks"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::BattleshipHullDesign"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::NavalPlatformConcept"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AirCarrierOperations"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AppliedPhysics"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::NuclearChainReaction"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::FullMetalAircraft"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::FischerTropschProcess"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::Sonar"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::CoalFactories"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AnalogComputers"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ArrestingGear"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::CloseAirSupport"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::HeavyFighterConcept"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AdvancedInfrastructure"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ResourceReclamation"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::HeavyArmoredPlating"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::EscortConvoys"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::FireControlSystems"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ArmoredDecks"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::TorpedoBombers"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AerospaceEngineering"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::BombingCountermeasures"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::RocketArtilleryConcept"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ImprovedAircraftEngines"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::LargeHulledAircraft"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AirTransport"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::SemiAutomaticWeapons"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::GuerillaTactics"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AirborneAssault"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::VehicleRadios"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AdvancedProduction"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AssaultTankWeaponry"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::Snorkels"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::EngineeringSciences"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::Antibiotics"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::PrecisionBombing"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::NavalAirCommand"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AirSuperiority"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::DigitalComputers"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::GuidedSystems"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::FlakCannons"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AdvancedNavalArchitecture"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AntiSubmarineWarfare"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::InfantryAntiTankWeapons"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::FieldRadios"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::Infiltration"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::MotorizedSupplyChain"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::NationalLaboratories"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::NavalRadarPicket"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AcousticTorpedos"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::TurbojetTesting"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ExperimentalJetEngines"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AdvancedPhysics"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ExplosiveReactiveArmour"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::UraniumEnrichment"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::NuclearClassCarrier"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::CabinPressurization"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::LiquidFuelEngines"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::Air2AirMissiles"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::MilitaryIndustrialComplex"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::SyntheticPesticides"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::NuclearFission"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::NuclearClassSubmarine"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::SuperiorFlightDeck"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::FullyAutomaticInfantryWeapons"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::DeepDefense"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::SpecialForces"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::Astrophysics"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::TransonicFlight"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::SupersonicAerodynamics"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::GroundBasedAirDefence"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ProgrammableComputers"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::ModernTankSystems"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::AdvancedLogistics"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::SpaceAge"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchTopicTemplate::StagedRockets"/>
+    </template>
+
+    <!-- Research Building Template List -->
+    <template type="TemplateList" name="ResearchCenterBuildingTemplateList">
+        <property name="otTemplateType" value="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::PublicSchool"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::University"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::ResearchFacility"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::MilitaryAcademy"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::NavalAcademy"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::MedicalCenter"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::ChemicalLab"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::RocketLab"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::JetPropulsionLab"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::NuclearLab"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::AirForceAcademy"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::TechnologyCenter"/>
+        <property name="tmplRefs" value="gs_tbg.ResearchCenterBuildingTemplate::OrbitalScienceLab"/>
+    </template>
+
+</locust>

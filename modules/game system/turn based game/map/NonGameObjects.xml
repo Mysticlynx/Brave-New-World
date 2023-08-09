@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+   	<objectDef type="RegionPathResult" class="CMLORegionPathResult" desc="Result of find path attempt between regions">
+        <propertyDef name="refSourceRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="refTargetRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="bFound" type="bool"/>
+        <propertyDef name="nWeight" type="int"/>
+        <propertyDef name="refRegions" type="GORef" restriction="Region" variable="true"/>
+ 	</objectDef>
+	
+	<enumDef name="RegionType">
+        <value name="SeaRegion"/>
+        <value name="LandRegion"/>
+        <value name="IslandRegion"/>
+	</enumDef>
+
+</locust>

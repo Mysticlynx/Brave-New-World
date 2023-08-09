@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="MapBehaviorTableGOSelected" class="CMLObject">
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objEntries" type="MapBehaviorEntryGOSelected" variable="true" storesChildren="true"/>
+
+        <script type="application/javascript"><![CDATA[
+
+            function lookupBehavior(GO)
+            {
+
+                for (i in self.objEntries)
+                {
+                    var objEntry = self.objEntries[i]
+                    if (GO.instanceOf(objEntry.otGO))
+                    {
+                        return objEntry
+                    }
+                }
+
+            }
+
+        ]]></script>
+	</objectDef>
+
+	<objectDef type="MapBehaviorEntryGOSelected" class="CMLObject">
+		<propertyDef name="otGO" type="ObjectType"/>
+
+        <propertyDef name="objRoot" type="mlui.UI2DElement"/>
+        <property name="objRoot" from="mlui.objUI.objRoot"/>
+	</objectDef>
+
+
+	<objectDef type="MapBehaviorTableGOQueried" class="CMLObject">
+		<propertyDef name="objMapData" type="MapData"/>	
+		<propertyDef name="objEntries" type="MapBehaviorEntryGOQueried" variable="true" storesChildren="true"/>
+
+        <script type="application/javascript"><![CDATA[
+
+            function lookupBehavior(GO)
+            {
+
+                for (i in self.objEntries)
+                {
+                    var objEntry = self.objEntries[i]
+                    if (GO.instanceOf(objEntry.otGO))
+                    {
+                        return objEntry
+                    }
+                }
+
+            }
+
+        ]]></script>
+	</objectDef>
+
+	<objectDef type="MapBehaviorEntryGOQueried" class="CMLObject">
+		<propertyDef name="otGO" type="ObjectType"/>
+
+        <propertyDef name="objRoot" type="mlui.UI2DElement"/>
+        <property name="objRoot" from="mlui.objUI.objRoot"/>
+	</objectDef>
+
+	<objectDef type="MapBehaviorTableGOTargetting" class="CMLObject" >
+		<propertyDef name="objEntries" type="MapBehaviorEntryGOTargetting" variable="true" storesChildren="true"/>
+        <propertyDef name="objDefault" type="MapBehaviorEntryGOTargetting" />
+
+        <script type="application/javascript"><![CDATA[
+
+            function lookupBehavior(GO, TargetGO)
+            {
+
+                for (i in self.objEntries)
+                {
+                    var objEntry = self.objEntries[i]
+                    if (GO.instanceOf(objEntry.otGO) && TargetGO.instanceOf(objEntry.otTargetGO))
+                    {
+                        return objEntry
+                    }
+                }
+
+            }
+
+        ]]></script>
+	</objectDef>
+
+	<objectDef type="MapBehaviorEntryGOTargetting" class="CMLObject">
+		<propertyDef name="otGO" type="ObjectType"/>
+        <propertyDef name="otTargetGO" type="ObjectType"/>
+
+        <propertyDef name="objRoot" type="mlui.UI2DElement"/>
+        <property name="objRoot" from="mlui.objUI.objRoot"/>
+	</objectDef>
+
+</locust>

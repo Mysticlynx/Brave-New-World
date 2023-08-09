@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DCityButtons" superType="mlui.UI2DElement">
+		<property name="nWidth" from="self.objTabs.nWidth"/>
+		<property name="nHeight" from="self.objTabs.nHeight"/>
+		
+		<object type="common_ui.UI2DListHorz" name="objTabs">
+			<property name="nSpacing" value="1"/>
+					
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.RegionalStatistics"/>
+				<property name="tmplIcon" value="skin.ImgPeopleIcon"/>
+				<property name="bSelected">
+                    reportdata.objCityData.eTab == CitySection.REGIONSTATS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objCityData.showRegionStatistics();
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.RegionAssets"/>
+				<property name="tmplIcon" value="skin.ImgPickaxHammerIcon"/>
+				<property name="bSelected">
+                    reportdata.objCityData.eTab == CitySection.REGIONASSETS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objCityData.showRegionAssets();
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>	
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.ResearchCenters"/>
+				<property name="tmplIcon" value="skin.ImgResearchIcon"/>
+				<property name="bSelected">
+                    reportdata.objCityData.eTab == CitySection.RESEARCH_LIST
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objCityData.showCityResearchList();
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.IndustrialProduction"/>
+				<property name="tmplIcon" value="skin.ImgFactoryIcon"/>
+				<property name="bSelected">
+                    reportdata.objCityData.eTab == CitySection.PRODUCTION_LIST
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objCityData.showCityProductionList();
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+		
+		</object>
+		
+	</objectDef>
+</locust>

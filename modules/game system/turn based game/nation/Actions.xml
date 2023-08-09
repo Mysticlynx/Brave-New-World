@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GActStartResearchProject" class="CMLOGActStartResearchProject" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="ResearchTopicTemplate"/>
+        <propertyDef name="objResearchProject" type="ResearchProject"/>
+	</objectDef>
+
+	<objectDef type="GActSetAutotrade" class="CMLOGActSetAutotrade" superType="mlgame.GameAction">
+		<propertyDef name="refNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="eAutotradeState" type="Enum" restriction="AutotradeState"/>
+		<propertyDef name="nStockpileLevel" type="int" default="10"/>
+	</objectDef>
+
+    <objectDef type="GActSetMilitaryMaintenanceLevel" class="CMLOGActSetMilitaryMaintenanceLevel" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="nMaintenanceLevel" type="int" default="100"/>
+    </objectDef>
+
+    <objectDef type="GActSetRepairAll" class="CMLOGActSetRepairAll" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="bRepairAll" type="bool" default="false"/>
+    </objectDef>
+
+    <objectDef type="GActSetNationStatus" class="CMLOGActSetNationStatus" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="otNationStatus" type="ObjectType" restriction="NationStatus"/>
+        <propertyDef name="refController" type="GORef" restriction="Nation"/>
+		<propertyDef name="nTurn" type="int" default="-1"/>
+    </objectDef>
+
+    <objectDef type="GActCreateNation" class="CMLOGActCreateNation" superType="mlgame.GameAction">
+        <propertyDef name="tmplNation" type="TemplateRef" restriction="NationTemplate"/>
+    </objectDef>
+    
+    <objectDef type="GActSetNationColor" class="CMLOGActSetNationColor" superType="mlgame.GameAction">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="colColor" type="Color"/>
+        <propertyDef name="bAlreadyUsed" type="bool" desc="set true after Execute if colColor was used by another nation"/>
+    </objectDef>
+
+	<objectDef type="GActIdeologyShift" superType="mlgame.GActMethod">
+		<propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="tmplIdeology" type="TemplateRef" restriction="IdeologyTemplate"/>
+		<propertyDef name="nPointShift" type="int"/>
+		<propertyDef name="bPositive" type="bool" default="false"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				//self.objNation.shiftTowardsIdeology(self.objGame, self.tmplIdeology, nPointShift);
+				var ideos = self.objNation.objIdeologies
+				for(var i in ideos)
+				{
+					if(ideos[i].tmplIdeology.equals(self.tmplIdeology))
+					{
+						var risingIdeo = ideos[i]
+					}
+					else if(ideos[i].tmplIdeology.equals(self.objNation.tmplIdeology))
+					{
+						var nationalIdeo = ideos[i]
+					}
+				}
+				// Only send the event if it doesn't take the nationalIdeo below 0
+				if(nationalIdeo.nLevel - self.nPointShift >= 0 && risingIdeo.nLevel + self.nPointShift <= 100 && self.bPositive == false)
+				{
+					// Send the event off so we get some notification goodness
+					self.objGame.sendEvent(EventPoliticalActivity.create({"objNation": self.objNation,"tmplIdeology": self.tmplIdeology}));
+					nationalIdeo.nLevel -= self.nPointShift;
+					risingIdeo.nLevel += self.nPointShift;
+				}
+				// Only send the event if it doesn't take the nationalIdeo above 90
+				else if(nationalIdeo.nLevel + self.nPointShift <= 90 && risingIdeo.nLevel - self.nPointShift >= 0 && self.bPositive == true)
+				{
+					// Send the event off so we get some notification goodness
+					self.objGame.sendEvent(EventPoliticalActivity.create({"objNation": self.objNation,"tmplIdeology": self.objNation.tmplIdeology}));
+					nationalIdeo.nLevel += self.nPointShift;
+					risingIdeo.nLevel -= self.nPointShift;
+				}
+			}
+		]]>	</script>
+	</objectDef>
+	
+	<objectDef type="GActRenameNation" superType="mlgame.GActMethod" >
+		<propertyDef name="refNation" type="GORef" restriction="Nation" />
+        <propertyDef name="strNewName" type="String"/>
+		<script type="application/javascript"><![CDATA[
+			function execute()
+			 {
+			    if (self.strNewName == "") 
+			        return;
+			        
+                nation = self.refNation.resolve(self.objGame);
+                if (nation == null)
+                    return;
+                    
+                if (nation.strDisplayName == self.strNewName)
+                    return;
+                    
+                var alreadyUsed = getAllNations(self.objGame).find({"strDisplayName":self.strNewName});
+                if (alreadyUsed != null)
+                {
+                    logError("Can't rename " + nation.strDisplayName + " to " + self.strNewName + " because the name is already in use.");
+                    return;
+                }
+                
+                nation.strDisplayName = self.strNewName;                    
+			}
+		]]></script>
+	</objectDef>
+	
+</locust>

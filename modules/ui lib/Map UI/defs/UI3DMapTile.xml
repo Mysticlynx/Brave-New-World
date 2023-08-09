@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI3DMapTile" superType="mlui.UI3DElement" class="CUI3DMapTile">
+		<propertyDef name="objMap" type="gs_tbg.GameSysMap"/>
+		<propertyDef name="vecPointOfInterest" type="Vec3D"/>
+        <propertyDef name="nTile" type="int"/> 
+        <propertyDef name="bDataLoaded" type="bool" default="false"/> 
+        <propertyDef name="objSamplerProto" type="mlmedia.Sampler"/>
+        <propertyDef name="bUseCompressedTextures" type="bool" default="true"/> 
+    </objectDef>
+</locust>

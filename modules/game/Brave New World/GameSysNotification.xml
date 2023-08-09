@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<object type="gs_notify.GameSysNotification" name="objGameSysNotification">
+
+		<object type="gs_notify.NoteGenEngagementBegan" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.EngagementBegan"/>
+		</object>
+
+		<object type="gs_notify.NoteGenEngagementEnded" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.EngagementEnded"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDamagedInEngagement" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDamagedEngagement"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDamagedByAA" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDamagedAA"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDamagedByAerialCombat" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDamagedAerialCombat"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDamagedByCoastalDefenses" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDamagedCoastalDefenses"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDamagedByBombing" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDamagedBombing"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDamagedByGroundFire" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDamagedGroundFire"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDamagedByShoreBombardment" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDamagedShoreBombardment"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDamaged" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDamaged"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDestroyedInEngagement" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDestroyedEngagement"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDestroyedByAA" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDestroyedAA"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDestroyedByAerialCombat" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDestroyedAerialCombat"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDestroyedByCoastalDefenses" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDestroyedCoastalDefenses"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDestroyedByBombing" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDestroyedBombing"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDestroyedByGroundFire" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDestroyedGroundFire"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitDestroyedByShoreBombardment" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDestroyedShoreBombardment"/>
+		</object>
+
+        <object type="gs_notify.NoteGenUnitDestroyed" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitDestroyed"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitRepaired" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitRepaired"/>
+		</object>
+
+        <object type="gs_notify.NoteGenUnitProduced" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitProduced"/>
+        </object>
+
+		<object type="gs_notify.NoteGenUnitMoraleChanged" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitMoraleChanged"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitExperienceChanged" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitExperienceChanged"/>
+		</object>
+
+		<object type="gs_notify.NoteGenUnitGroupCommandChanged" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.UnitGroupCommandChanged"/>
+		</object>
+
+		<object type="gs_notify.NoteGenNationStabilityChanged" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.NationStabilityChanged"/>
+		</object>
+
+        <object type="gs_notify.NoteGenFactoryOutputProduced" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.FactoryOutputProduced"/>
+        </object>
+
+        <object type="gs_notify.NoteGenRegionChangedController" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.RegionChangedController"/>
+		</object>
+
+		<object type="gs_notify.NoteGenRegionOutputProduced" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.RegionOutputProduced"/>
+		</object>
+
+		<object type="gs_notify.NoteGenResearchProjectCompleted" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.ResearchProjectCompleted"/>
+        </object>
+
+		<object type="gs_notify.NoteGenNationIdeologyEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventPoliticalActivity"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.PoliticalActivity"/>
+		</object>
+
+		<object type="gs_notify.NoteGenNationResearchTopicEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventResearchBreakthrough"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.ResearchBreakthrough"/>
+		</object>
+
+		<object type="gs_notify.NoteGenNationResearchTopicEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventResearchSetback"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.ResearchSetback"/>
+		</object>
+
+
+		<object type="gs_notify.NoteGenRegionResourceEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventResourceProductionIncrease"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.RegionResourceIncrease"/>
+			<property name="fstrOilMessage" from="locale.FSID.Notification.RegionOilIncrease"/>
+			<property name="fstrCoalMessage" from="locale.FSID.Notification.RegionCoalIncrease"/>
+			<property name="fstrMetalsMessage" from="locale.FSID.Notification.RegionMetalsIncrease"/>
+		</object>
+
+		<object type="gs_notify.NoteGenRegionResourceEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventResourceProductionDecrease"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.RegionResourceDecrease"/>
+			<property name="fstrOilMessage" from="locale.FSID.Notification.RegionOilDecrease"/>
+			<property name="fstrCoalMessage" from="locale.FSID.Notification.RegionCoalDecrease"/>
+			<property name="fstrMetalsMessage" from="locale.FSID.Notification.RegionMetalsDecrease"/>
+		</object>
+
+		<object type="gs_notify.NoteGenRegionResourceEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventResourceProductionDecreaseEnd"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.RegionResourceDecreaseEnd"/>
+		</object>
+
+		<object type="gs_notify.NoteGenRegionEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventMPUDecrease"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.Famine"/>
+		</object>
+
+		<object type="gs_notify.NoteGenNationRevoltEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventPuppetRevolt"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.PuppetRevolt"/>
+		</object>
+
+		<object type="gs_notify.NoteGenNationEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventHighMoraleIPUBonus"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.HighMoraleIPUBonus"/>
+		</object>
+
+		<object type="gs_notify.NoteGenNationEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventLowMoraleIPUPenalty"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.LowMoraleIPUPenalty"/>
+		</object>
+
+		<object type="gs_notify.NoteGenCityEvent" name="objNotificationGenerators">
+			<property name="otEvents" value="gs_tbg.EventLowStabilityIPUPenalty"/>
+			<property name="fstrMessage" from="locale.FSID.Notification.FactoryStrike"/>
+		</object>
+
+		<object type="gs_notify.NoteGenTradeAgreementAccepted" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenTradeAgreementCancelled" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.TradeAgreementCancelled"/>
+		</object>
+
+		<object type="gs_notify.NoteGenMoneyTransferAccepted" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenMoneyTransferCancelled" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.MoneyTransferCancelled"/>
+		</object>
+
+		<object type="gs_notify.NoteGenMoneyTransferOccurred" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.MoneyTransferOccurred"/>
+		</object>
+
+		<object type="gs_notify.NoteGenTradeOccurred" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenWarDeclared" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.WarDeclared"/>
+		</object>
+
+		<object type="gs_notify.NoteGenAllianceCreated" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.AllianceCreated"/>
+		</object>
+
+		<object type="gs_notify.NoteGenAllianceJoined" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.AllianceJoined"/>
+		</object>
+
+		<object type="gs_notify.NoteGenAllianceLeft" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenNationDefeated" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenMilitaryAccessChanged" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenEmbargoPlaced" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.EmbargoPlaced"/>
+		</object>
+
+		<object type="gs_notify.NoteGenEmbargoLifted" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.EmbargoLifted"/>
+		</object>
+
+        <object type="gs_notify.NoteGenRegionSeceded" name="objNotificationGenerators">
+            <property name="fstrMessage" from="locale.FSID.Notification.RegionSeceded"/>
+        </object>
+
+        <object type="gs_notify.NoteGenCivilWarStarted" name="objNotificationGenerators">
+            <property name="fstrMessage" from="locale.FSID.Notification.CivilWarStarted"/>
+        </object>
+
+		<object type="gs_notify.NoteGenNationLiberated" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.NationLiberated"/>
+		</object>
+
+		<object type="gs_notify.NoteGenIndependentNationFounded" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.IndependentNationFounded"/>
+		</object>
+
+		<object type="gs_notify.NoteGenCityNuked" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.CityNuked"/>
+		</object>
+
+		<object type="gs_notify.NoteGenAirbaseDestroyed" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.AirbaseDestroyed"/>
+		</object>
+
+		<object type="gs_notify.NoteGenAADefenseDestroyed" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.AADefenseDestroyed"/>
+		</object>
+
+		<object type="gs_notify.NoteGenCoastalDefenseDestroyed" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.CoastalDefenseDestroyed"/>
+		</object>
+
+		<object type="gs_notify.NoteGenFortificationDestroyed" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.FortificationDestroyed"/>
+		</object>
+
+		<object type="gs_notify.NoteGenTransportationDestroyed" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.TransportationDestroyed"/>
+		</object>
+
+		<object type="gs_notify.NoteGenResourceImprovementDestroyed" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.ResourceImprovementDestroyed"/>
+		</object>
+
+		<object type="gs_notify.NoteGenCityBuildingDestroyed" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.CityBuildingDestroyed"/>
+		</object>
+
+		<object type="gs_notify.NoteGenResearchCenterBuildingDestroyed" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.ResearchCenterBuildingDestroyed"/>
+		</object>
+
+		<object type="gs_notify.NoteGenRegionSabotaged" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenResearchStolen" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenOppositionSupportConcluded" name="objNotificationGenerators">
+		</object>
+
+    	<object type="gs_notify.NoteGenPoliticalSupportConcluded" name="objNotificationGenerators">
+		</object>
+
+    	<object type="gs_notify.NoteGenInternalSupportConcluded" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenRegionSurveillanceConcluded" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenRegionDamagedByBombing" name="objNotificationGenerators">
+			<property name="fstrMessage" from="locale.FSID.Notification.RegionDamagedBombing"/>
+		</object>
+
+		<object type="gs_notify.NoteGenCityDamagedByBombing" name="objNotificationGenerators">
+		</object>
+
+		<object type="gs_notify.NoteGenResourceImprovementsDamagedByBombing" name="objNotificationGenerators">
+            <property name="fstrMessage" from="locale.FSID.Notification.ResourceImprovementsDamagedBombing"/>
+		</object>
+
+        <object type="gs_notify.NoteGenNationAnnexed" name="objNotificationGenerators">
+            <property name="fstrMessage" from="locale.FSID.Notification.NationAnnexed"/>
+        </object>
+
+		<object type="gs_notify.NoteGenCollateralDamage" name="objNotificationGenerators">
+		</object>
+		
+		<object type="gs_notify.NoteGenDiplomaticRelationsChanged" name="objNotificationGenerators">
+		</object>
+
+	</object>
+</locust>

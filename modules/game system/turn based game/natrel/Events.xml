@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="EventWarDeclared" class="CMLOEventWarDeclared" superType="mlevent.Event" desc="Event when war is declared">
+        <propertyDef name="objDeclaringNation" type="Nation"/>
+        <propertyDef name="objTargetNation" type="Nation"/>
+        <propertyDef name="objAttackers" type="Nation" variable="true" key="strName"/>
+        <propertyDef name="objDefenders" type="Nation" variable="true" key="strName"/>
+		<propertyDef name="eJustification" type="Enum" restriction="WarJustification"/>
+        <propertyDef name="strMessage" type="String"/>
+        
+        <script type="application/x-locust-query">
+            isAttacker = ?{nation: self.objAttackers.contains(nation) }
+            isDefender = ?{nation: self.objDefenders.contains(nation) }
+        </script>
+        
+	</objectDef>
+
+    <objectDef type="EventTreatyProposed" class="CMLOEventTreatyProposed" superType="mlevent.Event" desc="Event when treaty is proposed">
+        <propertyDef name="objTreaty" type="Treaty"/>
+        <propertyDef name="strMessage" type="String"/>
+    </objectDef>
+
+    <objectDef type="EventTreatyRatified" class="CMLOEventTreatyRatified" superType="mlevent.Event" desc="Event when treaty is ratified">
+        <propertyDef name="objTreaty" type="Treaty"/>
+        <propertyDef name="strMessage" type="String"/>
+    </objectDef>
+
+    <objectDef type="EventTreatyRejected" class="CMLOEventTreatyRejected" superType="mlevent.Event" desc="Event when treaty is rejected">
+        <propertyDef name="objTreaty" type="Treaty"/>
+        <propertyDef name="strMessage" type="String"/>
+    </objectDef>
+
+	<objectDef type="EventAllianceCreated" class="CMLOEventAllianceCreated" superType="mlevent.Event" desc="Event when alliance is created">
+		<propertyDef name="objAlliance" type="Alliance"/>
+	</objectDef>
+
+	<objectDef type="EventAllianceJoined" class="CMLOEventAllianceJoined" superType="mlevent.Event" desc="Event when alliance is created">
+		<propertyDef name="objAllianceMembership" type="AllianceMembership"/>
+	</objectDef>
+
+	<objectDef type="EventAllianceLeft" class="CMLOEventAllianceLeft" superType="mlevent.Event" desc="Event when a nation leaves a alliance">
+		<propertyDef name="objAlliance" type="Alliance"/>
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="objRemainingMembers" type="Nation" variable="true" key="strName"/>
+		<propertyDef name="eWhy" type="Enum" restriction="LeaveAllianceReason"/>
+	</objectDef>
+	
+	<objectDef type="EventEmbargoPlaced" class="CMLOEventEmbargoPlaced" superType="mlevent.Event" desc="Event when a nation places an embargo on another nation">
+		<propertyDef name="objEmbargo" type="Embargo"/>
+	</objectDef>
+
+	<objectDef type="EventEmbargoLifted" class="CMLOEventEmbargoLifted" superType="mlevent.Event" desc="Event when a nation lifts it's embargo on another nation">
+		<propertyDef name="objEmbargo" type="Embargo"/>
+	</objectDef>
+
+    <objectDef type="EventMilitaryAccessChanged" class="CMLOEventMilitaryAccessChanged" superType="mlevent.Event" desc="Event when military access is unilaterally changed">
+        <propertyDef name="objGrantingNation" type="Nation"/>
+        <propertyDef name="objReceivingNation" type="Nation"/>
+        <propertyDef name="bGrant" type="bool" desc="true when granted, false when revoked"/>
+        <propertyDef name="bPortAccessOnly" type="bool" desc="true if this change applies only to port access"/>
+        <propertyDef name="eReason" type="Enum" restriction="AccessChangeReason"/>
+        <propertyDef name="strMessage" type="String"/>
+    </objectDef>
+
+    <objectDef type="EventRegionSeceded" class="CMLOEventRegionSeceded" superType="mlevent.Event" desc="Event when a region secedes to a different nation">
+        <propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objOldNation" type="Nation"/>
+        <propertyDef name="objNewNation" type="Nation"/>
+    </objectDef>
+
+    <objectDef type="EventCivilWarStarted" class="CMLOEventCivilWarStarted" superType="mlevent.Event" desc="Event when a civil war starts">
+        <propertyDef name="objDeclaringNation" type="Nation"/>
+        <propertyDef name="objTargetNation" type="Nation"/>
+    </objectDef>
+
+	<objectDef type="EventIndependentNationFounded" class="CMLOEventIndependentNationFounded" superType="mlevent.Event" desc="Event when an independent nation form at the start of a revolution">
+        <propertyDef name="objNewNation" type="Nation"/>
+        <propertyDef name="objOldNation" type="Nation"/>
+    </objectDef>
+
+	<objectDef type="EventPuppetRevolt" superType="mlevent.Event">
+		<propertyDef name="objMasterNation" type="Nation"/>
+		<propertyDef name="objRevoltNation" type="Nation"/>
+	</objectDef>
+	
+    <objectDef type="EventDiplomaticRelationsChanged" class="CMLOEventDiplomaticRelationsChanged" superType="mlevent.Event" desc="Event for when diplomatic relations change">
+        <propertyDef name="objActingNation" type="Nation" desc="Nation which did something"/>
+        <propertyDef name="objReactingNation" type="Nation" desc="Nation which is reacting diplomatically"/>
+        <propertyDef name="nDelta" type="int"/>
+        <propertyDef name="otReasonEventType" type="ObjectType" desc="Event type which precipitated the change"/>
+        <propertyDef name="strMessage" type="String" desc="message from reacting nation to acting nation"/>
+    </objectDef>
+	
+</locust>

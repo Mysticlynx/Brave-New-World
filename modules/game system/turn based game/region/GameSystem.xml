@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysRegion" class="CMLOGameSysRegion" superType="mlgame.GameSystem">
+        <propertyDef name="objRegions" type="Region" variable="true" storesChildren="true"/>
+        <propertyDef name="objColonies" type="Colony" variable="true" storesChildren="true"/>
+        <propertyDef name="tmplRegionOutputList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="fPopulationGrowthRate" type="float" default=".00027"/>
+        <propertyDef name="nBaseMPUDivisor" type="int" default="2000000"/>
+		<propertyDef name="tmplResourceImprovementDamageLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+		<propertyDef name="nImprovementRepairRate" type="int" default="1"/>
+		<propertyDef name="nSupplyMinimum" type="int" default="0" desc="Lowest possibly supply rate in a recently conquered region"/>
+        <propertyDef name="nSupplyReligionBonus" type="int" default="20" desc="Bonus to supply rate in a recently conquered region if same religion"/>
+        <propertyDef name="nSupplyCultureBonus" type="int" default="20" desc="Bonus to supply rate in a recently conquered region if same culture"/>
+        <propertyDef name="nSupplyEthnicityBonus" type="int" default="20" desc="Bonus to supply rate in a recently conquered region if same ethnicity"/>
+        <propertyDef name="nSupplyRecoveryRate" type="int" default="5" desc="Rate at which the supply limit recovers after being brought down to the low point"/>
+        <propertyDef name="nCultureStabilityModifier" type="int" default="-10" desc="region stability modifier for having different culture than nation"/>
+        <propertyDef name="nReligionStabilityModifier" type="int" default="-10" desc="region stability modifier for having different religion than nation"/>
+        <propertyDef name="nEthnicityStabilityModifier" type="int" default="-10" desc="region stability modifier for having different ethnicity than nation"/>
+        <propertyDef name="nColonyMPUGrowthModifier" type="int" default="-75" desc="MPU growth modifier for being a colony region"/>
+        <propertyDef name="nOccupiedMPUGrowthModifier" type="int" default="-100" desc="MPU growth modifier for being an occupied region"/>
+        <propertyDef name="nMedicalCenterMPUGrowthModifier" type="int" default="20" desc="MPU growth modifier for having a Medical Center"/>
+        <propertyDef name="nPublicSchoolMPUGrowthModifier" type="int" default="10" desc="MPU growth modifier for having a Public School"/>
+        <propertyDef name="bNewGame" type="bool" desc="Deprecated."/>
+        <propertyDef name="randGen" type="Random"/>
+        
+        <script type="application/x-locust-query">
+		    getControlledRegions = ?{nation:
+			    filter(?{region: region.refController == nation}, self.objRegions)
+		    }
+
+		    getOwnedRegions = ?{nation:
+    			filter(?{region: region.refOwner == nation}, self.objRegions)
+		    }
+
+		    getColonies = ?{nation:
+			    filter(?{colony: colony.refNation == nation}, self.objColonies)
+		    }
+		    
+		    getColonyRegions = ?{colony:
+    			filter(?{region: region.refColony == colony}, self.objRegions)
+		    }
+		    
+		    getControlledColonyRegions = ?{nation,colony:
+    			filter(?{region: region.refController == nation AND region.refColony == colony}, self.objRegions)
+		    }
+        </script>
+
+		<script type="application/javascript"><![CDATA[
+
+			function handleGameStarted(game,eventGameStarted)
+			{
+				setRandomSeed(eventGameStarted.nSeed);
+			}
+
+            function setRandomSeed(nSeed)
+			{
+				var strSeed = "seed:" + nSeed
+				self.randGen = strSeed;
+				log("DEBUG: GameSysRegion randGen " + strSeed);
+			}
+		]]></script>
+
+    </objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysRegion = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysRegion)
+		}
+
+		getAllRegions = ?{gameroot:
+			getGameSysRegion(gameroot).objRegions
+		}
+
+        getAllColonies = ?{gameroot:
+            getGameSysRegion(gameroot).objColonies
+        }
+
+		getAllRegionOutputs = ?{gameroot:
+			map(?{ref: ref.resolve()}, getGameSysRegion(gameroot).tmplRegionOutputList.resolve().tmplRefs)
+		}
+
+		getControlledRegions = ?{gameroot, nation:
+		    getGameSysRegion(gameroot).getControlledRegions(nation)
+		}
+
+		getOwnedRegions = ?{gameroot, nation:
+		    getGameSysRegion(gameroot).getOwnedRegions(nation)
+		}
+
+		getAllControlledRegions = ?{gameroot, controller:
+		    getGameSysRegion(gameroot).getControlledRegions(controller)
+		}
+
+		getAllOwnedRegions = ?{gameroot, owner:
+		    getGameSysRegion(gameroot).getOwnedRegions(owner)
+		}
+
+		getColonies = ?{gameroot, nation:
+		    getGameSysRegion(gameroot).getColonies(nation)
+		}
+		
+		getColonyRegions = ?{gameroot, colony:
+		    getGameSysRegion(gameroot).getColonyRegions(colony)
+		}
+		
+		getControlledColonyRegions = ?{gameroot, nation, colony:
+		    getGameSysRegion(gameroot).getControlledColonyRegions(nation, colony)
+		}
+
+		getTerrainTypes = ?{gameroot:
+			uniqueSet(map(?{region: region.tmplTerrain}, getGameSysRegion(gameroot).objRegions))}
+
+		getTransportationImprovementTypes = ?{gameroot:
+			uniqueSet(map(?{region: region.objTransportationImprovement.tmplTransportationImprovement}, getGameSysRegion(gameroot).objRegions))}
+
+		getFortificationImprovementTypes = ?{gameroot:
+			uniqueSet(map(?{region: region.objFortificationImprovement.tmplFortificationImprovement}, getGameSysRegion(gameroot).objRegions))}
+
+		getAADefenseImprovementTypes = ?{gameroot:
+			uniqueSet(map(?{region: region.objAADefenseImprovement.tmplAADefenseImprovement}, getGameSysRegion(gameroot).objRegions))}
+
+		getCoastalDefenseImprovementTypes = ?{gameroot:
+			uniqueSet(map(?{region: region.objCoastalDefenseImprovement.tmplCoastalDefenseImprovement}, getGameSysRegion(gameroot).objRegions))}
+	</script>
+
+</locust>

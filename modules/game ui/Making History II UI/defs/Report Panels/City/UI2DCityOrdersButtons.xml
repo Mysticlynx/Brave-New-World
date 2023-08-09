@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DCityOrdersButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		
+		<object type="mlui.UI2DTextButton" name="objQueue">
+			<property name="tmplTextButtonStyle" from="if(def.objMH2Data.otCityOrdersTab != UI2DCityOrdersTabQueue,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTab'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTabC'))
+			"/>
+			<property name="strText" from="locale.SID.UI.ProductionQueue"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="65"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.openCityOrdersTab(UI2DCityOrdersTabQueue);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>		
+		
+		<object type="mlui.UI2DTextButton" name="objLand">
+			<property name="tmplTextButtonStyle" from="if(def.objMH2Data.otCityOrdersTab != UI2DCityOrdersTabLand,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTab'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTabC'))
+			"/>
+			<property name="strText" from="locale.SID.UI.LandForces"/>
+			<property name="nX" value="68"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="65"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.openCityOrdersTab(UI2DCityOrdersTabLand);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objButtonAir">
+			<property name="tmplTextButtonStyle" from="if(def.objMH2Data.otCityOrdersTab != UI2DCityOrdersTabAir,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTab'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTabC'))
+			"/>
+			<property name="strText" from="locale.SID.UI.AirForces"/>
+			<property name="nX" value="136"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="65"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.openCityOrdersTab(UI2DCityOrdersTabAir);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>		
+
+		<object type="mlui.UI2DTextButton" name="objButtonNaval">
+			<property name="tmplTextButtonStyle" from="if(def.objMH2Data.otCityOrdersTab != UI2DCityOrdersTabNaval,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTab'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTabC'))
+			"/>
+			<property name="strText" from="locale.SID.UI.NavalForces"/>
+			<property name="nX" value="204"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="65"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.openCityOrdersTab(UI2DCityOrdersTabNaval);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DTextButton" name="objButtonIndustrial">
+			<property name="tmplTextButtonStyle" from="if(def.objMH2Data.otCityOrdersTab != UI2DCityOrdersTabIndustrial,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTab'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTabC'))
+			"/>
+			<property name="strText" from="locale.SID.UI.Industrial"/>
+			<property name="nX" value="272"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="65"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.openCityOrdersTab(UI2DCityOrdersTabIndustrial);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DTextButton" name="objButtonCityBuildings">
+			<property name="tmplTextButtonStyle" from="if(def.objMH2Data.otCityOrdersTab != UI2DCityOrdersTabCityBuildings,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTab'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportTabButtonSubTabC'))
+			"/>
+			<property name="strText" from="locale.SID.UI.CityBuildings"/>			
+			<property name="nX" value="340"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="65"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.openCityOrdersTab(UI2DCityOrdersTabCityBuildings);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+</locust>

@@ -1,0 +1,1229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="CityResearchRowData" class="CMLObject">
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+		
+		<object type="LookupResearchData" name="objLookupResearchData">
+			<property name="objCity" from="def.objCity"/>
+		</object>
+        
+		<propertyDef name="objResearchProject" type="gs_tbg.ResearchProject">
+			self.objCity.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject.resolve(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="nProjectRPUs" type="int">
+			sum(map(
+				?{city: city.nRPUs},
+					filter(
+						?{rcenter: rcenter.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject.resolve(mh2data.objAvatar) ==
+							self.objResearchProject
+					},
+						gs_tbg.getNationCities(mh2data.objAvatar, mh2data.objNation)
+					)
+			))
+		</propertyDef>
+		
+		<propertyDef name="nProjectPercent" type="int">
+			if(self.objResearchProject.tmplResearchTopic.resolve().nPointsRequired != 0,
+				self.objResearchProject.nPoints * 100 / self.objResearchProject.tmplResearchTopic.resolve().nPointsRequired,
+				0
+			)
+		</propertyDef>
+		
+		<propertyDef name="nTurns" type="int">
+			if(self.objResearchProject.tmplResearchTopic.resolve().nPointsRequired != 0 AND self.nProjectRPUs != 0,
+				((self.objResearchProject.tmplResearchTopic.resolve().nPointsRequired - self.objResearchProject.nPoints + (self.nProjectRPUs - 1)) / self.nProjectRPUs),
+				0
+			)
+		</propertyDef>
+		
+		<propertyDef name="objOwner" type="gs_tbg.Nation">
+			self.objCity.refRegion.resolve(mh2data.objAvatar).refOwner.resolve(mh2data.objAvatar)
+		</propertyDef>
+
+    <propertyDef name="objRegionNationality" type="String">
+      if(self.objCity.refRegion.resolve(mh2data.objAvatar).refColony == null,
+      <!--self.objOwner.tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName,-->
+      <!--this sorts the owners nationality to the top/bottom-->
+      'Zzzz',
+      self.objCity.refRegion.resolve(mh2data.objAvatar).tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName
+      )
+    </propertyDef>
+
+    <propertyDef name="strProject" type="String">
+			if(self.objResearchProject != null,
+                'b' + self.objResearchProject.tmplResearchTopic.resolve().strDisplayName,
+				'a'
+			)
+		</propertyDef>
+				
+		<propertyDef name="nUniversity" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'University')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+		<propertyDef name="nResearchFacility" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'ResearchFacility')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+		<propertyDef name="nMilitaryAcademy" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'MilitaryAcademy')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+		<propertyDef name="nNavalAcademy" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'NavalAcademy')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+        <propertyDef name="nMedicalCenter" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'MedicalCenter')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+        <propertyDef name="nPublicSchool" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'PublicSchool')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+        <propertyDef name="nChemicalLab" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'ChemicalLab')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+        <propertyDef name="nRocketLab" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'RocketLab')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+        <propertyDef name="nJetPropulsionLab" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'JetPropulsionLab')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+        <propertyDef name="nNuclearLab" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'NuclearLab')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+        <propertyDef name="nAirForceAcademy" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'AirForceAcademy')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+        <propertyDef name="nTechnologyCenter" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'TechnologyCenter')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+		<propertyDef name="nOrbitalScienceLab" type="int">
+			if(
+                find(
+                    ?{building:
+                        building.tmplBuilding == sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'OrbitalScienceLab')
+                    }, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings
+                )
+                != null
+                ,
+                1
+                ,
+                0
+            )
+		</propertyDef>
+				
+	</objectDef>
+	
+	<enumDef name="CityResearchSort">
+        <value name="NATIONALITY"/>
+        <value name="CITY"/>
+        <value name="RPUS"/>
+		    <value name="PROJECT"/>
+		    <value name="DONE"/>
+        
+        <value name="UNIVERSITY" />
+        <value name="RESEARCHFACILITY" />
+        <value name="TECHNOLOGYCENTER" />
+        <value name="MDEICALCENTER" />
+        <value name="PUBLICSCHOOL" />
+        
+        <value name="MILITARYACADEMY" />
+        <value name="NAVALACADEMY" />
+        <value name="AIRFORCEACADEMY" />
+        <value name="CHEMICALLAB" />
+        <value name="ROCKETLAB" />
+        <value name="JETPROPLAB" />
+        <value name="NUCLEARLAB" />
+        <value name="ORBITALSCIENCELAB" />
+    </enumDef>
+	
+	<objectDef type="UI2DCityTabResearchList" superType="mlui.UI2DElement">         
+		<propertyDef name="eColm" type="Enum" restriction="CityTabSort" />
+		<propertyDef name="objColony" type="gs_tbg.Colony" />
+		<propertyDef name="objColonies" type="gs_tbg.Colony" variable="true" >
+			gs_tbg.getColonies(mh2data.objAvatar, mh2data.objNation)
+		</propertyDef>
+		
+         <!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objCityTitleSorter">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12LeftWrap"/>
+			<property name="strText" >
+			switch
+			{
+				case def.eColm == CityTabSort.ALL:
+						locale.SID.UI.AllCities
+				case def.eColm == CityTabSort.BASE:
+						locale.SID.UI.NationalCities
+				case def.eColm == CityTabSort.COLONIES:
+						def.objColony.strDisplayName
+			}
+			</property>
+			<property name="nX" value="18"/>
+			<property name="nY" value="105"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>			
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCitySortArrow">
+			<property name="tmplImage" value="skin.ImgDownArrowOrange"/>
+			<property name="nX" value="200"/>
+			<property name="nY" value="107"/>
+			<property name="nWidth" value="10"/>
+			<property name="nHeight" value="9"/>
+		</object>
+		
+		<object type="EventCityProductionSortChosen" name="eSortALL" >
+			<property name="eColm" value="ALL" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;						
+				}
+			]]></script>
+		</object>
+		<object type="EventCityProductionSortChosen" name="eSortBASE" >
+			<property name="eColm" value="BASE" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;					
+				}
+			]]></script>
+		</object>	
+		<object type="EventCityProductionSortChosen" name="eSortCOLONIES" tiedTo="def.objColonies">
+			<property name="objColony" from="tiedTo"/>
+			<property name="eColm" value="COLONIES" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;						
+					def.objColony = self.objColony;						
+				}
+			]]></script>
+		</object>
+		
+		
+		<object type="mlui.UI2DButton" name="objProjectButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="18"/>
+			<property name="nY" value="105"/>
+			<property name="nDefaultWidth" from="def.objCityTitleSorter.nWidth"/>
+			<property name="nDefaultHeight" from="def.objCityTitleSorter.nHeight"/>
+			<property name="nDepth" value="5" />
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							menuX = def.nScreenX + 13;
+							menuY = def.nScreenY + 120;
+							
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": def.objProjectButton.nDefaultWidth,
+								"nDefaultItemHeight": def.objProjectButton.nDefaultHeight + 6
+							});
+							
+							var menuitem;
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.AllCities,
+								"objExecuteObject": def.eSortALL
+							});
+							menudata.objItems.add(menuitem);
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.NationalCities,
+								"objExecuteObject": def.eSortBASE
+							});
+							menudata.objItems.add(menuitem);
+							
+							for(var i = 0; i < def.eSortCOLONIES.length; i++)
+							{
+								menuitem = common_elements.MenuItem.create({
+									"strDisplayName": def.eSortCOLONIES[i].objColony.strDisplayName,
+									"objExecuteObject": def.eSortCOLONIES[i]
+								});
+								menudata.objItems.add(menuitem);							
+							}
+							
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]></script>
+				</object>					
+		    </object>
+		</object>
+                
+        <object type="mlui.UI2DImage" name="objBubble">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" value="12"/>
+			<property name="nY" value="99"/>
+			<property name="nWidth" from="def.objCityTitleSorter.nWidth + 10"/>
+			<property name="nHeight" from="def.objCityTitleSorter.nHeight + 12"/>
+		</object>
+		
+         
+         
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="CityResearchSort.CITY"/>
+		</object> -->
+		 
+	<!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objProductionAndResearchLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchCenters"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objProductionOrdersAndResearchProjectsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+        <property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.NATIONALITY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="40"/>
+				<property name="nHeight" value="23"/>
+        <property name="strToolTip" from="locale.SID.UI.ResearchFacilities + ' ' + locale.SID.UI.Controller"/>
+        
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconScientistSm"/>
+					<property name="nWidth" value="20"/>
+					<property name="nHeight" value="20"/>
+          <property name="nX" value="6"/>
+          <property name="nY" value="1"/>
+					<property name="nDepth" value="50"/>
+				</object>
+        
+			</object>  
+      
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.CityName"/>
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.CITY"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="195"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.RPUS"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="35"/>
+				<property name="nHeight" value="23"/>
+					<property name="strToolTip" from="locale.SID.UI.ResearchPointsRPU"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+					<property name="nWidth" value="17"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+          <property name="nY" value="2"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.CurrentProject"/>
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.PROJECT"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="200"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Turns"/>
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.DONE"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="40"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.MILITARYACADEMY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="45"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.MilitaryAcademy"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconArmySm"/>
+					<property name="nY" value="1"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="TOP"/>
+					<property name="nDepth" value="50"/>
+				</object>
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.NAVALACADEMY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="45"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.NavalAcademy"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgSEA"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="20"/>
+					<property name="nY" value="1"/>
+					<property name="nX" value="12"/>
+					<property name="vaYAlign" value="TOP"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+      
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.AIRFORCEACADEMY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="45"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.AirForceAcademy"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryTabNaval"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="20"/>
+					<property name="nY" value="1"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="TOP"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+      
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.CHEMICALLAB"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="45"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.ChemicalLab"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryTabChemical"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="20"/>
+					<property name="nY" value="1"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="TOP"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+      
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.ROCKETLAB"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="45"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.RocketLab"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryTabMissiles"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="20"/>
+					<property name="nY" value="1"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="TOP"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+      
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.JETPROPLAB"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="45"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.JetPropulsionLab"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryTabJetPropulsion"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="20"/>
+					<property name="nY" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="TOP"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+      
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.NUCLEARLAB"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="45"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.NuclearLab"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryTabNuke"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="20"/>
+					<property name="nY" value="2"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="TOP"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+      
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objCityResearchTableData"/>
+				<property name="eSortBy" from="CityResearchSort.ORBITALSCIENCELAB"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="45"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.OrbitalScienceLab"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryTabOrbitalScience"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="20"/>
+					<property name="nY" value="2"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="TOP"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+						
+		</object>
+        
+		<propertyDef name="objRowDatas" type="CityResearchRowData" storesChildren="true" variable="true">
+			map(?{city:
+				<object type="CityResearchRowData">
+					<property name="objCity" from="city"/>
+				</object>
+			},
+				filter(
+					?{city:
+						city.refResearchCenter.resolve(mh2data.objAvatar).objBuildings.size != 0
+					},
+					switch
+                    {
+                        case self.eColm == CityTabSort.ALL:
+                            filter(?{city: city.objController == mh2data.objNation }, gs_tbg.getAllCities(mh2data.objAvatar))				
+                        case self.eColm == CityTabSort.BASE:
+                            filter(?{city: city.refRegion.resolve(mh2data.objAvatar).refColony == null}, gs_tbg.getNationCities(mh2data.objAvatar, mh2data.objNation))
+                        case self.eColm == CityTabSort.COLONIES:
+                            filter(?{city: city.refRegion.resolve(mh2data.objAvatar).refColony == self.objColony}, gs_tbg.getNationCities(mh2data.objAvatar, mh2data.objNation))
+                    }
+				)
+			)
+		</propertyDef>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="10"/>
+            <property name="nY" value="187"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objCityResearchTableData.eColm == CityResearchSort.NATIONALITY:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.objRegionNationality}, def.objRowDatas),
+							sortDescending(?{data: data.objRegionNationality}, def.objRowDatas)
+						)
+					case mh2data.objCityResearchTableData.eColm == CityResearchSort.CITY:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.objCity.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objCity.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objCityResearchTableData.eColm == CityResearchSort.RPUS:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.objCity.nRPUs}, def.objRowDatas),
+							sortDescending(?{data: data.objCity.nRPUs}, def.objRowDatas)
+						)
+					case mh2data.objCityResearchTableData.eColm == CityResearchSort.PROJECT:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.strProject}, def.objRowDatas),
+							sortDescending(?{data: data.strProject}, def.objRowDatas)
+						)
+					case mh2data.objCityResearchTableData.eColm == CityResearchSort.DONE:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nTurns}, def.objRowDatas),
+							sortDescending(?{data: data.nTurns}, def.objRowDatas)
+						)
+					case mh2data.objCityResearchTableData.eColm == CityResearchSort.UNIVERSITY:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nUniversity}, def.objRowDatas),
+							sortDescending(?{data: data.nUniversity}, def.objRowDatas)
+						)
+					case mh2data.objCityResearchTableData.eColm == CityResearchSort.RESEARCHFACILITY :
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nResearchFacility}, def.objRowDatas),
+							sortDescending(?{data: data.nResearchFacility}, def.objRowDatas)
+						)                    
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.MILITARYACADEMY:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nMilitaryAcademy}, def.objRowDatas),
+							sortDescending(?{data: data.nMilitaryAcademy}, def.objRowDatas)
+						)                 
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.NAVALACADEMY:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nNavalAcademy}, def.objRowDatas),
+							sortDescending(?{data: data.nNavalAcademy}, def.objRowDatas)
+						)                 
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.PUBLICSCHOOL:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nPublicSchool}, def.objRowDatas),
+							sortDescending(?{data: data.nPublicSchool}, def.objRowDatas)
+						)                 
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.MDEICALCENTER:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nMedicalCenter}, def.objRowDatas),
+							sortDescending(?{data: data.nMedicalCenter}, def.objRowDatas)
+						)                 
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.CHEMICALLAB:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nChemicalLab}, def.objRowDatas),
+							sortDescending(?{data: data.nChemicalLab}, def.objRowDatas)
+						)                 
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.ROCKETLAB:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nRocketLab}, def.objRowDatas),
+							sortDescending(?{data: data.nRocketLab}, def.objRowDatas)
+						)                 
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.JETPROPLAB:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nJetPropulsionLab}, def.objRowDatas),
+							sortDescending(?{data: data.nJetPropulsionLab}, def.objRowDatas)
+						)   
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.NUCLEARLAB:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nNuclearLab}, def.objRowDatas),
+							sortDescending(?{data: data.nNuclearLab}, def.objRowDatas)
+						)   
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.AIRFORCEACADEMY:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nAirForceAcademy}, def.objRowDatas),
+							sortDescending(?{data: data.nAirForceAcademy}, def.objRowDatas)
+						)   
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.TECHNOLOGYCENTER:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nTechnologyCenter}, def.objRowDatas),
+							sortDescending(?{data: data.nTechnologyCenter}, def.objRowDatas)
+						)   
+                    case mh2data.objCityResearchTableData.eColm == CityResearchSort.ORBITALSCIENCELAB:
+						if(mh2data.objCityResearchTableData.bAsc,
+							sortAscending(?{data: data.nOrbitalScienceLab}, def.objRowDatas),
+							sortDescending(?{data: data.nOrbitalScienceLab}, def.objRowDatas)
+						)
+				}
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DResearchListBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+
+	</objectDef>
+
+    <objectDef type="UI2DResearchListBubble" superType="mlui.UI2DElement">
+		<script type="application/x-locust-query">
+			haveBuilding = ?{gameroot, city, building1:
+                find(?{building: building.tmplBuilding == building1},
+                        city.refResearchCenter.resolve(gameroot).objBuildings) != null						
+			}
+		</script>
+        
+    <propertyDef name="objData" type="CityResearchRowData"/>
+    <propertyDef name="nRow" type="int"/>
+      
+    <object type="LookupNationIcons" name="objLookupNationIcons">
+      <property name="tmplNation" from="def.objData.objOwner.tmplNation"/>
+      <property name="tmplIdeology" from="def.objData.objOwner.tmplIdeology"/>
+    </object>
+      
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+      
+      <object type="UI2DCityNationalIconBubble" name="objElements" >  
+        <property name="nRow" from="def.nRow"/>
+        <property name="nWidth" value="40"/>
+        <property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28"/>
+        <property name="strToolTip" from="def.objData.objOwner.tmplNation.resolve().strDisplayName"/>
+      </object>
+          
+          <!-- City name -->
+          <object type="UI2DCityNameAndButtonBubble" name="objElements">
+              <property name="nRow" from="def.nRow"/>
+              <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+              <property name="strText" from="def.objData.objCity.strDisplayName"/>
+              <property name="nWidth" value="195"/>
+				
+				      <object type="mlui.UI2DButton" name="objCitySelect">
+					      <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+					      <property name="nX" value="0"/>
+					      <property name="nY" value="0"/>
+					      <property name="nDefaultWidth" value="147"/>
+					      <property name="nDefaultHeight" value="30"/>
+					      <property name="nDepth" value="5"/>
+		
+					      <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+						      <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+							      <property name="otEventType" value="mlui.EventButtonClicked"/>
+							      <script type="application/javascript"><![CDATA[
+								      function handle(event, owner)
+								      {
+									      mh2data.objMapData.lookAt(def.objData.objCity.vecPosition);
+									      mh2data.setSelectedObject(def.objData.objCity);
+									      spdata.objCityData.showCityResearch(def.objData.objCity);
+									      <!--mh2data.objMapData.zoomToClosest();-->
+								      }
+							      ]]></script>
+						      </object>					
+					      </object>
+				      </object>
+            </object>
+            
+            <!-- Tech Points -->
+            <object type="UI2DCityTextBubble" name="objElements">
+                <property name="nRow" from="def.nRow"/>
+                <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+                <property name="strText" from="def.objData.objCity.nRPUs"/>
+                <property name="nWidth" value="35"/>
+            </object>
+            
+			<object type="UI2DCityResearchProjectBubble" name="objElements">
+				<property name="objCity" from="def.objData.objCity"/>
+				<property name="objLookupResearchData" from="def.objData.objLookupResearchData" />
+				<property name="objResearchProject" from="def.objData.objResearchProject" />
+                <property name="nRow" from="def.nRow"/>
+                
+                <property name="nWidth" value="200"/>
+				
+				<object type="mlui.UI2DText" name="objText">
+					<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					<property name="tmplTextStyle">
+						if(!(def.objData.objCity.nRPUs GT 0),
+							'locale.TxtStyleArialBrown12Center',
+							if(def.objData.objResearchProject == null,
+								'locale.TxtStyleArialBlue12Center',
+								'locale.TxtStyleArialBlue12Left'
+							)
+						)
+					</property>
+					<property name="strText">
+							if(def.objData.objCity.nRPUs GT 0,
+								if(def.objData.objResearchProject != null,
+									def.objData.objResearchProject.tmplResearchTopic.resolve().strDisplayName,
+									locale.SID.UI.NoProject
+								),
+								locale.SID.UI.NoResearchCenter
+							)
+					</property>
+					<property name="nX" value="35"/>
+					<property name="nY" value="10"/>
+					<property name="nWidth">
+						if(!(def.objData.objCity.nRPUs GT 0) OR def.objData.objResearchProject == null,
+							130,
+							165
+						)
+					</property>
+					<property name="nHeight" value="14"/>
+					<property name="nDepth" value="5" />
+				</object>
+				
+				<object type="mlui.UI2DImage" name="objProgressBar" existsWhile="def.objData.objResearchProject != null" >
+					<property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate,'ImgFillLightGreen')" />
+					<property name="nX" value="1" />
+					<property name="nDepth" value="4" />
+					<property name="nY" value="1" />
+					<property name="nHeight" from="def.nHeight-2" />
+					<property name="nWidth" >						
+						if(def.objData.objResearchProject.tmplResearchTopic.resolve().nPointsRequired != 0,
+							def.objData.objResearchProject.nPoints * 200 / def.objData.objResearchProject.tmplResearchTopic.resolve().nPointsRequired,
+							0
+						)
+					</property>
+				</object>
+            </object>
+           
+            <!-- Research Progress -->
+            <object type="UI2DCityTextBubble" name="objElements">
+                <property name="nRow" from="def.nRow"/>
+                <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+                <property name="strText" from="def.objData.nTurns"/>
+                <property name="nWidth" value="40"/>
+            </object>
+            
+            
+             <!-- Ground Science -->    
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="45"/>   
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.nMilitaryAcademy == 1">    
+                    <property name="tmplImage" value="skin.ImgBldgMilitaryAcademySM"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.MilitaryAcademy"/>	
+                </object>   
+            </object>   
+        
+            <!-- Naval Academy -->
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="45"/>   
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.nNavalAcademy == 1">   
+                    <property name="tmplImage" value="skin.ImgBldgNavalAcademySM"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.NavalAcademy"/>	
+                </object>   
+            </object>   
+        
+            <!--  Air Force Academy -->   
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="45"/>   
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.nAirForceAcademy == 1">    
+                    <property name="tmplImage" value="skin.ImgBldgAirforceAcademySM"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.AirForceAcademy"/>	
+                </object>   
+            </object>   
+                    
+            <!-- Chemical Lab -->
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="45"/>   
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.nChemicalLab == 1">  
+                    <property name="tmplImage" value="skin.ImgBldgChemicalLabSM"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="23"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.ChemicalLab"/>	
+                </object>   
+            </object>   
+        
+            <!--  Rocket Lab  -->
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="45"/>   
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.nRocketLab == 1">  
+                    <property name="tmplImage" value="skin.ImgBldgRocketLabSM"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.RocketLab"/>	
+                </object>   
+            </object>   
+        
+            <!--  Jet Lab  -->
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="45"/>   
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.nJetPropulsionLab == 1">  
+                    <property name="tmplImage" value="skin.ImgBldgJetPropulsionLabSM"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.JetPropulsionLab"/>
+                </object>   
+            </object>   
+        
+            <!--  Nuclear Lab  -->
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="45"/>   
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.nNuclearLab == 1">  
+                    <property name="tmplImage" value="skin.ImgBldgNuclearLabSM"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.NuclearLab"/>
+                </object>   
+            </object>   
+        
+             <!-- Orbital Science  -->
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="45"/>   
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.nOrbitalScienceLab == 1">  
+                    <property name="tmplImage" value="skin.ImgBldgOrbitalScienceLabSM"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="locale.SID.FactoryOutput.DisplayName.OrbitalScienceLab"/>
+                </object>   
+            </object>   
+            
+            
+        </object>
+    </objectDef>
+    
+    <objectDef type="UI2DResearchCenterBuildingsBubble" superType="UI2DCityBubble">
+	<propertyDef name="objCity" type="gs_tbg.City"/>
+		
+        <object type="common_ui.UI2DListHorz" name="objBuildings">
+            <property name="nSpacing" value="3"/>
+            <property name="nX" value="7"/>
+            <property name="nY" value="2"/>
+            
+            <object type="UI2DResearchCenterBuildingIcon" name="objElements"
+                    tiedTo="uniqueSet(map(?{researchBuilding: researchBuilding.tmplBuilding},
+                        def.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings))">
+                <property name="objResearchCenterBuilding" from="tiedTo"/>
+                <property name="objCity" from="def.objCity"/>
+                <property name="nWidth" value="27"/>
+                <property name="nHeight" value="27"/>
+            </object>
+                    
+        </object>
+    </objectDef>
+	
+    <objectDef type="UI2DResearchCenterBuildingIcon" superType="mlui.UI2DElement">
+        <propertyDef name="objResearchCenterBuilding" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objCity" type="gs_tbg.City"/>
+        
+        <object type="mlui.UI2DImage" name="objIcon">
+            <property name="tmplImage">
+                mh2data.objResearchCenterBuildingDisplayTable.getEntry(def.objResearchCenterBuilding).tmplIcon
+            </property>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nWidth" value="27"/>
+            <property name="nHeight" value="27"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+            <property name="strToolTip">
+				def.objResearchCenterBuilding.strDisplayName
+			</property>
+        </object>
+		
+    </objectDef>
+    
+    <objectDef type="UI2DCityNameAndButtonBubble" superType="UI2DCityBubble">
+        <propertyDef name="objCity" type="gs_tbg.City"/>
+        <propertyDef name="strText" type="String"/>
+            <propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+            <propertyDef name="objCitySelect" type="mlui.UI2DButton" storesChildren="true"/>
+            
+            <object type="mlui.UI2DText" name="objText">
+                <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+                <property name="tmplTextStyle" from="def.tmplTextStyle"/>
+                <property name="strText" from="def.strText"/>
+                <property name="nX" value="5"/>
+                <property name="nY" value="10"/>
+                <property name="nWidth" from="def.nWidth"/>
+                <property name="nHeight" value="14"/>
+            </object>
+    </objectDef>
+    
+    <objectDef type="UI2DCityResearchProjectBubble" superType="UI2DCityBubble">
+		<propertyDef name="objCity" type="gs_tbg.City" />
+		<propertyDef name="objResearchProject" type="gs_tbg.ResearchProject"/>
+		<propertyDef name="objResearchTopics" type="gs_tbg.ResearchTopicTemplate" variable="true" />
+		<propertyDef name="objLookupResearchData" />
+        <propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="objProgressBar" type="mlui.UI2DImage" storesChildren="true"/>
+        <propertyDef name="objText" type="mlui.UI2DText" storesChildren="true"/>
+            <propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+            <propertyDef name="objProjectButton" type="mlui.UI2DButton" storesChildren="true"/>
+            <object type="mlui.UI2DButton" name="objProjectButton" existsWhile="def.objCity.objController == mh2data.objNation">
+                <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nDefaultWidth" from="def.nWidth"/>
+                <property name="nDefaultHeight" value="30"/>
+				<property name="nDepth" value="5" />
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript">
+                                      <![CDATA[
+                            function handle(event, owner)
+                            {
+                                menuX = def.nScreenX
+                                menuY = def.nScreenY
+								
+								def.objCity.getAvailableResearchTopics(mh2data.objAvatar, def.objResearchTopics);
+								
+                                //create a basis for a pop up menu
+                                var menudata = common_elements.MenuData.create({
+                                    "vecPosition": Vec3D(menuX, menuY, 0.0),
+                                    "nDefaultItemWidth": def.objProjectButton.nDefaultWidth,
+                                    "nDefaultItemHeight": def.objProjectButton.nDefaultHeight - 10
+                                });
+                                
+                                if(def.objResearchTopics.size > 0)
+                                {
+                                    var menuitem
+                                    for(i in def.objResearchTopics)
+                                    {
+                                        menuitem = common_elements.MenuItem.create({
+                                            "strDisplayName": def.objResearchTopics[i].strDisplayName,
+                                            "objExecuteObject": eo.EOMapDataSetCityResearch.create({
+                                                "objMapData": mh2data.objMapData,
+                                                "objCity": def.objCity,
+                                                "objProject": def.objResearchTopics[i]
+                                            })
+                                        });
+                                        menudata.objItems.add(menuitem);
+                                    }
+									 menuitem = common_elements.MenuItem.create({
+											"strDisplayName": locale.SID.UI.CancelResearch,
+											"objExecuteObject": eo.EOMapDataCancelCityResearch.create({
+													"objMapData": mh2data.objMapData,
+													"objCity": def.objCity
+											})
+									});
+									menudata.objItems.add(menuitem);
+                                }
+                                
+                                menuitem = common_elements.MenuItem.create({
+                                        "strDisplayName": locale.SID.UI.ExitMenu
+                                });
+                                menudata.objItems.add(menuitem);
+								
+								mlui.ActSendEventToUIElement.execute({
+									"objElement": mlui.objUI.objRoot,
+									"objEvent": common_elements.EventDismissPopUpMenu.create({})
+								});
+                                mlui.ActSendEventToUIElement.execute({
+                                    "objElement": mlui.objUI.objRoot,
+                                    "objEvent": common_elements.EventRequestPopUpMenu.create({
+                                            "objMenuData": menudata
+                                    })
+                                });
+                            }
+                        ]]></script>
+			</object>					
+		    </object>
+		</object>
+		
+		<object type="UI2DResearchIcon" name="objResearchIcon" >
+			<property name="objResearchProject" from="def.objResearchProject"/>
+			<property name="bVisible" from="def.objResearchProject != null" />
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="nDepth" value="5" />
+		</object>
+		
+    </objectDef>
+    
+    
+    <objectDef type="UI2DCityTextBubble" superType="UI2DCityBubble">
+        <propertyDef name="strText" type="String"/>
+            <propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+            
+            <object type="mlui.UI2DText" name="objText">
+                <property name="tmplTextStyle" from="def.tmplTextStyle"/>
+                <property name="strText" from="def.strText"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="10"/>
+                <property name="nWidth" from="def.nWidth"/>
+                <property name="nHeight" value="14"/>
+            </object>        
+    </objectDef>
+    
+    <objectDef type="UI2DCityIconBubble" superType="UI2DCityBubble">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+    </objectDef>
+    	
+    <objectDef type="UI2DCityBubble" superType="mlui.UI2DElement">
+        <propertyDef name="nRow" type="int" default="0"/>
+		    <property name="nHeight" value="30"/>
+    		
+		    <object type="mlui.UI2DImage" name="objBG">
+			    <property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			    <property name="nX" value="0"/>
+			    <property name="nY" value="0"/>
+			    <property name="nWidth" from="def.nWidth"/>
+			    <property name="nHeight" from="def.nHeight"/>
+			    <property name="nDepth" value="-100"/>
+		    </object>
+    </objectDef>
+    
+</locust>

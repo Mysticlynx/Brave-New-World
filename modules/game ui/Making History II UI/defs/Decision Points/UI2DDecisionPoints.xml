@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DDecisionPoint" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objDecisionPoint" type="gs_tbg.DecisionPoint"/>
+		
+		<object type="mlui.UI2DImage" name="objPanelBG">
+			<property name="tmplImage" value="skin.ImgDecisionPointBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+        <object type="UI2DDPUnitOrder" name="objUnitOrder" existsWhile="self.objDecisionPoint.instanceOf(gs_tbg.DPUnitOrder)">
+            <property name="nX" value="9"/>
+            <property name="nY" value="9"/>
+            <property name="nWidth" value="396"/>
+            <property name="nHeight" value="245"/>
+            <property name="nDepth" value="50"/>
+            <property name="objMH2Data" from="def.objMH2Data"/>
+            <property name="objDecisionPoint" from="def.objDecisionPoint"/>
+        </object>
+
+        <object type="UI2DDPRegionRevolt" name="objRegionRevolt" existsWhile="self.objDecisionPoint.instanceOf(gs_tbg.DPRegionRevolt)">
+            <property name="nX" value="9"/>
+            <property name="nY" value="9"/>
+            <property name="nWidth" value="396"/>
+            <property name="nHeight" value="245"/>
+            <property name="nDepth" value="50"/>
+            <property name="objMH2Data" from="def.objMH2Data"/>
+            <property name="objDecisionPoint" from="def.objDecisionPoint"/>
+        </object>
+
+        <object type="UI2DDPNationDefeated" name="objNationDefeated" existsWhile="self.objDecisionPoint.instanceOf(gs_tbg.DPNationDefeat)">
+			<property name="nX" value="9"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" value="396"/>
+			<property name="nHeight" value="245"/>
+			<property name="nDepth" value="50"/>
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objDecisionPoint" from="def.objDecisionPoint"/>
+		</object>
+		
+		<object type="UI2DDPGeneric" name="objDestroyImprovements" existsWhile="self.objDecisionPoint.instanceOf(gs_tbg.DPDismantleResourceImprovement) 
+                                                                                OR self.objDecisionPoint.instanceOf(gs_tbg.DPDestroyCityBuilding)
+                                                                                OR self.objDecisionPoint.instanceOf(gs_tbg.DPDestroyResearchBuilding)
+                                                                                OR self.objDecisionPoint.instanceOf(gs_tbg.DPDismantleRegionImprovement)" >
+			<property name="nX" value="9"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" value="396"/>
+			<property name="nHeight" value="245"/>
+			<property name="nDepth" value="50"/>
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objDecisionPoint" from="def.objDecisionPoint"/>
+		</object>
+		
+		
+		<!--<object type="UI2DDPGeneric" name="objGeneric">-->
+		<!--	<property name="nX" value="9"/>-->
+		<!--	<property name="nY" value="9"/>-->
+		<!--	<property name="nWidth" value="396"/>-->
+		<!--	<property name="nHeight" value="245"/>-->
+		<!--	<property name="objMH2Data" from="def.objMH2Data"/>-->
+		<!--	<property name="objDecisionPoint" from="def.objDecisionPoint"/>-->
+		<!--</object>-->
+		
+	</objectDef>
+	
+	<objectDef type="UI2DDPBase" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objDecisionPoint" type="gs_tbg.DecisionPoint"/>
+	</objectDef>
+	
+	<objectDef type="UI2DDPGeneric" superType="UI2DDPBase">
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18CenterWrap"/>
+			<property name="strText" from="def.objDecisionPoint.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objInnerBG">
+			<property name="tmplImage" value="skin.ImgDecisionPointInnerBG"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="70"/>
+			<property name="nWidth" value="392"/>
+			<property name="nHeight" value="173"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="UI2DChooseAnswer" name="objAnswers">
+			<property name="nX" value="0"/>
+			<property name="nY" value="9"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objDecisionPoint" from="def.objDecisionPoint"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DDPUnitOrder" superType="UI2DDPBase">
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="TOP"/>			
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objDecisionPoint.refTargetNation.resolve(mh2data.objAvatar)"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="TOP"/>			
+		</object>	
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18CenterWrap"/>
+			<property name="strText" from="def.objDecisionPoint.strText"/>
+			<property name="nX" value="50"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth - 100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objInnerBG">
+			<property name="tmplImage" value="skin.ImgDecisionPointInnerBG"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="70"/>
+			<property name="nWidth" value="392"/>
+			<property name="nHeight" value="173"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="UI2DChooseAnswer" name="objAnswers">
+			<property name="nX" value="0"/>
+			<property name="nY" value="9"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objDecisionPoint" from="def.objDecisionPoint"/>
+		</object>
+		
+	</objectDef>
+
+    <objectDef type="UI2DDPRegionRevolt" superType="UI2DDPBase">
+        <object type="UI2DNationFlag46x24" name="objNationFlag">
+            <property name="objNation" from="mh2data.objNation"/>
+            <property name="nX" value="3"/>
+            <property name="nY" value="4"/>
+            <property name="nWidth" value="46"/>
+            <property name="nHeight" value="24"/>
+            <property name="haXAlign" value="LEFT"/>
+            <property name="vaYAlign" value="TOP"/>
+        </object>
+
+        <object type="UI2DNationFlag46x24" name="objNationFlag">
+            <property name="objNation" from="def.objDecisionPoint.refTargetNation.resolve(mh2data.objAvatar)"/>
+            <property name="nX" value="3"/>
+            <property name="nY" value="4"/>
+            <property name="nWidth" value="46"/>
+            <property name="nHeight" value="24"/>
+            <property name="haXAlign" value="RIGHT"/>
+            <property name="vaYAlign" value="TOP"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objText">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialBlue18CenterWrap"/>
+            <property name="strText" from="def.objDecisionPoint.strText"/>
+            <property name="nX" value="50"/>
+            <property name="nY" value="10"/>
+            <property name="nWidth" from="def.nWidth - 100"/>
+        </object>
+
+        <object type="mlui.UI2DImage" name="objInnerBG">
+            <property name="tmplImage" value="skin.ImgDecisionPointInnerBG"/>
+            <property name="nX" value="2"/>
+            <property name="nY" value="70"/>
+            <property name="nWidth" value="392"/>
+            <property name="nHeight" value="173"/>
+            <property name="nDepth" value="-100"/>
+        </object>
+
+        <object type="UI2DChooseAnswer" name="objAnswers">
+            <property name="nX" value="0"/>
+            <property name="nY" value="9"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="BOTTOM"/>
+            <property name="objMH2Data" from="def.objMH2Data"/>
+            <property name="objDecisionPoint" from="def.objDecisionPoint"/>
+        </object>
+
+    </objectDef>
+
+    <objectDef type="UI2DDPNationDefeated" superType="UI2DDPBase">
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="TOP"/>			
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objDecisionPoint.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="TOP"/>			
+		</object>	
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18CenterWrap"/>
+			<property name="strText" from="def.objDecisionPoint.strText"/>
+			<property name="nX" value="50"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth - 100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objInnerBG">
+			<property name="tmplImage" value="skin.ImgDecisionPointInnerBG"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="70"/>
+			<property name="nWidth" value="392"/>
+			<property name="nHeight" value="173"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="UI2DChooseAnswer" name="objAnswers">
+			<property name="nX" value="0"/>
+			<property name="nY" value="9"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objDecisionPoint" from="def.objDecisionPoint"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DChooseAnswer" superType="common_ui.UI2DList">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objDecisionPoint" type="gs_tbg.DecisionPoint"/>
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nTopSpacing" value="0"/>
+		<property name="nBottomSpacing" value="0"/>
+		<property name="nSpacing" value="3"/>		
+		
+		<object type="mlui.UI2DTextButton" name="objElements" tiedTo="self.objDecisionPoint.objAnswers">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="tiedTo.strText"/>
+			<property name="nDefaultWidth" value="350"/>
+			<property name="nDefaultHeight" value="28"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActAnswerDecisionPoint.create({
+								"objDecisionPoint": def.objDecisionPoint,
+								"objAnswer": tiedTo
+							});
+							def.objMH2Data.objAvatar.sendAction(action);
+							var indx = def.objMH2Data.objDecisionPoints.indexOf(def.objDecisionPoint);
+							delete def.objMH2Data.objDecisionPoints[indx];
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>		
+	</objectDef>
+	
+	<objectDef type="UI2DConfirmAnnex" superType="mlui.UI2DElement">
+		
+		<object type="mlui.UI2DImage" name="objPanelBG">
+			<property name="tmplImage" value="skin.ImgDecisionPointBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="spdata.objDiplomacyData.objNation"/>
+			<property name="nX" value="18"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="TOP"/>			
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="18"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="TOP"/>			
+		</object>	
+		
+		<object type="mlui.UI2DImage" name="objInnerBG">
+			<property name="tmplImage" value="skin.ImgDecisionPointInnerBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="12"/>
+			<property name="nWidth" value="392"/>
+			<property name="nHeight" value="113"/>
+			<property name="nDepth" value="-100"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="BOTTOM"/>	
+		</object>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18CenterWrap"/>
+			<property name="strText" >
+				locale.FSID.UI.AnnexDP.format('puppet', spdata.objDiplomacyData.objNation.strDisplayName)				
+			</property>
+			<property name="nX" value="50"/>
+			<property name="nY" value="70"/>
+			<property name="nWidth" from="def.nWidth - 100"/>
+		</object>
+		
+		<object type="common_ui.UI2DList" name="objButtonList">
+			
+			<property name="nX" value="0"/>
+			<property name="nY" value="37"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="BOTTOM"/>	
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="3"/>		
+			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.Annex + ' ' + spdata.objDiplomacyData.objNation.strDisplayName"/>
+				<property name="nDefaultWidth" value="350"/>
+				<property name="nDefaultHeight" value="28"/>
+	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								var action = gs_tbg.GActAnnexPuppet.create({
+								"refAnnexer": mh2data.objNation,
+								"refPuppet": spdata.objDiplomacyData.objNation
+								});
+								
+								mh2data.objAvatar.sendAction(action);
+								mh2data.closeConfirmAnnex();
+								
+								mh2data.setSelectedObject(mh2data.objNation);
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.Cancel"/>
+				<property name="nDefaultWidth" value="350"/>
+				<property name="nDefaultHeight" value="28"/>
+	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								mh2data.closeConfirmAnnex();
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+		
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DTradeProposal" superType="mlui.UI2DElement">
+		<propertyDef name="objTradeAgreement" type="gs_tbg.TradeAgreement"/>
+		
+		<object type="mlui.UI2DImage" name="objPanelBG">
+			<property name="tmplImage" value="skin.ImgDecisionPointBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objTradeAgreement.refProposingNation.resolve(mh2data.objAvatar)"/>
+			<property name="nX" value="18"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="TOP"/>			
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objTradeAgreement.refReceivingNation.resolve(mh2data.objAvatar)"/>
+			<property name="nX" value="18"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="TOP"/>			
+		</object>	
+		
+		<object type="mlui.UI2DImage" name="objInnerBG">
+			<property name="tmplImage" value="skin.ImgDecisionPointInnerBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="12"/>
+			<property name="nWidth" value="392"/>
+			<property name="nHeight" value="113"/>
+			<property name="nDepth" value="-100"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="BOTTOM"/>	
+		</object>
+
+		<propertyDef name="objNation" type="gs_tbg.Nation">
+			if(self.objTradeAgreement.refDestNation == mh2data.objNation,
+				self.objTradeAgreement.refSourceNation.resolve(mh2data.objAvatar),
+					self.objTradeAgreement.refDestNation.resolve(mh2data.objAvatar))
+		</propertyDef>		
+		<propertyDef name="objOtherNation" type="gs_tbg.Nation">
+			if(self.objTradeAgreement.refProposingNation == mh2data.objNation,
+				self.objTradeAgreement.refReceivingNation.resolve(mh2data.objAvatar),
+					self.objTradeAgreement.refProposingNation.resolve(mh2data.objAvatar))
+		</propertyDef>		
+		
+		<propertyDef name="bImporting" type="bool">
+			self.objTradeAgreement.refSourceNation == self.objNation
+		</propertyDef>
+		
+		<propertyDef name="strImportExport" type="String" >
+			if(self.objTradeAgreement.bAid == false,
+				if(self.bImporting, locale.SID.UI.ImportFrom, locale.SID.UI.ExportTo),
+				if(self.bImporting, locale.SID.UI.AidFrom, locale.SID.UI.AidTo))
+		</propertyDef>
+		
+		<propertyDef name="bProposal" type="bool">
+			self.objTradeAgreement.eStatus.equals(gs_tbg.TradeAgreementStatus.PROPOSED)
+		</propertyDef>
+		
+		<propertyDef name="nTradeBalance" type="int">
+			gs_tbg.getNationResource(
+				mh2data.objAvatar, self.objTradeAgreement.refSourceNation.resolve(mh2data.objAvatar),
+					self.objTradeAgreement.tmplResource).nAmount - self.objTradeAgreement.nAmount
+		</propertyDef>
+		
+		<propertyDef name="bCantAfford" type="bool">
+			self.nTradeBalance LTE 0
+		</propertyDef>
+
+		<!-- may want to change these string and localize them -->
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18CenterWrap"/>
+			<property name="strText" >
+				def.objTradeAgreement.nAmount + ' ' +
+				def.objTradeAgreement.tmplResource.resolve().strDisplayName + ' ' +
+				def.strImportExport + ' ' +
+				def.objNation.strDisplayName + ' ' +
+					if(def.bProposal, locale.SID.UI.Proposed, if(def.bCantAfford,
+						'- ' + locale.SID.UI.Short + ' ' + abs(def.nTradeBalance).formatNumber(0, true), ' '))				
+			</property>
+			<property name="nX" value="50"/>
+			<property name="nY" value="50"/>
+			<property name="nWidth" from="def.nWidth - 100"/>
+		</object>
+			
+
+		<object type="common_ui.UI2DList" name="objButtonList">
+			
+			<property name="nX" value="0"/>
+			<property name="nY" value="19"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="BOTTOM"/>	
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="3"/>		
+			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.AcceptTradeAgreement"/>
+				<property name="nDefaultWidth" value="350"/>
+				<property name="nDefaultHeight" value="28"/>
+	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								var action = gs_tbg.GActAcceptTradeAgreement.create({
+								"refTradeAgreement": def.objTradeAgreement
+								});
+								mh2data.objAvatar.sendAction(action);
+								mh2data.closeTradeProposal();
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.RejectTradeAgreement"/>
+				<property name="nDefaultWidth" value="350"/>
+				<property name="nDefaultHeight" value="28"/>
+	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								var action = gs_tbg.GActRejectTradeAgreement.create({
+								"refTradeAgreement": def.objTradeAgreement
+								});
+								mh2data.objAvatar.sendAction(action);
+								mh2data.closeTradeProposal();
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.RenegotiateTradeAgreement"/>
+				<property name="nDefaultWidth" value="350"/>
+				<property name="nDefaultHeight" value="28"/>
+	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								mh2data.setSelectedObject(def.objOtherNation);
+								mh2data.objSelectedTradeAgreement.setTradeAgreement(def.objTradeAgreement);
+                                mh2data.strDiplomaticMessage = "";                                
+								mh2data.objTheirTradeProposal = def.objTradeAgreement;
+								mh2data.objMapData.refSelectedObject = GORef(gs_tbg.Nation, def.objOtherNation);
+								mh2data.objNationSelectionHistory.setNationHistory(def.objOtherNation);
+								mh2data.openDiplomaticActionAll(UI2DTradeAgreement);	
+				
+								spdata.bIsMoreInfo = true	
+								resource = def.objTradeAgreement.tmplResource.resolve().strDisplayName;
+								
+								mh2data.openTradeAgreementTab(resource);
+								mh2data.bRegnegotiateTrade = true;
+								mh2data.closeTradeProposal();
+								
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+
+	
+	
+</locust>

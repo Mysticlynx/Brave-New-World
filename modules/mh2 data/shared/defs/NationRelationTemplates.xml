@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- Diplomatic Relations -->
+	<template type="gs_tbg.DiplomaticRelationsTemplate" name="DiplomaticRelationsTerrible">
+		<property name="strDisplayName" from="locale.SID.DiplomaticRelations.DisplayName.DiplomaticRelationsTerrible"/>
+	</template>
+	<template type="gs_tbg.DiplomaticRelationsTemplate" name="DiplomaticRelationsPoor">
+		<property name="strDisplayName" from="locale.SID.DiplomaticRelations.DisplayName.DiplomaticRelationsPoor"/>
+	</template>
+	<template type="gs_tbg.DiplomaticRelationsTemplate" name="DiplomaticRelationsStrained">
+		<property name="strDisplayName" from="locale.SID.DiplomaticRelations.DisplayName.DiplomaticRelationsStrained"/>
+	</template>
+	<template type="gs_tbg.DiplomaticRelationsTemplate" name="DiplomaticRelationsStrong">
+		<property name="strDisplayName" from="locale.SID.DiplomaticRelations.DisplayName.DiplomaticRelationsStrong"/>
+	</template>
+	<template type="gs_tbg.DiplomaticRelationsTemplate" name="DiplomaticRelationsVeryStrong">
+		<property name="strDisplayName" from="locale.SID.DiplomaticRelations.DisplayName.DiplomaticRelationsVeryStrong"/>
+	</template>
+
+	<!-- Diplomatic Relations Template List-->
+	<template type="mh2_common.RangedTemplateList" name="DiplomaticRelationsRangedTemplateList">
+		<property name="otTemplateType" value="gs_tbg.DiplomaticRelationsTemplate"/>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="0"/>
+			<property name="nUpperBound" value="199"/>
+			<property name="tmplRef" value="gs_tbg.DiplomaticRelationsTemplate::DiplomaticRelationsTerrible"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="200"/>
+			<property name="nUpperBound" value="399"/>
+			<property name="tmplRef" value="gs_tbg.DiplomaticRelationsTemplate::DiplomaticRelationsPoor"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="400"/>
+			<property name="nUpperBound" value="599"/>
+			<property name="tmplRef" value="gs_tbg.DiplomaticRelationsTemplate::DiplomaticRelationsStrained"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="600"/>
+			<property name="nUpperBound" value="799"/>
+			<property name="tmplRef" value="gs_tbg.DiplomaticRelationsTemplate::DiplomaticRelationsStrong"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="800"/>
+			<property name="nUpperBound" value="1000"/>
+			<property name="tmplRef" value="gs_tbg.DiplomaticRelationsTemplate::DiplomaticRelationsVeryStrong"/>
+		</object>
+	</template>
+	
+	<!-- Region Stability -->
+    <template type="gs_tbg.RegionStabilityTemplate" name="RevoltRiskSevere">
+		<property name="strDisplayName" from="locale.SID.RevoltRisk.DisplayName.RevoltRiskSevere"/>
+		<property name="colColor" value="#FF0000FF"/>
+		<property name="nHighMoraleChance" value="0"/>
+		<property name="nRevoltRisk" value="20"/>
+        <property name="nCivilWarRisk" value="15"/>
+        <property name="nMPUGrowthModifier" value="-50"/>
+    </template>
+    <template type="gs_tbg.RegionStabilityTemplate" name="RevoltRiskHigh">
+		<property name="strDisplayName" from="locale.SID.RevoltRisk.DisplayName.RevoltRiskHigh"/>
+		<property name="colColor" value="#FF8A00FF"/>
+		<property name="nHighMoraleChance" value="0"/>
+		<property name="nRevoltRisk" value="15"/>
+        <property name="nCivilWarRisk" value="10"/>
+        <property name="nMPUGrowthModifier" value="-25"/>
+    </template>
+    <template type="gs_tbg.RegionStabilityTemplate" name="RevoltRiskElevated">
+		<property name="strDisplayName" from="locale.SID.RevoltRisk.DisplayName.RevoltRiskElevated"/>
+		<property name="colColor" value="#FFFF00FF"/>
+		<property name="nHighMoraleChance" value="0"/>
+		<property name="nRevoltRisk" value="10"/>
+        <property name="nCivilWarRisk" value="5"/>
+        <property name="nMPUGrowthModifier" value="0"/>
+    </template>
+    <template type="gs_tbg.RegionStabilityTemplate" name="RevoltRiskLow">
+		<property name="strDisplayName" from="locale.SID.RevoltRisk.DisplayName.RevoltRiskLow"/>
+		<property name="colColor" value="#0000FFFF"/>
+		<property name="nHighMoraleChance" value="0"/>
+		<property name="nRevoltRisk" value="5"/>
+        <property name="nCivilWarRisk" value="0"/>
+        <property name="nMPUGrowthModifier" value="25"/>
+    </template>
+    <template type="gs_tbg.RegionStabilityTemplate" name="RevoltRiskNone">
+		<property name="strDisplayName" from="locale.SID.RevoltRisk.DisplayName.RevoltRiskNone"/>
+		<property name="colColor" value="#33FF00FF"/>
+		<property name="nHighMoraleChance" value="5"/>
+		<property name="nRevoltRisk" value="0"/>
+        <property name="nCivilWarRisk" value="0"/>
+        <property name="nMPUGrowthModifier" value="50"/>
+    </template>
+
+    <!-- Region Stability Template List -->
+    <template type="mh2_common.RangedTemplateList" name="RegionStabilityRangedTemplateList">
+        <property name="otTemplateType" value="gs_tbg.RegionStabilityTemplate"/>
+        <object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="0"/>
+            <property name="nUpperBound" value="20"/>
+            <property name="tmplRef" value="gs_tbg.RegionStabilityTemplate::RevoltRiskSevere"/>
+        </object>
+        <object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="21"/>
+            <property name="nUpperBound" value="40"/>
+            <property name="tmplRef" value="gs_tbg.RegionStabilityTemplate::RevoltRiskHigh"/>
+        </object>
+        <object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="41"/>
+            <property name="nUpperBound" value="60"/>
+            <property name="tmplRef" value="gs_tbg.RegionStabilityTemplate::RevoltRiskElevated"/>
+        </object>
+        <object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="61"/>
+            <property name="nUpperBound" value="80"/>
+            <property name="tmplRef" value="gs_tbg.RegionStabilityTemplate::RevoltRiskLow"/>
+        </object>
+        <object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="81"/>
+            <property name="nUpperBound" value="100"/>
+            <property name="tmplRef" value="gs_tbg.RegionStabilityTemplate::RevoltRiskNone"/>
+        </object>
+    </template>
+
+    <!-- Revolt Risk Template List - deprecated -->
+    <template type="mh2_common.RangedTemplateList" name="RevoltRiskRangedTemplateList">
+        <property name="otTemplateType" value="gs_tbg.RegionStabilityTemplate"/>
+        <object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="0"/>
+            <property name="nUpperBound" value="20"/>
+            <property name="tmplRef" value="gs_tbg.RegionStabilityTemplate::RevoltRiskSevere"/>
+        </object>
+        <object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="21"/>
+            <property name="nUpperBound" value="40"/>
+            <property name="tmplRef" value="gs_tbg.RegionStabilityTemplate::RevoltRiskHigh"/>
+        </object>
+        <object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="41"/>
+            <property name="nUpperBound" value="60"/>
+            <property name="tmplRef" value="gs_tbg.RegionStabilityTemplate::RevoltRiskElevated"/>
+        </object>
+        <object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="61"/>
+            <property name="nUpperBound" value="80"/>
+            <property name="tmplRef" value="gs_tbg.RegionStabilityTemplate::RevoltRiskLow"/>
+        </object>
+        <object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="81"/>
+            <property name="nUpperBound" value="100"/>
+            <property name="tmplRef" value="gs_tbg.RegionStabilityTemplate::RevoltRiskNone"/>
+        </object>
+    </template>
+
+
+</locust>

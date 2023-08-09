@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysTurnBasedGame" class="CMLOGameSysTurnBasedGame" superType="mlgame.GameSystem">
+        <propertyDef name="objTurnBasedGame" type="TurnBasedGame" storesChildren="true"/>
+        <propertyDef name="nGameStartedSeed" type="int" default="-1"/>
+        <propertyDef name="strScenarioAbbr" type="String"/>
+
+        <script type="application/javascript"><![CDATA[
+
+			function notifyGameStartedAttributeSet(game, oldVal, newVal)
+			{
+				self.objTurnBasedGame.bGameStarted = newVal;
+				if (newVal)
+				{
+					// generate a random seed for the game
+					var seed = Math.floor(Math.random() * 10000);
+					self.nGameStartedSeed = seed; // 7777;  // <- change this assignment if needed for testing
+					log("nGameStartedSeed = " + self.nGameStartedSeed);
+
+					self.startGame(game, self.nGameStartedSeed); // sends EventGameStarted
+				}
+			}
+
+			function notifyDifficultyAttributeSet(game, oldVal, newVal)
+			{
+				self.objTurnBasedGame.nDifficulty = newVal;
+			}
+			
+			function notifyAutosaveAttributeSet(game, oldVal, newVal)
+			{
+				self.objTurnBasedGame.nAutosaveFrequency = newVal;
+			}
+			
+            function getUnitModelSetDisplayName(eUnitModelSet)
+            {
+                return locale.SID.UI.UnitModelSet[eUnitModelSet.name];
+            }
+            
+            function getLocalizedScenarioAbbreviation()
+            {
+                if (self.strScenarioAbbr != "")
+                {
+                    if (locale.SID.UI.ABBR != null)
+                    {
+                        if (locale.SID.UI.ABBR[self.strScenarioAbbr] != null)
+                        {
+                            return locale.SID.UI.ABBR[self.strScenarioAbbr];
+                        }
+                    }
+                }
+                return self.strScenarioAbbr; // if we don't find a localized version, just return the actual abbreviation
+            }
+
+		]]></script>
+
+	</objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysTurnBasedGame = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysTurnBasedGame)
+		}
+
+		getSoundVolume = ?{gameroot: getGameSysTurnBasedGame(gameroot).getSoundVolume() }
+		setSoundVolume = ?{gameroot,volume: getGameSysTurnBasedGame(gameroot).setSoundVolume(volume) }
+
+		getMusicVolume = ?{gameroot: getGameSysTurnBasedGame(gameroot).getMusicVolume() }
+		setMusicVolume = ?{gameroot,volume: getGameSysTurnBasedGame(gameroot).setMusicVolume(volume) }
+
+		getUserSettingBitFlags = ?{gameroot,index: getGameSysTurnBasedGame(gameroot).getUserSettingBitFlags(index) }
+		setUserSettingBitFlags = ?{gameroot,index,value: getGameSysTurnBasedGame(gameroot).setUserSettingBitFlags(index,value) }
+		
+	</script>
+
+</locust>

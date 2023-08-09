@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <!-- AIInternationalPositionTemplate templates -->
+    <template type="gs_tbg.AIInternationalPositionTemplate" name="Expansionist">
+        <property name="fExpansionist" value="1.0"/>
+    </template>
+    
+    <template type="gs_tbg.AIInternationalPositionTemplate" name="StatusQuo">
+        <property name="fExpansionist" value="0.0"/>
+    </template>
+
+    <template type="gs_tbg.AIInternationalPositionTemplate" name="Neutral">
+        <property name="fExpansionist" value="0.0"/>
+    </template>
+    
+    <!-- PowerDifferentialTemplate templates -->    
+	<template type="gs_tbg.PowerDifferentialTemplate" name="MuchWeaker"/>
+	<template type="gs_tbg.PowerDifferentialTemplate" name="Weaker"/>
+	<template type="gs_tbg.PowerDifferentialTemplate" name="Even"/>
+	<template type="gs_tbg.PowerDifferentialTemplate" name="Stronger"/>
+	<template type="gs_tbg.PowerDifferentialTemplate" name="MuchStronger"/>
+    
+    <!-- PowerDifferentialTemplate ranged template list -->
+	<template type="mh2_common.RangedTemplateList" name="PowerDifferentialRangedTemplateList">
+		<property name="otTemplateType" value="gs_tbg.PowerDifferentialTemplate"/>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="0"/>
+			<property name="nUpperBound" value="39"/>
+			<property name="tmplRef" value="gs_tbg.PowerDifferentialTemplate::MuchWeaker"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="40"/>
+			<property name="nUpperBound" value="79"/>
+			<property name="tmplRef" value="gs_tbg.PowerDifferentialTemplate::Weaker"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="80"/>
+			<property name="nUpperBound" value="119"/>
+			<property name="tmplRef" value="gs_tbg.PowerDifferentialTemplate::Even"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="120"/>
+			<property name="nUpperBound" value="159"/>
+			<property name="tmplRef" value="gs_tbg.PowerDifferentialTemplate::Stronger"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="160"/>
+			<property name="nUpperBound" value="200"/>
+			<property name="tmplRef" value="gs_tbg.PowerDifferentialTemplate::MuchStronger"/>
+		</object>
+	</template>
+	
+	
+	<!-- Difficulty Template -->
+	<template type="gs_tbg.DifficultyTemplate" name="DiffTemplate">
+		<object type="gs_tbg.DifficultyItem" name="objItems" >
+            <property name="nLevel" value="1"/>
+            <property name="nCityIPUModifier" value="-100"/>
+		</object>
+		<object type="gs_tbg.DifficultyItem" name="objItems" >
+            <property name="nLevel" value="2"/>
+            <property name="nCityIPUModifier" value="-50"/>
+		</object>
+		<object type="gs_tbg.DifficultyItem" name="objItems" >
+            <property name="nLevel" value="3"/>
+            <property name="nCityIPUModifier" value="-20"/>
+		</object>
+		<object type="gs_tbg.DifficultyItem" name="objItems" >
+            <property name="nLevel" value="4"/>
+            <property name="nCityIPUModifier" value="-10"/>
+		</object>
+		<object type="gs_tbg.DifficultyItem" name="objItems" >
+            <property name="nLevel" value="6"/>
+            <property name="nCityBuildingIPUPercent" value="90"/>
+            <property name="nResearchBuildingIPUPercent" value="75"/>
+            <property name="nUnitIPUPercent" value="90"/>
+            <property name="nOtherIPUPercent" value="100"/>
+            <property name="nRegionProjectTurnPercent" value="100"/>
+            <property name="nCityIPUModifier" value="10"/>
+		</object>
+		<object type="gs_tbg.DifficultyItem" name="objItems" >
+            <property name="nLevel" value="7"/>
+            <property name="nCityBuildingIPUPercent" value="80"/>
+            <property name="nResearchBuildingIPUPercent" value="50"/>
+            <property name="nUnitIPUPercent" value="80"/>
+            <property name="nOtherIPUPercent" value="90"/>
+            <property name="nRegionProjectTurnPercent" value="90"/>
+            <property name="nCityIPUModifier" value="20"/>
+		</object>
+		<object type="gs_tbg.DifficultyItem" name="objItems" >
+            <property name="nLevel" value="8"/>
+            <property name="nCityBuildingIPUPercent" value="60"/>
+            <property name="nResearchBuildingIPUPercent" value="25"/>
+            <property name="nUnitIPUPercent" value="60"/>
+            <property name="nOtherIPUPercent" value="65"/>
+            <property name="nRegionProjectTurnPercent" value="75"/>
+            <property name="nCityIPUModifier" value="30"/>
+		</object>
+		<object type="gs_tbg.DifficultyItem" name="objItems" >
+            <property name="nLevel" value="9"/>
+            <property name="nCityBuildingIPUPercent" value="40"/>
+            <property name="nResearchBuildingIPUPercent" value="1"/>
+            <property name="nUnitIPUPercent" value="40"/>
+            <property name="nOtherIPUPercent" value="40"/>
+            <property name="nRegionProjectTurnPercent" value="60"/>
+            <property name="nCityIPUModifier" value="50"/>
+		</object>
+		<object type="gs_tbg.DifficultyItem" name="objItems" >
+            <property name="nLevel" value="10"/>
+            <property name="nCityBuildingIPUPercent" value="25"/>
+            <property name="nResearchBuildingIPUPercent" value="1"/>
+            <property name="nUnitIPUPercent" value="25"/>
+            <property name="nOtherIPUPercent" value="25"/>
+            <property name="nRegionProjectTurnPercent" value="50"/>
+            <property name="nCityIPUModifier" value="100"/>
+		</object>
+		<object type="gs_tbg.DifficultyItem" name="objItems" >
+            <property name="nLevel" value="11"/>
+            <property name="nCityBuildingIPUPercent" value="1"/>
+            <property name="nResearchBuildingIPUPercent" value="1"/>
+            <property name="nUnitIPUPercent" value="1"/>
+            <property name="nOtherIPUPercent" value="1"/>
+            <property name="nRegionProjectTurnPercent" value="1"/>
+            <property name="nCityIPUModifier" value="1000"/>
+		</object>
+	</template>
+	
+    <!-- TerritorialIntegrity templates -->    
+	<template type="gs_tbg.TerritorialIntegrityTemplate" name="Destroyed"/>
+	<template type="gs_tbg.TerritorialIntegrityTemplate" name="BadlyDamaged"/>
+	<template type="gs_tbg.TerritorialIntegrityTemplate" name="Damaged"/>
+	<template type="gs_tbg.TerritorialIntegrityTemplate" name="NearlyIntact"/>
+	<template type="gs_tbg.TerritorialIntegrityTemplate" name="Intact"/>
+    
+    <!-- TerritorialIntegrity ranged template list -->
+	<template type="mh2_common.RangedTemplateList" name="TerritorialIntegrityRangedTemplateList">
+		<property name="otTemplateType" value="gs_tbg.TerritorialIntegrityTemplate"/>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="0"/>
+			<property name="nUpperBound" value="19"/>
+			<property name="tmplRef" value="gs_tbg.TerritorialIntegrityTemplate::Destroyed"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="20"/>
+			<property name="nUpperBound" value="49"/>
+			<property name="tmplRef" value="gs_tbg.TerritorialIntegrityTemplate::BadlyDamaged"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="50"/>
+			<property name="nUpperBound" value="79"/>
+			<property name="tmplRef" value="gs_tbg.TerritorialIntegrityTemplate::Damaged"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="80"/>
+			<property name="nUpperBound" value="99"/>
+			<property name="tmplRef" value="gs_tbg.TerritorialIntegrityTemplate::NearlyIntact"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="100"/>
+			<property name="nUpperBound" value="100"/>
+			<property name="tmplRef" value="gs_tbg.TerritorialIntegrityTemplate::Intact"/>
+		</object>
+	</template>
+	
+
+
+    <!-- Trade policy templates -->
+    <template type="gs_tbg.AITradePolicyTemplate" name="FreeTrader">
+        <property name="fBuyForeignWillingness" value="0.75"/>
+        <property name="fDominateDomesticMarket" value="0.25"/>
+        <property name="fBuyOnWorldMarketPreference" value="0.25"/>
+        <property name="fSellOnWorldMarketPreference" value="0.75"/>
+    </template>
+
+    <template type="gs_tbg.AITradePolicyTemplate" name="Protectionism">
+        <property name="fBuyForeignWillingness" value="0.25"/>
+        <property name="fDominateDomesticMarket" value="0.75"/>
+        <property name="fBuyOnWorldMarketPreference" value="0.75"/>
+        <property name="fSellOnWorldMarketPreference" value="0.25"/>
+    </template>
+
+    <template type="gs_tbg.AITradePolicyTemplate" name="DefaultTradePolicy">
+        <property name="fBuyForeignWillingness" value="0.5"/>
+        <property name="fDominateDomesticMarket" value="0.5"/>
+        <property name="fBuyOnWorldMarketPreference" value="0.5"/>
+        <property name="fSellOnWorldMarketPreference" value="0.5"/>
+    </template>
+
+    
+    <!-- Ruling philosophy templates -->
+    <template type="gs_tbg.AIRulingPhilosophyTemplate" name="Militarism">
+        <property name="fMilitaryStrengthMultiplier" value="1.5"/>
+        <property name="fMilitaryProductionFraction" value="0.75"/>
+    </template>
+
+    <template type="gs_tbg.AIRulingPhilosophyTemplate" name="Economic">
+        <property name="fMilitaryStrengthMultiplier" value="0.75"/>
+        <property name="fMilitaryProductionFraction" value="0.25"/>
+    </template>
+    
+    <template type="gs_tbg.AIRulingPhilosophyTemplate" name="DefaultRulingPhilosophy">
+        <property name="fMilitaryStrengthMultiplier" value="1.0"/>
+        <property name="fMilitaryProductionFraction" value="0.5"/>
+    </template>
+    
+    
+    <!-- Trust templates -->
+    <template type="gs_tbg.AITrustTemplate" name="Loyal">
+        <property name="fLoyalty" value="0.75"/>
+        <property name="fOpportunistic" value="0.25"/>
+    </template>
+
+    <template type="gs_tbg.AITrustTemplate" name="Opportunistic">
+        <property name="fLoyalty" value="0.25"/>
+        <property name="fOpportunistic" value="0.75"/>
+    </template>
+    
+    <template type="gs_tbg.AITrustTemplate" name="DefaultTrustTemplate">
+        <property name="fLoyalty" value="0.5"/>
+        <property name="fOpportunistic" value="0.5"/>
+    </template>
+    
+    
+    <!-- Internationalism templates -->
+    <template type="gs_tbg.AIInternationalismTemplate" name="Interventionist">
+        <property name="fDiplomacy" value="0.5"/>
+        <property name="fSpying" value="0.5"/>
+        <property name="fInstigateCoup" value="0.75"/>
+        <property name="fAid" value="0.75"/>
+        <property name="fWar" value="0.75"/>
+        <property name="fAlly" value="0.75"/>
+    </template>
+
+    <template type="gs_tbg.AIInternationalismTemplate" name="Isolationist">
+        <property name="fDiplomacy" value="0.5"/>
+        <property name="fSpying" value="0.25"/>
+        <property name="fInstigateCoup" value="0.1"/>
+        <property name="fAid" value="0.5"/>
+        <property name="fWar" value="0.1"/>
+        <property name="fAlly" value="0.1"/>
+    </template>
+    
+    <template type="gs_tbg.AIInternationalismTemplate" name="DefaultInternationalismTemplate">
+        <property name="fDiplomacy" value="0.5"/>
+        <property name="fSpying" value="0.5"/>
+        <property name="fInstigateCoup" value="0.5"/>
+        <property name="fAid" value="0.5"/>
+        <property name="fWar" value="0.5"/>
+        <property name="fAlly" value="0.5"/>
+    </template>
+    
+    
+    <!-- AIImperialismTemplate templates -->
+    <template type="gs_tbg.AIImperialismTemplate" name="Imperial">
+        <property name="fAnnex" value="0.5"/>       
+        <property name="fColonize" value="0.0"/>       
+        <property name="fLiberate" value="0.0"/>       
+        <property name="fPuppet" value="0.5"/>       
+    </template>
+    
+    <template type="gs_tbg.AIImperialismTemplate" name="SelfDetermination">
+        <property name="fAnnex" value="0.0"/>       
+        <property name="fColonize" value="0.0"/>       
+        <property name="fLiberate" value="1.0"/>       
+        <property name="fPuppet" value="0.0"/>       
+    </template>
+
+    <template type="gs_tbg.AIImperialismTemplate" name="DefaultImperialismTemplate">
+        <property name="fAnnex" value="0.25"/>       
+        <property name="fColonize" value="0.25"/>       
+        <property name="fLiberate" value="0.25"/>       
+        <property name="fPuppet" value="0.25"/>       
+    </template>
+    
+</locust>

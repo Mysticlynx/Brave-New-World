@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <enumDef name="SeasonType">
+        <value name="Spring"/>
+        <value name="Summer"/>
+        <value name="Fall"/>
+        <value name="Winter"/>
+    </enumDef>
+    
+    <objectDef type="SeasonData" class="CMLOSeasonData" desc="Seeding data for a season">
+         <goDef gameSystem="GameSysWeather" storageProperty="objSeasonDatas">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="colColor" type="Color"/>
+        <propertyDef name="dateStart" type="Date"/>
+        <propertyDef name="dateEnd" type="Date"/>
+        <propertyDef name="nMovementPenalty" type="int" desc="Penalty percentage"/>
+        <propertyDef name="nSupplyPenalty" type="int" desc="Penalty percentage"/>
+        <propertyDef name="refRegions" type="GORef" restriction="Region" variable="true" storesChildren="true"/>
+        <propertyDef name="eSeasonType" type="Enum" restriction="SeasonType"/>
+    </objectDef>
+    
+    <objectDef type="Season" class="CMLOSeason" desc="A season">
+        <goDef gameSystem="GameSysWeather" storageProperty="objSeasons">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="dateStart" type="Date"/>
+        <propertyDef name="dateEnd" type="Date"/>
+        <propertyDef name="nMovementPenalty" type="int" desc="Penalty percentage"/>
+        <propertyDef name="nSupplyPenalty" type="int" desc="Penalty percentage"/>
+        <propertyDef name="refSeasonData" type="GORef" restriction="SeasonData"/>
+    </objectDef>
+
+</locust>

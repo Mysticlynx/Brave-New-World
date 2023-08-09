@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DMapViewKeyPanel" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+
+		<property name="nX" value="349"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth">
+			if(mh2data.otMapToggle == null, 203, 326)
+		</property>
+		<property name="nHeight" value="155"/>
+		<property name="haXAlign" value="RIGHT"/>
+		<property name="vaYAlign" value="BOTTOM"/>
+		
+		<object type="mlui.UI2DImage" name="objMapViewCrest">
+			<property name="tmplImage" value="skin.ImgMapKeyCrest"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="32"/>
+			<property name="nDepth" value="151"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="TOP"/>
+		</object>
+		
+		<!-- Key info area BG -->
+		<object type="mlui.UI2DImage" name="objDetailsBG1">
+			<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="32"/>
+			<property name="nWidth">
+				if(mh2data.otMapToggle == null, 203, 326)
+			</property>	
+			<property name="nHeight" value="123"/>
+		</object>
+		
+		<!-- Key Title -->
+		<object name="objMapViewKeyTitle" type="UI2DMapViewKeyTitle">
+			<property name="nX" value="3"/>
+			<property name="nY" value="34"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="31"/>
+		</object>
+			
+		 <!--Key Elements -->
+		<object name="objMapViewKeyInfo" type="UI2DMapViewKeyInfo">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="nX">
+				if(mh2data.otMapToggle == null, 2, 173)
+			</property>	
+			<property name="nY">
+				if(mh2data.otMapToggle == null, 65, 61)
+			</property>	
+				value="65"/>
+			<property name="nWidth" value="347"/>
+			<property name="nHeight" value="122"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DMapViewToggle" superType="mlui.UI2DElement">
+		<propertyDef name="nCurrentView" type="int" default="1"/>
+		
+		<propertyDef name="strTitle" type="String"/>
+		<propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		
+		<propertyDef name="strText1" type="String"/>
+		<propertyDef name="objMapView1" type="mapui.MapViewTemplate"/>
+		
+		<propertyDef name="strText2" type="String"/>
+		<propertyDef name="objMapView2" type="mapui.MapViewTemplate"/>
+		
+		<propertyDef name="strText3" type="String"/>
+		<propertyDef name="objMapView3" type="mapui.MapViewTemplate"/>
+		
+		<propertyDef name="strText4" type="String"/>
+		<propertyDef name="objMapView4" type="mapui.MapViewTemplate"/>
+				
+		<object type="mlui.UI2DImage" name="objMapViewCrest" existsWhile="mh2data.objMapData.tmplMapView.resolve().getKeyItems(mh2data.objMapData) == null">
+			<property name="tmplImage" value="skin.ImgMapKeyCrest"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="2"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="32"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBackground" existsWhile="mh2data.objMapData.tmplMapView.resolve().getKeyItems(mh2data.objMapData) == null">
+			<property name="tmplImage" value="skin.ImgBubbleGoldGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="33"/>
+			<property name="nWidth" value="183"/>
+			<property name="nHeight" value="123"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMapIcon" existsWhile="mh2data.objMapData.tmplMapView.resolve().getKeyItems(mh2data.objMapData) == null">
+			<property name="tmplImage" from="def.tmplIcon"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objTitle" existsWhile="mh2data.objMapData.tmplMapView.resolve().getKeyItems(mh2data.objMapData) == null">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite16Left"/>
+			<property name="strText" from="def.strTitle"/>
+			<property name="nX" from="37"/>
+			<property name="nY" from="41"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objText1">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Center"/>
+			<property name="strText" from="def.strText1"/>
+			<property name="nX" from="41"/>
+			<property name="nY" from="65"/>
+			<property name="nHeight" value="16"/>
+			<property name="nWidth" from="130"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objBubble1">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>			
+			<property name="nX" from="36"/>
+			<property name="nY" from="61"/>
+			<property name="nWidth" from="135"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+        <object type="mlui.UI2DButton" name="objButton1">
+			<property name="tmplButtonStyle">
+				if(def.nCurrentView == 1, 'skin.BtnStyleHighlightC', 'skin.BtnStyleHighlight')
+			</property>		
+			<property name="nX" from="36"/>
+			<property name="nY" from="61"/>
+			<property name="nWidth" from="135"/>
+			<property name="nHeight" value="20"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            mh2data.objMapData.tmplMapView = def.objMapView1;
+							def.nCurrentView = 1;
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+				
+		<object type="mlui.UI2DText" name="objText2">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Center"/>
+			<property name="strText" from="def.strText2"/>
+			<property name="nX" from="41"/>
+			<property name="nY" from="88"/>
+			<property name="nHeight" value="16"/>
+			<property name="nWidth" from="130"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objBubble2">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>			
+			<property name="nX" from="36"/>
+			<property name="nY" from="84"/>
+			<property name="nWidth" from="135"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+        <object type="mlui.UI2DButton" name="objButton2">
+			<property name="tmplButtonStyle">
+				if(def.nCurrentView == 2, 'skin.BtnStyleHighlightC', 'skin.BtnStyleHighlight')
+			</property>			
+			<property name="nX" from="36"/>
+			<property name="nY" from="84"/>
+			<property name="nWidth" from="135"/>
+			<property name="nHeight" value="20"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            mh2data.objMapData.tmplMapView = def.objMapView2;
+							def.nCurrentView = 2;
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objText3">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Center"/>
+			<property name="strText" from="def.strText3"/>
+			<property name="nX" from="41"/>
+			<property name="nY" from="111"/>
+			<property name="nHeight" value="16"/>
+			<property name="nWidth" from="130"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objBubble3">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" from="36"/>
+			<property name="nY" from="107"/>
+			<property name="nWidth" from="135"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+        <object type="mlui.UI2DButton" name="objButton3">
+			<property name="tmplButtonStyle">
+				if(def.nCurrentView == 3, 'skin.BtnStyleHighlightC', 'skin.BtnStyleHighlight')
+			</property>		
+			<property name="nX" from="36"/>
+			<property name="nY" from="107"/>
+			<property name="nWidth" from="135"/>
+			<property name="nHeight" value="20"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            mh2data.objMapData.tmplMapView = def.objMapView3;
+							def.nCurrentView = 3;
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objText4">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Center"/>
+			<property name="strText" from="def.strText4"/>
+			<property name="nX" from="41"/>
+			<property name="nY" from="134"/>
+			<property name="nHeight" value="16"/>
+			<property name="nWidth" from="130"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objBubble4">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" from="36"/>
+			<property name="nY" from="130"/>
+			<property name="nWidth" from="135"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+        <object type="mlui.UI2DButton" name="objButton4">
+			<property name="tmplButtonStyle">
+				if(def.nCurrentView == 4, 'skin.BtnStyleHighlightC', 'skin.BtnStyleHighlight')
+			</property>
+			<property name="nX" from="36"/>
+			<property name="nY" from="130"/>
+			<property name="nWidth" from="135"/>
+			<property name="nHeight" value="20"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            mh2data.objMapData.tmplMapView = def.objMapView4;
+							def.nCurrentView = 4;
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DDemographicToggle" superType="mlui.UI2DElement">
+			
+		<object type="UI2DMapViewToggle" name="objDemoToggle">
+			<property name="nWidth" value="184"/>
+			<property name="nHeight" value="156"/>
+			
+			<property name="tmplIcon" value="skin.ImgDemographicBW"/>
+			<property name="strTitle" from="locale.SID.UI.Demographics"/>
+			<property name="strText1" from="locale.SID.UI.Nationality"/>
+			<property name="objMapView1" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewNationality')"/>
+			<property name="strText2" from="locale.SID.UI.Culture"/>
+			<property name="objMapView2" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewCulture')"/>
+			<property name="strText3" from="locale.SID.UI.Ethnicity"/>
+			<property name="objMapView3" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewEthnicity')"/>
+			<property name="strText4" from="locale.SID.UI.Religion"/>
+			<property name="objMapView4" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewReligion')"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DRegionToggle" superType="mlui.UI2DElement">
+			
+		<object type="UI2DMapViewToggle" name="objMapViewToggleRegion">
+			<property name="nWidth" value="184"/>
+			<property name="nHeight" value="156"/>
+			
+			<property name="tmplIcon" value="skin.ImgInfoIconPickaxeBW"/>
+			<property name="strTitle" from="locale.SID.UI.Region"/>
+			<property name="strText2" from="locale.SID.UI.Fortifications"/>
+			<property name="objMapView2" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewFortifications')"/>
+			<property name="strText1" from="locale.SID.UI.AntiAirDefenses"/>
+			<property name="objMapView1" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewAADefense')"/>
+			<property name="strText3" from="locale.SID.UI.CoastalDefense"/>
+			<property name="objMapView3" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewCoastalDefense')"/>
+			<property name="strText4" from="locale.SID.UI.Transportation"/>
+			<property name="objMapView4" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTransportationImprovement')"/>
+			
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DMapViewKeyTitle" superType="mlui.UI2DElement">
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage">
+				mh2data.objMapIconTable.getEntry(mh2data.objMapData.tmplMapView).tmplImage
+			</property>	
+			<property name="nX" value="5"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objMapViewName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite16Left"/>
+			<property name="strText" from="mh2data.objMapData.tmplMapView.resolve().strDisplayName"/>
+			<property name="nX" from="def.objIcon.nX + def.objIcon.nWidth + 3"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="16"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DMapViewKeyInfo" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objKeyItems" variable="true" storesChildren="true">
+			self.objMH2Data.objMapData.tmplMapView.resolve().getKeyItems(self.objMH2Data.objMapData)
+		</propertyDef>
+		<propertyDef name="nItemHeight" type="int"/>
+		<propertyDef name="nItemWidth" type="int"/>
+		<propertyDef name="nItemSpacer" type="int"/>
+		<propertyDef name="nRowsAmount" type="int"/>
+		<property name="nItemHeight" value="14"/>
+		<property name="nItemWidth" >
+			if(mh2data.otMapToggle == null, 100, 152)
+		</property>
+		<property name="nItemSpacer" value="1"/>
+		<property name="nRowsAmount" >
+			if(mh2data.otMapToggle == null, 2, 1)
+		</property>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objList2">
+			<property name="nX" value="5"/>
+			<property name="nY" value="0"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" from="def.nItemSpacer"/>
+			<property name="nMaxEltsPerRow" from="def.nRowsAmount"/>
+
+			<object type="UI2DKeyListElement" name="objElements"
+					tiedTo="def.objKeyItems">
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nHeight" from="def.nItemHeight"/>
+				<property name="nWidth" from="def.nItemWidth" />
+				<property name="strDisplayName" from="tiedTo.strDisplayName"/>
+				<property name="colColor" from="tiedTo.colColor" />
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DKeyListElement" superType="mlui.UI2DElement">
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="colColor" type="Color"/>
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate" default="skin.ImgWhite"/>
+		
+		<object type="mlui.UI2DImage" name="objColorBack">
+			<property name="tmplImage" value="skin.ImgMapViewKeyBack"/>
+			<property name="nX" from="1"/>
+			<property name="nY" from="1"/>
+			<property name="nWidth" from="17"/>
+			<property name="nHeight" value="9"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objGamePanelIcon">
+			<property name="tmplImage" from="def.tmplImage"/>
+			<property name="colColor" from="def.colColor"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="15"/>
+			<property name="nHeight" value="7"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objKeyElementText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Left"/>
+			<property name="strText" from="def.strDisplayName"/>
+			<property name="nX" value="21"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth - self.nX"/>
+			<property name="nHeight" value="12"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	</objectDef>
+</locust>

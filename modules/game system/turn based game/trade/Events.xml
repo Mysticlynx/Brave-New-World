@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="EventTradeAgreementProposed" class="CMLOEventTradeAgreementProposed" superType="mlevent.Event" desc="Event when trade agreement is proposed">
+		<propertyDef name="objTradeAgreement" type="TradeAgreement"/>
+		<propertyDef name="strProposeMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="EventTradeAgreementAccepted" class="CMLOEventTradeAgreementAccepted" superType="mlevent.Event" desc="Event when trade agreement is accepted">
+		<propertyDef name="objTradeAgreement" type="TradeAgreement"/>
+		<propertyDef name="strAcceptMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="EventTradeAgreementRejected" class="CMLOEventTradeAgreementRejected" superType="mlevent.Event" desc="Event when trade agreement is rejected">
+		<propertyDef name="objTradeAgreement" type="TradeAgreement"/>
+		<propertyDef name="strRejectMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="EventTradeAgreementCancelled" class="CMLOEventTradeAgreementCancelled" superType="mlevent.Event" desc="Event when trade agreement is cancelled">
+		<propertyDef name="objTradeAgreement" type="TradeAgreement"/>
+		<propertyDef name="strCancelMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="EventTradeOccurred" class="CMLOEventTradeOccurred" superType="mlevent.Event" desc="Event when a trade occurred">
+		<propertyDef name="objTradeRecord" type="TradeRecord"/>
+	</objectDef>
+
+	<objectDef type="EventMoneyTransferProposed" class="CMLOEventMoneyTransferProposed" superType="mlevent.Event" desc="Event when money transfer is proposed">
+		<propertyDef name="objMoneyTransfer" type="MoneyTransfer"/>
+		<propertyDef name="strProposeMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="EventMoneyTransferAccepted" class="CMLOEventMoneyTransferAccepted" superType="mlevent.Event" desc="Event when money transfer is accepted">
+		<propertyDef name="objMoneyTransfer" type="MoneyTransfer"/>
+		<propertyDef name="strAcceptMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="EventMoneyTransferRejected" class="CMLOEventMoneyTransferRejected" superType="mlevent.Event" desc="Event when money transfer is rejected">
+		<propertyDef name="objMoneyTransfer" type="MoneyTransfer"/>
+		<propertyDef name="strRejectMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="EventMoneyTransferCancelled" class="CMLOEventMoneyTransferCancelled" superType="mlevent.Event" desc="Event when money transfer is cancelled">
+		<propertyDef name="objMoneyTransfer" type="MoneyTransfer"/>
+		<propertyDef name="strCancelMessage" type="String"/>
+	</objectDef>
+	
+	<objectDef type="EventMoneyTransferOccurred" class="CMLOEventMoneyTransferOccurred" superType="mlevent.Event" desc="Event when money transfer occurrs">
+		<propertyDef name="objSource" type="Nation"/>
+		<propertyDef name="objDestination" type="Nation"/>
+		<propertyDef name="n64Amount" type="int64" default="0"/>
+	</objectDef>
+
+</locust>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="AIPlanDefendNation" superType="gs_tbg.AIMilitaryPlanDefendNation">
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <propertyDef name="objGameSysCity" type="gs_tbg.GameSysCity"/>
+        <propertyDef name="objGameSysCombat" type="gs_tbg.GameSysCombat"/>
+        <propertyDef name="objGameSysMap" type="gs_tbg.GameSysMap"/>
+        <propertyDef name="objMilitaryAI" type="gs_tbg.NationMilitaryAI"/>
+
+        <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+        <property name="objGameSysTurnBasedGame" from="self.objParentAI.objGameSysTurnBasedGame"/>
+        <property name="objGameSysCity" from="self.objParentAI.objGameSysCity"/>
+        <property name="objGameSysCombat" from="self.objParentAI.objGameSysCombat"/>
+        <property name="objGameSysMap" from="self.objParentAI.objGameSysMap"/>
+   		
+        <property name="strComposition" value="DefensiveArmy"/>
+  		
+   		<!-- expected methods:
+   		    NOT updateUnitRequirements() - handled internally
+   		    NOT advance() - handled internally
+   		    
+		    handleEventRegionChangedController
+			group borrowUnitGroup(avatar,otherPlan,region)
+        -->
+
+		<script type="application/javascript"><![CDATA[
+		
+		// setup some frequently needed data in a struct
+		function TempContext(avatar)
+		{
+			this.avatar = avatar;
+			this.nation = self.refNation.resolve(avatar);
+ 			this.turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+ 			this.pad = getPAD(avatar,PADMakingHistoryAI);
+ 			
+            this.setStatus = function(status,reason)
+            {
+                this.avatar.sendAction(
+                    gs_tbg.GActSetAIMilitaryPlanStatus.create({
+                        "objPlan": self,
+                        "eStatus": status,
+                        "strReason": reason,
+                        "nTurn": this.turn
+                        }) );
+            }
+                    
+            this.handleEventRegionChangedController = function(event)
+            {
+                if ( event.objOldController.equals(this.nation) || event.objNewController.equals(this.nation) )
+                {
+                    //log("we gained or lost a region.");
+                    self.bRegionsNeedUpdated = true;
+                }
+                else
+                {
+                    var adjRegions = new Array();
+					self.objGameSysMap.getAdjacentRegions(event.objRegion, adjRegions);
+                    for (var i in adjRegions)
+                    {
+                        var adjRegion = adjRegions[i];
+                        if (adjRegion.refController == null)
+                            continue;
+                            
+                        if ( equals(adjRegion.refController.resolve(this.avatar),this.nation) )
+                        {
+                            //log("a region adjacent to ours changed controllers.");
+                            self.bRegionsNeedUpdated = true;
+                            break;
+                        }
+                    }
+                }
+            }                    
+
+			// return unitGroup assigned to this plan and at the specified region with nothing to do
+			// or NULL if we'd rather not.
+            this.borrowUnitGroup = function(otherPlan,region)
+			{
+				// is there a city to protect at the current region?
+		        var anyCity = self.objGameSysCity.objCities.find({ "refRegion": region});
+				if (anyCity != null)
+					return null;
+
+				var assignments = self.objGameSysAIUtility.objAIUnitGroupAssignments.filter({ "objPlan" : self, "objRegion":region });
+				var foundGroup = null;
+				for (var i in assignments)
+				{
+					var assignment = assignments[i];
+					var group = assignment.objUnitGroup;
+					if (!group.eStatus.equals(gs_tbg.UnitGroupStatus.STATUS_NORMAL))
+						continue;
+
+					var region = group.getRegion(this.avatar);
+					if (region.equals(region))
+					{
+						foundGroup = group;
+						break;
+					}
+				}
+
+				if (foundGroup != null)
+				{
+					if (this.pad.bWantMilitaryAILog)
+					{
+						log("DEBUG: loaning " + foundGroup.strName + " to " + otherPlan.strName);
+					}
+				}
+				return foundGroup;
+			}
+
+		} // TempContext
+		
+        var gData; // TempContext
+		
+		// expected method
+		//function advance(avatar)
+		//{
+		//  This is handled by base class in C++
+		//}
+		
+        // updateUnitRequirements handled internally
+		 
+		function handleEventRegionChangedController(avatar,event)
+        {
+			gData = new TempContext(avatar);
+            gData.handleEventRegionChangedController(event);
+        }
+
+		function borrowUnitGroup(avatar,otherPlan,region)
+		{
+			gData = new TempContext(avatar);
+            return gData.borrowUnitGroup(otherPlan,region);
+		}
+
+		function cleanup()
+		{
+			// clear any reference loops we created
+			self.objParentAI = null;
+		}
+		
+		]]></script>
+	</objectDef>
+	
+</locust>

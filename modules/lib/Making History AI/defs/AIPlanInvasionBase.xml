@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="AIPlanInvasionBase" superType="gs_tbg.AIMilitaryPlan">
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        <propertyDef name="objSourceCity" type="gs_tbg.City" /><!-- key city where units are presumed to be built -->       
+        <propertyDef name="objStartLandRegion" type="gs_tbg.Region" /><!-- region to determine the front from -->               
+        <propertyDef name="objLandMassIDRegion" type="gs_tbg.Region" desc="used to determine what land mass this invasion is for"/>
+        <propertyDef name="objRegionsToConquer" type="gs_tbg.Region" variable="true"/><!-- regions that are our ultimate goal -->
+        <propertyDef name="objBuildupRegions" type="gs_tbg.Region" variable="true"/><!-- region(s) where we build up armies until they're strong enough to advance-->
+        <propertyDef name="bBuildupRegionsDirty" type="bool" default="false"/><!-- set true if updateBuildupRegions needs to be called -->
+        <propertyDef name="objAdvanceRegions" type="gs_tbg.Region" variable="true"/><!-- regions to advance to next -->       
+        <propertyDef name="objInvasionPath" type="gs_tbg.RegionPathResult" storesChildren="true"/>
+        <propertyDef name="objMilitaryAI" type="gs_tbg.NationMilitaryAI"/>
+		<propertyDef name="objDesiredLandMass" type="gs_tbg.AIDesiredLandMass"/>
+
+        <!-- paratrooper subplan properties -->
+        <propertyDef name="bUseParatroopers" type="bool" default="false" desc="set this true when creating plan (before first advance) to enable paratrooper subplan"/>
+        <propertyDef name="refParatrooperSubPlan" type="GORef" restriction="gs_tbg.AIMilitaryPlan"/>
+        
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <propertyDef name="objGameSysCity" type="gs_tbg.GameSysCity"/>
+        <propertyDef name="objGameSysRegion" type="gs_tbg.GameSysRegion"/>
+        <propertyDef name="objGameSysNation" type="gs_tbg.GameSysNation"/>
+        <propertyDef name="objGameSysNationRelations" type="gs_tbg.GameSysNationRelations"/>
+        <propertyDef name="objGameSysUnit" type="gs_tbg.GameSysUnit"/>
+        <propertyDef name="objGameSysMap" type="gs_tbg.GameSysMap"/>
+        <propertyDef name="objNationOil" type="gs_tbg.NationResource"/>
+        <propertyDef name="objNationArms" type="gs_tbg.NationResource"/>
+
+		<property name="objDesiredLandMass">
+		    if (self.objMilitaryAI.instanceOf(gs_tbg.NationMilitaryAI), self.objMilitaryAI.getDesiredLandMass(self.objLandMassIDRegion), null)
+		</property> 
+                
+        <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+        <property name="objGameSysTurnBasedGame" from="self.objParentAI.objGameSysTurnBasedGame"/>
+        <property name="objGameSysCity" from="self.objParentAI.objGameSysCity"/>
+        <property name="objGameSysRegion" from="self.objParentAI.objGameSysRegion"/>
+        <property name="objGameSysNation" from="self.objParentAI.objGameSysNation"/>
+        <property name="objGameSysNationRelations" from="self.objParentAI.objGameSysNationRelations"/>
+        <property name="objGameSysUnit" from="self.objParentAI.objGameSysUnit"/>
+        <property name="objGameSysMap" from="self.objParentAI.objGameSysMap"/>
+        
+        <property name="objNationOil">
+			find(?{nationResource: nationResource.refNation == self.refNation AND nationResource.objResourceTemplate == self.objParentAI.objOilTemplate},self.objGameSysNation.objNationResources)
+        </property>
+
+        <property name="objNationArms">
+			find(?{nationResource: nationResource.refNation == self.refNation AND nationResource.objResourceTemplate == self.objParentAI.objArmsTemplate},self.objGameSysNation.objNationResources)
+        </property>
+
+        <object type="gs_tbg.RegionPathResult" name="objInvasionPath"/>
+
+        <script type="application/javascript"><![CDATA[
+        
+            function updateRegionsToConquer(avatar)
+            {
+                self.objRegionsToConquer.clear();
+				var dlm = self.objDesiredLandMass;
+                if (dlm != null)
+                {
+                    for (var r in dlm.objRegionsToConquer)
+                    {
+                        var region = dlm.objRegionsToConquer[r];
+                        self.objRegionsToConquer.add(region);
+                    }
+                    return true;
+                }
+                log("DEBUG: no desired land mass found for " + self.objLandMassIDRegion.strName);
+                return false; // desired land mass not found
+            } // updateRegionsToConquer
+            
+            
+
+            // updates self.objAdvanceRegions with the regions we should advance to next.  
+            // Returns true if the function succeeded (plan should succeed if self.objAdvanceRegions has no regions)
+            // Returns false if we couldn't find any way to advance.
+            function updateAdvanceRegions(avatar)
+            {
+				var pad = getPAD(avatar,PADMakingHistoryAI);
+
+                self.objAdvanceRegions.clear();
+
+				if (self.objStartLandRegion == null)
+				{
+					if (pad.bWantMilitaryAILog)
+						log("DEBUG: no objStartLandRegion.");
+					return false;
+				}
+
+				var nation = self.refNation.resolve(avatar);
+				var landNation = self.objStartLandRegion.refController.resolve(avatar);
+				if (!nation.equals(landNation))
+				{
+				    if (!self.objGameSysNationRelations.hasNationLandAccess(avatar,nation,landNation))
+				    {
+					    if (pad.bWantMilitaryAILog)
+    					    log("DEBUG: objStartLandRegion not controlled by " + nation.strName + " and we don't have military access.");
+					    return false;
+					}
+				}
+
+
+				if (self.objDesiredLandMass == null)
+				{
+					if (pad.bWantMilitaryAILog)
+						log("DEBUG: updateAdvanceRegions - no desired land mass."); // presumed win
+					return true;
+				}
+
+                if (self.objRegionsToConquer.length == 0)   
+                {
+					if (pad.bWantMilitaryAILog)
+	                    log("DEBUG: updateAdvanceRegions - no regions to conquer."); // presumed win
+                    return true;
+                }
+
+                            
+                var ourBorderRegions = new Array();
+                var enemyBorderRegions = new Array();
+                self.objMilitaryAI.getInvasionFront(avatar, self.objStartLandRegion, ourBorderRegions, enemyBorderRegions);
+				if (pad.bWantMilitaryAILog)
+					log("DEBUG: getInvasionFront from " + self.objStartLandRegion.strName + " border length = " + ourBorderRegions.length);
+                
+                if (enemyBorderRegions.length == 0)
+                {
+	                log("DEBUG: updateAdvanceRegions - front not found for " + nation.strName + " invasion plan " + self.strName + " from " + self.objStartLandRegion.strName);
+
+					var invasionColorMap = self.objMilitaryAI.getInvasionColorMap(avatar);
+					var perimeter = new Array();
+					invasionColorMap.getColorPerimeter(avatar,self.objStartLandRegion,perimeter);
+
+					log("Invasion color perimeter regions: ");
+					var perimText = new Array();
+					for (var r in perimeter)
+					{
+						if (perimText.length > 9)
+						{
+							log(perimText.toString() + ",");
+							perimText = new Array();
+						}
+						var region = perimeter[r];
+						perimText.push(region.strName);
+					}
+					log(perimText.toString());
+
+					var accessNeededNations = new Array();
+					self.objMilitaryAI.getLandInvasionAccessNeededNations(avatar, self.objStartLandRegion, accessNeededNations);
+					log("DEBUG - accessNeededNations:");
+					for (var i in accessNeededNations)
+					{
+						var otherNation = accessNeededNations[i];
+						log(i + ". " + otherNation.strName);
+					}
+
+                    return false;
+                }
+                
+                var bSkippedVictimRegions = false;
+
+                // advance along entire front at once
+                var strAdvanceRegions = ""; // DEBUG
+                for (r in enemyBorderRegions)
+                {
+                    var region = enemyBorderRegions[r];
+					if (self.objMilitaryAI.isOptionalInvadeRegion(avatar,region))
+					{
+                        bSkippedVictimRegions = true;
+                        continue;
+                    }
+                        
+                    self.objAdvanceRegions.add(region);
+                    
+					if (pad.bWantMilitaryAILog)
+	                    strAdvanceRegions += region.strName + " "; // DEBUG
+                }
+
+                if (self.objAdvanceRegions.length > 0)
+                {
+					if (pad.bWantMilitaryAILog)
+						log("DEBUG: Advancing into regions " + strAdvanceRegions);
+                    return true;
+                }
+                    
+                if ( bSkippedVictimRegions )
+                {
+                    // we need to go thru a victim nation region in order to get to the regions we want
+                    // so we have to calculate a path.
+                    
+                    // find a path to the regions we want to conquer.
+                    self.objMilitaryAI.calculateInvasionPath(avatar,self.objStartLandRegion,self.objInvasionPath);
+                    if (self.objInvasionPath.bFound == false)
+                    {
+                        if (pad.bWantMilitaryAILog)
+                            log("DEBUG: Failed to find invasion path from " + self.objStartLandRegion.strName);
+                        return false;
+                    }
+                    
+                    var firstAdvanceRegion = null;
+                    var regionPath = self.objInvasionPath.refRegions;
+                    for (var i in regionPath)
+                    {
+                        var r = regionPath[i];
+                        var region = r.resolve(avatar);
+                        var controller = region.refController.resolve(avatar);
+						if (self.objMilitaryAI.isDesignatedOrActualEnemy(avatar,controller))
+                        {
+                            firstAdvanceRegion = region;
+                            break;
+                        }
+                    }
+
+                    if (firstAdvanceRegion == null)
+                    {
+                        if (pad.bWantMilitaryAILog)
+                            log("DEBUG: Failed to find firstAdvanceRegion in invasion path");
+                        return false;
+                    }
+                    
+                    self.objAdvanceRegions.add(firstAdvanceRegion);
+                    return true;
+                } // if we need to go thru a victim region
+                
+			} // updateAdvanceRegions
+			
+			
+			
+            // updates self.objBuildupRegions with our front regions (or just objStartLandRegion if no front was found)
+            function updateBuildupRegions(avatar)
+            {
+                var ourBorderRegions = new Array();
+                var enemyBorderRegions = new Array();
+                self.objMilitaryAI.getInvasionFront(avatar, self.objStartLandRegion, ourBorderRegions, enemyBorderRegions);
+
+                //log("DEBUG: getInvasionFront from " + self.objStartLandRegion.strName + " border length = " + ourBorderRegions.length);
+                
+                self.objBuildupRegions.clear();
+                if (ourBorderRegions.length == 0)
+                {
+                    self.objBuildupRegions.add(self.objStartLandRegion);
+                }
+                else
+                {
+                    for (var r in ourBorderRegions)
+                    {
+                        var region = ourBorderRegions[r];
+                        self.objBuildupRegions.add(region);
+                    }                
+                }
+			} // updateBuildupRegions
+			
+			
+			// estimate the military response to this invasion
+            function estimateMilitaryResponse(avatar)
+            {
+				if (self.objDesiredLandMass == null)
+				{
+					log("DEBUG: estimateMilitaryResponse - no desired land mass.")
+					return 0;
+				}
+                var totalResponse = self.objDesiredLandMass.nEstimatedEnemyLandCombatStrength;
+                var totalFailures = self.objDesiredLandMass.nLandInvasionFailures + self.objDesiredLandMass.nSeaInvasionFailures;
+                if ( totalFailures > 0 )
+                {
+                    totalResponse = totalResponse + ( totalResponse * 0.75 * totalFailures );
+                }
+                return totalResponse; 
+            }
+            
+            function anyUndeclaredEnemies(avatar, nation)
+            {
+				var bResult = true;
+                var enemyNationsOnLandMass = new Array();
+                self.objMilitaryAI.getNationsToInvadeOnLandMass(avatar, self.objLandMassIDRegion, enemyNationsOnLandMass);
+                
+                for (var e in enemyNationsOnLandMass)
+                {
+                    var enemyNation = enemyNationsOnLandMass[e];
+                    var bAtWar = (self.objGameSysNationRelations.getWarEx(avatar,nation,enemyNation,true) != null);
+                    if (!bAtWar)
+                        return true
+                }
+				return false;
+            }
+
+            function declareWarIfNeeded(avatar, nation)
+            {
+				var bResult = true;
+                var enemyNationsOnLandMass = new Array();
+                self.objMilitaryAI.getNationsToInvadeOnLandMass(avatar, self.objLandMassIDRegion, enemyNationsOnLandMass);
+                
+                for (var e in enemyNationsOnLandMass)
+                {
+                    var enemyNation = enemyNationsOnLandMass[e];
+                    if (!self.objParentAI.notifyAdvanceStarted(avatar,self,enemyNation))
+						bResult = false;
+                }
+				return bResult;
+            }
+
+        ]]></script>
+    </objectDef>
+</locust>

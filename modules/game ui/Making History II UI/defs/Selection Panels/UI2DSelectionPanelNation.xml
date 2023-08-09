@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- UI2DSelectionPanelNation is shown when selecting a nation other than the one the player controls -->
+	<objectDef type="UI2DSelectionPanelNation" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+			
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="351"/>
+		<property name="nHeight" value="213"/>
+		<property name="haXAlign" value="LEFT"/>
+		<property name="vaYAlign" value="BOTTOM"/>
+
+	<!-- Header and Background -->
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="157"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="157"/>
+			<property name="nWidth" value="81"/>
+			<property name="nHeight" value="56"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="156"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="157"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelBG">
+			<property name="tmplImage" value="skin.ImgDetailPanel"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="119"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelBGTop">
+			<property name="tmplImage" value="skin.ImgPanelTopBG"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="124"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="32"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBottomBG">
+			<property name="tmplImage" value="skin.ImgOlive"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+<!-- Foreground -->
+		<object type="mlui.UI2DImage" name="objPanelBorder">
+			<property name="tmplImage" value="skin.ImgPanelBorderSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="158"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="119"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="304"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<!--<object type="mlui.UI2DButton" name="objNationPanelButton">-->
+		<!--	<property name="tmplButtonStyle" value="skin.BtnStyleNationExpand"/>-->
+		<!--	<property name="nX" value="315"/>-->
+		<!--	<property name="nY" value="188"/>-->
+		<!--	<property name="nDefaultWidth" value="38"/>-->
+		<!--	<property name="nDefaultHeight" value="25"/>-->
+		<!--	<property name="strToolTip" from="locale.SID.UI.Maximize"/>-->
+		<!--	-->
+		<!--	<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--		<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--			<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--			<script type="application/javascript"><![CDATA[-->
+		<!--				function handle(event, owner)-->
+		<!--				{-->
+		<!--					spdata.showMoreInfo();-->
+		<!--				}-->
+		<!--			]]></script>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--</object>-->
+
+	<!-- Content -->
+		<object type="UI2DNationPanel" name="objNationPanel">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="152"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DNationSelectionMenu" name="objNationSelectionMenu" >
+			<property name="objNation" from="def.objNation" />
+		</object>
+		
+		<!--<object type="mlui.UI2DButton" name="objCovertButton" >
+			<property name="tmplButtonStyle" value="skin.BtnSelectionPanelLower"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="-1"/>
+			<property name="nDefaultWidth" value="64"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="strToolTip" from="locale.SID.UI.Covert"/>
+
+		--><!-- creates the menu for covert actions --><!--
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{			
+						
+							menuX = def.nScreenX;
+							menuY = def.nScreenY + 78;					
+						
+										
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": 250,
+								"nDefaultItemHeight": 22
+							});		
+							var i = 0;	
+							var length = def.objNationSelectionMenu.objMenu.objMenuItemsCovert.length;
+							while( i < length)
+							{
+								item =  def.objNationSelectionMenu.objMenu.objMenuItemsCovert[i];
+								if(item != null)
+								{
+									menudata.objItems.add(def.objNationSelectionMenu.objMenu.objMenuItemsCovert[i]);		
+								}
+								i++;
+							}
+							
+							menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": def,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCovertButtonText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite10Center"/>
+			<property name="strText" from="locale.SID.UI.Covert"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="64"/>
+			<property name="nHeight" value="14"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		<object type="mlui.UI2DButton" name="objDiplomaticButton" >
+			<property name="tmplButtonStyle" value="skin.BtnSelectionPanelLower"/>
+			<property name="nX" value="75"/>
+			<property name="nY" value="-1"/>
+			<property name="nDefaultWidth" value="64"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="strToolTip" from="locale.SID.UI.DiplomaticSummary"/>
+
+		--><!-- creates the menu for diplomatic actions --><!--
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							menuX = def.nScreenX;
+							menuY = def.nScreenY + 6;				
+									
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": 250,
+								"nDefaultItemHeight": 22
+							});		
+							var i = 0;	
+							var length = def.objNationSelectionMenu.objMenu.objMenuItemsDiplomatic.length;
+							while( i < length)
+							{
+								item =  def.objNationSelectionMenu.objMenu.objMenuItemsDiplomatic[i];
+								if(item != null)
+								{
+									menudata.objItems.add(def.objNationSelectionMenu.objMenu.objMenuItemsDiplomatic[i]);		
+								}
+								i++;
+							}
+							
+							menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": def,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objDiplomaticButtonText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite10Center"/>
+			<property name="strText" from="locale.SID.UI.DiplomaticSummary"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nX" value="75"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="64"/>
+			<property name="nHeight" value="14"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>-->
+		
+	</objectDef><!-- UI2DSelectionPanelNation -->
+	
+	<objectDef type="UI2DNationPanel" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<property name="haXAlign" value="LEFT"/>
+		<property name="vaYAlign" value="TOP"/>		
+		
+	<!-- Header and Background -->
+		<object type="UI2DNationIcon" name="objNationIcon">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="strText" from="def.objNation.strDisplayName"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="14"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCapitalCityName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" from="gs_tbg.getCapitalCity(mh2data.objAvatar, def.objNation).strDisplayName"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<propertyDef name="bAtWarWithMe" type="bool">
+			find(?{war:
+				war.objAttackers.contains(mh2data.objNation) OR war.objDefenders.contains(mh2data.objNation)
+            },gs_tbg.getNationWars(mh2data.objAvatar, self.objNation)) != null
+		</propertyDef>
+
+		<object type="common_ui.UI2DListHorz" name="objInfoBubbles">
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nSpacing" value="3"/>
+			
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgNationCrestWar"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="nDepth" value="50"/>
+				<property name="bVisible" from="gs_tbg.getNationWars(mh2data.objAvatar, def.objNation).size GT 0"/>
+				<property name="strToolTip" from="locale.SID.UI.AtWar"/>
+			</object>
+			
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgReportBubbleMilitaryEmbargo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="nDepth" value="50"/>
+				<property name="bVisible" from="gs_tbg.getEmbargo(mh2data.objAvatar, mh2data.objNation, def.objNation) != null"/>
+				<property name="strToolTip" from="locale.SID.UI.NationsUnderTradeEmbargo"/>
+			</object>
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgReportBubbleMilitaryAccess"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="nDepth" value="50"/>
+				<property name="bVisible" from="gs_tbg.getAccessAgreement(mh2data.objAvatar, mh2data.objNation, def.objNation) != null"/>
+				<property name="strToolTip" from="locale.SID.UI.TotalMilitaryAccess"/>
+			</object>
+			
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage">
+						if(def.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet),
+							'skin.ImgNationCrestPuppet',
+								'skin.ImgNationCrestIndependant')
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+        <property name="strToolTip">
+          if(def.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet),
+          locale.SID.UI.Puppet,
+          locale.SID.UI.Independent + " " + locale.SID.UI.Nation)
+        </property>
+			</object>
+			
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage">
+						if(def.objNation.tmplIdeology.resolve().strName == 'Democratic',
+						'skin.ImgNationCrestDemocratic',
+							if(def.objNation.tmplIdeology.resolve().strName == 'Communist',
+							'skin.ImgNationCrestCommunist',
+								if(def.objNation.tmplIdeology.resolve().strName == 'Fascist',
+								'skin.ImgNationCrestFascist', 'skin.ImgNationCrestAuthoritarian'
+								)
+							)
+						)
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="nDepth" value="50"/>
+				<property name="strToolTip" from="def.objNation.getIdeologyTemplate().strDisplayName"/>
+			</object>
+      
+			<object type="UI2DSOMaximizeButton" name="objElements">
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{							
+								mlui.ActSendEventToUIElement.execute({
+									"objElement": mlui.objUI.objRoot,
+									"objEvent": common_elements.EventDismissPopUpMenu.create({})
+								});
+								spdata.showMoreInfo();
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+		</object>
+
+
+		<!--<object type="common_ui.UI2DListHorz" name="objBasesIcons">-->
+		<!--	<property name="nX" value="5"/>-->
+		<!--	<property name="nY" value="1"/>-->
+		<!--	<property name="haXAlign" value="RIGHT"/>-->
+		<!--	<property name="nSpacing" value="2"/>-->
+		<!--	-->
+		<!--	<object type="mlui.UI2DImage" name="objElements" existsWhile="-->
+		<!--	gs_tbg.getNationWars(mh2data.objAvatar, def.objNation).size GT 0">-->
+		<!--		<property name="tmplImage" value="skin.ImgNationCrestWar"/>-->
+		<!--		<property name="nX" value="0"/>-->
+		<!--		<property name="nY" value="0"/>-->
+		<!--		<property name="nWidth" value="28"/>-->
+		<!--		<property name="nHeight" value="28"/>-->
+		<!--		<property name="nDepth" value="50"/>-->
+		<!--		<property name="strToolTip" from="locale.SID.UI.AtWar"/>-->
+		<!--	</object>-->
+		<!--	-->
+		<!--	<object type="mlui.UI2DImage" name="objElements">-->
+		<!--		<property name="tmplImage">-->
+		<!--				if(def.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet),-->
+		<!--					'skin.ImgNationCrestPuppet',-->
+		<!--						'skin.ImgNationCrestIndependant')-->
+		<!--		</property>-->
+		<!--		<property name="nX" value="0"/>-->
+		<!--		<property name="nY" value="0"/>-->
+		<!--		<property name="nWidth" value="28"/>-->
+		<!--		<property name="nHeight" value="28"/>-->
+		<!--	</object>-->
+		<!--	-->
+		<!--	<object type="mlui.UI2DImage" name="objElements">-->
+		<!--		<property name="tmplImage">-->
+		<!--				if(def.objNation.tmplIdeology.resolve().strName == 'Democratic',-->
+		<!--				'skin.ImgNationCrestDemocratic',-->
+		<!--					if(def.objNation.tmplIdeology.resolve().strName == 'Communist',-->
+		<!--					'skin.ImgNationCrestCommunist',-->
+		<!--						if(def.objNation.tmplIdeology.resolve().strName == 'Fascist',-->
+		<!--						'skin.ImgNationCrestFascist', 'skin.ImgNationCrestAuthoritarian'-->
+		<!--						)-->
+		<!--					)-->
+		<!--				)-->
+		<!--		</property>-->
+		<!--		<property name="nX" value="0"/>-->
+		<!--		<property name="nY" value="0"/>-->
+		<!--		<property name="nWidth" value="28"/>-->
+		<!--		<property name="nHeight" value="28"/>-->
+		<!--		<property name="nDepth" value="50"/>-->
+		<!--		<property name="strToolTip" from="def.objNation.getIdeologyTemplate().strDisplayName"/>-->
+		<!--	</object>-->
+		<!--</object>-->
+		
+		<object type="mlui.UI2DImage" name="objDetailsBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleBrownTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="341"/>
+			<property name="nHeight" value="89"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objDetailsBG2">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="85"/>
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objDetailsBGGradient">
+			<property name="tmplImage" value="skin.ImgGradientGraySm"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="38"/>
+			<property name="nWidth" value="335"/>
+			<property name="nHeight" value="39"/>
+		</object>
+
+		
+		
+		<object type="mlui.UI2DText" name="objAlliesText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Allies" />
+			<property name="nX" value="8"/>
+			<property name="nY" value="40"/>
+			<property name="nWidth" value="110"/>
+			<property name="nHeight" value="26"/>
+		</object>
+		
+		<object type="UINationAlliesList" name="objAlliesList">
+			<property name="objNations" >	
+					filter(?{nation: nation != def.objNation}, gs_tbg.getNationAllies(mh2data.objAvatar, def.objNation))				
+			</property>
+			<property name="nX" value="8"/>
+			<property name="nY" value="55"/>
+			<property name="nWidth" value="187"/>
+			<property name="nHeight" value="75"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objEnemiesText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Wars" />
+			<property name="nX" value="8"/>
+			<property name="nY" value="84"/>
+			<property name="nWidth" value="110"/>
+			<property name="nHeight" value="26"/>
+		</object>
+		
+		<object type="UINationAlliesList" name="objEnemiesList">
+			<property name="objNations" >	
+					filter(?{nation: nation != def.objNation}, gs_tbg.getNationEnemies(mh2data.objAvatar, def.objNation))				
+			</property>
+			<property name="nX" value="8"/>
+			<property name="nY" value="95"/>
+			<property name="nWidth" value="187"/>
+			<property name="nHeight" value="75"/>
+		</object>
+		
+		
+		<object type="mlui.UI2DImage" name="objDetailsRightBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="300"/>
+			<property name="nY" value="40"/>
+			<property name="nWidth" value="36"/>
+			<property name="nHeight" value="79"/>
+		</object>	
+		
+		
+	<!-- Diplomatic Relations Section -->		
+		<object type="mlui.UI2DImage" name="objRelationsIcon" >
+			<property name="tmplImage" value="skin.ImgInfoIconRelationsSm"/>
+			<property name="strToolTip" from="locale.SID.UI.DiplomaticRelations"/>
+			<property name="nX" value="306"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objDiplomaticRelationsAmount">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Center"/>
+			<property name="strText">
+				?{relation:
+					relation.nDiplomaticRelations
+				}(gs_tbg.getDiplomaticRelation(mh2data.objAvatar, def.objNation, mh2data.objNation))
+			</property>
+			<property name="nX" value="300"/>
+			<property name="nY" value="67"/>
+			<property name="strToolTip" from="locale.SID.UI.DiplomaticRelations"/>
+			<property name="nWidth" value="36"/>
+			<property name="nHeight" value="12"/>
+		</object>
+				
+	<!-- Stability Section -->
+		<object type="mlui.UI2DImage" name="objStabilityIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconStabilitySm"/>
+            <property name="strToolTip" from="locale.SID.UI.Stability"/>
+			<property name="nX" value="306"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="24"/>
+			<property name="nDepth" value="2" />
+		</object>
+		
+		<object type="mlui.UI2DText" name="objStabilityAmount">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Center"/>
+			<property name="strText" from="def.objNation.nStability"/>
+			<property name="strToolTip" from="locale.SID.UI.Stability"/>
+			<property name="nX" value="300"/>
+			<property name="nY" value="105"/>
+			<property name="nWidth" value="36"/>
+			<property name="nHeight" value="12"/>
+			<property name="nDepth" value="2" />
+		</object>		
+		
+	</objectDef>
+	
+	<objectDef type="UINationAlliesList" superType="mlui.UI2DElement">
+		<propertyDef name="objNations" type="gs_tbg.Nation" variable="true" />
+		
+		<object type="common_ui.UI2DListHorz" name="objNationFlagList">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="nSpacing" value="3"/>
+
+			<object type="UI2DNationFlag46x24" name="objElements" tiedTo="def.objNations">
+				<property name="objNation" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="46"/>
+				<property name="nHeight" from="24"/>
+			</object>
+		</object>
+		
+	</objectDef>
+</locust>

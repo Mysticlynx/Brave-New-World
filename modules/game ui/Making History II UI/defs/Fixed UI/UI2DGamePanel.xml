@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DGamePanel" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="351"/>
+		<property name="nHeight" value="196"/>
+		<property name="haXAlign" value="RIGHT"/>
+		<property name="vaYAlign" value="BOTTOM"/>
+
+		<!-- Background -->
+		<!--<object type="UI2DGamePanelButtonBG" name="objGamePanelButtonBG">-->
+		<!--	<property name="objMH2Data" from="def.objMH2Data"/>-->
+		<!---->
+		<!--	<property name="nX" value="32"/>-->
+		<!--	<property name="nY" value="21"/>-->
+		<!--	<property name="nWidth" value="351"/>-->
+		<!--	<property name="nHeight" value="22"/>-->
+		<!--</object>-->
+
+		<!--<object type="mlui.UI2DImage" name="objPanelMinHL1">-->
+		<!--	<property name="tmplImage" value="skin.ImgPanelHL"/>-->
+		<!--	<property name="nX" value="69"/>-->
+		<!--	<property name="nY" value="22"/>-->
+		<!--	<property name="nWidth" value="260"/>-->
+		<!--	<property name="nHeight" value="8"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DImage" name="objPanelMinHL2">-->
+		<!--	<property name="tmplImage" value="skin.ImgPanelHL"/>-->
+		<!--	<property name="nX" value="100"/>-->
+		<!--	<property name="nY" value="28"/>-->
+		<!--	<property name="nWidth" value="225"/>-->
+		<!--	<property name="nHeight" value="8"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DImage" name="objPanelMinHL3">-->
+		<!--	<property name="tmplImage" value="skin.ImgPanelHL"/>-->
+		<!--	<property name="nX" value="100"/>-->
+		<!--	<property name="nY" value="33"/>-->
+		<!--	<property name="nWidth" value="225"/>-->
+		<!--	<property name="nHeight" value="8"/>-->
+		<!--</object>-->
+
+		<!--<object type="mlui.UI2DImage" name="objGamePanelGear">-->
+		<!--	<property name="tmplImage" value="skin.ImgGamePanelGear"/>-->
+		<!--	<property name="nX" value="2"/>-->
+		<!--	<property name="nY" value="18"/>-->
+		<!--	<property name="nWidth" value="41"/>-->
+		<!--	<property name="nHeight" value="23"/>-->
+		<!--</object>-->
+		<!---->
+		<object type="mlui.UI2DImage" name="objPanelBackground">
+			<property name="tmplImage" value="skin.ImgDetailPanel"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="73"/>
+			<property name="nWidth" value="347"/>
+			<property name="nHeight" value="122"/>
+		</object>
+		<!---->
+		<object type="mlui.UI2DImage" name="objPanelBackgroundTop">
+			<property name="tmplImage" value="skin.ImgPanelTopBG"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="40"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="33"/>
+		</object>
+
+		<!-- minimap -->
+		<object type="UI2DGamePanelMiniMap" name="objMiniMap" >
+			<property name="objMapData" from="def.objMH2Data.objMapData"/>
+
+			<property name="nX" value="94"/>
+			<property name="nY" value="74"/>
+		</object>
+
+		<!-- Content -->
+		<object type="UI2DGamePanelInfo" name="objPanel">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+
+			<property name="nX" value="3"/>
+			<property name="nY" value="42"/>
+		</object>
+
+		<object type="UI2DGamePanelControlButtons" name="objControlButtons">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+		</object>
+
+		<object type="UI2DGamePanelMapButtons" name="objMapButtons">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+		</object>
+
+		<!-- Foreground -->
+		<object type="mlui.UI2DImage" name="objPanelBorder">
+			<property name="tmplImage" value="skin.ImgPanelBorderSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="38"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="158"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<!--<object type="UI2DGamePanelButtonFG" name="objGamePanelButtonFG">-->
+		<!--	<property name="nX" value="28"/>-->
+		<!--	<property name="nY" value="0"/>-->
+		<!--	<property name="nWidth" value="320"/>-->
+		<!--	<property name="nHeight" value="42"/>-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--</object>-->
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="69"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelVL">
+			<property name="tmplImage" value="skin.ImgPanelVL"/>
+			<property name="nX" value="89"/>
+			<property name="nY" value="71"/>
+			<property name="nWidth" value="8"/>
+			<property name="nHeight" value="125"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+        <object type="mlui.UI2DText" name="objTime">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Left"/>
+			<property name="strText">
+				switch{
+					case mlgame.getGameSysSave(mh2data.objAvatar).eLastAutoSaveResult == mlgame.SaveResult.NOT_FINISHED OR
+						 mlgame.getGameSysSave(mh2data.objAvatar).eLastSaveResult == mlgame.SaveResult.NOT_FINISHED:
+						locale.SID.UI.SavingGame
+					case mlgame.getGameSysSave(mh2data.objAvatar).eLastAutoSaveResult == mlgame.SaveResult.FAILED:
+						locale.SID.UI.AutoSaveFailed
+					default:
+						''
+				}
+			</property>
+			<property name="nX" value="150"/>
+			<property name="nY" value="45"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="13"/>
+		</object>		
+		<propertyDef name="bAutoSaving" type="bool" default="false" />
+		
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="bBroadcast" value="true"/>
+				<property name="otEventType" value="mlgame.EventGameSaveFinished"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.bAutoSaving = false;
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="bBroadcast" value="true"/>
+				<property name="otEventType" value="mlgame.EventGameSaveStarted"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.bAutoSaving = true;
+					}
+				]]></script>
+			</object>
+		</object>	
+		
+	</objectDef>
+
+	<objectDef type="UI2DGamePanelInfo" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+
+		<propertyDef name="nTurnTimer" type="int"/>
+		<propertyDef name="objTurnBasedGame" type="gs_tbg.TurnBasedGame" from="gs_tbg.getGameSysTurnBasedGame(self.objMH2Data.objAvatar).objTurnBasedGame"/>
+
+        <propertyDef name="eScoringMode" type="Enum" restriction="gs_tbg.ScoringMode"/>
+        <property name="eScoringMode" from="gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).eScoringMode"/>
+
+        <property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="346"/>
+		<property name="nHeight" value="33"/>
+
+		<property name="nTurnTimer">
+            if(self.objTurnBasedGame.eTurnTimeMode.equals(gs_tbg.TurnTimeMode.TIMER),
+                self.objTurnBasedGame.nTurnTime - self.objTurnBasedGame.nTimeElapsed,
+                self.objTurnBasedGame.nTimeElapsed)
+        </property>
+
+		<object type="mlui.UI2DImage" name="objGamePanelIcon">
+			<property name="tmplImage" value="skin.ImgGamePanelIcon"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objDate" existsWhile="self.objMH2Data.objNation != null">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="strText" from="gs_tbg.getGameSysTurnBasedGame(def.objMH2Data.objAvatar).objTurnBasedGame.dateCurrentDate"/>
+			<property name="nX" value="36"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="96"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTurn">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" from="locale.SID.UI.Turn + ': ' + gs_tbg.getGameSysTurnBasedGame(def.objMH2Data.objAvatar).objTurnBasedGame.nTurn
+				+ '/' + find(?{vc: vc.strName == 'TurnLimit'}, gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).objVictoryConditions).nTurns"/>
+			<property name="nX" value="36"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="96"/>
+			<property name="nHeight" value="13"/>
+		</object>
+
+        <object type="mlui.UI2DText" name="objVictoryMode">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+            <property name="strText">
+                switch
+                {
+                case def.eScoringMode == gs_tbg.ScoringMode.CONQUEST:
+                locale.SID.UI.ConquestScoring
+                case def.eScoringMode == gs_tbg.ScoringMode.NATION:
+                locale.SID.UI.NationScoring
+                case def.eScoringMode == gs_tbg.ScoringMode.ALLIANCE:
+                locale.SID.UI.AllianceScoring
+                case def.eScoringMode == gs_tbg.ScoringMode.IDEOLOGY:
+                locale.SID.UI.IdeologyScoring
+                }
+            </property>
+            <property name="nX" value="140"/>
+            <property name="nY" value="15"/>
+            <property name="nWidth" value="96"/>
+            <property name="nHeight" value="13"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objTurnTimerState">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialOrange12Right"/>
+            <property name="strText" from="if(gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.eTurnTimeMode.equals(gs_tbg.TurnTimeMode.OFF),
+				locale.SID.UI.TurnTimerOff, locale.SID.UI.TurnTimerOn)"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="0"/>
+            <property name="nHeight" value="13"/>
+            <property name="haXAlign" value="RIGHT"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objTime">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Right"/>
+			
+			<property name="strText">
+				
+				(def.nTurnTimer/3600) + ':' +
+				let minutes = ((def.nTurnTimer/60)%60)
+				{
+					if(minutes LT 10, '0'+minutes,minutes)
+				}  + ':' +
+				let seconds = (def.nTurnTimer%60)
+				{
+					if(seconds LT 10, '0'+seconds,seconds)
+				}
+				
+			</property>
+			<property name="nX" value="4"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="64"/>
+			<property name="nHeight" value="13"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DGamePanelMiniMap" superType="mlui.UI2DElement">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+		<propertyDef name="bNavigateByName" type="bool" default="false"/>
+
+		<property name="nWidth" value="254"/>
+		<property name="nHeight" value="119"/>
+
+		<object type="mlui.UI2DImage" name="objMapSurface">
+			<property name="tmplImage" from="if (def.objMapData.objMap.tmplImgMiniMap != null,def.objMapData.objMap.tmplImgMiniMap, uidata.getTemplateRef(mlmedia.ImageTemplate,'ImgOldMiniMap') )"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			
+		    <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				    <property name="otEventType" value="mlui.EventMouseButtonDown"/>
+				    <script type="application/javascript"><![CDATA[
+					    function handle(event, owner)
+					    {
+					        if (event.objParams.eMetaKeys.contains(mlui.MetaKey.META_KEY_CTRL) ||
+					            event.objParams.eMetaKeys.contains(mlui.MetaKey.META_KEY_SHIFT) )
+					        {
+					            // show navigate text box
+					            def.bNavigateByName = true;
+                                mlui.ActSetKeyboardFocus.execute({"objElement": def.objNavigateText});
+					        }
+					        else
+					        {
+	        					var x = event.objParams.nPosX;
+    		    				var y = event.objParams.nPosY;
+    		    				var rx = (x - def.nScreenX) / def.nWidth;
+    		    				var ry = (y - def.nScreenY) / def.nHeight;
+    		    				var vecMin = def.objMapData.objMap.vecMin;
+    		    				var vecMax = def.objMapData.objMap.vecMax;
+    		    				 
+    		    				var worldx = vecMin.x + (vecMax.x - vecMin.x) * rx;
+    		    				var worldy = vecMin.y + (vecMax.y - vecMin.y) * (1-ry);
+    		    				var worldz = def.objMapData.objMap.fSeaLevel;
+    		    				
+    		    				var vecWorld = Vec3D(worldx, worldy, worldz);
+						        def.objMapData.lookAt(vecWorld);
+						    }
+					    }
+				    ]]></script>
+			    </object>
+		    </object>
+			
+		</object>
+		
+		<object type="mlui.UI2DEditableText" name="objNavigateText" existsWhile="def.bNavigateByName == true">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddleFitForEditing"/>
+			<property name="nX" from="0"/>
+			<property name="nY" from="if(self.strText == '',5,0)"/>
+			<property name="nHeight" value="25"/>
+			<property name="nWidth" from="if(self.strText == '',10,254)"/><!-- workaround for cursor position when empty -->
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nDepth" value="50"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_ESCAPE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_RETURN"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_GRAVE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_TAB"/>
+			
+			<object type="mlui.KeyBindList" name="objKeyBindList">
+				<object type="mlui.KeyBindMethod" name="objKeyBinds">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<property name="eKey" value="KEY_CODE_RETURN"/>
+					<script type="application/javascript"><![CDATA[
+						function notifyTriggered(owner) {
+							if(owner.strText != '')
+							{
+                                var navigateToName = owner.strText;
+								owner.strText = "";
+								def.bNavigateByName = false;
+																
+								var position = null;
+                                var regionRef = new GORef(gs_tbg.Region, navigateToName);
+                                var region = regionRef.resolve(def.objMapData.objAvatar);
+                                if (region == null)
+                                {
+                                    // try finding a region by display name
+                                    region = gs_tbg.getGameSysRegion(def.objMapData.objAvatar).objRegions.find({"strDisplayName": navigateToName});
+                                }
+                                
+                                if (region != null)
+                                {
+                                    var mapRegion = gs_tbg.getGameSysMap(def.objMapData.objAvatar).objMapRegions.find({"refRegion": region});
+                                    if (mapRegion != null)
+                                    {
+                                        position = mapRegion.vecCenter;
+        						    }
+        						}
+        						
+        						if (position == null)
+        						{
+                                    // try a city ref
+                                    var cityRef = new GORef(gs_tbg.City, navigateToName);
+                                    var city = cityRef.resolve(def.objMapData.objAvatar);
+                                    if (city == null)
+                                    {
+                                        // try finding a city by display name
+                                        city = gs_tbg.getGameSysCity(def.objMapData.objAvatar).objCities.find({"strDisplayName": navigateToName});
+                                    }
+                                    
+                                    if (city != null)
+                                    {
+                                        position = city.vecPosition;
+                                    }
+                                }
+                                
+                                if (position == null)
+                                {
+                                    // try a nation ref
+                                    var nationRef = new GORef(gs_tbg.Nation, navigateToName);
+                                    var nation = nationRef.resolve(def.objMapData.objAvatar);
+                                    if (nation == null)
+                                    {
+                                        // try finding a nation by display name
+                                        nation = gs_tbg.getGameSysNation(def.objMapData.objAvatar).objNations.find({"strDisplayName": navigateToName});
+                                    }
+                                    
+                                    if (nation != null)
+                                    {
+                                        var capCity = gs_tbg.getGameSysCity(def.objMapData.objAvatar).objCapitalCityNations.find({"refNation":nation});
+                                        if (capCity != null)
+                                        {
+                                            if (capCity.refCapitalCity != null)
+                                            {
+                                                var city = capCity.refCapitalCity.resolve(def.objMapData.objAvatar);
+                                                if (city != null)
+                                                {
+                                                    position = city.vecPosition;
+                                                }
+                                            }
+                                        }
+                                        
+                                        if (position == null)
+                                        {
+                                            var region = gs_tbg.getGameSysRegion(def.objMapData.objAvatar).objRegions.find({"refController":nation, "refOwner":nation});
+                                            if (region == null)
+                                                region = gs_tbg.getGameSysRegion(def.objMapData.objAvatar).objRegions.find({"refController":nation});
+                                            if (region != null)
+                                            {
+                                                var mapRegion = gs_tbg.getGameSysMap(def.objMapData.objAvatar).objMapRegions.find({"refRegion": region});
+                                                if (mapRegion != null)
+                                                {
+                                                    position = mapRegion.vecCenter;
+        						                }
+                                            }
+                                        }
+                                        
+                                        if (position == null)
+                                        {
+                                            log("no positions found for nation " + navigateToName);
+                                        }
+                                    }
+                                }
+        						
+        						if (position != null)
+        						{
+    						        def.objMapData.lookAt(position);
+                                    def.objMapData.zoomToClosest();
+                                }
+                                else
+                                {
+                                    if (navigateToName == "populationBomb")
+                                    {
+                                        log("--- before adding units ---");
+                                        def.objMapData.objUnitModelTable.test("dumpHeapStats");
+                                        def.objMapData.objUnitModelTable.test("dumpAll");
+                                        populationBomb(1000,false);
+                                    }
+                                    else if (navigateToName == "cloneBomb")
+                                    {
+                                        log("--- before adding units ---");
+                                        def.objMapData.objUnitModelTable.test("dumpHeapStats");
+                                        def.objMapData.objUnitModelTable.test("dumpAll");
+                                        populationBomb(1000,true);
+                                    }
+                                    else if (navigateToName == "dumpTexturePool")
+                                    {
+                                        mlui.objUI.dumpTexturePool();
+                                    }
+                                    else
+                                    {                                
+                                        log("nothing found for " + navigateToName);                                    
+                                        def.objMapData.objUnitModelTable.test(navigateToName); // temporary line to test new UnitModelTable functionality
+                                    }
+                                }
+							}
+						}
+                        
+                        function populationBomb(numUnitsToCreate,singleUnitTemplate)
+                        {
+                            var gameSysRegion = gs_tbg.getGameSysRegion(def.objMapData.objAvatar);
+                            var gameSysNation = gs_tbg.getGameSysNation(def.objMapData.objAvatar);
+                            var gameSysUnit = gs_tbg.getGameSysUnit(def.objMapData.objAvatar);
+                            var gameSysNationRelations = gs_tbg.getGameSysNationRelations(def.objMapData.objAvatar);
+                            
+                            var numUnits = gameSysUnit.objUnitGroups.size;
+                            var numUnitsCreated = 0;
+                            
+                            var armyBranch = sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army');
+                            var unitTemplates = sd.getAllTemplates(gs_tbg.UnitTemplate);
+                            
+                            var unitNumber = numUnits + 1;
+                            
+                            var firstArmyTemplate = null;
+                            
+                            var region = gameSysRegion.objRegions.find({strName: "Massachusetts"}); // pax
+                            var regionController = region.refController.resolve(def.objMapData.objAvatar);
+                            var mapRegion = gs_tbg.getGameSysMap(def.objMapData.objAvatar).objMapRegions.find({refRegion: region});
+                            var position = mapRegion.vecCenter;
+                            
+                            // look at the region ...
+                            def.objMapData.lookAt(position);
+                            def.objMapData.zoomToClosest();
+                            
+                            for (var i in gameSysNation.objNations) {
+                                var nation;
+                                if (singleUnitTemplate) {
+                                    nation = gameSysNation.objNations.getArbitraryValue();
+                                }
+                                else {
+                                    nation = gameSysNation.objNations[i];
+                                    var anyGroup = gameSysUnit.objUnitGroups.find({refController: nation});
+                                    if (anyGroup != null)
+                                        continue;
+                                }
+                                
+                                if (!regionController.equals(nation))
+                                {
+                                    if (!gameSysNationRelations.hasNationLandAccess(def.objMapData.objAvatar,nation,regionController))
+                                    {
+                                        // give nation access
+                                        action = gs_tbg.GActGrantMilitaryAccess.create({
+                                            refGrantingNation: regionController,
+                                            refReceivingNation: nation });
+                                        def.objMapData.objAvatar.sendAction(action);
+                                    }
+                                }
+
+                                for (var i in unitTemplates)
+                                {
+                                    var tmpl = unitTemplates[i];
+                                    if (armyBranch.equals(tmpl.tmplUnitSubBranch.resolve().tmplUnitBranch.resolve()))
+                                    {
+                                        if (firstArmyTemplate == null) {
+                                            firstArmyTemplate = tmpl;
+                                        }
+                                        var unique_group_name = 'PopBombGroup' + unitNumber;
+                                        var unique_unit_name = 'PopBombUnit' + unitNumber;
+                                        var unit_group = gs_tbg.UnitGroup.create({
+                                            strName: unique_group_name,
+                                            strDisplayName: unique_group_name,
+                                            tmplUnitBranch: armyBranch,
+                                            refController: nation,
+                                            refLocation: region,
+                                            nPosIndex: unitNumber 
+                                        });
+                                        var unit = gs_tbg.Unit.create({
+                                            strName: unique_unit_name,
+                                            strDisplayName: unique_unit_name,
+                                            objUnitTemplate:  singleUnitTemplate ? firstArmyTemplate : tmpl,
+                                            refUnitGroup: unit_group,
+                                            refController: nation,
+                                            refOwner: nation,
+                                            objNationTemplate: nation.tmplNation
+                                        });
+                                        gameSysUnit.objUnitGroups.add(unit_group);
+                                        gameSysUnit.objUnits.add(unit);
+                                        unitNumber ++;
+                                        numUnitsCreated ++;
+                                        if (numUnitsCreated >= numUnitsToCreate) {
+                                            break;
+                                        }
+                                    }
+                                } // for unit templates
+                                if (numUnitsCreated >= numUnitsToCreate) {
+                                    break;
+                                }
+                            } // for nations
+                            log("populationBomb numUnitsCreated: " + numUnitsCreated);
+                        } // populationBomb
+                        
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+
+</locust>

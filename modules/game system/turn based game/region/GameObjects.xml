@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="Region" class="CMLORegion" desc="A region">
+         <goDef gameSystem="GameSysRegion" storageProperty="objRegions">
+            <keyProperty name="strName"/>
+        </goDef>
+
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="strAreaDisplayName" type="String"/>
+        <propertyDef name="eArchitecture" type="Enum" restriction="ArchitectureType"/>
+        <propertyDef name="refOwner" type="GORef" restriction="Nation"/>
+        <propertyDef name="refController" type="GORef" restriction="Nation"/>
+        <propertyDef name="refColony" type="GORef" restriction="Colony"/>
+        <propertyDef name="refCanalRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="nRegionSize" type="int" />
+        <propertyDef name="vecPositions" type="Vec3D" variable="true" />
+        <propertyDef name="nPopulation" type="int" default="0"/>
+        <propertyDef name="nMPUGrowthRate" type="int" default="0" desc="deprecated"/>
+        <propertyDef name="fMPUGrowthRate" type="float" default="0.0"/>
+        <propertyDef name="fMPURunoff" type="float" default="0.0" desc="Saved fractional MPU growth"/>
+        <propertyDef name="nUnemployedMPUs" type="int" default="0" desc="Number of available MPUs in this region"/>
+		<propertyDef name="nResourceMPUs" type="int" default="0" desc="Number of MPUs in this region's improvements, excluding food producers"/>
+		<propertyDef name="nFoodMPUs" type="int" default="0" desc="Number of MPUs in this region's food producing improvements"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0" desc="Maintenance Cost of improvements in this region (excluding cities)"/>
+        <propertyDef name="nResourceProducerExpenses" type="int" default="0" desc="Maintenance cost of resource producers in this region"/>
+        <propertyDef name="nTransportationExpenses" type="int" default="0" desc="Maintenance cost of transportation infrastructure in this region"/>
+        <propertyDef name="nFoodProduction" type="int" default="0"/>
+        <propertyDef name="nFoodConsumption" type="int" default="0"/>
+        <propertyDef name="nFoodDemand" type="int" default="0"/>
+        <propertyDef name="nGoodsDemand" type="int" default="0"/>
+        <propertyDef name="tmplNation" type="TemplateRef" restriction="NationTemplate" desc="NationTemplate to use for military units created in this region"/>
+        <propertyDef name="tmplTerrain" type="TemplateRef" restriction="TerrainTemplate"/>
+        <propertyDef name="tmplCulture" type="TemplateRef" restriction="CultureTemplate"/>
+        <propertyDef name="tmplReligion" type="TemplateRef" restriction="ReligionTemplate"/>
+        <propertyDef name="tmplEthnicity" type="TemplateRef" restriction="EthnicityTemplate"/>
+        <propertyDef name="nRegionStability" type="int" default="100"/>
+        <propertyDef name="nRevoltRisk" type="int" default="100" desc="deprecated"/>
+        <propertyDef name="nArmsLimit" type="int" default="100" desc="Percent of arms that can be delivered to units in this region"/>
+		<propertyDef name="nArmsLow" type="int" default="0" desc="deprecated"/>
+		<propertyDef name="nArmsRecoveryRate" type="int" default="5" desc="deprecated"/>
+        <propertyDef name="bTradeLane" type="bool" default="false" desc="Whether or not this region is a trade lane."/>
+        <propertyDef name="bHasMedicalCenter" type="bool" default="false" desc="Whether or not this region has a Medical Center."/>
+        <propertyDef name="bHasPublicSchool" type="bool" default="false" desc="Whether or not this region has a Public School."/>
+        <propertyDef name="objResourceCapacities" type="ResourceCapacity" variable="true" storesChildren="true"/>
+        <propertyDef name="objRegionProjects" type="RegionProject" variable="true" storesChildren="true"/>
+        <propertyDef name="objTransportationImprovement" type="Object" restriction="RegionImprovement" storesChildren="true"/>
+        <propertyDef name="objFortificationImprovement" type="Object" restriction="RegionImprovement" storesChildren="true"/>
+        <propertyDef name="objAADefenseImprovement" type="Object" restriction="RegionImprovement" storesChildren="true"/>
+        <propertyDef name="objCoastalDefenseImprovement" type="Object" restriction="RegionImprovement" storesChildren="true"/>
+        <propertyDef name="objAirbaseImprovement" type="Object" restriction="RegionImprovement" storesChildren="true"/>
+        <propertyDef name="tmplHistoricNations" type="TemplateRef" restriction="NationTemplate" variable="true"/>
+		<propertyDef name="vecCoastalPos" type="Vec3D"/>
+		<propertyDef name="nCoastalRotation" type="int"/>
+        <propertyDef name="objPowerPoints" type="PowerPoints" storesChildren="true"/>
+
+        <script type="application/x-locust-query">
+			canView = ?{visibilityList:
+				visibilityList.getRegionIsUnfogged(self)
+			}
+
+			canCommand = ?{gameroot, nation:
+				self.refController.resolve(gameroot).canCommand(nation)
+			}
+
+			getMasterNation = ?{gameroot:
+				switch {
+					case self.refController.resolve(gameroot).objStatus.instanceOf(NationStatusPuppet):
+						self.refController.resolve(gameroot).objStatus.refController.resolve(gameroot)
+					default:
+						self.refController.resolve(gameroot)
+				}
+			}
+
+			getCitiesInRegion = ?{gameroot, cities:
+				filter(?{city: city.refRegion == self}, cities)
+			}
+
+			bProducedResource = ?{gameroot, resource:
+				?{cap:
+					if(cap != null,
+						if(cap.nProduced > 0, true,
+						false),
+					false)
+				}(find(?{resourcecap: resourcecap.tmplResource == resource}, self.objResourceCapacities))
+			}
+			
+			isControllable = ?{: if(self.tmplTerrain.resolve().bWater,self.refCanalRegion != null,!self.tmplTerrain.resolve().bImpassable) }
+		</script>
+    </objectDef>
+
+    <objectDef type="Colony" class="CMLOColony" desc="A colony">
+        <goDef gameSystem="GameSysRegion" storageProperty="objColonies">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="tmplColonyNation" type="TemplateRef" restriction="NationTemplate"/>
+        <propertyDef name="strDisplayName" type="String"/>
+    </objectDef>
+
+    <objectDef type="DPDismantleResourceImprovement" class="CMLODPDismantleResourceImprovement" superType="DecisionPoint" desc="A decision point for when a resource improvement dismantling requires a prompt or confirmation">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="objResourceImprovement" type="Object" restriction="ResourceImprovement"/>
+    </objectDef>
+
+    <objectDef type="DPDismantleRegionImprovement" class="CMLODPDismantleRegionImprovement" superType="DecisionPoint" desc="A decision point for when a region improvement dismantling requires a prompt or confirmation">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="eImprovementType" type="Enum" restriction="RegionImprovementType"/>
+    </objectDef>
+
+</locust>

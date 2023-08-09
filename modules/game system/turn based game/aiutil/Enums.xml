@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<enumDef name="Reason">
+        <value name="NoReason"/>                <!--no reason given-->
+        <value name="AtWar"/>                   <!--they are at war with us-->
+        <value name="WarWithOurAlly"/>          <!--they are at war with our ally-->
+        <value name="AlliedWithOurEnemy"/>      <!--they are allied with someone we're at war with-->
+        <value name="AlliancesAtWar"/>          <!--a nation in their alliance is at war with a nation in our alliance-->
+        <value name="InsufficientFunds"/>       <!--we don't have enough money-->
+        <value name="InsufficientResources"/>   <!--we don't have the resource-->
+        <value name="PoorRelations"/>           <!--relations not good enough-->
+        <value name="TradePolicy"/>             <!--due to trade policy-->
+        <value name="FavorDomesticMarket"/>     <!--we want to favor our domestic market-->
+        <value name="FavorTradeAgreements"/>    <!--we support direct trade-->
+        <value name="FavorWorldMarket"/>        <!--we'd rather just go through the world market-->
+        <value name="ForceAllegiance"/>         <!--we are trying to force you into an alliance -->
+        <value name="Embargo"/>                 <!--Because of an embargo-->
+        <value name="OurEmbargo"/>              <!--Because of our embargo-->
+        <value name="AlreadyAsked"/>			<!--repeat -->
+        <value name="ProposingWarWithOurAlly"/> <!--they are proposing war with our ally-->
+		<value name="NotOurEnemy"/>				<!--they are proposing war with someone we do not want to fight-->
+		<value name="NationCharacteristics"/>	<!--ideological, cultural, religious, or ethnic differences-->
+		<value name="Internationalism"/>
+		<value name="ForIdeology"/>				<!-- to promote democracy, communism etc -->
+		<value name="AgainstIdeology"/>			<!-- against fascism, authoritarian etc -->
+		<value name="WeAreAColony"/>
+		<value name="WeAreAPuppet"/>
+        <value name="SurplusResources"/>        <!--we have more than we need-->
+        <value name="FreeAid"/>                 <!--Hey, it's free-->
+        <value name="AskingTooMuch"/>           <!--Asking for too much (i.e. repeating aid agreement) -->
+        <value name="OurAlly"/>                 <!--Because you are our ally... -->
+        <value name="NotOurAlly"/>              <!--Not something we would consider except for an ally (i.e. request for aid) -->
+        <value name="NotYours"/>                <!--Asking for something they have no right to (i.e. territory transfer) -->
+        <value name="WhatAboutMine"/>           <!--Asking for something of theirs but not offering mine in exchange -->
+        <value name="PeaceTreatyRejected"/>     <!--Because you rejected peace treaty...-->
+        <value name="AllianceRejected"/>        <!--Because you rejected alliance...-->
+        <value name="MilitaryAccessRefused"/>   <!--Because you refused military access...-->
+        <value name="PortAccessRefused"/>       <!--Because you refused port access...-->
+        <value name="PeaceTreatyAccepted"/>     <!--Because peace treaty was accepted... -->
+        <value name="AllianceAccepted"/>        <!--Because alliance was formed... -->
+        <value name="MilitaryAccessGranted"/>   <!--Because military access was granted... -->
+        <value name="PortAccessGranted"/>       <!--Because port access was granted...-->
+        <value name="DeclaredWar"/>             <!--Because you declared war...-->
+        <value name="FinancialAid"/>            <!--Because you gave money...-->
+        <value name="ResourceAid"/>             <!--Because you gave resources...-->
+        <value name="TradeAgreementMade"/>      <!--Because trade agreement was made...-->
+        <value name="TradeAgreementCancelled"/> <!--Because trade agreement was cancelled...-->
+        <value name="ResourceAidReceived"/>     <!--Because resource aid was received...-->
+        <value name="FinancialAidReceived"/>    <!--Because financial aid was received...-->
+        <value name="EmbargoPlaced"/>           <!--Because of the embargo you placed...-->
+        <value name="EmbargoLifted"/>           <!--Because you lifted your embargo...-->
+        <value name="NationLiberated"/>         <!--Because you liberated nation...-->
+        <value name="NationAnnexed"/>           <!--Because you annexed a nation...-->
+        <value name="NationMadePuppet"/>        <!--Because you turn a nation into a puppet...-->
+        <value name="LiberateRegion"/>          <!--Because we want to liberate this region...-->
+        
+        <!-- national program reasons -->
+        <value name="DeploymentSurveillance"/>  
+        <value name="OppositionSupport"/>
+        <value name="PoliticalSupport"/>
+        <value name="RegionSurveillance"/>
+        <value name="SabotageRegion"/>
+        <value name="StealResearch"/>
+        
+    </enumDef>
+    
+	<enumDef name="Tone">
+        <value name="NoTone"/><!-- neutral -->
+        <value name="Unfriendly"/>
+        <value name="Friendly"/>
+        <value name="Angry"/>
+        <value name="Afraid"/>
+        <value name="Desperate"/>
+	</enumDef>
+    
+</locust>

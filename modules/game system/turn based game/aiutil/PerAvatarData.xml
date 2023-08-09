@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="PADAIUtility" class="CMLOPADAIUtility" superType="mlgame.PerSessionData" desc="Per-avatar data for AI utility">
+		<propertyDef name="objPerOtherNationData" type="AIUtilityPerOtherNationData" storesChildren="true" variable="true"/>
+		<propertyDef name="objWarPlan" type="WarPlan" desc="Current war plan (if any)"/>
+		<propertyDef name="bPickedWarPlan" type="bool" default="false"/>
+	</objectDef>
+
+</locust>

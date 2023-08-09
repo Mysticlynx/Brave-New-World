@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DMapViewPort" superType="mlui.UI2DElement">
+		<propertyDef name="objAvatar" type="mlgame.Avatar"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+        <propertyDef name="bShadows" type="bool" default="false"/>
+        <propertyDef name="bCompressedTerrainTextures" type="bool" default="true"/>
+
+        <object type="UI2DMapViewPort3D" name="obj3DViewPort">
+            <property name="nWidth" from="def.nWidth"/>
+            <property name="nHeight" from="def.nHeight"/>
+            <property name="objAvatar" from="def.objAvatar"/>
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objNation" from="def.objNation"/>
+            <property name="bShadows" from="def.bShadows"/>                   
+            <property name="bCompressedTerrainTextures" from="def.bCompressedTerrainTextures"/>            
+        </object>
+    </objectDef>
+	<objectDef type="UI2DMapViewPortBase" superType="mlui.UI2DViewPort">
+		<propertyDef name="objAvatar" type="mlgame.Avatar"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+	</objectDef>
+
+	<objectDef type="UI2DMapViewPort3D" superType="UI2DMapViewPortBase">    
+		<propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+		
+		<propertyDef name="objGroups" type="gs_tbg.UnitGroup" variable="true"/>
+        <property name="objGroups">
+            gs_tbg.getGroupsAtLocation(self.objAvatar,self.objGroup.refLocation)
+		</property>
+
+		<propertyDef name="fDragThreshold" type="float" value="20.0"/>
+		<propertyDef name="bShadows" type="bool" default="false"/>       
+        <propertyDef name="bCompressedTerrainTextures" type="bool" default="true"/>            
+
+		<object type="EdgeScrollBox" name="objLeftEdgeScrollBox" existsWhile="mlui.objUI.bFullscreen">
+			<property name="vecDirection" value="[-1, 0, 0]"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" from="mlui.objUI.nHeight"/>
+			<property name="nWidth" from="3"/>
+            <property name="haXAlign" value="LEFT"/>
+		</object>
+		<object type="EdgeScrollBox" name="objRightEdgeScrollBox" existsWhile="mlui.objUI.bFullscreen">
+			<property name="vecDirection" value="[1, 0, 0]"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" from="mlui.objUI.nHeight"/>
+			<property name="nWidth" from="3"/>
+            <property name="haXAlign" value="RIGHT"/>
+		</object>
+		<object type="EdgeScrollBox" name="objTopEdgeScrollBox" existsWhile="mlui.objUI.bFullscreen">
+			<property name="vecDirection" value="[0, 1, 0]"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" from="3"/>
+			<property name="nWidth" from="mlui.objUI.nWidth"/>
+            <property name="vaYAlign" value="TOP"/>
+		</object>
+		<object type="EdgeScrollBox" name="objBottomEdgeScrollBox" existsWhile="mlui.objUI.bFullscreen">
+			<property name="vecDirection" value="[0, -1, 0]"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" from="3"/>
+			<property name="nWidth" from="mlui.objUI.nWidth"/>
+            <property name="vaYAlign" value="BOTTOM"/>
+		</object>
+		
+		<!-- Methods -->
+		<script type="application/javascript"><![CDATA[
+			function handleMouseLeftDown(mouseparams)
+			{
+					mlui.ActSendEventToUIElement.execute({
+						"objElement": mlui.objUI.objRoot,
+						"objEvent": common_elements.EventDismissPopUpMenu.create()
+					});
+					
+					self.objMouseDragCameraData.bSelecting = true;
+					self.objMouseDragCameraData.bDragging = false;
+	
+					self.objMouseDragCameraData.nPosX = mouseparams.nPosX;
+					self.objMouseDragCameraData.nPosY = mouseparams.nPosY;
+	
+					self.objMouseDragCameraData.vecCameraStart = self.objMapData.objCameraTransform.vecLookAt;
+					
+				if ( mouseparams.vecRayDir.z != 0)
+				{
+					self.objMouseDragCameraData.vecClickStart = Vec3D(
+						(-mouseparams.vecRayDir.x / mouseparams.vecRayDir.z) * mouseparams.vecRayStart.z + mouseparams.vecRayStart.x,
+						(-mouseparams.vecRayDir.y / mouseparams.vecRayDir.z) * mouseparams.vecRayStart.z + mouseparams.vecRayStart.y,
+						0.0);
+				}
+				else
+				{
+					self.objMouseDragCameraData.vecClickStart = Vec3D( mouseparams.vecRayStart.x, mouseparams.vecRayStart.y, 0.0);
+				}
+               				
+                log("Click Coords: [" + mouseparams.vecRayIntersect.x + ", " + mouseparams.vecRayIntersect.y + ", " + mouseparams.vecRayIntersect.z + "]");
+			}
+			
+			function handleMouseLeftDoubleClick(mouseparams)
+			{
+				var objGO = mouseparams.objOver.objGO;
+				if (objGO == self.objMapData.objSelectedObject)
+				{
+					mlui.objUI.objRoot.toggleExpandedSelectionPanel();
+				}
+			}
+			
+            function handleMouseLeftDrag(mouseparams)
+            {
+
+                if(!self.objMouseDragCameraData.bDragging)
+                {
+                    var dist = Math.sqrt(Math.pow((self.objMouseDragCameraData.nPosX - mouseparams.nPosX), 2) + Math.pow((self.objMouseDragCameraData.nPosY - mouseparams.nPosY), 2));
+
+                    if(dist > self.fDragThreshold)
+                    {
+                        self.objMouseDragCameraData.bSelecting = false;
+                        self.objMouseDragCameraData.bDragging = true;
+                    }
+                }
+
+                if(self.objMouseDragCameraData.bDragging)
+                {
+                    var vecStart = self.objMouseDragCameraData.vecClickStart;
+                    var vecPoint = Vec3D(
+                        (-mouseparams.vecRayDir.x / mouseparams.vecRayDir.z) * mouseparams.vecRayStart.z + mouseparams.vecRayStart.x,
+                        (-mouseparams.vecRayDir.y / mouseparams.vecRayDir.z) * mouseparams.vecRayStart.z + mouseparams.vecRayStart.y,
+                        0.0);
+
+                    var vecChange = vecPoint.minus(vecStart);
+
+                    var vecNewLookAt = self.objMouseDragCameraData.vecCameraStart.minus(vecChange);
+
+                    self.objMapData.lookAt(vecNewLookAt)
+
+                    self.objMouseDragCameraData.vecCameraStart = self.objMapData.objCameraTransform.vecLookAt;
+                }
+            }
+				
+            function handleMouseLeftUp(mouseparams)
+			{
+					//if selecting, select
+					if (self.objMouseDragCameraData.bSelecting)
+					{
+						self.objMouseDragCameraData.bSelecting = false;
+	
+						var objGO = mouseparams.objOver.objGO;
+						if ((objGO != null) && (objGO != self.objMapData.objSelectedObject))
+						{
+							self.objMapData.dispatchOnGOSelected(objGO, mouseparams);
+						}
+	
+						else
+						{
+							log("objOver : " + mouseparams.objOver + "  objGO was NULL")
+						}
+					}
+	
+					//if dragging, stop dragging
+					if (self.objMouseDragCameraData.bDragging)
+					{
+						self.objMouseDragCameraData.bDragging = false;
+	
+						self.objMouseDragCameraData.vecCameraStart = Vec3D(0.0, 0.0, 0.0);
+						self.objMouseDragCameraData.vecClickStart = Vec3D(0.0, 0.0, 0.0);
+					}
+				}
+
+            function handleMouseRightDown(mouseparams)
+			{
+				mlui.ActSendEventToUIElement.execute({
+					"objElement": mlui.objUI.objRoot,
+					"objEvent": common_elements.EventDismissPopUpMenu.create()
+				});
+
+                var selectedGO = self.objMapData.objSelectedObject;
+                var targetGO = mouseparams.objOver.objGO;
+				
+                if (selectedGO != null)
+                {
+                    log("Selected GO:" + selectedGO.toString());
+                }
+
+                if (targetGO != null)
+                {
+					log("GO: " + targetGO.toString());
+                    // Lookup the selected object's behavior if right clicking on the selected object
+                    if (selectedGO == targetGO)
+                    {
+                        log("querying GO")
+                        self.objMapData.dispatchOnGOQueried(selectedGO, mouseparams)
+                    }
+                    // Lookup the targetting behavior if right clicking with an orderable object
+                    else if (selectedGO.instanceOf(gs_tbg.UnitGroup) && selectedGO.refController.resolve(self.objAvatar) == self.objNation)
+                    {
+                        log("responding to GO targetting")
+                        self.objMapData.dispatchOnGOTargetting(selectedGO, targetGO, mouseparams)
+							}
+                    // Lookup the target's behavior
+                    else
+                    {
+                        log("querying GO")
+                        self.objMapData.dispatchOnGOQueried(targetGO, mouseparams)
+                    }
+                }
+			}
+
+            function handleMouseRightUp(mouseparams)
+			{
+
+			}
+
+		]]></script>
+
+		<object type="UI3DMapCamera" name="objMapCamera">
+			<property name="objMapData" from="def.objMapData"/>
+		</object>
+
+        <!-- Camera Ref -->
+		<object type="mlui.CameraRefFromUICamera" name="objCameraRef">
+			<property name="objCamera" from="def.objMapCamera.objCamera"/>
+		</object>
+
+        <object type="MouseDragCameraData" name="objMouseDragCameraData">
+		</object>
+
+		<!-- Key Binds -->
+		<object type="mlui.KeyBindList" name="objKeyBindList" overrideBehavior="extend">
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">				
+				<property name="strName" from="locale.SID.UI.ZoomIn"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_ADD"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMapData.zoomCameraIn();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.ZoomIn"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_EQUALS"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMapData.zoomCameraIn();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.ZoomOut"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_SUBTRACT"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMapData.zoomCameraOut();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.ZoomOut"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_MINUS"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMapData.zoomCameraOut();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.TiltDown"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_HOME"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMapData.tiltCameraDown();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.TiltUp"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_END"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMapData.tiltCameraUp();
+					}
+				]]></script>
+			</object>
+            <object type="mlui.KeyBindMethod" name="objKeyBinds">
+                <property name="strName" from="locale.SID.UI.PanUp"/>
+                <property name="otEventType" value="mlui.EventKeyPressed"/>
+                <property name="eKey" value="KEY_CODE_ESCAPE"/>
+                <script type="application/javascript">
+                    <![CDATA[
+					function notifyTriggered(owner)
+					{
+						mlui.objUI.objRoot.objMH2Data.openMainMenu();
+					}
+				]]>
+                </script>
+            </object>
+            <!--<object type="mlui.KeyBindMethod" name="objKeyBinds">-->
+			<!--	<property name="strName" from="locale.SID.UI.TradeandFinances"/>-->
+			<!--	<property name="otEventType" value="mlui.EventKeyPressed"/>-->
+			<!--	<property name="eMetaKeys" value="META_KEY_SHIFT"/>-->
+			<!--	<property name="eKey" value="KEY_CODE_PERIOD"/>-->
+			<!--	<script type="application/javascript"><![CDATA[-->
+			<!--		function notifyTriggered(owner)-->
+			<!--		{-->
+			<!--			def.objMapData.bMoveObjectsMode = !def.objMapData.bMoveObjectsMode-->
+			<!--		}-->
+			<!--	]]></script>-->
+			<!--</object>-->
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanUp"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_UP"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if(def.objMapData.bMoveObjectsMode == true)
+						{
+							def.objMapData.objSelectedObject.vecPosition = Vec3D(def.objMapData.objSelectedObject.vecPosition.x, def.objMapData.objSelectedObject.vecPosition.y + .01, def.objMapData.objSelectedObject.vecPosition.z)
+							log(def.objMapData.objSelectedObject.vecPosition)
+						}
+						else
+						{
+							def.objMapData.panCameraUp();
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanUp"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_W"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMapData.panCameraUp();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanDown"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_DOWN"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if(def.objMapData.bMoveObjectsMode == true)
+						{
+							def.objMapData.objSelectedObject.vecPosition = Vec3D(def.objMapData.objSelectedObject.vecPosition.x, def.objMapData.objSelectedObject.vecPosition.y - .01, def.objMapData.objSelectedObject.vecPosition.z)
+							log(def.objMapData.objSelectedObject.vecPosition)
+						}
+						else
+						{
+							def.objMapData.panCameraDown();
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanDown"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_S"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMapData.panCameraDown();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanLeft"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_LEFT"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if(def.objMapData.bMoveObjectsMode == true)
+						{
+							def.objMapData.objSelectedObject.vecPosition = Vec3D(def.objMapData.objSelectedObject.vecPosition.x - .01, def.objMapData.objSelectedObject.vecPosition.y, def.objMapData.objSelectedObject.vecPosition.z)
+							log(def.objMapData.objSelectedObject.vecPosition)
+						}
+						else
+						{
+							def.objMapData.panCameraLeft();
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanLeft"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eMetaKeys" value="META_KEY_SHIFT"/>
+				<property name="eKey" value="KEY_CODE_LEFT"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if(def.objMapData.bMoveObjectsMode == true)
+						{
+							def.objMapData.objSelectedObject.nRotation = def.objMapData.objSelectedObject.nRotation + 1
+							log(def.objMapData.objSelectedObject.nRotation)
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanLeft"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_A"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMapData.panCameraLeft();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanRight"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_RIGHT"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if(def.objMapData.bMoveObjectsMode == true)
+						{
+							def.objMapData.objSelectedObject.vecPosition = Vec3D(def.objMapData.objSelectedObject.vecPosition.x + .01, def.objMapData.objSelectedObject.vecPosition.y, def.objMapData.objSelectedObject.vecPosition.z)
+							log(def.objMapData.objSelectedObject.vecPosition)
+						}
+						else
+						{
+							def.objMapData.panCameraRight();
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanLeft"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eMetaKeys" value="META_KEY_SHIFT"/>
+				<property name="eKey" value="KEY_CODE_RIGHT"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if(def.objMapData.bMoveObjectsMode == true)
+						{
+							def.objMapData.objSelectedObject.nRotation = def.objMapData.objSelectedObject.nRotation - 1
+							log(def.objMapData.objSelectedObject.nRotation)
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanRight"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_D"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMapData.panCameraRight();
+					}
+				]]></script>
+			</object>
+
+		</object>
+
+		<!-- Event Handlers -->
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap" overrideBehavior="extend">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventMouseWheelUp"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if(event.objParams.eMetaKeys.length > 0)
+						{
+							for(var i=0; i < event.objParams.eMetaKeys.length; i++)
+							{
+								if(event.objParams.eMetaKeys[i].equals(mlui.MetaKey.META_KEY_CTRL))
+								{								
+									def.objMapData.tiltCameraUp();
+									return;
+								}
+							}
+						}							
+						def.objMapData.zoomCameraIn();
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventMouseWheelDown"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if(event.objParams.eMetaKeys.length > 0)
+						{
+							for(var i=0; i < event.objParams.eMetaKeys.length; i++)
+							{
+								if(event.objParams.eMetaKeys[i].equals(mlui.MetaKey.META_KEY_CTRL))
+								{								
+									def.objMapData.tiltCameraDown();
+									return;
+								}
+							}
+						}	
+						def.objMapData.zoomCameraOut();
+					}
+				]]></script>
+			</object>
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonDown" />
+				<property name="strName" value="Handle Left Mouse Button Down" />
+
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+                        {
+                            def.handleMouseLeftDown(event.objParams);
+                        }
+					}
+				]]></script>
+			</object>
+			 <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonDown" />
+				<property name="strName" value="Handle Middle Mouse Button Down" />
+
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_MIDDLE))
+                        {
+                            def.handleMouseMiddleDown(event.objParams);
+                        }
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonDblClick" />
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+						{
+							def.handleMouseLeftDoubleClick(event.objParams);
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonDblClick" />
+				<property name="strName" value="Handle Left Mouse Button Down" />
+
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+                        {
+                            def.handleMouseLeftDown(event.objParams);
+                        }
+					}
+				]]></script>
+			</object>
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonUp" />
+				<property name="strName" value="Handle Left Mouse Button Up" />
+
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+                        {
+                            def.handleMouseLeftUp(event.objParams);
+                        }
+					}
+				]]></script>
+			</object>
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseMoved" />
+				<property name="strName" value="Handle Left Mouse Button Drag" />
+
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eMouseButtonsDown.contains(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+                        {
+                            def.handleMouseLeftDrag(event.objParams);
+                        }
+						if (event.eMouseButtonsDown.contains(mlui.MouseButton.MOUSE_BUTTON_MIDDLE))
+                        {
+                            def.handleMouseMiddleDrag(event.objParams);
+                        }
+					}
+				]]></script>
+			</object>
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonDown" />
+				<property name="strName" value="Handle Right Mouse Button Down" />
+
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_RIGHT))
+                        {
+                            def.handleMouseRightDown(event.objParams);
+                        }
+					}
+				]]></script>
+			</object>
+        </object>
+        
+		<!-- Model Layer -->
+		<object type="UI3DLayerModel" name="objModelLayer">
+			<property name="nDepth" value="100"/> <!-- Make sure this is always rendered last -->
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="true"/>
+			<property name="objGameRoot" from="def.objAvatar"/>
+			<property name="objMapData" from="def.objMapData"/>
+		</object>
+		<object type="UI3DLayerWorldEdge" name="objWorldEdgeLayer" existsWhile="!gs_tbg.getGameSysTurnBasedGame(def.objAvatar).objTurnBasedGame.InDemoMode()">
+       		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN"/>	
+			<property name="nDepth" value="110"/> <!-- This actually rendered even more last -->
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="true"/>
+			<property name="objGameRoot" from="def.objAvatar"/>
+			<property name="objMapData" from="def.objMapData"/>
+		</object>        
+        
+		<object type="UI3DLayerTerrain" name="objTerrain">
+			<property name="objAvatar" from="def.objAvatar"/>
+			<property name="objMapData" from="def.objMapData"/>
+            <!--<property name="objFlatMapSampler" from="def.objFlatMapSampler"/>-->
+		    <property name="nMapUIWidth" from="def.nWidth"/>
+		    <property name="nMapUIHeight" from="def.nHeight"/>
+            <property name="bShadows" from="def.bShadows"/>
+            <property name="bCompressedTerrainTextures" from="def.bCompressedTerrainTextures"/>
+
+            <!-- layer properties -->
+			<property name="nDepth" value="0"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="true"/>
+		</object>
+        
+		<!--<object type="UI3DLayerOcean" name="objOcean" existsWhile="!gs_tbg.getGameSysMap(def.objAvatar).bFlat">-->
+		<!--	<property name="objMap" from="gs_tbg.getGameSysMap(def.objAvatar)"/>-->
+        <!--    <property name="objFlatMapSampler" from="def.objFlatMapSampler"/>-->
+		<!--	<property name="nDepth" value="4"/>-->
+		<!--	<property name="bClearColorBuffer" value="false"/>-->
+		<!--	<property name="bClearDepthBuffer" value="false"/>-->
+		<!--	<property name="bUseDepthBuffer" value="true"/>-->
+        <!--    <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN" />-->
+		<!--</object>-->
+                
+        <object type="UI3DLayerRegion" name="objRegions">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+			<property name="objMapData" from="def.objMapData"/>
+            
+            <!-- layer properties -->
+            <property name="nDepth" value="1"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT" />            
+        </object>               
+
+        <object type="UI3DLayerRegionVisibility" name="objRegionVisibility">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+			<property name="objMapData" from="def.objMapData"/>
+            <!-- layer properties -->
+            <property name="nDepth" value="2"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN" />            
+        </object>
+
+        <object type="UI3DLayerRegionSelection" name="objRegionSelection">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+			<property name="objMapData" from="def.objMapData"/>
+            <!-- layer properties -->
+            <property name="nDepth" value="3"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN" />            
+        </object>
+        
+        <!--<object type="UI3DLayerRoads" name="objRoads">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+			<property name="objMapData" from="def.objMapData"/>
+            <property name="nDepth" value="4"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN" />            
+        </object>-->
+        
+                
+        <object type="UI3DLayerControlBorder" name="objControlBorder">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+            <property name="nDepth" value="4"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN" />            
+        </object>       
+        
+        <!-- Don't need to draw rivers, except for the tooltips -->
+        <object type="UI3DLayerRivers" name="objRivers">
+            <property name="objGameRoot" from="def.objAvatar"/>
+			<property name="objMapData" from="def.objMapData"/>
+            <property name="nDepth" value="5"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT" />
+        </object>       
+
+        <!-- Don't need to draw lakes except to overwrite region colors -->
+        <!--
+        <object type="UI3DLayerLakes" name="objLakes">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+			<property name="objMapData" from="def.objMapData"/>
+            <property name="nDepth" value="5"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN" />            
+        </object>
+        -->
+        
+        <object type="UI3DLayerInterdiction" name="objInterdiction">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+			<property name="objMapData" from="def.objMapData"/>
+            <property name="nDepth" value="6"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT" />            
+        </object>
+        
+        <object type="UI3DLayerTrade" name="objTrade">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+			<property name="objMapData" from="def.objMapData"/>
+            <property name="nDepth" value="6"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT" />            
+        </object>
+        
+        <object type="UI3DLayerMoveArrows" name="objMoveArrows">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+			<property name="objMapData" from="def.objMapData"/>
+            <property name="nDepth" value="7"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN" />            
+        </object>       
+
+        <object type="UI3DLayerEngagements" name="objEngagements">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+			<property name="objMapData" from="def.objMapData"/>
+            <property name="nDepth" value="9"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT" />            
+        </object>
+        
+        <object type="UI3DLayerDecal" name="objDecals">
+            <property name="objGameRoot" from="def.objAvatar"/>        
+			<property name="objMapData" from="def.objMapData"/>
+            <property name="nDepth" value="11"/>
+			<property name="bClearColorBuffer" value="false"/>
+			<property name="bClearDepthBuffer" value="false"/>
+			<property name="bUseDepthBuffer" value="false"/>
+            <property name="bShadows" from="def.bShadows"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT" />            
+        </object>
+		
+    </objectDef>
+
+	
+	<objectDef type="EdgeScrollBox" superType="mlui.UI2DElement">
+		<propertyDef name="vecDirection" type="Vec3D" default="[0, 0, 0]"/>
+		<propertyDef name="nDepth" value="1000000000" />
+				
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventMouseFocusGained"/>
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+						mlui.objUI.objRoot.objMH2Data.objMapData.bIsEdgeScrolling = true;
+						mlui.objUI.objRoot.objMH2Data.objMapData.vecEdgeScrollingDir = def.vecDirection;
+						mlui.objUI.objRoot.objMH2Data.objMapData.fEdgeScrollingStartTime = mlui.objUI.fTime;
+					}
+                ]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventMouseFocusLost"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						mlui.objUI.objRoot.objMH2Data.objMapData.lookAt(Vec3D(mlui.objUI.objRoot.objMH2Data.objMapData.vecCurLookAt.x + mlui.objUI.objRoot.objMH2Data.objMapData.vecCurLookAtOffset.x,
+																			  mlui.objUI.objRoot.objMH2Data.objMapData.vecCurLookAt.y + mlui.objUI.objRoot.objMH2Data.objMapData.vecCurLookAtOffset.y,
+																			  0));
+						mlui.objUI.objRoot.objMH2Data.objMapData.bIsEdgeScrolling = false;
+					}
+				]]></script>
+			</object>
+		</object>
+	</objectDef>
+	
+</locust>

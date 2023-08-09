@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="UITestMode" superType="mlui.UIElement">
+		<propertyDef name="objTurnBasedGame" type="gs_tbg.TurnBasedGame" from="gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame"/>
+        <propertyDef name="nWaitUntil" type="int" value="30"/>
+        <propertyDef name="nTimeElapsed" type="int" from="self.objTurnBasedGame.nTimeElapsed"/>
+		<propertyDef name="nSaveID" type="int"/>
+        <propertyDef name="bSavingGame" type="bool" default="false"/>
+        <propertyDef name="bReadyToQuit" type="bool" default="false"/>
+        <propertyDef name="nTurnCount" type="int" default="1"/>
+
+        <script type="application/javascript"><![CDATA[
+        
+            function notifyAddedToUI()
+            {
+                testStartupComplete();
+                mh2data.closeNationInfo();
+                testCollectStats("Start");
+                self.endTurn();
+            }
+            
+            function endTurn()
+            {
+                var action = gs_tbg.GActEndTurn.create({"objAvatar": mh2data.objAvatar});
+                mh2data.objAvatar.sendAction(action);
+            }
+            
+        ]]></script>
+        
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                <property name="otEventType" value="mh2_common.EventTurnStarted"/>
+                <property name="bBroadcast" value="true"/>
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+                        testCollectStats("Start of turn " + event.nTurn);
+                        
+                        var lastTurn = event.nTurn + 1; // past our current turn by default
+                        var vc = gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).objVictoryConditions.find({"strName": "TurnLimit"});
+                        if (vc != null)
+                        {
+                            lastTurn = vc.nTurns;
+                        }
+                        
+                        var bTimeToExit = (event.nTurn >= lastTurn);
+                        
+                        def.nTurnCount = (def.nTurnCount + 1);
+                        if ( def.nTurnCount >= def.objTurnBasedGame.nTestModeExitTurn )
+                        {
+                            bTimeToExit = true;
+                        }
+
+                        if(bTimeToExit == false)
+                        {
+                            def.endTurn();
+                        }
+                        else
+                        {
+                            if (def.objTurnBasedGame.strTestModeExitSaveName != "")
+                            {
+                                var bAITestMode = ( mlgame.client.objReplicatedServer.getAttribValue("AITestMode") == true );
+
+                                var bShouldSave = (event.nTurn < lastTurn);
+                                if (bAITestMode == false)
+                                {
+                                    // only save if we are on the first set of turns
+                                    if (event.nTurn > def.objTurnBasedGame.nTestModeExitTurn)
+                                    {
+                                        bShouldSave = false;
+                                    }
+                                }
+                                
+                                if (bShouldSave)
+                                {
+                                    var strSaveName = def.objTurnBasedGame.strTestModeExitSaveName + " Turn " + event.nTurn;
+                                
+                                    def.bSavingGame = true;
+                                    def.nSaveID = -1;
+                                    
+                                    mh2data.objAvatar.sendAction(mlgame.GActSaveGame.create({ strSaveName: strSaveName }));
+                                }
+                            }
+                            
+                            def.bReadyToQuit = true;
+                        }
+                    }
+                ]]></script>
+            </object>
+            
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="bBroadcast" value="true"/>
+				<property name="otEventType" value="mlgame.EventGameSaveStarted"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+                        if (def.nSaveID == -1)
+                        {
+						    def.nSaveID = event.nSaveID;
+                        }
+					}
+				]]></script>
+			</object>
+            
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="bBroadcast" value="true"/>
+				<property name="otEventType" value="mlgame.EventGameSaveFinished"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if(def.nSaveID != event.nSaveID)
+							return;
+                            
+						log("SaveResult: " + event.eResult.name);
+                        def.bSavingGame = false;
+					}
+				]]></script>
+			</object>
+            
+        </object>
+        
+        <object type="mlui.UIElement" name="objCreateOnTimeUp" existsWhile="self.bReadyToQuit AND self.nTimeElapsed GT self.nWaitUntil AND self.bSavingGame == false">
+            <script type="application/javascript"><![CDATA[
+                function notifyAddedToUI() {
+                    testQuit();
+                }
+            ]]></script>
+        </object>
+    </objectDef>
+</locust>

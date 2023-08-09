@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="PADTurnBasedGame" class="CMLOPADTurnBasedGame" superType="mlgame.PerSessionData" desc="Per-avatar data for turn based games">
+		<propertyDef name="bEndedTurn" type="bool"/>
+	</objectDef>
+
+</locust>

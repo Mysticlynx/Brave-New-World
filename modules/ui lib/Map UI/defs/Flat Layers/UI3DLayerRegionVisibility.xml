@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- Region -->
+	<objectDef type="UI3DLayerRegionVisibility" superType="mlui.UI3DLayer">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>    
+		<propertyDef name="objMapView" type="MapViewTemplate" from="self.objMapData.tmplMapView.resolve()"/>
+    
+		<object type="ml3dworld.TransformTranslate" name="objTransform">
+			<property name="vecTranslation">
+				Vec3D(0, 0, 0.27)
+			</property>
+		</object>        
+
+		<propertyDef name="objNationVisibilityList" type="gs_tbg.VisibilityList"/>
+		<property name="objNationVisibilityList" from="gs_tbg.getVisibilityList(self.objGameRoot,self.objMapData.objNation)"/>
+
+		<propertyDef name="objFoggedRegions" type="gs_tbg.MapRegion" variable="true">
+			filter(?{map_region: !self.objNationVisibilityList.getRegionIsUnfogged(map_region.refRegion.resolve(self.objGameRoot))}, gs_tbg.getAllMapRegions(self.objGameRoot))
+        </propertyDef>
+
+		<object type="UI3DRegionVisibility" name="objMapRegionModels" tiedTo="self.objFoggedRegions">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapRegion" from="tiedTo"/>
+			<property name="objMap" from="def.objMapData.objMap" />
+			<property name="bModelAlwaysChild" value="true"/>
+			<property name="vecPointOfInterest" from="def.objMapData.objCameraTransform.vecLookAt" />
+		</object>
+	</objectDef>
+
+	<objectDef type="UI3DRegionVisibility" superType="UI3DMapModelGO">
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapRegion" type="gs_tbg.MapRegion"/>
+
+        <!-- Internal -->
+		<propertyDef name="objRegion" type="gs_tbg.Region">
+            self.objMapRegion.refRegion.resolve(self.objGameRoot)
+        </propertyDef>
+
+        <!-- UI3DModelGO Properties -->
+        <property name="objGO" from="self.objRegion"/>
+		<property name="tmplModel" from="self.objMapRegion.tmplDisplayModel"/>
+
+        <!-- 3D Element Properties -->
+        <property name="strToolTip" from="self.objRegion.strDisplayName"/>
+		<object type="mlui.UIDataMaterial" name="objMaterial">
+            <object type="mlmedia.Material" name="objMaterial">
+                <property name="colEmission" value="#000000FF"/>
+                <property name="fTransparency" value="0.6"/>
+            </object>
+        </object>
+
+	</objectDef>
+
+</locust>

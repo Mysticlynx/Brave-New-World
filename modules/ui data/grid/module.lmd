@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="ui data"
+	name="grid"
+	version="1.0"
+	locustVersion="2.11"
+>
+	<import module="mlcore" default="true"/>
+	<import module="ml:lib:media:1.0" as="mlmedia"/>
+	<import module="ml:ui lib:Map UI:1.0" as="mapui"/>
+	<import module="ml:lib:3d_world:1.0" as="ml3dworld"/>
+	<import module="ml:mh2 data:shared:1.0" as="sd"/>
+	<import module="ml:ui data:shared:1.0" as="uidata"/>
+	<import module="ml:unit_model_mappings:shared:1.0" as="unit_model_mapping"/>
+	<import module="ml:game:Grid:1.0" as="grid"/>
+
+	<include>
+		nation/map models/Models.xml
+		nation/map models/ModelTables.xml
+	</include>
+</locustModule>

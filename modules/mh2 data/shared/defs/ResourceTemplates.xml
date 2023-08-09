@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Resource Templates -->
+    <template type="gs_tbg.ResourceTemplate" name="Metals">
+        <property name="strDisplayName" from="locale.SID.Resource.DisplayName.Metals"/>
+        <property name="nPrice" value="500000"/>
+        <property name="bTradable" value="true"/>
+    </template>
+    <template type="gs_tbg.ResourceTemplate" name="Coal">
+        <property name="strDisplayName" from="locale.SID.Resource.DisplayName.Coal"/>
+        <property name="nPrice" value="500000"/>
+        <property name="bTradable" value="true"/>
+    </template>
+    <template type="gs_tbg.ResourceTemplate" name="Oil">
+        <property name="strDisplayName" from="locale.SID.Resource.DisplayName.Oil"/>
+        <property name="nPrice" value="500000"/>
+        <property name="bTradable" value="true"/>
+    </template>
+    <template type="gs_tbg.ResourceTemplate" name="AtomicBombs">
+        <property name="strDisplayName" from="locale.SID.Resource.DisplayName.AtomicBombs"/>
+        <property name="nPrice" value="5000000"/>
+        <property name="bTradable" value="false"/>
+    </template>
+    <template type="gs_tbg.ResourceTemplate" name="Food">
+        <property name="strDisplayName" from="locale.SID.Resource.DisplayName.Food"/>
+        <property name="nPrice" value="200000"/>
+        <property name="bTradable" value="true"/>
+    </template>
+    <template type="gs_tbg.ResourceTemplate" name="Arms">
+        <property name="strDisplayName" from="locale.SID.Resource.DisplayName.Arms"/>
+        <property name="nPrice" value="3000000"/>
+        <property name="bTradable" value="true"/>
+    </template>
+
+    <template type="TemplateList" name="ResourceTemplateList">
+		<property name="otTemplateType" value="gs_tbg.ResourceTemplate"/>
+        <property name="tmplRefs" value="gs_tbg.ResourceTemplate::Metals"/>
+        <property name="tmplRefs" value="gs_tbg.ResourceTemplate::Coal"/>
+        <property name="tmplRefs" value="gs_tbg.ResourceTemplate::Oil"/>
+        <property name="tmplRefs" value="gs_tbg.ResourceTemplate::AtomicBombs"/>
+        <property name="tmplRefs" value="gs_tbg.ResourceTemplate::Food"/>
+        <property name="tmplRefs" value="gs_tbg.ResourceTemplate::Arms"/>
+    </template>
+</locust>

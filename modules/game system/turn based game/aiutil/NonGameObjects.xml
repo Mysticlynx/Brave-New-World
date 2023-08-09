@@ -1,0 +1,931 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="AIInternationalPositionTemplate" superType="Template" class="CMLOAIInternationalPositionTemplate" templateBase="true">
+        <propertyDef name="fExpansionist" type="float" desc="Tendency to expand (0-1)"/>       
+    </objectDef>
+
+    <objectDef type="AIPersonalityTemplate" superType="Template" class="CMLOAIPersonalityTemplate" templateBase="true">
+        <propertyDef name="strStyleOfSpeach" type="String"/>
+        <propertyDef name="objInitialAITradePolicyTemplate" type="AITradePolicyTemplate"/>	        
+        <propertyDef name="objInitialAIRulingPhilosophyTemplate" type="AIRulingPhilosophyTemplate"/>
+        <propertyDef name="objInitialAITrustTemplate" type="AITrustTemplate"/>
+        <propertyDef name="objInitialAIInternationalismTemplate" type="AIInternationalismTemplate"/>
+        <propertyDef name="objInitialAIImperialismTemplate" type="AIImperialismTemplate"/>
+    </objectDef>
+
+    <!-- AIDiplomaticRelationsTemplate determines default tone and other factors 
+         that depend on the diplomatic levels between nations -->
+    <objectDef type="AIDiplomaticRelationsTemplate" superType="Template" class="CMLOAIDiplomaticRelationsTemplate" templateBase="true">
+        <propertyDef name="bAllowAnyTrade" type="bool" desc="Allow any trade agreements?"/>		
+        <propertyDef name="bAllowArmsTrade" type="bool" desc="Allow any arms trade?"/>
+        <propertyDef name="bAllowAlliance" type="bool" desc="Allow alliance?"/>
+        <propertyDef name="bAllowUnprovokedAttack" type="bool"/>
+		<propertyDef name="nUnprovokedAttackWeightNeeded" type="int"/>
+        <propertyDef name="eDefaultTone" type="Enum" restriction="Tone" desc="Default tone to use"/>
+        <propertyDef name="fBaseThreatRating" type="float" desc="Base threat rating"/>
+    </objectDef>
+
+    <objectDef type="AITradePolicyTemplate" superType="Template" templateBase="true">
+        <propertyDef name="fBuyForeignWillingness" type="float" desc="Willingness (0-1) to accept a deal to buy from a foreign nation" />
+        <propertyDef name="fDominateDomesticMarket" type="float" desc="Desire (0-1) to dominate domestic market" />
+        <propertyDef name="fBuyOnWorldMarketPreference" type="float" desc="Preference (0-1) to buy on world market instead of direct trade" />
+        <propertyDef name="fSellOnWorldMarketPreference" type="float" desc="Preference (0-1) to sell on world market instead of direct trade" />
+    </objectDef>
+    
+    <objectDef type="AIRulingPhilosophyTemplate" superType="Template" class="CMLOAIRulingPhilosophyTemplate" templateBase="true">
+        <propertyDef name="fMilitaryStrengthMultiplier" type="float" default="1.0" desc="How strong a military does it want vs. standard."/>
+        <propertyDef name="fMilitaryProductionFraction" type="float" default="0.5" desc="What fraction of production is assigned to military."/>
+    </objectDef>
+
+    <objectDef type="AITrustTemplate" superType="Template" templateBase="true">
+        <propertyDef name="fLoyalty" type="float" desc="How loyal is it to alliances (0-1)"/>
+        <propertyDef name="fOpportunistic" type="float" desc="Tendency to attack a weakly defended region for it's resources (0-1)"/>
+    </objectDef>
+
+    <objectDef type="AIInternationalismTemplate" superType="Template" templateBase="true">
+        <propertyDef name="fDiplomacy" type="float" desc="(0-1) Tendency to use diplomacy to achieve aims"/>
+        <propertyDef name="fSpying" type="float" desc="(0-1) Tendency to spy to achieve aims"/>
+        <propertyDef name="fInstigateCoup" type="float" desc="(0-1) Tendency to instigate coups to achieve aims"/>
+        <propertyDef name="fAid" type="float" desc="(0-1) Tendency to give aid to achieve aims"/>
+        <propertyDef name="fWar" type="float" desc="(0-1) Tendency to go to war to achieve aims"/>
+        <propertyDef name="fAlly" type="float" desc="(0-1) Tendency to join or form alliances to achieve aims"/>
+    </objectDef>
+
+    <objectDef type="AIImperialismTemplate" superType="Template" templateBase="true">
+        <propertyDef name="fAnnex" type="float" desc="Tendency to annex (0-1)"/>       
+        <propertyDef name="fColonize" type="float" desc="Tendency to colonize (0-1)"/>       
+        <propertyDef name="fLiberate" type="float" desc="Tendency to liberate (0-1)"/>       
+        <propertyDef name="fPuppet" type="float" desc="Tendency to create puppet nations (0-1)"/>       
+    </objectDef>
+    
+    
+    <!-- IPU increasing buildings (factories) -->    
+    <objectDef type="AIFactoryOutputSequenceItem" class="CMLOAIFactoryOutputSequenceItem">
+        <propertyDef name="objFactoryOutputTemplate" type="FactoryOutputTemplate"/>       
+        <propertyDef name="nRecommendedIPUs" type="int"/>       
+    </objectDef>
+    
+    <objectDef type="AICityDevelopmentSequenceItem" class="CMLOAICityDevelopmentSequenceItem">
+        <propertyDef name="objFactoryOutputTemplate" type="FactoryOutputTemplate"/>
+        <propertyDef name="nPhaseStartIPUs" type="int"/>
+        <propertyDef name="nPhaseStartRank" type="int"/>
+        <propertyDef name="nPhaseEndRank" type="int"/>
+        <propertyDef name="nCityPercent" type="int" default="-1"/>
+        <propertyDef name="nPortPercent" type="int" default="-1"/>
+        <propertyDef name="bAllowArmyPrereqs" type="bool" default="false"/>
+        <propertyDef name="bAllowNavyPrereqs" type="bool" default="false"/>
+        <propertyDef name="bAllowAirForcePrereqs" type="bool" default="false"/>
+        <propertyDef name="bAllowSubmarinePrereqs" type="bool" default="false"/>
+        <propertyDef name="bAllowResearchBuildings" type="bool" default="false"/>
+    </objectDef>
+   
+	<objectDef type="AICityDevelopmentTemplate" superType="Template" class ="CMLOAICityDevelopmentTemplate" templateBase="true">
+	    <propertyDef name="objCityDevelopmentSequence" type="AICityDevelopmentSequenceItem" variable="true" storesChildren="true" desc="build these in this order"/>
+    </objectDef>
+    
+	<objectDef type="AIEconomicStrategyTemplate" superType="Template" class ="CMLOAIEconomicStrategyTemplate" templateBase="true">
+	    <propertyDef name="objCityDevelopmentTemplates" type="AICityDevelopmentTemplate" variable="true" storesChildren="true" desc="list of city production templates for the AI to assign to its cities"/>
+	    <propertyDef name="objFactoryProductionSequence" type="AIFactoryOutputSequenceItem" variable="true" storesChildren="true" desc="build these to increase IPUs"/>
+        <propertyDef name="nUndevelopedCityProductionTurnsLimit" type="int" default="20"/>
+        <propertyDef name="nDevelopingCityProductionTurnsLimit" type="int" default="20"/>
+        <propertyDef name="nNonColonyPreference" type="int" default="20"/>
+        <propertyDef name="nMinBuildupTurns" type="int" default="10"/>
+        <propertyDef name="nMaxBuildupTurns" type="int" default="50"/>
+        <propertyDef name="nMinNonBuildupTurns" type="int" default="10"/>
+	</objectDef>
+    
+    <objectDef type="AICityDevelopmentTemplateSetting" class="CMLOAICityDevelopmentTemplateSetting">
+        <propertyDef name="refCity" type="GORef" restriction="City"/>
+        <propertyDef name="objAICityDevelopmentTemplate" type="AICityDevelopmentTemplate"/>
+    </objectDef>
+    
+    <objectDef type="AICombatStrength" class="CMLOAICombatStrength">
+        <propertyDef name="eCombatProperties" type="Enum" restriction="CombatProperty" variable="true"/>       
+        <propertyDef name="objCombatStrengths" type="CombatModifier" variable="true" storesChildren="true"/>
+        <propertyDef name="nExtraCarryingCapacityNeeded" type="int" default="0"/>
+        
+        <!-- builtin method signatures
+            setCombatStrength(eCombatProperty,nStrength)
+	        int getCombatStrength(eCombatProperty)
+            bool isStrengthSpecified()
+        -->
+    </objectDef>   
+
+	<objectDef type="AIUnitRegionRequirements" class="CMLOAIUnitRegionRequirements" desc="Forces an AI plan calls for of a particular type in a particular region">		   
+		<propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="strComposition" type="String"/>		
+        <propertyDef name="strPreferredComposition" type="String"/>		
+        <propertyDef name="objCombatStrengthNeeded" type="AICombatStrength" storesChildren="true"/>       
+        <propertyDef name="objCombatStrengthAllocated" type="AICombatStrength" storesChildren="true"/>       
+        <propertyDef name="nTurnsUntilNeeded" type="int" default="1" desc="how many turns we can wait"/>
+        <propertyDef name="nLastUpdateTurn" type="int" desc="when values were last set"/>
+        <propertyDef name="fKeepPriority" type="float" default="1.0" desc="Priority (0 to 1) for keeping assigned unit groups"/>
+        <propertyDef name="fAddPriority" type="float" default="1.0" desc="Priority (0 to 1) for adding more units"/>
+        <propertyDef name="nAllocatedETA" type="int" desc="worst ETA of assigned groups"/>      
+		<propertyDef name="bAllocatedPreferredComposition" type="bool" default="false"/>
+        <propertyDef name="bAvoidEngagements" type="bool" default="true" desc="pathfinding option"/>      
+        <propertyDef name="bAvoidEnemyRegions" type="bool" default="false" desc="pathfinding option"/>      
+        
+        <!-- builtin method signatures
+            setCombatStrengthNeeded(avatar,plan,strength)
+            int getPercentStrengthAllocated()
+        -->
+	</objectDef>
+	
+	<objectDef type="AIUnitGroupCompositionElementTemplate" superType="Template" class="CMLOAIUnitGroupCompositionElementTemplate"  templateBase="true" desc="list of unit categories">
+        <propertyDef name="eUnitCategories" type="Enum" restriction="UnitCategory" variable="true" desc="possible categories (from the same branch)"/>
+	</objectDef>
+	
+	<objectDef type="AIUnitGroupCompositionElement" class="CMLOAIUnitGroupCompositionElement" desc="one element of a unit group composition">
+	    <propertyDef name="objElementTemplate" type="AIUnitGroupCompositionElementTemplate"/>
+	    <propertyDef name="objElementWhichCarriesTemplate" type="AIUnitGroupCompositionElementTemplate"/>
+        <propertyDef name="otRequiredUnitCaps" type="ObjectType" variable="true"/>    
+        <propertyDef name="eCombatStrengths" type="Enum" restriction="CombatProperty" variable="true" desc="override of CombatProperties to be counted for this element"/>-->
+        <propertyDef name="nMinPercent" type="int" default="0" desc="min percent this element should contribute to composition power"/>
+        <propertyDef name="nDesiredPercent" type="int" default="100" desc="desired percent we want this element to contribute to composition power"/>
+        <propertyDef name="nMaxPercent" type="int" default="100" desc="max percent this element should contribute to composition power"/>
+        <propertyDef name="bCarriesOtherElements" type="bool" default="false"/>
+        <propertyDef name="bCountTowardsCompositionPower" type="bool" default="true"/>
+	</objectDef>
+
+	<objectDef type="AIUnitGroupComposition" class="CMLOAIUnitGroupComposition" desc="a composition for a unit group">
+		<propertyDef name="strName" type="String"/>
+        <propertyDef name="nRating" type="int" default="1"/>
+        <propertyDef name="objElements" type="AIUnitGroupCompositionElement" variable="true" storesChildren="true"/>
+	</objectDef>
+	
+	<objectDef type="AIUnitGroupCompositionTemplate" superType="Template" class="CMLOAIUnitGroupCompositionTemplate"  templateBase="true" desc="a set of unit group compositions">
+        <propertyDef name="objCompositions" type="AIUnitGroupComposition" variable="true" storesChildren="true"/>
+	</objectDef>
+	
+	<objectDef type="DefenderCompositionItem" class="CMLODefenderCompositionItem" desc="An item in a DefenderCompositionsTemplate">
+		<propertyDef name="strName" type="String" desc="Name of the preferred composition"/>
+        <propertyDef name="nIPUs" type="int" desc="Size of city this composition is recommended for"/>
+	</objectDef>
+
+	<objectDef type="DefenderCompositionsTemplate" superType="Template" class="CMLODefenderCompositionsTemplate"  templateBase="true" desc="A set of compositions for defense plans">
+        <propertyDef name="objDefenderCompositions" type="DefenderCompositionItem" variable="true" storesChildren="true"/>
+	</objectDef>
+
+	
+	<objectDef type="DifficultyItem" class="CMLODifficultyItem">
+        <propertyDef name="nLevel" type="int"/>
+        <propertyDef name="nCityBuildingIPUPercent" type="int" default="100"/>
+        <propertyDef name="nResearchBuildingIPUPercent" type="int" default="100"/>
+        <propertyDef name="nUnitIPUPercent" type="int" default="100"/>
+        <propertyDef name="nOtherIPUPercent" type="int" default="100"/>
+        <propertyDef name="nRegionProjectTurnPercent" type="int" default="100"/>
+        <propertyDef name="nCityIPUModifier" type="int" default="0"/>
+	</objectDef>
+	
+	<objectDef type="DifficultyTemplate" superType="Template" class="CMLODifficultyTemplate"  templateBase="true">
+        <propertyDef name="objItems" type="DifficultyItem" variable="true" storesChildren="true"/>
+	</objectDef>
+    
+    <!-- DEPRECATED -->
+   	<objectDef type="AIMilitaryPlanHistory" class="CMLOAIMilitaryPlanHistory" desc="History of plan status changes with reasons">
+        <propertyDef name="nTurn" type="int" desc="turn"/>        
+        <propertyDef name="eStatus" type="Enum" restriction="MilitaryPlanStatus"/>
+        <propertyDef name="strReason" type="String"/>
+	</objectDef>
+    
+	<objectDef type="AIProdSimResourceWeight" class="CMLOAIProdSimResourceWeight">
+	    <propertyDef name="objResourceTemplate" type="ResourceTemplate"/>
+	    <propertyDef name="nDesiredAmount" type="int" default="0"/>
+	    <propertyDef name="fWeight" type="float" default="1.0"/>
+	    <propertyDef name="fNegativeRange" type="float" default="0.1"/>
+	    <propertyDef name="fNormalRange" type="float" default="0.8"/>
+	    <propertyDef name="fExcessRange" type="float" default="0.1"/>
+	</objectDef>
+	
+	<objectDef type="AIProdSimResearchFactoryNeedWeight" class ="CMLOAIProdSimResearchFactoryNeedWeight" desc="research factory output weights for production simulator">
+	    <propertyDef name="objFactoryOutputTemplate" type="FactoryOutputTemplate"/>
+	    <propertyDef name="nDesiredCities" type="int" default="1"/>
+	    <propertyDef name="fWeight" type="float" default="1.0"/>
+	</objectDef>
+
+	<objectDef type="AIProdSimResearchRegionNeedWeight" class ="CMLOAIProdSimResearchRegionNeedWeight" desc="research region output weights for production simulator">
+	    <propertyDef name="objRegionOutputTemplate" type="RegionOutputTemplate"/>
+	    <propertyDef name="fWeight" type="float" default="1.0"/>
+	</objectDef>
+
+	<objectDef type="AIProdSimMilitaryFactoryNeedWeight" class ="CMLOAIProdSimMilitaryFactoryNeedWeight" desc="Military Factory project needs weights for production simulator">
+	    <propertyDef name="objFactoryOutputTemplate" type="FactoryOutputTemplate"/>
+	    <propertyDef name="objCity" type="City"/>
+	    <propertyDef name="fWeight" type="float" default="1.0"/>
+	</objectDef>
+
+	<objectDef type="AIProdSimMilitaryRegionNeedWeight" class ="CMLOAIProdSimMilitaryRegionNeedWeight" desc="Military region project needs weights for production simulator">
+	    <propertyDef name="objRegionOutputTemplate" type="RegionOutputTemplate"/>
+	    <propertyDef name="nDesiredRegions" type="int" default="1"/>
+	    <propertyDef name="objRegions" type="Region" variable="true"/>
+	    <propertyDef name="fWeight" type="float" default="1.0"/>
+	</objectDef>
+
+	<objectDef type="AIProductionSimulatorRatingWeights" class ="CMLOAIProductionSimulatorRatingWeights" desc="weights used to calculate production value for production simulator">
+	    <propertyDef name="objResourceWeights" type="AIProdSimResourceWeight" storesChildren="true" variable="true"/>
+	    <propertyDef name="objResearchFactoryNeedWeights" type="AIProdSimResearchFactoryNeedWeight" storesChildren="true" variable="true"/>
+	    <propertyDef name="objResearchRegionNeedWeights" type="AIProdSimResearchRegionNeedWeight" storesChildren="true" variable="true"/>
+	    <propertyDef name="objMilitaryFactoryNeedWeights" type="AIProdSimMilitaryFactoryNeedWeight" storesChildren="true" variable="true"/>
+	    <propertyDef name="objMilitaryRegionNeedWeights" type="AIProdSimMilitaryRegionNeedWeight" storesChildren="true" variable="true"/>
+	    <propertyDef name="fResourceOverallWeight" type="float" default="0.5"/>  
+        <propertyDef name="fUnitGroupCompositionOverallWeight" type="float" default="0.25"/>
+	    <propertyDef name="fResearchNeedsOverallWeight" type="float" default="0.25"/>
+	    <propertyDef name="fMilitaryRegionNeedsOverallWeight" type="float" default="0.25"/>
+	    <propertyDef name="fCityIPUNormalRange" type="float" default="0.999"/>
+	    <propertyDef name="fCityIPUExcessRange" type="float" default="0.001"/>
+	    <propertyDef name="nDesiredCityIPU" type="int" default="5"/>
+	    <propertyDef name="nMaxCityIPU" type="int" default="100"/>
+	    <propertyDef name="fCityIPUWeight" type="float" default="0.0025"/>
+	    <propertyDef name="fCityRPUNormalRange" type="float" default="0.98"/>
+	    <propertyDef name="fCityRPUExcessRange" type="float" default="0.02"/>
+	    <propertyDef name="nDesiredCityRPU" type="int" default="0"/>
+	    <propertyDef name="nMaxCityRPU" type="int" default="10"/>
+	    <propertyDef name="fCityRPUWeight" type="float" default="0.00025"/>
+	    <propertyDef name="fCityDevelopmentWeight" type="float" default="0.2"/>
+		<propertyDef name="n64DesiredMoney" type="int64" default="100000000000"/><!-- max we want -->
+	    <propertyDef name="fMoneyNegativeRange" type="float" default="0.1"/>
+	    <propertyDef name="fMoneyNormalRange" type="float" default="0.8"/>
+	    <propertyDef name="fMoneyExcessRange" type="float" default="0.1"/>
+	    <propertyDef name="fMoneyWeight" type="float" default="0.1"/>
+
+	</objectDef>
+
+    <!-- ProdSimOutputChoice enum values:
+            OUTPUT_CHOICE_ALWAYS
+            OUTPUT_CHOICE_NEVER
+            OUTPUT_CHOICE_SOMETIMES
+    -->
+	<objectDef type="AIProductionSimulatorExclusions" class ="CMLOAIProductionSimulatorExclusions" desc="specifies which outputs the AI wants to exclude in production simulator">
+        <!-- builtin method signatures:
+        
+            // eChoice is a ProdSimOutputChoice enum value
+	        setCityOutputChoice(pObjFactoryOutputTemplate,eChoice) 
+            setCityOutputChoiceCity(pObjFactoryOutputTemplate,city,bEnable)
+	        setRegionOutputChoice(pObjRegionOutputTemplate,eChoice)
+            setRegionOutputChoiceRegion(pObjRegionOutputTemplate,region,bEnable)
+            eChoice getChoice(avatar,template) // template can be factory output, city output, or something they produce.  
+        -->
+	</objectDef>
+    
+    <objectDef type="NationPerimeter" class="CMLONationPerimeter" desc="inner and outer perimeter regions of a nation">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="objPerimeterRegions" type="Region" variable="true" />
+        <propertyDef name="objInsidePerimeterRegions" type="Region" variable="true" />
+        <propertyDef name="objOutsidePerimeterRegions" type="Region" variable="true" />
+    </objectDef>
+    
+    <objectDef type="AITriggerAction" class="CMLObject" desc="Base class for trigger actions">
+        <!-- expected methods:
+            fireAction(game,ai)
+        -->
+    </objectDef>
+    
+    <!-- trigger actions for AINationTrigger -->    
+    <objectDef type="AITriggerActionNationTrigger" superType="AITriggerAction" desc="action for AINationTrigger">
+        <propertyDef name="objNationTrigger" type="AINationTrigger" desc="trigger which caused this action"/>
+        <propertyDef name="objOffendingNation" type="Nation"/>
+    </objectDef>
+    
+    <objectDef type="AITriggerActionDeclareWar" superType="AITriggerActionNationTrigger" desc="Trigger AI to declare war">
+        <script type="application/javascript"><![CDATA[
+            function fireAction(game,ai)
+            {
+                ai.triggerActionDeclareWar(game,self);
+            }
+        ]]></script>        
+    </objectDef>
+
+    <objectDef type="AITriggerActionImposeEmbargo" superType="AITriggerActionNationTrigger" desc="Trigger AI to impose an embargo">
+        <script type="application/javascript"><![CDATA[
+            function fireAction(game,ai)
+            {
+                ai.triggerActionImposeEmbargo(game,self);
+            }
+        ]]></script>        
+    </objectDef>
+    
+    
+    <!-- force AI to aggressively seek a particular resource -->
+    <objectDef type="AITriggerActionSeekResource" superType="AITriggerAction" desc="Trigger AI becoming very interested in a particular resource">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objResourceTemplate" type="ResourceTemplate"/>
+        <propertyDef name="bAllowConquest" type="bool" desc="Should the AI consider conquering a region which produces the resource?"/>
+        <script type="application/javascript"><![CDATA[
+            function fireAction(game,ai)
+            {
+                ai.triggerActionSeekResource(game,self);
+            }
+        ]]></script>        
+    </objectDef>
+
+    <!-- change an AI's international position -->
+    <objectDef type="AITriggerActionChangeInternationalPosition" superType="AITriggerAction" desc="Change a nation AI's international position.">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objAIInternationalPositionTemplate" type="AIInternationalPositionTemplate"/>
+        <script type="application/javascript"><![CDATA[
+            function fireAction(game,ai)
+            {
+                ai.triggerActionChangeInternationalPosition(game,self);
+            }
+        ]]></script>        
+    </objectDef>
+    
+
+	<objectDef type="AIUtilityPerOtherNationData" class="CMLOAIUtilityPerOtherNationData">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="nLastAllianceAttemptTurn" type="int" default="-1"/>
+        <propertyDef name="nNumAllianceAttempts" type="int" default="0"/>
+        <propertyDef name="nLastMilitaryAccessAttemptTurn" type="int" default="-1"/>
+        <propertyDef name="nNumMilitaryAccessAttempts" type="int" default="0"/>
+        <propertyDef name="nLastPeaceAttemptTurn" type="int" default="-1"/>
+        <propertyDef name="nNumPeaceAttempts" type="int" default="0"/>
+	</objectDef>
+    
+    <objectDef type="WarPlanOperation" class="CMLOWarPlanOperation" desc="Part of a war plan">
+        <propertyDef name="strName" type="String" desc="Unique identifier within a war plan"/>    
+		<propertyDef name="refTargetNations" type="GORef" restriction="Nation" variable="true"/>
+		<propertyDef name="refTargetRegions" type="GORef" restriction="Region" variable="true"/>
+		<propertyDef name="strPrereqOperations" type="String" variable="true" desc="Names of prerequisite operations"/>
+		<propertyDef name="refWarTriggerNationsA" type="GORef" restriction="Nation" variable="true"/>
+		<propertyDef name="refWarTriggerNationsB" type="GORef" restriction="Nation" variable="true"/>
+		<propertyDef name="dateTrigger" type="Date" default="1/1/1900"/>
+		<propertyDef name="dateExpires" type="Date" default="12/31/9999"/>
+		<propertyDef name="nAggression" type="int" default="-1" desc="overrides AI nAggressiveNature when specified  (not -1) and operation is active"/>
+		<propertyDef name="bActive" type="bool" default="false"/>
+		<propertyDef name="bComplete" type="bool" default="false"/>
+		<propertyDef name="bOfferPeaceWhenComplete" type="bool" default="false"/>
+    </objectDef>
+    
+    <objectDef type="ResearchAITrackItem" class="CMLOResearchAITrackItem" desc="One item in a research track template">
+        <propertyDef name="nSequence" type="int"/>
+        <propertyDef name="objFactoryOutputTemplate" type="FactoryOutputTemplate"/>
+        <propertyDef name="objRegionOutputTemplate" type="RegionOutputTemplate"/>
+    </objectDef>
+    
+    <objectDef type="ResearchAITrackTemplate" superType="Template" class="CMLOResearchAITrackTemplate" templateBase="true" desc="A sequence of factory/research outputs the Research AI should want to unlock">
+        <propertyDef name="objTrackItems" type="ResearchAITrackItem" variable="true" storesChildren="true"/>
+    </objectDef>
+    
+    <objectDef type="ResearchAITrack" class="CMLOResearchAITrack" desc="A research track">
+        <propertyDef name="objTrackTemplate" type="ResearchAITrackTemplate"/>
+        <propertyDef name="nWeight" type="int" default="1" desc="Weight for this track vs. other tracks"/>
+        <propertyDef name="nCurrentSequence" type="int" default="-1"/>
+        <propertyDef name="bCurrentItemResearched" type="bool" default="false"/>
+        <propertyDef name="bCurrentItemBuilt" type="bool" default="false"/>
+        <propertyDef name="bComplete" type="bool" default="false"/>
+    </objectDef>
+
+    <objectDef type="ResearchAISpecificFactoryItem" class="CMLOResearchAISpecificFactoryItem">
+        <propertyDef name="objFactoryOutputTemplate" type="FactoryOutputTemplate"/>
+		<propertyDef name="refCity" type="GORef" restriction="City"/>
+        <propertyDef name="nWeight" type="int" default="1" desc="Weight for this vs. other research priorities"/>
+        <propertyDef name="bResearched" type="bool" default="false" desc="Set true when ResearchAI is done with this item"/>
+    </objectDef>
+
+    <objectDef type="ResearchAISpecificRegionItem" class="CMLOResearchAISpecificRegionItem">
+        <propertyDef name="objRegionOutputTemplate" type="RegionOutputTemplate"/>
+        <propertyDef name="nWeight" type="int" default="1" desc="Weight for this vs. other research priorities"/>
+        <propertyDef name="bResearched" type="bool" default="false" desc="Set true when ResearchAI is done with this item"/>
+    </objectDef>
+
+    <objectDef type="BaseRegionColorMap" class="CMLOBaseRegionColorMap" desc="Pathfinding region color map">
+    </objectDef>
+
+    <objectDef type="RegionColorMap" class="CMLORegionColorMap" superType="BaseRegionColorMap">
+        <propertyDef name="bConsiderEnemyRegionsImpassable" type="bool"/>
+    </objectDef>
+
+    <objectDef type="InvasionColorMap" class="CMLOInvasionColorMap" superType="BaseRegionColorMap">
+    <!--
+    	builtin methods:
+    	    int getRegionInvasionColor(region)
+	        bool isRegionOurColor(region)
+    -->
+    </objectDef>
+    
+    <objectDef type="NationColorMap" class="CMLONationColorMap" desc="Pathfinding nation color map">
+    </objectDef>
+
+    <objectDef type="GeographicNode" class="CMLOGeographicNode" desc="continent or ocean">
+        <propertyDef name="nColor" type="int"/>
+        <propertyDef name="eGeoType" type="Enum" restriction="GeographicNodeType" desc="Default tone to use"/>
+        <propertyDef name="objAdjacentNodes" type="GeographicNode" variable="true"/>
+        <!-- 
+            GeographicNodeType (builtin enum) names:
+                GEOTYPE_WATER
+                GEOTYPE_LAND
+        -->
+    </objectDef>
+    
+    <objectDef type="GeographicColorMap" class="CMLOGeographicColorMap" desc="Pathfinding geographic color map">
+        <propertyDef name="objDesignatedRegions" type="Region" variable="true" key="strName"/>
+        <propertyDef name="objGeoNodes" type="GeographicNode" variable="true" storesChildren="true"/>
+        <!--
+            GeographicConnection (builtin enum) names:
+                GEOCONN_SAME_LAND_MASS
+                GEOCONN_SAME_WATER
+                GEOCONN_ADJACENT
+                GEOCONN_SEPARATED_BY_WATER
+                GEOCONN_SEPARATED_BY_LAND
+                GEOCONN_NOT_ADJACENT
+                
+            builtin method signatures:    
+                GeographicNode getGeographicNode(gameRoot,region)
+                GeographicConnection getGeographicConnection(gameRoot,regionA,regionB)
+                getNationLandMassColors(gameRoot,nation,landMassColors)
+                int getRegionColor(gameRoot,region)
+                bool getGeographicPath(gameRoot,regionA,regionB,colors)
+        -->
+    </objectDef>
+    
+    <objectDef type="SafeRegionColorMap" class="CMLOSafeRegionColorMap" desc="color map to check for safe paths">
+            <!-- builtin method signatures:  
+                bool safePathShouldExist(game,nation,regionA,regionB)
+            -->
+    </objectDef>
+    
+    
+    <objectDef type="AIDesiredLandMass" class="CMLOAIDesiredLandMass">
+        <propertyDef name="objTargetLandMassIDRegion" type="Region"/>
+        <propertyDef name="objRegionsToConquer" type="Region" variable="true" key="strName" desc="regions on the land mass belonging to nations we intend to conquer"/>
+        <propertyDef name="objSourceCities" type="City" variable="true" key="strName" desc="designated port cities or city on the same land mass"/>
+	    <propertyDef name="nEstimatedEnemyLandCombatStrength" type="int"/>
+	    <propertyDef name="nNumOurCities" type="int"/>
+	    <propertyDef name="nNumEnemyCities" type="int"/>
+	    <propertyDef name="fPriority" type="float"/>
+	    <propertyDef name="nLandInvasionFailures" type="int" default="0"/>	    
+	    <propertyDef name="nSeaInvasionFailures" type="int" default="0"/>
+    </objectDef>
+
+    <objectDef type="AIDesiredMilitaryAccess" class="CMLOAIDesiredMilitaryAccess">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="objTargetNations" type="Nation" variable="true"/>
+	    <propertyDef name="nRequests" type="int"/>
+	    <propertyDef name="nRefusals" type="int"/>
+	    <propertyDef name="nLastUpdateTurn" type="int"/>
+    </objectDef>
+
+	<!-- ReasonForDesignation Enum values
+			RFD_UNSPECIFIED,
+			RFD_WAR_PLAN,				
+			RFD_FORCE_ALLEGIANCE_PLAN,	
+			RFD_RANDOM_AGGRESSION,		
+			RFD_ENEMY_OF_ALLY,			
+			RFD_PROVOKED,
+			RFD_TRIGGERED		
+	-->
+
+    <objectDef type="AIEnemyDesignation" class="CMLOAIEnemyDesignation">
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="eReasonForDesignation" type="Enum" restriction="ReasonForDesignation"/>
+		<propertyDef name="bLandMassScopeAll" type="bool" default="false"/>
+		<propertyDef name="bLandMassScopeAllyOwned" type="bool" default="false"/>
+		<propertyDef name="bLandMassScopeSelfOwned" type="bool" default="false"/>
+		<propertyDef name="bLandMassScopeSpecified" type="bool" default="false"/>
+		<propertyDef name="bRegionScopeAll" type="bool" default="false"/>
+		<propertyDef name="bRegionScopeAdjacentToAlly" type="bool" default="false"/>
+		<propertyDef name="bRegionScopeAdjacentToSelf" type="bool" default="false"/>
+		<propertyDef name="bRegionScopeAllyOwned" type="bool" default="false"/>
+		<propertyDef name="bRegionScopeSelfOwned" type="bool" default="false"/>
+		<propertyDef name="bRegionScopeLiberate" type="bool" default="false"/>
+		<propertyDef name="bRegionScopeSpecified" type="bool" default="false"/>
+		<propertyDef name="objReasonSources" type="Object" variable="true"/><!-- WarPlan or ForceAllegiancePlan -->
+		<propertyDef name="objLandMassIDRegions" type="Region" variable="true" key="strName"/>
+		<propertyDef name="fPriority" type="float" default="1.0"/>
+    </objectDef>
+
+    <objectDef type="AILiberateDesignation" class="CMLOAILiberateDesignation">
+		<propertyDef name="objNationTemplate" type="NationTemplate"/>
+		<propertyDef name="nTurn" type="int"/>
+		<propertyDef name="objEnemyNations" type="Nation" variable="true"/>
+    </objectDef>
+    
+    <objectDef type="AIPotentialExpansion" class="CMLOAIPotentialExpansion">
+		<propertyDef name="objTargetNation" type="Nation"/>
+		<propertyDef name="objTargetLandMassIDRegion" type="Region"/>
+		<propertyDef name="objRegionsToConquer" type="Region" variable="true"/>
+		<propertyDef name="objOurCities" type="City" variable="true"/>
+		<propertyDef name="objTargetCities" type="City" variable="true"/>
+		<propertyDef name="nEstimatedTargetAttackPower" type="int"/>
+		<propertyDef name="nEstimatedTargetDefensePower" type="int"/>
+		<propertyDef name="bCanAttackByLand" type="bool"/>
+		<propertyDef name="bHistoric" type="bool" default="false"/>
+		<propertyDef name="nWeight" type="int" default="1"/>
+    </objectDef>
+
+    <objectDef type="AIFortificationWeight" class="CMLOAIFortificationWeight">
+        <propertyDef name="objFortificationImprovementTemplate" type="FortificationImprovementTemplate"/>
+        <propertyDef name="fWeight" type="float" default="0.5"/>
+    </objectDef>
+
+	<objectDef type="AIFortificationTemplate" superType="Template" class="CMLOAIFortificationTemplate" templateBase="true">
+		<propertyDef name="objFortificationWeights" type="AIFortificationWeight" variable="true" storesChildren="true"/>
+    </objectDef>
+    
+    <objectDef type="AIEnemyNavyThreat" class="CMLOAIEnemyNavyThreat">
+        <propertyDef name="objSeaRegion" type="Region" desc="Region of potential navy threat"/>
+        <propertyDef name="objShoreRegion" type="Region" desc="Closest shore region"/>
+        <propertyDef name="objPortCity" type="City" desc="Closest port city"/>
+	    <propertyDef name="fCostToShore" type="float"/>
+	    <propertyDef name="fCostToPort" type="float"/>
+    </objectDef>    
+
+	<enumDef name="Tactic">
+        <value name="CaptureCitiesFirst"/>
+        <value name="SoftenUpShoreDefenses"/>
+	</enumDef>
+
+	<objectDef type="AIMilitaryTacticWeight" class="CMLObject">
+		<propertyDef name="eTactic" type="Enum" restriction="Tactic"/>
+		<propertyDef name="nWeight" type="int"/>
+    </objectDef>
+
+	<objectDef type="AIMilitaryStrategyTemplate" superType="Template" class="CMLOAIMilitaryStrategyTemplate"  templateBase="true">
+		<propertyDef name="objCompositionsTemplate" type="AIUnitGroupCompositionTemplate"/>
+		<propertyDef name="objFortificationsTemplate" type="AIFortificationTemplate"/>
+		<propertyDef name="fOffensePriority" type="float" default="0.5"/>
+		<propertyDef name="fDefensePriority" type="float" default="0.5"/>
+		<propertyDef name="fFortificationPriority" type="float" default="0.25"/>
+		<propertyDef name="fAADefensePriority" type="float" default="0.75"/>
+		<propertyDef name="fEmergencyBuildupPriority" type="float" default="0.5"/>
+		<propertyDef name="fMilitaryRankPriority" type="float" default="0.25"/>
+		<propertyDef name="objTacticWeights" type="AIMilitaryTacticWeight" variable="true" storesChildren="true"/>
+        <propertyDef name="strEmergencyArmyComposition" type="String" default="EmergencyArmy"/>
+        <propertyDef name="strArmyExpansionComposition" type="String" default="DefaultArmy"/>	
+        <propertyDef name="strNavyExpansionComposition" type="String" default="AnyNavyGroup"/>
+        <propertyDef name="strAirForceExpansionComposition" type="String" default="AirSupport"/>
+        <propertyDef name="strSubmarineExpansionComposition" type="String" default="SubmarineGroup"/>		
+    </objectDef>
+
+	<!-- child of AIMessageSelectionCriteria --> 	
+	<objectDef type="ReasonPair" class="CMLObject">
+		<propertyDef name="eReason" type="Enum" restriction="Reason"/>
+		<propertyDef name="nWeight" type="int"/>
+	</objectDef>
+	
+	<!-- temporary object used to select and format an appropriate AIMessage -->
+	<objectDef type="AIMessageSelectionCriteria" class="CMLObject">
+		<propertyDef name="objReasons" type="ReasonPair" variable="true" storesChildren="true"/>
+		<propertyDef name="strStyleOfSpeach" type="String"/>
+		<propertyDef name="objSendingNation" type="Nation" desc="nation sending message"/>
+		<propertyDef name="objReceivingNation" type="Nation" desc="nation receiving message"/>
+		<propertyDef name="objFriendNation" type="Nation" desc="third party friend of nation sending message"/>
+		<propertyDef name="objEnemyNation" type="Nation" desc="third party enemy of nation sending message"/>
+		<propertyDef name="objOtherNation" type="Nation" desc="third party nation pertaining to the message"/>
+		<propertyDef name="objParentNation" type="Nation" desc="parent nation of a colony or puppet"/>
+		<propertyDef name="objResourceNation" type="Nation" desc="nation from which resource comes"/>
+		<propertyDef name="objEmbargoingNation" type="Nation" desc="nation which has an embargo"/>
+		<propertyDef name="objResourceTemplate" type="ResourceTemplate"/>
+		<propertyDef name="objForIdeologyTemplate" type="IdeologyTemplate" desc="ideology sending nation would say they are for in message"/>
+		<propertyDef name="objAgainstIdeologyTemplate" type="IdeologyTemplate"  desc="ideology sending nation would say they are against in message"/>
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="nAmount" type="int" default="-99999"/>
+
+        <script type="application/javascript"><![CDATA[
+
+			var SourcePropName = 
+			{
+				sendingNation:				"objSendingNation",	
+				receivingNation:			"objReceivingNation",
+				resourceNationAdjective:	"objResourceNation",
+				friendNation:				"objFriendNation",
+				enemyNation:				"objEnemyNation",
+				otherNation:                "objOtherNation",
+				parentNation:				"objParentNation",
+				resourceName:				"objResourceTemplate",
+				forIdeology:				"objForIdeologyTemplate",
+				againstIdeology:			"objAgainstIdeologyTemplate",
+				region:						"objRegion",
+				embargoingNation:           "objEmbargoingNation",
+				amount:                     "nAmount"
+			};
+
+			function getMessage(fmtString)
+			{
+				var sendingNation = "";
+				var receivingNation = "";
+				var friendNation = "";
+				var enemyNation = "";
+				var otherNation = "";
+				var parentNation = "";
+				var resourceNation = "";
+				var resourceName = "";
+				var forIdeology = "";
+				var againstIdeology = "";
+				var region="";
+				var embargoingNation ="";
+				var amount="";
+
+				if (self.objSendingNation != null)
+				{
+					sendingNation = self.objSendingNation.strDisplayName;
+				}
+
+				if (self.objReceivingNation != null)
+				{
+					receivingNation = self.objReceivingNation.strDisplayName;
+				}
+
+				if (self.objFriendNation != null)
+				{
+					friendNation = self.objFriendNation.strDisplayName;
+				}
+
+				if (self.objEnemyNation != null)
+				{
+					enemyNation = self.objEnemyNation.strDisplayName;
+				}
+				
+				if (self.objOtherNation != null)
+                {
+					otherNation = self.objOtherNation.strDisplayName;
+                }
+
+				if (self.objParentNation != null)
+				{
+					parentNation = self.objParentNation.strDisplayName;
+				}
+
+				if (self.objResourceNation != null)
+				{
+					resourceNation = self.objResourceNation.strDisplayName;
+				}
+
+				if (self.objResourceTemplate != null)
+				{
+					resourceName = self.objResourceTemplate.strDisplayName;
+				}
+
+				if (self.objForIdeologyTemplate != null)
+				{
+					forIdeology = self.objForIdeologyTemplate.strDisplayName;
+				}
+
+				if (self.objAgainstIdeologyTemplate != null)
+				{
+					againstIdeology = self.objAgainstIdeologyTemplate.strDisplayName;
+				}
+
+				if (self.objRegion != null)
+				{
+					region = self.objRegion.strDisplayName;
+				}
+				
+				if (self.objEmbargoingNation != null)
+				{
+    				embargoingNation = self.objEmbargoingNation.strDisplayName;
+				}
+				
+				if (self.nAmount != -99999)
+				{
+				    amount = self.nAmount.toString();
+				}
+
+				// TODO - adjectives
+
+				return fmtString.format({
+					"sendingNation": sendingNation,	
+					"receivingNation": receivingNation,	
+					"resourceNationAdjective": resourceNation,	
+					"friendNation": friendNation,
+					"enemyNation": enemyNation,
+					"otherNation": otherNation,
+					"parentNation": parentNation,
+					"resourceName": resourceName,
+					"forIdeology": forIdeology,
+					"againstIdeology": againstIdeology,
+					"region": region,
+					"embargoingNation": embargoingNation,
+					"amount": amount
+					});
+			}
+			
+			function hasVariables(fmtString)
+			{
+				// check keywords
+				//log("DEBUG: " + fmtString + ".varNames=" + fmtString.varNames);
+
+				for (var k in fmtString.varNames)
+				{
+					var word = fmtString.varNames[k];
+					var propName = SourcePropName[word];
+					//log("DEBUG: keyword " + k + ". word=" + word + ", propName=" + propName);
+
+					if (self[propName] == null)
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+
+			function numVariableSources(fmtString)
+			{
+				var numSources = 0;
+				var test = new Object;
+				for (var k in fmtString.varNames)
+				{
+					var word = fmtString.varNames[k];
+					var propName = SourcePropName[word];
+					if (self[propName] == null)
+					{
+						return -1;
+					}
+					if (test[propName] == undefined)
+					{
+						test[propName] = true;
+						numSources++;
+					}
+				}
+				return numSources;
+			}
+
+        ]]></script>
+	</objectDef>
+	
+    <!-- a type of diplomatic decision (pertaining to one nation vs another) -->
+    <enumDef name="AIDiplomaticDecisionType">
+        <value name="UnprovokedAttack"/>
+        <value name="AllyWith"/>
+        <value name="AllyAgainst"/>
+        
+        <!-- national programs -->
+        <value name="DeploymentSurveillance"/>
+        <value name="StealResearch"/>
+        <value name="SabotageRegion"/>
+        <value name="PoliticalSupport"/>
+        <value name="OppositionSupport"/>
+        
+        <!-- treaties -->
+        <value name="AllowMilitaryAccess"/>
+        <value name="AllowPortAccess"/>
+        <value name="AcceptPeaceTreaty"/>
+        <value name="GiveUpTerritories"/>
+        
+        <!-- trade agreements -->
+        <value name="AcceptTradeAgreement"/>
+        
+        <!-- conquerer decisions -->
+        <value name="MakePuppet"/>
+        <value name="MakeColony"/>
+        <value name="Annex"/>
+        
+    </enumDef>
+
+    <objectDef type="PowerDifferentialTemplate" superType="Template" class="CMLOPowerDifferentialTemplate" templateBase="true"/>
+
+    <objectDef type="TerritorialIntegrityTemplate" superType="Template" class="CMLOTerritorialIntegrityTemplate" templateBase="true"/>
+    
+    <!-- weights for one decision type -->
+    <objectDef type="AIDiplomaticDecisionWeight" class="CMLOAIDiplomaticDecisionWeight">
+        <propertyDef name="eDecisionType" type="Enum" restriction="AIDiplomaticDecisionType"/>
+        <propertyDef name="nChooseChance" type="int" default="-1" desc="chance of making this decision"/>
+        <propertyDef name="nChooseWeight" type="int" default="50" desc="how important is this decision"/>
+        <propertyDef name="nVetoChance" type="int" default="-1" desc="chance of vetoing this decision"/>
+        <propertyDef name="nVetoWeight" type="int" default="50" desc="how important is this decision"/>
+        <!--  chances < 0 indicates we don't have a preference one way or the other.
+              weights are expected to be > 0 (although a weight of 0 would effectively be the same as chance < 0) -->
+    </objectDef>
+
+    <objectDef type="TemplateVsTemplateWeights" class="CMLOTemplateVsTemplateWeights">
+        <propertyDef name="objMyTemplate" type="Object"/> <!-- "Template" -->
+        <propertyDef name="objTheirTemplate" type="Object"/><!-- "Template" -->
+        <propertyDef name="objDecisionWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+    </objectDef>
+
+    <!-- decision weights per diplomatic levels -->    
+    <objectDef type="DiplomaticLevelWeights" class="CMLODiplomaticLevelWeights">
+        <propertyDef name="objDiplomaticLevelTemplate" type="DiplomaticRelationsTemplate"/>
+        <propertyDef name="objDecisionWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+    </objectDef>
+            
+    <!-- decision weights per power differential -->
+    <objectDef type="PowerDifferentialWeights" class="CMLOPowerDifferentialWeights">
+        <propertyDef name="objPowerDifferentialTemplate" type="PowerDifferentialTemplate"/>
+        <propertyDef name="objDecisionWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+    </objectDef>
+
+    <objectDef type="AINationComparison" class="CMLOAINationComparison">
+        <propertyDef name="objGameRoot" type="Object"/>
+        <propertyDef name="objMyNation" type="Nation"/>
+        <propertyDef name="objTheirNation" type="Nation"/>
+        <!--
+            builtin method signatures:
+                getChooseChance(eDecisionType[,bWantLog])
+                getVetoChance(eDecisionType[,bWantLog])
+                getChooseMinusVetoChance(eDecisionType[,bWantLog])
+                getIsSameIdeology()
+                getIsSameCulture()
+                getIsSameReligion()
+        -->
+        
+        <script type="application/javascript"><![CDATA[
+            function getAllyWithChanceIncludingVeto()
+            {
+                return self.getChooseMinusVetoChance(AIDiplomaticDecisionType.AllyWith);
+            }
+            
+            function getAllyAgainstChanceIncludingVeto()
+            {
+                return self.getChooseMinusVetoChance(AIDiplomaticDecisionType.AllyAgainst);
+            }
+            
+            function getChanceOfUnprovokedAttack()
+            {
+                return self.getChooseMinusVetoChance(AIDiplomaticDecisionType.UnprovokedAttack);
+            }
+            
+        ]]></script>
+
+    </objectDef>
+    
+
+    <objectDef type="AIUsVersusThemTemplate" superType="Template" class="CMLOAIUsVersusThemTemplate" templateBase="true">
+        <propertyDef name="objIdeologyComparisons" type="TemplateVsTemplateWeights" variable="true" storesChildren="true"/>
+        <propertyDef name="objSameIdeologyDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        <propertyDef name="objDifferentIdeologyDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        
+        <propertyDef name="objCultureComparisons" type="TemplateVsTemplateWeights" variable="true" storesChildren="true"/>
+        <propertyDef name="objSameCultureDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        <propertyDef name="objDifferentCultureDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        
+        <propertyDef name="objReligionComparisons" type="TemplateVsTemplateWeights" variable="true" storesChildren="true"/>
+        <propertyDef name="objSameReligionDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        <propertyDef name="objDifferentReligionDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        
+        <propertyDef name="objEthnicityComparisons" type="TemplateVsTemplateWeights" variable="true" storesChildren="true"/>
+        <propertyDef name="objSameEthnicityDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        <propertyDef name="objDifferentEthnicityDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        
+        <propertyDef name="objInternationalPositionComparisons" type="TemplateVsTemplateWeights" variable="true" storesChildren="true"/>
+        <propertyDef name="objSameInternationalPositionDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        <propertyDef name="objDifferentInternationalPositionDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        
+        <propertyDef name="objStabilityComparisons" type="TemplateVsTemplateWeights" variable="true" storesChildren="true"/>
+        <propertyDef name="objSameStabilityDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        <propertyDef name="objDifferentStabilityDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        
+        <propertyDef name="objTerritorialIntegrityComparisons" type="TemplateVsTemplateWeights" variable="true" storesChildren="true"/>
+        <propertyDef name="objSameTerritorialIntegrityDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        <propertyDef name="objDifferentTerritorialIntegrityDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        
+        <propertyDef name="objPersonalityComparisons" type="TemplateVsTemplateWeights" variable="true" storesChildren="true"/>
+        <propertyDef name="objSamePersonalityDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        <propertyDef name="objDifferentPersonalityDefaultWeights" type="AIDiplomaticDecisionWeight" variable="true" storesChildren="true"/>
+        <propertyDef name="objHumanPlaceholderTemplate" type="AIPersonalityTemplate"/>
+        
+        <propertyDef name="objDiplomaticLevelWeights" type="DiplomaticLevelWeights" variable="true" storesChildren="true"/>
+        <propertyDef name="objPowerDifferentialWeights" type="PowerDifferentialWeights" variable="true" storesChildren="true"/>
+
+        <script type="application/javascript"><![CDATA[
+
+            function getIdeologyComparison(myIdeology,theirIdeology)
+            {
+                if ((myIdeology == null) || (theirIdeology == null))
+                    return null;
+
+                var comparison = null;
+                var me_vs_them = self.objIdeologyComparisons.find({ "objMyTemplate": myIdeology, "objTheirTemplate": theirIdeology });
+                if (me_vs_them != null)
+                    comparison = me_vs_them.objDecisionWeights;
+
+                if (comparison == null)
+                {
+                    var me_vs_any = self.objIdeologyComparisons.find({ "objMyTemplate": myIdeology, "objTheirTemplate": null });
+                    if (me_vs_any != null)
+                        comparison = me_vs_any.objDecisionWeights;
+                }
+
+                if (comparison == null)
+                {
+                    if (myIdeology.equals(theirIdeology))
+                        comparison = self.objSameIdeologyDefaultWeights;
+                    else
+                        comparison = self.objDifferentIdeologyDefaultWeights;
+                }
+
+                if (comparison == null)
+                {
+                    log("WARN(4): comparison not found for ideology " + myIdeology.strName + " vs " + theirIdeology.strName);
+                }
+
+                return comparison;
+            } // getIdeologyComparison
+
+        ]]></script>
+
+    </objectDef><!-- AIUsVersusThemTemplate -->
+    
+    <objectDef type="AIFerryTarget" class="CMLOAIFerryTarget">
+        <propertyDef name="objUnitGroup" type="UnitGroup"/>
+        <propertyDef name="objPlan" type="AIMilitaryPlan"/>
+        <propertyDef name="objRequirement" type="AIUnitRegionRequirements"/>
+        <propertyDef name="objLoadLandRegion" type="Region"/>
+        <propertyDef name="objLoadSeaRegion" type="Region"/>
+        <propertyDef name="objUnloadSeaRegion" type="Region"/>
+        <propertyDef name="objUnloadLandRegion" type="Region"/>
+    </objectDef>
+
+</locust>

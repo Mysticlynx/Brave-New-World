@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Resource Templates -->
+    <objectDef type="ResourceTemplate" superType="Template" class="CMLOResourceTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="nPrice" type="int"/>
+        <propertyDef name="bTradable" type="bool" default="true"/>
+    </objectDef>  
+    
+    <objectDef type="ResourceAmount" class="CMLOResourceAmount" desc="An amount of a resource">
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nAmount" type="int"/>
+    </objectDef>
+    
+
+</locust>

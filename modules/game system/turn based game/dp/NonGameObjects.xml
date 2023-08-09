@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="DecisionPointAnswer" class="CMLODecisionPointAnswer" desc="A possible answer for a decision point">
+        <propertyDef name="strText" type="String"/>
+        <propertyDef name="bDefault" type="bool" default="false"/>
+    </objectDef>
+
+    <objectDef type="DecisionPointStrings" class="CMLODecisionPointStrings" desc="A container for all the format strings used by the decision points">
+        <propertyDef name="fstrTextDeclareWarAndMove" type="FormatString"/>
+        <propertyDef name="fstrTextDeclareWarAndBombTarget" type="FormatString"/>
+        <propertyDef name="fstrTextDeclareWarAndBombNavalBase" type="FormatString"/>
+        <propertyDef name="fstrTextDeclareWarAndDropNuke" type="FormatString"/>
+        <propertyDef name="fstrTextDeclareWarAndDropTroops" type="FormatString"/>
+        <propertyDef name="fstrTextDeclareWarAndUnload" type="FormatString"/>
+        <propertyDef name="fstrTextDeclareWarAndShoreBombard" type="FormatString"/>
+        <propertyDef name="fstrTextDeclareWarAndRangedAttack" type="FormatString"/>
+        <propertyDef name="fstrTextDeclareWarAndSubAttackGroup" type="FormatString"/>
+        <propertyDef name="fstrTextDisband" type="FormatString"/>
+        <propertyDef name="strTextChooseFate" type="String"/>
+        <propertyDef name="fstrAnswerDeclareWarAndMove" type="FormatString"/>
+        <propertyDef name="fstTextDestroyImprovement" type="FormatString"/>
+        <propertyDef name="fstAnswerDestroyImprovement" type="FormatString"/>
+        <propertyDef name="fstrAnswerDeclareWar" type="FormatString"/>
+        <propertyDef name="fstrAnswerDisband" type="FormatString"/>
+        <propertyDef name="strAnswerAnnexTerritory" type="String"/>
+        <propertyDef name="strAnswerMakeColony" type="String"/>
+        <propertyDef name="strAnswerMakePuppet" type="String"/>
+        <propertyDef name="strAnswerCancel" type="String"/>
+        <propertyDef name="fstrTextRegionRevolt" type="FormatString"/>
+        <propertyDef name="fstrAnswerRegionRevoltAccept" type="FormatString"/>
+        <propertyDef name="fstrAnswerRegionRevoltDecline" type="FormatString"/>
+    </objectDef>
+
+</locust>

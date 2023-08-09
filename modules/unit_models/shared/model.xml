@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <template type="ml3dworld.TexturePathTemplate" name="UnitModelTexturePool">
+		<object type="ml3dworld.TexturePath" name="objTexturePaths">
+            <property name="strTexturePool" value="UnitModel"/>
+            <property name="fileDir" value="textures"/>            
+        </object>    
+    </template>
+
+    <template type="mapui.UnitModelDirsTemplate" name="UnitModelDirs">
+        <property name="fileUnitModelsDir" value="."/>
+    </template>
+    
+</locust>

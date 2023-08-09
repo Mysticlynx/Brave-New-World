@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="TradeData" class="CMLObject">
+		<propertyDef name="eTab" type="Enum" restriction="TradeSection"/>
+	</objectDef>
+	
+	<enumDef name="TradeSection">
+        <value name="STOCKPILE"/>
+        <value name="WORLD_MARKET"/>
+		<value name="DEALS"/>
+		<value name="REPORTS"/>
+    </enumDef>
+	
+	<objectDef type="UI2DReportSheetTrade" superType="UI2DReportPanel">
+
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" from="636"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="62"/>
+			<property name="nHeight" value="56"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="635"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objFinancePolicyIcon">
+      <property name="tmplImage" value="skin.ImgUIInfoIconFinance"/>
+      <property name="nX" value="1"/>
+      <property name="nY" value="58"/>
+      <property name="nWidth" value="23"/>
+      <property name="nHeight" value="26"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objMilitaryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite18Left"/>
+			<property name="strText" from="locale.SID.UI.TradeandFinances"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="66"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="UI2DLargeCloseButton" name="objClose">
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							reportdata.closeReportPanel();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="8"/>
+			<property name="nY" value="136"/>
+			<property name="nWidth" value="878"/>
+			<property name="nHeight" value="548"/>
+		</object>
+		
+	<!-- Content -->	
+		<!--<object type="UI2DTradeTabs" name="objTabs">-->
+		<!--	<property name="nWidth" from="def.nWidth"/>-->
+		<!--	<property name="nHeight" from="def.nHeight"/>-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--</object>-->
+		
+		<propertyDef name="objTabs" storesChildren="true">
+			switch{
+				case reportdata.objTradeData.eTab == TradeSection.REPORTS:
+					<object type="UI2DTradeTabNationalFinances">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				case reportdata.objTradeData.eTab == TradeSection.DEALS:
+					<object type="UI2DTradeTabTradeDeals">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				case reportdata.objTradeData.eTab == TradeSection.WORLD_MARKET:
+					<object type="UI2DTradeTabWorldMarket">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				case reportdata.objTradeData.eTab == TradeSection.STOCKPILE:
+					<object type="UI2DTradeTabStockpiles">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+			}
+		</propertyDef>
+		
+		<object type="mlui.UI2DImage" name="objButtonsShadow">
+			<property name="tmplImage" value="skin.ImgReportPanelShadow16x16"/>
+			<property name="nX" value="797"/>
+			<property name="nY" value="101"/>
+			<property name="nWidth" value="90"/>
+			<property name="nHeight" value="48"/>
+			<property name="nDepth" value="-100"/>
+		</object>		
+		
+		<object type="UI2DTradeButtons" name="objTabButtons">
+			<property name="nX" value="13"/>
+			<property name="nY" value="102"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" value="40"/>
+		</object>
+	</objectDef>
+</locust>

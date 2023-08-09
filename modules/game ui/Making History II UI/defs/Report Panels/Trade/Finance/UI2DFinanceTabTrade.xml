@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="UI2DFinanceTabTrade" superType="UI2DFinancePanel">
+		<propertyDef name="objNationFinance" type="gs_tbg.NationFinance"/>
+
+		<object type="mlui.UI2DText" name="objTradeTransactionsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.TradeTransactions"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objLastTurnSummaryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.dateCurrentDate - gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.durTurnDuration"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="UI2DResourceTradeListSection" name="objResourceTradeList">
+			<property name="objNationFinance" from="mh2data.objNation.objFinance"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="40"/>
+			<property name="nWidth" from="500"/>
+			<property name="nHeight" from="197"/>
+		</object>
+
+
+		<!--<object type="mlui.UI2DText" name="objImportRevenueLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.TradeBalance"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="237"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTurnSummaryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.dateCurrentDate - gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.durTurnDuration"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="252"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>-->
+
+		<object type="UI2DTradeSummary" name="objTradeSummary">
+			<property name="objNationFinance" from="mh2data.objNation.objFinance"/>
+			<property name="objResourceTradeList" from="def.objResourceTradeList"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="270"/>
+			<property name="nWidth" from="500"/>
+			<property name="nHeight" from="113"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objPieChartLabelRevenue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ExportRevenues"/>	
+			<property name="nX" value="450"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="10"/>
+		</object>
+        
+        <object name="objPieChartRevenue" type="mlchart.UI2DChart" >		
+			<property name="nX" value="475"/>
+			<property name="nY" value="47"/>
+            <property name="nWidth" value="142" />
+            <property name="nHeight" value="142" />
+            <object name="objChartSource" type="mlchart.ChartSourcePie" >
+                <object name="objOptions" type="mlchart.ChartOptionBackground" >
+                    <property name="colColor" value="#FFFFFFFF" />
+                </object>
+                <object name="objPieOptions" type="mlchart.PieChartOptionPieSize" >
+                    <property name="nX" value="71" />
+                    <property name="nY" value="71"/>
+                    <property name="nRadius" value="70"/>
+                </object>
+                <object name="objPieOptions" type="mlchart.PieChartOptionLabelStyle" >
+                    <property name="colColor" value="#FFFFFFFF" />
+                </object>
+                <object name="objSectors" type="mlchart.PieChartSector" tiedTo="def.objResourceTradeList.objList.objElements" >
+                    <property name="fValue" >
+                        (
+                            (float) (tiedTo.objTradeSummary.nRevenues)
+                        )
+                        / 
+                        (
+                            (float) 
+                            (
+                                if( (def.nTotalRevenue GT 0) , 
+                                    def.nTotalRevenue , 
+                                    1
+                                )
+                            )
+                        )
+                    </property>
+                    <property name="colColor" from="tiedTo.colColor"/>
+                </object>
+            </object>
+        </object>
+        
+		<object type="mlui.UI2DImage" name="objPieChartBG">
+			<property name="tmplImage" value="skin.ImgPieChartBG"/>
+			<property name="nX" value="469"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="155"/>
+			<property name="nDepth" value="1"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objPieChartLabelCosts">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ImportCosts"/>	
+			<property name="nX" value="450"/>
+			<property name="nY" value="210"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="10"/>
+		</object>
+        
+        
+        <object name="objPieChartCosts" type="mlchart.UI2DChart" >		
+			<property name="nX" value="475"/>
+			<property name="nY" value="220"/>
+            <property name="nWidth" value="142" />
+            <property name="nHeight" value="142" />
+            <object name="objChartSource" type="mlchart.ChartSourcePie" >
+                <object name="objOptions" type="mlchart.ChartOptionBackground" >
+                    <property name="colColor" value="#FFFFFFFF" />
+                </object>
+                <object name="objPieOptions" type="mlchart.PieChartOptionPieSize" >
+                    <property name="nX" value="71" />
+                    <property name="nY" value="71"/>
+                    <property name="nRadius" value="70"/>
+                </object>
+                <object name="objPieOptions" type="mlchart.PieChartOptionLabelStyle" >
+                    <property name="colColor" value="#FFFFFFFF" />
+                </object>
+                <object name="objSectors" type="mlchart.PieChartSector" tiedTo="def.objResourceTradeList.objList.objElements" >
+                    <property name="fValue" >
+                        (
+                            (float) (tiedTo.objTradeSummary.nCosts)
+                        )
+                        / 
+                        (
+                            (float) 
+                            (
+                                if( (def.nTotalCosts GT 0) , 
+                                    def.nTotalCosts , 
+                                    1
+                                )
+                            )
+                        )
+                    </property>
+                    <property name="colColor" from="tiedTo.colColor"/>
+                </object>
+            </object>
+        </object>
+		
+		<object type="mlui.UI2DImage" name="objPieChartBG">
+			<property name="tmplImage" value="skin.ImgPieChartBG"/>
+			<property name="nX" value="469"/>
+			<property name="nY" value="214"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="155"/>
+			<property name="nDepth" value="1"/>
+		</object>
+        
+        <propertyDef name="nTotalRevenue" type="int64" >
+            self.getRevenues(self.objResourceTradeList) 
+        </propertyDef>
+        
+        <propertyDef name="nTotalCosts" type="int64" >
+            self.getCosts(self.objResourceTradeList) 
+        </propertyDef>
+        
+        <script type="application/x-locust-query"> <![CDATA[
+            getRevenues = ?{object:
+                  sum(map(?{elm: elm.objTradeSummary.nRevenues}, object.objList.objElements))
+            }
+            getCosts = ?{object:
+                  sum(map(?{elm: elm.objTradeSummary.nCosts}, object.objList.objElements))
+            }
+        ]]></script>    
+        
+        
+	</objectDef>
+
+	<objectDef type="UI2DResourceTradeListSection" superType="mlui.UI2DElement">
+		<propertyDef name="objNationFinance" type="gs_tbg.NationFinance"/>
+
+		<object type="mlui.UI2DText" name="objSourceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Source"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objExportRevenuesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.ExportRevenues"/>
+			<property name="nX" value="160"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objImportCostsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.ImportCosts"/>
+			<property name="nX" value="280"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+        <object type="common_ui.UI2DList" name="objList">		
+            <property name="nX" value="0"/>
+			<property name="nY" from="11"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="1"/>		
+                
+            <!-- Arms -->
+            <object type="UI2DResourceTradeRow" name="objElements">
+                <property name="objResourceIcon" value="skin.ImgInfoIconArms21x21"/>
+                <property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Arms')"/>
+                <property name="colColor" value="#CAEAB5FF" />
+            </object>
+
+            <!-- Metals -->
+            <object type="UI2DResourceTradeRow" name="objElements">
+                <property name="objResourceIcon" value="skin.ImgInfoIconMetals21x21"/>
+                <property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')"/>
+                <property name="colColor" value="#B6AF4CFF" />
+            </object>
+
+            <!-- Coal -->
+            <object type="UI2DResourceTradeRow" name="objElements">
+                <property name="objResourceIcon" value="skin.ImgInfoIconCoal21x21"/>
+                <property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')"/>
+                <property name="colColor" value="#824646FF" />
+            </object>
+
+            <!-- Oil -->
+            <object type="UI2DResourceTradeRow" name="objElements">
+                <property name="objResourceIcon" value="skin.ImgInfoIconOil21x21"/>
+                <property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')"/>
+                <property name="colColor" value="#4E7855FF" />
+            </object>
+
+            <!-- Food -->
+            <object type="UI2DResourceTradeRow" name="objElements">
+                <property name="objResourceIcon" value="skin.ImgInfoIconFood21x21"/>
+                <property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')"/>
+                <property name="colColor" value="#4E6078FF" />
+            </object>
+        </object>
+	</objectDef>
+
+
+	<objectDef type="NationTradeSummary" class="CMLObject">
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+
+		<propertyDef name="objNationHistoryTrade" type="gs_tbg.NationHistoryTrade"/>
+		<property name="objNationHistoryTrade">
+			find(?{nhtrade: nhtrade.tmplResource == self.tmplResource}, self.objNationHistory.objTrades)
+		</property>
+
+		<propertyDef name="objNationHistory" type="gs_tbg.NationHistory"/>
+		<property name="objNationHistory">
+			 find(?{history: history.refNation == mh2data.objNation}, gs_tbg.getAllNationHistories(mh2data.objAvatar))
+		</property>
+
+		<propertyDef name="nTotalImports" type="int64">
+			int64(self.objNationHistoryTrade.nDirectImports) +
+			int64(self.objNationHistoryTrade.nMarketImports)
+		</propertyDef>
+
+		<propertyDef name="nTotalExports" type="int64">
+			int64(self.objNationHistoryTrade.nDirectExports) +
+			int64(self.objNationHistoryTrade.nMarketExports)
+		</propertyDef>
+
+		<propertyDef name="objSupplyAndDemand" type="gs_tbg.SupplyAndDemand"/>
+		<property name="objSupplyAndDemand">
+			find(?{snd: snd.tmplResource == self.tmplResource}, gs_tbg.getAllSupplyAndDemand(mh2data.objAvatar))
+		</property>
+
+		<propertyDef name="objResourceTemplate" type="gs_tbg.ResourceTemplate"/>
+		<property name="objResourceTemplate" from="self.tmplResource.resolve()"/>
+
+		<propertyDef name="objPriceAdjustTemplate" type="gs_tbg.PriceAdjustTemplate"/>
+		<property name="objPriceAdjustTemplate" from="self.objSupplyAndDemand.tmplPriceAdjust.resolve()"/>
+
+		<propertyDef name="nMarketPrice" type="int64"/>
+		<property name="nMarketPrice" from="self.objResourceTemplate.nPrice * self.objPriceAdjustTemplate.fPriceAdjust"/>
+
+		<propertyDef name="nRevenues" type="int64"/>
+		<property name="nRevenues" from="self.nTotalExports * self.nMarketPrice"/>
+
+		<propertyDef name="nCosts" type="int64"/>
+		<property name="nCosts" from="self.nTotalImports * self.nMarketPrice"/>
+
+		<object type="LookupSupplyAndDemand" name="objLookupSupplyAndDemand">
+			<property name="tmplResource" from="def.tmplResource"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objListRowSourceBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="21"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DResourceTradeRow" superType="mlui.UI2DElement">
+		<propertyDef name="strTitle" type="String"/>
+		<propertyDef name="strRevenues" type="String"/>
+		<propertyDef name="strCosts" type="String"/>
+		<propertyDef name="objResourceIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+        <propertyDef name="colColor" type="Color" />
+
+		<property name="nHeight" value="30"/>
+
+		<property name="nWidth" value="442"/>
+
+		<object type="NationTradeSummary" name="objTradeSummary">
+			<property name="tmplResource" from="def.tmplResource"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objListRowSourceBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="21"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="140"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objResourceIcon"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="24"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objResourceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="def.tmplResource.resolve().strDisplayName"/>
+			<property name="nX" value="53"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="140"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objListRowRevenuesBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="160"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="120"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objRevenuesValue">
+			<property name="tmplTextStyle">
+				'locale.TxtStyleArialBlue12Right'
+			</property>
+			<property name="strText" from="'$' + def.objTradeSummary.nRevenues.formatNumber(0, true)"/>
+			<property name="nX" value="160"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="116"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objListRowCostsBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="279"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="120"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objCostsValue">
+			<property name="tmplTextStyle">
+				'locale.TxtStyleArialBlue12Right'
+			</property>
+			<property name="strText" from="'$' + def.objTradeSummary.nCosts.formatNumber(0, true)"/>
+			<property name="nX" value="278"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="116"/>
+			<property name="nHeight" value="14"/>
+		</object>
+        
+        
+		<object type="mlui.UI2DImage" name="objColor">
+			<property name="tmplImage" value="skin.ImgRowBubbleWhite"/>
+            <property name="colColor" from="def.colColor" />
+			<property name="nX" value="402"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="18"/>
+			<property name="nHeight" value="30"/>
+		</object>
+        
+	</objectDef>
+
+	<objectDef type="UI2DTradeSummary" superType="mlui.UI2DElement">
+		<propertyDef name="objNationFinance" type="gs_tbg.NationFinance"/>
+		<propertyDef name="objResourceTradeList" type="UI2DResourceTradeListSection"/>
+
+		<propertyDef name="nTotalRevenue" type="int64"/>
+			<property name="nTotalRevenue">
+				sum(map(?{resource: resource.objTradeSummary.nRevenues}, self.objResourceTradeList.objList.objElements))
+			</property>
+		<propertyDef name="nTotalCosts" type="int64"/>
+			<property name="nTotalCosts">
+				sum(map(?{resource: resource.objTradeSummary.nCosts}, self.objResourceTradeList.objList.objElements))
+			</property>
+
+
+            
+		<object type="mlui.UI2DText" name="objSourceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Source"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objExportRevenuesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.TradeAgreements"/>
+			<property name="nX" value="160"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		<object type="mlui.UI2DText" name="objWorldMarketLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.WorldMarket"/>
+			<property name="nX" value="280"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="10"/>
+		</object>
+            
+            
+		<!-- Total Revenue -->
+		<object type="mlui.UI2DImage" name="objTotalRevenue">
+			<property name="tmplImage" value="skin.ImgRowBubbleWhite"/>
+            <property name="colColor" value="#EFF9E9FF" />
+			<property name="nX" value="21"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="140"/>
+			<property name="nHeight" value="30"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTotalRevenueBG">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.TotalRevenue"/>
+			<property name="nY" value="21"/>
+			<property name="nX" value="27"/>
+			<property name="nWidth" value="135"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objTotalRevenueRight">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nY" value="11"/>
+			<property name="nX" value="160"/>
+			<property name="nWidth" value="120"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTotalRevenueValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Right"/>
+			<property name="strText" from="'$' + def.nTotalRevenue.formatNumber(0, true)"/>
+			<property name="nY" value="21"/>
+			<property name="nX" value="159"/>
+			<property name="nWidth" value="116"/>
+			<property name="nHeight" value="14"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objTotalRevenueWMBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nY" value="11"/>
+			<property name="nX" value="279"/>
+			<property name="nWidth" value="120"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTotalRevenueWM">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Right"/>
+			<property name="strText" from="'$' + def.objNationFinance.n64WMExportRevenue.formatNumber(0, true)"/>
+			<property name="nY" value="21"/>
+			<property name="nX" value="278"/>
+			<property name="nWidth" value="116"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<!-- Total Costs -->
+        
+		<object type="mlui.UI2DImage" name="objTotalCostsBG">
+			<property name="tmplImage" value="skin.ImgRowBubbleWhite"/>
+            <property name="colColor" value="#F9E9E9FF" />
+			<property name="nY" value="42"/>
+			<property name="nX" value="21"/>
+			<property name="nWidth" value="140"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-50"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTradeCosts">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.TotalCosts"/>
+			<property name="nY" value="52"/>
+			<property name="nX" value="27"/>
+			<property name="nWidth" value="135"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objTotalCostsRight">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nY" value="42"/>
+			<property name="nX" value="160"/>
+			<property name="nWidth" value="120"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTotalCostsValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Right"/>
+			<property name="strText" from="'$' + def.nTotalCosts.formatNumber(0, true)"/>
+			<property name="nY" value="52"/>
+			<property name="nX" value="159"/>
+			<property name="nWidth" value="116"/>
+			<property name="nHeight" value="14"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objTotalCostsWMBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nY" value="42"/>
+			<property name="nX" value="279"/>
+			<property name="nWidth" value="120"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTotalCostsWM">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Right"/>
+			<property name="strText" from="'$' + def.objNationFinance.n64WMImportExpense.formatNumber(0, true)"/>
+			<property name="nY" value="52"/>
+			<property name="nX" value="278"/>
+			<property name="nWidth" value="116"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<!-- Trade Balance -->
+		<object type="mlui.UI2DImage" name="objTradeBalanceBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nY" value="73"/>
+			<property name="nX" value="21"/>
+			<property name="nWidth" value="140"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-50"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objTradeBalance">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.TradeBalance"/>
+			<property name="nY" value="83"/>
+			<property name="nX" value="27"/>
+			<property name="nWidth" value="135"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objTradeBalanceRight">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nY" value="73"/>
+			<property name="nX" value="160"/>
+			<property name="nWidth" value="120"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+
+        <propertyDef name="nNetBalanceTradeAgreements" type="int64" >
+            self.nTotalRevenue - self.nTotalCosts
+        </propertyDef>
+        
+        <propertyDef name="nNetBalanceWM" type="int64" >
+          self.objNationFinance.n64WMExportRevenue - self.objNationFinance.n64WMImportExpense
+        </propertyDef>
+        
+		<object type="mlui.UI2DText" name="objTradeBalanceValue">
+			<property name="tmplTextStyle">
+				if(def.nNetBalanceTradeAgreements LT 0, 'locale.TxtStyleArialRed14Right', 'locale.TxtStyleArialGreen14Right')
+			</property>
+			<property name="strText" from="'$' + (def.nNetBalanceTradeAgreements).formatNumber(0, true)"/>
+			<property name="nY" value="83"/>
+			<property name="nX" value="159"/>
+			<property name="nWidth" value="116"/>
+			<property name="nHeight" value="14"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objTotalBalanceWMBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nY" value="73"/>
+			<property name="nX" value="279"/>
+			<property name="nWidth" value="120"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-110"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTotalBalanceWM">
+			<property name="tmplTextStyle">
+				if(def.nNetBalanceWM LT 0, 'locale.TxtStyleArialRed14Right', 'locale.TxtStyleArialGreen14Right')
+			</property>
+			<property name="strText" from="'$' + def.nNetBalanceWM.formatNumber(0, true)"/>
+			<property name="nY" value="83"/>
+			<property name="nX" value="278"/>
+			<property name="nWidth" value="116"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	</objectDef>
+</locust>

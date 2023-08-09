@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- TODO: Replace with query -->
+    <objectDef type="AvailableFactoryOutputsLookup" class="CMLOAvailableFactoryOutputsLookup">
+        <propertyDef name="objGameRoot" type="Object"/>
+        <propertyDef name="objCity" type="City"/>
+        <propertyDef name="objValidFactoryOutputs" type="FactoryOutputTemplate" variable="true"/>
+    </objectDef>
+
+	<!-- TODO: Replace with query -->
+    <objectDef type="AvailableResearchTopicsLookup" class="CMLOAvailableResearchTopicsLookup">
+        <propertyDef name="objGameRoot" type="Object"/>
+        <propertyDef name="objCity" type="City"/>
+        <propertyDef name="objValidResearchTopics" type="ResearchTopicTemplate" variable="true"/>
+        <propertyDef name="objBlockedResearchTopics" type="ResearchTopicTemplate" variable="true"/>
+    </objectDef>
+
+</locust>

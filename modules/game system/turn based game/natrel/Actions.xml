@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GActDeclareWar"  superType="mlgame.GActMethod">
+		<propertyDef name="refDeclaringNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="eJustification" type="Enum" restriction="WarJustification" default="None"/>
+	    <propertyDef name="strMessage" type="String"/>
+
+		<script type="application/javascript"><![CDATA[
+			function execute()
+			{
+				log("DEBUG: GActDeclareWar strMessage=" + self.strMessage);
+
+				getGameSysNationRelations(self.objGame).declareWar(
+					self.objGame,
+					self.refDeclaringNation.resolve(self.objGame),
+					self.refTargetNation.resolve(self.objGame),
+					self.eJustification,
+					self.strMessage );
+			}
+		]]></script>
+
+	</objectDef>
+
+	<objectDef type="GActPlaceEmbargo" class="CMLOGActPlaceEmbargo" superType="mlgame.GameAction">
+		<propertyDef name="refDeclaringNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refEmbargoedNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="dateExpiration" type="Date"/>
+	</objectDef>
+
+	<objectDef type="GActLiftEmbargo" class="CMLOGActLiftEmbargo" superType="mlgame.GameAction">
+		<propertyDef name="refDeclaringNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refEmbargoedNation" type="GORef" restriction="Nation"/>
+	</objectDef>
+
+	<objectDef type="GActLiberateNation" class="CMLOGActLiberateNation" superType="mlgame.GameAction">
+        <propertyDef name="refLiberator" type="GORef" restriction="Nation"/>
+        <propertyDef name="tmplNation" type="TemplateRef" restriction="NationTemplate"/>
+        <propertyDef name="tmplIdeology" type="TemplateRef" restriction="IdeologyTemplate"/>
+        <propertyDef name="eStatus" type="Enum" restriction="NationStatusType"/>
+        <propertyDef name="objRegions" type="Object" restriction="Region" variable="true"/>
+	</objectDef>
+
+    <objectDef type="GActGrantMilitaryAccess" class="CMLOGActGrantMilitaryAccess" superType="mlgame.GameAction">
+        <propertyDef name="refGrantingNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+    </objectDef>
+
+    <objectDef type="GActGrantPortAccess" class="CMLOGActGrantPortAccess" superType="mlgame.GameAction">
+        <propertyDef name="refGrantingNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+    </objectDef>
+
+    <objectDef type="GActCancelMilitaryAccess" class="CMLOGActCancelMilitaryAccess" superType="mlgame.GameAction">
+        <propertyDef name="refGrantingNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+    </objectDef>
+
+    <objectDef type="GActCancelPortAccess" class="CMLOGActCancelPortAccess" superType="mlgame.GameAction">
+        <propertyDef name="refGrantingNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+    </objectDef>
+
+    <objectDef type="GActTransferTerritory" class="CMLOGActTransferTerritory" superType="mlgame.GameAction">
+        <propertyDef name="refTransferer" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTransferee" type="GORef" restriction="Nation"/>
+        <propertyDef name="objRegions" type="Object" restriction="Region" variable="true"/>
+    </objectDef>
+
+    <objectDef type="GActAnnexPuppet" class="CMLOGActAnnexPuppet" superType="mlgame.GameAction">
+        <propertyDef name="refAnnexer" type="GORef" restriction="Nation"/>
+        <propertyDef name="refPuppet" type="GORef" restriction="Nation"/>
+    </objectDef>
+
+	<objectDef type="GActProposeAlliance" superType="mlgame.GActMethod">
+		<propertyDef name="refProposingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="bDemand" type="bool" default="false"/>
+		<propertyDef name="refProposedCommonEnemyNation" type="GORef" restriction="Nation"/>
+	    <propertyDef name="strMessage" type="String"/>
+		<script type="application/javascript"><![CDATA[
+			function execute()
+			{
+				var commonEnemy = null;
+				if (self.refProposedCommonEnemyNation != null)
+				{
+					commonEnemy = self.refProposedCommonEnemyNation.resolve(self.objGame);
+				}
+
+				getGameSysNationRelations(self.objGame).proposeAlliance(
+					self.objGame,
+					self.refProposingNation.resolve(self.objGame),
+					self.refReceivingNation.resolve(self.objGame),
+					self.bDemand,
+					commonEnemy,
+					self.strMessage );
+			}
+		]]></script>
+	</objectDef>
+
+	<objectDef type="GActProposeMilitaryAccessTreaty" superType="mlgame.GActMethod">
+		<propertyDef name="refProposingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="bDemand" type="bool" default="false"/>
+		<propertyDef name="refProposedCommonEnemyNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="strMessage" type="String"/>
+		<script type="application/javascript"><![CDATA[
+			function execute()
+			{
+				var commonEnemy = null;
+				if (self.refProposedCommonEnemyNation != null)
+				{
+					commonEnemy = self.refProposedCommonEnemyNation.resolve(self.objGame);
+				}
+
+				getGameSysNationRelations(self.objGame).proposeMilitaryAccessTreaty(
+					self.objGame,
+					self.refProposingNation.resolve(self.objGame),
+					self.refReceivingNation.resolve(self.objGame),
+					self.bDemand,
+					commonEnemy,
+					self.strMessage );
+			}
+		]]></script>
+	</objectDef>
+
+	<objectDef type="GActProposePortAccessTreaty" superType="mlgame.GActMethod">
+		<propertyDef name="refProposingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="bDemand" type="bool" default="false"/>
+		<propertyDef name="strMessage" type="String"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				getGameSysNationRelations(self.objGame).proposePortAccessTreaty(
+					self.objGame,
+					self.refProposingNation.resolve(self.objGame),
+					self.refReceivingNation.resolve(self.objGame),
+					self.bDemand,
+					self.strMessage );
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActProposeTerritorialTransfer" superType="mlgame.GActMethod">
+		<propertyDef name="refProposingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="objTerms" type="TreatyTerm" variable="true" storesChildren="true"/>
+		<propertyDef name="bDemand" type="bool" default="false"/>
+		<propertyDef name="strMessage" type="String"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				getGameSysNationRelations(self.objGame).proposeTerritorialTransferTreaty(
+					self.objGame,
+					self.refProposingNation.resolve(self.objGame),
+					self.refReceivingNation.resolve(self.objGame),
+					self.objTerms,
+					self.bDemand,
+					self.strMessage );
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActProposePeaceTreaty" superType="mlgame.GActMethod">
+		<propertyDef name="refProposingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="objTerms" type="TreatyTerm" variable="true" storesChildren="true"/>
+		<propertyDef name="bDemand" type="bool" default="false"/>
+		<propertyDef name="strMessage" type="String"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				getGameSysNationRelations(self.objGame).proposePeaceTreaty(
+					self.objGame,
+					self.refProposingNation.resolve(self.objGame),
+					self.refReceivingNation.resolve(self.objGame),
+					self.objTerms,
+					self.bDemand,
+					self.strMessage );
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActRatifyTreaty" superType="mlgame.GActMethod">
+		<propertyDef name="refTreaty" type="GORef" restriction="Treaty"/>
+		<propertyDef name="strMessage" type="String"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				getGameSysNationRelations(self.objGame).ratifyTreaty(
+					self.objGame,
+					self.refTreaty.resolve(self.objGame),
+					self.strMessage);
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActRejectTreaty" superType="mlgame.GActMethod">
+		<propertyDef name="refTreaty" type="GORef" restriction="Treaty"/>
+		<propertyDef name="strMessage" type="String"/>
+		<script type="application/javascript"><![CDATA[
+			function execute()
+			{
+				getGameSysNationRelations(self.objGame).rejectTreaty(self.objGame,self.refTreaty.resolve(self.objGame),self.strMessage);
+			}
+		]]></script>
+	</objectDef>
+
+    <objectDef type="GActLeaveAlliance" superType="mlgame.GActMethod">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <script type="application/javascript"><![CDATA[
+			function execute()
+			{
+				getGameSysNationRelations(self.objGame).leaveAlliance(
+					self.objGame,
+					self.refNation.resolve(self.objGame)
+				);
+			}
+		]]></script>
+	</objectDef>
+
+	<objectDef type="GActPuppetDeclareIndependence" superType="mlgame.GActMethod">
+		<propertyDef name="objNation" type="Nation"/>
+        <script type="application/javascript"><![CDATA[
+			function execute()
+			{
+				self.objGame.sendEvent(EventPuppetRevolt.create({"objMasterNation": self.objNation.objStatus.refController.resolve(self.objGame), "objRevoltNation": self.objNation}));
+				self.objNation.objStatus = NationStatusIndependent.create({});
+				//getGameSysNationRelations(self.objGame).leaveAlliance(
+				//	self.objGame,
+				//	self.objNation
+				//);
+			}
+		]]></script>
+	</objectDef>
+
+	<objectDef type="GActRenameAlliance" superType="mlgame.GActMethod" >
+		<propertyDef name="refAlliance" type="GORef" restriction="Alliance" />
+        <propertyDef name="strNewName" type="String"/>
+		<script type="application/javascript"><![CDATA[
+			function execute()
+			 {
+			    if (self.strNewName == "") 
+			        return;
+			        
+                alliance = self.refAlliance.resolve(self.objGame);
+                if (alliance == null)
+                    return;
+                    
+                if (alliance.strDisplayName == self.strNewName)
+                    return;
+                    
+                var alreadyUsed = getAllAlliances(self.objGame).find({"strDisplayName":self.strNewName});
+                if (alreadyUsed != null)
+                {
+                    logError("Can't rename " + alliance.strDisplayName + " to " + self.strNewName + " because the name is already in use.");
+                    return;
+                }
+                
+                alliance.strDisplayName = self.strNewName;                    
+			}
+		]]></script>
+	</objectDef>
+
+</locust>

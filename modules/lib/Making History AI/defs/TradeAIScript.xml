@@ -1,0 +1,1052 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="TradeAIScript" class="CMLObject">
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        <propertyDef name="n64MinimumMoney" type="int64" default="500000"/>
+
+        <propertyDef name="objGameSysTrade" type="gs_tbg.GameSysTrade"/>
+        <property name="objGameSysTrade" from="self.objParentAI.objGameSysTrade"/>
+
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+
+        <propertyDef name="objGameSysNation" type="gs_tbg.GameSysNation"/>
+        <property name="objGameSysNation" from="self.objParentAI.objGameSysNation"/>
+
+        <propertyDef name="objGameSysNationRelations" type="gs_tbg.GameSysNationRelations"/>
+        <property name="objGameSysNationRelations" from="self.objParentAI.objGameSysNationRelations"/>
+
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <property name="objGameSysTurnBasedGame" from="self.objParentAI.objGameSysTurnBasedGame"/>
+        
+        <script type="application/javascript"><![CDATA[
+
+
+// some enum values we want to use
+// gs_tbg.TradeAgreementStatus.ACCEPTED
+// gs_tbg.AutotradeState.AUTOTRADE_STATE_DISABLED
+// gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_ONLY
+// gs_tbg.AutotradeState.AUTOTRADE_STATE_SELL_ONLY
+// gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_AND_SELL
+
+// utility Object
+function DecisionFactor(eReason,bDecision,fWeight)
+{
+    this.m_eReason = eReason;
+    this.m_bDecision = bDecision;
+    this.m_fWeight = fWeight;
+
+    this.logValues = function()
+    {
+        log("reason=" + this.m_eReason + ",decision=" + this.m_bDecision + ",weight=" + this.m_fWeight);
+    }
+}
+
+function addRandomDecisionFactor(decisionFactors,eReason,fTendency,bTendencyWinResult,fWeight,strLogComment)
+{
+    var fRand = self.objParentAI.getRandomFloat();
+    var bDecision = bTendencyWinResult;
+    if (fTendency >= fRand)
+    {
+        //log("addRandomDecisionFactor:" + strLogComment + ",tendency:" + fTendency + ",rand:" + fRand + ",decision:" + bDecision);
+        //log("eReason=" + eReason);
+        decisionFactors.push(new DecisionFactor(eReason,bDecision,fWeight) );
+    }
+}
+
+// weigh decisions in decision factor list
+function weighDecisions(decisionFactors)
+{
+    if (decisionFactors.length == 0)
+    {
+        log("ERROR! no decision factors");
+        return DecisionFactor(gs_tbg.Reason.NoReason,false,0.0);
+    }
+
+    // if any weights are at 1.0, that means the decision is required,
+    // otherwise we can pick randomly between different ones based on weight
+    var chosenDecision = decisionFactors[0]; // pick first one as default
+    var totalWeight = 0;
+    for (var i=0; i<decisionFactors.length; i++)
+    {
+        var d=decisionFactors[i];
+        //d.logValues();
+
+        if (d.m_fWeight >= 0.999) // make sure we catch required decisions
+        {
+            chosenDecision = d;
+            break;
+        }
+        if (totalWeight <= 0)
+        {
+            chosenDecision = d;
+        }
+        else
+        {
+            var fRatio = d.m_fWeight / totalWeight;
+            var fRand = self.objParentAI.getRandomFloat();
+            if (fRatio > fRand)
+                chosenDecision = d;
+        }
+        totalWeight += d.m_fWeight;
+    }
+    //log("chosenDecision.m_bDecision = " + chosenDecision.m_bDecision);
+    return chosenDecision;
+}
+
+
+// temporary object for research AI
+function TradeAITempData(avatar)
+{
+    this.avatar = avatar;
+    this.pad = getPAD(avatar,PADMakingHistoryAI);
+    this.nation = this.pad.objNation;
+    this.turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+
+    // get the amount of surplus cash
+    this.getTotalCash = function()
+    {
+		return this.nation.getMoney(this.avatar);
+    }
+
+    // get the amount of surplus resource we have
+    this.getSurplusResourceAmount = function(resource)
+    {
+        var nationResource = this.pad.getNationResource(resource);
+        var amt = nationResource.nAmount - nationResource.nDesiredStockpile;
+        if (amt < 0)
+            amt = 0;
+        return amt;
+    }
+
+    // get the current cost of a resource
+    this.getResourceAdjustedCost = function(resource)
+    {
+        var adjust = self.objGameSysTrade.getPriceAdjustTemplate(resource);
+        return adjust.fPriceAdjust * resource.nPrice;
+    }
+
+    this.parentDiplomaticRelationsOkForTrading = function(parentNation,proposingNation,resource)
+    {
+		var parentAvatar = self.objParentAI.getControllingAvatar(this.avatar,parentNation);
+		if (parentAvatar == null)
+		{
+			// human controlled
+	        var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,parentNation,proposingNation,true) != null);
+			return !bAtWar;
+		}
+		else
+		{
+			var tmplAIDiplo = self.objParentAI.objDiplomacyAI.getAIDiplomaticRelations(parentAvatar,proposingNation);
+			var bIsArms = false;
+			if (resource != null)
+			{
+			    bIsArms = resource.equals(self.objParentAI.objArmsTemplate);
+			}
+			if (bIsArms)
+				return tmplAIDiplo.bAllowArmsTrade;
+			else
+				return tmplAIDiplo.bAllowAnyTrade;
+		}
+	}
+
+    this.diplomaticRelationsOkForTrading = function(proposingNation,resource)
+    {
+        var tmplAIDiplo = self.objParentAI.objDiplomacyAI.getAIDiplomaticRelations(this.avatar,proposingNation);
+        //log("tmplAIDiplo=" + tmplAIDiplo);
+
+		var bIsArms = false;
+		if (resource != null)
+		{
+		    bIsArms = resource.equals(self.objParentAI.objArmsTemplate);
+		}
+
+        if (bIsArms)
+            return tmplAIDiplo.bAllowArmsTrade;
+        else
+            return tmplAIDiplo.bAllowAnyTrade;
+    }
+
+    this.addTradePolicyDecisionFactors = function(decisionFactors,tradeAgreement,proposingNation,bProposingNationIsBuying,fPolicyWeight)
+    {
+        var policy = this.pad.objAITradePolicyTemplate;
+        if (bProposingNationIsBuying)
+        {
+            if (tradeAgreement.bAid)
+            {
+                // proposal is for this nation to give something to another nation
+            }
+            else
+            {
+                // proposal is for this nation to sell something to another nation
+                addRandomDecisionFactor(decisionFactors, gs_tbg.Reason.FavorDomesticMarket, policy.fDominateDomesticMarket,      false,  fPolicyWeight,"fDominateDomesticMarket");
+                addRandomDecisionFactor(decisionFactors, gs_tbg.Reason.FavorWorldMarket,    policy.fSellOnWorldMarketPreference, false,  fPolicyWeight,"fSellOnWorldMarketPreference");
+            }
+        }
+        else
+        {
+            if (tradeAgreement.bAid)
+            {
+                // proposal is for this nation to accept aid from another nation
+            }
+            else
+            {
+                // proposal is for this nation to buy something from another nation
+                addRandomDecisionFactor(decisionFactors, gs_tbg.Reason.FavorTradeAgreements,    policy.fBuyForeignWillingness,       true,   fPolicyWeight,"fBuyForeignWillingness");
+                addRandomDecisionFactor(decisionFactors, gs_tbg.Reason.FavorDomesticMarket,     policy.fDominateDomesticMarket,      false,  fPolicyWeight,"fDominateDomesticMarket");
+                addRandomDecisionFactor(decisionFactors, gs_tbg.Reason.FavorWorldMarket,        policy.fBuyOnWorldMarketPreference,  false,  fPolicyWeight,"fBuyOnWorldMarketPreference");
+            }
+        }
+    }
+
+    // consider a trade agreement
+    this.considerTradeOrMoneyProposal = function(tradeAgreement, moneyTransfer)
+    {
+        var proposingNation;
+        var destNation;
+        var nAmount;
+        var bOneTime;
+        var bAid;
+        var resource;
+        var nTheirAmount;
+        var nOurAmount;
+        
+        var bWantLog = self.objGameSysAIUtility.bAITestMode;
+         
+        if (tradeAgreement != null)
+        {
+            proposingNation = tradeAgreement.refProposingNation.resolve(this.avatar);
+            destNation = tradeAgreement.refDestNation.resolve(this.avatar);
+            nAmount = tradeAgreement.nAmount;
+            bOneTime = (tradeAgreement.nDuration == 1);
+            bAid = tradeAgreement.bAid;
+            resource = tradeAgreement.tmplResource.resolve();
+            
+            var theirNationResource = self.objGameSysNation.getNationResource(proposingNation, resource);
+            var ourNationResource = this.pad.getNationResource(resource);
+            
+            nTheirAmount = theirNationResource.nAmount;
+            nOurAmount = ourNationResource.nAmount;
+        }
+        else
+        {
+            proposingNation = moneyTransfer.refProposingNation.resolve(this.avatar);
+            destNation = moneyTransfer.refDestNation.resolve(this.avatar);
+            nAmount = moneyTransfer.n64Amount;
+            bOneTime =  moneyTransfer.bOneTime;
+            bAid = true;
+            resource = null;
+            nTheirAmount = proposingNation.getMoney(this.avatar);
+            nOurAmount = this.nation.getMoney(this.avatar);
+        }
+        
+        var embargoingNation = null;
+        
+        var bProposingNationIsDestination = proposingNation.equals(destNation);
+        
+        if (bWantLog)
+        {
+            if (tradeAgreement != null)
+            {
+                log("DEBUG: " +  this.nation.strName + " considering trade agreement proposal from " + proposingNation.strName);
+            }
+            else
+            {
+                log("DEBUG: " +  this.nation.strName + " considering money transfer proposal from " + proposingNation.strName);
+            }
+        }
+            
+        if (this.nation == null)
+        {
+            // AI or UI should check for and not allow this genericProposal in the first place.
+            log("WARN(4): null nation received proposal from " + proposingNation.strName);
+            return;
+		}
+		
+		if (this.nation.bDisabled)
+		{
+		    log("DEBUG: " + this.nation.strName + " is awaiting its fate and cannot accept trade agreements.");
+		    var message="..."; // we're not capable of responding at this moment...
+		    if (tradeAgreement != null)
+                this.avatar.sendAction(gs_tbg.GActRejectTradeAgreement.create({"refTradeAgreement": tradeAgreement,"strRejectMessage": message}) );
+            else
+                this.avatar.sendAction(gs_tbg.GActRejectMoneyTransfer.create({"refMoneyTransfer": moneyTransfer,"strRejectMessage": message}) );
+            return;
+		}
+
+        
+        var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,proposingNation,true) != null);
+
+        // defaults
+        var eTone = self.objParentAI.objDiplomacyAI.getDefaultTone(this.avatar,proposingNation);
+        var eReason = gs_tbg.Reason.NoReason;
+        var considerObject = null; // AINationComparision 
+
+        var decisionFactors = new Array();
+        var puppetToMaster = false;
+        var fromAlly = self.objGameSysNationRelations.areAllies(this.avatar, this.nation, proposingNation, true);
+
+		var parentNation = null;
+        if (this.nation.objStatus.instanceOf(gs_tbg.NationStatusPuppet))
+		{
+			parentNation = this.nation.objStatus.refController.resolve(this.avatar);
+			if (parentNation.equals(proposingNation))
+			{
+			    puppetToMaster = true;
+				decisionFactors.push(new DecisionFactor(gs_tbg.Reason.WeAreAPuppet,true,0.95) );
+			}
+			else
+			{
+                if ( (!bAid) && (!this.parentDiplomaticRelationsOkForTrading(parentNation,proposingNation,resource) ) )
+				{
+					decisionFactors.push(new DecisionFactor(gs_tbg.Reason.WeAreAPuppet,false,1.0) );
+				}
+			}
+		}
+		
+        if (!bAtWar)
+        {
+            // check for embargos
+		    if (tradeAgreement && (!puppetToMaster) && (!bAid))
+		    {
+                var proposerDiplo = self.objGameSysNationRelations.getDiplomaticRelations(this.nation,proposingNation);
+                var proposerLevel = proposerDiplo.nDiplomaticRelations;
+		    
+		        // find embargo initiated by the nation we like best
+		        var embargos = self.objGameSysNationRelations.objEmbargos.filter({"refEmbargoedNation": proposingNation});
+		        var bestNation = null;
+		        var bestLevel = proposerLevel;
+		        for (var i in embargos)
+		        {
+		            var embargo = embargos[i];
+		            var otherNation = embargo.refInitiatingNation.resolve(this.avatar);
+		            if (otherNation.equals(this.nation))
+		            {
+                        bestNation = this.nation;
+                        bestLevel = 1001;
+                        break;
+		            }
+		            else
+		            {
+                        var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation,false) != null);
+                        if (!bAtWar)
+                        {
+                            var otherDiplo = self.objGameSysNationRelations.getDiplomaticRelations(this.nation,otherNation);
+                            var otherDiploLevel = otherDiplo.nDiplomaticRelations;
+                            if (otherDiploLevel > bestLevel)
+                            {
+                                bestNation = otherNation;
+                                bestLevel = otherDiploLevel;
+                            }
+                        }
+                    }
+		        }
+		        
+		        if (bestNation != null)
+		        {
+		            // honor the embargo
+		            if (bestNation.equals(this.nation))
+		            {
+                        decisionFactors.push(new DecisionFactor(gs_tbg.Reason.OurEmbargo,false,1.0) );
+		            }
+		            else
+		            {
+                        decisionFactors.push(new DecisionFactor(gs_tbg.Reason.Embargo,false,1.0) );
+		                embargoingNation = bestNation;
+		            }
+		        }
+		    }
+		            
+            if (bProposingNationIsDestination)
+            {
+                if (puppetToMaster)
+                {
+                    // always accepts unless we don't actually have enough resources
+                    if (nOurAmount < nAmount)
+                    {
+                        decisionFactors.push(new DecisionFactor(gs_tbg.Reason.InsufficientResources,false,1.0) );
+                    }
+                }
+                else
+                {
+                    // see if we have enough resources
+                    var surplusAmt = 0;
+                    if (resource != null)
+                        surplusAmt = this.getSurplusResourceAmount(resource);
+                    else
+                        surplusAmt = nOurAmount - self.n64MinimumMoney;
+                        
+                    if (surplusAmt < nAmount)
+                    {
+                        if (resource != null)
+                            decisionFactors.push(new DecisionFactor(gs_tbg.Reason.InsufficientResources,false,1.0) );
+                        else
+                            decisionFactors.push(new DecisionFactor(gs_tbg.Reason.InsufficientFunds,false,1.0) );
+                    }
+                    else
+                    {
+                        if (bAid)
+                        {
+                            // they want a gift
+                            if (!bOneTime)
+                            {
+                                decisionFactors.push(new DecisionFactor(gs_tbg.Reason.AskingTooMuch,false,1.0) );
+                            }
+                            
+                            if (fromAlly)
+                            {
+                                decisionFactors.push(new DecisionFactor(gs_tbg.Reason.OurAlly,true,0.75) );
+                                decisionFactors.push(new DecisionFactor(gs_tbg.Reason.AskingTooMuch,false,0.25) );
+                            }
+                            else
+                            {
+                                decisionFactors.push(new DecisionFactor(gs_tbg.Reason.NotOurAlly,true,0.05) );
+                                decisionFactors.push(new DecisionFactor(gs_tbg.Reason.NotOurAlly,false,0.95) );
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // proposing nation is sending
+                if (!puppetToMaster)
+                {
+                    if (resource != null)
+                    {
+                        var surplusAmt = this.getSurplusResourceAmount(resource);
+                        if (surplusAmt > 1000)
+                        {
+                            decisionFactors.push(new DecisionFactor(gs_tbg.Reason.SurplusResources,false,0.15) );
+                        }
+                        else if (surplusAmt > 500)
+                        {
+                            decisionFactors.push(new DecisionFactor(gs_tbg.Reason.SurplusResources,false,0.05) );
+                        }
+                    }
+                    
+                    if (bAid)
+                    {
+                        decisionFactors.push(new DecisionFactor(gs_tbg.Reason.FreeAid,true,1.0) );
+                    }
+                    else
+                    {
+                        // see if we have enough money
+                        if (resource != null)
+                        {
+                            var cash = this.getTotalCash();
+                            var cost = this.getResourceAdjustedCost(resource);
+                            if (cash < cost * tradeAgreement.nAmount)
+                            {
+                                decisionFactors.push(new DecisionFactor(gs_tbg.Reason.InsufficientFunds,false,1.0) );
+                            }
+                        }
+                        // else invalid since money transfer is always aid
+                    }
+                } // if not puppet to master
+            } // else proposingNation is selling or giving a resource
+            
+            if (!puppetToMaster)
+            {
+                if ((!bAid) && (tradeAgreement != null) )
+                {
+                    // check diplomatic status
+                    if (!this.diplomaticRelationsOkForTrading(proposingNation,resource))
+                    {
+                        decisionFactors.push(new DecisionFactor(gs_tbg.Reason.PoorRelations,false,1.0) );
+                    }
+
+                    var fPolicyWeight = 0.5; // tweak point
+                    this.addTradePolicyDecisionFactors(decisionFactors,tradeAgreement,proposingNation,bProposingNationIsDestination,fPolicyWeight);
+                    
+                    // evaluate nation characteristics
+                    considerObject = gs_tbg.AINationComparison.create({"objGameRoot":this.avatar, "objMyNation":this.nation, "objTheirNation":proposingNation});
+                    value = considerObject.getChooseMinusVetoChance(gs_tbg.AIDiplomaticDecisionType.AcceptTradeAgreement);
+                    if (value >= 0)
+                    {
+                        var fWeight = value / 100.0;
+                        if (fWeight > 0.99)
+                            fWeight = 0.99;
+                        decisionFactors.push(new DecisionFactor(gs_tbg.Reason.NationCharacteristics,true,fWeight) );
+                    }
+                    else // if (value < 0)
+                    {
+                        var fWeight = - value / 100.0;
+                        if (fWeight > 0.99)
+                            fWeight = 0.99;
+                        decisionFactors.push(new DecisionFactor(gs_tbg.Reason.NationCharacteristics,false,fWeight) );
+                    }
+                } // if this is a trade agreement
+            } // if not puppet to master
+        }
+        else // at war (if this is even possible)
+        {
+            decisionFactors.push(new DecisionFactor(gs_tbg.Reason.AtWar,false,1.0) );
+            eTone = gs_tbg.Tone.Angry;
+        }
+        
+        if (decisionFactors.length == 0)
+        {
+            // Failsafe 
+            if (bWantLog)
+            {
+                log("DEBUG: Didn't find any decision factors.");
+            }
+            decisionFactors.push(new DecisionFactor(gs_tbg.Reason.NoReason,true,0.15) );
+            decisionFactors.push(new DecisionFactor(gs_tbg.Reason.NoReason,false,0.85) );
+        }
+        
+                
+        var finalDecision = weighDecisions(decisionFactors);
+        var bAccept = finalDecision.m_bDecision;
+        var eReason = finalDecision.m_eReason;
+
+        if (resource != null)
+        {
+            if (bAccept && bProposingNationIsDestination && resource.equals(self.objParentAI.objAtomicBombsTemplate) )
+            {
+                // always refuse to sell atomic bombs        
+                bAccept = false;
+                eReason = gs_tbg.Reason.TradePolicy;
+            }	
+        }
+
+		var messageType;
+		if (bAccept)
+		{
+		    if (tradeAgreement != null)
+		    {
+		        if (bAid)
+		        {
+			        if (bProposingNationIsDestination)
+				        messageType = "AgreeToSendResourceAid";
+			        else
+				        messageType = "AgreeToAcceptResourceAid";
+		        }
+		        else
+		        {
+			        if (bProposingNationIsDestination)
+				        messageType = "AgreeToExport";
+			        else
+				        messageType = "AgreeToImport";
+				}
+	        }
+	        else
+	        {
+			    if (bProposingNationIsDestination)
+				    messageType = "AgreeToSendFinancialAid";
+			    else
+				    messageType = "AgreeToAcceptFinancialAid";
+	        }
+		}
+		else
+		{
+		    if (tradeAgreement != null)
+		    {
+		        if (bAid)
+		        {
+			        if (bProposingNationIsDestination)
+				        messageType = "RefuseToSendResourceAid";
+			        else
+				        messageType = "RefuseToAcceptResourceAid";
+		        }
+		        else
+		        {
+			        if (bProposingNationIsDestination)
+				        messageType = "RefuseToExport";
+			        else
+				        messageType = "RefuseToImport";
+				}
+		    }
+		    else
+		    {
+			    if (bProposingNationIsDestination)
+				    messageType = "RefuseToSendFinancialAid";
+			    else
+				    messageType = "RefuseToAcceptFinancialAid";
+		    }
+		}
+
+
+		var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({ "objParentNation": parentNation });
+		
+		if (resource != null)
+		{
+		    messageCriteria.objResourceNation = destNation;
+		    messageCriteria.objResourceTemplate = resource;
+        }
+        
+        if (embargoingNation != null)
+        {
+            messageCriteria.objEmbargoingNation = embargoingNation;
+        }
+
+        messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+		var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,messageType,messageCriteria);
+		
+        if (bAccept)
+        {
+            if (tradeAgreement != null)
+            {
+                if (bWantLog)
+    			    log("DEBUG: " + this.nation.strDisplayName + " accepts trade agreement proposed by " + proposingNation.strDisplayName + ": " + message);
+
+			    this.avatar.sendAction(gs_tbg.GActAcceptTradeAgreement.create({"refTradeAgreement": tradeAgreement, "strAcceptMessage": message }) );
+            }
+            else
+            {
+                if (bWantLog)
+    			    log("DEBUG: " + this.nation.strDisplayName + " accepts money transfer proposed by " + proposingNation.strDisplayName + ": " + message);
+
+			    this.avatar.sendAction(gs_tbg.GActAcceptMoneyTransfer.create({"refMoneyTransfer": moneyTransfer, "strAcceptMessage": message }) );
+            }
+        }
+        else
+        {
+            if (tradeAgreement != null)
+            {
+                if (bWantLog)
+			        log("DEBUG: " + this.nation.strDisplayName + " rejects trade agreement proposed by " + proposingNation.strDisplayName + ": " + message);
+
+                this.avatar.sendAction(gs_tbg.GActRejectTradeAgreement.create({"refTradeAgreement": tradeAgreement, "strRejectMessage": message}) );
+            }
+            else
+            {
+                if (bWantLog)
+			        log("DEBUG: " + this.nation.strDisplayName + " rejects money transfer proposed by " + proposingNation.strDisplayName + ": " + message);
+
+                this.avatar.sendAction(gs_tbg.GActRejectMoneyTransfer.create({"refMoneyTransfer": moneyTransfer, "strRejectMessage": message}) );
+            }
+        }
+    } // considerTradeOrMoneyProposal
+
+
+	this.getNationWhichMayImport = function(resource,nAmount)
+	{
+		var chosenNation = null;
+		var numPossibleNations = 0;
+		var nationRoll = self.objParentAI.getRandomFloat();
+
+        var cost = this.getResourceAdjustedCost(resource) * nAmount;
+
+		// find a nation which wants to buy the specified resource
+		var nationResources = self.objGameSysNation.objNationResources.filter({"objResourceTemplate": resource, "eAutotradeState": gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_AND_SELL});
+		for (var i in nationResources)
+		{
+			var nationResource = nationResources[i];
+			if (nationResource.nAmount > nationResource.nDesiredStockpile)
+				continue;
+
+			var otherNation = nationResource.refNation.resolve(this.avatar);
+			if (otherNation.equals(this.nation))
+				continue;
+
+			// check if they can afford it
+			var theirMoney = otherNation.getMoney(this.avatar) - 1000; // do they have enough plus a bit of extra?
+			if (theirMoney < cost )
+				continue;
+
+			// see if there's an existing agreement to export resource to otherNation
+			var currentAgreement = self.objGameSysTrade.objTradeAgreements.find({
+				"refSourceNation": this.nation,
+				"refDestNation": otherNation,
+				"tmplResource": resource });
+
+			if (currentAgreement != null)
+				continue;
+
+			// see if there's an existing agreement to import resource from otherNation
+			currentAgreement = self.objGameSysTrade.objTradeAgreements.find({
+				"refSourceNation": otherNation,
+				"refDestNation": this.nation,
+				"tmplResource": resource });
+
+			if (currentAgreement != null)
+				continue;
+
+	        var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation,true) != null);
+			if (bAtWar)
+				continue;
+
+			if (!this.diplomaticRelationsOkForTrading(otherNation,resource))
+				continue;
+
+			// reduce frequency of asking any particular nation
+			var skipRoll = self.objParentAI.getRandomIntInRange(0,99);
+			if (skipRoll > 10)
+				continue;
+
+			numPossibleNations++;
+			if (nationRoll < 1/numPossibleNations)
+				chosenNation = otherNation;
+		}
+		return chosenNation;
+	} // this.getNationWhichMayImport
+
+	this.getNationWhichMayExport = function(resource,nAmount)
+	{
+		var chosenNation = null;
+		var numPossibleNations = 0;
+		var nationRoll = self.objParentAI.getRandomFloat();
+
+		// find a nation which wants to buy the specified resource
+		var nationResources = self.objGameSysNation.objNationResources.filter({"objResourceTemplate": resource, "eAutotradeState": gs_tbg.AutotradeState.AUTOTRADE_STATE_SELL_ONLY});
+		for (var i in nationResources)
+		{
+			var nationResource = nationResources[i];
+			if (nationResource.nAmount - nAmount < nationResource.nDesiredStockpile)
+				continue;
+
+			var otherNation = nationResource.refNation.resolve(this.avatar);
+			if (otherNation.equals(this.nation))
+				continue;
+
+			// see if there's an existing agreement to export resource to otherNation
+			var currentAgreement = self.objGameSysTrade.objTradeAgreements.find({
+				"refSourceNation": this.nation,
+				"refDestNation": otherNation,
+				"tmplResource": resource });
+
+			if (currentAgreement != null)
+				continue;
+
+			// see if there's an existing agreement to import resource from otherNation
+			currentAgreement = self.objGameSysTrade.objTradeAgreements.find({
+				"refSourceNation": otherNation,
+				"refDestNation": this.nation,
+				"tmplResource": resource });
+
+			if (currentAgreement != null)
+				continue;
+
+	        var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation,true) != null);
+			if (bAtWar)
+				continue;
+
+			if (!this.diplomaticRelationsOkForTrading(otherNation,resource))
+				continue;
+
+			// reduce frequency of asking any particular nation
+			var skipRoll = self.objParentAI.getRandomIntInRange(0,99);
+			if (skipRoll > 10)
+				continue;
+
+			numPossibleNations++;
+			if (nationRoll < 1/numPossibleNations)
+				chosenNation = otherNation;
+		}
+		return chosenNation;
+	}
+	
+    // consider proposing and cancelling trade agreements
+    // and update market stockpile orders.
+    this.update = function()
+    {
+        //var nProductionAILogLevel = 0;
+        if (this.pad.bWantTradeAILog)
+        {
+            log("--- TradeAI update for " + this.nation.strName + " ---");
+            //nProductionAILogLevel = 1;
+        }
+
+        // set this before calling getDesiredResourceAmount etc because they eventually use the production simulator
+        //var prodSim = self.objGameSysAIUtility.getAINationProductionSimulator(this.avatar,this.nation);
+        //prodSim.setLogLevel(nProductionAILogLevel);
+        
+        var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+
+        // Could adjust existing trade agreements here
+
+		var directTradeThreshold = 50; // tweak point
+		var bestResourceToImport = null;
+		var bestImportAmount = directTradeThreshold;
+
+		var bestResourceToExport = null;
+		var bestExportAmount = directTradeThreshold;
+
+        var resources = self.objParentAI.objResourceList;
+
+        for (var index in resources)
+        {
+            var resource = resources[index];
+            if (!resource.bTradable)
+                continue;
+
+            var nationResource = this.pad.getNationResource(resource);
+            var desiredStockpile = this.pad.getDesiredResourceAmount(resource);
+
+            // delta > 0 indicates we want more (buy), < 0 indicates we can sell
+            var delta = desiredStockpile - nationResource.nAmount;
+
+            var costPer = this.getResourceAdjustedCost(resource);
+            if (delta > 0)
+            {
+				if (delta > bestImportAmount)
+				{
+					bestImportAmount = delta;
+					bestResourceToImport = resource;
+				}
+            }
+            else
+            {
+				if (-delta > bestExportAmount)
+				{
+					bestExportAmount = -delta;
+					bestResourceToExport = resource;
+				}
+            }
+
+            if (this.pad.bWantTradeAILog)
+            {
+                var perTurnChange = self.objParentAI.objProductionAI.getCurrentResourcePerTurnChange(this.avatar,this.nation,resource);            
+                var strDelta;
+                if (delta > 0)
+                    strDelta = "want to buy";
+                else
+                    strDelta = "want to sell";
+                log(resource.strName + " nAmount=" + nationResource.nAmount + ", perTurnChange=" + perTurnChange + ", desiredStockpile=" + desiredStockpile + ", " + strDelta);
+            }
+        }
+
+        // set market trade values
+        for (var index in resources)
+        {
+            var resource = resources[index];
+            if (!resource.bTradable)
+                continue;
+
+            var nationResource = this.pad.getNationResource(resource);
+            var desiredStockpile = this.pad.getDesiredResourceAmount(resource);
+            var tradeOrder = gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_AND_SELL;
+            if ( (nationResource.nDesiredStockpile != desiredStockpile) || notEqual(nationResource.eAutotradeState,tradeOrder) )
+            {
+                if (this.pad.bWantTradeAILog)
+                {
+                    log("Setting nStockpileLevel for " + resource.strName + " to " + desiredStockpile + " " + tradeOrder.name);
+                }
+                this.avatar.sendAction(gs_tbg.GActSetAutotrade.create({
+                    refNation: this.nation,
+                    tmplResource: resource,
+                    eAutotradeState: tradeOrder,
+                    nStockpileLevel: desiredStockpile
+                    }) );
+            }
+            else
+            {
+                if (this.pad.bWantTradeAILog)
+                {
+                    log("Keeping nStockpileLevel for " + resource.strName + " at " + desiredStockpile + " " + tradeOrder.name);
+                }
+            }
+        }
+        
+        var parentNation = this.nation.getMasterNation(this.avatar); // puppet check
+        
+        // Consider reducing or cancelling existing import agreements where we are gaining and have more than we want
+        for (var index in resources)
+        {
+            var resource = resources[index];
+            if (!resource.bTradable)
+                continue;
+                
+            var nationResource = this.pad.getNationResource(resource);
+            var surplus = nationResource.nAmount - nationResource.nDesiredStockpile;
+            if (surplus < 0)
+                continue;
+                
+            if (!nationResource.eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_SELL_ONLY))
+                continue;
+                
+            var reduceTarget = Math.floor(nationResource.fRunningAvgChange);
+            if (reduceTarget < 1)
+            {
+                reduceTarget = Math.floor(surplus / 10);
+                if (reduceTarget < 1)
+                    continue;
+            }
+                        
+			var importAgreements = self.objGameSysTrade.objTradeAgreements.filter({
+				"refDestNation": this.nation,
+				"tmplResource": resource,
+				"eStatus": gs_tbg.TradeAgreementStatus.ACCEPTED
+				 });
+				
+		    var bestAgreementToChange = null;
+		    var worstDiploLevel = 1001;
+		    var worstAmount = 10000000;
+				
+		    for (var i in importAgreements)
+		    {
+		        var tradeAgreement = importAgreements[i];
+		        
+		        if (tradeAgreement.nDuration == 1)
+		            continue;
+		        
+		        var fromNation = tradeAgreement.refSourceNation.resolve(this.avatar);
+		        if (fromNation.equals(parentNation))
+		            continue; // we have to obey our master nation
+		            
+                var diplo = self.objGameSysNationRelations.getDiplomaticRelations(this.nation,fromNation);
+                var level = diplo.nDiplomaticRelations;
+                var amt = tradeAgreement.nAmount;
+		        
+		        if (bestAgreementToChange != null)
+		        {
+		            if (level > worstDiploLevel)
+		                continue;
+		            
+		            if (level == worstDiploLevel)
+		            {
+		                if (amt < worstAmount)
+		                    continue;
+		            }
+		        }
+		        
+		        bestAgreementToChange = tradeAgreement;
+		        worstDiploLevel = level;
+		        worstAmount = amt;
+		    }
+		    
+		    if (bestAgreementToChange != null)
+		    {
+                var fromNation = bestAgreementToChange.refSourceNation.resolve(this.avatar);
+                var newAmt = worstAmount - reduceTarget;
+		        if ( newAmt > 0 )
+		        {
+		            // reduce
+                    if (this.pad.bWantTradeAILog)
+                    {
+                        log("DEBUG: " + this.nation.strDisplayName + " reducing import agreement for " + resource.strName + " from " + fromNation.strDisplayName + " to " + newAmt);
+                    }
+                    
+                    this.avatar.sendAction(gs_tbg.GActReduceTradeAgreement.create({ "refTradeAgreement": bestAgreementToChange, "nNewAmount": newAmt }));
+		        }
+		        else
+		        {
+		            // cancel
+                    var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+                        "objSendingNation": this.nation,
+                        "objReceivingNation": fromNation,
+					    "objResourceNation": fromNation,
+					    "objResourceTemplate": resource
+                        });
+
+	                var eReason = gs_tbg.Reason.SurplusResources;
+                    messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+	                
+    				var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"CancelImport",messageCriteria);
+                    
+                    if (this.pad.bWantTradeAILog)
+                    {
+                        log("DEBUG: " + this.nation.strDisplayName + " cancelling import agreement for " + resource.strName + " from " + fromNation.strDisplayName);
+                        log("DEBUG: " + message);
+                    }
+		            
+                    this.avatar.sendAction(gs_tbg.GActCancelTradeAgreement.create({ 
+                        "refTradeAgreement": bestAgreementToChange, 
+                        "strCancelMessage": message,
+                        "objCancelingNation": this.nation }));
+		        }
+		    }
+        }
+
+		// Consider domestic trade policy factors here
+		
+		var roll = self.objParentAI.getRandomIntInRange(0,99);
+		var bConsiderProposingTradeAgreement = (roll > 90);
+
+		// see if we can find any direct trading partners
+		if ((bestResourceToExport != null) && bConsiderProposingTradeAgreement)
+		{
+			var otherNation = this.getNationWhichMayImport(bestResourceToExport,directTradeThreshold);
+			if (otherNation != null)
+			{
+				var eReason = gs_tbg.Reason.NoReason;
+
+				var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+					"objResourceNation": otherNation,
+					"objResourceTemplate": bestResourceToExport
+					});
+
+				messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+				var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"ProposeToExport",messageCriteria);
+
+                if (this.pad.bWantTradeAILog)
+    				log("DEBUG: " + this.nation.strDisplayName + " proposing to export " + bestResourceToExport.strName + " to " + otherNation.strDisplayName + ": " + message);
+
+				this.avatar.sendAction(gs_tbg.GActProposeTradeAgreement.create({
+					"refProposingNation": this.nation,
+					"refSourceNation": this.nation,
+					"refDestNation": otherNation,
+					"tmplResource": bestResourceToExport,
+					"nAmount": directTradeThreshold,
+					"nDuration": -1,
+					"strProposeMessage": message
+					}) );
+
+				bConsiderProposingTradeAgreement = false; // don't also consider proposing import this turn
+			} // if we found a potential buyer
+		} // if we have something to export
+
+		if ((bestResourceToImport != null) && bConsiderProposingTradeAgreement)
+		{
+			var otherNation = this.getNationWhichMayExport(bestResourceToImport,directTradeThreshold);
+			if (otherNation != null)
+			{
+				var eReason = gs_tbg.Reason.NoReason;
+
+				var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+					"objResourceNation": this.nation,
+					"objResourceTemplate": bestResourceToImport
+					});
+
+				messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+				var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"ProposeToImport",messageCriteria);
+
+                if (this.pad.bWantTradeAILog)
+    				log("DEBUG: " + this.nation.strDisplayName + " proposing to import " + bestResourceToImport.strName + " from " + otherNation.strDisplayName + ": " + message);
+
+				this.avatar.sendAction(gs_tbg.GActProposeTradeAgreement.create({
+					"refProposingNation": this.nation,
+					"refSourceNation": otherNation,
+					"refDestNation": this.nation,
+					"tmplResource": bestResourceToImport,
+					"nAmount": directTradeThreshold,
+					"nDuration": -1,
+					"strProposeMessage": message
+					}) );
+			}
+		}
+
+    } // update
+
+} // TradeAITempData
+
+function update(avatar)
+{
+    var context = new TradeAITempData(avatar);
+    context.update();
+}
+
+function considerTradeProposal(avatar,tradeAgreement)
+{
+    var context = new TradeAITempData(avatar);
+    context.considerTradeOrMoneyProposal(tradeAgreement,null)
+}
+
+function considerMoneyTransferProposal(avatar,moneyTransfer)
+{
+    var context = new TradeAITempData(avatar);
+    context.considerTradeOrMoneyProposal(null,moneyTransfer)
+}
+
+
+        ]]></script>
+
+    </objectDef>
+
+</locust>

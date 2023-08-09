@@ -1,0 +1,1056 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- utility string IDs for sorting -->
+	<string id="SID.UI.AlphaString" value="     "/>
+	<string id="SID.UI.OmegaString" value="zzzzz"/>
+
+	<objectDef type="RegionProductionRowData" class="CMLObject">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="objTransportationDisplayTable" type="TransportationDisplayTable"/>
+
+		<propertyDef name="strCurrentProject" type="String">
+			if(self.objLookupCurrentRegionProject.objProject != null,
+					self.objLookupCurrentRegionProject.objOutputTemplate.strDisplayName,
+					SID.UI.AlphaString)
+		</propertyDef>
+
+		<propertyDef name="strTransportation" type="String">
+			if(self.objRegion.objTransportationImprovement.tmplTransportationImprovement != null,
+					self.objRegion.objTransportationImprovement.tmplTransportationImprovement.resolve().strDisplayName,
+					SID.UI.OmegaString)
+		</propertyDef>
+
+		<propertyDef name="strGroundDef" type="String">
+			if(self.objRegion.objFortificationImprovement.tmplFortificationImprovement != null,
+					self.objRegion.objFortificationImprovement.tmplFortificationImprovement.resolve().strDisplayName,
+					SID.UI.OmegaString)
+		</propertyDef>
+
+		<propertyDef name="strAirDef" type="String">
+			if(self.objRegion.objAADefenseImprovement.tmplAADefenseImprovement != null,
+					self.objRegion.objFortificationImprovement.tmplFortificationImprovement.resolve().strDisplayName,
+					SID.UI.OmegaString)
+		</propertyDef>
+
+		<propertyDef name="strCoastalDef" type="String">
+			if(self.objRegion.objCoastalDefenseImprovement.tmplCoastalDefenseImprovement != null,
+					self.objRegion.objCoastalDefenseImprovement.tmplCoastalDefenseImprovement.resolve().strDisplayName,
+					SID.UI.OmegaString)
+		</propertyDef>
+
+		<object type="LookupCurrentRegionProject" name="objLookupCurrentRegionProject">
+			<property name="objRegion" from="def.objRegion"/>
+		</object>
+		
+		<object type="LookupResourceImprovements" name="objLookupResourceImprovementsCoal">
+			<property name="objRegion" from="def.objRegion"/>
+			<property name="tmplResource" value="sd.Coal"/>
+		</object>
+
+		<object type="LookupResourceImprovements" name="objLookupResourceImprovementsMetals">
+			<property name="objRegion" from="def.objRegion"/>
+			<property name="tmplResource" value="sd.Metals"/>
+		</object>
+
+		<object type="LookupResourceImprovements" name="objLookupResourceImprovementsOil">
+			<property name="objRegion" from="def.objRegion"/>
+			<property name="tmplResource" value="sd.Oil"/>
+		</object>
+
+		<object type="LookupResourceImprovements" name="objLookupResourceImprovementsFood">
+			<property name="objRegion" from="def.objRegion"/>
+			<property name="tmplResource" value="sd.Food"/>
+		</object>
+	</objectDef>
+
+	<enumDef name="RegionProductionSort">
+        <value name="NAME"/>
+        <value name="TERRAIN"/>
+		<value name="PROJECT"/>
+		<value name="TURNS"/>
+		<value name="ROADS"/>
+		<value name="GROUND_DEF"/>
+		<value name="AIR_DEF"/>
+		<value name="COASTAL_DEF"/>
+		<value name="SUPPLY"/>
+		<value name="FOOD"/>
+		<value name="FOOD_RES"/>
+		<value name="COAL"/>
+		<value name="COAL_RES"/>
+		<value name="METALS"/>
+		<value name="METALS_RES"/>
+		<value name="OIL"/>
+		<value name="OIL_RES"/>
+    </enumDef>
+
+	<enumDef name="RegionSort">
+        <value name="ALL"/>
+        <value name="BASE"/>
+        <value name="COLONIES"/>
+    </enumDef>
+
+	<objectDef type="EventRegionAssetSortChosen" superType="mlevent.Event" >
+		<propertyDef name="eColm" type="Enum" restriction="RegionSort" />
+		<propertyDef name="objColony" type="gs_tbg.Colony" />
+		<script type="application/javascript"><![CDATA[
+			function execute(event, owner)
+			{
+				log("EventRegionAssetSortChosen with no owner -- cannot complete task ")
+			}
+		]]></script>
+    </objectDef>
+
+	<objectDef type="UI2DRegionTabAssets" superType="mlui.UI2DElement">
+		<object type="TransportationDisplayTable" name="objTransportationDisplayTable"/>
+	
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="RegionProductionSort.NAME"/>
+		</object> -->
+
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="eColm" type="Enum" restriction="RegionSort" />
+		<propertyDef name="objColony" type="gs_tbg.Colony" />
+		<propertyDef name="objColonies" type="gs_tbg.Colony" variable="true" >
+			gs_tbg.getColonies(mh2data.objAvatar, self.objNation)
+		</propertyDef>
+
+		<propertyDef name="objRegions" type="gs_tbg.Region" variable="true" >
+			switch
+			{
+				case self.eColm == RegionSort.ALL:
+					gs_tbg.getControlledRegions(mh2data.objAvatar, self.objNation)
+
+                case self.eColm == RegionSort.BASE:
+					gs_tbg.getControlledColonyRegions(mh2data.objAvatar, self.objNation, null)
+
+                case self.eColm == RegionSort.COLONIES:
+					gs_tbg.getControlledColonyRegions(mh2data.objAvatar, self.objNation, self.objColony)
+			}
+		</propertyDef>
+
+	    <!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objCityTitleSorter">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12LeftWrap"/>
+			<property name="strText" >
+			switch
+				{
+				case def.eColm == RegionSort.ALL:
+					locale.SID.UI.AllRegions
+				case def.eColm == RegionSort.BASE:
+					locale.SID.UI.NationalRegions
+				case def.eColm == RegionSort.COLONIES:
+					def.objColony.strDisplayName
+				}
+			</property>
+			<property name="nX" value="18"/>
+			<property name="nY" value="105"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRegionSortArrow">
+			<property name="tmplImage" value="skin.ImgDownArrowOrange"/>
+			<property name="nX" value="200"/>
+			<property name="nY" value="107"/>
+			<property name="nWidth" value="10"/>
+			<property name="nHeight" value="9"/>
+		</object>
+
+		<object type="EventRegionAssetSortChosen" name="eSortALL" >
+			<property name="eColm" value="ALL" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;
+				}
+			]]></script>
+		</object>
+
+		<object type="EventRegionAssetSortChosen" name="eSortBASE" >
+			<property name="eColm" value="BASE" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;
+				}
+			]]></script>
+		</object>
+
+		<object type="EventRegionAssetSortChosen" name="eSortCOLONIES" tiedTo="def.objColonies">
+			<property name="objColony" from="tiedTo"/>
+			<property name="eColm" value="COLONIES" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;
+					def.objColony = self.objColony;
+				}
+			]]></script>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objProjectButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="18"/>
+			<property name="nY" value="105"/>
+			<property name="nDefaultWidth" from="def.objCityTitleSorter.nWidth"/>
+			<property name="nDefaultHeight" from="def.objCityTitleSorter.nHeight"/>
+			<property name="nDepth" value="5" />
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							menuX = def.nScreenX + 13;
+							menuY = def.nScreenY + 120;
+
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": def.objProjectButton.nDefaultWidth,
+								"nDefaultItemHeight": def.objProjectButton.nDefaultHeight + 6
+							});
+
+							var menuitem;
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.AllRegions,
+								"objExecuteObject": def.eSortALL
+							});
+							menudata.objItems.add(menuitem);
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.NationalRegions,
+								"objExecuteObject": def.eSortBASE
+							});
+							menudata.objItems.add(menuitem);
+
+							for(var i = 0; i < def.eSortCOLONIES.length; i++)
+							{
+								menuitem = common_elements.MenuItem.create({
+									"strDisplayName": def.eSortCOLONIES[i].objColony.strDisplayName,
+									"objExecuteObject": def.eSortCOLONIES[i]
+								});
+								menudata.objItems.add(menuitem);
+							}
+
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]></script>
+				</object>
+		    </object>
+		</object>
+
+        <object type="mlui.UI2DImage" name="objBubble">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" value="12"/>
+			<property name="nY" value="99"/>
+			<property name="nWidth" from="def.objCityTitleSorter.nWidth + 10"/>
+			<property name="nHeight" from="def.objCityTitleSorter.nHeight + 12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objRegionAssetsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.RegionAssets"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objProductionOrdersAndResearchProjectsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="163"/>
+
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Name"/>
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.NAME"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="131"/>
+				<property name="nHeight" value="23"/>
+			</object>
+
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.CurrentProject"/>
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.PROJECT"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="144"/>
+				<property name="nHeight" value="23"/>
+			</object>
+
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Turns"/>
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.TURNS"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="35"/>
+				<property name="nHeight" value="23"/>
+			</object>
+
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.LandType"/>
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.TERRAIN"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="30"/>
+				<property name="nHeight" value="23"/>
+			</object>
+
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.ROADS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="30"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.TransportationInfrastructure" />
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgTransportRoadIcon"/>
+					<property name="nWidth" value="24"/>
+					<property name="nHeight" value="18"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+
+			</object>
+
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.GROUND_DEF"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="39"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.Fortification"/>
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryImprovementGround"/>
+					<property name="nWidth" value="36"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+
+			</object>
+
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.AIR_DEF"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="39"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.AntiAir"/>
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryImprovementAir"/>
+					<property name="nWidth" value="20"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+
+			</object>
+
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.COASTAL_DEF"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="39"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.CoastalDefense"/>
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryImprovementCoastal"/>
+					<property name="nWidth" value="35"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+
+			</object>
+
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.SUPPLY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="35"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.MapViewSupply"/>
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconSupplyTny"/>
+					<property name="nWidth" value="20"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+
+			</object>
+
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.FOOD"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.FoodProduction"/>
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconFood21x21"/>
+                      <property name="nY" value="0"/>
+					<property name="nWidth" value="22"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<!--<property name="vaYAlign" value="MIDDLE"/>-->
+					<property name="nDepth" value="50"/>
+				</object>
+
+			</object>
+
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.FoodReserves"/>
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.FOOD_RES"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.NumberofOpenFoodSlots"/>
+			</object>
+
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.COAL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.CoalProduction"/>
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconCoal21x21"/>
+					<property name="nWidth" value="21"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+			</object>
+
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.CoalReserves"/>
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.COAL_RES"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.NumberofOpenCoalSlots"/>
+			</object>
+
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.METALS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.MetalsProduction"/>
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconMetals21x21"/>
+					<property name="nWidth" value="21"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+			</object>
+
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.MetalsReserves"/>
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.METALS_RES"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.NumberofOpenMetalsSlots"/>
+			</object>
+
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.OIL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.OilProduction"/>
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconOil21x21"/>
+                    <property name="nY" value="0"/>
+					<property name="nWidth" value="21"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="nDepth" value="50"/>
+				</object>
+			</object>
+
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.OilReserves"/>
+				<property name="objData" from="mh2data.objRegionProductionTableData"/>
+				<property name="eSortBy" from="RegionProductionSort.OIL_RES"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="40"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.NumberofOpenOilSlots"/>
+			</object>
+		</object>
+		
+		<object type="RegionProductionRowData" name="objRowDatas" tiedTo="def.objRegions">
+			<property name="objRegion" from="tiedTo"/>
+			<property name="objTransportationDisplayTable" from="def.objTransportationDisplayTable"/>
+		</object>
+
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.NAME:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objRegion.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objRegion.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.TERRAIN:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objRegion.tmplTerrain.resolve().strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objRegion.tmplTerrain.resolve().strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.PROJECT:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.strCurrentProject}, def.objRowDatas),
+							sortDescending(?{data: data.strCurrentProject}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.TURNS:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objLookupCurrentRegionProject.nProjectTurns}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupCurrentRegionProject.nProjectTurns}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.ROADS:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.strTransportation}, def.objRowDatas),
+							sortDescending(?{data: data.strTransportation}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.GROUND_DEF:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.strGroundDef}, def.objRowDatas),
+							sortDescending(?{data: data.strGroundDef}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.AIR_DEF:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.strAirDef}, def.objRowDatas),
+							sortDescending(?{data: data.strAirDef}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.COASTAL_DEF:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.strCoastalDef}, def.objRowDatas),
+							sortDescending(?{data: data.strCoastalDef}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.SUPPLY:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objRegion.nArmsLimit}, def.objRowDatas),
+							sortDescending(?{data: data.objRegion.nArmsLimit}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.FOOD:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objLookupResourceImprovementsFood.nTotalOutput}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupResourceImprovementsFood.nTotalOutput}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.FOOD_RES:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objLookupResourceImprovementsFood.nImprovementSlots}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupResourceImprovementsFood.nImprovementSlots}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.COAL:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objLookupResourceImprovementsCoal.nTotalOutput}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupResourceImprovementsCoal.nTotalOutput}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.COAL_RES:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objLookupResourceImprovementsCoal.nImprovementSlots}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupResourceImprovementsCoal.nImprovementSlots}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.METALS:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objLookupResourceImprovementsMetals.nTotalOutput}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupResourceImprovementsMetals.nTotalOutput}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.METALS_RES:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objLookupResourceImprovementsMetals.nImprovementSlots}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupResourceImprovementsMetals.nImprovementSlots}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.OIL:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objLookupResourceImprovementsOil.nTotalOutput}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupResourceImprovementsOil.nTotalOutput}, def.objRowDatas)
+						)
+					case mh2data.objRegionProductionTableData.eColm == RegionProductionSort.OIL_RES:
+						if(mh2data.objRegionProductionTableData.bAsc,
+							sortAscending(?{data: data.objLookupResourceImprovementsOil.nImprovementSlots}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupResourceImprovementsOil.nImprovementSlots}, def.objRowDatas)
+						)
+				}
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DRegionAssetListBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+
+	</objectDef>
+
+
+	<!-- Bubble Defs -->
+	<objectDef type="UI2DRegionAssetListBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int"/>
+		<propertyDef name="objData" type="RegionProductionRowData"/>
+
+
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+
+			<!-- Name -->
+			<object type="UI2DRegionAssetTextNameBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="objRegion" from="def.objData.objRegion"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+                <property name="strText" from="def.objData.objRegion.strDisplayName"/>
+				<property name="nWidth" value="131"/>
+			</object>
+            
+			<!-- Current Project -->
+			<object type="UI2DRegionProjectBubble" name="objElements">
+				<property name="objRegion" from="def.objData.objRegion"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle">
+                    if (def.objData.objLookupCurrentRegionProject.objProject.nNumPaidFor == 0,
+                    'locale.TxtStyleArialRed12Left',
+                    'locale.TxtStyleArialBlue12Left'
+                    )
+                </property>
+                <property name="objProject" from="def.objData.objLookupCurrentRegionProject.objProject" />
+                <property name="objOutputTemplate" from="def.objData.objLookupCurrentRegionProject.objOutputTemplate" />
+				<property name="nWidth" value="144"/>
+                <property name="strToolTip" from="if(def.objData.objLookupCurrentRegionProject.objProject.nNumPaidFor == 0, locale.SID.UI.SuppliesNeeded, null)" />
+            </object>
+
+			<!-- Percent Done -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+                <property name="tmplTextStyle">
+                    if (def.objData.objLookupCurrentRegionProject.objProject.nNumPaidFor == 0,
+                    'locale.TxtStyleArialRed12Center',
+                    'locale.TxtStyleArialBlue12Center'
+                    )
+                </property>
+                <property name="strText" from="def.objData.objLookupCurrentRegionProject.nProjectTurns"/>
+				<property name="nWidth" value="35"/>
+			</object>
+
+			<!-- Terrain -->
+			<object type="UI2DRegionAssetIconBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="30"/>
+				<object type="UI2DTerrainIcon" name="objDecal">
+					<property name="objRegion" from="def.objData.objRegion"/>
+					<property name="nX" value="2"/>
+					<property name="nY" value="2"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nWidth" value="28"/>
+					<property name="nHeight" value="28"/>
+				</object>
+			</object>
+
+
+			<!-- Transportation -->
+			<object type="UI2DRegionAssetIconBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="30"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage">
+						def.objData.objTransportationDisplayTable.getEntry(def.objData.objRegion.objTransportationImprovement.tmplTransportationImprovement).tmplImage
+					</property>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nWidth" value="28"/>
+					<property name="nHeight" value="28"/>
+					<property name="strToolTip" from="if(def.objData.objRegion.objTransportationImprovement == null,
+						locale.SID.UI.None, def.objData.objRegion.objTransportationImprovement.tmplTransportationImprovement.resolve().strDisplayName)"/>
+					
+				</object>
+			</object>
+
+			<!-- Fortification -->
+			<object type="UI2DRegionAssetIconBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="38"/>
+				<object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.objRegion.objFortificationImprovement != null">
+					<property name="tmplImage">
+						mh2data.objFortificationDisplayTable.getEntry(def.objData.objRegion.objFortificationImprovement.tmplFortificationImprovement).tmplIcon
+					</property>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="if(def.objData.objRegion.objFortificationImprovement == null,
+						locale.SID.UI.None, def.objData.objRegion.objFortificationImprovement.
+						tmplFortificationImprovement.resolve().strDisplayName)"/>
+				</object>
+			</object>
+
+			<!-- Air Defense -->
+			<object type="UI2DRegionAssetIconBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="40"/>
+				<object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.objRegion.objAADefenseImprovement != null">
+					<property name="tmplImage">
+						mh2data.objAADefenseDisplayTable.getEntry(def.objData.objRegion.objAADefenseImprovement.tmplAADefenseImprovement).tmplIcon
+					</property>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="if(def.objData.objRegion.objAADefenseImprovement == null,
+						locale.SID.UI.None, def.objData.objRegion.objAADefenseImprovement.
+						tmplAADefenseImprovement.resolve().strDisplayName)"/>
+				</object>
+			</object>
+
+			<!-- Coastal Defense -->
+			<object type="UI2DRegionAssetIconBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="39"/>
+				<object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.objRegion.objCoastalDefenseImprovement != null">
+					<property name="tmplImage" value="skin.ImgInfoIconFortificationSm"/>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="23"/>
+					<property name="nHeight" value="23"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="if(def.objData.objRegion.objCoastalDefenseImprovement == null,
+						locale.SID.UI.None, def.objData.objRegion.objCoastalDefenseImprovement.
+						tmplCoastalDefenseImprovement.resolve().strDisplayName)"/>
+				</object>
+			</object>
+
+			<!-- Supply Rate -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="def.objData.objRegion.nArmsLimit + '%'"/>
+				<property name="nWidth" value="35"/>
+			</object>
+
+			<!-- Food Production -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="if(def.objData.objLookupResourceImprovementsFood.nTotalOutput GT 0,
+								def.objData.objLookupResourceImprovementsFood.nTotalOutput,
+								def.objData.objLookupResourceImprovementsFood.nTotalOutput).formatNumber(0, true)"/>
+				<property name="nWidth" value="44"/>
+			</object>
+
+
+			<!-- Food Surplus -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="def.objData.objLookupResourceImprovementsFood.nImprovementSlots.formatNumber(0, true)"/>
+				<property name="nWidth" value="44"/>
+			</object>
+
+			<!-- Coal Production -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="if(def.objData.objLookupResourceImprovementsCoal.nTotalOutput GT 0,
+					def.objData.objLookupResourceImprovementsCoal.nTotalOutput,
+					def.objData.objLookupResourceImprovementsCoal.nTotalOutput).formatNumber(0, true)"/>
+				<property name="nWidth" value="44"/>
+			</object>
+
+			<!-- Coal Reserves -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="def.objData.objLookupResourceImprovementsCoal.nImprovementSlots.formatNumber(0, true)"/>
+				<property name="nWidth" value="44"/>
+			</object>
+
+			<!-- Metal Production -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="if(def.objData.objLookupResourceImprovementsMetals.nTotalOutput GT 0,
+								def.objData.objLookupResourceImprovementsMetals.nTotalOutput,
+								def.objData.objLookupResourceImprovementsMetals.nTotalOutput).formatNumber(0, true)"/>
+				<property name="nWidth" value="44"/>
+			</object>
+
+			<!-- Metal Reserves -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="def.objData.objLookupResourceImprovementsMetals.nImprovementSlots.formatNumber(0, true)"/>
+				<property name="nWidth" value="44"/>
+			</object>
+
+			<!-- Oil Production -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="if(def.objData.objLookupResourceImprovementsOil.nTotalOutput GT 0,
+								def.objData.objLookupResourceImprovementsOil.nTotalOutput,
+								def.objData.objLookupResourceImprovementsOil.nTotalOutput).formatNumber(0, true)"/>
+				<property name="nWidth" value="44"/>
+			</object>
+
+			<!-- Oil Reserves -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="def.objData.objLookupResourceImprovementsOil.nImprovementSlots.formatNumber(0, true)"/>
+				<property name="nWidth" value="44"/>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DRegionAssetIconBubble" superType="UI2DRegionStatsRowBubble">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="objDecal" type="UI2DTerrainIcon" storesChildren="true"/>
+	</objectDef>
+
+	<objectDef type="UI2DRegionAssetTextBubble" superType="UI2DRegionStatsRowBubble">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DRegionAssetTextNameBubble" superType="UI2DRegionStatsRowBubble">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+
+
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objCitySelect">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="131"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="nDepth" value="5"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.objMapData.lookAt(def.objRegion.vecPositions[0]);
+							<!--mh2data.objMapData.zoomToClosest();-->
+							spdata.objRegionData.showRegion(def.objRegion);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DRegionProjectBubble" superType="UI2DRegionStatsRowBubble">
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="objOutputs" type="gs_tbg.RegionOutputTemplate" variable="true"/>
+		<propertyDef name="objOutputTemplate" type="gs_tbg.RegionOutputTemplate" />
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="objProject" type="gs_tbg.RegionProject"/>       
+        
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor" value="#C4DF9BFF"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" >
+                if(def.objProject.nTurns != 0, float(def.nWidth) * float(def.objProject.nTurns) / float(def.objProject.tmplRegionOutput.resolve().nTurns) - 4, 0)
+            </property>
+			<property name="nHeight" from="def.nHeight-4" />
+		</object>
+        
+		<object type="UI2DRegionProjectIcon" name="objRegionProjectIcon" existsWhile="def.objOutputTemplate != null">
+			<property name="objRegionProject" from="def.objOutputTemplate"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" value="27"/>
+			<property name="nDepth" value="50"/>
+		</object>		
+
+		<object type="mlui.UI2DText" name="objText">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle">
+				if(def.objProject != null,
+                    def.tmplTextStyle,
+                    'locale.TxtStyleArialBlue12Center')
+			</property>	
+      
+			<property name="strText" >
+                if(def.objProject != null,
+                       switch
+				                {
+					                case def.objOutputTemplate.strDisplayName == 'Coal Mine Upgrade':
+						                'Coal Mine'
+					                case def.objOutputTemplate.strDisplayName == 'Metals Mine Upgrade':
+						                'Metals Mine'
+					                case def.objOutputTemplate.strDisplayName == 'Deep Oil Well Upgrade':
+						                'Deep Oil Well'
+                                    case def.objOutputTemplate.strDisplayName == 'Deep Coal Mine Upgrade':
+						                'Deep Coal Mine'
+					                case def.objOutputTemplate.strDisplayName == 'Deep Metals Mine Upgrade':
+						                'Deep Metals Mine'
+					                case def.objOutputTemplate.strDisplayName == 'Oil Refinery Upgrade':
+						                'Oil Refinery'
+					                default:
+						                def.objOutputTemplate.strDisplayName
+				                },
+                    locale.SID.UI.NoProject)
+            </property>     
+
+			<property name="nX">
+				if(def.objProject != null,
+                    32,0)
+			</property>	
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<propertyDef name="objProjectButton" type="mlui.UI2DButton" storesChildren="true"/>
+		<object type="mlui.UI2DButton" name="objProjectButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="def.nWidth"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="bVisible" from="def.objRegion.refController == mh2data.objNation"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							menuX = def.nScreenX
+							menuY = def.nScreenY
+							//create a basis for a pop up menu
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": def.objProjectButton.nDefaultWidth,
+								"nDefaultItemHeight": def.objProjectButton.nDefaultHeight - 10
+							});
+
+							def.objRegion.getAvailableRegionOutputs(mh2data.objAvatar, null, def.objOutputs)
+
+							if(def.objOutputs.size > 0)
+							{
+								var menuitem
+								for(i in def.objOutputs)
+								{
+									menuitem = common_elements.MenuItem.create({
+										"strDisplayName": def.objOutputs[i].strDisplayName,
+										"objExecuteObject": eo.EOMapDataSetRegionProduction.create({
+											"objMapData": mh2data.objMapData,
+											"objRegion": def.objRegion,
+											"objOutput": def.objOutputs[i]
+										})
+									});
+									menudata.objItems.add(menuitem);
+								}
+							}
+
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.CancelRegionProjects,
+								"objExecuteObject": eo.EOMapDataCancelRegionProduction.create({
+									"objMapData": mh2data.objMapData,
+									"objRegion": def.objRegion
+								})
+							});
+							menudata.objItems.add(menuitem);
+
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+									"objMenuData": menudata
+								})
+							});
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+
+    </objectDef>
+
+</locust>

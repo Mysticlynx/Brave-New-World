@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GActAddRegionProject" class="CMLOGActAddRegionProject" superType="mlgame.GameAction">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="tmplRegionOutput" type="TemplateRef" restriction="RegionOutputTemplate"/>
+        <propertyDef name="nPriority" type="int" default="0" desc="Desired priority of new region project.  Default of 0 places it at the end of the queue"/>
+        <propertyDef name="objParam" type="Object"/>
+	</objectDef>
+
+	<objectDef type="GActRemoveRegionProject" class="CMLOGActRemoveRegionProject" superType="mlgame.GameAction">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="objRegionProject" type="RegionProject"/>
+	</objectDef>
+
+	<objectDef type="GActSetRegionProjectPriority" class="CMLOGActSetRegionProjectPriority" superType="mlgame.GameAction">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="objRegionProject" type="RegionProject"/>
+        <propertyDef name="nPriority" type="int"/>
+	</objectDef>
+
+    <objectDef type="GActDismantleResourceImprovement" class="CMLOGActDismantleResourceImprovement" superType="mlgame.GameAction">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="objResourceImprovement" type="Object" restriction="ResourceImprovement"/>
+    </objectDef>
+
+	<objectDef type="GActResourceProductionIncrease" superType="mlgame.GActMethod">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="nPointsToAdd" type="int"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				self.objGame.sendEvent(EventResourceProductionIncrease.create({"objRegion": self.objRegion,"tmplResource": self.tmplResource,"nAmount": self.nPointsToAdd}));
+				self.objRegion.adjustResourceProduction(self.objGame, self.tmplResource.resolve(), self.nPointsToAdd);
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActResourceProductionDecrease" superType="mlgame.GActMethod">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="nPointsToSubtract" type="int"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				self.objGame.sendEvent(EventResourceProductionDecrease.create({"objRegion": self.objRegion,"tmplResource": self.tmplResource,"nAmount": self.nPointsToSubtract}));
+				self.objRegion.adjustResourceProduction(self.objGame, self.tmplResource.resolve(), -self.nPointsToSubtract);
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActResourceProductionIncreaseEnd" superType="mlgame.GActMethod">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="nPointsToSubtract" type="int"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				self.objGame.sendEvent(EventResourceProductionIncreaseEnd.create({"objRegion": self.objRegion,"tmplResource": self.tmplResource}));
+				self.objRegion.adjustResourceProduction(self.objGame, self.tmplResource.resolve(), -self.nPointsToSubtract);
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActResourceProductionDecreaseEnd" superType="mlgame.GActMethod">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="nPointsToAdd" type="int"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				self.objGame.sendEvent(EventResourceProductionDecreaseEnd.create({"objRegion": self.objRegion,"tmplResource": self.tmplResource}));
+				self.objRegion.adjustResourceProduction(self.objGame, self.tmplResource.resolve(), self.nPointsToAdd);
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActMPUDecrease" superType="mlgame.GActMethod">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="nPercent" type="int"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				self.objGame.sendEvent(EventMPUDecrease.create({"objRegion": self.objRegion}));
+				self.objRegion.nUnemployedMPUs = self.objRegion.nUnemployedMPUs - (self.objRegion.nUnemployedMPUs * self.nPercent / 100);
+			}
+		]]>	</script>
+	</objectDef>
+	
+	<objectDef type="GActRenameRegion" superType="mlgame.GActMethod" >
+		<propertyDef name="refRegion" type="GORef" restriction="Region" />
+        <propertyDef name="strNewName" type="String"/>
+		<script type="application/javascript"><![CDATA[
+			function execute()
+			 {
+			    if (self.strNewName == "") 
+			        return;
+			        
+                region = self.refRegion.resolve(self.objGame);
+                if (region == null)
+                    return;
+                    
+                if (region.strDisplayName == self.strNewName)
+                    return;
+                    
+                var alreadyUsed = getAllCities(self.objGame).find({"strDisplayName":self.strNewName});
+                if (alreadyUsed != null)
+                {
+                    logError("Can't rename " + region.strDisplayName + " to " + self.strNewName + " because the name is already in use.");
+                    return;
+                }
+                
+                region.strDisplayName = self.strNewName;                    
+			}
+		]]></script>
+	</objectDef>
+	
+	<objectDef type="GActRenameColony" superType="mlgame.GActMethod" >
+		<propertyDef name="refColony" type="GORef" restriction="Colony" />
+        <propertyDef name="strNewName" type="String"/>
+		<script type="application/javascript"><![CDATA[
+			function execute()
+			 {
+			    if (self.strNewName == "") 
+			        return;
+			        
+                colony = self.refColony.resolve(self.objGame);
+                if (colony == null)
+                    return;
+                    
+                if (colony.strDisplayName == self.strNewName)
+                    return;
+                    
+                var alreadyUsed = getAllColonies(self.objGame).find({"strDisplayName":self.strNewName});
+                if (alreadyUsed != null)
+                {
+                    logError("Can't rename " + colony.strDisplayName + " to " + self.strNewName + " because the name is already in use.");
+                    return;
+                }
+                
+                colony.strDisplayName = self.strNewName;                    
+			}
+		]]></script>
+	</objectDef>
+
+</locust>

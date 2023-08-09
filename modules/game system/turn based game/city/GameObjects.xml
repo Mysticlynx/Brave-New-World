@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="City" class="CMLOCity" desc="A city">
+        <goDef gameSystem="GameSysCity" storageProperty="objCities">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="refSeaRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="nIPUs" type="int" default="0"/>
+        <propertyDef name="nRPUs" type="int" default="0"/>
+        <propertyDef name="nCityMPUs" type="int" default="0" desc="Number of MPUs in this city's production buildings"/>
+        <propertyDef name="nResearchMPUs" type="int" default="0" desc="Number of MPUs in this city's research buildings"/>
+        <propertyDef name="nGoodsDemand" type="int" default="0"/>
+        <propertyDef name="nFoodDemand" type="int" default="0"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0"/>
+        <propertyDef name="nResearchExpenses" type="int" default="0"/>
+        <propertyDef name="refResearchCenter" type="GORef" restriction="ResearchCenter"/>
+        <propertyDef name="objCityBuildings" type="CityBuilding" variable="true" storesChildren="true"/>
+        <propertyDef name="objWorkOrders" type="WorkOrder" variable="true" storesChildren="true"/>
+		<propertyDef name="bDamaged" type="bool" default="false"/>
+		<propertyDef name="bNuked" type="bool" default="false"/>
+        <propertyDef name="vecPosition" type="Vec3D" default="[2, 2, 0]"/>
+        <propertyDef name="objController" type="Nation"/>
+        <propertyDef name="nRotation" type="int" default="0"/>
+		<!-- DEPRECATED --><propertyDef name="objCurrentWorkOrder" type="WorkOrder">
+			find(?{order: order.nPriority == 1}, self.objWorkOrders)
+		</propertyDef>
+
+		<script type="application/x-locust-query">
+			canView = ?{gameroot, visibilityList:
+				visibilityList.getRegionIsUnfogged(self.refRegion.resolve(gameroot))
+			}
+
+			canCommand = ?{gameroot, nation:
+				self.refRegion.resolve(gameroot).canCommand(gameroot, nation)
+			}
+
+			getController = ?{gameroot:
+				switch {
+					case self.refRegion.resolve(gameroot).refController.resolve(gameroot).objStatus.instanceOf(NationStatusPuppet):
+						self.refRegion.resolve(gameroot).refController.resolve(gameroot).objStatus.refController.resolve(gameroot)
+					default:
+						self.refRegion.resolve(gameroot).refController.resolve(gameroot)
+				}
+			}
+
+			getOrderTurns = ?{:
+				?{ipus:
+					if(self.nIPUs != 0,
+						if(ipus % self.nIPUs != 0, 1, 0) + ipus / self.nIPUs,
+						0)
+				}((self.objCurrentWorkOrder.tmplFactoryOutput.resolve().nIPUs - self.objCurrentWorkOrder.nIPUs))
+			}
+
+			getResearchPercent = ?{gameroot:
+				?{project:
+					if(project.tmplResearchTopic.resolve().nPointsRequired != 0,
+						project.nPoints * 100 / project.tmplResearchTopic.resolve().nPointsRequired, 0)
+				}((self.refResearchCenter.resolve(gameroot).refResearchProject.resolve(gameroot)))
+			}
+
+		</script>
+ 	</objectDef>
+
+    <!-- City Nation -->
+    <objectDef type="CapitalCityNation" class="CMLOCapitalCityNation">
+        <goDef gameSystem="GameSysCity" storageProperty="objCapitalCityNations">
+            <keyProperty name="refNation"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refCapitalCity" type="GORef" restriction="City"/>
+    </objectDef>
+
+	<!-- Historic Capital Cities -->
+	<objectDef type="HistoricCapitalCity" class="CMLOHistoricCapitalCity">
+        <replicationRule>false</replicationRule>
+        <goDef gameSystem="GameSysCity" storageProperty="objHistoricCapitalCities">
+			<keyProperty name="tmplNation"/>
+		</goDef>
+		<propertyDef name="tmplNation" type="TemplateRef" restriction="NationTemplate"/>
+		<propertyDef name="refCapital" type="GORef" restriction="City"/>
+	</objectDef>
+
+    <objectDef type="DPADestroyCityBuilding" class="CMLODPADestroyCityBuilding" superType="DecisionPointAnswer" >
+		<propertyDef name="objCityBuilding" type="CityBuilding"/>
+    </objectDef>
+
+    <objectDef type="DPADestroyResearchBuilding" class="CMLODPADestroyResearchBuilding" superType="DecisionPointAnswer" >
+		<propertyDef name="objCity" type="City"/>
+		<propertyDef name="objResearchBuilding" type="ResearchCenterBuilding"/>
+    </objectDef>
+
+    <objectDef type="VictoryConditionCities" class="CMLOVictoryConditionCities" superType="VictoryCondition" desc="A victory condition that tests for a given nation controlling specific cities">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refCities" type="GORef" variable="true" restriction="City"/>
+        <propertyDef name="nHoldTurns" type="int" default="2"/>
+        <propertyDef name="nMetTurns" type="int" default="0"/>
+    </objectDef>
+
+</locust>

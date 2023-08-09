@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="TurnBasedGame" class="CMLOTurnBasedGame" desc="A turn based game">
+		<propertyDef name="nTurn" type="int" default="0"/>
+        <propertyDef name="bUsingTurnTimer" type="bool" default="false" desc="deprecated"/>
+        <propertyDef name="eTurnTimeMode" type="Enum" restriction="TurnTimeMode" default="OFF"/>
+        <propertyDef name="nLastEndTurnDay" type="int" default="0"/>
+        <propertyDef name="nTurnTime" type="int" desc="Turn time in seconds, or the number of seconds past midnight when turn auto ends (depending on eTurnTimeMode)"/>
+        <propertyDef name="nDisconnectTime" type="int" default="600" desc="How long after human disconnect before suspending (seconds)"/>
+        <propertyDef name="nResumeLeadTime" type="int" default="300" desc="How much lead time do we allow for auto resume before we need to end turn (seconds)"/>
+        <propertyDef name="nNearEndTurnTime" type="int" default="600" desc="How much longer do we stay awake if near time to end turn anyway? (seconds)"/>
+        <propertyDef name="nTimeElapsed" type="int" default="0"/>
+		<propertyDef name="dateCurrentDate" type="Date" default="01/20/1933"/>
+        <propertyDef name="durTurnDuration" type="DateDuration" default="7 days"/>
+        <propertyDef name="bEndingTurn" type="bool" default="false"/>
+        <propertyDef name="bGameStarted" type="bool" default="false"/>
+        <propertyDef name="nDifficulty" type="int" default="5" desc="Difficulty level (1-10)"/>
+        <propertyDef name="nAutosaveFrequency" type="int" default="0" desc="How often to autosave (0=never)"/>
+        <propertyDef name="strAutosaveName" type="String" default="AutoSave" desc="Base name for autosaves"/>
+        <propertyDef name="nMaxAutosaves" type="int" default="5" desc="How many autosaves to keep"/>
+        <propertyDef name="bDemoMode" type="bool" default="false"/>
+        <propertyDef name="bStartedFromWeb" type="bool" default="true"/>
+        <propertyDef name="strGameOwner" type="String"/>
+        <propertyDef name="strEndTurnExportURL" type="String"/>
+	    <propertyDef name="nTestModeExitTurn" type="int" default="3"/><!-- for automated testing -->
+	    <propertyDef name="strTestModeExitSaveName" type="String"/><!-- for automated testing -->
+	    <propertyDef name="fGameStartTimeoutSeconds" type="float" default="900"/>
+        
+        <!-- Built in methods
+            InDemoMode()   : returns if in demo mode as set through lenny (in case bDemoMode is changed by player)
+        -->
+        
+		<script type="application/javascript"><![CDATA[
+        
+        	function getAutosaveName(game,turn,date)
+        	{
+        	    var abbr = getGameSysTurnBasedGame(game).getLocalizedScenarioAbbreviation();
+        	    var autosave_name = locale.FSID.UI.AutosaveName.format('Turn',turn);
+        	    var autosave_desc = locale.FSID.UI.AutosaveDesc.format('Scenario',abbr,'Date',date);
+				
+				var savename = autosave_name + "~" + autosave_desc;
+				return savename;
+        	}
+        	
+		]]></script>
+        
+    </objectDef>
+
+	<objectDef type="VictoryConditionTurnLimit" class="CMLOVictoryConditionTurnLimit" superType="VictoryCondition" desc="A victory condition that tests for a turn limit">
+        <propertyDef name="nTurns" type="int"/>
+	</objectDef>
+
+    <objectDef type="DPNationDefeat" class="CMLODPNationDefeat" superType="DecisionPoint" desc="A decision point for when a nation is defeated">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="objConqueringNation" type="Nation"/>
+    </objectDef>
+
+</locust>

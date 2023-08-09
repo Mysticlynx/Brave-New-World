@@ -1,0 +1,1026 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<enumDef name="GovSubordinateSort">
+        <value name="NAME"/>
+		<value name="STATUS"/>
+		<value name="CAPITAL"/>
+		<value name="STABILITY"/>
+		<value name="POP"/>
+		<value name="POWERPOINTS"/>
+		<value name="MPUS"/>
+		<value name="RPUS"/>
+		<value name="IPUS"/>
+		<value name="FOOD"/>
+		<value name="COAL"/>
+		<value name="METALS"/>
+		<value name="OIL"/>
+    </enumDef>
+    
+    
+	<objectDef type="UI2DGovernmentTabSubordinates" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.PuppetsAndColonies"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objTopBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+	<!-- Column Labels -->
+    
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="GovSubordinateSort.NAME"/>
+		</object> -->
+    
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Name"/>
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.NAME"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="213"/>
+				<property name="nHeight" value="23"/>
+			</object>			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Status"/>
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.STATUS"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="35"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Capital"/>
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.CAPITAL"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="144"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Stability"/>
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.STABILITY"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="47"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Population"/>
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.POP"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="88"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.POWERPOINTS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="49"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.WorldPowerPoints"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconPointsSm"/>
+                    <property name="nWidth" value="22"/>
+                    <property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.MPUS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.MPUs"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconMPU21x21"/>
+                    <property name="nWidth" value="21"/>
+                    <property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.RPUS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.RPUsPerTurn"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+          <property name="nY" value="1"/>
+          <property name="nWidth" value="17"/>
+          <property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.IPUS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.IPUsPerTurn"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconIndustrySm"/>
+          <property name="nY" value="1"/>
+          <property name="nWidth" value="20"/>
+          <property name="nHeight" value="26"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.COAL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.CoalProduction"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconCoal21x21"/>
+                    <property name="nWidth" value="21"/>
+                    <property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.METALS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.MetalsProduction"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconMetals21x21"/>
+                    <property name="nWidth" value="21"/>
+                    <property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+			</object>			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.OIL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.OilProduction"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconOil21x21"/>
+                    <property name="nWidth" value="21"/>
+                    <property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+			</object>	
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objGovSubordinateSortTableData"/>
+				<property name="eSortBy" from="GovSubordinateSort.FOOD"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.FoodProduction"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconFood21x21"/>
+                    <property name="nWidth" value="21"/>
+                    <property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+			</object>
+		</object>
+		
+		<propertyDef name="objSubordinates" type="SubordinateData" variable="true" storesChildren="true"/>
+		<property name="objSubordinates">
+            map(?{puppet:
+					<object type="PuppetNationSubordinateData">
+						<property name="objSubordinate" from="puppet"/>
+					</object>
+				},
+                    gs_tbg.getPuppets(mh2data.objAvatar, mh2data.objNation)
+            )
+		</property>
+		<property name="objSubordinates">
+            map(?{colony:
+					<object type="ColonyNationSubordinateData">
+						<property name="objSubordinate" from="colony"/>
+					</object>
+				},
+                gs_tbg.getColonies(mh2data.objAvatar, mh2data.objNation)
+            )
+		</property>
+		
+	<!-- World Nations List -->
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.NAME:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.strName}, def.objSubordinates),
+							sortDescending(?{data: data.strName}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.STATUS:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.strStatus}, def.objSubordinates),
+							sortDescending(?{data: data.strStatus}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.CAPITAL:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.strCapital}, def.objSubordinates),
+							sortDescending(?{data: data.strCapital}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.STABILITY:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.nStability}, def.objSubordinates),
+							sortDescending(?{data: data.nStability}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.POP:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.nPopulation}, def.objSubordinates),
+							sortDescending(?{data: data.nPopulation}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.POWERPOINTS:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.nPowerPoints}, def.objSubordinates),
+							sortDescending(?{data: data.nPowerPoints}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.MPUS:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.nMPUs}, def.objSubordinates),
+							sortDescending(?{data: data.nMPUs}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.RPUS:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.nRPUs}, def.objSubordinates),
+							sortDescending(?{data: data.nRPUs}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.IPUS:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.nIPUs}, def.objSubordinates),
+							sortDescending(?{data: data.nIPUs}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.FOOD:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.nFood}, def.objSubordinates),
+							sortDescending(?{data: data.nFood}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.COAL:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.nCoal}, def.objSubordinates),
+							sortDescending(?{data: data.nCoal}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.METALS:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.nMetals}, def.objSubordinates),
+							sortDescending(?{data: data.nMetals}, def.objSubordinates)
+						)
+					case mh2data.objGovSubordinateSortTableData.eColm == GovSubordinateSort.OIL:
+						if(mh2data.objGovSubordinateSortTableData.bAsc,
+							sortAscending(?{data: data.nOil}, def.objSubordinates),
+							sortDescending(?{data: data.nOil}, def.objSubordinates)
+						)
+                    default:
+                        sortAscending(?{data: data.strName}, def.objSubordinates)
+                    }						
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DPuppetOrColonyBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+	
+	
+	<objectDef type="UI2DPuppetName" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="bChangeName" type="bool" default="false"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="tmplTextStyleEdit" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objName" existsWhile="def.bChangeName == false">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objNation.strDisplayName"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>			
+		</object>
+		
+		<object type="mlui.UI2DEditableText" name="objEditableText" existsWhile="def.bChangeName == true">
+			<property name="tmplTextStyle" from="def.tmplTextStyleEdit"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth-50"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_ESCAPE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_RETURN"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_GRAVE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_TAB"/>
+			
+			<object type="mlui.KeyBindList" name="objKeyBindList">
+				<object type="mlui.KeyBindMethod" name="objKeyBinds">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<property name="eKey" value="KEY_CODE_RETURN"/>
+					<script type="application/javascript"><![CDATA[
+						function notifyTriggered(owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object><!-- objEditableText -->
+		
+		<object type="UI2DElementMask" name="objNationPopupMask" existsWhile="def.bChangeName == false">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="95"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_RIGHT))
+							{
+							    def.startRename();
+							}
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objSumbitRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleNationRename"/>
+			<property name="nX" from="def.nWidth-47"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="55"/>
+			<property name="strToolTip" from="locale.SID.UI.Submit"/>
+			
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objCancelRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleNationRenameCancel"/>
+			<property name="nX" from="def.nWidth-24"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="95"/>
+			<property name="strToolTip" from="locale.SID.UI.Cancel"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.bChangeName = false;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<script type="application/javascript"><![CDATA[
+			function executeRename()
+			{
+                if (mh2data.objNation.equals(self.objNation.objStatus.refController))
+                {
+                    if(self.objEditableText.strText != '')
+                    {
+                        var action = gs_tbg.GActRenameNation.create({
+                            "refNation": self.objNation, 
+                            "strNewName": self.objEditableText.strText
+                            });
+                        mh2data.objAvatar.sendAction(action);
+                    }
+                }
+                self.objEditableText.strText = '';
+                self.bChangeName = false;
+			}
+			
+            function startRename()
+            {
+			    if (mh2data.objNation.equals(self.objNation.objStatus.refController))
+			    {
+                    self.bChangeName = true;
+                    self.objEditableText.strText = '';
+                    mlui.ActSetKeyboardFocus.execute({"objElement": self.objEditableText});
+                }
+            }
+            
+		]]></script>
+		
+	</objectDef> <!-- UI2DPuppetName -->
+	
+    
+    <objectDef type="PuppetNationSubordinateData" superType="SubordinateData">
+		<propertyDef name="objNation" type="gs_tbg.Nation">
+            self.objSubordinate
+        </propertyDef>
+		<property name="strName" from="self.objNation.strDisplayName" />
+		<property name="strStatus" from="'a' + self.strName" />
+		<property name="strCapital" from="gs_tbg.getCapitalCity(mh2data.objAvatar, self.objNation).strDisplayName" />
+		<property name="nStability" from="self.objNation.nStability" />
+        <property name="nPopulation" from="self.objNation.n64Population"/>
+        <property name="nPowerPoints" from="self.objNation.objPowerPoints.nTotalPoints"/>
+        <property name="nMPUs" from="self.objNation.nMPUs"/>
+        <property name="nRPUs" from="sum(map(?{city: city.nRPUs}, gs_tbg.getNationCities(mh2data.objAvatar, self.objNation)))"/>
+        <property name="nIPUs" from="self.objNation.nIPUs"/>
+        
+		<propertyDef name="objPuppetResources" type="gs_tbg.ResourceCapacity" variable="true" storesChildren="true"/>
+            <property name="objPuppetResources">
+                flattenSet(map(?{region: region.objResourceCapacities}, gs_tbg.getControlledRegions(mh2data.objAvatar, self.objNation)))
+            </property>
+        <property name="nFood" >
+            sum(
+                map(?{resourceCap: resourceCap.nBaseProduction}, 
+                    filter(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')},
+                        self.objPuppetResources)
+                    )
+                )
+        </property>
+        <property name="nCoal" >
+            sum(map(?{resourceCap: resourceCap.nBaseProduction}, 
+            filter(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')},
+                self.objPuppetResources)
+                ))
+        </property>
+        <property name="nMetals" >
+            sum(map(?{resourceCap: resourceCap.nBaseProduction}, 
+            filter(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')},
+                self.objPuppetResources)
+                ))
+        </property>
+        <property name="nOil" >
+            sum(map(?{resourceCap: resourceCap.nBaseProduction}, 
+            filter(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')},
+                self.objPuppetResources)
+                ))
+        </property>
+    </objectDef>
+    
+    <objectDef type="ColonyNationSubordinateData" superType="SubordinateData"> 
+		<propertyDef name="objColony" type="gs_tbg.Colony">
+            self.objSubordinate
+        </propertyDef>
+        
+		<propertyDef name="objColonyRegions" type="gs_tbg.Region" variable="true"/>
+			<property name="objColonyRegions">
+				gs_tbg.getControlledColonyRegions(mh2data.objAvatar, self.objColony.refNation.resolve(mh2data.objAvatar), self.objColony)
+			</property>        
+		<propertyDef name="objColonyCities" type="gs_tbg.City" variable="true"/>
+			<property name="objColonyCities">
+				filter(?{city: city.refRegion.resolve(mh2data.objAvatar).refColony == self.objColony},
+					gs_tbg.getNationCities(mh2data.objAvatar, self.objColony.refNation.resolve(mh2data.objAvatar)))
+			</property>
+			
+		<propertyDef name="nStability" type="int" default="100"/>
+			<property name="nStability">
+				if(self.objColonyRegions.size != 0,
+					(sum(map(?{region: region.nRegionStability}, self.objColonyRegions)) / (self.objColonyRegions.size)), 100)
+			</property>
+			
+		<propertyDef name="objColonyResources" type="gs_tbg.ResourceCapacity" variable="true" storesChildren="true"/>
+			<property name="objColonyResources">
+				flattenSet(map(?{region: region.objResourceCapacities}, self.objColonyRegions))
+			</property>
+        
+		<property name="strName" from="self.objColony.strDisplayName" />
+		<property name="strStatus" from="'b' + self.strName"/>
+		<property name="strCapital" from="locale.SID.UI.NoCapitalCity" />
+        <property name="nPopulation" from="sum(map(?{region: region.nPopulation}, self.objColonyRegions))"/>
+        <property name="nPowerPoints" from="sum(map(?{region: region.objPowerPoints.nTotalPoints}, self.objColonyRegions))"/>
+        <property name="nMPUs" from="sum(map(?{region: region.nUnemployedMPUs}, self.objColonyRegions))"/>
+        <property name="nRPUs" from="sum(map(?{city: city.nRPUs}, self.objColonyCities))"/>
+        <property name="nIPUs" from="sum(map(?{city: city.nIPUs}, self.objColonyCities))"/>
+        
+        <property name="nFood" >
+            sum(map(?{resourceCap: resourceCap.nBaseProduction}, 
+            filter(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')},
+                self.objColonyResources)
+                ))
+        </property>
+        <property name="nCoal" >
+            sum(map(?{resourceCap: resourceCap.nBaseProduction}, 
+            filter(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')},
+                self.objColonyResources)
+                ))
+        </property>
+        <property name="nMetals" >
+            sum(map(?{resourceCap: resourceCap.nBaseProduction}, 
+            filter(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')},
+                self.objColonyResources)
+                ))
+        </property>
+        <property name="nOil" >
+            sum(map(?{resourceCap: resourceCap.nBaseProduction}, 
+                filter(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')},
+                    self.objColonyResources)
+                ))
+        </property>
+        
+    </objectDef>
+    
+    <objectDef type="SubordinateData" class="CMLObject" >
+		<propertyDef name="objSubordinate" type="Object"/>
+		<propertyDef name="strName" type="String" default="" />
+		<propertyDef name="strStatus" type="String" default="" />
+		<propertyDef name="strCapital" type="String" default="" />
+		<propertyDef name="nStability" type="int" default="0" />
+		<propertyDef name="nPopulation" type="int64" default="0" />
+		<propertyDef name="nPowerPoints" type="int" default="0" />
+		<propertyDef name="nMPUs" type="int" default="0" />
+		<propertyDef name="nRPUs" type="int" default="0" />
+		<propertyDef name="nIPUs" type="int" default="0" />
+		<propertyDef name="nFood" type="int" default="0" />
+		<propertyDef name="nCoal" type="int" default="0" />
+		<propertyDef name="nMetals" type="int" default="0" />
+		<propertyDef name="nOil" type="int" default="0" />
+    </objectDef>
+    
+
+	<objectDef type="UI2DSubordinateNationRowBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int" default="0"/>
+
+		<property name="nHeight" value="30"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DSubordinateNationRowBubbleNation" superType="UI2DSubordinateNationRowBubble">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+		<object type="UI2DPuppetName" name="objPuppetName">
+		    <property name="objNation" from="def.objNation"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="tmplTextStyleEdit" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="nX" value="52"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="161"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objNationSelect" existsWhile="def.objPuppetName.bChangeName == false">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="858"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="nDepth" value="5"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_RIGHT))
+							{
+                                def.objPuppetName.startRename();
+                            }
+						    else
+						    {
+								mh2data.objMapData.selectNation(def.objNation);
+						    }
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+	</objectDef>
+    
+	<objectDef type="UI2DColonyName" superType="mlui.UI2DElement">
+		<propertyDef name="objColony" type="gs_tbg.Colony"/>
+		<propertyDef name="bChangeName" type="bool" default="false"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="tmplTextStyleEdit" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objName" existsWhile="def.bChangeName == false">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objColony.strDisplayName"/>    
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>
+		</object>
+		
+		<object type="mlui.UI2DEditableText" name="objEditableText" existsWhile="def.bChangeName == true">
+			<property name="tmplTextStyle" from="def.tmplTextStyleEdit"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth-50"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_ESCAPE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_RETURN"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_GRAVE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_TAB"/>
+			
+			<object type="mlui.KeyBindList" name="objKeyBindList">
+				<object type="mlui.KeyBindMethod" name="objKeyBinds">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<property name="eKey" value="KEY_CODE_RETURN"/>
+					<script type="application/javascript"><![CDATA[
+						function notifyTriggered(owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object><!-- objEditableText -->
+		
+		<object type="UI2DElementMask" name="objNationPopupMask" existsWhile="def.bChangeName == false">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="95"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_RIGHT))
+							{
+							    def.startRename();
+							}
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objSumbitRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleNationRename"/>
+			<property name="nX" from="def.nWidth-47"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="97"/>
+			<property name="strToolTip" from="locale.SID.UI.Submit"/>
+			
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objCancelRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleNationRenameCancel"/>
+			<property name="nX" from="def.nWidth-24"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="97"/>
+			<property name="strToolTip" from="locale.SID.UI.Cancel"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.bChangeName = false;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<script type="application/javascript"><![CDATA[
+			function executeRename()
+			{
+                if (mh2data.objNation.equals(self.objColony.refNation.resolve(mh2data.objAvatar).getMasterNation(mh2data.objAvatar)))
+                {
+                    if(self.objEditableText.strText != '')
+                    {
+                        var action = gs_tbg.GActRenameColony.create({
+                            "refColony": self.objColony, 
+                            "strNewName": self.objEditableText.strText
+                            });
+                        mh2data.objAvatar.sendAction(action);
+                    }
+                }
+                self.objEditableText.strText = '';
+                self.bChangeName = false;
+			}
+			
+            function startRename()
+            {
+			    if (mh2data.objNation.equals(self.objColony.refNation.resolve(mh2data.objAvatar).getMasterNation(mh2data.objAvatar)))
+			    {
+                    self.bChangeName = true;
+                    self.objEditableText.strText = '';
+                    mlui.ActSetKeyboardFocus.execute({"objElement": self.objEditableText});
+                }
+            }
+            
+		]]></script>
+		
+	</objectDef> <!-- UI2DColonyName -->
+    
+	
+	<objectDef type="UI2DColonyRowBubbleName" superType="UI2DSubordinateNationRowBubble">
+		<propertyDef name="objColony" type="gs_tbg.Colony"/>
+
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objColony.refNation.resolve(mh2data.objAvatar)"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+        <object type="UI2DColonyName" name="objColonyName">
+            <property name="objColony" from="def.objColony"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="tmplTextStyleEdit" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="nX" value="52"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="161"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objNationSelect"  existsWhile="def.objColonyName.bChangeName == false">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="858"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="nDepth" value="5"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_RIGHT))
+							{
+                                def.objColonyName.startRename();
+                            }
+						    else
+						    {
+						        mh2data.setSelectedObject(def.objColony.refNation.resolve(mh2data.objAvatar));
+						        mh2data.openGovernmentTab(UI2DGovernmentTabInfo);
+						    }
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DSubordinateNationRowBubbleIcon" superType="UI2DSubordinateNationRowBubble">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+	</objectDef>
+
+	<objectDef type="UI2DSubordinateNationRowBubbleTextCenter" superType="UI2DSubordinateNationRowBubble">
+		<propertyDef name="strText" type="String"/>
+
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	</objectDef>
+	
+	<objectDef type="UI2DPuppetOrColonyBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="SubordinateData"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+
+			<object type="UI2DSubordinateBubbleName" name="objElements" >
+				<property name="objSubordinate" from="def.objData.objSubordinate"/>
+				<property name="nWidth" value="213"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+            
+			<object type="UI2DSubordinateNationRowBubbleIcon" name="objElements">
+				<property name="nWidth" value="35"/>
+				<property name="nRow" from="def.nRow"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage">
+							if(def.objData.instanceOf(ColonyNationSubordinateData),
+                                'skin.ImgGovColony'
+                                ,
+                                'skin.ImgGovPuppet'
+                            )
+					</property>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="32"/>
+					<property name="nHeight" value="30"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="strToolTip">
+							if(def.objData.instanceOf(ColonyNationSubordinateData),
+                                locale.SID.UI.Colony
+                                ,
+                                locale.SID.UI.Puppet
+                            )
+                    </property> 
+				</object>
+			</object>
+
+			<object type="UI2DSubordinateNationRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.strCapital"/>
+				<property name="nWidth" value="144"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+			
+			<object type="UI2DSubordinateNationRowBubbleIcon" name="objElements">
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage">
+						if(def.objData.nStability GTE 80, 'skin.ImgInfoIconRevoltRiskNone',
+							if(def.objData.nStability LTE 30, 'skin.ImgInfoIconRevoltRiskHigh',
+							'skin.ImgInfoIconRevoltRiskLow'
+							)
+						)
+					</property>
+					<property name="nX" value="0"/>
+					<property name="nY" value="2"/>
+					<property name="nWidth" value="32"/>
+					<property name="nHeight" value="30"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="strToolTip" from="def.objData.nStability.formatNumber(0, true)"/>
+				</object>
+				<property name="nWidth" value="47"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+			
+			<object type="UI2DSubordinateNationRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.nPopulation.formatNumber(0, true)" />
+				<property name="nWidth" value="88"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+
+			<object type="UI2DSubordinateNationRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.nPowerPoints.formatNumber(0, true)" />
+				<property name="nWidth" value="49"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+
+			<object type="UI2DSubordinateNationRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.nMPUs.formatNumber(0, true)" />
+				<property name="nWidth" value="42"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+			
+			<object type="UI2DSubordinateNationRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.nRPUs.formatNumber(0, true)" />
+				<property name="nWidth" value="42"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+
+			<object type="UI2DSubordinateNationRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.nIPUs.formatNumber(0, true)" />
+				<property name="nWidth" value="42"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+
+			<object type="UI2DSubordinateNationRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.nCoal.formatNumber(0, true)" />
+				<property name="nWidth" value="42"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+			
+			<object type="UI2DSubordinateNationRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.nMetals.formatNumber(0, true)" />
+				<property name="nWidth" value="42"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+			
+			<object type="UI2DSubordinateNationRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.nOil.formatNumber(0, true)" />
+				<property name="nWidth" value="42"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+            
+			<object type="UI2DSubordinateNationRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.nFood.formatNumber(0, true)" />
+				<property name="nWidth" value="42"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+			
+			
+		</object>
+
+	</objectDef>
+    
+	<objectDef type="UI2DSubordinateBubbleName" superType="UI2DSubordinateNationRowBubble">
+		<propertyDef name="objSubordinate" type="Object"/>
+       
+        <object type="UI2DColonyRowBubbleName" name="objColony" existsWhile="def.objSubordinate.instanceOf(gs_tbg.Colony)">
+            <property name="objColony" from="def.objSubordinate"/>
+            <property name="nWidth" from="def.nWidth" />
+            <property name="nHeight" from="def.nHeight" />
+            <property name="nRow" from="def.nRow"/>
+        </object>
+        
+        <object type="UI2DSubordinateNationRowBubbleNation" name="objPuppet"  existsWhile="def.objSubordinate.instanceOf(gs_tbg.Nation)">
+            <property name="objNation" from="def.objSubordinate"/>
+            <property name="nWidth" from="def.nWidth" />
+            <property name="nHeight" from="def.nHeight" />
+            <property name="nRow" from="def.nRow"/>
+        </object>
+
+
+	</objectDef>
+
+</locust>

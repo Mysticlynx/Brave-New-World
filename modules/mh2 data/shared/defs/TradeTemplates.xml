@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Price Adjustment Templates -->
+	<template type="gs_tbg.PriceAdjustTemplate" name="DemandEqualsSupply">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.DemandEqualsSupply"/>
+		<property name="fSupplyPerDemand" value="1"/>
+		<property name="fPriceAdjust" value="1"/>
+		<property name="nIndex" value="0"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Supply1_5x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Supply1_5x"/>
+		<property name="fSupplyPerDemand" value="1.5"/>
+		<property name="fPriceAdjust" value="0.9375"/>
+		<property name="nIndex" value="1"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Supply2x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Supply2x"/>
+		<property name="fSupplyPerDemand" value="2"/>
+		<property name="fPriceAdjust" value="0.875"/>
+		<property name="nIndex" value="2"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Supply2_5x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Supply2_5x"/>
+		<property name="fSupplyPerDemand" value="2.5"/>
+		<property name="fPriceAdjust" value="0.8125"/>
+		<property name="nIndex" value="3"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Supply3x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Supply3x"/>
+		<property name="fSupplyPerDemand" value="3"/>
+		<property name="fPriceAdjust" value="0.75"/>
+		<property name="nIndex" value="4"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Supply3_5x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Supply3_5x"/>
+		<property name="fSupplyPerDemand" value="3.5"/>
+		<property name="fPriceAdjust" value="0.6875"/>
+		<property name="nIndex" value="5"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Supply4x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Supply4x"/>
+		<property name="fSupplyPerDemand" value="4"/>
+		<property name="fPriceAdjust" value="0.625"/>
+		<property name="nIndex" value="6"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Supply4_5x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Supply4_5x"/>
+		<property name="fSupplyPerDemand" value="4.5"/>
+		<property name="fPriceAdjust" value="0.5625"/>
+		<property name="nIndex" value="7"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Supply5x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Supply5x"/>
+		<property name="fSupplyPerDemand" value="5"/>
+		<property name="fPriceAdjust" value="0.5"/>
+		<property name="nIndex" value="8"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Demand1_5x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Demand1_5x"/>
+		<property name="fSupplyPerDemand" value="0.667"/>
+		<property name="fPriceAdjust" value="1.125"/>
+		<property name="nIndex" value="-1"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Demand2x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Demand2x"/>
+		<property name="fSupplyPerDemand" value="0.5"/>
+		<property name="fPriceAdjust" value="1.25"/>
+		<property name="nIndex" value="-2"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Demand2_5x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Demand2_5x"/>
+		<property name="fSupplyPerDemand" value="0.4"/>
+		<property name="fPriceAdjust" value="1.375"/>
+		<property name="nIndex" value="-3"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Demand3x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Demand3x"/>
+		<property name="fSupplyPerDemand" value="0.333"/>
+		<property name="fPriceAdjust" value="1.5"/>
+		<property name="nIndex" value="-4"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Demand3_5x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Demand3_5x"/>
+		<property name="fSupplyPerDemand" value="0.286"/>
+		<property name="fPriceAdjust" value="1.625"/>
+		<property name="nIndex" value="-5"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Demand4x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Demand4x"/>
+		<property name="fSupplyPerDemand" value="0.25"/>
+		<property name="fPriceAdjust" value="1.75"/>
+		<property name="nIndex" value="-6"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Demand4_5x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Demand4_5x"/>
+		<property name="fSupplyPerDemand" value="0.222"/>
+		<property name="fPriceAdjust" value="1.875"/>
+		<property name="nIndex" value="-7"/>
+    </template>
+	<template type="gs_tbg.PriceAdjustTemplate" name="Demand5x">
+        <property name="strDisplayName" from="locale.SID.PriceAdjust.DisplayName.Demand5x"/>
+		<property name="fSupplyPerDemand" value="0.2"/>
+		<property name="fPriceAdjust" value="2"/>
+		<property name="nIndex" value="-8"/>
+    </template>
+
+	<!-- Price Adjustment Template List -->
+    <template type="TemplateList" name="PriceAdjustmentTemplateList">
+		<property name="otTemplateType" value="gs_tbg.PriceAdjustTemplate"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::DemandEqualsSupply"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Supply1_5x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Supply2x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Supply2_5x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Supply3x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Supply3_5x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Supply4x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Supply4_5x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Supply5x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Demand1_5x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Demand2x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Demand2_5x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Demand3x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Demand3_5x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Demand4x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Demand4_5x"/>
+		<property name="tmplRefs" value="gs_tbg.PriceAdjustTemplate::Demand5x"/>
+	</template>
+
+</locust>

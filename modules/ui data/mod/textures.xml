@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+<!-- texture templates for one set of nation flags / decals -->
+<template type="mlmedia.TextureTemplateFromFile" name="TexModDecal">
+	<property name="fileSource" value="art/ModDecal.tga"/>
+</template>
+<template type="mlmedia.TextureTemplateFromFile" name="TexModDecalIcon28x28">
+	<property name="fileSource" value="art/ModDecalIcon28x28.png"/>
+</template>
+<template type="mlmedia.TextureTemplateFromFile" name="TexModFlagTarg">
+	<property name="fileSource" value="art/ModFlag.tga"/>
+</template>
+<template type="mlmedia.TextureTemplateFromFile" name="TexModFlag46x24">
+    <property name="fileSource" value="art/ModFlag46x24.png"/>
+</template>
+<template type="mlmedia.TextureTemplateFromFile" name="TexModFlag256x128">
+	<property name="fileSource" value="art/ModFlag256x128.png"/>
+</template>
+
+<template type="ml3dworld.TexturePathTemplate" name="UnitModelTexturePoolMod">
+    <object type="ml3dworld.TexturePath" name="objTexturePaths">
+        <property name="strTexturePool" value="UnitModel"/>
+        <property name="fileDir" value="textures"/><!-- texture files here override origional model textures -->
+    </object>    
+</template>
+
+</locust>

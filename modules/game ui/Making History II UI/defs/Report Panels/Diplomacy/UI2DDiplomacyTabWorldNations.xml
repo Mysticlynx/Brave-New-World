@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="WorldNationRowData" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="objNationRank" type="gs_tbg.NationRank"/>
+			<property name="objNationRank">
+				find(?{
+					rank: rank.refNation == self.objNation},
+						gs_tbg.getNationRanks(mh2data.objAvatar)
+					)
+			</property>
+
+        <propertyDef name="objDiplomaticRelationsTemplate" type="gs_tbg.DiplomaticRelationsTemplate">
+            gs_tbg.getDiplomaticRelation(mh2data.objAvatar, self.objNation, mh2data.objNation).tmplDiplomaticRelations.resolve()
+        </propertyDef>
+
+        <propertyDef name="nDiplomaticRelations" type="int">
+            gs_tbg.getDiplomaticRelation(mh2data.objAvatar, self.objNation, mh2data.objNation).nDiplomaticRelations
+        </propertyDef>
+
+        <propertyDef name="objAccessNation" type="gs_tbg.AccessAgreement">
+			gs_tbg.getAccessAgreement(mh2data.objAvatar, mh2data.objNation, self.objNation)
+		</propertyDef>
+		<propertyDef name="strHaveAccess" type="String">
+			if(self.objAccessNation == null, 'a' + self.objNation.strDisplayName, 'b' + self.objNation.strDisplayName)
+		</propertyDef>
+		
+		<propertyDef name="objAllies" type="gs_tbg.Nation" variable="true">
+			gs_tbg.getNationAllies(mh2data.objAvatar, self.objNation)
+		</propertyDef>
+		<propertyDef name="nAlliancePowerPoints" type="int">
+			sum(
+				map(?{nation:
+					nation.objPowerPoints.nTotalPoints
+				}, self.objAllies)
+			) + self.objNation.objPowerPoints.nTotalPoints
+		</propertyDef>
+		
+	</objectDef>
+	
+	<enumDef name="WorldNationSort">
+        <value name="NAME"/>
+        <value name="RELATIONS"/>
+		<value name="ACCESS"/>
+		<value name="RANK"/>
+		<value name="STATUS"/>
+		<value name="CONTROLLER"/>
+		<value name="IDEOLOGY"/>
+		<value name="STABILITY"/>
+		<value name="ALLIES"/>
+    </enumDef>
+	
+	<objectDef type="UI2DDiplomacyTabWorldNations" superType="UI2DDiplomacyTab">
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="WorldNationSort.NAME"/>
+		</object> -->
+		
+<!-- Header and Background -->	
+		<object type="mlui.UI2DText" name="objWorldNationsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.WorldNations"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+			
+		<object type="mlui.UI2DImage" name="objTopBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>		
+
+		
+<!-- Column Labels -->
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Name"/>
+				<property name="objData" from="mh2data.objWorldNationSortTableData"/>
+				<property name="eSortBy" from="WorldNationSort.NAME"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="228"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Relations"/>
+				<property name="objData" from="mh2data.objWorldNationSortTableData"/>
+				<property name="eSortBy" from="WorldNationSort.RELATIONS"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="64"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Access"/>
+				<property name="objData" from="mh2data.objWorldNationSortTableData"/>
+				<property name="eSortBy" from="WorldNationSort.ACCESS"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="45"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Rank"/>
+				<property name="objData" from="mh2data.objWorldNationSortTableData"/>
+				<property name="eSortBy" from="WorldNationSort.RANK"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="40"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Status"/>
+				<property name="objData" from="mh2data.objWorldNationSortTableData"/>
+				<property name="eSortBy" from="WorldNationSort.STATUS"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="40"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Controller"/>
+				<property name="objData" from="mh2data.objWorldNationSortTableData"/>
+				<property name="eSortBy" from="WorldNationSort.CONTROLLER"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="58"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Ideology"/>
+				<property name="objData" from="mh2data.objWorldNationSortTableData"/>
+				<property name="eSortBy" from="WorldNationSort.IDEOLOGY"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="53"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Stability"/>
+				<property name="objData" from="mh2data.objWorldNationSortTableData"/>
+				<property name="eSortBy" from="WorldNationSort.STABILITY"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="49"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Allies"/>
+				<property name="objData" from="mh2data.objWorldNationSortTableData"/>
+				<property name="eSortBy" from="WorldNationSort.ALLIES"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="285"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+		</object>
+		
+		<object type="WorldNationRowData" name="objRowDatas" tiedTo="gs_tbg.getAllNations(mh2data.objAvatar)">
+			<property name="objNation" from="tiedTo"/>
+		</object>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="871"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objWorldNationSortTableData.eColm == WorldNationSort.NAME:
+						if(mh2data.objWorldNationSortTableData.bAsc, 
+							sortAscending(
+								?{
+									data:
+									data.objNation.strDisplayName
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{
+									data:
+									data.objNation.strDisplayName
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldNationSortTableData.eColm == WorldNationSort.RELATIONS:
+						if(mh2data.objWorldNationSortTableData.bAsc, 
+							sortAscending(
+								?{
+									data:
+									data.nDiplomaticRelations
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{
+									data:
+									data.nDiplomaticRelations
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldNationSortTableData.eColm == WorldNationSort.ACCESS:
+						if(mh2data.objWorldNationSortTableData.bAsc, 
+							sortAscending(
+								?{
+									data:
+									data.strHaveAccess
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{
+									data:
+									data.strHaveAccess
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldNationSortTableData.eColm == WorldNationSort.RANK:
+						if(mh2data.objWorldNationSortTableData.bAsc, 
+							sortAscending(
+								?{
+									data:
+									data.objNationRank.nTotalRank
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{
+									data:
+									data.objNationRank.nTotalRank
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldNationSortTableData.eColm == WorldNationSort.STATUS:
+						if(mh2data.objWorldNationSortTableData.bAsc, 
+							sortAscending(
+								?{
+									data:
+									data.objNation.objStatus.strDisplayName
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{
+									data:
+									data.objNation.objStatus.strDisplayName
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldNationSortTableData.eColm == WorldNationSort.CONTROLLER:
+						if(mh2data.objWorldNationSortTableData.bAsc, 
+							sortAscending(
+								?{
+									data:
+									if(data.objNation.objStatus.refController == null,
+										data.objNation.strDisplayName,
+										data.objNation.objStatus.refController.resolve(mh2data.objAvatar).strDisplayName
+									)
+									
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{
+									data:
+									if(data.objNation.objStatus.refController == null,
+										data.objNation.strDisplayName,
+										data.objNation.objStatus.refController.resolve(mh2data.objAvatar).strDisplayName
+									)
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldNationSortTableData.eColm == WorldNationSort.IDEOLOGY:
+						if(mh2data.objWorldNationSortTableData.bAsc, 
+							sortAscending(
+								?{
+									data:
+									data.objNation.tmplIdeology.resolve().strDisplayName
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{
+									data:
+									data.objNation.tmplIdeology.resolve().strDisplayName
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldNationSortTableData.eColm == WorldNationSort.STABILITY:
+						if(mh2data.objWorldNationSortTableData.bAsc, 
+							sortAscending(
+								?{
+									data:
+									data.objNation.nStability
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{
+									data:
+									data.objNation.nStability
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldNationSortTableData.eColm == WorldNationSort.ALLIES:
+						if(mh2data.objWorldNationSortTableData.bAsc, 
+							sortAscending(
+								?{
+									data:
+									data.nAlliancePowerPoints
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{
+									data:
+									data.nAlliancePowerPoints
+								},
+								def.objRowDatas
+							)
+						)
+				}
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DWorldNationsBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+		
+	</objectDef>
+
+
+<!--Bubble Definitions-->
+	<objectDef type="UI2DWorldNationsRowBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int" default="0"/>
+		
+		<property name="nHeight" value="30"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DWorldNationsRowBubbleNation" superType="UI2DWorldNationsRowBubble">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		
+		<property name="nWidth" value="858"/>
+		<property name="nHeight" value="30"/>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>	
+		
+		<object type="mlui.UI2DText" name="objNationName">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objNation.strDisplayName"/>
+			<property name="nX" value="52"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objNationSelect">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="858"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="nDepth" value="5"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						if(mh2data.objNation.equals(def.objNation))
+							{
+								mh2data.openGovernmentTabAll(UI2DGovernmentTabInfo);
+							}
+						else
+							{
+								mh2data.objNationSelectionHistory.setNationHistory(def.objNation);
+								spdata.objDiplomacyData.showInfo(def.objNation);
+							};
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DWorldNationsRowBubbleIcon" superType="UI2DWorldNationsRowBubble">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="objOrderIcon" type="UI2DCenteredIcon" storesChildren="true"/>
+		<propertyDef name="objNationalityIcon" type="UI2DNationIcon" storesChildren="true"/>
+	</objectDef>
+	
+	<objectDef type="UI2DWorldNationsRowBubbleController" superType="UI2DWorldNationsRowBubble">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation">
+        switch{
+        case def.objNation.objStatus.refController != null:
+        def.objNation.objStatus.refController.resolve(mh2data.objAvatar)
+        <!--default:
+        def.objNation-->
+        }
+      </property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>	
+	</objectDef>
+	
+	<objectDef type="UI2DWorldNationsRowBubbleAllies" superType="UI2DWorldNationsRowBubble">
+		<propertyDef name="objData" type="WorldNationRowData"/>
+		
+		<object type="common_ui.UI2DListHorz" name="objIcon">
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nSpacing" value="1"/>
+		
+			<object type="UI2DNationFlag46x24" name="objElements" tiedTo="def.objData.objAllies">
+				<property name="objNation" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="46"/>
+				<property name="nHeight" value="24"/>
+			</object>
+		</object>
+		
+		<!-- <object type="mlui.UI2DButton" name="objNationSelect">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="858"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="nDepth" value="5"/>
+	
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							spdata.objDiplomacyData.showAllianceInfo(def.objNation);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object> -->
+		
+	</objectDef>	
+	
+	<objectDef type="UI2DWorldNationsRowBubbleTextCenter" superType="UI2DWorldNationsRowBubble">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DWorldNationsBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="WorldNationRowData"/>
+		<!--<propertyDef name="objNation" type="gs_tbg.Nation"/>-->
+		<!--<property name="objNation" from="self.objData.objNation"/>-->
+		<!---->
+		<propertyDef name="nRow" type="int"/>
+		<propertyDef name="bAtWar" type="bool">
+			find(?{enemy: enemy == mh2data.objNation},
+				gs_tbg.getNationEnemies(mh2data.objAvatar, self.objData.objNation)) != null
+		</propertyDef>
+		<!---->
+		<!--<propertyDef name="objNationRank" type="gs_tbg.NationRank"/>-->
+		<!--	<property name="objNationRank">-->
+		<!--		find(?{-->
+		<!--			rank: rank.refNation == self.objNation},-->
+		<!--				gs_tbg.getNationRanks(mh2data.objAvatar)-->
+		<!--			)-->
+		<!--	</property>-->
+		<!--		-->
+		<!--<propertyDef name="objDiplomaticRelationsTemplate" type="gs_tbg.DiplomaticRelationsTemplate">-->
+		<!--	gs_tbg.getDiplomaticRelation(mh2data.objAvatar, self.objNation, mh2data.objNation).tmplDiplomaticRelations.resolve()-->
+		<!--</propertyDef>-->
+		<!---->
+		<!--<propertyDef name="objAccessNation" type="gs_tbg.AccessAgreement">-->
+		<!--	gs_tbg.getAccessAgreement(mh2data.objAvatar, mh2data.objNation, self.objNation)-->
+		<!--</propertyDef>-->
+				
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			
+			<!--Name/Flag-->
+			<object type="UI2DWorldNationsRowBubbleNation" name="objElements">
+				<property name="objNation" from="def.objData.objNation"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle">
+					if(def.bAtWar, 'locale.TxtStyleArialGold12Left', 'locale.TxtStyleArialBlue12Left')
+				</property>
+				<property name="nWidth" value="228"/>
+			</object>
+			
+			
+			<!--Relations-->
+			<object type="UI2DWorldNationsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(def.bAtWar, 'locale.TxtStyleArialRed12Center', 'locale.TxtStyleArialBlue12Center')
+				</property>
+				<property name="strText">
+					if(def.bAtWar, locale.SID.UI.AtWar, def.objData.objDiplomaticRelationsTemplate.strDisplayName) 
+				</property>	
+					
+					<!--from="def.objDiplomaticRelationsTemplate.strDisplayName"/>-->
+				
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="64"/>
+			</object>
+			
+			<!--Access - Still needs icons, more specific data -->
+			<object type="UI2DWorldNationsRowBubbleIcon" name="objElements">
+				<property name="nWidth" value="45"/>
+				<property name="nRow" from="def.nRow"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage">
+						if(def.objData.objAccessNation != null, 'skin.ImgInfoIconArmy', 'skin.ImgNoAccess')
+				
+				<!--<property name="strText" from="if(def.objAccessNation != null, locale.SID.UI.Yes, locale.SID.UI.No)"/>-->
+					</property>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="32"/>
+					<property name="nHeight" value="30"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+				</object>
+			</object>
+			
+			<!--Rank - Still needs ranking structure-->
+			<object type="UI2DWorldNationsRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="locale.formatNumberRank(def.objData.objNationRank.nTotalRank)"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="40"/>
+                <property name="strToolTip" from="def.objData.objNation.objPowerPoints.nTotalPoints.formatNumber(0,true) + ' ' + locale.SID.UI.Points"/>
+            </object>
+			
+			<!--Status-->
+			<object type="UI2DWorldNationsRowBubbleIcon" name="objElements">
+				<property name="nWidth" value="40"/>
+				<property name="nRow" from="def.nRow"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage">
+						if(def.objData.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet),
+							'skin.ImgGovPuppet', 'skin.ImgWNIndependant'
+						)	
+					</property>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="32"/>
+					<property name="nHeight" value="30"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip">
+						if(def.objData.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet),
+							locale.SID.UI.Puppet, locale.SID.UI.Independent
+						)
+					</property>
+				</object>
+			</object>
+			
+			<!--Controller-->
+			<object type="UI2DWorldNationsRowBubbleController" name="objElements">
+				<property name="objNation" from="def.objData.objNation"/>
+				<property name="nWidth" value="58"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+			
+			<!--Ideology - get template comparison data-->
+			<object type="UI2DWorldNationsRowBubbleIcon" name="objElements">
+				<property name="nWidth" value="53"/>
+				<property name="nRow" from="def.nRow"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage">
+						if(def.objData.objNation.tmplIdeology.resolve().strName == 'Democratic',
+						'skin.ImgInfoIconDemocracySm',
+							if(def.objData.objNation.tmplIdeology.resolve().strName == 'Communist',
+							'skin.ImgInfoIconCommunistSm',
+								if(def.objData.objNation.tmplIdeology.resolve().strName == 'Fascist',
+								'skin.ImgInfoIconFascistSm', 'skin.ImgInfoIconAuthoritarianSm'
+								)
+							)
+						)
+					</property>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="32"/>
+					<property name="nHeight" value="30"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="strToolTip" from="def.objData.objNation.tmplIdeology.resolve().strDisplayName"/>
+				</object>
+			</object>
+			
+			<!--Stability-->
+			<object type="UI2DWorldNationsRowBubbleTextCenter" name="objElements">
+				<property name="strText" from="def.objData.objNation.nStability"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="nWidth" value="49"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+			
+			<!--Allies-->
+			<object type="UI2DWorldNationsRowBubbleAllies" name="objElements">
+				<property name="objData" from="def.objData"/>
+				<property name="nWidth" value="285"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+						
+		</object>
+		
+	</objectDef>
+</locust>

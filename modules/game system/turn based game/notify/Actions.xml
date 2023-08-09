@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="GActCreateAndAddNotification" class="CMLOGActCreateAndAddNotification" superType="mlgame.GameAction">
+		<propertyDef name="strMessage" type="String"/>
+		<propertyDef name="tmplNotification" type="TemplateRef" />
+		<propertyDef name="bAllNations" type="bool" default="true"/>
+		<propertyDef name="objTargetNations" type="Nation" variable="true"/>
+        <propertyDef name="bAlert" type="bool" default="false"/>
+		<propertyDef name="objJumpTarget" type="Object"/>        
+	</objectDef>
+</locust>

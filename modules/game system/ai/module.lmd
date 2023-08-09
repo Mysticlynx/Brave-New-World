@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="game system"
+	name="ai"
+	version="1.0"
+	locustVersion="2.11"
+>
+
+    <!-- stub module so old references to ai will be found in mlgame -->
+	<import module="lib:mlgame" default="true"/>
+
+</locustModule>

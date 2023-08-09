@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DSummaryPanelRequests" superType="UI2DSummaryPanel">
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="327"/>		
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineR">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineL">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DScrollPane" name="objNotificationBubbles">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth - 1"/>
+			<property name="nHeight" from="def.nHeight"/>
+			
+			<object type="UI2DRequestList" name="objScrollable">
+				<property name="objData" from="def.objSummaryPanelExtraData"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DRequestList" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="SummaryPanelExtraData"/>
+		
+		<property name="nHeight" from="self.objRequestButtons.nHeight + 3"/>
+		<property name="nWidth" from="self.objRequestButtons.nWidth"/>
+		
+		<object type="common_ui.UI2DList" name="objRequestButtons">
+			<property name="nX" value="3"/>
+			<property name="nY" value="2"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="2"/>
+			
+			<object type="UI2DRequestButtonDispatch" name="objElements" tiedTo="def.objData.objRequestData.objRequests">
+				<property name="objRequestWrapper" from="tiedTo"/>
+			</object>
+			
+		</object>		
+	</objectDef>
+	
+	<objectDef type="UI2DRequestButtonDispatch" superType="mlui.UI2DElement">
+		<propertyDef name="objRequestWrapper" type="SummaryPanelRequestWrapper"/>
+		<propertyDef name="objButton" type="UI2DRequestButton" storesChildren="true">
+			switch{
+				case self.objRequestWrapper.objRequest.instanceOf(gs_tbg.Treaty):
+				<object type="UI2DRequestPeaceTreatyButton">
+					<property name="objRequestWrapper" from="def.objRequestWrapper"/>
+				</object>
+			}
+		</propertyDef>
+		
+		<property name="nHeight" from="self.objButton.nHeight"/>
+		<property name="nWidth" from="self.objButton.nWidth"/>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DRequestButton" superType="mlui.UI2DButton">
+		<propertyDef name="objRequestWrapper" type="SummaryPanelRequestWrapper"/>
+		<propertyDef name="strText" type="String"/>
+		<property name="nWidth" value="230"/>
+		
+		<object type="mlui.UI2DImage" name="objImg">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBubble3x3"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objNotificationText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11Wrap"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="27"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="198"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<script type="application/javascript"><![CDATA[
+			function notifyAddedToUI()
+			{
+				self.objRequestWrapper.bNew = false;
+			}
+		]]></script>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DRequestTreatyButton" superType="UI2DRequestButton">
+		<propertyDef name="objTreaty" type="Object" from="self.objRequestWrapper.objRequest"/>
+		<property name="strText" from="self.objTreaty.strMessage"/>
+		
+		<property name="nHeight">
+			if((self.objNotificationText.nY + self.objNotificationText.nHeight) GT self.objImg2.nHeight,
+				self.objNotificationText.nY + self.objNotificationText.nHeight,
+				self.objImg2.nHeight
+			) + 4
+		</property>
+		
+		<object type="mlui.UI2DImage" name="objImg2">
+			<property name="tmplImage" value="skin.ImgSummaryPanelDiplomacy"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="30"/>
+		</object>
+		
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventButtonClicked"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var proposingNation = def.objTreaty.refProposingNation.resolve(mh2data.objAvatar);
+						var receivingNation = def.objTreaty.refReceivingNation.resolve(mh2data.objAvatar);
+						var playerNation = mh2data.objNation;
+
+						if(receivingNation.equals(playerNation))
+						{
+							mh2data.objTheirTreatyProposal = def.objTreaty;
+							mh2data.strDiplomaticMessage = def.objTreaty.strMessage;
+							mh2data.objMapData.selectNation(proposingNation);
+							spdata.bIsMoreInfo = true;
+							
+							mh2data.openDiplomaticActionAll(UI2DTreaty);
+						}
+					}
+				]]></script>
+			</object>
+		</object>
+		
+		
+		
+	</objectDef>
+	
+	<objectDef type="UI2DRequestPeaceTreatyButton" superType="UI2DRequestButton">
+		<propertyDef name="objTreaty" type="Object" from="self.objRequestWrapper.objRequest"/>
+		<property name="strText" from="self.objTreaty.strMessage"/>
+		
+		<property name="nHeight">
+			if((self.objNotificationText.nY + self.objNotificationText.nHeight) GT self.objImg2.nHeight,
+				self.objNotificationText.nY + self.objNotificationText.nHeight,
+				self.objImg2.nHeight
+			) + 4
+		</property>
+		
+		<object type="mlui.UI2DImage" name="objImg2">
+			<property name="tmplImage" value="skin.ImgSummaryPanelDiplomacy"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="30"/>
+		</object>
+		
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventButtonClicked"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var proposingNation = def.objTreaty.refProposingNation.resolve(mh2data.objAvatar);
+						var receivingNation = def.objTreaty.refReceivingNation.resolve(mh2data.objAvatar);
+						var playerNation = mh2data.objNation;
+
+						if(receivingNation.equals(playerNation))
+						{
+							mh2data.objTheirTreatyProposal = def.objTreaty;
+							mh2data.strDiplomaticMessage = def.objTreaty.strMessage;
+							mh2data.objMapData.selectNation(proposingNation);
+							spdata.bIsMoreInfo = true;
+							
+							mh2data.openDiplomaticActionAll(UI2DPeaceTreaty);
+						}
+					}
+				]]></script>
+			</object>
+		</object>
+		
+		
+		
+	</objectDef>
+	
+</locust>

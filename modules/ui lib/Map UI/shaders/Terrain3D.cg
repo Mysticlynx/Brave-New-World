@@ -1,0 +1,133 @@
+uniform float3 mapMin;
+uniform float3 mapMax;
+uniform float2 tileMin;
+uniform float2 tileMax;
+uniform float fDetailMultiplierX;
+uniform float fDetailMultiplierY;
+uniform float fSeaLevel;
+uniform sampler2D regionAndBorderOverlay;
+uniform sampler2D TileSampler; // LuminanceMap
+uniform sampler2D terrainBlend1;
+uniform sampler2D terrainBlend2;
+uniform sampler2D terrainDetailChannels;
+//uniform sampler2D terrainDiffuse1;
+//uniform sampler2D terrainDiffuse2;
+//uniform sampler2D terrainDiffuse3;
+//uniform sampler2D terrainDiffuse4;
+uniform sampler2D terrainDiffuse5; // mountain
+//uniform sampler2D terrainDiffuse6;
+uniform float fOffScreenCamLeft;
+uniform float fOffScreenCamRight;
+uniform float fOffScreenCamTop;
+uniform float fOffScreenCamBottom;
+
+struct SGLight {
+	float4 color;
+	float4 position;
+};
+uniform SGLight sgLights[2];
+
+uniform float4x4 sgModelViewProj;
+uniform float4x4 sgModelView;
+
+struct VertexOutput {
+	float4 position : POSITION;
+	float3 vFlatPos : TEXCOORD0;
+	float3 viewSpacePosition : TEXCOORD1;
+	float3 viewSpaceNormal : TEXCOORD2;
+	float2 uvBlend : TEXCOORD3;
+	float2 uvDiffuse : TEXCOORD4;
+	float2 uvNorm : TEXCOORD5;
+};
+
+VertexOutput vertexProgram(
+	float3 position : POSITION,
+	float3 normal : NORMAL
+) {
+	VertexOutput output;
+
+	output.position = mul(sgModelViewProj, float4(position, 1));
+	
+	// Assume the camera for the off screen texture is in the same position
+	// as the current camera and translate to the camera's coordinate space
+	output.vFlatPos = mul(sgModelView, float4(position.xy,fSeaLevel, 1)).xyz;
+	
+	output.viewSpacePosition = mul(sgModelView, float4(position, 1)).xyz;
+	output.viewSpaceNormal = mul(sgModelView, float4(normal, 0)).xyz;
+	
+	// Determine blend and diffuse texture coordinates
+	output.uvNorm = float2( ( position.x - tileMin.x) / (tileMax.x - tileMin.x), 1.0 - (position.y - tileMin.y) / (tileMax.y - tileMin.y));
+	output.uvBlend = float2( ( position.x - mapMin.x) / (mapMax.x - mapMin.x), 1.0 - (position.y - mapMin.y) / (mapMax.y - mapMin.y));
+	output.uvDiffuse = output.uvBlend * float2(fDetailMultiplierX, fDetailMultiplierY);
+	
+	return output;
+}
+
+
+
+struct FragmentOutput {
+	float4 color : COLOR;
+};
+
+FragmentOutput fragmentProgram(
+	float3 vFlatPos : TEXCOORD0, 
+	float3 viewSpacePosition : TEXCOORD1, 
+	float3 viewSpaceNormal : TEXCOORD2, 
+	float2 uvBlend : TEXCOORD3, 
+	float2 uvDiffuse : TEXCOORD4,
+	float2 uvNorm : TEXCOORD5
+) {
+	// Determine region/border texture coordinates
+
+	// Find the off screen texture screen space coordinates for the position
+	float fScreenX = (2.0 * vFlatPos.x + (fOffScreenCamRight + fOffScreenCamLeft)
+			* vFlatPos.z) / (fOffScreenCamRight - fOffScreenCamLeft);
+	float fScreenY = (2.0 * vFlatPos.y + (fOffScreenCamTop + fOffScreenCamBottom)
+			* vFlatPos.z) / (fOffScreenCamTop - fOffScreenCamBottom);
+	
+	float2 vScreenSpacePos = float2(fScreenX, fScreenY) / -vFlatPos.z;
+	
+    float2 uvRegionAndBorder = float2(0.5 + 0.5*vScreenSpacePos.x, 0.5 - 0.5*vScreenSpacePos.y);
+	
+	float3 E = normalize(-viewSpacePosition); // we are in Eye Coordinates, so EyePos is (0,0,0)  
+	
+	// diffuse
+	float4 borderColor = tex2D(regionAndBorderOverlay, uvRegionAndBorder);
+	float3 blend1 = tex2D(terrainBlend1, uvBlend).rgb;
+	float4 blend2 = tex2D(terrainBlend2, uvBlend);
+	float3 detailChannels = tex2D(terrainDetailChannels, uvDiffuse).rgb;
+	
+	// terrain colors
+	float3 c1 = lerp(float3(0.604, 0.467, 0.302), float3(0.710, 0.557, 0.357), detailChannels.b); // sand
+	float3 c2 = lerp(float3(0.322, 0.380, 0.145), float3(0.598, 0.772, 0.280), detailChannels.r); // grass	
+	float3 c3 = lerp(float3(0.000, 0.012, 0.000), float3(0.429, 0.610, 0.135), detailChannels.g); // hill
+	float3 c4 = lerp(float3(0.494, 0.294, 0.098), float3(0.610, 0.457, 0.257), detailChannels.b); // dirt
+	float3 c5 = tex2D(terrainDiffuse5, uvDiffuse).rgb;                                            // mountain
+	float3 c6 = lerp(float3(0.800, 0.800, 0.900), float3(1.000, 1.000, 1.000), detailChannels.b); // ice
+	float texLuminance = ( tex2D(TileSampler, uvNorm).r * 1.33 ) - 0.33;
+	
+	// normalize blend
+	const float nonZero = 0.004; // to avoid dividing by zero
+	float blendTotal1 = max(blend1.r + blend1.g + blend1.b,nonZero);
+	float blendTotal2 = max(blend2.r + blend2.g + blend2.b,nonZero);
+
+	blend1 /= blendTotal1;
+	blend2.rgb /= blendTotal2;
+		
+	float3 baseColor = c1 * blend1.r + c2 * blend1.g + c3 * blend1.b;
+	float3 modColor = c4 * blend2.r + c5 * blend2.g + c6 * blend2.b;
+	
+	float3 diffColor = lerp(baseColor, modColor, blend2.a);
+	
+	// ambient color
+	float3 Iamb = diffColor * sgLights[1].color.rgb;
+	
+	float3 Idiff = diffColor * texLuminance * sgLights[0].color.rgb;
+
+	// scene color
+	float3 color = Iamb + Idiff;
+		
+	FragmentOutput output;
+	output.color = float4(lerp(color, borderColor.rgb, borderColor.a),1);
+	return output;
+}

@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="UI2DNationSelectionMenu"  class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation" />
+		
+		<propertyDef name="objMenu" storesChildren="true">
+			switch{
+				case self.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet) AND
+						self.objNation.getMasterNation(mh2data.objAvatar) == mh2data.objNation:
+					<object type="UI2NationSelectionMenuActionListMasterNationView">
+						<property name="objNation" from="def.objNation"/>
+					</object>
+				case self.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet) AND
+						self.objNation.getMasterNation(mh2data.objAvatar) != mh2data.objNation AND
+						gs_tbg.getWar(mh2data.objAvatar, self.objNation, mh2data.objNation) == null:
+					<object type="UI2NationSelectionMenuActionListNonMasterViewPeace">
+						<property name="objNation" from="def.objNation"/>
+					</object>
+				case self.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet) AND
+						self.objNation.getMasterNation(mh2data.objAvatar) != mh2data.objNation AND
+						gs_tbg.getWar(mh2data.objAvatar, self.objNation, mh2data.objNation) != null:
+					<object type="UI2NationSelectionMenuActionListNonMasterViewWar">
+						<property name="objNation" from="def.objNation"/>
+					</object>
+				case gs_tbg.getNationAlliance(mh2data.objAvatar, self.objNation) == gs_tbg.getNationAlliance(mh2data.objAvatar, mh2data.objNation) AND
+						gs_tbg.getNationAlliance(mh2data.objAvatar, self.objNation) != null AND
+						gs_tbg.getNationAlliance(mh2data.objAvatar, mh2data.objNation) != null:
+					<object type="UI2NationSelectionMenuActionListAlly">
+						<property name="objNation" from="def.objNation"/>
+					</object>
+				case gs_tbg.getWar(mh2data.objAvatar, self.objNation, mh2data.objNation) != null:
+					<object type="UI2NationSelectionMenuActionListNonAllyWar">
+						<property name="objNation" from="def.objNation"/>
+					</object>
+				default:
+					<object type="UI2NationSelectionMenuActionListNonAlly">
+						<property name="objNation" from="def.objNation"/>
+					</object>
+			}
+		</propertyDef>		
+		
+    </objectDef>
+	
+	<objectDef type="UI2NationSelectionBase"  class="CMLObject">	
+		<propertyDef name="objNation" type="gs_tbg.Nation" />			
+        <propertyDef name="objMenuItemsCovert" type="common_elements.MenuItem" variable="true" storesChildren="true"/>
+        <propertyDef name="objMenuItemsDiplomatic" type="common_elements.MenuItem" variable="true" storesChildren="true"/>	
+		
+		<propertyDef name="objNationalPrograms" type="gs_tbg.NationalProgram" variable="true">
+			gs_tbg.getNationalProgramsForTarget(mh2data.objAvatar, mh2data.objNation, self.objNation)
+		</propertyDef>
+		
+		<script type="application/x-locust-query">
+			atWar = ?{gameroot, nation:
+				find(?{enemy: enemy == mh2data.objNation},
+					gs_tbg.getNationEnemies(gameroot, nation)) != null
+			}
+			
+			haveAccess = ?{gameroot, nation1, nation2:
+				gs_tbg.getAccessAgreement(gameroot, nation1, nation2) != null
+			}
+			
+			areAlly = ?{gameroot, nation1, nation2:
+                find(
+                    ?{nation:
+                        nation == nation2
+                    }, gs_tbg.getNationAllies(gameroot, nation1)
+                ) == nation2
+			}
+			
+			embargoing = ?{gameroot, initiatingNation, embargoedNation:
+				gs_tbg.getEmbargo(gameroot, initiatingNation, embargoedNation) != null
+			}
+			
+		</script>
+		
+	</objectDef>
+	
+	
+	<objectDef type="NationSelectionMenuObject" class="CMLObject" >
+		<script type="application/javascript"><![CDATA[
+			function execute()
+			{
+				log("forgot to write an execute for this object " + self);
+			}
+		]]></script>
+	</objectDef>
+	
+	<objectDef type="UI2NationSelectionMenuActionListMasterNationView" superType="UI2NationSelectionBase" >			
+		<!-- Diplomatic -->
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic">
+			<property name="strDisplayName" from="locale.SID.UI.ProposeTradeAgreement"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DTradeAgreement);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic">
+			<property name="strDisplayName" from="locale.SID.UI.GrantIndependence"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DChangePuppetStatus);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<propertyDef name="bEmbargo" type="bool" >
+			self.embargoing(mh2data.objAvatar, mh2data.objNation, self.objNation)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="!self.bEmbargo">
+			<property name="strDisplayName" from="locale.SID.UI.DeclareEmbargo"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeclareEmbargo);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bEmbargo">
+			<property name="strDisplayName" from="locale.SID.UI.EndEmbargo"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DEndEmbargo);
+					}
+				]]></script>
+			</object>		
+		</object>	
+
+		
+		<!-- Covert -->
+		<propertyDef name="bOppositionSupport" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.OppositionSupport)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bOppositionSupport" >
+			<property name="strDisplayName" from="locale.SID.UI.FundPoliticalOpposition"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DFundOpposition);
+					}
+				]]></script>
+			</object>		
+		</object>	
+		
+	</objectDef>
+	
+	<objectDef type="UI2NationSelectionMenuActionListNonMasterViewPeace" superType="UI2NationSelectionBase" >		
+		<!-- Trade Agreements Action -->		
+		
+		<propertyDef name="bAtWar" type="bool" >
+			self.atWar(mh2data.objAvatar, self.objNation)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bAtWar">
+			<property name="strDisplayName" from="locale.SID.UI.OfferPeace"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeclareWar);
+					}
+				]]></script>
+			</object>		
+		</object>
+	
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic">
+			<property name="strDisplayName" from="locale.SID.UI.ProposeTradeAgreement"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DTradeAgreement);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<propertyDef name="bEmbargo" type="bool" >
+			self.embargoing(mh2data.objAvatar, mh2data.objNation, self.objNation)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="!self.bEmbargo">
+			<property name="strDisplayName" from="locale.SID.UI.DeclareEmbargo"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeclareEmbargo);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bEmbargo">
+			<property name="strDisplayName" from="locale.SID.UI.EndEmbargo"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DEndEmbargo);
+					}
+				]]></script>
+			</object>		
+		</object>	
+
+		<!-- Covert -->
+		<propertyDef name="bDeploySurveillance" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.StealResearch)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bDeploySurveillance" >
+			<property name="strDisplayName" from="locale.SID.UI.Surveillance"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeploySurveillance);
+					}
+				]]></script>
+			</object>		
+		</object>	
+		<propertyDef name="bOppositionSupport" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.OppositionSupport)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bOppositionSupport" >
+			<property name="strDisplayName" from="locale.SID.UI.FundPoliticalOpposition"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DFundOpposition);
+					}
+				]]></script>
+			</object>		
+		</object>	
+
+		
+	</objectDef>
+	
+	<objectDef type="UI2NationSelectionMenuActionListNonMasterViewWar" superType="UI2NationSelectionBase" >		
+		<!-- Diplomatic -->	
+		<propertyDef name="bAtWar" type="bool" >
+			self.atWar(mh2data.objAvatar, self.objNation)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bAtWar">
+			<property name="strDisplayName" from="locale.SID.UI.OfferPeace"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeclareWar);
+					}
+				]]></script>
+			</object>		
+		</object>
+	
+		<!-- Covert -->
+		<propertyDef name="bDeploySurveillance" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.StealResearch)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bDeploySurveillance" >
+			<property name="strDisplayName" from="locale.SID.UI.Surveillance"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeploySurveillance);
+					}
+				]]></script>
+			</object>		
+		</object>	
+		<propertyDef name="bOppositionSupport" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.OppositionSupport)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bOppositionSupport" >
+			<property name="strDisplayName" from="locale.SID.UI.FundPoliticalOpposition"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DFundOpposition);
+					}
+				]]></script>
+			</object>		
+		</object>	
+
+	</objectDef>
+	
+	<objectDef type="UI2NationSelectionMenuActionListAlly" superType="UI2NationSelectionBase" >		
+		<!-- Diplomatic -->		
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic">
+			<property name="strDisplayName" from="locale.SID.UI.ProposeTradeAgreement"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DTradeAgreement);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<propertyDef name="bRequestMilitaryAccessTreaty" type="bool" >
+			gs_tbg.getAccessAgreement(mh2data.objAvatar, mh2data.objNation, self.objNation) == null
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bRequestMilitaryAccessTreaty" >
+			<property name="strDisplayName" from="locale.SID.UI.RequestMilitaryAccessTreaty"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DMilitaryAccessTreaty);
+					}
+				]]></script>
+			</object>		
+		</object>		
+		<propertyDef name="bGrantMilitaryAccessTreaty" type="bool" >
+			gs_tbg.getAccessAgreement(mh2data.objAvatar, self.objNation, mh2data.objNation) == null
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bGrantMilitaryAccessTreaty" >
+			<property name="strDisplayName" from="locale.SID.UI.GrantMilitaryAccessTreaty"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DGrantMilitaryAccessTreaty);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<propertyDef name="bCancelMilitaryAccessTreaty" type="bool" >
+			gs_tbg.getAccessAgreement(mh2data.objAvatar, self.objNation, mh2data.objNation) != null
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bCancelMilitaryAccessTreaty" >
+			<property name="strDisplayName" from="locale.SID.UI.CancelMilitaryAccessTreaty"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DCancelMilitaryAccess);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<propertyDef name="bLeaveAlliance" type="bool" >
+			self.areAlly(mh2data.objAvatar, mh2data.objNation, self.objNation)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bLeaveAlliance" >
+			<property name="strDisplayName" from="locale.SID.UI.LeaveAlliance"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DEndAlliance);
+					}
+				]]></script>
+			</object>		
+		</object>
+				
+		<!-- Covert -->
+		<propertyDef name="bDeploySurveillance" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.StealResearch)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bDeploySurveillance" >
+			<property name="strDisplayName" from="locale.SID.UI.Surveillance"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeploySurveillance);
+					}
+				]]></script>
+			</object>		
+		</object>	
+		<propertyDef name="bOppositionSupport" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.OppositionSupport)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bOppositionSupport" >
+			<property name="strDisplayName" from="locale.SID.UI.FundPoliticalOpposition"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DFundOpposition);
+					}
+				]]></script>
+			</object>		
+		</object>	
+
+		</objectDef>
+		
+	<objectDef type="UI2NationSelectionMenuActionListNonAlly" superType="UI2NationSelectionBase" >		
+		<!-- Diplomatic -->
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic">
+			<property name="strDisplayName" from="locale.SID.UI.DeclareWar"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeclareWar);
+					}
+				]]></script>
+			</object>		
+		</object>		
+		<propertyDef name="bRequestMilitaryAccessTreaty" type="bool" >
+			gs_tbg.getAccessAgreement(mh2data.objAvatar, mh2data.objNation, self.objNation) == null
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bRequestMilitaryAccessTreaty" >
+			<property name="strDisplayName" from="locale.SID.UI.RequestMilitaryAccessTreaty"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DMilitaryAccessTreaty);
+					}
+				]]></script>
+			</object>		
+		</object>
+		
+		<propertyDef name="bGrantMilitaryAccessTreaty" type="bool" >
+			gs_tbg.getAccessAgreement(mh2data.objAvatar, self.objNation, mh2data.objNation) == null
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bGrantMilitaryAccessTreaty" >
+			<property name="strDisplayName" from="locale.SID.UI.GrantMilitaryAccessTreaty"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DGrantMilitaryAccessTreaty);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<propertyDef name="bCancelMilitaryAccessTreaty" type="bool" >
+			gs_tbg.getAccessAgreement(mh2data.objAvatar, self.objNation, mh2data.objNation) != null
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bCancelMilitaryAccessTreaty" >
+			<property name="strDisplayName" from="locale.SID.UI.CancelMilitaryAccessTreaty"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DCancelMilitaryAccess);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<propertyDef name="bLeaveAlliance" type="bool" >
+			self.areAlly(mh2data.objAvatar, mh2data.objNation, self.objNation)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bLeaveAlliance" >
+			<property name="strDisplayName" from="locale.SID.UI.LeaveAlliance"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DEndAlliance);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="!self.bLeaveAlliance" >
+			<property name="strDisplayName" from="locale.SID.UI.AllianceTreaty"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DAllianceTreaty);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="!self.bLeaveAlliance" >
+			<property name="strDisplayName" from="locale.SID.UI.ProposeTradeAgreement"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DTradeAgreement);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<propertyDef name="bEmbargo" type="bool" >
+			self.embargoing(mh2data.objAvatar, mh2data.objNation, self.objNation)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="!self.bEmbargo">
+			<property name="strDisplayName" from="locale.SID.UI.DeclareEmbargo"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeclareEmbargo);
+					}
+				]]></script>
+			</object>		
+		</object>
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic" existsWhile="self.bEmbargo">
+			<property name="strDisplayName" from="locale.SID.UI.EndEmbargo"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DEndEmbargo);
+					}
+				]]></script>
+			</object>		
+		</object>	
+
+		<!-- Covert -->
+		<propertyDef name="bStealResearch" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.StealResearch)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bStealResearch" >
+			<property name="strDisplayName" from="locale.SID.UI.StealResearch"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DGatherIntelligence);
+					}
+				]]></script>
+			</object>		
+		</object>	
+		<propertyDef name="bDeploySurveillance" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.StealResearch)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bDeploySurveillance" >
+			<property name="strDisplayName" from="locale.SID.UI.Surveillance"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeploySurveillance);
+					}
+				]]></script>
+			</object>		
+		</object>	
+		<propertyDef name="bOppositionSupport" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.OppositionSupport)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bOppositionSupport" >
+			<property name="strDisplayName" from="locale.SID.UI.FundPoliticalOpposition"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DFundOpposition);
+					}
+				]]></script>
+			</object>		
+		</object>	
+
+	</objectDef>
+	
+	<objectDef type="UI2NationSelectionMenuActionListNonAllyWar" superType="UI2NationSelectionBase" >		
+		<!-- Diplomatic -->
+		<object type="common_elements.MenuItem" name="objMenuItemsDiplomatic">
+			<property name="strDisplayName" from="locale.SID.UI.OfferPeace"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DOfferPeace);
+					}
+				]]></script>
+			</object>		
+		</object>	
+		
+		<!-- Covert -->
+		<propertyDef name="bStealResearch" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.StealResearch)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bStealResearch" >
+			<property name="strDisplayName" from="locale.SID.UI.StealResearch"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DGatherIntelligence);
+					}
+				]]></script>
+			</object>		
+		</object>	
+		<propertyDef name="bDeploySurveillance" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.StealResearch)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bDeploySurveillance" >
+			<property name="strDisplayName" from="locale.SID.UI.Surveillance"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DDeploySurveillance);
+					}
+				]]></script>
+			</object>		
+		</object>	
+		<propertyDef name="bOppositionSupport" type="bool" >
+			!self.objNationalPrograms.containsValueOfType(gs_tbg.OppositionSupport)
+		</propertyDef>
+		<object type="common_elements.MenuItem" name="objMenuItemsCovert" existsWhile="self.bOppositionSupport" >
+			<property name="strDisplayName" from="locale.SID.UI.FundPoliticalOpposition"/>
+			<object name="objExecuteObject" type="NationSelectionMenuObject">				
+				<script type="application/javascript"><![CDATA[
+					function execute()
+					{
+						spdata.showMoreInfo();
+						mh2data.openDiplomaticAction(UI2DFundOpposition);
+					}
+				]]></script>
+			</object>		
+		</object>	
+
+
+
+		
+	</objectDef>
+	
+	
+</locust>

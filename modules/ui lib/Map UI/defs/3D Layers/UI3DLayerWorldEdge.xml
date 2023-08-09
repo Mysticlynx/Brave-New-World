@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- Model -->
+	<objectDef type="UI3DLayerWorldEdge" superType="mlui.UI3DLayer">
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		
+		<object type="UI3DWorldEdge" name="objWorldEdgeNorth">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="vecPosition" value="[0, 10, 0]"/>
+		</object>
+		<object type="UI3DWorldEdge" name="objWorldEdgeNorth">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="vecPosition" value="[200, 10, 0]"/>
+		</object>
+		<object type="UI3DWorldEdge" name="objWorldEdgeNorth">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="vecPosition" value="[-100, 10, 0]"/>
+		</object>
+
+		<!-- Lights -->
+		<object type="UI3DModelLight" name="objMapLight">
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI3DWorldEdge" superType="UI3DMapModelGO">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		
+		<propertyDef name="objMapModel" type="MapModelTemplate">
+			self.objMapData.tmplWorldEdgeNorthMapModel.resolve()
+        </propertyDef>
+		<property name="tmplModel" from="self.objMapModel.tmplModel"/>
+		
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		
+		<object type="ml3dworld.TransformList" name="objLocalTransforms">
+			<object type="ml3dworld.TransformList" name="objTransforms">
+				<property name="objTransforms" from="def.objMapModel.objTransform"/>
+			</object>
+		</object>
+	</objectDef>
+</locust>
+		

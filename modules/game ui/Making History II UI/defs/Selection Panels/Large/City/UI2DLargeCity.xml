@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="UI2DCityName" superType="mlui.UI2DElement">
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+		<propertyDef name="bChangeName" type="bool" default="false"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="tmplTextStyleEdit" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="tmplButtonStyleAccept" type="TemplateRef" restriction="mlmedia.ButtonStyleTemplate"/>
+		<propertyDef name="tmplButtonStyleCancel" type="TemplateRef" restriction="mlmedia.ButtonStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objName" existsWhile="def.bChangeName == false">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objCity.strDisplayName"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>			
+		</object>
+		
+		<object type="mlui.UI2DEditableText" name="objEditableText" existsWhile="def.bChangeName == true">
+			<property name="tmplTextStyle" from="def.tmplTextStyleEdit"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth-50"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_ESCAPE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_RETURN"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_GRAVE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_TAB"/>
+			
+			<object type="mlui.KeyBindList" name="objKeyBindList">
+				<object type="mlui.KeyBindMethod" name="objKeyBinds">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<property name="eKey" value="KEY_CODE_RETURN"/>
+					<script type="application/javascript"><![CDATA[
+						function notifyTriggered(owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object><!-- objEditableText -->
+		
+		<object type="UI2DElementMask" name="objPopupMask" existsWhile="def.bChangeName == false">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="95"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_RIGHT))
+							{
+                                def.bChangeName = true;
+                                def.objEditableText.strText = '';							
+                                mlui.ActSetKeyboardFocus.execute({"objElement": def.objEditableText});
+							}
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objSumbitRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" from="def.tmplButtonStyleAccept"/>
+			<property name="nX" from="def.nWidth-47"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="55"/>
+			<property name="strToolTip" from="locale.SID.UI.Submit"/>
+			
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objCancelRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" from="def.tmplButtonStyleCancel"/>
+			<property name="nX" from="def.nWidth-23"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="95"/>
+			<property name="strToolTip" from="locale.SID.UI.Cancel"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.bChangeName = false;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<script type="application/javascript"><![CDATA[
+			function executeRename()
+			{
+                if(mh2data.objNation.equals(self.objCity.objController))
+                {
+                    if(self.objEditableText.strText != '')
+                    {
+                        var action = gs_tbg.GActRenameCity.create({
+                            "refCity": self.objCity, 
+                            "strNewName": self.objEditableText.strText
+                            });
+                        mh2data.objAvatar.sendAction(action);
+                    }
+                }
+                self.objEditableText.strText = '';
+                self.bChangeName = false;
+			}
+		]]></script>
+		
+	</objectDef> <!-- UI2DCityName -->
+
+
+
+	<objectDef type="UI2DLargeCity" superType="UI2DReportPanel">
+		
+		<propertyDef name="objUnitGroupsInPort" type="gs_tbg.UnitGroup" variable="true">
+		    gs_tbg.getGroupsAtLocation(mh2data.objAvatar,spdata.objCityData.objCity)
+		</propertyDef>
+		
+	<!-- Header and Background -->
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" from="636"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconCity"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="62"/>
+			<property name="nHeight" value="56"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="spdata.objCityData.objOwner"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="635"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>		
+		
+		<object type="UI2DNationIcon" name="objCityControllerIcon">
+			<property name="objNation" from="spdata.objCityData.objController"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="nDepth" value="100"/>			
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIDIconOccupation" existsWhile="spdata.objCityData.objController != spdata.objCityData.objOwner">
+			<property name="tmplImage" value="skin.ImgIDIconOccupation"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>		
+		
+        <object type="UI2DCityName" name="objCityName">
+            <property name="objCity" from="spdata.objCityData.objCity"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="tmplTextStyleEdit" value="locale.TxtStyleArialWhite14Left"/>
+		    <property name="tmplButtonStyleAccept" value="skin.BtnStyleNationRename"/>
+		    <property name="tmplButtonStyleCancel" value="skin.BtnStyleNationRenameCancel"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="61"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objControllerName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" from="spdata.objCityData.objController.strDisplayName"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="75"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>		
+		
+		<object type="common_ui.UI2DListHorz" name="objInfoBubbles">
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nSpacing" value="3"/>
+			
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgIDIconCapital"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="bVisible" from="spdata.objCityData.objCity == spdata.objCityData.objCapitalCity"/>
+				<property name="strToolTip" from="locale.SID.UI.Capital"/>
+			</object>
+			
+			<object type="UI2DCitySelectionPortAccess" name="objElements">
+				<property name="nUnits">
+					def.objUnitGroupsInPort.size
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="bVisible" from="spdata.objCityData.objCity.refSeaRegion != null"/>				
+                <property name="strToolTip" >
+                    if(spdata.objCityData.objController == mh2data.objNation,
+                        if(self.nUnits GT 0,
+                            locale.SID.UI.UnitsInPort,
+                            locale.SID.UI.PortAccess
+                        ),
+                        locale.SID.UI.NoPortAccess
+                    )
+                </property>
+			</object>
+			
+			<object type="UI2DInfoBubbleSq" name="objElements">
+				<property name="tmplIcon" value="skin.ImgIDIconResearchPoints"/>
+				<property name="strToolTip" from="locale.SID.UI.ResearchPoints"/>
+				<property name="strText" from="spdata.objCityData.objCity.nRPUs"/>
+			</object>
+			
+			<object type="UI2DInfoBubbleSq" name="objElements">
+				<property name="tmplIcon" value="skin.ImgIDIconIPUs"/>
+				<property name="strToolTip" from="locale.SID.UI.IPUs"/>
+				<property name="strText" from="spdata.objCityData.objCity.nIPUs"/>
+			</object>
+			
+			<object type="UI2DSOLargeMinimizeButton" name="objElements">
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								spdata.showLessInfo();
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCityManagementLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown18Left"/>
+			<property name="strText" from="locale.SID.UI.CityManagement"/>
+			<property name="nX" value="12"/>
+			<property name="nY" from="99 + if(mlui.objUI.nHeight == 600, 4, 0)"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="8"/>
+			<property name="nY" value="136"/>
+			<property name="nWidth" value="878"/>
+			<property name="nHeight" value="548"/>
+		</object>		
+	
+	<!-- Content -->	
+		<!--<object type="UI2DCityTabs" name="objCityTabs">-->
+		<!--	<property name="nWidth" from="def.nWidth"/>-->
+		<!--	<property name="nHeight" from="def.nHeight"/>-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--</object>-->
+		<!---->
+		<propertyDef name="objTab" storesChildren="true">
+			switch{
+				case spdata.objCityData.eTab == CitySection.INFRASTRUCTURE:
+					<object type="UI2DCityTabInfrastructure">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				case spdata.objCityData.eTab == CitySection.RESEARCH:
+					<object type="UI2DCityTabResearch">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				case spdata.objCityData.eTab == CitySection.PRODUCTION:
+					<object type="UI2DCityTabProduction">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+			}
+		</propertyDef>
+		
+		<object type="mlui.UI2DImage" name="objButtonsShadow">
+			<property name="tmplImage" value="skin.ImgReportPanelShadow16x16"/>
+			<property name="nX" value="678"/>
+			<property name="nY" value="101"/>
+			<property name="nWidth" value="211"/>
+			<property name="nHeight" value="48"/>
+			<property name="nDepth" value="-100"/>
+		</object>		
+		
+		<object type="common_ui.UI2DListHorz" name="objTabs">
+			<property name="nX" value="14"/>
+			<property name="nY" value="102"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nSpacing" value="1"/>
+			<property name="bVisible">
+				spdata.objCityData.objController == mh2data.objNation
+			</property>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.CityResearch"/>
+				<property name="tmplIcon" value="skin.ImgResearchIcon"/>
+				<property name="bSelected">
+                    spdata.objCityData.eTab == CitySection.RESEARCH
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								spdata.objCityData.showCityResearch(spdata.objCityData.objCity);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.CityProduction"/>
+				<property name="tmplIcon" value="skin.ImgFactoryIcon"/>
+				<property name="bSelected">
+                    spdata.objCityData.eTab == CitySection.PRODUCTION
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								spdata.objCityData.showCityProduction(spdata.objCityData.objCity);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.CityInfrastructure"/>
+				<property name="tmplIcon" value="skin.ImgCityBuildingsIcon"/>
+				<property name="bSelected">
+                    spdata.objCityData.eTab == CitySection.INFRASTRUCTURE
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								spdata.objCityData.showCityInfrastructure(spdata.objCityData.objCity);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+		</object>
+		
+		
+	</objectDef>
+</locust>

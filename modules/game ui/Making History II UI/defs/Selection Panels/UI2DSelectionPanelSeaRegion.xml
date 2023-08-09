@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="SeaRegionData" class="CMLObject">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="eExpand" type="Enum" restriction="SeaRegionSection" default="NONE"/>
+		
+		<propertyDef name="objGroups" type="gs_tbg.UnitGroup" variable="true">
+		    gs_tbg.getGroupsAtLocation(mh2data.objAvatar,self.objRegion)
+		</propertyDef>
+
+		<propertyDef name="objNavalGroups" type="gs_tbg.UnitGroup" variable="true">
+            filter(?{group: group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy') OR group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Submarine')}, self.objGroups)
+        </propertyDef>
+
+		<!-- TODO: remove duplicates once implemented in locust -->
+		<propertyDef name="objNavalNations" type="gs_tbg.Nation" variable="true">
+			map(?{group: group.refController.resolve(mh2data.objAvatar)}, self.objNavalGroups)
+		</propertyDef>
+	</objectDef>
+	
+	<enumDef name="SeaRegionSection">
+        <value name="NONE"/>
+        <value name="GROUPS"/>
+    </enumDef>
+	
+	<objectDef type="UI2DSelectionPanelSeaRegion" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<property name="vaYAlign" value="BOTTOM"/>
+		
+		<property name="nHeight">
+				self.objPanel.nHeight
+		</property>
+		<property name="nWidth" from="self.objPanel.nWidth"/>
+		
+		<object type="UI2DSeaRegionPanel" name="objPanel">
+		</object>
+	
+	</objectDef>
+	
+	<objectDef type="UI2DSeaRegionPanel" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="351"/>
+		<property name="nHeight" from="192 + self.objExpand.nHeight"/>
+
+		<!-- Background -->
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="13"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>		
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconSeaRegion"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="72"/>
+			<property name="nHeight" value="36"/>
+			<property name="haXAlign" value="LEFT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelMinBackgroundTop">
+			<property name="tmplImage" value="skin.ImgPanelTopBG"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="36"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="32"/>		
+		</object>
+		
+		<!-- Content -->
+		<object type="UI2DSeaRegionData" name="objPanel">
+			<property name="nX" value="3"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="128"/>	
+		</object>
+		
+		<propertyDef name="objExpand" storesChildren="true">
+			switch{
+				case spdata.objSeaRegionData.eExpand == SeaRegionSection.GROUPS:
+					<object type="UI2DSeaRegionTabGroups">
+						<property name="nY" from="def.objPanel.nY + def.objPanel.nHeight - 1"/>
+					</object>
+				default:
+					<object type="mlui.UI2DElement">
+						<property name="vaYAlign" value="BOTTOM"/>
+						<property name="nDepth" value="100"/>
+					</object>
+			}
+		</propertyDef>
+		
+		<!-- Foreground -->
+		<object type="mlui.UI2DImage" name="objPanelBG">
+			<property name="tmplImage" value="skin.ImgDetailPanel"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="70"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="94"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBottomBG">
+			<property name="tmplImage" value="skin.ImgOlive"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objPanelBorder">
+			<property name="tmplImage" value="skin.ImgPanelBorderSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="34"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" from="def.nHeight - self.nY"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="65"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objNavalBaseButton" existsWhile="spdata.objSeaRegionData.objNavalNations.size GT 0">
+			<property name="tmplButtonStyle" value="skin.BtnStyleCityNavalBase"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="38"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="strToolTip" from="locale.SID.UI.NavalGroups"/>
+
+		<!-- Opens the Sea Group panel -->
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(spdata.objSeaRegionData.eExpand.equals(SeaRegionSection.NONE)){
+								spdata.objSeaRegionData.showSeaRegionExpand(spdata.objSeaRegionData.objRegion);
+							}
+							else{
+								spdata.objSeaRegionData.showSeaRegion(spdata.objSeaRegionData.objRegion);
+							};
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+	</objectDef>
+
+  <objectDef type="UI2DNationFleetIcon" superType="mlui.UI2DElement">
+    <propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+    <object type="LookupNationIcons" name="objLookupNationIcons">
+      <property name="tmplNation" from="def.objNation.tmplNation"/>
+      <property name="tmplIdeology" from="def.objNation.tmplIdeology"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objIcon">
+      <property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28"/>
+      <property name="nX" value="0"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+      <property name="strToolTip" from="def.objNation.getNationalityTemplate().strDisplayName + ' ' + locale.SID.UI.NavalGroup"/>
+    </object>
+  </objectDef>
+
+	<objectDef type="UI2DSeaRegionData" superType="mlui.UI2DElement">
+		
+		<object type="mlui.UI2DImage" name="objSeaRegionIcon">
+			<property name="tmplImage" value="skin.ImgNationIconSeaRegion"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="nDepth" value="100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="strText" from="spdata.objSeaRegionData.objRegion.strDisplayName"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objLocation">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" from="spdata.objSeaRegionData.objRegion.strAreaDisplayName"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objIDIconTerrainBG">
+			<property name="tmplImage" value="skin.ImgIDIconBlank"/>
+			<property name="nX" value="315"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="UI2DTerrainIcon" name="objIDIconTerrain">
+			<property name="objRegion" from="spdata.objSeaRegionData.objRegion"/>
+			<property name="nX" value="318"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="22"/>
+		</object>
+		
+	<!-- Details Background Section -->
+		<object type="mlui.UI2DImage" name="objDetailsBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleBrownTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="341"/>
+			<property name="nHeight" value="89"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objDetailsBG2">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="337"/>
+			<property name="nHeight" value="85"/>
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objDetailsBGGradient">
+			<property name="tmplImage" value="skin.ImgGradientGraySm"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="38"/>
+			<property name="nWidth" value="335"/>
+			<property name="nHeight" value="39"/>
+		</object>
+		
+	<!-- Naval Forces Section -->
+		<!--<object type="mlui.UI2DImage" name="objNavalForcesIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconNaval"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="39"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>-->
+		
+		<object type="mlui.UI2DText" name="objNavalForcesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.NavalForcesPresent"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objNavalGroups">
+			<property name="nX" value="10"/>
+			<property name="nY" value="54"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nMaxEltsPerRow" value="5"/>
+			
+			<object type="UI2DNationFleetIcon" name="objElements" tiedTo="spdata.objSeaRegionData.objNavalNations">
+				<property name="objNation" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+			</object>
+		</object>
+		
+	</objectDef>	
+</locust>

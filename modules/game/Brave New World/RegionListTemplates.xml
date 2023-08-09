@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- RegionListTemplate definitions -->
+	<template type="gs_tbg.RegionListTemplate" name="BelgiumProper" >
+		<property name="refRegions" value="Wallonia"/>
+		<property name="refRegions" value="Flanders"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="NetherlandsProper" >
+		<property name="refRegions" value="NorthHolland"/>
+		<property name="refRegions" value="SouthHolland"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Niederlande" >
+		<property name="refRegions" value="NorthHolland"/>
+		<property name="refRegions" value="SouthHolland"/>
+		<property name="refRegions" value="Flanders"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="DenmarkProper" >
+		<property name="refRegions" value="Bornholm"/>
+		<property name="refRegions" value="Jutland"/>
+		<property name="refRegions" value="Zealand"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="GreenlandTerritories" >
+		<property name="refRegions" value="Vestgronland"/>
+		<property name="refRegions" value="Osterbygd"/>
+		<property name="refRegions" value="Nordgronland"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="FaroeIslandRegion" >
+		<property name="refRegions" value="FaroeIslands"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="WestPoland" >
+		<property name="refRegions" value="Kieleckie"/>
+		<property name="refRegions" value="Lodzkie"/>
+		<property name="refRegions" value="Malopolskie"/>
+		<property name="refRegions" value="Masovia"/>
+		<property name="refRegions" value="Pomorze"/>
+		<property name="refRegions" value="Wielkopolskie"/>
+		<property name="refRegions" value="Bialystok"/>
+		<property name="refRegions" value="Lubelskie"/>
+		<property name="refRegions" value="Ruskie"/>
+		<property name="refRegions" value="NarewValley"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="EastPoland" >
+		<property name="refRegions" value="Wilno"/>
+		<property name="refRegions" value="Tarnopol"/>
+		<property name="refRegions" value="Volhynia"/>
+		<property name="refRegions" value="Grodno"/>
+		<property name="refRegions" value="Polesia"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="ItalianFranceClaim" >
+		<property name="refRegions" value="Provence"/>
+		<property name="refRegions" value="Savoy"/>
+		<property name="refRegions" value="Corsica"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="FranceProper" >
+		<property name="refRegions" value="Auvergne"/>
+		<property name="refRegions" value="Provence"/>
+		<property name="refRegions" value="Pyrenees"/>
+		<property name="refRegions" value="Reunion"/>
+		<property name="refRegions" value="Rhone"/>
+		<property name="refRegions" value="MarcheLimousine"/>
+		<property name="refRegions" value="Savoy"/>
+		<property name="refRegions" value="Corsica"/>
+		<property name="refRegions" value="Aquitaine"/>
+		<property name="refRegions" value="Poitou"/>
+		<property name="refRegions" value="Anjou"/>
+		<property name="refRegions" value="Brittany"/>
+		<property name="refRegions" value="Normandy"/>
+		<property name="refRegions" value="IlDeFrance"/>
+		<property name="refRegions" value="Picardy"/>
+		<property name="refRegions" value="Burgundy"/>
+		<property name="refRegions" value="Champagne"/>
+		<property name="refRegions" value="Lorraine"/>
+		<property name="refRegions" value="Alsace"/>
+		<property name="refRegions" value="FrancheComte"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="VichyFrance" >
+		<property name="refRegions" value="Auvergne"/>
+		<property name="refRegions" value="Provence"/>
+		<property name="refRegions" value="Pyrenees"/>
+		<property name="refRegions" value="Reunion"/>
+		<property name="refRegions" value="Rhone"/>
+		<property name="refRegions" value="MarcheLimousine"/>
+		<property name="refRegions" value="Savoy"/>
+		<property name="refRegions" value="Corsica"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="OccupiedFrance" >
+		<property name="refRegions" value="Aquitaine"/>
+		<property name="refRegions" value="Poitou"/>
+		<property name="refRegions" value="Anjou"/>
+		<property name="refRegions" value="Brittany"/>
+		<property name="refRegions" value="Normandy"/>
+		<property name="refRegions" value="IlDeFrance"/>
+		<property name="refRegions" value="Picardy"/>
+		<property name="refRegions" value="Burgundy"/>
+		<property name="refRegions" value="Champagne"/>
+		<property name="refRegions" value="Lorraine"/>
+		<property name="refRegions" value="Alsace"/>
+		<property name="refRegions" value="FrancheComte"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="GreekThracia" >
+		<property name="refRegions" value="Thrace"/>
+		<property name="refRegions" value="Macedonia"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Cypriot" >
+		<property name="refRegions" value="Cyprus"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="VardarMacedonia" >
+		<property name="refRegions" value="VardarBanovina"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="ArabianCoast" >
+		<property name="refRegions" value="Shafah"/>
+		<property name="refRegions" value="Sarawat"/>
+		<property name="refRegions" value="Hejaz"/>
+		<property name="refRegions" value="Asir"/>
+		<property name="refRegions" value="AlHasa"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="YemenTerritory" >
+		<property name="refRegions" value="UpperYemen"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="RedSeaCoast" >
+		<property name="refRegions" value="RedSeaHills"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="TheLevant" >
+		<property name="refRegions" value="Alawite"/>
+		<property name="refRegions" value="CentralSyria"/>
+		<property name="refRegions" value="Chebar"/>
+		<property name="refRegions" value="Halab"/>
+		<property name="refRegions" value="Lebanon"/>
+		<property name="refRegions" value="Mari"/>
+		<property name="refRegions" value="Osroene"/>
+		<property name="refRegions" value="Palmyra"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Transjordan" >
+		<property name="refRegions" value="CentralJordan"/>
+		<property name="refRegions" value="Cyprus"/>
+		<property name="refRegions" value="EastJordan"/>
+		<property name="refRegions" value="Malta"/>
+		<property name="refRegions" value="Negev"/>
+		<property name="refRegions" value="Petra"/>
+		<property name="refRegions" value="Samaria"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="SuezCanal" >
+		<property name="refRegions" value="SuezCanalZone"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="NorthernTransylvania" >
+		<property name="refRegions" value="Crisana"/>
+		<property name="refRegions" value="Transylvania"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Moldavia" >
+		<property name="refRegions" value="Bessarabia"/>
+		<property name="refRegions" value="Budjak"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="RomanianEasternClaims" >
+		<property name="refRegions" value="Podolia"/>
+		<property name="refRegions" value="Jedisan"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Ostland" >
+		<property name="refRegions" value="Harrien"/>
+		<property name="refRegions" value="Wierland"/>
+		<property name="refRegions" value="Courland"/>
+		<property name="refRegions" value="Latgale"/>
+		<property name="refRegions" value="Livonia"/>
+		<property name="refRegions" value="Aukstaitija"/>
+		<property name="refRegions" value="Samogitia"/>
+		<property name="refRegions" value="Grodno"/>
+		<property name="refRegions" value="Wilno"/>
+		<property name="refRegions" value="Babruysk"/>
+		<property name="refRegions" value="Baranavichy"/>
+		<property name="refRegions" value="Polatsk"/>
+		<property name="refRegions" value="Turov"/>
+		<property name="refRegions" value="Polesia"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Ukrainia" >
+		<property name="refRegions" value="Dnieper"/>
+		<property name="refRegions" value="Donbass"/>
+		<property name="refRegions" value="Kherson"/>
+		<property name="refRegions" value="Podolia"/>
+		<property name="refRegions" value="Pryazovia"/>
+		<property name="refRegions" value="Siveria"/>
+		<property name="refRegions" value="Sloboda"/>
+		<property name="refRegions" value="Polissia"/>
+		<property name="refRegions" value="Jedisan"/>
+		<property name="refRegions" value="Taurida"/>
+		<property name="refRegions" value="Tarnopol"/>
+		<property name="refRegions" value="Volhynia"/>
+		<property name="refRegions" value="Crimea"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="GreatRussia" >
+		<property name="refRegions" value="Pskov"/>
+		<property name="refRegions" value="Ingermanland"/>
+		<property name="refRegions" value="Novgorod"/>
+		<property name="refRegions" value="Bryansk"/>
+		<property name="refRegions" value="Kalinin"/>
+		<property name="refRegions" value="Kaluga"/>
+		<property name="refRegions" value="Kursk"/>
+		<property name="refRegions" value="Muscovy"/>
+		<property name="refRegions" value="Nizhny"/>
+		<property name="refRegions" value="Ryazan"/>
+		<property name="refRegions" value="Semyonovsky"/>
+		<property name="refRegions" value="Simbirsk"/>
+		<property name="refRegions" value="Smolensk"/>
+		<property name="refRegions" value="Tula"/>
+		<property name="refRegions" value="Tver"/>
+		<property name="refRegions" value="Uglich"/>
+		<property name="refRegions" value="Vladimir"/>
+		<property name="refRegions" value="Voronezh"/>
+		<property name="refRegions" value="Yaroslavl"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Caucasia" >
+		<property name="refRegions" value="Armenia"/>
+		<property name="refRegions" value="Azerbaijan"/>
+		<property name="refRegions" value="Circassia"/>
+		<property name="refRegions" value="Daghestan"/>
+		<property name="refRegions" value="Colchis"/>
+		<property name="refRegions" value="Kakheti"/>
+		<property name="refRegions" value="Adygea"/>
+		<property name="refRegions" value="Forecaucasia"/>
+		<property name="refRegions" value="Kuban"/>
+		<property name="refRegions" value="Rostov"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="EurasianSteppes" >
+		<property name="refRegions" value="Aktyubinsk"/>
+		<property name="refRegions" value="Bashkiria"/>
+		<property name="refRegions" value="Kalmykia"/>
+		<property name="refRegions" value="Orenburg"/>
+		<property name="refRegions" value="Saratov"/>
+		<property name="refRegions" value="SouthernUrals"/>
+		<property name="refRegions" value="Tara"/>
+		<property name="refRegions" value="Tatar"/>
+		<property name="refRegions" value="Tengiz"/>
+		<property name="refRegions" value="Uralsk"/>
+		<property name="refRegions" value="Volga"/>
+		<property name="refRegions" value="VolgaDelta"/>
+		<property name="refRegions" value="Volgograd"/>
+		<property name="refRegions" value="WesternSiberia"/>
+		<property name="refRegions" value="Wolgadeutsche"/>
+		<property name="refRegions" value="Yamalia"/>
+		<property name="refRegions" value="Yugra"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Transcaspia" >
+		<property name="refRegions" value="Emba"/>
+		<property name="refRegions" value="SirDaria"/>
+		<property name="refRegions" value="UstUrt"/>
+		<property name="refRegions" value="Samarkand"/>
+		<property name="refRegions" value="KaraKum"/>
+		<property name="refRegions" value="Mary"/>
+		<property name="refRegions" value="Tejen"/>
+		<property name="refRegions" value="AmuDaria"/>
+		<property name="refRegions" value="Khiva"/>
+		<property name="refRegions" value="KyzylKum"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="EasternSteppes" >
+		<property name="refRegions" value="Alxa"/>
+		<property name="refRegions" value="Bayan"/>
+		<property name="refRegions" value="Ningsia"/>
+		<property name="refRegions" value="Ordos"/>
+		<property name="refRegions" value="WestKansu"/>
+		<property name="refRegions" value="Dzungaria"/>
+		<property name="refRegions" value="Hami"/>
+		<property name="refRegions" value="NorthChahar"/>
+		<property name="refRegions" value="SouthChahar"/>
+		<property name="refRegions" value="Suiyuan"/>
+		<property name="refRegions" value="Dorvod"/>
+		<property name="refRegions" value="Altay"/>
+		<property name="refRegions" value="Bayangobi"/>
+		<property name="refRegions" value="Dundgobi"/>
+		<property name="refRegions" value="EastGobi"/>
+		<property name="refRegions" value="Khangai"/>
+		<property name="refRegions" value="Khentii"/>
+		<property name="refRegions" value="SouthGobi"/>
+		<property name="refRegions" value="Tov"/>
+		<property name="refRegions" value="Tumen"/>
+		<property name="refRegions" value="TannuUriankhai"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="EasternSiberia" >
+		<property name="refRegions" value="Kuril"/>
+		<property name="refRegions" value="Aldansk"/>
+		<property name="refRegions" value="Ayano"/>
+		<property name="refRegions" value="Buryatia"/>
+		<property name="refRegions" value="Chukota"/>
+		<property name="refRegions" value="Dauria"/>
+		<property name="refRegions" value="Gizhigin"/>
+		<property name="refRegions" value="Kamchatka"/>
+		<property name="refRegions" value="Karaga"/>
+		<property name="refRegions" value="Kolyma"/>
+		<property name="refRegions" value="Koryak"/>
+		<property name="refRegions" value="Lensk"/>
+		<property name="refRegions" value="Magadan"/>
+		<property name="refRegions" value="Olenyok"/>
+		<property name="refRegions" value="Sakha"/>
+		<property name="refRegions" value="Transbaikal"/>
+		<property name="refRegions" value="UpperUdinsk"/>
+		<property name="refRegions" value="Verkhoyansk"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="NorthernChina" >
+		<property name="refRegions" value="Anhwei"/>
+		<property name="refRegions" value="Ganzhou"/>
+		<property name="refRegions" value="Hankow"/>
+		<property name="refRegions" value="HexiCorridor"/>
+		<property name="refRegions" value="Honan"/>
+		<property name="refRegions" value="Hopeh"/>
+		<property name="refRegions" value="Huizhou"/>
+		<property name="refRegions" value="Hupeh"/>
+		<property name="refRegions" value="HwangHo"/>
+		<property name="refRegions" value="Jinzhong"/>
+		<property name="refRegions" value="Kiangsi"/>
+		<property name="refRegions" value="Kingyang"/>
+		<property name="refRegions" value="Liang"/>
+		<property name="refRegions" value="Linyi"/>
+		<property name="refRegions" value="Nanyang"/>
+		<property name="refRegions" value="Shansi"/>
+		<property name="refRegions" value="Shantung"/>
+		<property name="refRegions" value="Szechwan"/>
+		<property name="refRegions" value="Tanggu"/>
+		<property name="refRegions" value="Wei"/>
+		<property name="refRegions" value="Xingtai"/>
+		<property name="refRegions" value="Ngawa"/>
+		<property name="refRegions" value="Shensi"/>
+		<property name="refRegions" value="Yenan"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="SouthernChina" >
+		<property name="refRegions" value="Changchow"/>
+		<property name="refRegions" value="Chekiang"/>
+		<property name="refRegions" value="Enshi"/>
+		<property name="refRegions" value="Fukien"/>
+		<property name="refRegions" value="Guilin"/>
+		<property name="refRegions" value="Hainan"/>
+		<property name="refRegions" value="Hechi"/>
+		<property name="refRegions" value="Hengchow"/>
+		<property name="refRegions" value="Hunan"/>
+		<property name="refRegions" value="Kiangsu"/>
+		<property name="refRegions" value="Kwangsi"/>
+		<property name="refRegions" value="Leizhou"/>
+		<property name="refRegions" value="Panyu"/>
+		<property name="refRegions" value="Pengcheng"/>
+		<property name="refRegions" value="ShanghaiProper"/>
+		<property name="refRegions" value="Shaoyang"/>
+		<property name="refRegions" value="Shenzhen"/>
+		<property name="refRegions" value="Formosa"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Macao" >
+		<property name="refRegions" value="MacaoPeninsula"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="HongKong" >
+		<property name="refRegions" value="Kowloon"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Irrawaddy" >
+		<property name="refRegions" value="Dali"/>
+		<property name="refRegions" value="Yunnan"/>
+		<property name="refRegions" value="Simao"/>
+		<property name="refRegions" value="Arakan"/>
+		<property name="refRegions" value="DeccaValley"/>
+		<property name="refRegions" value="Jamuna"/>
+		<property name="refRegions" value="Karnaphuli"/>
+		<property name="refRegions" value="SunderbanDelta"/>
+		<property name="refRegions" value="Bago"/>
+		<property name="refRegions" value="IrrawaddyDelta"/>
+		<property name="refRegions" value="Sagaing"/>
+		<property name="refRegions" value="UpperBurma"/>
+		<property name="refRegions" value="Chin"/>
+		<property name="refRegions" value="AndamanIslands"/>
+		<property name="refRegions" value="Arunachal"/>
+		<property name="refRegions" value="Assam"/>
+		<property name="refRegions" value="Cachar"/>
+		<property name="refRegions" value="Dooars"/>
+		<property name="refRegions" value="WestBengal"/>
+		<property name="refRegions" value="Kachin"/>
+		<property name="refRegions" value="NorthernShan"/>
+		<property name="refRegions" value="SouthernShan"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Melanesia" >
+		<property name="refRegions" value="BismarckArchipelago"/>
+		<property name="refRegions" value="Finisterre"/>
+		<property name="refRegions" value="Oriomo"/>
+		<property name="refRegions" value="OwenStanely"/>
+		<property name="refRegions" value="Papua"/>
+		<property name="refRegions" value="Sepik"/>
+		<property name="refRegions" value="Bougainville"/>
+		<property name="refRegions" value="NewCaledonia"/>
+		<property name="refRegions" value="BandaIslands"/>
+		<property name="refRegions" value="NorthMoluccas"/>
+		<property name="refRegions" value="SouthMoluccas"/>
+		<property name="refRegions" value="Baliem"/>
+		<property name="refRegions" value="Nassau"/>
+		<property name="refRegions" value="VanRees"/>
+		<property name="refRegions" value="Vogelkop"/>
+		<property name="refRegions" value="Fiji"/>
+		<property name="refRegions" value="NewHebrides"/>
+		<property name="refRegions" value="Guadalcanal"/>
+		<property name="refRegions" value="NewGeorgia"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Polynesia" >
+		<property name="refRegions" value="TuamotuArchipelago"/>
+		<property name="refRegions" value="WallisFutuna"/>
+		<property name="refRegions" value="CookIslands"/>
+		<property name="refRegions" value="Tonga"/>
+		<property name="refRegions" value="Tuvalu"/>
+		<property name="refRegions" value="WesternSamoa"/>
+		<property name="refRegions" value="LineIslands"/>
+		<property name="refRegions" value="EasternSamoa"/>
+		<property name="refRegions" value="Hawaii"/>
+		<property name="refRegions" value="Midway"/>
+		<property name="refRegions" value="PhoenixIslands"/>
+		<property name="refRegions" value="WakeIsland"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Deccan" >
+		<property name="refRegions" value="Goa"/>
+		<property name="refRegions" value="Ceylon"/>
+		<property name="refRegions" value="Andhra"/>
+		<property name="refRegions" value="Aurangabad"/>
+		<property name="refRegions" value="Bastar"/>
+		<property name="refRegions" value="Berar"/>
+		<property name="refRegions" value="Bijapore"/>
+		<property name="refRegions" value="Canara"/>
+		<property name="refRegions" value="Carnatic"/>
+		<property name="refRegions" value="Chhattisgarh"/>
+		<property name="refRegions" value="Circar"/>
+		<property name="refRegions" value="Coimbatore"/>
+		<property name="refRegions" value="Coromandel"/>
+		<property name="refRegions" value="Godavari"/>
+		<property name="refRegions" value="Kaveri"/>
+		<property name="refRegions" value="Konkan"/>
+		<property name="refRegions" value="Koraput"/>
+		<property name="refRegions" value="MadhyaPradesh"/>
+		<property name="refRegions" value="Malabar"/>
+		<property name="refRegions" value="Malnad"/>
+		<property name="refRegions" value="Marathas"/>
+		<property name="refRegions" value="Orissa"/>
+		<property name="refRegions" value="Rayalaseema"/>
+		<property name="refRegions" value="Telangana"/>
+		<property name="refRegions" value="Travancore"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="IndoGangetic" >
+		<property name="refRegions" value="EasternNepal"/>
+		<property name="refRegions" value="WesternNepal"/>
+		<property name="refRegions" value="Ajmer"/>
+		<property name="refRegions" value="Bikaner"/>
+		<property name="refRegions" value="Bundelkhand"/>
+		<property name="refRegions" value="ChotaNagpur"/>
+		<property name="refRegions" value="Cutch"/>
+		<property name="refRegions" value="EastPunjab"/>
+		<property name="refRegions" value="Gwalior"/>
+		<property name="refRegions" value="Kathiawar"/>
+		<property name="refRegions" value="LowerDoab"/>
+		<property name="refRegions" value="Malwa"/>
+		<property name="refRegions" value="Marwar"/>
+		<property name="refRegions" value="NorthBihar"/>
+		<property name="refRegions" value="Oudh"/>
+		<property name="refRegions" value="Purvanchal"/>
+		<property name="refRegions" value="RewaKantha"/>
+		<property name="refRegions" value="Rohilkhand"/>
+		<property name="refRegions" value="SouthBihar"/>
+		<property name="refRegions" value="Khairpur"/>
+		<property name="refRegions" value="Sindh"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Klondike" >
+		<property name="refRegions" value="Yukon"/>
+		<property name="refRegions" value="AleutianIslands"/>
+		<property name="refRegions" value="Alexander"/>
+		<property name="refRegions" value="Kenai"/>
+		<property name="refRegions" value="Kuskokwim"/>
+		<property name="refRegions" value="NearIslands"/>
+		<property name="refRegions" value="NorthSlope"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="FinnishKarelia" >
+		<property name="refRegions" value="Kexholm"/>
+		<property name="refRegions" value="SouthKarelia"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="ToraToraTora" >
+		<property name="refRegions" value="Hawaii"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="NorthernPacific" >
+		<property name="refRegions" value="Midway"/>
+		<property name="refRegions" value="WakeIsland"/>
+		<property name="refRegions" value="Guam"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="WesternPacific" >
+		<property name="refRegions" value="PhoenixIslands"/>
+		<property name="refRegions" value="LineIslands"/>
+		<property name="refRegions" value="NauruIsland"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="SouthernPacific" >
+		<property name="refRegions" value="BismarckArchipelago"/>
+		<property name="refRegions" value="Bougainville"/>
+		<property name="refRegions" value="Guadalcanal"/>
+		<property name="refRegions" value="NewGeorgia"/>
+		<property name="refRegions" value="NewHebrides"/>
+		<property name="refRegions" value="NewCaledonia"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="CentralPacific" >
+		<property name="refRegions" value="GilbertIslands"/>
+		<property name="refRegions" value="Tuvalu"/>
+		<property name="refRegions" value="EasternSamoa"/>
+		<property name="refRegions" value="Fiji"/>
+		<property name="refRegions" value="Tonga"/>
+		<property name="refRegions" value="WesternSamoa"/>
+		<property name="refRegions" value="TuamotuArchipelago"/>
+		<property name="refRegions" value="WallisFutuna"/>
+		<property name="refRegions" value="CookIslands"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="Micronesia" >
+		<property name="refRegions" value="NauruIsland"/>
+		<property name="refRegions" value="CarolineIslands"/>
+		<property name="refRegions" value="MarianasIslands"/>
+		<property name="refRegions" value="MarshallIslands"/>
+		<property name="refRegions" value="Palau"/>
+		<property name="refRegions" value="GilbertIslands"/>
+		<property name="refRegions" value="Guam"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="BritishIsles" >
+		<property name="refRegions" value="Cornwall"/>
+		<property name="refRegions" value="EastAnglia"/>
+		<property name="refRegions" value="Grampian"/>
+		<property name="refRegions" value="Highlands"/>
+		<property name="refRegions" value="Lancashire"/>
+		<property name="refRegions" value="Lincoln"/>
+		<property name="refRegions" value="Lothian"/>
+		<property name="refRegions" value="Midlands"/>
+		<property name="refRegions" value="NorthernIreland"/>
+		<property name="refRegions" value="Northumberland"/>
+		<property name="refRegions" value="OuterHebrides"/>
+		<property name="refRegions" value="Shetlands"/>
+		<property name="refRegions" value="Strathclyde"/>
+		<property name="refRegions" value="Sussex"/>
+		<property name="refRegions" value="Wales"/>
+		<property name="refRegions" value="Yorkshire"/>
+	</template>
+	
+	<template type="gs_tbg.RegionListTemplate" name="AbyssinianColony" >
+		<property name="refRegions" value="Agame"/>
+		<property name="refRegions" value="Arsi"/>
+		<property name="refRegions" value="Bale"/>
+		<property name="refRegions" value="Begemder"/>
+		<property name="refRegions" value="Gojjam"/>
+		<property name="refRegions" value="Hararghe"/>
+		<property name="refRegions" value="Kaffa"/>
+		<property name="refRegions" value="Ogaden"/>
+		<property name="refRegions" value="Shewa"/>
+		<property name="refRegions" value="Sidamo"/>
+		<property name="refRegions" value="Welega"/>
+		<property name="refRegions" value="Wello"/>
+	</template>
+	
+</locust>

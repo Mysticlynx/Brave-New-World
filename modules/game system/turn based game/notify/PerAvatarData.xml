@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <objectDef type="PADNotification" class="CMLOPADNotification" superType="mlgame.PerSessionData" desc="Per-avatar data for notifications">
+		<propertyDef name="objNotifications" type="Notification" variable="true" storesChildren="true"/>
+	</objectDef>
+
+</locust>

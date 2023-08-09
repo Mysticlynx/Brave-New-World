@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="game ui"
+	name="Making History II UI"
+	version="1.0"
+	locustVersion="2.11"
+	runnable="objRunnable"
+>
+	<import module="mlcore" default="true"/>
+	<import module="script:javascript" as="mljs"/>
+	<import module="lib:mlui" as="mlui"/>
+	<import module="lib:mlscript" as="mlscript"/>
+	<import module="lib:3d_world" as="ml3dworld"/>
+	<import module="lib:mlgame" as="mlgame"/>
+	<import module="lib:mlevent" as="mlevent"/>
+	<import module="lib:mluichart" as="mlchart"/>
+	<import module="lib:mh2 common" as="mh2_common"/>
+	<import module="ui lib:common ui" as="common_ui"/>
+	<import module="ui lib:skin" as="skin"/>
+	<import module="ui lib:Media Tables" as="media_tables"/>
+	<import module="ui lib:Map UI" as="mapui"/>
+	<import module="ui lib:Common Elements" as="common_elements"/>
+	<import module="ui lib:Execute Objects" as="eo"/>
+	<import module="lib:media" as="mlmedia"/>
+	<import module="ui data:shared" as="uidata"/>
+	<import module="ui data:sound" as="sound"/>
+	<import module="ui data:mod" as="uidata_mod"/>
+	<import module="unit_model_mappings:shared" as="unit_model_mapping"/>
+	<import module="city_model_mappings:shared" as="city_model_mapping"/>
+	<import module="city_models:shared" as="city_models"/>
+	<import module="mh2 data:shared" as="sd"/>
+	<import module="game system:turn based game" as="gs_tbg"/>
+	<import module="game system:notification" as="gs_notify"/>
+	<import module="lib:Making History AI" as="makinghistory_ai"/>
+	<import module="media:Default Media" as="default_media"/>
+
+	<include>
+		defs/UI2DRoot.xml
+		defs/MH2Data.xml
+		defs/SelectedPanelData.xml
+		defs/UI2DGameEnd.xml
+		defs/UI2DGameStart.xml
+		defs/Common/Data.xml
+		defs/Common/Lookups.xml
+		defs/Common/UI2DElements.xml
+		defs/Fixed UI/UI2DInfoBar.xml
+		defs/Fixed UI/UI2DGamePanel.xml
+		defs/Fixed UI/UI2DGamePanelControlButtons.xml
+		defs/Fixed UI/UI2DGamePanelMapButtons.xml
+		defs/Fixed UI/UI2DMainMenu.xml
+		defs/Fixed UI/UI2DGameStartNationInfo.xml
+		defs/Summary Panel/UI2DSummaryPanelLayout.xml
+		defs/Summary Panel/UI2DSummaryPanelMinLayout.xml
+		defs/Summary Panel/UI2DSummaryPanelButtons.xml
+		defs/Summary Panel/UI2DSummaryPanelNotifications.xml
+		defs/Summary Panel/UI2DSummaryPanelRequests.xml
+		defs/Summary Panel/UI2DSummaryPanelChat.xml
+		defs/Selection Panels/UI2DSelectionPanelPopups.xml
+		defs/Selection Panels/UI2DSelectionPanelCity.xml
+		defs/Selection Panels/UI2DSelectionPanelRegion.xml
+		defs/Selection Panels/UI2DSelectionPanelSeaRegion.xml
+		defs/Selection Panels/SeaRegion/UI2DSeaRegionTabs.xml
+		defs/Selection Panels/SeaRegion/UI2DSeaRegionTabGroups.xml
+		defs/Selection Panels/SeaRegion/UI2DSeaRegionGroup.xml
+		defs/Selection Panels/UI2DSelectionPanelNation.xml
+		defs/Selection Panels/UI2DSelectionPanelEngagement.xml		
+		defs/Selection Panels/UI2DSelectionPanelGroup.xml
+		defs/Selection Panels/Group/UI2DGroupButtons.xml
+		defs/Selection Panels/Group/UI2DGroupIDIcons.xml
+		defs/Selection Panels/Group/UI2DGroupTabUnits.xml
+		defs/Selection Panels/Group/UI2DGroupTabMerge.xml
+		defs/Selection Panels/Group/UI2DGroupTabSplit.xml
+		defs/Selection Panels/Group/UI2DGroupTabCarriers.xml
+		defs/Selection Panels/Group/UI2DGroupTabGroupsOnTransports.xml
+		defs/Selection Panels/Group/UI2DGroupTabParatroopers.xml
+		defs/Selection Panels/Group/UI2DUnitBubble.xml
+		defs/Selection Panels/Group/UI2DGroupBubble.xml
+		defs/Selection Panels/City/UI2DCityPopupTabPort.xml
+		defs/Selection Panels/City/UI2DCityPopupTabs.xml
+		defs/Selection Panels/Nation/UI2DNationSelectionMenu.xml
+		defs/Selection Panels/Large/Region/UI2DLargeRegion.xml
+		defs/Selection Panels/Large/City/UI2DLargeCity.xml
+		defs/Selection Panels/Large/Nation/UI2DLargeDiplomatic.xml
+		defs/Report Panels/UI2DReportPanelPopups.xml
+		defs/Report Panels/UI2DReportPanel.xml
+		defs/Report Panels/UI2DReportButtons.xml
+		defs/Report Panels/Military/UI2DReportSheetMilitary.xml
+		defs/Report Panels/Encyclopedia/UI2DEncyclopedia.xml
+		defs/Report Panels/Diplomacy/UI2DReportSheetDiplomacy.xml
+		defs/Report Panels/Government/UI2DReportSheetGovernment.xml
+		defs/Report Panels/City/UI2DReportSheetCity.xml
+		defs/Report Panels/Region/UI2DReportSheetRegion.xml
+		defs/Report Panels/Trade/UI2DReportSheetTrade.xml
+		defs/Report Panels/Military/UI2DMilitaryButtons.xml
+		defs/Report Panels/Military/UI2DMilitaryLists.xml
+		defs/Report Panels/Military/UI2DMilitaryTabNavalUnits.xml
+		defs/Report Panels/Military/UI2DMilitaryTabSubUnits.xml
+		defs/Report Panels/Military/UI2DMilitaryTabAirUnits.xml
+		defs/Report Panels/Military/UI2DMilitaryTabArmyUnits.xml
+		defs/Report Panels/Military/UI2DMilitaryTabNavalGroups.xml
+		defs/Report Panels/Military/UI2DMilitaryTabSubGroups.xml
+		defs/Report Panels/Military/UI2DMilitaryTabAirGroups.xml
+		defs/Report Panels/Military/UI2DMilitaryTabArmyGroups.xml
+		defs/Report Panels/Military/UI2DMilitaryTabCombatReports.xml
+		defs/Report Panels/Military/UI2DMilitaryTabMilitaryStatus.xml
+		defs/Report Panels/Military/UI2DMilitaryTabNational.xml
+		defs/Report Panels/Diplomacy/UI2DDiplomacyButtons.xml
+		defs/Report Panels/Diplomacy/UI2DDiplomacyTabs.xml
+		defs/Report Panels/Diplomacy/UI2DDiplomacyTabInfo.xml
+		defs/Report Panels/Diplomacy/UI2DDiplomacyTabWorldNations.xml
+		defs/Report Panels/Diplomacy/UI2DDiplomacyTabAlliances.xml
+		defs/Report Panels/Diplomacy/UI2DDiplomacyTabIdeologies.xml
+		defs/Report Panels/Diplomacy/UI2DDiplomacyTabWars.xml
+		defs/Report Panels/Diplomacy/UI2DDiplomacyTabRevolts.xml
+		defs/Report Panels/Diplomacy/UI2DDiplomaticActions.xml
+		defs/Report Panels/Diplomacy/UI2DDiplomaticActionsPopups.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DDeclareWar.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DOfferPeace.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DOfferPeaceButtons.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DOfferPeaceTabs.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DTerritorialTransfer.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DTerritorialTransferButtons.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DTerritorialTransferTabs.xml		
+		defs/Report Panels/Diplomacy/Actions/UI2DDeclareEmbargo.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DEndEmbargo.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DAllianceTreaty.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DEndAlliance.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DMilitaryAccessTreaty.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DGrantMilitaryAccessTreaty.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DCancelMilitaryAccess.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DTradeAgreement.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DTradeAgreementButtons.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DTradeAgreementTabs.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DTradeAgreementTabMoney.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DTradeAgreementTabResources.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DPoliticalActions.xml
+		defs/Report Panels/Diplomacy/Actions/UI2DChangePuppetStatus.xml
+		defs/Report Panels/Government/UI2DGovernmentButtons.xml
+		defs/Report Panels/Government/UI2DGovernmentTabs.xml
+		defs/Report Panels/Government/UI2DGovernmentTabNationalities.xml
+		defs/Report Panels/Government/UI2DGovernmentTabSubordinates.xml
+		defs/Report Panels/Government/UI2DGovernmentTabInfo.xml
+		defs/Report Panels/Government/UI2DGovernmentTabPrograms.xml
+		defs/Report Panels/City/UI2DCityButtons.xml
+		defs/Report Panels/City/UI2DCityTabProductionList.xml
+		defs/Report Panels/City/UI2DCityTabProduction.xml
+		defs/Report Panels/City/UI2DCityTabResearch.xml
+		defs/Report Panels/City/UI2DCityTabResearchList.xml
+		defs/Report Panels/City/UI2DCityTabResearchTree.xml
+		defs/Report Panels/City/UI2DCityTabInfrastructure.xml
+		defs/Report Panels/City/UI2DCityOrdersButtons.xml
+		defs/Report Panels/City/UI2DCityOrdersTabs.xml
+		defs/Report Panels/City/UI2DCityOrdersTabLand.xml
+		defs/Report Panels/City/UI2DCityOrdersTabAir.xml
+		defs/Report Panels/City/UI2DCityOrdersTabNaval.xml
+		defs/Report Panels/City/UI2DCityOrdersTabIndustrial.xml
+		defs/Report Panels/City/UI2DCityOrdersTabCityBuildings.xml
+		defs/Report Panels/City/UI2DCityOrdersTabQueue.xml
+		defs/Report Panels/City/UI2DCityProjectsButtons.xml
+		defs/Report Panels/City/UI2DCityProjectsTabs.xml
+		defs/Report Panels/City/UI2DCityProjectsTab.xml
+		defs/Report Panels/Region/UI2DRegionButtons.xml
+		defs/Report Panels/Region/UI2DRegionTabInfo.xml
+		defs/Report Panels/Region/UI2DRegionTabProduction.xml
+		defs/Report Panels/Region/UI2DRegionTabInfrastructure.xml
+		defs/Report Panels/Region/UI2DRegionTabData.xml
+		defs/Report Panels/Region/UI2DRegionTabAssets.xml
+		defs/Report Panels/Trade/UI2DTradeButtons.xml
+		defs/Report Panels/Trade/UI2DTradeTabWorldMarket.xml
+		defs/Report Panels/Trade/UI2DTradeTabTradeDeals.xml
+		defs/Report Panels/Trade/UI2DTradeTabNationalFinances.xml
+		defs/Report Panels/Trade/UI2DTradeTabStockpiles.xml
+		defs/Report Panels/Trade/Finance/UI2DFinanceTabTreasury.xml
+		defs/Report Panels/Trade/Finance/UI2DFinanceTabSummary.xml
+		defs/Report Panels/Trade/Finance/UI2DFinanceTabInfrastructure.xml
+		defs/Report Panels/Trade/Finance/UI2DFinanceTabProduction.xml
+		defs/Report Panels/Trade/Finance/UI2DFinanceTabTrade.xml
+		defs/Report Panels/Trade/Finance/FinanceTabCommon.xml
+		defs/UI2DSOLayer.xml
+		defs/UI2DEncyLayer.xml
+		defs/UI2DReportLayer.xml
+		defs/Decision Points/UI2DDecisionPoints.xml
+		defs/Notifications/UI2DNotification.xml
+		defs/Mapview Key Panel/UI2DMapviewKeyPanel.xml
+		defs/UITestMode.xml
+		defs/UI2DIdleConnectionScreen.xml
+		defs/UI2DClosedConnectionScreen.xml
+		defs/UI2DLostConnectionScreen.xml        
+		runnable.xml
+		defs/Common/Tables.xml
+	</include>
+</locustModule>

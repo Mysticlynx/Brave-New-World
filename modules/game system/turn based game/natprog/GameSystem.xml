@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysNationalPrograms" class="CMLOGameSysNationalPrograms" superType="mlgame.GameSystem">
+        <propertyDef name="objNationalProgramSets" type="Object" restriction="NationalProgramSet" variable="true" storesChildren="true"/>
+		<propertyDef name="randGen" type="Random"/>
+        <propertyDef name="nPopSizeDivisor" type="int" default="2000000" desc="Amount of population to reduce chance of success by 1% for PoliticalSupport/OppositionSupport"/>
+        <propertyDef name="nMinSuccessPercent" type="int" default="1" desc="Lowest chance of success for PoliticalSupport/OppositionSupport"/>
+        <propertyDef name="nDeploymentSurveillancePercent" type="int" default="100" desc="Percent chance deployment surveillance unfogs region of a unit group"/>
+        <propertyDef name="nRegionSurveillanceDiscoveryPercent" type="int" default="5" desc="Percent chance of discovery for region surveillance program"/>
+        <propertyDef name="nRegionSurveillanceRelationsPenalty" type="int" default="10" desc="deprecated"/><!-- Deprecated - See NationalProgramsDiplomaticEffectsTemplate-->
+        <propertyDef name="nRegionSurveillanceCost" type="int" default="20000000" desc="Cost to run a region surveillance program"/>
+        <propertyDef name="nRegionSurveillanceTime" type="int" default="20" desc="Time to run a region surveillance program"/>
+        <propertyDef name="nStealResearchPercent" type="int" default="100" desc="Base percent chance steal research program will succeed minus power differential"/>
+        <propertyDef name="nCompletedStealPercent" type="int" default="100" desc="Percent chance steal research program will steal a research point from a completed project"/>
+        <propertyDef name="nInProgressStealPercent" type="int" default="100" desc="Percent chance steal research program will steal a research point from an in-progress project"/>
+        <propertyDef name="nStealResearchDiscoveryPercent" type="int" default="30" desc="Percent chance of discovery for steal research"/>
+        <propertyDef name="nStealResearchRelationsPenalty" type="int" default="25" desc="deprecated"/><!-- Deprecated - See NationalProgramsDiplomaticEffectsTemplate-->
+        <propertyDef name="nStealResearchCost" type="int" default="100000000" desc="Cost to run a steal research program"/>
+        <propertyDef name="nStealResearchTime" type="int" default="15" desc="Time to run a steal research program"/>
+        <propertyDef name="nSabotagePercent" type="int" default="60" desc="Percent chance sabotage region program will damage infrastructure"/>
+        <propertyDef name="nSabotageDiscoveryPercent" type="int" default="20" desc="Percent chance of discovery for sabotage region program"/>
+        <propertyDef name="nSabotageRelationsPenalty" type="int" default="30" desc="deprecated"/><!-- Deprecated - See NationalProgramsDiplomaticEffectsTemplate-->
+        <propertyDef name="nSabotageMinDamage" type="int" default="10" desc="Minimum damage sabotage region program can inflict"/>
+        <propertyDef name="nSabotageMaxDamage" type="int" default="20" desc="Maximum damage sabotage region program can inflict"/>
+        <propertyDef name="nSabotageCost" type="int" default="20000000" desc="Cost to run a sabotage region program"/>
+        <propertyDef name="nSabotageTime" type="int" default="15" desc="Time to run a sabotage region program"/>
+        <propertyDef name="nPoliticalSupportPercent" type="int" default="35" desc="Percent chance political support program will increase ruling ideology level"/>
+        <propertyDef name="nPoliticalSupportMinPoints" type="int" default="1" desc="Minimum points political support will move ruling ideology level"/>
+        <propertyDef name="nPoliticalSupportMaxPoints" type="int" default="2" desc="Maximum points political support will move ruling ideology level"/>
+        <propertyDef name="nPoliticalSupportCost" type="int" default="15000000" desc="Cost to run a political support program"/>
+        <propertyDef name="nPoliticalSupportTime" type="int" default="20" desc="Time to run a political support program"/>
+        <propertyDef name="nOppositionSupportPercent" type="int" default="50" desc="Percent chance opposition support program will increase opposition ideology level"/>
+        <propertyDef name="nOppositionSupportDiscoveryPercent" type="int" default="15" desc="Percent chance of discovery for opposition support program"/>
+        <propertyDef name="nOppositionSupportRelationsPenalty" type="int" default="40" desc="deprecated"/><!-- Deprecated - See NationalProgramsDiplomaticEffectsTemplate-->
+        <propertyDef name="nOppositionSupportMinPoints" type="int" default="1" desc="Minimum points opposition support will move opposition ideology level"/>
+        <propertyDef name="nOppositionSupportMaxPoints" type="int" default="3" desc="Maximum points opposition support will move opposition ideology level"/>
+        <propertyDef name="nOppositionSupportCost" type="int" default="30000000" desc="Cost to run an opposition support program"/>
+        <propertyDef name="nOppositionSupportTime" type="int" default="20" desc="Time to run an opposition support program"/>
+        <propertyDef name="nInternalSupportPercent" type="int" default="40" desc="Percent chance internal support program will increase ruling ideology level"/>"
+        <propertyDef name="nInternalSupportMinPoints" type="int" default="1" desc="Minimum points internal support will move ruling ideology level"/>
+        <propertyDef name="nInternalSupportMaxPoints" type="int" default="2" desc="Maximum points internal support will move ruling ideology level"/>
+        <propertyDef name="nInternalSupportCost" type="int" default="30000000" desc="Cost to run an internal support program"/>
+        <propertyDef name="nInternalSupportTime" type="int" default="15" desc="Time to run an internal support program"/>
+        <propertyDef name="tmplDiplomaticEffects" type="TemplateRef" restriction="NationalProgramsDiplomaticEffectsTemplate"/>
+
+		<script type="application/javascript"><![CDATA[
+
+			function handleGameStarted(game,eventGameStarted)
+			{
+				setRandomSeed(eventGameStarted.nSeed);
+			}
+
+            function setRandomSeed(nSeed)
+			{
+				var strSeed = "seed:" + nSeed
+				self.randGen = strSeed;
+				log("DEBUG: GameSysNationalPrograms randGen " + strSeed);
+			}
+		]]></script>
+		
+	    <script type="application/x-locust-query">
+	        getNationalProgramsForTarget = ?{gameroot, nation, target:
+		        filter(?{program: if(program.instanceOf(SabotageRegion) OR program.instanceOf(RegionSurveillance), program.refTargetRegion.resolve(gameroot).refController == target, program.refTargetNation == target)},
+			        find(?{programSet: programSet.refNation == nation}, self.objNationalProgramSets).objNationalPrograms)
+	        }
+	    </script>
+
+	</objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysNationalPrograms = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysNationalPrograms)
+		}
+
+		getNationalProgramsForTarget = ?{gameroot, nation, target:
+		    getGameSysNationalPrograms(gameroot).getNationalProgramsForTarget(gameroot, nation, target)
+		}			
+	</script>
+
+</locust>

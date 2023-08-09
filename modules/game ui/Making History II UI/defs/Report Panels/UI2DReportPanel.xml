@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="UI2DRegionName" superType="mlui.UI2DElement">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="bChangeName" type="bool" default="false"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="tmplTextStyleEdit" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objName" existsWhile="def.bChangeName == false">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objRegion.strDisplayName"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>		
+			<property name="nHeight" value="16"/>
+			<property name="nDepth" value="50"/>
+		</object>
+		
+		<object type="mlui.UI2DEditableText" name="objEditableText" existsWhile="def.bChangeName == true">
+			<property name="tmplTextStyle" from="def.tmplTextStyleEdit"/>
+			<property name="nX" from="0"/>
+			<property name="nY" from="0"/>
+			<property name="nWidth" from="def.nWidth-50"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_ESCAPE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_RETURN"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_GRAVE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_TAB"/>
+			
+			<object type="mlui.KeyBindList" name="objKeyBindList">
+				<object type="mlui.KeyBindMethod" name="objKeyBinds">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<property name="eKey" value="KEY_CODE_RETURN"/>
+					<script type="application/javascript"><![CDATA[
+						function notifyTriggered(owner) {
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="UI2DElementMask" name="objRegionPopupMask" existsWhile="def.bChangeName == false">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="95"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_RIGHT))
+							{
+							    def.startRename();
+							}
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objSumbitRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleRegionRename"/>
+			
+			<property name="nX" from="def.nWidth-47"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="94"/>
+			<property name="strToolTip" from="locale.SID.UI.Submit"/>
+			
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objCancelRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleRegionRenameCancel"/>
+			<property name="nX" from="def.nWidth-27"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="94"/>
+			<property name="strToolTip" from="locale.SID.UI.Cancel"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.bChangeName = false;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<script type="application/javascript"><![CDATA[
+            function executeRename()
+            {
+                if(self.objEditableText.strText != '')
+                {
+                    if (mh2data.objNation.equals(self.objRegion.refController.resolve(mh2data.objAvatar).getMasterNation(mh2data.objAvatar)))
+                    {
+                        var action = gs_tbg.GActRenameRegion.create({
+                            "strNewName": self.objEditableText.strText,
+                            "refRegion": self.objRegion
+                        });
+                        mh2data.objAvatar.sendAction(action);
+                    }
+                }
+                self.objEditableText.strText = '';
+                self.bChangeName = false;
+            }
+            
+            function startRename()
+            {
+                if (mh2data.objNation.equals(self.objRegion.refController.resolve(mh2data.objAvatar).getMasterNation(mh2data.objAvatar)))
+                {
+                    self.bChangeName = true;
+                    self.objEditableText.strText = '';
+                    mlui.ActSetKeyboardFocus.execute({"objElement": self.objEditableText});
+                }
+            }
+            
+        ]]></script>
+		
+	</objectDef><!-- UI2DRegionName -->
+
+	<objectDef type="UI2DReportPanel" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="vaYAlign" value="BOTTOM"/>
+		<property name="nWidth" value="894"/>
+		<property name="nHeight" from="692"/>
+		
+		<object type="mlui.UI2DImage" name="objSubpage3" existsWhile="mh2data.getLayersPanelCount() - 1 GTE 3">
+			<property name="tmplImage" value="skin.ImgSubpage"/>
+			<property name="nX" value="21"/>
+			<property name="nY" from="43"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nDepth" value="-20"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSubpage2" existsWhile="mh2data.getLayersPanelCount() - 1 GTE 2">
+			<property name="tmplImage" value="skin.ImgSubpage"/>
+			<property name="nX" value="14"/>
+			<property name="nY" from="47"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nDepth" value="-10"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSubpage1" existsWhile="mh2data.getLayersPanelCount() - 1 GTE 1">
+			<property name="tmplImage" value="skin.ImgSubpage"/>
+			<property name="nX" value="7"/>
+			<property name="nY" from="51"/>
+			<property name="nDepth" value="-1"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+				
+		<object type="mlui.UI2DImage" name="objTopBG" existsWhile="mlui.objUI.nHeight GT 600">
+			<property name="tmplImage" value="skin.ImgPanelTopBG"/>
+			<property name="nX" value="2"/>
+			<property name="nY" from="57"/>
+			<property name="nWidth" value="924"/>
+			<property name="nHeight" value="32"/>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="skin.ImgPanel"/>			
+			<property name="nX" value="3"/>
+			<property name="nY" from="91 + if(mlui.objUI.nHeight == 600, 4, 0)"/>
+			<property name="nWidth" value="889"/>
+			<property name="nHeight" from="598 - if(mlui.objUI.nHeight == 600, 4, 0)"/>
+		</object>
+				
+		<object type="mlui.UI2DImage" name="objSheetBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleBrownTan"/>			
+			<property name="nX" value="5"/>
+			<property name="nY" from="93 + if(mlui.objUI.nHeight == 600, 4, 0)"/>
+			<property name="nWidth" value="884"/>
+			<property name="nHeight" from="594 - if(mlui.objUI.nHeight == 600, 4, 0)"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objGearBG">
+			<property name="tmplImage" value="skin.ImgReportPanelGearBG"/>			
+			<property name="nX" value="337"/>
+			<property name="nY" from="94 + if(mlui.objUI.nHeight == 600, 4, 0)"/>
+			<property name="nWidth" value="172"/>
+			<property name="nHeight" value="97"/>
+		</object>	
+        
+	<!-- Foreground -->
+		<object type="mlui.UI2DImage" name="objPanelBorder">
+			<property name="tmplImage" value="skin.ImgPanelBorderSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" from="if(mlui.objUI.nHeight == 600, 92, 55)"/>
+			<property name="nWidth" value="894"/>
+			<property name="nHeight" from="if(mlui.objUI.nHeight == 600, 600, 637)"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objPanelMinHL" existsWhile="mlui.objUI.nHeight GT 600">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="86"/>
+			<property name="nWidth" value="894"/>
+			<property name="nHeight" value="8"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DPanelTop" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="strDesc" type="String"/>
+		<propertyDef name="objInfoBubbles" type="mlui.UI2DElement" storesChildren="true"/>
+		
+		<property name="nHeight" value="31"/>
+		
+		<object type="UI2DControllerIcon" name="objRegionControllerIcon">
+			<property name="objNation" from="spdata.objRegionData.objController"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="nDepth" value="90"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIDIconOccupation" existsWhile="spdata.objRegionData.objController != spdata.objRegionData.objOwner">
+			<property name="tmplImage" value="skin.ImgIDIconOccupation"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>		
+		
+		<object type="UI2DRegionName" name="objName">
+		    <property name="objRegion" from="spdata.objRegionData.objRegion"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="tmplTextStyleEdit" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objControllerName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" from="spdata.objRegionData.objController.strDisplayName"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="16"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>		
+		
+	</objectDef>
+	
+</locust>

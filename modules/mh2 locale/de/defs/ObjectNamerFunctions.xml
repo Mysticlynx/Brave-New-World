@@ -1,0 +1,34 @@
+<?xml version="1.v0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<script type="application/javascript"><![CDATA[
+
+		function getObjectNamerSuffix(nValue)
+		{
+            return".";
+		}
+
+	]]></script>
+	
+	<script type="application/x-locust-query"><![CDATA[
+			formatNumberRank = ?{nValue:
+				String(nValue) + 
+				?{nMod100, nMod10:
+					switch {
+						case nMod100 / 10 == 1:
+							"th"
+						case nMod10 == 1:
+							"st"
+						case nMod10 == 2:
+							"nd"
+						case nMod10 == 3:
+							"rd"	
+						default:
+							"th"
+					}
+				}(nValue % 100, nValue % 10)
+			}
+			allowNaziSymbol = ?{: false }			
+	]]></script>
+
+</locust>

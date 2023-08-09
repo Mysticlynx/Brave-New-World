@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="EventAvatarEndedTurn" class="CMLOEventAvatarEndedTurn" superType="mlevent.Event" desc="Event for when an avatar ends its turn">
+        <propertyDef name="objAvatar" type="mlgame.Avatar"/>
+    </objectDef>
+
+    <objectDef type="EventNationDefeated" class="CMLOEventNationDefeated" superType="mlevent.Event" desc="Event for when a nation is defeated and annexed, colonized or turned into a puppet">
+        <propertyDef name="objControllerNation" type="Nation"/>
+        <propertyDef name="objDefeatedNation" type="Nation"/>
+        <propertyDef name="eChoice" type="Enum" restriction="NationDefeatChoice"/>
+    </objectDef>
+
+
+    <objectDef type="EventNationLostLastRegion" class="CMLOEventNationLostLastRegion" superType="mlevent.Event" desc="Event for nation losing its last controlled region">
+        <propertyDef name="objNation" type="Nation"/>
+    </objectDef>
+
+    <objectDef type="EventVCTurnLimit" class="CMLOEventVCTurnLimit" superType="mlevent.Event" desc="Event for when the turn limit victory condition is met">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="bContinue" type="bool" default="true" />
+    </objectDef>
+
+    <objectDef type="EventChatMessageSent" superType="mlevent.Event">
+        <propertyDef name="strMessage" type="String"/>
+        <propertyDef name="strSender" type="String"/>
+        <propertyDef name="strRecipient" type="String"/>
+    </objectDef>
+
+    <objectDef type="EventGameOver" class="CMLOEventGameOver" superType="mlevent.Event">
+        <propertyDef name="objWinner" type="Nation"/>
+        <propertyDef name="objLoser" type="Nation"/>
+        <propertyDef name="bCanContinue" type="bool"/>
+    </objectDef>
+
+</locust>

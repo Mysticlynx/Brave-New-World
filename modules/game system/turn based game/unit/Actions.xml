@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="GActSetUnitGroupRepairing" class="CMLOGActSetUnitGroupRepairing" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="bRepairing" type="bool"/>
+    </objectDef>
+
+    <objectDef type="GActSetUnitRepairing" class="CMLOGActSetUnitRepairing" superType="mlgame.GameAction">
+        <propertyDef name="refUnit" type="GORef" restriction="Unit"/>
+        <propertyDef name="bRepairing" type="bool"/>
+    </objectDef>
+
+	<objectDef type="GActSetIndividualUnitOrder" superType="mlgame.GActMethod" >
+		<propertyDef name="refUnit" type="GORef" restriction="Unit" />
+		<propertyDef name="bHasIndividualOrder" type="bool" />
+		<script type="application/javascript"><![CDATA[
+			function execute() {
+
+				unit = self.refUnit.resolve(self.objGame);
+				unit.bHasIndividualOrder = self.bHasIndividualOrder;
+
+			}
+		]]></script>
+	</objectDef>
+
+    <objectDef type="GActRenameUnitGroup" class="CMLOGActRenameUnitGroup" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="strNewName" type="String"/>
+    </objectDef>
+
+    <objectDef type="GActRenameUnit" class="CMLOGActRenameUnit" superType="mlgame.GameAction">
+        <propertyDef name="refUnit" type="GORef" restriction="Unit"/>
+        <propertyDef name="strNewName" type="String"/>
+    </objectDef>
+    
+    <objectDef type="GActSetUnitGroupPosition" class="CMLOGActSetUnitGroupPosition" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object" desc="Region or UnitGroup"/>
+        <propertyDef name="vecPosition" type="Vec3D" desc="Desired 3d position within a region"/>
+    </objectDef>
+
+    <objectDef type="GActDisbandUnitGroup" class="CMLOGActDisbandUnitGroup" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+    </objectDef>
+
+    <objectDef type="GActCancelUnitOrder" class="CMLOGActCancelUnitOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+	</objectDef>
+
+    <objectDef type="GActSetMoveOrder" class="CMLOGActSetMoveOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+        <propertyDef name="objPathFinderOptions" type="Object" restriction="PathFinderOptions"/>
+    </objectDef>
+
+    <objectDef type="GActAddMoveWaypoint" class="CMLOGActAddMoveWaypoint" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+    <objectDef type="GActSplitUnitGroup" class="CMLOGActSplitUnitGroup" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="refUnits" type="GORef" restriction="Unit" variable="true"/>
+        <propertyDef name="refTransportedUnitGroups" type="GORef" restriction="UnitGroup" variable="true"/>
+        <propertyDef name="objNewUnitGroup" type="UnitGroup" desc="group that refUnits were put into"/>
+    </objectDef>
+
+    <objectDef type="GActMergeUnitGroups" class="CMLOGActMergeUnitGroups" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroupToMergeInto" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="refUnitGroupsToMerge" type="GORef" restriction="UnitGroup" variable="true"/>
+    </objectDef>
+
+    <objectDef type="GActSetRebaseOrder" class="CMLOGActSetRebaseOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+        <propertyDef name="objPathFinderOptions" type="Object" restriction="PathFinderOptions"/>
+    </objectDef>
+
+    <objectDef type="GActSetAirPatrolOrder" class="CMLOGActSetAirPatrolOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+    <objectDef type="GActAddAirPatrolTarget" class="CMLOGActAddAirPatrolTarget" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+    <objectDef type="GActSetSeaPatrolOrder" class="CMLOGActSetSeaPatrolOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+		<propertyDef name="objPathFinderOptions" type="Object" restriction="PathFinderOptions"/>
+    </objectDef>
+
+    <objectDef type="GActAddSeaPatrolTarget" class="CMLOGActAddSeaPatrolTarget" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombRegionOrder" class="CMLOGActSetBombRegionOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+		<propertyDef name="objPathFinderOptions" type="Object" restriction="PathFinderOptions"/>
+        <propertyDef name="eBombRegionParam" type="Enum" restriction="BombRegionParam"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombRegionTransportationOrder" class="CMLOGActSetBombRegionTransportationOrder" superType="GActSetBombRegionOrder">
+        <property name="eBombRegionParam" value="BOMB_REGION_PARAM_TRANSPORTATION"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombRegionFortificationOrder" class="CMLOGActSetBombRegionFortificationOrder" superType="GActSetBombRegionOrder">
+        <property name="eBombRegionParam" value="BOMB_REGION_PARAM_FORTIFICATION"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombRegionAADefenseOrder" class="CMLOGActSetBombRegionAADefenseOrder" superType="GActSetBombRegionOrder">
+        <property name="eBombRegionParam" value="BOMB_REGION_PARAM_AA_DEFENSE"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombRegionCoastalDefenseOrder" class="CMLOGActSetBombRegionCoastalDefenseOrder" superType="GActSetBombRegionOrder">
+        <property name="eBombRegionParam" value="BOMB_REGION_PARAM_COASTAL_DEFENSE"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombRegionUnitsOrder" class="CMLOGActSetBombRegionUnitsOrder" superType="GActSetBombRegionOrder">
+        <property name="eBombRegionParam" value="BOMB_REGION_PARAM_UNITS"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombRegionAirbaseOrder" class="CMLOGActSetBombRegionAirbaseOrder" superType="GActSetBombRegionOrder">
+        <property name="eBombRegionParam" value="BOMB_REGION_PARAM_AIRBASE"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombCityOrder" class="CMLOGActSetBombCityOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+		<propertyDef name="objPathFinderOptions" type="Object" restriction="PathFinderOptions"/>
+        <propertyDef name="eBombCityParam" type="Enum" restriction="BombCityParam"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombCityInfrastructureOrder" class="CMLOGActSetBombCityInfrastructureOrder" superType="GActSetBombCityOrder">
+        <property name="eBombCityParam" value="BOMB_CITY_PARAM_INFRASTRUCTURE_BOMBER"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombCityPortOrder" class="CMLOGActSetBombCityPortOrder" superType="GActSetBombCityOrder">
+        <property name="eBombCityParam" value="BOMB_CITY_PARAM_PORT_BOMBER"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombCityResearchOrder" class="CMLOGActSetBombCityResearchOrder" superType="GActSetBombCityOrder">
+        <property name="eBombCityParam" value="BOMB_CITY_PARAM_RESEARCH_BOMBER"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombNavalBaseOrder" class="CMLOGActSetBombNavalBaseOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+		<propertyDef name="objPathFinderOptions" type="Object" restriction="PathFinderOptions"/>
+    </objectDef>
+
+    <objectDef type="GActSetBombResourceOrder" class="CMLOGActSetBombResourceOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+		<propertyDef name="objPathFinderOptions" type="Object" restriction="PathFinderOptions"/>
+    </objectDef>
+
+    <objectDef type="GActTakeControlGroup" class="CMLOGActTakeControlGroup" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+	</objectDef>
+
+    <objectDef type="GActSetLoadOnTransportsOrder" class="CMLOGActSetLoadOnTransportsOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+    <objectDef type="GActSetUnloadFromTransportsOrder" class="CMLOGActSetUnloadFromTransportsOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+	<objectDef type="GActSetOrdersToUnloadAllTransports" superType="mlgame.GActMethod" >
+		<propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup" />
+		<propertyDef name="objTarget" type="Object" />
+		<script type="application/javascript"><![CDATA[
+			function execute() {
+
+				parent_group = self.refUnitGroup.resolve(self.objGame);
+				for (child_group in parent_group.getGroupsOnTransports(self.objGame)) {
+					local.GActSetUnloadFromTransportsOrder.execute({
+						"objGame" : self.objGame,
+						"refUnitGroup" : child_group,
+						"objTarget" : self.objTarget
+					})
+				}
+
+			}
+		]]></script>
+	</objectDef>
+
+    <objectDef type="GActSetEnterPortOrder" class="CMLOGActSetEnterPortOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+    <objectDef type="GActSetExitPortOrder" class="CMLOGActSetExitPortOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+    <objectDef type="GActSetLoadOnCarrierOrder" class="CMLOGActSetLoadOnCarrierOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+    <objectDef type="GActSetUnloadFromCarrierOrder" class="CMLOGActSetUnloadFromCarrierOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+    <objectDef type="GActSetDropParatrooperOrder" class="CMLOGActSetDropParatrooperOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+		<propertyDef name="objPathFinderOptions" type="Object" restriction="PathFinderOptions"/>
+    </objectDef>
+
+    <objectDef type="GActSetDropAtomicBombOrder" class="CMLOGActSetDropAtomicBombOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+		<propertyDef name="objPathFinderOptions" type="Object" restriction="PathFinderOptions"/>
+    </objectDef>
+
+    <objectDef type="GActSetRetreatOrder" class="CMLOGActSetRetreatOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+	<objectDef type="GActLoadAtomicBomb" class="CMLOGActLoadAtomicBomb" superType="mlgame.GameAction">
+        <propertyDef name="refUnit" type="GORef" restriction="Unit"/>
+    </objectDef>
+
+	<objectDef type="GActUnloadAtomicBomb" class="CMLOGActUnloadAtomicBomb" superType="mlgame.GameAction">
+        <propertyDef name="refUnit" type="GORef" restriction="Unit"/>
+    </objectDef>
+
+    <objectDef type="GActSetUnitUpgrade" class="CMLOGActSetUnitUpgrade" superType="mlgame.GameAction">
+        <propertyDef name="refUnit" type="GORef" restriction="Unit"/>
+        <propertyDef name="objUnitTemplate" type="UnitTemplate"/>
+    </objectDef>
+
+    <objectDef type="GActCancelUnitUpgrade" class="CMLOGActCancelUnitUpgrade" superType="mlgame.GameAction">
+        <propertyDef name="refUnit" type="GORef" restriction="Unit"/>
+    </objectDef>
+
+    <objectDef type="GActSetSubAttack" class="CMLOGActSetSubAttack" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+    </objectDef>
+
+    <objectDef type="GActSetSubAttackGroup" class="CMLOGActSetSubAttackGroup" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+    <objectDef type="GActSetShoreBombardmentOrder" class="CMLOGActSetShoreBombardmentOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+        <propertyDef name="eShoreBombardmentParam" type="Enum" restriction="ShoreBombardmentParam"/>
+    </objectDef>
+
+    <objectDef type="GActSetShoreBombardmentCoastalOrder" class="CMLOGActSetShoreBombardmentCoastalOrder" superType="GActSetShoreBombardmentOrder">
+        <property name="eShoreBombardmentParam" value="SHORE_BOMBARDMENT_PARAM_COASTAL_DEFENSE"/>
+    </objectDef>
+
+    <objectDef type="GActSetShoreBombardmentCityInfrastructureOrder" class="CMLOGActSetShoreBombardmentCityInfrastructureOrder" superType="GActSetShoreBombardmentOrder">
+        <property name="eShoreBombardmentParam" value="SHORE_BOMBARDMENT_PARAM_CITY_INFRASTRUCTURE"/>
+    </objectDef>
+
+    <objectDef type="GActSetShoreBombardmentCityResearchOrder" class="CMLOGActSetShoreBombardmentCityResearchOrder" superType="GActSetShoreBombardmentOrder">
+        <property name="eShoreBombardmentParam" value="SHORE_BOMBARDMENT_PARAM_CITY_RESEARCH"/>
+    </objectDef>
+
+    <objectDef type="GActSetShoreBombardmentCityPortOrder" class="CMLOGActSetShoreBombardmentCityPortOrder" superType="GActSetShoreBombardmentOrder">
+        <property name="eShoreBombardmentParam" value="SHORE_BOMBARDMENT_PARAM_CITY_PORT"/>
+    </objectDef>
+
+    <objectDef type="GActSetRangedAttackOrder" class="CMLOGActSetRangedAttackOrder" superType="mlgame.GameAction">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+        <propertyDef name="eRangedAttackParam" type="Enum" restriction="RangedAttackParam"/>
+    </objectDef>
+
+    <objectDef type="GActSetRangedAttackTransportationOrder" class="CMLOGActSetRangedAttackTransportationOrder" superType="GActSetRangedAttackOrder">
+        <property name="eRangedAttackParam" value="RANGED_ATTACK_PARAM_TRANSPORTATION"/>
+    </objectDef>
+
+    <objectDef type="GActSetRangedAttackFortificationOrder" class="CMLOGActSetRangedAttackFortificationOrder" superType="GActSetRangedAttackOrder">
+        <property name="eRangedAttackParam" value="RANGED_ATTACK_PARAM_FORTIFICATION"/>
+    </objectDef>
+
+    <objectDef type="GActSetRangedAttackAADefenseOrder" class="CMLOGActSetRangedAttackAADefenseOrder" superType="GActSetRangedAttackOrder">
+        <property name="eRangedAttackParam" value="RANGED_ATTACK_PARAM_AA_DEFENSE"/>
+    </objectDef>
+
+    <objectDef type="GActSetRangedAttackCoastalDefenseOrder" class="CMLOGActSetRangedAttackCoastalDefenseOrder" superType="GActSetRangedAttackOrder">
+        <property name="eRangedAttackParam" value="RANGED_ATTACK_PARAM_COASTAL_DEFENSE"/>
+    </objectDef>
+
+    <objectDef type="GActSetRangedAttackAirbaseOrder" class="CMLOGActSetRangedAttackAirbaseOrder" superType="GActSetRangedAttackOrder">
+        <property name="eRangedAttackParam" value="RANGED_ATTACK_PARAM_AIRBASE"/>
+    </objectDef>
+
+    <objectDef type="GActSetRangedAttackInfrastructureOrder" class="CMLOGActSetRangedAttackInfrastructureOrder" superType="GActSetRangedAttackOrder">
+        <property name="eRangedAttackParam" value="RANGED_ATTACK_PARAM_INFRASTRUCTURE"/>
+    </objectDef>
+
+    <objectDef type="GActSetRangedAttackResearchOrder" class="CMLOGActSetRangedAttackResearchOrder" superType="GActSetRangedAttackOrder">
+        <property name="eRangedAttackParam" value="RANGED_ATTACK_PARAM_RESEARCH"/>
+    </objectDef>
+
+    <objectDef type="GActSetRangedAttackAtomicOrder" class="CMLOGActSetRangedAttackAtomicOrder" superType="GActSetRangedAttackOrder">
+        <property name="eRangedAttackParam" value="RANGED_ATTACK_PARAM_ATOMIC"/>
+    </objectDef>
+
+    <objectDef type="GActDismantleRegionImprovement" class="CMLOGActDismantleRegionImprovement" superType="mlgame.GameAction">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="eImprovementType" type="Enum" restriction="RegionImprovementType"/>
+    </objectDef>
+	
+	<objectDef type="GActSetAcceptNewUnits" superType="mlgame.GActMethod" >
+		<propertyDef name="objGroup" type="Object" restriction="UnitGroup" />
+		<propertyDef name="bAcceptNewUnits" type="bool" />
+		<script type="application/javascript"><![CDATA[
+			function execute() {
+
+				self.objGroup.bAcceptingNewlyProducedUnits = self.bAcceptNewUnits;
+
+			}
+		]]></script>
+	</objectDef>
+
+    <objectDef type="GActSetDisplayUnit" class="CMLOGActSetDisplayUnit" superType="mlgame.GameAction">
+        <propertyDef name="objUnitGroup" type="UnitGroup"/>
+        <propertyDef name="objDisplayUnit" type="Unit"/>
+    </objectDef>
+
+</locust>

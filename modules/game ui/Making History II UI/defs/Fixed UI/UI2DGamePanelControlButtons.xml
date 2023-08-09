@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI2DGamePanelEndTurnButton" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objPerAvatarData" type="gs_tbg.PADTurnBasedGame"/>
+		<property name="objPerAvatarData" >
+		self.objMH2Data.objAvatar.getPerAvatarData(gs_tbg.PADTurnBasedGame)
+		</property>
+		
+		<propertyDef name="objWaiting" type="bool">
+			((filter(?{avatar:(find(?{PAD: PAD.instanceOf(gs_tbg.PADTurnBasedGame) AND PAD.bEndedTurn}, avatar.objPerAvatarData)) != null},
+				filter(?{avatar: avatar.bConnected AND avatar.objPerAvatarData.size != 3}, mh2data.objAvatar.objOtherAvatars))).length >= 
+					(filter(?{avatar: avatar.bConnected AND avatar.objPerAvatarData.size != 3}, mh2data.objAvatar.objOtherAvatars)).length)
+		</propertyDef>
+		
+		<property name="nWidth" value="54"/>
+		<property name="nHeight" value="37"/>
+		
+		<object type="mlui.UI2DButton" name="objButton">
+			<!--<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsTurn"/>-->
+			<!--skin.getTemplateRef(mlmedia.ButtonStyleTemplate,-->
+			<!--	if(!gs_tbg.getGameSysTurnBasedGame(def.objMH2Data.objAvatar).objTurnBasedGame.bEndingTurn,-->
+			<!--		'BtnStyleGameControlsTurn', 'BtnStyleGameControlsTurnDisabled'))-->
+			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+				if(!def.objPerAvatarData.bEndedTurn, 'BtnStyleGameControlsTurn', if(def.objWaiting, 'BtnStyleGameControlsTurnDisabled', 'BtnStyleGameControlsTurnWaiting')))
+			"/>
+			
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nDefaultWidth" value="52"/>
+			<property name="nDefaultHeight" value="35"/>
+			<property name="strToolTip" from="locale.SID.UI.EndTurn"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							objRunnable.objRoot.playSoundOnce("Icon End Turn")
+							
+							if(mh2data.bSaving != true)
+							{
+								if(!gs_tbg.getGameSysTurnBasedGame(def.objMH2Data.objAvatar).objTurnBasedGame.bEndingTurn)
+								{
+									var action = gs_tbg.GActEndTurn.create({"objAvatar": def.objMH2Data.objAvatar});
+									def.objMH2Data.objAvatar.sendAction(action);
+								}
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objRing">
+			<property name="tmplImage" value="skin.ImgGamePanelTurnRing"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="54"/>
+			<property name="nHeight" value="37"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DGamePanelRoundButtons" superType="mlui.UI2DElement">
+		<propertyDef name="tmplButtonStyle" type="TemplateRef" restriction="mlmedia.ButtonStyleTemplate"/>
+		
+		<property name="nWidth" value="36"/>
+		<property name="nHeight" value="36"/>
+		
+		<object type="mlui.UI2DButton" name="objButton">
+			<property name="tmplButtonStyle" from="def.tmplButtonStyle"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objRing">
+			<property name="tmplImage" value="skin.ImgGamePanelGCRing"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="36"/>
+			<property name="nHeight" value="36"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DGamePanelControlButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+
+		<property name="nWidth" value="350"/>
+		<property name="nHeight" value="40"/>
+		
+		<object type="mlui.UI2DImage" name="objGamePanelNavBG">
+			<property name="tmplImage" value="skin.ImgGamePanelNavBG"/>
+			<property name="nX" value="27"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="310"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objGamePanelGear">
+			<property name="tmplImage" value="skin.ImgGamePanelGear"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="41"/>
+			<property name="nHeight" value="23"/>
+		</object>
+		
+		<!-- Buttons -->
+		<object type="UI2DGamePanelEndTurnButton" name="objEndTurn">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="objMH2Data" from="def.objMH2Data"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="0"/>
+			<property name="nX" value="57"/>
+			<property name="nY" value="6"/>
+			
+			<object type="UI2DGamePanelRoundButtons" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsMilitary"/>
+				<property name="strToolTip" from="locale.SID.UI.Military"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								objRunnable.objRoot.playSoundOnce("Icon Military View")
+								reportdata.togglePanel(ReportPanelSelection.MILITARY);
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DGamePanelRoundButtons" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsDiplomacy"/>
+				<property name="strToolTip" from="locale.SID.UI.Diplomacy"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+								function handle(event, owner)
+								{
+									objRunnable.objRoot.playSoundOnce("Icon Diplomatic View")
+									reportdata.togglePanel(ReportPanelSelection.DIPLOMATIC);
+								}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DGamePanelRoundButtons" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsGovernment"/>
+				<property name="strToolTip" from="locale.SID.UI.Government"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								objRunnable.objRoot.playSoundOnce("Icon Domestic View")
+								reportdata.togglePanel(ReportPanelSelection.DOMESTIC);
+								
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DGamePanelRoundButtons" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsCity"/>
+				<property name="strToolTip" from="locale.SID.UI.CityRegionManagement"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								objRunnable.objRoot.playSoundOnce("City Universal")
+								reportdata.togglePanel(ReportPanelSelection.CITY)
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DGamePanelRoundButtons" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsResearch"/>
+				<property name="strToolTip" from="locale.SID.UI.Research"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								objRunnable.objRoot.playSoundOnce("Icon World Summary View")
+								reportdata.togglePanel(ReportPanelSelection.RESEARCH)
+							}	
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DGamePanelRoundButtons" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsTrade"/>
+				<property name="strToolTip" from="locale.SID.UI.TradeandFinances"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								objRunnable.objRoot.playSoundOnce("Icon Diplomatic")
+								reportdata.togglePanel(ReportPanelSelection.TRADE)
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DGamePanelRoundButtons" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsSearch"/>
+				<property name="strToolTip" from="locale.SID.UI.Encyclopedia"/>
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								encydata.objEncyclopediaData.showEncyclopedia();
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+			<object type="UI2DGamePanelRoundButtons" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsMenu"/>
+				<property name="strToolTip" from="locale.SID.UI.MainMenu"/>
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								if(mh2data.otMainMenu == null)
+								{
+									mh2data.openMainMenu();
+								}
+								else
+								{
+									mh2data.closeMainMenu();
+								}
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+		</object>
+		
+		
+		<!---->
+		<!--<object type="mlui.UI2DButton" name="objGameControlsMilitary">-->
+		<!--	<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsMilitary"/>-->
+		<!--	<property name="nX" value="57"/>-->
+		<!--	<property name="nY" value="9"/>-->
+		<!--	<property name="nDefaultWidth" value="30"/>-->
+		<!--	<property name="nDefaultHeight" value="30"/>-->
+		<!--	<property name="strToolTip" from="locale.SID.UI.Military"/>-->
+		<!---->
+		<!--	<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--		<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--			<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--			<script type="application/javascript"><![CDATA[-->
+		<!--				function handle(event, owner)-->
+		<!--				{-->
+		<!--					def.objMH2Data.openMilitaryTabAll(UI2DMilitaryTabMilitaryStatus);-->
+		<!--				}-->
+		<!--			]]></script>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--</object>-->
+
+		<object type="NationListData" name="objNationList">
+		</object>
+
+		<!--<object type="mlui.UI2DButton" name="objGameControlsDiplomacy">-->
+		<!--	<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsDiplomacy"/>-->
+		<!--	<property name="nX" value="95"/>-->
+		<!--	<property name="nY" value="9"/>-->
+		<!--	<property name="nDefaultWidth" value="30"/>-->
+		<!--	<property name="nDefaultHeight" value="30"/>-->
+		<!--	<property name="strToolTip" from="locale.SID.UI.Diplomacy"/>-->
+		<!---->
+		<!--	<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--		<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--			<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--			<script type="application/javascript"><![CDATA[-->
+		<!--				function handle(event, owner)-->
+		<!--				{-->
+		<!--					def.objMH2Data.openDiplomacyTabAll(UI2DDiplomacyTabWorldNations);-->
+		<!--					def.objMH2Data.objMapData.refSelectedObject = def.objNationList.objItems.getArbitraryValue();-->
+		<!--				}-->
+		<!--			]]></script>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--</object>-->
+
+		<!--<object type="mlui.UI2DButton" name="objGameControlsGovernment">-->
+		<!--	<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsGovernment"/>-->
+		<!--	<property name="nX" value="133"/>-->
+		<!--	<property name="nY" value="9"/>-->
+		<!--	<property name="nDefaultWidth" value="30"/>-->
+		<!--	<property name="nDefaultHeight" value="30"/>-->
+		<!--	<property name="strToolTip" from="locale.SID.UI.Government"/>-->
+		<!---->
+		<!--	<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--		<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--			<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--			<script type="application/javascript"><![CDATA[-->
+		<!--				function handle(event, owner)-->
+		<!--				{-->
+		<!--					def.objMH2Data.openGovernmentTabAll(UI2DGovernmentTabInfo);-->
+		<!--				}-->
+		<!--			]]></script>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--</object>-->
+
+		<!--<object type="mlui.UI2DButton" name="objGameControlsCity">-->
+		<!--	<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsCity"/>-->
+		<!--	<property name="nX" value="171"/>-->
+		<!--	<property name="nY" value="9"/>-->
+		<!--	<property name="nDefaultWidth" value="30"/>-->
+		<!--	<property name="nDefaultHeight" value="30"/>-->
+		<!--	<property name="strToolTip" from="locale.SID.UI.City"/>-->
+		<!---->
+		<!--	<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--		<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--			<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--			<script type="application/javascript"><![CDATA[-->
+		<!--				function handle(event, owner)-->
+		<!--				{-->
+		<!--					def.objMH2Data.openCityTabAll(UI2DCityTabCityList);-->
+		<!--				}-->
+		<!--			]]></script>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--</object>-->
+
+		<!--<object type="mlui.UI2DButton" name="objGameControlsRegion">-->
+		<!--	<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsResearch"/>-->
+		<!--	<property name="nX" value="209"/>-->
+		<!--	<property name="nY" value="9"/>-->
+		<!--	<property name="nDefaultWidth" value="30"/>-->
+		<!--	<property name="nDefaultHeight" value="30"/>-->
+		<!--	<property name="strToolTip" from="locale.SID.UI.Region"/>-->
+		<!---->
+		<!--	<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--		<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--			<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--			<script type="application/javascript"><![CDATA[-->
+		<!--				function handle(event, owner)-->
+		<!--				{-->
+		<!--					def.objMH2Data.openRegionTabAll(UI2DRegionTabInfo);-->
+		<!--				}-->
+		<!--			]]></script>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--</object>-->
+
+		<!--<object type="mlui.UI2DButton" name="objGameControlsTrade">-->
+		<!--	<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsTrade"/>-->
+		<!--	<property name="nX" value="247"/>-->
+		<!--	<property name="nY" value="9"/>-->
+		<!--	<property name="nDefaultWidth" value="30"/>-->
+		<!--	<property name="nDefaultHeight" value="30"/>-->
+		<!--	<property name="strToolTip" from="locale.SID.UI.TradeandFinances"/>-->
+		<!---->
+		<!--	<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--		<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--			<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--			<script type="application/javascript"><![CDATA[-->
+		<!--				function handle(event, owner)-->
+		<!--				{-->
+		<!--					def.objMH2Data.openTradeTabAll(UI2DTradeTabWorldMarket);-->
+		<!--				}-->
+		<!--			]]></script>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--</object>-->
+
+<!--		<object type="mlui.UI2DButton" name="objGameControlsMenu">-->
+<!--			<property name="tmplButtonStyle" value="skin.BtnStyleGameControlsMenu"/>-->
+<!--			<property name="nX" value="285"/>-->
+<!--			<property name="nY" value="9"/>-->
+<!--			<property name="nDefaultWidth" value="30"/>-->
+<!--			<property name="nDefaultHeight" value="30"/>-->
+<!--			<property name="strToolTip" value="Placeholder"/>-->
+<!---->
+<!--			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+<!--				<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+<!--					<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+<!--					<script type="application/javascript"><![CDATA[-->
+<!--						function handle(event, owner)-->
+<!--						{-->
+<!--    						var action = gs_tbg.GActCreateNation.create({"tmplNation": sd.getTemplateRef(gs_tbg.NationTemplate, 'Austria')});-->
+<!--							def.objMH2Data.objAvatar.sendAction(action);-->
+<!--						}-->
+<!--					]]></script>-->
+<!--				</object>-->
+<!--			</object>-->
+<!---->
+<!--		</object>-->
+	</objectDef>
+
+	<objectDef type="UI2DGamePanelButtonBG" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="351"/>
+		<property name="nHeight" value="22"/>
+
+		<object type="mlui.UI2DImage" name="objGamePanelGCBGLeft">
+			<property name="tmplImage" value="skin.ImgGamePanelGCBGLeft"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="70"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objGamePanelGCBGCenter1">
+			<property name="tmplImage" value="skin.ImgGamePanelGCBGCenter"/>
+			<property name="nX" value="70"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="19"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objGamePanelGCBGCenter2">
+			<property name="tmplImage" value="skin.ImgGamePanelGCBGCenter"/>
+			<property name="nX" value="108"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="19"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objGamePanelGCBGCenter3">
+			<property name="tmplImage" value="skin.ImgGamePanelGCBGCenter"/>
+			<property name="nX" value="146"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="19"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objGamePanelGCBGCenter4">
+			<property name="tmplImage" value="skin.ImgGamePanelGCBGCenter"/>
+			<property name="nX" value="184"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="19"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objGamePanelGCBGCenter5">
+			<property name="tmplImage" value="skin.ImgGamePanelGCBGCenter"/>
+			<property name="nX" value="222"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="19"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objGamePanelGCBGCenter6">
+			<property name="tmplImage" value="skin.ImgGamePanelGCBGCenter"/>
+			<property name="nX" value="260"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="19"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objGamePanelGCBGRight">
+			<property name="tmplImage" value="skin.ImgGamePanelGCBGRight"/>
+			<property name="nX" value="298"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="19"/>
+			<property name="nHeight" value="19"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DGamePanelButtonFG" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="320"/>
+		<property name="nHeight" value="42"/>
+
+		<!--<object type="mlui.UI2DImage" name="objPanelRingTurn">-->
+		<!--	<property name="tmplImage" value="skin.ImgGamePanelTurnRing"/>-->
+		<!--	<property name="nX" value="0"/>-->
+		<!--	<property name="nY" value="0"/>-->
+		<!--	<property name="nWidth" value="54"/>-->
+		<!--	<property name="nHeight" value="37"/>-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--</object>-->
+
+		<object type="mlui.UI2DImage" name="objPanelRing1">
+			<property name="tmplImage" value="skin.ImgGamePanelGCRing"/>
+			<property name="nX" value="54"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="36"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelRing2">
+			<property name="tmplImage" value="skin.ImgGamePanelGCRing"/>
+			<property name="nX" value="92"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="36"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelRing3">
+			<property name="tmplImage" value="skin.ImgGamePanelGCRing"/>
+			<property name="nX" value="130"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="36"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelRing4">
+			<property name="tmplImage" value="skin.ImgGamePanelGCRing"/>
+			<property name="nX" value="168"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="36"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelRing5">
+			<property name="tmplImage" value="skin.ImgGamePanelGCRing"/>
+			<property name="nX" value="206"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="36"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelRing6">
+			<property name="tmplImage" value="skin.ImgGamePanelGCRing"/>
+			<property name="nX" value="244"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="36"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelRing7">
+			<property name="tmplImage" value="skin.ImgGamePanelGCRing"/>
+			<property name="nX" value="282"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="36"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	</objectDef>
+</locust>

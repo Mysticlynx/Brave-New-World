@@ -1,0 +1,1977 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="MHAISysScript" superType="mlgame.AISysFromScript">
+        <propertyDef name="objDefaultAIPersonalityTemplate" type="gs_tbg.AIPersonalityTemplate"/>
+        <propertyDef name="objDefaultAIInternationalPositionTemplate" type="gs_tbg.AIInternationalPositionTemplate"/>
+        <propertyDef name="objDefaultAIMilitaryStrategyTemplate" type="gs_tbg.AIMilitaryStrategyTemplate"/>
+        <propertyDef name="objAIDiplomaticLevelsTemplate" type="mh2_common.RangedTemplateList"/>
+        <propertyDef name="objAIUsVersusThemTemplate" type="gs_tbg.AIUsVersusThemTemplate"/>
+        <propertyDef name="objPowerDifferentialRangedTemplateList" type="mh2_common.RangedTemplateList"/>
+        <propertyDef name="objTerritorialIntegrityRangedTemplateList" type="mh2_common.RangedTemplateList"/>
+        
+        <!-- child AI objects -->
+        <propertyDef name="objMilitaryAIScript" type="MilitaryAIScript" storesChildren="true"/>
+        <propertyDef name="objResearchAI" type="ResearchAIScript" storesChildren="true"/>
+        <propertyDef name="objDiplomacyAI" type="DiplomacyAIScript" storesChildren="true"/>
+        <propertyDef name="objTradeAI" type="TradeAIScript" storesChildren="true"/>
+        <propertyDef name="objProductionAI" type="ProductionAIScript" storesChildren="true"/>
+
+        <!--  resources -->
+        <propertyDef name="objMetalsTemplate" type="gs_tbg.ResourceTemplate"/>
+        <propertyDef name="objOilTemplate" type="gs_tbg.ResourceTemplate"/>
+        <propertyDef name="objArmsTemplate" type="gs_tbg.ResourceTemplate"/>
+        <propertyDef name="objFoodTemplate" type="gs_tbg.ResourceTemplate"/>
+        <propertyDef name="objCoalTemplate" type="gs_tbg.ResourceTemplate"/>
+        <propertyDef name="objAtomicBombsTemplate" type="gs_tbg.ResourceTemplate"/>
+
+        <!-- game systems, set by initSystem -->
+        <propertyDef name="objGameSysResource" type="gs_tbg.GameSysResource"/>
+        <propertyDef name="objGameSysRegion" type="gs_tbg.GameSysRegion"/>
+        <propertyDef name="objGameSysCity" type="gs_tbg.GameSysCity"/>
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <propertyDef name="objGameSysNationRelations" type="gs_tbg.GameSysNationRelations"/>
+        <propertyDef name="objGameSysNationalPrograms" type="gs_tbg.GameSysNationalPrograms"/>       
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <propertyDef name="objGameSysUnit" type="gs_tbg.GameSysUnit"/>
+        <propertyDef name="objGameSysNation" type="gs_tbg.GameSysNation"/>
+        <propertyDef name="objGameSysTrade" type="gs_tbg.GameSysTrade"/>
+        <propertyDef name="objGameSysCombat" type="gs_tbg.GameSysCombat"/>
+        <propertyDef name="objGameSysMap" type="gs_tbg.GameSysMap"/>
+        
+        <propertyDef name="nUnitGroupStrengthLimit" type="int" default="5000"/><!-- tweak point -->
+
+        <propertyDef name="objResourceList" type="gs_tbg.ResourceTemplate" variable="true"/>
+
+        <propertyDef name="nLastUpdateTick" type="int" default="-1"/>
+        <propertyDef name="nTicksBetweenTurns" type="int" default="2"/>
+        <propertyDef name="nSeedCount" type="int" default="0"/>
+
+        <!-- properties for development use -->
+        <!--<propertyDef name="bWantAITimeDeltas" type="bool" default="true"/>-->
+        <propertyDef name="nTestAutoTurnStep" type="int" default="0"/>
+        <propertyDef name="nLastErrorSaveTurn" type="int" default="0"/>    
+        <propertyDef name="bWantInvasionSummaryLog" type="bool" default="false"/>
+
+        <property name="objMetalsTemplate" value="sd.Metals"/>
+        <property name="objOilTemplate" value="sd.Oil"/>
+        <property name="objArmsTemplate" value="sd.Arms"/>
+        <property name="objFoodTemplate" value="sd.Food"/>
+        <property name="objCoalTemplate" value="sd.Coal"/>
+        <property name="objAtomicBombsTemplate" value="sd.AtomicBombs"/>
+
+        <object name="objMilitaryAIScript" type="MilitaryAIScript">
+            <property name="objParentAI" from="def"/>
+        </object>
+
+        <object name="objResearchAI" type="ResearchAIScript">
+            <property name="objParentAI" from="def"/>
+        </object>
+
+        <object name="objDiplomacyAI" type="DiplomacyAIScript">
+            <property name="objParentAI" from="def"/>
+        </object>
+
+        <object name="objTradeAI" type="TradeAIScript">
+            <property name="objParentAI" from="def"/>
+        </object>
+
+        <object name="objProductionAI" type="ProductionAIScript">
+            <property name="objParentAI" from="def"/>
+        </object>
+
+        <script type="application/javascript"><![CDATA[
+
+        function getRandomIntInRange(nMin,nMax)
+        {
+            return self.objGameSysAIUtility.randGen.getRandomIntInRange(nMin,nMax);
+        }
+
+        function getRandomFloat()
+        {
+            return self.objGameSysAIUtility.randGen.getRandomFloat();
+        }
+
+        // class for script AI, temporary
+        function AITempContext(game)
+        {
+            this.useCount = 0;
+            this.turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+
+            this.setAvatar = function(avatar)
+            {
+                this.avatar = avatar;
+                this.nation = avatar.getAttribValue("Nation").resolve(avatar);
+                this.pad = getPAD(avatar,local.PADMakingHistoryAI);
+            }
+
+            // handle turn started for one avatar
+            this.handleAvatarTurnStarted = function()
+            {
+                if (this.nation == null)
+                {
+                    log("DEBUG: this.nation is null."); // probably destroyed
+                    return;
+                }
+                
+                if (this.nation.bDisabled)
+                {
+                    log("DEBUG: " + this.nation.strName + " is awaiting its fate.");
+                    // we're waiting for the victor's decision on our fate
+                    return;
+                }
+
+                //var dStart = new Date();
+
+                // --- test code (for debugging) ---
+                if (this.pad.bTestBoostResources)
+                {
+                    // boost money
+
+                    var money = this.nation.getMoney(this.avatar);
+                    if (money < 1000000)
+                    {
+                        log("DEBUG: boosting money for " + this.nation.strName);
+                        this.nation.objFinance.n64Money = 1000000000;
+                    }
+
+                    // boost metals
+                    var metals = gs_tbg.getNationResource(this.avatar,this.nation,self.objMetalsTemplate);
+                    if (metals.nAmount < 50000)
+                    {
+                        log("DEBUG: boosting Metals for " + this.nation.strName);
+                        metals.nAmount = 100000;
+                    }
+
+                    // boost mpus
+                    //var mpus = gs_tbg.getNationResource(this.avatar,this.nation,self.tmplMPU);
+                    //if (mpus.nAmount < 1000)
+                    //{
+                    //	log("DEBUG: boosting MPUs for " + this.nation.strName);
+                    //	mpus.nAmount = 5000;
+                    //}
+
+                    // boost coal
+                    var coal = gs_tbg.getNationResource(this.avatar,this.nation,self.objCoalTemplate);
+                    if (coal.nAmount < 50000)
+                    {
+                        log("DEBUG: boosting coal for " + this.nation.strName);
+                        coal.nAmount = 100000;
+                    }
+                    
+                    // boost oil
+                    var oil = gs_tbg.getNationResource(this.avatar,this.nation,self.objOilTemplate);
+                    if (oil.nAmount < 50000)
+                    {
+                        log("DEBUG: boosting oil for " + this.nation.strName);
+                        oil.nAmount = 100000;
+                    }
+
+                    // boost arms
+                    var arms = gs_tbg.getNationResource(this.avatar,this.nation,self.objArmsTemplate);
+                    if (arms.nAmount < 5000)
+                    {
+                        log("DEBUG: boosting arms for " + this.nation.strName);
+                        arms.nAmount = 25000;
+                    }
+                    
+                    // boost food
+                    var food = gs_tbg.getNationResource(this.avatar,this.nation,self.objFoodTemplate);
+                    if (food.nAmount < 5000)
+                    {
+                        log("DEBUG: boosting food for " + this.nation.strName);
+                        food.nAmount = 25000;
+                    }
+                    
+                    
+                } // ------- end of test code ---------
+
+                self.objMilitaryAIScript.update(this.avatar);
+                //var dMilitary = new Date();
+
+                self.objResearchAI.update(this.avatar);
+                //var dResearch = new Date();
+
+                self.objProductionAI.update(this.avatar);
+                //var dProduction = new Date();
+
+                // this call moved to preEndTurnUpdate so stockpile desires are correct when market runs
+                //self.objTradeAI.update(this.avatar);
+                //var dTrade = new Date();
+
+                self.objDiplomacyAI.update(this.avatar);
+                //var dDiplomacy = new Date();
+
+                this.completeTurnStateFlags();
+
+                //var dEnd = new Date();
+
+//                if (self.bWantAITimeDeltas)
+//                {
+//                    var deltaMilitary = dMilitary.getTime() - dStart.getTime();
+//                    var deltaResearch = dResearch.getTime() - dMilitary.getTime();
+//                    var deltaProduction = dProduction.getTime() - dResearch.getTime();
+//                    var deltaTrade = dTrade.getTime() - dProduction.getTime();
+//                    var deltaDiplomacy = dDiplomacy.getTime() - dTrade.getTime();
+//                    var deltaAll = dEnd.getTime() - dStart.getTime();
+//                    updateAITimeDeltas(deltaMilitary,deltaResearch,deltaProduction,deltaTrade,deltaDiplomacy,deltaAll);
+//                }
+                
+                if (this.pad.bWantUnitCounts)
+                {
+                    self.objGameSysUnit.dumpUnitTemplateCounts(this.avatar,this.nation);
+                }
+                
+            } // handleAvatarTurnStarted 
+
+            // set state flags after we finish all our turn processing.
+            this.completeTurnStateFlags = function()
+            {
+                this.pad.bNeedToUpdateState = false;
+                this.pad.bEnemyChange = false;
+                this.pad.bWasAtWar = this.pad.bAtWar;
+                if (this.pad.objLastTurnChangeData != null)
+                {
+                    //log("DEBUG: Clearing last turn data object: " + this.pad.objLastTurnChangeData );
+                    this.pad.objLastTurnChangeData = null;
+                }
+            }
+
+            this.handleWarDeclared = function(event)
+            {
+                if ((this.nation == null) || this.nation.bDisabled )
+                    return;
+                    
+                if (event.objDeclaringNation.bDisabled || event.objTargetNation.bDisabled)
+                {
+                    logWarn("ignoring handleWarDeclared event due to nation in the middle of being destroyed.");
+                    return;
+                }
+
+                // are we involved?
+                if ( event.isDefender(this.nation) || event.isAttacker(this.nation)  )
+                {
+                    //log("setting bEnemyChange for " + targetNation.strName);
+                    this.pad.bEnemyChange = true;
+                    this.pad.bNeedToUpdateState = true;
+
+                    if (this.pad.objPlanDefense != null)
+                    {
+                        this.pad.objPlanDefense.bRegionsNeedUpdated = true;
+                    }
+                    
+                    if (this.nation.equals(event.objTargetNation)) // we were specifically targeted rather than being pulled in as part of an alliance
+                    {
+                        self.objMilitaryAIScript.handleWarDeclared(this.avatar,event.objDeclaringNation);
+                    }
+                }
+            }
+
+            // called when our plan is about to send troops across a border
+            this.notifyAdvanceStarted = function(plan,enemyNation)
+            {
+                var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,enemyNation,true) != null);
+                if (!bAtWar)
+                {
+                    if (!this.nation.canDeclareWar())
+                        return false;
+                        
+                    if ( this.nation.objStatus.instanceOf(gs_tbg.NationStatusPuppet) )
+                    {
+                        // AI puppets don't declare war or make alliances
+                        // despite what the gameplay rules are
+                        return  false; 
+                    }
+                        
+                    if (!self.objGameSysNationRelations.canDeclareWarOn(this.avatar,this.nation, enemyNation))
+                        return false;
+                        
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: " + this.nation.strName + " declaring war against " + enemyNation.strName + " in order to advance " + plan.strPurpose + " " + plan);
+                        if (plan.objRegionsToConquer != undefined)
+                        {
+                            var n = 0;
+                            var regionNames = "";
+                            for (var i in plan.objRegionsToConquer)
+                            {
+                                if (n < 5)
+                                {
+                                    var region = plan.objRegionsToConquer[i];
+                                    if (n > 0)
+                                        regionNames += ",";
+                                    regionNames += region.strName;
+                                }
+                                n++;
+                            }
+                            if (n > 5)
+                                regionNames += " and " + (n-5) + " other regions.";
+                            log("DEBUG: regions to conquer: " + regionNames);
+                        }
+                    }
+
+                    if (enemyNation.canDeclareWar())
+                        self.objDiplomacyAI.declareWarAgainst(this.avatar,enemyNation,null,null,null,null);
+                    else
+                        self.objDiplomacyAI.declareWarAgainst(this.avatar,enemyNation.getMasterNation(this.avatar),null,null,null,null);
+                }
+                return true;
+            }
+
+            this.addRegionLoss = function(region,takingNation)
+            {
+                var lastTurnData = this.pad.getLastTurnChangeData(true);
+                var regionLoss = local.AIRegionLoss.create({"objRegion":region,"objTakingNation":takingNation});
+                lastTurnData.objRegionLosses.add(regionLoss);
+            }
+
+            this.addRegionGain = function(region,losingNation)
+            {
+                var lastTurnData = this.pad.getLastTurnChangeData(true);
+                var regionLoss = local.AIRegionGain.create({"objRegion":region,"objLosingNation":losingNation});
+                lastTurnData.objRegionGains.add(regionLoss);
+            }
+
+            this.handleEventRegionChangedController = function(event)
+            {
+                if (this.nation == null)
+                    return;
+
+                // see if this was our region
+                if ( this.nation.equals(event.objOldController) )
+                {
+                    this.addRegionLoss(event.objRegion,event.objNewController);
+                }
+                else if (this.nation.equals(event.objNewController) )
+                {
+                    this.addRegionGain(event.objRegion,event.objOldController);
+                }
+
+                // update plans
+                var callback = local.CallbackEventRegionChangedController.create({
+                    "objAvatar": this.avatar,
+                    "objAI": self,
+                    "objEvent": event
+                    });
+                self.objGameSysAIUtility.enumPlans(this.avatar,this.nation,callback);
+            }
+
+            // triggered action
+            this.triggerActionSeekResource = function(resource,bAllowConquest)
+            {
+                log( this.nation.strName + " becomes interested in " + resource.strName);
+                if (bAllowConquest)
+                {
+                    self.objMilitaryAIScript.createPlanToConquerRegionWithResource(this.avatar,resource);
+                }
+                else
+                {
+                    log("ERROR! Seek resource without conquest"); // Implement if needed
+                }
+            }
+            
+            this.triggerActionChangeInternationalPosition = function(objAIInternationalPositionTemplate)
+            {
+                log("changing international position of " + this.nation.strName + " to " + objAIInternationalPositionTemplate.strName );
+                var diplomacyAI = self.objGameSysAIUtility.getDiplomacyAI(this.avatar,this.nation);
+                diplomacyAI.objAIInternationalPositionTemplate = objAIInternationalPositionTemplate;
+            }
+            
+            this.triggerActionDeclareWar = function(enemyNation,tmplRegionList)
+            {
+                self.objMilitaryAIScript.triggerActionDeclareWar(this.avatar,enemyNation,tmplRegionList);
+            }
+
+            this.triggerActionImposeEmbargo = function(enemyNation)
+            {
+                self.objDiplomacyAI.triggerActionImposeEmbargo(this.avatar,enemyNation);
+            }
+
+            this.handleAllianceMemberConquered = function(nationConquered)
+            {
+                self.objMilitaryAIScript.handleAllianceMemberConquered(this.avatar,nationConquered);
+            }
+
+            this.handleMilitaryAccessLost = function(revokingNation)
+            {
+                var lastTurnData = this.pad.getLastTurnChangeData(true);
+                lastTurnData.bMilitaryAccessLost = true;
+            }
+            
+            this.handleRegionBombed = function(region)
+            {
+                var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+                if (!militaryAI.objBombedRegions.contains(region)) 
+                {
+                    militaryAI.objBombedRegions.add(region);
+                    this.pad.bUpdateRegionExclusions = true;
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: " + this.nation.strName + " controlled " + region.strName + " bombed.");
+                    }
+                }
+                else
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: " + this.nation.strName + " controlled " + region.strName + " bombed again.");
+                    }
+                }
+            }
+            
+            this.handleEngagementBegan = function(event)
+            {
+                self.objResearchAI.investigateTechnology(this.avatar,event.objAttacker,event.objRegion);
+            }
+            
+            this.handleAdjacentRegionChangedController = function(nationTakingControl,region)
+            {
+                self.objResearchAI.investigateTechnology(this.avatar,nationTakingControl,region);
+            }
+
+        } // ------------------ end of AITempContext ---------------------------
+
+
+        var gData = null; // AITempContext
+        var gDataStack = new Array();
+
+        function BeginTempContext()
+        {
+            //log("BeginTempContext");
+            if (gData != null)
+                gDataStack.push(gData);
+            gData = new AITempContext();
+        }
+
+        function EndTempContext()
+        {
+            //log("EndTempContext");
+            if (gDataStack.length > 0)
+                gData = gDataStack.pop();
+            else
+                gData = null;
+        }
+
+        function initSystem(game)
+        {
+            //log("initializing system " + self + " for game " + game + " in AI " + self.getAI());
+
+            // do some lookups and cache in self properties
+            self.objGameSysResource = gs_tbg.getGameSysResource(game);
+            self.objGameSysRegion = gs_tbg.getGameSysRegion(game);
+            self.objGameSysCity = gs_tbg.getGameSysCity(game);
+            self.objGameSysAIUtility = gs_tbg.getGameSysAIUtility(game);
+            self.objGameSysNationRelations = gs_tbg.getGameSysNationRelations(game);
+            self.objGameSysNationalPrograms = gs_tbg.getGameSysNationalPrograms(game);
+            self.objGameSysTurnBasedGame = gs_tbg.getGameSysTurnBasedGame(game);
+            self.objGameSysUnit = gs_tbg.getGameSysUnit(game);
+            self.objGameSysNation = gs_tbg.getGameSysNation(game);
+            self.objGameSysTrade = gs_tbg.getGameSysTrade(game);
+            self.objGameSysCombat = gs_tbg.getGameSysCombat(game);
+            self.objGameSysMap = gs_tbg.getGameSysMap(game);
+            
+            self.objGameSysAIUtility.setDiplomacyAIScript(self.objDiplomacyAI);
+            self.objGameSysAIUtility.setUsVsThemTemplate(self.objAIUsVersusThemTemplate);
+            self.objGameSysAIUtility.setTerritorialIntegrityRangedTemplateList(self.objTerritorialIntegrityRangedTemplateList);
+            self.objGameSysAIUtility.setPowerDifferentialRangedTemplateList(self.objPowerDifferentialRangedTemplateList)
+
+            self.objResourceList.clear();
+            var resources = gs_tbg.getAllResources(game);
+            for (var r in resources)
+            {
+                var resource = resources[r];
+                self.objResourceList.add(resource);
+            }
+        }
+
+        function cleanupSystem(game)
+        {
+            log("cleaning up system " + self + " for game " + game + " in AI " + self.getAI());
+
+            self.objGameSysResource = null;
+            self.objGameSysRegion = null;
+            self.objGameSysCity = null;
+            self.objGameSysAIUtility = null;
+            self.objGameSysNationRelations = null;
+            self.objGameSysNationalPrograms = null;
+            self.objGameSysTurnBasedGame = null;
+            self.objGameSysUnit = null;
+            self.objGameSysNation = null;
+            self.objGameSysTrade = null;
+            self.objGameSysCombat = null;
+            self.objGameSysMap = null;
+            self.objResourceList.clear();
+        }
+
+        // called every tick
+        //function updateSystem(game, avatar)
+        //{
+        //}
+
+        function setInitialPolicies(diplomacyAI, aiPAD)
+        {
+            // set international position if not already set
+            if (diplomacyAI.objAIInternationalPositionTemplate == null)
+            {
+                diplomacyAI.objAIInternationalPositionTemplate = self.objDefaultAIInternationalPositionTemplate;
+            }
+            
+            if (diplomacyAI.objAIDiplomaticLevelsTemplate == null)
+            {
+                diplomacyAI.objAIDiplomaticLevelsTemplate = self.objAIDiplomaticLevelsTemplate;
+            }
+                    
+            var position = diplomacyAI.objAIInternationalPositionTemplate;
+            if (position.equals(sd.getTemplate(gs_tbg.AIInternationalPositionTemplate, "Expansionist")))
+            {
+                aiPAD.objAITradePolicyTemplate           = sd.getTemplate(gs_tbg.AITradePolicyTemplate, "DefaultTradePolicy");
+                aiPAD.objAIRulingPhilosophyTemplate      = sd.getTemplate(gs_tbg.AIRulingPhilosophyTemplate, "Militarism");
+                aiPAD.objAITrustTemplate                 = sd.getTemplate(gs_tbg.AITrustTemplate, "Opportunistic");
+                aiPAD.objAIInternationalismTemplate      = sd.getTemplate(gs_tbg.AIInternationalismTemplate, "DefaultInternationalismTemplate");
+                aiPAD.objAIImperialismTemplate           = sd.getTemplate(gs_tbg.AIImperialismTemplate, "Imperial");
+            }
+            else if (position.equals(sd.getTemplate(gs_tbg.AIInternationalPositionTemplate, "StatusQuo")) )
+            {
+                aiPAD.objAITradePolicyTemplate           = sd.getTemplate(gs_tbg.AITradePolicyTemplate, "FreeTrader");
+                aiPAD.objAIRulingPhilosophyTemplate      = sd.getTemplate(gs_tbg.AIRulingPhilosophyTemplate, "Economic");
+                aiPAD.objAITrustTemplate                 = sd.getTemplate(gs_tbg.AITrustTemplate, "Loyal");
+                aiPAD.objAIInternationalismTemplate      = sd.getTemplate(gs_tbg.AIInternationalismTemplate, "Isolationist");
+                aiPAD.objAIImperialismTemplate           = sd.getTemplate(gs_tbg.AIImperialismTemplate, "SelfDetermination");
+            }
+            else
+            {
+                // default
+                aiPAD.objAITradePolicyTemplate           = sd.getTemplate(gs_tbg.AITradePolicyTemplate, "DefaultTradePolicy");
+                aiPAD.objAIRulingPhilosophyTemplate      = sd.getTemplate(gs_tbg.AIRulingPhilosophyTemplate, "DefaultRulingPhilosophy");
+                aiPAD.objAITrustTemplate                 = sd.getTemplate(gs_tbg.AITrustTemplate, "DefaultTrustTemplate");
+                aiPAD.objAIInternationalismTemplate      = sd.getTemplate(gs_tbg.AIInternationalismTemplate, "DefaultInternationalismTemplate");
+                aiPAD.objAIImperialismTemplate           = sd.getTemplate(gs_tbg.AIImperialismTemplate, "DefaultImperialismTemplate");
+            }
+            
+            diplomacyAI.objAIRulingPhilosophyTemplate = aiPAD.objAIRulingPhilosophyTemplate;
+            
+        } // setInitialPolicies
+        
+        function notifyStartedControllingAvatar(game, avatar)
+        {
+            //log("notifying " + self + " that avatar " + avatar + " is being controlled in " + game);
+
+            var nation = avatar.getAttribValue("Nation").resolve(avatar);
+
+            // see if personality is specified (from diplomacyAI)
+            var diplomacyAI = self.objGameSysAIUtility.getDiplomacyAI(avatar,nation);
+            var objAIPersonalityTemplate = diplomacyAI.objAIPersonalityTemplate;
+            if (objAIPersonalityTemplate == null)
+            {
+                // use the default
+                objAIPersonalityTemplate = self.objDefaultAIPersonalityTemplate;
+                diplomacyAI.objAIPersonalityTemplate = objAIPersonalityTemplate;
+            }
+            
+            // see if military AI needs a strategy
+            var militaryAI = self.objGameSysAIUtility.getMilitaryAI(avatar,nation);
+            if (militaryAI.objStrategyTemplate == null)
+            {
+                militaryAI.objStrategyTemplate = self.objDefaultAIMilitaryStrategyTemplate;
+            }
+
+            // set up initial per avatar data values
+            var aiPAD = local.PADMakingHistoryAI.create({"objAvatar":avatar,"objNation":nation, "objParentAI":self });
+
+            aiPAD.nSeed = self.nSeedCount;
+            self.nSeedCount = (self.nSeedCount + 13);
+            
+            aiPAD.objAIPersonalityTemplate = objAIPersonalityTemplate;
+            
+            setInitialPolicies(diplomacyAI, aiPAD);
+            
+            aiPAD.bNeedToUpdateState = true;
+
+            aiPAD.bWantProductionAILog = false;
+            aiPAD.bWantResearchAILog = false;
+            aiPAD.bWantMilitaryAILog = false;
+            aiPAD.bWantTradeAILog = false;
+            aiPAD.bWantDiplomacyAILog = false;
+            aiPAD.bWantUnitCounts = false;
+            
+            //if (nation.strName == "UnitedStates")
+            //{
+            //    log("WARN(4): remove log spam!"); 
+            //    aiPAD.bWantProductionAILog = true;
+            //    aiPAD.bWantMilitaryAILog = true;
+            //}
+                       
+            //aiPAD.outputDebugInfo();
+            
+            avatar.attachData(aiPAD);
+            
+            if (!avatar.bReadyToStart)
+            {
+                //log("AI Avatar for " + nation.strName + " is ready to start");
+                avatar.sendAction(local.mlgame.GActUserReadyToStart.create({"objSession": avatar}));
+            }
+
+            // endTurn(avatar);
+        }
+
+        function notifyStoppedControllingAvatar(game, avatar)
+        {
+            //log("notifying " + self + " that avatar " + avatar + " is no longer being controlled in " + game);
+
+            var aiPAD = getPAD(avatar,local.PADMakingHistoryAI);
+            if (aiPAD != null)
+            {
+                aiPAD.objAvatar = null;
+                aiPAD.objNation = null;
+                aiPAD.objParentAI = null;
+                aiPAD.objAIPersonalityTemplate = null;
+                aiPAD.objAITradePolicyTemplate = null;
+                aiPAD.objAIRulingPhilosophyTemplate = null
+                aiPAD.objAITrustTemplate = null;
+                aiPAD.objAIInternationalismTemplate = null;
+                aiPAD.objAIImperialismTemplate = null;
+                aiPAD.objLastTurnChangeData = null;
+                aiPAD.objVitalRegions.clear();
+                aiPAD.objPlanDefense = null;
+                aiPAD.objPlanAirPatrolAndBombing = null;
+                aiPAD.objPlanNavyPatrolAndIntercept = null;
+                aiPAD.objPlanTradeInterdiction = null;
+            }
+
+            avatar.detachData(aiPAD);
+        }
+
+        function notifyAvatarConnected(game, avatar)
+        {
+            
+            if (!avatar.bReadyToStart)
+            {
+                //var nation = getNation(avatar);
+                //log("AI Avatar for " + nation.strName + " is ready to start");
+                avatar.sendAction(local.mlgame.GActUserReadyToStart.create({"objSession": avatar}));
+            }
+        
+            var tbgPAD = getPAD(avatar,gs_tbg.PADTurnBasedGame);
+            if (!tbgPAD.bEndedTurn)
+            {
+                // see if the game is started
+                if (game.getAttribValue("GameStarted"))
+                {
+                    //var nation = getNation(avatar);
+                    //log("AI takeover of " + nation.strName);
+                    log("DEBUG: ending turn due to AI takeover");
+                    endTurn(avatar);
+                }
+            }
+        }
+
+        function notifyAvatarDisconnected(game, avatar)
+        {
+            //var nation = getNation(avatar);
+            //log("human takeover of " + nation.strName);
+
+            var aiPAD;
+            try
+            {
+                aiPAD = getPAD(avatar,local.PADMakingHistoryAI);
+            }
+            catch(err)
+            {
+                aiPAD = null;
+            }
+
+            if (aiPAD != null)
+            {
+                // indicate we need to update state variables because we may have
+                // missed events while suspended or inactive
+                aiPAD.bNeedToUpdateState = true;
+            }
+        }
+
+        // utility function
+        // execute end turn action
+        function endTurn(avatar)
+        {
+            avatar.sendAction( gs_tbg.GActEndTurn.create({"objAvatar": avatar}) );
+        }
+
+        // utility function
+        // get nation associated with an avatar
+        function getNation(avatar)
+        {
+            return avatar.getAttribValue("Nation").resolve(avatar);
+        }
+
+        // returns the nation's capital city, if it has one
+        // otherwise returns any city.
+        // If the nation has no cities, it returns null
+        function getNationHomeCity(avatar,nation)
+        {
+            var homeCity = null;
+            var capCity = self.objGameSysCity.objCapitalCityNations.find({"refNation":nation});
+            if (capCity != null)
+            {
+                if (capCity.refCapitalCity != null)
+                {
+                    homeCity = capCity.refCapitalCity.resolve(avatar);
+                }
+            }
+            if (homeCity == null)
+            {
+                // gameplay guarantees a capital city if there are any cities
+            }
+            return homeCity;
+        }
+        
+        // returns the region of a nation's home city, if it has one,
+        // or any region if it has no cities.
+        // otherwise returns null
+        function getNationHomeRegion(avatar,nation)
+        {        
+            var homeRegion = null;
+            var homeCity = getNationHomeCity(avatar,nation);
+            if (homeCity != null)
+            {
+                homeRegion = homeCity.refRegion.resolve(avatar);
+            }
+            else
+            {
+                // just get any region we control
+                homeRegion = self.objGameSysRegion.objRegions.find({"refController":nation});
+            }
+            return homeRegion;
+        }
+
+        // return an arbitrary value indicating how big a force we create
+        // for a particular plan and region.  Used to limit arms races.
+        function getUnitGroupStrengthLimit()
+        {
+            return self.nUnitGroupStrengthLimit;
+        }
+
+        // public method
+        function getAttackForceStrengthLimit()
+        {
+            return getUnitGroupStrengthLimit();
+        }
+
+        // public method - callback by one of our plans when it
+        // is about to send troops into another nation.
+        function notifyAdvanceStarted(avatar,plan,foreignNation)
+        {
+            BeginTempContext();
+            gData.setAvatar(avatar);        
+            var result = gData.notifyAdvanceStarted(plan,foreignNation);
+            EndTempContext();
+            return result;
+        }
+
+        // utility function. Returns the avatar that controls nation,
+        // or null if this AI does not currently control the nation.
+        function getControllingAvatar(gameroot,nation)
+        {
+            var avatars = self.getAI().refControlledAvatars;
+            for(var index = 0; index < avatars.length; ++index)
+            {
+                avatarRef = avatars[index];
+                if(avatarRef == undefined)
+                    continue;
+
+                var avatar = avatarRef.resolve(gameroot);
+                var avatarNation = getNation(avatar);
+                if ( nation.equals(avatarNation) )
+                {
+                    if (!avatar.bConnected)
+                        return null;
+                    return avatar;
+                }
+            }
+            return null;
+        }
+
+        // public method - called by event handler
+        function handleGameLoaded(game)
+        {
+            BeginTempContext();
+        
+            var avatars = self.getAI().refControlledAvatars;
+            var numAvatars  = avatars.length;
+
+            for(var index = 0; index < numAvatars; ++index)
+            {
+                var avatarRef = avatars[index];
+                if(avatarRef == undefined)
+                    continue;
+
+                var avatar = avatarRef.resolve(game);
+                if (!avatar.bConnected)
+                    continue;
+
+                gData.setAvatar(avatar);
+                gData.pad.bNeedToUpdateState = true;
+                self.objMilitaryAIScript.clearVitalRegionAttacks(avatar);
+            }
+            
+            EndTempContext();
+        }
+
+        // public method - called by event handler
+        function handleTurnStarted(game,nTurn)
+        {
+            var d = new Date();
+        
+            BeginTempContext();
+
+            var avatars = self.getAI().refControlledAvatars;
+            var numAvatars  = avatars.length;
+
+            for(var index = 0; index < numAvatars; ++index)
+            {
+                var avatarRef = avatars[index];
+                if(avatarRef == undefined)
+                    continue;
+
+                var avatar = avatarRef.resolve(game);
+                if (!avatar.bConnected)
+                    continue;
+                    
+                var tbgPAD = getPAD(avatar,gs_tbg.PADTurnBasedGame);
+                if (tbgPAD.bEndedTurn)
+                    continue;
+
+                gData.setAvatar(avatar);
+                
+                gData.handleAvatarTurnStarted();
+                
+                // Note: endTurn is taken by gs_tbg by its EventAfterTurnStarted processing
+                //if (nTurn == -1)
+                //{
+                //    // Just got 'game started' event. 
+                //    endTurn(avatar); 
+                //}
+            }
+
+            EndTempContext();
+
+            //if (self.bWantAITimeDeltas)
+            //    self.outputAITimeDeltas();
+
+            var d2 = new Date();
+            var elapsedMS = d2.getTime() - d.getTime();
+            log("AI Turn processing time: " + elapsedMS + "(ms)");
+
+            //--------------- DEBUG CODE START -------------
+            //
+
+            var localAvatar = game.objAvatarSet.objAvatars.find({"strAvatarID" : "1" }); // local_client
+            if (localAvatar == null)
+                localAvatar = game.objAvatarSet.objAvatars.find({"strAvatarID" : "Player" });
+                
+            var enableOneTimeTests = ( (localAvatar != null) && self.objGameSysAIUtility.bAITestMode );
+
+            var bEndTurnAutomatically = false;
+            if (enableOneTimeTests)
+            {
+                if ( (nTurn >= 0) && (self.nTestAutoTurnStep > 0))
+                {
+                    bEndTurnAutomatically = ((nTurn % self.nTestAutoTurnStep) != 0 );
+                }
+
+                if ((nTurn % 50) == 0)
+                {
+                    // self.objGameSysUnit.dumpUnitTemplateCounts(game);
+                    log("\n\n");
+                    log("World factory and region output counts for turn " + nTurn);
+                    self.objGameSysCity.dumpFactoryOutputCounts(game);
+                    self.objGameSysRegion.dumpRegionOutputCounts(game);
+                    
+                    // world market
+                    var armsMarket = self.objGameSysTrade.objSupplyAndDemand.find({"tmplResource":self.objArmsTemplate});
+                    var metalsMarket = self.objGameSysTrade.objSupplyAndDemand.find({"tmplResource":self.objMetalsTemplate});
+                    var coalMarket = self.objGameSysTrade.objSupplyAndDemand.find({"tmplResource":self.objCoalTemplate});
+                    var oilMarket = self.objGameSysTrade.objSupplyAndDemand.find({"tmplResource":self.objOilTemplate});
+                    var foodMarket = self.objGameSysTrade.objSupplyAndDemand.find({"tmplResource":self.objFoodTemplate});
+                    
+                    log("World Market:    ARMS    METALS    COAL     OIL      FOOD");
+                    log("               -------- -------- -------- -------- --------");
+                    log("SUPPLY:       " + carlFormatNumber(armsMarket.nSupply,9) + carlFormatNumber(metalsMarket.nSupply,9) + carlFormatNumber(coalMarket.nSupply,9) + carlFormatNumber(oilMarket.nSupply,9) + carlFormatNumber(foodMarket.nSupply,9) );
+                    log("DEMAND:       " + carlFormatNumber(armsMarket.nDemand,9) + carlFormatNumber(metalsMarket.nDemand,9) + carlFormatNumber(coalMarket.nDemand,9) + carlFormatNumber(oilMarket.nDemand,9) + carlFormatNumber(foodMarket.nDemand,9) );
+                    log("\n\n");
+                    
+                    // dump all the city development counts
+                    for(var index = 0; index < numAvatars; ++index)
+                    {
+                        var avatarRef = avatars[index];
+                        if(avatarRef == undefined)
+                            continue;
+
+                        var avatar = avatarRef.resolve(game);
+                        if (!avatar.bConnected)
+                            continue;
+                            
+                        var nation = avatar.getAttribValue("Nation").resolve(avatar);
+                        if (nation == null)
+                            continue;
+                            
+                        var prodSim = self.objGameSysAIUtility.getAINationProductionSimulator(avatar,nation);
+                        prodSim.dumpCityDevelopmentState(avatar);
+                        
+                        self.objGameSysUnit.dumpUnitTemplateCounts(game,nation);
+                        
+                        self.objGameSysCity.dumpFactoryOutputCounts(game, nation, true);
+                        
+                        var money = nation.getMoney(avatar);
+                        var food   = gs_tbg.getNationResource(avatar,nation,self.objFoodTemplate);
+                        var arms   = gs_tbg.getNationResource(avatar,nation,self.objArmsTemplate);
+                        var metals = gs_tbg.getNationResource(avatar,nation,self.objMetalsTemplate);
+                        var coal   = gs_tbg.getNationResource(avatar,nation,self.objCoalTemplate);
+                        var oil    = gs_tbg.getNationResource(avatar,nation,self.objOilTemplate);
+                        var bombs  = gs_tbg.getNationResource(avatar,nation,self.objAtomicBombsTemplate);
+                        
+                        var strNationDescription = nation.strName;
+                        if (nation.strName != nation.strDisplayName)
+                        {
+                            strNationDescription += "(" + nation.strDisplayName + ")";
+                        }
+                        
+                        log(" ");
+                        log(strNationDescription + ": Money=" + money + ", nDebtStabilityModifier: " + nation.nDebtStabilityModifier);
+                        log("Unemployment: " + nation.getUnemploymentPercent() + "%, nMPUs=" + nation.nMPUs + ", nWorkingMPUs=" + nation.nWorkingMPUs);
+                        log("Population: " + nation.n64Population + ", nonNation=" + nation.getNonNationPercent() + "%, nonReligion=" + nation.getNonReligionPercent() + "%, nonCulture=" + nation.getNonCulturePercent() + "%");
+                        log("Ruling ideology strength: " + nation.getRulingIdeologyStrength() );
+                        log("nStability=" + nation.nStability);
+                            
+                        log("                 ARMS    METALS    COAL     OIL      FOOD");
+                        log("               -------- -------- -------- -------- --------");
+                        log("STOCKPILE:    " + carlFormatNumber(arms.nAmount,9) + carlFormatNumber(metals.nAmount,9) + carlFormatNumber(coal.nAmount,9) + carlFormatNumber(oil.nAmount,9) + carlFormatNumber(food.nAmount,9) );
+                        log("TARGET:       " + carlFormatNumber(arms.nDesiredStockpile,9) + carlFormatNumber(metals.nDesiredStockpile,9) + carlFormatNumber(coal.nDesiredStockpile,9) + carlFormatNumber(oil.nDesiredStockpile,9) + carlFormatNumber(food.nDesiredStockpile,9) );
+                        log("ORDER:        " + formatMarketOrder(arms.eAutotradeState,9) + formatMarketOrder(metals.eAutotradeState,9) + formatMarketOrder(coal.eAutotradeState,9) + formatMarketOrder(oil.eAutotradeState,9) + formatMarketOrder(food.eAutotradeState,9) + "\n\n");
+                    } // for avatars
+
+                    log(" ");
+                    log("Military strength percentiles, turn " + nTurn);
+                    self.objGameSysAIUtility.dumpActualMilitaryPercentiles(game);
+                    
+                } // if it is time to dump stats
+            }
+            
+            if (bEndTurnAutomatically)                
+            {
+                // var localNation = self.getNation(localAvatar);
+                log("WARN(4) - automatically ending turn " + nTurn + " for " + localAvatar.strIdentity);
+                localAvatar.sendAction( gs_tbg.GActEndTurn.create({"objAvatar": localAvatar}) );
+            }
+
+            if (enableOneTimeTests)
+            {
+                if (nTurn <= 2)
+                {
+                    //log(" ");
+                    //log("Military strength percentiles, turn " + nTurn);
+                    //self.objGameSysAIUtility.dumpActualMilitaryPercentiles(game);
+                
+                    //self.setupTestInvasion(game,"UnitedStates","Cuba",true);
+                    //self.enableMilitaryAILogForNation(game,"UnitedStates");
+                    //self.enableProductionAILogForNation(game,"Germany");
+                    //self.enableResearchAILogForNation(game,"Germany");
+                    //self.enableDiplomacyAILogForNation(game,"Germany");
+                    //var aiNationData = new AINationData(game,"UnitedKingdom");
+                    //if (aiNationData.pad != null)
+                    //{
+                    //    //aiNationData.pad.bWantUnitCounts = true;
+                    //    aiNationData.pad.bWantTradeAILog = true;
+                    //    self.objGameSysAIUtility.setNationTestFlag(aiNationData.nation,"WantRegionRevoltRiskLog",true);
+                    //}
+                    
+                } // if nTurn <= 2
+                                
+            } // if enableOneTimeTests
+
+            //
+            //--------------- DEBUG CODE END -------------
+
+        } // handleTurnStarted
+
+        // public method - called by event handler
+        function handleTradeAgreementProposed(game,tradeAgreement)
+        {
+            var proposingNation = tradeAgreement.refProposingNation.resolve(game);
+            var respondingNation;
+            if ( proposingNation.equals(tradeAgreement.refSourceNation.resolve(game)) )
+                respondingNation = tradeAgreement.refDestNation.resolve(game);
+            else
+                respondingNation = tradeAgreement.refSourceNation.resolve(game);
+            //log("responding nation = " + respondingNation);
+
+            var avatar = getControllingAvatar(game,respondingNation);
+            if (avatar != null)
+            {
+                BeginTempContext();
+                gData.setAvatar(avatar);
+                self.objTradeAI.considerTradeProposal(avatar,tradeAgreement);
+                EndTempContext();
+            }
+        }
+        
+        // public method - called by event handler
+        function handleMoneyTransferProposed(game,moneyTransfer)
+        {
+            var proposingNation = moneyTransfer.refProposingNation.resolve(game);
+            var respondingNation;
+            if ( proposingNation.equals(moneyTransfer.refSourceNation.resolve(game)) )
+                respondingNation = moneyTransfer.refDestNation.resolve(game);
+            else
+                respondingNation = moneyTransfer.refSourceNation.resolve(game);
+            //log("responding nation = " + respondingNation);
+
+            var avatar = getControllingAvatar(game,respondingNation);
+            if (avatar != null)
+            {
+                BeginTempContext();
+                gData.setAvatar(avatar);
+                self.objTradeAI.considerMoneyTransferProposal(avatar,moneyTransfer);
+                EndTempContext();
+            }
+        }
+        
+
+        // public method - called by event handler
+        function handleTreatyProposed(game,treaty)
+        {
+            var proposingNation = treaty.refProposingNation.resolve(game);
+            var respondingNation = treaty.refReceivingNation.resolve(game);
+            //log("responding nation = " + respondingNation);
+
+            var avatar = getControllingAvatar(game,respondingNation);
+            if (avatar != null)
+            {
+                BeginTempContext();
+                gData.setAvatar(avatar);
+                self.objDiplomacyAI.considerTreaty(avatar,treaty);
+                EndTempContext();
+            }
+        }
+
+        function handleTreatyRatified(game,treaty)
+        {
+            BeginTempContext();
+            var proposingNation = treaty.refProposingNation.resolve(game)
+            var receivingNation = treaty.refReceivingNation.resolve(game);
+
+            var avatar = getControllingAvatar(game,receivingNation);
+            if (avatar != null)
+            {
+                if (treaty.eType.equals(gs_tbg.TreatyType.PEACE))
+                {
+                    gData.setAvatar(avatar);
+                    gData.pad.bNeedToUpdateState = true;
+                    self.objMilitaryAIScript.handlePeace(avatar,proposingNation);
+                }
+            }
+
+            avatar = getControllingAvatar(game,proposingNation);
+            if (avatar != null)
+            {
+                if (treaty.eType.equals(gs_tbg.TreatyType.PEACE))
+                {
+                    gData.setAvatar(avatar);
+                    gData.pad.bNeedToUpdateState = true;
+                    self.objMilitaryAIScript.handlePeace(avatar,receivingNation);
+                }
+            }
+            EndTempContext();
+        }
+
+        function handleTreatyRejected(game,treaty)
+        {
+            // nothing to do here currently
+        }
+
+        function handleWarDeclared(game,event)
+        {
+            BeginTempContext();
+            var avatars = self.getAI().refControlledAvatars;
+            for(var index in avatars)
+            {
+                avatarRef = avatars[index];
+                var avatar = avatarRef.resolve(game);
+                if (!avatar.bConnected)
+                    continue;
+
+                gData.setAvatar(avatar);
+                gData.handleWarDeclared(event);
+            }
+            EndTempContext();
+        }
+
+        function handleEventRegionChangedController(game,event)
+        {
+            // get list of nations which control adjacent regions
+            var adjRegions = new Array();
+            var adjNations = new Object();
+            self.objGameSysMap.getAdjacentRegions(event.objRegion,adjRegions);
+            for (var r in adjRegions)
+            {
+                var adjRegion = adjRegions[r];
+                var refController = adjRegion.refController;
+                if (refController == null)
+                    continue;
+                var nation = refController.resolve(game);
+                if (nation.equals(event.objOldController) || nation.equals(event.objNewController) )
+                    continue;
+                adjNations[nation.strName] = nation;
+            }
+        
+            BeginTempContext();
+
+            var avatars = self.getAI().refControlledAvatars;
+            for(var index in avatars)
+            {
+                avatarRef = avatars[index];
+                var avatar = avatarRef.resolve(game);
+                if (!avatar.bConnected)
+                    continue;
+
+                gData.setAvatar(avatar);
+                gData.handleEventRegionChangedController(event);
+            }
+            
+            // go through adjacent nations
+            for (i in adjNations)
+            {
+                var nation = adjNations[i];
+                var avatar = getControllingAvatar(game,nation);
+                if (avatar != null)
+                {
+                    gData.handleAdjacentRegionChangedController(event.objNewController,event.objRegion);
+                }
+            }
+
+            EndTempContext();
+        }
+
+        function handleEventResearchProjectCompleted(game,event)
+        {
+            var nation = self.objGameSysNation.objNations.find({"refResearchProgram":event.objResearchProject.refResearchProgram});
+            //log("DEBUG: nation with research program named " + event.objResearchProject.refResearchProgram.resolve(game).strName + " = " + nation.strName);
+            var avatar = getControllingAvatar(game,nation);
+            if (avatar != null)
+            {
+                var topic = event.objResearchProject.tmplResearchTopic.resolve();
+                self.objProductionAI.handleResearchTopicCompleted(avatar,topic);
+            }
+        }
+
+        function handleEventDecisionPointCreated(game,event)
+        {
+            var humanAvatar = event.objDecisionPoint.objAvatar;
+            var nation = self.getNation(humanAvatar);
+            if (nation == null)
+            {
+                logWarn("ignoring decision point for avatar without nation:" + humanAvatar);
+                return;
+            }
+
+            log("DEBUG: Received EventDecisionPointCreated " + event.objDecisionPoint + " for " + nation.strName);
+
+            var avatar = getControllingAvatar(game,nation);
+            if (avatar != null)
+            {
+                if (event.objDecisionPoint.instanceOf(gs_tbg.DPNationDefeat))
+                {
+                    self.objDiplomacyAI.handle_DPNationDefeat(avatar,event.objDecisionPoint);
+                }
+                else if (event.objDecisionPoint.instanceOf(gs_tbg.DPUnitOrder))
+                {
+                    self.objDiplomacyAI.handle_DPUnitOrder(avatar,event.objDecisionPoint);
+                }
+                else if (event.objDecisionPoint.instanceOf(gs_tbg.DPRegionRevolt))
+                {
+                    self.objDiplomacyAI.handle_DPRegionRevolt(avatar,event.objDecisionPoint);
+                }
+                else
+                {
+                    log("WARN(4): need to handle " + event.objDecisionPoint);
+                }
+            }
+            else
+            {
+                log("DEBUG: EventDecisionPointCreated not for AI.");
+            }
+        }
+
+        function handleEventNationChangedStatus(game, event)
+        {
+            if (event.objOldStatus == null)
+                return; // ignore initial setting of status
+
+            var nation = event.objNation;
+            
+            if ( nation.objStatus.instanceOf(gs_tbg.NationStatusPuppet) )
+            {
+                var controllingNation = nation.objStatus.refController.resolve(game);
+                
+                var defeatedAvatar = getControllingAvatar(game, event.objNation);
+                var controllingAvatar = getControllingAvatar(game, controllingNation);
+                if ((defeatedAvatar != null) || (controllingAvatar != null))
+                {
+                    BeginTempContext();
+                    if (defeatedAvatar != null)
+                    {
+                        gData.setAvatar(defeatedAvatar);
+                        self.objMilitaryAIScript.handleDefeatBy(defeatedAvatar, controllingNation);
+                    }
+
+                    if (controllingAvatar != null)
+                    {
+                        gData.setAvatar(controllingAvatar);
+                        self.objMilitaryAIScript.handleVictoryOver(controllingAvatar, nation);
+                    }
+                    EndTempContext();
+                }
+            }
+            else if (nation.objStatus.instanceOf(gs_tbg.NationStatusIndependent))
+            {
+                // liberated - nothing to do here yet
+            }
+        }
+
+        // called when we get an EventAllianceLeft event due to NATION_STATUS_CHANGED
+        // event has an objAlliance but it can be NULL in some cases.
+        function handleEventAllianceMemberConquered(game,event)
+        {
+            BeginTempContext();
+
+            var nationLeaving = event.objNation;
+            for (var i in event.objRemainingMembers)
+            {
+                var nation = event.objRemainingMembers[i];
+                if (nation.equals(nationLeaving))
+                    continue;
+
+                var avatar = getControllingAvatar(game,nation);
+                if (avatar == null)
+                    continue;
+
+                gData.setAvatar(avatar);
+                gData.handleAllianceMemberConquered(nationLeaving);
+            }
+
+            EndTempContext();
+        }
+
+        function handleMilitaryAccessLost(game,nation,revokingNation)
+        {
+            var avatar = getControllingAvatar(game,nation);
+            if (avatar != null)
+            {
+                BeginTempContext();
+                gData.setAvatar(avatar);
+                gData.handleMilitaryAccessLost(revokingNation);
+                EndTempContext();
+            }
+        }
+        
+        function handleEventBombing(game,event)
+        {
+            var region = event.objUnitOrderBomb.getRegionOfTarget(game);
+            if (region.refController == null) // bombing in a sea regon
+                return;
+                
+            var nation = region.refController.resolve(game);
+            if (nation == null)
+                return; // doublecheck
+                
+            var avatar = getControllingAvatar(game,nation);
+            if (avatar != null)
+            {
+                BeginTempContext();
+                gData.setAvatar(avatar);
+                gData.handleRegionBombed(region);
+                EndTempContext();
+            }
+        }
+        
+        function handleEngagementBegan(game,event)
+        {
+            var nation = event.objDefender;
+            var avatar = getControllingAvatar(game,nation);
+            if (avatar != null)
+            {
+                BeginTempContext();
+                gData.setAvatar(avatar);
+                gData.handleEngagementBegan(event);
+                EndTempContext();
+            }
+        }
+
+        function triggerActionSeekResource(game,actionSeekResource)
+        {
+            var nation = actionSeekResource.refNation.resolve(game);
+            var avatar = getControllingAvatar(game,nation);
+            if (avatar != null)
+            {
+                BeginTempContext();
+                gData.setAvatar(avatar);
+
+                var resource = actionSeekResource.objResourceTemplate;
+                var bAllowConquest = actionSeekResource.bAllowConquest;
+                gData.triggerActionSeekResource(resource,bAllowConquest);
+
+                EndTempContext();
+            }
+        }
+        
+        function triggerActionChangeInternationalPosition(game,actionChangeInternationalPosition)
+        {
+            var nation = actionChangeInternationalPosition.refNation.resolve(game);
+            var avatar = getControllingAvatar(game,nation);
+            if (avatar != null)
+            {
+                BeginTempContext();
+                gData.setAvatar(avatar);                
+                gData.triggerActionChangeInternationalPosition(actionChangeInternationalPosition.objAIInternationalPositionTemplate);
+                EndTempContext();
+            }
+        }
+        
+        function triggerActionDeclareWar(game,actionDeclareWar)
+        {
+            var nation = actionDeclareWar.objNationTrigger.refNation.resolve(game);
+            var enemyNation = actionDeclareWar.objOffendingNation;
+            
+            log("DEBUG: triggerActionDeclareWar for " + nation.strName + ", objOffendingNation=" + enemyNation.strName); 
+            var avatar = getControllingAvatar(game,nation);
+            if (avatar != null)
+            {
+                BeginTempContext();
+                gData.setAvatar(avatar);
+                gData.triggerActionDeclareWar(enemyNation,actionDeclareWar.objNationTrigger.tmplRegionList);
+                EndTempContext();
+            }
+        }
+        
+        function triggerActionImposeEmbargo(game,actionImposeEmbargo)
+        {
+            var nation = actionImposeEmbargo.objNationTrigger.refNation.resolve(game);
+            var enemyNation = actionImposeEmbargo.objOffendingNation;
+            
+            log("DEBUG: triggerActionImposeEmbargo for " + nation.strName + ", objOffendingNation=" + enemyNation.strName); 
+            var avatar = getControllingAvatar(game,nation);
+            if (avatar != null)
+            {
+                BeginTempContext();
+                gData.setAvatar(avatar);
+                gData.triggerActionImposeEmbargo(enemyNation,actionImposeEmbargo.objNationTrigger.tmplRegionList);
+                EndTempContext();
+            }
+        }
+
+//        var gTimeDeltas;
+//
+//        function updateAITimeDeltas(deltaMilitary,deltaResearch,deltaProduction,deltaTrade,deltaDiplomacy,deltaAll)
+//        {
+//            if (gTimeDeltas == undefined)
+//            {
+//                gTimeDeltas = new Object();
+//                gTimeDeltas.deltaMilitary = deltaMilitary;
+//                gTimeDeltas.deltaResearch = deltaResearch;
+//                gTimeDeltas.deltaProduction = deltaProduction;
+//                gTimeDeltas.deltaTrade = deltaTrade;
+//                gTimeDeltas.deltaDiplomacy = deltaDiplomacy;
+//                gTimeDeltas.deltaAll = deltaAll;
+//            }
+//            else
+//            {
+//                gTimeDeltas.deltaMilitary += deltaMilitary;
+//                gTimeDeltas.deltaResearch += deltaResearch;
+//                gTimeDeltas.deltaProduction += deltaProduction;
+//                gTimeDeltas.deltaTrade += deltaTrade;
+//                gTimeDeltas.deltaDiplomacy += deltaDiplomacy;
+//                gTimeDeltas.deltaAll += deltaAll;
+//            }
+//        }
+//
+//        function outputAITimeDeltas()
+//        {
+//            if (gTimeDeltas != undefined)
+//            {
+//                log("MilitaryAI time(ms) = " + gTimeDeltas.deltaMilitary);
+//                log("ResearchAI time(ms) = " + gTimeDeltas.deltaResearch);
+//                log("ProductionAI time(ms) = " + gTimeDeltas.deltaProduction);
+//                log("TradeAI time(ms) = " + gTimeDeltas.deltaTrade);
+//                log("DiplomacyAI time(ms) = " + gTimeDeltas.deltaDiplomacy);
+//                log("Total update time(ms) = " + gTimeDeltas.deltaAll);
+//            }
+//        }
+        
+        // returns object with nation, avatar, pad, and militaryAI
+        // if it is an AI controlled nation. Otherwise the properties
+        // are set to null.
+        function AINationData(game,nationName)
+        {
+            this.nation = null;
+            this.avatar = null;
+            this.pad = null;
+            this.militaryAI = null;
+
+            var nationRef = new GORef(gs_tbg.Nation, nationName);
+            this.nation = nationRef.resolve(game);
+            if (this.nation == null)
+                return;
+                
+            this.avatar = self.getControllingAvatar(game,this.nation);
+            if (this.avatar == null)
+            {
+                this.nation = null;
+                return;
+            }
+                
+            this.pad = getPAD(this.avatar,PADMakingHistoryAI);
+            this.militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+        }
+        
+        function enableLogsForNation(game,nationName)
+        {
+            var aiNationData = new AINationData(game,nationName);
+            if (aiNationData.pad == null)
+                return;
+                
+            aiNationData.pad.bWantProductionAILog = true;
+            aiNationData.pad.bWantResearchAILog = true;
+            aiNationData.pad.bWantMilitaryAILog = true;
+            aiNationData.pad.bWantTradeAILog = true;
+            aiNationData.pad.bWantDiplomacyAILog = true;
+            
+            data.militaryAI.setWantDebugLog(true);
+        }
+
+        function enableProductionAILogForNation(game,nationName,bEnable)
+        {
+            if (bEnable == undefined)
+                bEnable = true;
+            
+            var aiNationData = new AINationData(game,nationName);
+            if (aiNationData.pad == null)
+                return;
+            
+            aiNationData.pad.bWantProductionAILog = bEnable;
+        }
+        
+        function enableMilitaryAILogForNation(game,nationName)
+        {
+            var aiNationData = new AINationData(game,nationName);
+            if (aiNationData.pad == null)
+                return;
+        
+            aiNationData.pad.bWantMilitaryAILog = true;
+            aiNationData.militaryAI.setWantDebugLog(true);
+        }
+        
+        function enableResearchAILogForNation(game,nationName)
+        {
+            var aiNationData = new AINationData(game,nationName);
+            if (aiNationData.pad == null)
+                return;
+        
+            aiNationData.pad.bWantResearchAILog = true;
+        }
+        
+        
+        function enableDiplomacyAILogForNation(game,nationName)
+        {
+            var aiNationData = new AINationData(game,nationName);
+            if (aiNationData.pad == null)
+                return;
+        
+            aiNationData.pad.bWantDiplomacyAILog  = true;
+        }       
+
+        // for development use.
+        function boostResourcesForNation(game,nationName)
+        {
+            var aiNationData = new AINationData(game,nationName);
+            if (aiNationData.pad == null)
+                return;
+                
+            aiNationData.pad.bTestBoostResources = true;
+        }
+
+        // for development use.
+        function setupTestInvasion(game,attackerName,victimName,boostAttacker)
+        {
+            if (boostAttacker == undefined)
+                boostAttacker = true;
+
+            // boost from nation's production and resources to test invasion logic faster
+            nationRef = new GORef(gs_tbg.Nation, attackerName);
+            nation = nationRef.resolve(game);
+            if (nation == null)
+                return;
+
+            var victimRef = new GORef(gs_tbg.Nation, victimName);
+            var victimNation = victimRef.resolve(game);
+            if (victimNation == null)
+                return;
+
+            var avatar = self.getControllingAvatar(game,nation);
+            if (avatar == null)
+                return;
+                
+            var militaryAI = self.objGameSysAIUtility.getMilitaryAI(avatar,nation);
+
+            log("DEBUG: setting up test invasion by " + attackerName + " of " + victimName);
+
+            var enemyDesignation = militaryAI.getEnemyDesignation(avatar,victimNation);
+            if (enemyDesignation == null)
+            {
+                enemyDesignation = militaryAI.createEnemyDesignation(avatar,victimNation);
+                enemyDesignation.eReasonForDesignation = gs_tbg.ReasonForDesignation.RFD_RANDOM_AGGRESSION;
+            }
+
+            // set max priority
+            enemyDesignation.fPriority = 1.0;
+
+            // make sure our scope is broad enough
+            enemyDesignation.bLandMassScopeAll = true;
+            enemyDesignation.bRegionScopeAll = true;
+
+            var pad = getPAD(avatar,PADMakingHistoryAI);
+            pad.bWantMilitaryAILog = true;
+            //pad.bWantProductionAILog = true;
+            //pad.bWantResearchAILog = true;
+            militaryAI.setWantDebugLog(true);
+
+            if (boostAttacker)
+            {
+                // boost attacker city IPUs
+                pad.bTestBoostResources = true;
+                var cities = new Array();
+                self.objGameSysCity.getControlledCities(avatar, nation, cities);
+                for (var c in cities)
+                {
+                    var city = cities[c];
+                    if (city.nIPUs < 30)
+                    {
+                        log("DEBUG: boosting " + city.strName + " nIPUs");
+                        for (var i=0; i<50; i++)
+                        {
+                            var cottageFactory = gs_tbg.CityBuilding.create({
+                                "tmplCityBuilding": sd.getTemplateRef(gs_tbg.CityBuildingTemplate, "CottageFactory"),
+                                "nHitPoints": 100
+                                });
+                            city.objCityBuildings.add(cottageFactory)
+                        }
+                    }
+                }
+                
+                var prodSim = self.objGameSysAIUtility.getAINationProductionSimulator(avatar,nation);
+                if (prodSim != null)
+                {
+                    prodSim.setDifficulty(avatar,11,victimNation); // It goes to 11...
+                }
+                
+            }
+        } // setupTestInvasion
+
+        // for development use
+        function forceMilitaryAccess(game,grantingNationName,receivingNationName,value)
+        {
+            grantingNationRef = new GORef(gs_tbg.Nation, grantingNationName);
+            grantingNation = grantingNationRef.resolve(game);
+            if (grantingNation == null)
+                return;
+
+            receivingNationRef = new GORef(gs_tbg.Nation, receivingNationName);
+            receivingNation = receivingNationRef.resolve(game);
+            if (receivingNation == null)
+                return;
+
+            self.objGameSysNationRelations.changeMilitaryAccess(game, grantingNation, receivingNation, value, "DevelopmentTest");
+        }
+        
+        function carlFormatNumber(n,desiredLength)
+        {
+            var s = n.toString();
+            var currentLength = s.length;
+            for (var i=currentLength; i < desiredLength; ++i)
+            {
+                s = ' ' + s;   
+            }
+            return s;
+        }
+        
+        function formatMarketOrder(eAutotradeState,desiredLength)
+        {
+            if (eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_DISABLED))
+                s ="NONE";
+            if (eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_ONLY))
+                s ="BUY";
+            else if (eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_SELL_ONLY))
+                s ="SELL";
+            else if (eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_AND_SELL))
+                s ="BUY/SELL";
+            else
+                s="??"
+                
+            var currentLength = s.length;
+            for (var i=currentLength; i < desiredLength; ++i)
+            {
+                s = ' ' + s;   
+            }
+            return s;
+        }
+        
+        // considers triggering a save due to an error condition
+        // (only if we're doing a test run)
+        function considerErrorSave(avatar)
+        {
+            if (self.objGameSysAIUtility.bAITestMode)
+            {
+                var gameSysSave = mlgame.getGameSysSave(mlgame.server);
+                if (gameSysSave.eLastAutoSaveResult.equals(mlgame.SaveResult.NOT_FINISHED) || gameSysSave.eLastSaveResult.equals(mlgame.SaveResult.NOT_FINISHED)) {
+                    logWarn("Save already in progress.  Not doing error save.");
+                    return;
+                }
+            
+                var turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+                if (turn == self.nLastErrorSaveTurn)
+                {
+                    logWarn("Already had an error save for turn " + turn);
+                    return;
+                }
+                
+                var strSaveName = "AIErrorSaveTurn" + turn;
+                log("DEBUG: Triggering error save to " + strSaveName);
+                
+                avatar.sendAction(mlgame.GActSaveGame.create({ strSaveName: strSaveName }));
+                self.nLastErrorSaveTurn = turn;
+            }
+        }
+        
+
+        ]]></script>
+
+
+        <!-- ********************* Event handlers ***************************** -->
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="mh2_common.EventTurnStarted" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleTurnStarted(game,event.nTurn);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="mh2_common.EventGameStarted" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    game.queueEvent(EventPostGameStarted.create()); // we need to let the other systems handle this first.
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="EventPostGameStarted" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    log("DEBUG: AI handling EventPostGameStarted.")
+                    def.handleTurnStarted(game,-1);
+                    
+                    // Need to manually queue EventAfterTurnStarted since there was no previous turn.
+                    var event = mh2_common.EventAfterTurnStarted.create({"nPhase":1});
+                    game.queueEvent(event);
+                                      
+                    // endTurn(avatar) for all the AI avatars
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="mlgame.EventGameLoaded" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    if (!def.objGameSysTurnBasedGame.objTurnBasedGame.bGameStarted)
+                    {
+                        log("DEBUG: Ignoring EventGameLoaded since game isn't started.");
+                        return;
+                    }
+                    
+                    log("DEBUG: AI handling EventGameLoaded.")
+                    
+                    // supply some default template values to old saves
+                    if (def.objGameSysAIUtility.objDefaultEconomicTemplate == null)
+                    {
+                        logWarn("setting missing DefaultEconomicStrategy");
+                        def.objGameSysAIUtility.objDefaultEconomicStrategyTemplate = sd.getTemplate(gs_tbg.AIEconomicStrategyTemplate, "DefaultEconomicStrategy");
+                    }
+                    
+                    // Make sure we have values for some new properties (in case we loaded an old save). 
+                    if (def.objGameSysNationRelations.tmplRegionStabilityLevels == null)
+                    {
+                        logWarn("setting missing tmplRegionStabilityLevels");
+                        def.objGameSysNationRelations.tmplRegionStabilityLevels = sd.getTemplateRef(mh2_common.RangedTemplateList, "RegionStabilityRangedTemplateList");
+                    }
+                    
+                    def.objGameSysNationRelations.objWarDeclarationEffectsTemplate = null; // deprecated
+                    
+                    if (def.objGameSysNationRelations.objDiplomaticEffectsTemplate == null)
+                    {
+                        logWarn("setting missing objDiplomaticEffectsTemplate");
+                        def.objGameSysNationRelations.objDiplomaticEffectsTemplate = sd.getTemplate(gs_tbg.DiplomaticEffectsTemplate, "DefaultDiplomaticEffectsTemplate");
+                    }
+                    
+                    if (def.objGameSysAIUtility.objDifficultyTemplate == null)
+                    {
+                        logWarn("setting missing objDifficultyTemplate");
+                        def.objGameSysAIUtility.objDifficultyTemplate = sd.getTemplate(gs_tbg.DifficultyTemplate, "DiffTemplate");
+                    }
+                    
+                    var dp = gs_tbg.getGameSysDecisionPoint(game);
+                    if (dp.objDecisionPointStrings.fstrTextRegionRevolt == null)
+                    {
+                        logWarn("setting missing objDecisionPointStrings values");
+			            dp.objDecisionPointStrings.fstrTextRegionRevolt = locale.FSID.DecisionPoint.Text.RegionRevolt;
+                        dp.objDecisionPointStrings.fstrAnswerRegionRevoltAccept = locale.FSID.DecisionPoint.Answer.RegionRevoltAccept;
+                        dp.objDecisionPointStrings.fstrAnswerRegionRevoltDecline = locale.FSID.DecisionPoint.Answer.RegionRevoltDecline;
+                    }
+                    
+                    def.handleGameLoaded(game);
+                    
+                    def.handleTurnStarted(game,-1);
+                    
+                    // Need to manually queue EventAfterTurnStarted since there was no previous turn.
+                    var event = mh2_common.EventAfterTurnStarted.create({"nPhase":1});
+                    game.queueEvent(event);
+                                      
+                    // endTurn(avatar) for all the AI avatars
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventTradeAgreementProposed" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleTradeAgreementProposed(game,event.objTradeAgreement);
+                }
+            ]]></script>
+        </object>
+        
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventMoneyTransferProposed" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleMoneyTransferProposed(game,event.objMoneyTransfer);
+                }
+            ]]></script>
+        </object>
+        
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventTreatyProposed" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleTreatyProposed(game,event.objTreaty);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventTreatyRatified" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    if (!event.objTreaty.eType.equals(gs_tbg.TreatyType.MILITARY_ACCESS)) // granting of military access handled elsewhere (don't do it twice) 
+                        def.objGameSysNationRelations.handleDiplomaticEffectsOfTreaties(event, game);
+                    
+                    def.handleTreatyRatified(game,event.objTreaty);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventTreatyRejected" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.objGameSysNationRelations.handleDiplomaticEffectsOfTreaties(event, game);
+
+                    def.handleTreatyRejected(game,event.objTreaty);
+                }
+            ]]></script>
+        </object>
+        
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventEmbargoPlaced" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    log("DEBUG: Embargo placed by " + event.objEmbargo.refInitiatingNation.resolve(game).strDisplayName + " on " + event.objEmbargo.refEmbargoedNation.resolve(game).strDisplayName);
+                    def.objGameSysNationRelations.handleDiplomaticEffectsOfEmbargos(event, game);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventEmbargoLifted" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    log("DEBUG: Embargo by " + event.objEmbargo.refInitiatingNation.resolve(game).strDisplayName + " on " + event.objEmbargo.refEmbargoedNation.resolve(game).strDisplayName + " lifted.");
+                    def.objGameSysNationRelations.handleDiplomaticEffectsOfEmbargos(event, game);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventMilitaryAccessChanged" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    if (event.eReason.equals(gs_tbg.AccessChangeReason.VOLUNTARY))
+                    {
+                        def.objGameSysNationRelations.handleDiplomaticEffectsOfTreaties(event, game);
+                    }
+                    
+                    if (event.bGrant == false)
+                    {
+                        def.handleMilitaryAccessLost(game, event.objReceivingNation, event.objGrantingNation);
+                    }
+                }
+            ]]></script>
+        </object>
+        
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventWarDeclared" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleWarDeclared(game,event);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="strName" value="EventRegionChangedController" />
+            <property name="otEventType" value="gs_tbg.EventRegionChangedController" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleEventRegionChangedController(game,event);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventResearchProjectCompleted"/>
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleEventResearchProjectCompleted(game,event);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="strName" value="EventAITriggerFired" />
+            <property name="otEventType" value="gs_tbg.EventAITriggerFired" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    // fireAction for this ai system
+                    event.objAction.fireAction(game,def);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="strName" value="EventDecisionPointCreated" />
+            <property name="otEventType" value="gs_tbg.EventDecisionPointCreated" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleEventDecisionPointCreated(game, event);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="strName" value="EventNationChangedStatus" />
+            <property name="otEventType" value="gs_tbg.EventNationChangedStatus" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleEventNationChangedStatus(game, event);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventAllianceLeft" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    if (event.eWhy.equals(gs_tbg.LeaveAllianceReason.NATION_STATUS_CHANGED))
+                        def.handleEventAllianceMemberConquered(game, event);
+                }
+            ]]></script>
+        </object>
+
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventBombing" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleEventBombing(game,event);
+                }
+            ]]></script>
+        </object>
+        
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="gs_tbg.EventEngagementBegan" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    def.handleEngagementBegan(game,event);
+                }
+            ]]></script>
+        </object>
+        
+
+    </objectDef>
+    <!-- end of MHAISysScript -->
+
+    <!-- ********************* callbacks ***************************** -->
+    <objectDef type="CallbackEventRegionChangedController" superType="mh2_common.Callback" >
+        <propertyDef name="objAvatar" type="mlgame.Avatar"/>
+        <propertyDef name="objAI" type="MHAISysScript"/>
+        <propertyDef name="objEvent" type="gs_tbg.EventRegionChangedController"/>
+        <script type="application/javascript"><![CDATA[
+        function callback(plan)
+        {
+            if (plan.eStatus.equals(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE))
+            {
+                if (plan.handleEventRegionChangedController != null)
+                {
+                    plan.handleEventRegionChangedController(self.objAvatar,self.objEvent);
+                }
+            }
+        }
+        ]]></script>
+    </objectDef>
+
+    <objectDef type="EventPostGameStarted" superType="mlevent.Event">
+
+    </objectDef>
+
+</locust>

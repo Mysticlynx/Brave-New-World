@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GActAddWorkOrder" class="CMLOGActAddWorkOrder" superType="mlgame.GameAction">
+        <propertyDef name="refCity" type="GORef" restriction="City"/>
+        <propertyDef name="tmplFactoryOutput" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+        <propertyDef name="nPriority" type="int" default="0" desc="Desired priority of new work order.  Default of 0 places it at the end of the queue."/>
+        <propertyDef name="bRepeating" type="bool" default="false" desc="Whether or not new work order should repeat."/>
+        <propertyDef name="objAIDesiredFactoryOutput" type="Object" restriction="FactoryOutputTemplate" desc="For AI use"/>
+	</objectDef>
+
+	<objectDef type="GActRemoveWorkOrder" class="CMLOGActRemoveWorkOrder" superType="mlgame.GameAction">
+        <propertyDef name="refCity" type="GORef" restriction="City"/>
+        <propertyDef name="objWorkOrder" type="WorkOrder"/>
+	</objectDef>
+
+	<objectDef type="GActSetWorkOrderPriority" class="CMLOGActSetWorkOrderPriority" superType="mlgame.GameAction">
+        <propertyDef name="refCity" type="GORef" restriction="City"/>
+        <propertyDef name="objWorkOrder" type="WorkOrder"/>
+        <propertyDef name="nPriority" type="int"/>
+	</objectDef>
+
+	<objectDef type="GActSetResearchProject" class="CMLOGActSetResearchProject" superType="mlgame.GameAction">
+        <propertyDef name="refCity" type="GORef" restriction="City"/>
+        <propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="ResearchTopicTemplate"/>
+	</objectDef>
+
+	<objectDef type="GActClearResearchProject" class="CMLOGActClearResearchProject" superType="mlgame.GameAction">
+        <propertyDef name="refCity" type="GORef" restriction="City"/>
+	</objectDef>
+
+	<objectDef type="GActDismantleCityBuilding" class="CMLOGActDismantleCityBuilding" superType="mlgame.GameAction">
+        <propertyDef name="objCityBuilding" type="Object" restriction="CityBuilding"/>
+	</objectDef>
+
+	<objectDef type="GActDismantleResearchBuilding" class="CMLOGActDismantleResearchBuilding" superType="mlgame.GameAction">
+        <propertyDef name="refCity" type="GORef" restriction="City"/>
+        <propertyDef name="objResearchBuilding" type="Object" restriction="ResearchCenterBuilding"/>
+	</objectDef>
+
+	<objectDef type="GActSetWorkOrderRepeating" superType="mlgame.GActMethod">
+		<propertyDef name="objWorkOrder" type="WorkOrder"/>
+
+		<script type="application/javascript"> <![CDATA[
+
+		function execute()
+		{
+			log("Set Work Order Repeating");
+			log("objGame " + self.objGame);
+			log("objWorkOrder" + self.objWorkOrder);
+
+			getGameSysCity(self.objGame).setWorkOrderRepeating(self.objWorkOrder);
+		}
+		]]></script>
+	</objectDef>
+
+	<objectDef type="GActHighMoraleIPUBonus" superType="mlgame.GActMethod">
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="nIPUBonus" type="int"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				self.objGame.sendEvent(EventHighMoraleIPUBonus.create({"objNation": self.objNation}));
+				var cities = getNationCities(self.objGame, self.objNation);
+				for (var j in cities)
+				{
+					var city = cities[j];
+					city.adjustWorkOrderIPUs(self.objGame,self.nIPUBonus);
+				}
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActLowMoraleIPUPenalty" superType="mlgame.GActMethod">
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="nIPUPenalty" type="int"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				self.objGame.sendEvent(EventLowMoraleIPUPenalty.create({"objNation": self.objNation}));
+				var cities = getNationCities(self.objGame, self.objNation);
+				for (var j in cities)
+				{
+					var city = cities[j];
+					city.adjustWorkOrderIPUs(self.objGame,-self.nIPUPenalty);
+				}
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActLowStabilityIPUPenalty" superType="mlgame.GActMethod">
+		<propertyDef name="objCity" type="City"/>
+		<propertyDef name="nIPUPenalty" type="int"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				self.objGame.sendEvent(EventLowStabilityIPUPenalty.create({"objCity": self.objCity}));
+				self.objCity.adjustWorkOrderIPUs(self.objGame,-self.nIPUPenalty)
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActResearchBreakthrough" superType="mlgame.GActMethod">
+		<propertyDef name="objCity" type="City"/>
+		<propertyDef name="objResearchProject" type="ResearchProject"/>
+		<propertyDef name="nPointsToAdd" type="int"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				// send the event first before adjusting research points, so it shows up before a possible 'research complete' event
+				self.objGame.sendEvent(EventResearchBreakthrough.create({"objCity": self.objCity,"tmplResearchTopic": self.objResearchProject.tmplResearchTopic}));
+				self.objCity.objController.adjustResearchProjectPoints(self.objGame,self.objResearchProject,self.nPointsToAdd);
+			}
+		]]>	</script>
+	</objectDef>
+
+	<objectDef type="GActResearchSetback" superType="mlgame.GActMethod">
+		<propertyDef name="objCity" type="City"/>
+		<propertyDef name="objResearchProject" type="ResearchProject"/>
+		<propertyDef name="nPointsToSubtract" type="int"/>
+		<script type="application/javascript"> <![CDATA[
+			function execute()
+			{
+				self.objGame.sendEvent(EventResearchSetback.create({"objCity": self.objCity,"tmplResearchTopic": self.objResearchProject.tmplResearchTopic}));
+				self.objCity.objController.adjustResearchProjectPoints(self.objGame,self.objResearchProject,-self.nPointsToSubtract);
+			}
+		]]>	</script>
+	</objectDef>
+	
+	<objectDef type="GActRenameCity" superType="mlgame.GActMethod" >
+		<propertyDef name="refCity" type="GORef" restriction="City" />
+        <propertyDef name="strNewName" type="String"/>
+		<script type="application/javascript"><![CDATA[
+			function execute()
+			 {
+			    if (self.strNewName == "") 
+			        return;
+			        
+                city = self.refCity.resolve(self.objGame);
+                if (city == null)
+                    return;
+                    
+                if (city.strDisplayName == self.strNewName)
+                    return;
+                    
+                var alreadyUsed = getAllCities(self.objGame).find({"strDisplayName":self.strNewName});
+                if (alreadyUsed != null)
+                {
+                    logError("Can't rename " + city.strDisplayName + " to " + self.strNewName + " because the name is already in use.");
+                    return;
+                }
+                
+                city.strDisplayName = self.strNewName;                    
+			}
+		]]></script>
+	</objectDef>
+	
+</locust>

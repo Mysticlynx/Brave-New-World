@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Base Tempaltes -->
+
+	<template type="CategoryTemplate" name="Diplomatic"> <!-- Deprecated -->
+		<property name="strDisplayName" value="Diplomatic"/>
+	</template>
+	<template type="CategoryTemplate" name="National"> <!-- Deprecated -->
+		<property name="strDisplayName" value="National"/>
+	</template>
+	<template type="CategoryTemplate" name="Production"> <!-- Deprecated -->
+		<property name="strDisplayName" value="Production"/>
+	</template>
+	<template type="CategoryTemplate" name="Combat"> <!-- Deprecated -->
+		<property name="strDisplayName" value="Combat"/>
+	</template>
+	<template type="CategoryTemplate" name="Espionage"> <!-- Deprecated -->
+		<property name="strDisplayName" value="Espionage"/>
+	</template>
+	<template type="CategoryTemplate" name="Trade"> <!-- Deprecated -->
+		<property name="strDisplayName" value="Trade"/>
+	</template>
+
+    <template type="NotificationTemplate" name="NotificationTemplateEngagement">
+        <property name="strDisplayName" from="locale.SID.Notification.Engagement" />
+    </template>
+    <template type="NotificationTemplate" name="NotificationTemplateDiplomatic">
+        <property name="strDisplayName" from="locale.SID.Notification.Diplomatic" />
+    </template>
+    <template type="NotificationTemplate" name="NotificationTemplateGovernment">
+        <property name="strDisplayName" from="locale.SID.Notification.Government" />
+    </template>
+    <template type="NotificationTemplate" name="NotificationTemplateTrade">
+        <property name="strDisplayName" from="locale.SID.Notification.Trade" />
+    </template>
+    <template type="NotificationTemplate" name="NotificationTemplateRegion">
+        <property name="strDisplayName" from="locale.SID.Notification.Region" />
+    </template>
+    <template type="NotificationTemplate" name="NotificationTemplateCity">
+        <property name="strDisplayName" from="locale.SID.Notification.City" />
+    </template>
+    <template type="NotificationTemplate" name="NotificationTemplateResearch">
+        <property name="strDisplayName" from="locale.SID.Notification.Research" />
+    </template>
+    <template type="NotificationTemplate" name="NotificationTemplateStability">
+        <property name="strDisplayName" from="locale.SID.Notification.Stability" />
+    </template>
+
+
+    <!-- Engagement -->
+	<template name="NotificationTemplateEngagementBegan" type="NotificationTemplateEngagement" >
+        <property name="strDisplayName" from="locale.SID.Notification.EngagementBegan" />
+	</template>
+	<template name="NotificationTemplateEngagementEnded" type="NotificationTemplateEngagement" >
+        <property name="strDisplayName" from="locale.SID.Notification.EngagementEnded" />
+	</template>
+	<template name="NotificationTemplateEngagementUnitDamaged" type="NotificationTemplateEngagement" >
+        <property name="strDisplayName" from="locale.SID.Notification.UnitDamaged" />
+	</template>
+	<template name="NotificationTemplateEngagementUnitDestroyed" type="NotificationTemplateEngagement" >
+        <property name="strDisplayName" from="locale.SID.Notification.UnitDestroyed" />
+	</template>
+	<template name="NotificationTemplateEngagementUnitRepaired" type="NotificationTemplateEngagement" >
+        <property name="strDisplayName" from="locale.SID.Notification.UnitRepaired" />
+	</template>
+	<template name="NotificationTemplateEngagementUnitGroupCommandChanged" type="NotificationTemplateEngagement" >
+        <property name="strDisplayName" from="locale.SID.Notification.UnitGroupCommandChanged" />
+	</template>
+	<template name="NotificationTemplateEngagementUnitExperienceChanged" type="NotificationTemplateEngagement" >
+        <property name="strDisplayName" from="locale.SID.Notification.UnitExperienceChanged" />
+	</template>
+	<template name="NotificationTemplateEngagementGenCityNuked" type="NotificationTemplateEngagement" >
+        <property name="strDisplayName" from="locale.SID.Notification.CityNuked" />
+	</template>
+	<template name="NotificationTemplateCollateralDamage" type="NotificationTemplateEngagement" >
+        <property name="strDisplayName" from="locale.SID.Notification.CollateralDamage" />
+	</template>
+
+    <!-- City -->
+	<template name="NotificationTemplateCityUnitProduced" type="NotificationTemplateCity" >
+        <property name="strDisplayName" from="locale.SID.Notification.CityUnitProduced" />
+	</template>
+	<template name="NotificationTemplateCityFactoryOutputProduced" type="NotificationTemplateCity" >
+        <property name="strDisplayName" from="locale.SID.Notification.CityFactoryOutputProduced" />
+	</template>
+	<template name="NotificationTemplateCityGenCity" type="NotificationTemplateCity" >
+        <property name="strDisplayName" from="locale.SID.Notification.CityGenCity" />
+	</template>
+	<template name="NotificationTemplateCityGenCityBuildingDestroyed" type="NotificationTemplateCity" >
+        <property name="strDisplayName" from="locale.SID.Notification.CityBuildingDestroyed" />
+	</template>
+	<template name="NotificationTemplateCityGenResearchCenterBuildingDestroyed" type="NotificationTemplateCity" >
+        <property name="strDisplayName" from="locale.SID.Notification.ResearchCenterBuildingDestroyed" />
+	</template>
+
+    <!-- Trade -->
+	<template name="NotificationTemplateTradeAgreementAccepted" type="NotificationTemplateTrade" >
+        <property name="strDisplayName" from="locale.SID.Notification.TradeAgreementAccepted" />
+	</template>
+	<template name="NotificationTemplateTradeAgreementCancelled" type="NotificationTemplateTrade" >
+        <property name="strDisplayName" from="locale.SID.Notification.TradeAgreementCancelled" />
+	</template>
+	<template name="NotificationTemplateTradeMoneyTransferAccepted" type="NotificationTemplateTrade" >
+        <property name="strDisplayName" from="locale.SID.Notification.TradeMoneyTransferAccepted" />
+	</template>
+	<template name="NotificationTemplateTradeMoneyTransferCancelled" type="NotificationTemplateTrade" >
+        <property name="strDisplayName" from="locale.SID.Notification.TradeMoneyTransferCancelled" />
+	</template>
+	<template name="NotificationTemplateTradeMoneyTransferOccurred" type="NotificationTemplateTrade" >
+        <property name="strDisplayName" from="locale.SID.Notification.MoneyTransferOccurred" />
+	</template>
+	<template name="NotificationTemplateTradeOccurred" type="NotificationTemplateTrade" >
+        <property name="strDisplayName" from="locale.SID.Notification.TradeOccurred" />
+	</template>
+
+    <!-- Diplomatic -->
+	<template name="NotificationTemplateDiplomaticWarDeclared" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticWarDeclared" />
+	</template>
+	<template name="NotificationTemplateDiplomaticAllianceCreated" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticAllianceCreated" />
+	</template>
+	<template name="NotificationTemplateDiplomaticAllianceJoined" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticAllianceJoined" />
+	</template>
+	<template name="NotificationTemplateDiplomaticAllianceLeft" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticAllianceLeft" />
+	</template>
+	<template name="NotificationTemplateDiplomaticNationDefeated" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticNationDefeated" />
+	</template>
+	<template name="NotificationTemplateDiplomaticMilitaryAccessChanged" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticMilitaryAccessChanged" />
+	</template>
+	<template name="NotificationTemplateDiplomaticEmbargoPlaced" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticEmbargoPlaced" />
+	</template>
+	<template name="NotificationTemplateDiplomaticEmbargoLifted" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticEmbargoLifted" />
+	</template>
+	<template name="NotificationTemplateDiplomaticGenRegionSeceded" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticGenRegionSeceded" />
+	</template>
+	<template name="NotificationTemplateDiplomaticGenCivilWarStarted" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticGenCivilWarStarted" />
+	</template>
+	<template name="NotificationTemplateDiplomaticGenNationLiberated" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticGenNationLiberated" />
+	</template>
+	<template name="NotificationTemplateDiplomaticGenIndependentNationFounded" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticGenIndependentNationFounded" />
+	</template>
+	<template name="NotificationTemplateDiplomaticGenResearchStolen" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticGenResearchStolen" />
+	</template>
+	<template name="NotificationTemplateDiplomaticGenOppositionSupportConcluded" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticGenOppositionSupportConcluded" />
+	</template>
+	<template name="NotificationTemplateDiplomaticGenPoliticalSupportConcluded" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticGenPoliticalSupportConcluded" />
+	</template>
+	<template name="NotificationTemplateDiplomaticGenRegionSurveillanceConcluded" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticGenRegionSurveillanceConcluded" />
+	</template>
+	<template name="NotificationTemplateDiplomaticNationAnnexed" type="NotificationTemplateDiplomatic" >
+        <property name="strDisplayName" from="locale.SID.Notification.DiplomaticNationAnnexed" />
+	</template>
+
+    <!-- Region -->
+	<template name="NotificationTemplateRegionOutputProduced" type="NotificationTemplateRegion" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionOutputProduced" />
+	</template>
+	<template name="NotificationTemplateRegionGenRegionResource" type="NotificationTemplateRegion" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionGenRegionResource" />
+	</template>
+	<template name="NotificationTemplateRegionGenRegion" type="NotificationTemplateRegion" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionGenRegion" />
+	</template>
+	<template name="NotificationTemplateRegionGenAirbaseDestroyed" type="NotificationTemplateRegion" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionGenAirbaseDestroyed" />
+	</template>
+	<template name="NotificationTemplateRegionGenAADefenseDestroyed" type="NotificationTemplateRegion" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionGenAADefenseDestroyed" />
+	</template>
+	<template name="NotificationTemplateRegionGenCoastalDefenseDestroyed" type="NotificationTemplateRegion" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionGenCoastalDefenseDestroyed" />
+	</template>
+	<template name="NotificationTemplateRegionGenFortificationDestroyed" type="NotificationTemplateRegion" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionGenFortificationDestroyed" />
+	</template>
+	<template name="NotificationTemplateRegionGenTransportationDestroyed" type="NotificationTemplateRegion" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionGenTransportationDestroyed" />
+	</template>
+	<template name="NotificationTemplateRegionGenResourceImprovementDestroyed" type="NotificationTemplateRegion" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionGenResourceImprovementDestroyed" />
+	</template>
+	<template name="NotificationTemplateRegionGenRegionSabotaged" type="NotificationTemplateRegion" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionGenRegionSabotaged" />
+	</template>
+	<template name="NotificationTemplateRegionDamaged" type="NotificationTemplateEngagement" >
+        <property name="strDisplayName" from="locale.SID.Notification.RegionDamaged" />
+	</template>
+
+
+    <!-- Stability -->
+	<template name="NotificationTemplateStabilityUnitMoraleChanged" type="NotificationTemplateStability" >
+        <property name="strDisplayName" from="locale.SID.Notification.StabilityUnitMoraleChanged" />
+	</template>
+
+	<template name="NotificationTemplateStabilityNationChanged" type="NotificationTemplateStability" >
+        <property name="strDisplayName" from="locale.SID.Notification.StabilityNationChanged" />
+	</template>
+
+    <!-- Research -->
+    <template name="NotificationTemplateResearchProjectCompleted" type="NotificationTemplateResearch" >
+        <property name="strDisplayName" from="locale.SID.Notification.ResearchProjectCompleted" />
+	</template>
+    <template name="NotificationTemplateResearchGenNationResearchTopic" type="NotificationTemplateResearch" >
+        <property name="strDisplayName" from="locale.SID.Notification.ResearchGenNationResearchTopic" />
+	</template>
+    <template name="NotificationTemplateResearchGenFactoryOutputProduced" type="NotificationTemplateResearch" >
+        <property name="strDisplayName" from="locale.SID.Notification.ResearchGenFactoryOutputProduced" />
+	</template>
+
+    <!-- Government -->
+	<template name="NotificationTemplateGovernmentGenNationRevolt" type="NotificationTemplateGovernment" >
+        <property name="strDisplayName" from="locale.SID.Notification.GovernmentGenNationRevolt" />
+	</template>
+	<template name="NotificationTemplateGovernmentGenNation" type="NotificationTemplateGovernment" >
+        <property name="strDisplayName" from="locale.SID.Notification.GovernmentGenNation" />
+	</template>
+	<template name="NotificationTemplateGovernmentGenInternalSupportConcluded" type="NotificationTemplateGovernment" >
+        <property name="strDisplayName" from="locale.SID.Notification.GovernmentGenInternalSupportConcluded" />
+	</template>
+	<template name="NotificationTemplateGovernmentGenNationIdeology" type="NotificationTemplateGovernment" >
+        <property name="strDisplayName" from="locale.SID.Notification.GovernmentGenNationIdeology" />
+	</template>
+  <template name="NotificationTemplateStabilityGenRegionChangedController" type="NotificationTemplateGovernment" >
+    <property name="strDisplayName" from="locale.SID.Notification.StabilityGenRegionChangedController" />
+  </template>
+  
+</locust>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- AIDiplomaticRelations templates -->
+	<template type="gs_tbg.AIDiplomaticRelationsTemplate" name="Terrible">
+        <property name="bAllowAnyTrade" value="false"/>		
+        <property name="bAllowArmsTrade" value="false"/>
+        <property name="bAllowAlliance" value="false"/>
+		<property name="bAllowUnprovokedAttack" value="true"/>
+		<property name="nUnprovokedAttackWeightNeeded" value="-100"/>
+        <property name="eDefaultTone" value="Unfriendly"/>
+		<property name="fBaseThreatRating" value="0.75"/>
+    </template>
+	
+	<template type="gs_tbg.AIDiplomaticRelationsTemplate" name="Poor">
+        <property name="bAllowAnyTrade" value="true"/>		
+        <property name="bAllowArmsTrade" value="true"/>		
+        <property name="bAllowAlliance" value="true"/>
+		<property name="bAllowUnprovokedAttack" value="true"/>
+		<property name="nUnprovokedAttackWeightNeeded" value="-50"/>
+        <property name="eDefaultTone" value="NoTone"/>
+		<property name="fBaseThreatRating" value="0.5"/>
+    </template>
+
+	<template type="gs_tbg.AIDiplomaticRelationsTemplate" name="Strained">
+        <property name="bAllowAnyTrade" value="true"/>		
+        <property name="bAllowArmsTrade" value="true"/>		
+        <property name="bAllowAlliance" value="true"/>
+		<property name="bAllowUnprovokedAttack" value="true"/>
+		<property name="nUnprovokedAttackWeightNeeded" value="0"/>
+        <property name="eDefaultTone" value="NoTone"/>
+		<property name="fBaseThreatRating" value="0.25"/>
+    </template>
+
+	<template type="gs_tbg.AIDiplomaticRelationsTemplate" name="Strong">
+        <property name="bAllowAnyTrade" value="true"/>		
+        <property name="bAllowArmsTrade" value="true"/>
+        <property name="bAllowAlliance" value="true"/>
+		<property name="bAllowUnprovokedAttack" value="false"/>
+		<property name="nUnprovokedAttackWeightNeeded" value="50"/>
+        <property name="eDefaultTone" value="Friendly"/>
+		<property name="fBaseThreatRating" value="0.1"/>
+    </template>
+	
+	<template type="gs_tbg.AIDiplomaticRelationsTemplate" name="VeryStrong">
+        <property name="bAllowAnyTrade" value="true"/>		
+        <property name="bAllowArmsTrade" value="true"/>		
+        <property name="bAllowAlliance" value="true"/>
+		<property name="bAllowUnprovokedAttack" value="false"/>
+		<property name="nUnprovokedAttackWeightNeeded" value="100"/>
+        <property name="eDefaultTone" value="Friendly"/>
+		<property name="fBaseThreatRating" value="0.0"/>
+    </template>
+	
+	<!-- AI specific data per diplomatic level. These may or may not parallel 
+	     DiplomaticRelationsRangedTemplateList but they do use the same numeric value source. -->
+	<template type="mh2_common.RangedTemplateList" name="AIDefaultDiplomaticLevels">
+		<property name="otTemplateType" value="gs_tbg.AIDiplomaticRelationsTemplate"/>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="0"/>
+			<property name="nUpperBound" value="199"/>
+			<property name="tmplRef" value="gs_tbg.AIDiplomaticRelationsTemplate::Terrible"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="200"/>
+			<property name="nUpperBound" value="399"/>
+			<property name="tmplRef" value="gs_tbg.AIDiplomaticRelationsTemplate::Poor"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="400"/>
+			<property name="nUpperBound" value="599"/>
+			<property name="tmplRef" value="gs_tbg.AIDiplomaticRelationsTemplate::Strained"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="600"/>
+			<property name="nUpperBound" value="799"/>
+			<property name="tmplRef" value="gs_tbg.AIDiplomaticRelationsTemplate::Strong"/>
+		</object>
+		<object type="mh2_common.RangedTemplate" name="rangedTemplates" >
+			<property name="nLowerBound" value="800"/>
+			<property name="nUpperBound" value="1000"/>
+			<property name="tmplRef" value="gs_tbg.AIDiplomaticRelationsTemplate::VeryStrong"/>
+		</object>
+	</template>
+	
+	
+</locust>

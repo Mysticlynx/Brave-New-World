@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+  <objectDef type="UI3DAirbase" superType="UI3DMapModelWithAnimationGO" >
+    <!-- Input Properties -->
+    <propertyDef name="objGameRoot" type="Object"/>
+    <propertyDef name="objMapData" type="MapData"/>
+    <propertyDef name="objRegion" type="gs_tbg.Region"/>
+
+    <!-- UI3DMapModel properties -->
+    <property name="objMap" from="self.objMapData.objMap" />
+    <property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+    <property name="vecPosition" from="self.objRegion.vecPositions[1]"/>
+    <!--<property name="fScale" from="self.objMapModel.objTransform.fScale" />-->
+    <object type="ml3dworld.TransformList" name="objLocalTransforms">
+            <!--<object type="ml3dworld.TransformTranslate" name="objTransforms">
+                <property name="vecTranslation" from="def.objRegion.vecPositions[1]"/>
+            </object>-->
+			<object type="ml3dworld.TransformList" name="objTransforms">
+				<property name="objTransforms" from="def.objMapModel.objTransform"/>
+			</object>
+		</object>
+		
+    <!-- Internal Properties -->
+    <propertyDef name="objMapModel" type="MapModelTemplate">
+      self.objMapData.tmplAirbaseMapModel.resolve()
+    </propertyDef>
+
+    <!-- UI3DModelWithAnimationGO properties -->
+    <property name="objGO" from="self.objRegion"/>
+    <property name="tmplModel" from="self.objMapModel.tmplModel"/>
+    <property name="tmplAnimation" from="self.objMapModel.tmplAnimation"/>
+
+    <!-- Effect -->
+    <object type="mlui.UIDataEffect" name="objEffect">
+      <property name="tmplEffect" value="SkinnedEffect"/>
+        switch { case mh2data.bShadows:
+        <property name="tmplSurfaceEffects" value="SkinnedShadowEffect"/>            
+        }      
+    </object>
+    
+    <!-- Transform 		
+		<object type="ml3dworld.TransformList" name="objTransform">
+            <object type="ml3dworld.TransformTranslate" name="objTransforms">
+                <property name="vecTranslation" from="def.objRegion.vecPositions[1]"/>
+            </object>
+			<object type="ml3dworld.TransformList" name="objTransforms">
+				<property name="objTransforms" from="def.objMapModel.objTransform"/>
+			</object>
+		</object>
+		-->
+  </objectDef>
+  
+</locust>

@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<!-- Map Views -->
+	
+	<objectDef type="MapViewTemplate" superType="Template" templateBase="true">
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="bColorRegions" type="bool" default="true"/>
+		<propertyDef name="bColorSeaRegions" type="bool" default="false"/>
+        <propertyDef name="bShowTradeRoutes" type="bool" default="false"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				#FFFFFFFF
+			}
+			getRegionTransparency = ?{mapdata, region:
+				1.0
+			}
+			getKeyItems = ?{mapdata:
+				null
+			}
+			getRegionToolTip = ?{mapdata, region:
+				?{curproject:
+					if(curproject != null AND region.canCommand(mapdata.objAvatar, mapdata.objNation) == true,
+						if(region.tmplTerrain.resolve().bWater,
+							locale.FSID.UI.ProducerProducingOutput.format(
+								'Producer',region.strDisplayName,
+								'Output', curproject.tmplRegionOutput.resolve().strDisplayName),
+							locale.FSID.UI.ProducerNationProducingOutput.format(
+								'Producer',region.strDisplayName,
+								'Nation', region.refController.resolve(mapdata.objGameRoot).strDisplayName,
+								'Output', curproject.tmplRegionOutput.resolve().strDisplayName)
+						),
+						if(region.tmplTerrain.resolve().bWater,
+							region.strDisplayName,
+							locale.FSID.UI.RegionNation.format(
+								'region', region.strDisplayName,
+								'nation', region.refController.resolve(mapdata.objGameRoot).strDisplayName)
+						)
+					)
+				}(find(?{project: project.nPriority == 1}, region.objRegionProjects))
+			}
+		</script>
+	</objectDef>
+
+	<template type="MapViewTemplate" name="MapViewStandard">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewStandard"/>
+		<property name="bColorRegions" value="false"/>
+	</template>
+
+	<template type="MapViewTemplate" name="MapViewController">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewPolitical"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				region.refController.resolve(mapdata.objGameRoot).colColor
+			}
+			
+			getRegionTransparency = ?{mapdata, region:
+			    if (region.refController!=null,0.4,0)
+			}
+			
+			getKeyItems = ?{mapdata:
+				null
+			}
+			getRegionToolTip = ?{mapdata, region:
+				if(region.refController != null,
+					locale.FSID.UI.RegionNation.format(
+						'region', region.strDisplayName,
+						'nation', region.refController.resolve(mapdata.objGameRoot).strDisplayName),
+					region.strDisplayName)
+			}
+		</script>
+	</template>
+	
+    <objectDef type="TradingNations">
+        <propertyDef name="objNationsTrading" type="gs_tbg.Nation" variable="true"/>
+    </objectDef>
+    
+	<template type="MapViewTemplate" name="MapViewTrade">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewTrade"/>
+		<property name="bColorSeaRegions" value="true"/>
+        <property name="bShowTradeRoutes" value="true"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				switch{
+					case region.bTradeLane:
+						#009999FF
+					case self.getSelectedNation(mapdata) == region.refController.resolve(mapdata.objGameRoot):
+						#0040E1FF
+					case self.getNationsTradingWithSelected(mapdata).objNationsTrading.contains(region.refController.resolve(mapdata.objGameRoot)):
+						#0CF200FF
+					default:
+						#FFFFFFFF
+				}
+			}
+			
+			getRegionTransparency = ?{mapdata, region:
+				switch{
+					case region.bTradeLane:
+						.5
+					case self.getRegionColor(mapdata, region) !=  #FFFFFFFF:
+						.5
+					default:
+						0
+				}
+			}
+			
+			getKeyItems = ?{mapdata:
+				[<object type="MapViewKeyItem">
+					<property name="strDisplayName">
+						switch{
+							case mapdata.objSelectedObject.instanceOf(gs_tbg.Nation):
+								mapdata.objSelectedObject.strDisplayName
+							case mapdata.objSelectedObject.instanceOf(gs_tbg.City):
+								mapdata.objSelectedObject.refRegion.resolve(mapdata.objGameRoot).refController.resolve(mapdata.objGameRoot).strDisplayName
+							case mapdata.objSelectedObject.refController == null:
+								mapdata.objNation.strDisplayName
+							default:
+								mapdata.objSelectedObject.refController.resolve(mapdata.objGameRoot).strDisplayName
+						}
+					</property>
+					<property name="colColor" value="#0040E1FF"/>
+				</object>,
+				<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.UI.TradeRoute"/>
+					<property name="colColor" value="#009999FF"/>
+				</object>,
+				<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.UI.TradingWith"/>
+					<property name="colColor" value="#0CF200FF"/>
+				</object>]
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.strDisplayName
+			}
+			
+			getSelectedNation = ?{mapdata:
+				switch{
+					case mapdata.objSelectedObject.instanceOf(gs_tbg.Nation):
+						mapdata.objSelectedObject
+					case mapdata.objSelectedObject.instanceOf(gs_tbg.City):
+						mapdata.objSelectedObject.refRegion.resolve(mapdata.objGameRoot).refController.resolve(mapdata.objGameRoot)
+					case mapdata.objSelectedObject.refController == null:
+						mapdata.objNation
+					default:
+						mapdata.objSelectedObject.refController.resolve(mapdata.objGameRoot)
+				}
+			}
+			getNationsTradingWithSelected = ?{mapdata:
+                <object type="TradingNations">
+                    <property name="objNationsTrading">
+                        union(
+                            map(?{record: record.refDestNation.resolve(mapdata.objGameRoot)},
+                                filter(?{record: record.refSourceNation == self.getSelectedNation(mapdata)},
+                                    gs_tbg.getGameSysTrade(mapdata.objAvatar).objTradeRecords)
+                            ),
+                            map(?{record: record.refSourceNation.resolve(mapdata.objGameRoot)},
+                                filter(?{record: record.refDestNation == self.getSelectedNation(mapdata)},
+                                    gs_tbg.getGameSysTrade(mapdata.objAvatar).objTradeRecords)
+                            )
+                        )
+                    </property>
+                </object>
+			}
+		</script>
+	</template>
+	
+	<template type="MapViewTemplate" name="MapViewTerrainType">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewTerrain"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				?{terrain:
+					if(terrain != null, terrain.colColor, #7D8F99FF)
+				}(region.tmplTerrain.resolve())
+			}
+			getRegionTransparency = ?{mapdata, region:
+				0.45
+			}
+			getKeyItems = ?{mapdata:
+				map(
+					?{terrain:
+						<object type="MapViewKeyItem">
+							<property name="strDisplayName" from="terrain.resolve().strDisplayName"/>
+							<property name="colColor" from="terrain.resolve().colColor"/>
+						</object>
+					},
+					mapdata.getTerrainTypes()
+				)
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.tmplTerrain.resolve().strDisplayName
+			}
+		</script>
+	</template>
+		
+	<template type="MapViewTemplate" name="MapViewTransportationImprovement">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewImprovements"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				?{improvement:
+					if(improvement != null, improvement.colColor, #7D8F99FF)
+				}(region.objTransportationImprovement.tmplTransportationImprovement.resolve())
+			}
+			getRegionTransparency = ?{mapdata, region:
+				?{improvement:
+					if(improvement != null, 0.5, 0.0)
+				}(region.objTransportationImprovement.tmplTransportationImprovement.resolve())
+			}
+			getKeyItems = ?{mapdata:
+				map(
+					?{improvement:
+						<object type="MapViewKeyItem">
+							<property name="strDisplayName" from="improvement.resolve().strDisplayName" />
+							<property name="colColor" from="improvement.resolve().colColor"/>
+						</object>
+					},
+					mapdata.getTransportationImprovementTypes()
+				)
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.objTransportationImprovement.tmplTransportationImprovement.resolve().strDisplayName
+			}
+		</script>
+	</template>
+	
+	<template type="MapViewTemplate" name="MapViewEmpire">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewEmpire"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+					 <!--If changing colors here, also change them in getKeyItems-->
+				if(region.refController.resolve(mapdata.objGameRoot) == self.getSelectedNation(mapdata),
+					switch {
+						case region.refColony != null AND region.refOwner.resolve(mapdata.objGameRoot) == region.refController.resolve(mapdata.objGameRoot):
+							#AA00FFFF
+						case region.refOwner.resolve(mapdata.objGameRoot) != region.refController.resolve(mapdata.objGameRoot):
+							#00FFCCFF
+						default:
+							#0040E1FF
+					},
+					switch {
+						case region.refController.resolve(mapdata.objGameRoot).objStatus.instanceOf(gs_tbg.NationStatusPuppet) AND region.refController.resolve(mapdata.objGameRoot).objStatus.refController.resolve(mapdata.objGameRoot) == self.getSelectedNation(mapdata):
+							#FFFF00FF
+						case find(?{enemy: enemy == region.refController.resolve(mapdata.objGameRoot)}, gs_tbg.getNationEnemies(mapdata.objAvatar, self.getSelectedNation(mapdata))) != null:
+							#FF3700FF
+						case find(?{ally: ally == region.refController.resolve(mapdata.objGameRoot)}, gs_tbg.getNationAllies(mapdata.objAvatar, self.getSelectedNation(mapdata))) != null:
+							#0CF200FF
+						default:
+							#888888FF
+					}
+				)
+			}
+			getSelectedNation = ?{mapdata:
+				switch{
+					case mapdata.objSelectedObject.instanceOf(gs_tbg.Nation):
+						mapdata.objSelectedObject
+					case mapdata.objSelectedObject.instanceOf(gs_tbg.City):
+						mapdata.objSelectedObject.refRegion.resolve(mapdata.objGameRoot).refController.resolve(mapdata.objGameRoot)
+					case mapdata.objSelectedObject.refController == null:
+						mapdata.objNation
+					default:
+						mapdata.objSelectedObject.refController.resolve(mapdata.objGameRoot)
+				}
+			}
+			getRegionTransparency = ?{mapdata, region:
+				.6
+			}
+			getKeyItems = ?{mapdata:
+				<!-- If changing colors here, also change them in getRegionColor -->
+				[<object type="MapViewKeyItem">
+					<property name="strDisplayName">
+						switch{
+							case mapdata.objSelectedObject.instanceOf(gs_tbg.Nation):
+								mapdata.objSelectedObject.strDisplayName
+							case mapdata.objSelectedObject.instanceOf(gs_tbg.City):
+								mapdata.objSelectedObject.refRegion.resolve(mapdata.objGameRoot).refController.resolve(mapdata.objGameRoot).strDisplayName
+							case mapdata.objSelectedObject.refController == null:
+								mapdata.objNation.strDisplayName
+							default:
+								mapdata.objSelectedObject.refController.resolve(mapdata.objGameRoot).strDisplayName
+						}
+					</property>
+					<property name="colColor" value="#0040E1FF"/>
+				</object>,
+				<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.UI.Colony"/>
+					<property name="colColor" value="#AA00FFFF"/>
+				</object>,
+				<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.UI.Puppet"/>
+					<property name="colColor" value="#FFFF00FF"/>
+				</object>,
+				<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.UI.Occupied"/>
+					<property name="colColor" value="#00FFCCFF"/>
+				</object>,
+				<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.UI.Ally"/>
+					<property name="colColor" value="#0CF200FF"/>
+				</object>,
+				<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.UI.AtWar"/>
+					<property name="colColor" value="#FF3700FF"/>
+				</object>]
+			}
+			getRegionToolTip = ?{mapdata, region:
+				<!--if(region.objCurrentRegionProject != null AND region.canCommand(mapdata.objAvatar, mapdata.objNation) == true,-->
+				<!--locale.FSID.UI.ProducerProducingOutput.format(-->
+				<!--	'Producer',region.strDisplayName,-->
+				<!--	'Output', region.objCurrentRegionProject.tmplRegionOutput.resolve().strDisplayName),-->
+				region.strDisplayName<!--)-->
+			}
+		</script>
+	</template>
+	
+	<template type="MapViewTemplate" name="MapViewFortifications">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewImprovements"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				?{improvement:
+					if(improvement != null, improvement.colColor, #7D8F99FF)
+				}(region.objFortificationImprovement.tmplFortificationImprovement.resolve())
+			}
+			getRegionTransparency = ?{mapdata, region:
+				?{improvement:
+					if(improvement != null, 0.5, 0.0)
+				}(region.objFortificationImprovement.tmplFortificationImprovement.resolve())
+			}
+			getKeyItems = ?{mapdata:
+				if(mapdata.getFortificationImprovementTypes().length > 0,
+					map(
+						?{improvement:
+							<object type="MapViewKeyItem">
+								<property name="strDisplayName" from="improvement.resolve().strDisplayName" />
+								<property name="colColor" from="improvement.resolve().colColor"/>
+							</object>
+						},
+						mapdata.getFortificationImprovementTypes()
+					),
+					<object type="MapViewKeyItem">
+						<property name="strDisplayName" from="locale.FSID.UI.NoDefensesBuilt.format('DefenseType', locale.SID.UI.Fortification)" />
+					</object>
+				)
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.objFortificationImprovement.tmplFortificationImprovement.resolve().strDisplayName
+			}
+		</script>
+	</template>
+	
+	<template type="MapViewTemplate" name="MapViewAADefense">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewImprovements"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				?{improvement:
+					if(improvement != null, improvement.colColor, #7D8F99FF)
+				}(region.objAADefenseImprovement.tmplAADefenseImprovement.resolve())
+			}
+			getRegionTransparency = ?{mapdata, region:
+				?{improvement:
+					if(improvement != null, 0.5, 0.0)
+				}(region.objAADefenseImprovement.tmplAADefenseImprovement.resolve())
+			}
+			getKeyItems = ?{mapdata:
+				if(mapdata.getAADefenseImprovementTypes().length > 0,
+					map(
+						?{improvement:
+							<object type="MapViewKeyItem">
+								<property name="strDisplayName" from="improvement.resolve().strDisplayName" />
+								<property name="colColor" from="improvement.resolve().colColor"/>
+							</object>
+						},
+						mapdata.getAADefenseImprovementTypes()
+					),
+					<object type="MapViewKeyItem">
+						<property name="strDisplayName" from="locale.FSID.UI.NoDefensesBuilt.format('DefenseType', locale.SID.UI.AirDefense)" />
+					</object>
+				)
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.objAADefenseImprovement.tmplAADefenseImprovement.resolve().strDisplayName
+			}
+		</script>
+	</template>
+	
+	<template type="MapViewTemplate" name="MapViewCoastalDefense">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewImprovements"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				?{improvement:
+					if(improvement != null, improvement.colColor, #7D8F99FF)
+				}(region.objCoastalDefenseImprovement.tmplCoastalDefenseImprovement.resolve())
+			}
+			getRegionTransparency = ?{mapdata, region:
+				?{improvement:
+					if(improvement != null, 0.5, 0.0)
+				}(region.objCoastalDefenseImprovement.tmplCoastalDefenseImprovement.resolve())
+			}
+			getKeyItems = ?{mapdata:
+				if(mapdata.getCoastalDefenseImprovementTypes().length > 0,
+					map(
+						?{improvement:
+							<object type="MapViewKeyItem">
+								<property name="strDisplayName" from="improvement.resolve().strDisplayName" />
+								<property name="colColor" from="improvement.resolve().colColor"/>
+							</object>
+						},
+						mapdata.getCoastalDefenseImprovementTypes()
+					),
+					<object type="MapViewKeyItem">
+						<property name="strDisplayName" from="locale.FSID.UI.NoDefensesBuilt.format('DefenseType', locale.SID.UI.CoastalDefense)" />
+					</object>
+				)
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.objCoastalDefenseImprovement.tmplCoastalDefenseImprovement.resolve().strDisplayName
+			}
+		</script>
+	</template>
+	
+	<template type="MapViewTemplate" name="MapViewNationality">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewNationality"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				region.tmplNation.resolve().tmplDefaultNationality.resolve().colColor
+			}
+			getRegionTransparency = ?{mapdata, region:
+				.5
+			}
+			getKeyItems = ?{mapdata:
+				null
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName
+			}
+		</script>
+	</template>
+	<template type="MapViewTemplate" name="MapViewCulture">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewCulture"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				?{culture:
+					if(culture != null, culture.colColor, #00000000)
+				}(region.tmplCulture.resolve())
+			}
+			getRegionTransparency = ?{mapdata, region:
+				.5
+			}
+			getKeyItems = ?{mapdata:
+				null
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.tmplCulture.resolve().strDisplayName
+			}
+		</script>
+	</template>
+	<template type="MapViewTemplate" name="MapViewEthnicity">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewEthnicity"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				?{ethnicity:
+					if(ethnicity != null, ethnicity.colColor, #00000000)
+				}(region.tmplEthnicity.resolve())
+			}
+			getRegionTransparency = ?{mapdata, region:
+				.5
+			}
+			getKeyItems = ?{mapdata:
+				null
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.tmplEthnicity.resolve().strDisplayName
+			}
+		</script>
+	</template>
+	<template type="MapViewTemplate" name="MapViewReligion">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewReligion"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				?{religion:
+					if(religion != null, religion.colColor, #00000000)
+				}(region.tmplReligion.resolve())
+			}
+			getRegionTransparency = ?{mapdata, region:
+				.5
+			}
+			getKeyItems = ?{mapdata:
+				null
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.tmplReligion.resolve().strDisplayName
+			}
+		</script>
+	</template>
+	<template type="MapViewTemplate" name="MapViewIdeology">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewIdeology"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				?{ideo:
+					switch{
+						case ideo == mapdata.objIdeologyTemplateDemocratic:
+							#70B6E3FF
+						case ideo == mapdata.objIdeologyTemplateCommunist:
+							#FF0000FF
+						case ideo == mapdata.objIdeologyTemplateAuthoritarian:
+							#00CC00FF
+						case ideo == mapdata.objIdeologyTemplateFascist:
+							#292929FF
+						default:
+							#00000000
+					}
+				}(region.refController.resolve(mapdata.objGameRoot).tmplIdeology.resolve())
+			}
+			getRegionTransparency = ?{mapdata, region:
+				.5
+			}
+			getKeyItems = ?{mapdata:
+				<!-- If changing colors here, also change them in getRegionColor -->
+				[<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.Ideology.DisplayName.Democratic"/>
+					<property name="colColor" value="#70B6E3FF"/>
+				</object>,
+				<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.Ideology.DisplayName.Communist"/>
+					<property name="colColor" value="#FF0000FF"/>
+				</object>,
+				<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.Ideology.DisplayName.Authoritarian"/>
+					<property name="colColor" value="#00CC00FF"/>
+				</object>,
+				<object type="MapViewKeyItem">
+					<property name="strDisplayName" from="locale.SID.Ideology.DisplayName.Fascist"/>
+					<property name="colColor" value="#292929FF"/>
+				</object>]
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.refController.resolve(mapdata.objGameRoot).tmplIdeology.resolve().strDisplayName
+			}
+		</script>
+	</template>
+	<template type="MapViewTemplate" name="MapViewSupply">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewSupply"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				if(region.getMasterNation(mapdata.objAvatar) == mapdata.objNation,
+					Color(1 - float(region.nArmsLimit) / 100, float(region.nArmsLimit) / 100, 0, 1),
+					#00000000
+				)
+			}
+			getRegionTransparency = ?{mapdata, region:
+				if(region.getMasterNation(mapdata.objAvatar) == mapdata.objNation,
+					.45,
+					0
+				)
+			}
+			getKeyItems = ?{mapdata:
+				null
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.strDisplayName
+			}
+		</script>
+	</template>
+	<template type="MapViewTemplate" name="MapViewRegionPoints">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewRegionPoints"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				Color(1 - float(region.objPowerPoints.nTotalPoints - mapdata.nMinRegionPoints) / float(mapdata.nMaxRegionPoints - mapdata.nMinRegionPoints), float(region.objPowerPoints.nTotalPoints - mapdata.nMinRegionPoints) / float(mapdata.nMaxRegionPoints - mapdata.nMinRegionPoints), 0, 1)
+			}
+			getRegionTransparency = ?{mapdata, region:
+				.5
+			}
+			getKeyItems = ?{mapdata:
+				null
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.strDisplayName
+			}
+		</script>
+	</template>
+	<template type="MapViewTemplate" name="MapViewVictoryCondition">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewVictoryCondition"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				if(region.refController == mapdata.objNation,
+					#33FF00FF,
+					#FF0000FF
+				)
+			}
+			getRegionTransparency = ?{mapdata, region:
+				if(find(?{city: city.resolve(mapdata.objGameRoot).refRegion == region},
+					find(?{condition: condition.instanceOf(gs_tbg.VictoryConditionCities) AND condition.refNation == mapdata.objNation},
+						gs_tbg.getGameSysVictoryCondition(mapdata.objAvatar).objVictoryConditions).refCities) != null,
+					.5,
+					0
+				)
+			}
+			getKeyItems = ?{mapdata:
+				null
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.strDisplayName
+			}
+		</script>
+	</template>
+	<template type="MapViewTemplate" name="MapViewRevoltRisk">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewRevoltRisk"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				if(region.getMasterNation(mapdata.objAvatar) == mapdata.objNation,
+					gs_tbg.getGameSysNationRelations(mapdata.objAvatar).getRegionStabilityTemplate(region.nRegionStability).colColor,
+					#00000000
+				)
+			}
+			getRegionTransparency = ?{mapdata, region:
+				if(region.getMasterNation(mapdata.objAvatar) == mapdata.objNation,
+					.45,
+					0
+				)
+			}
+			getKeyItems = ?{mapdata:
+				null
+			}
+			getRegionToolTip = ?{mapdata, region:
+				region.strDisplayName
+			}
+		</script>
+	</template>
+	<template type="MapViewTemplate" name="MapViewWeather">
+		<property name="strDisplayName" from="locale.SID.UI.MapViewWeather"/>
+		<script type="application/x-locust-query">
+			getRegionColor = ?{mapdata, region:
+				?{season:
+					if(season != null,
+						season.refSeasonData.resolve(mapdata.objGameRoot).colColor,
+						#00000000
+					)
+				}(gs_tbg.getRegionSeason(mapdata.objAvatar, region))
+			}
+			getRegionTransparency = ?{mapdata, region:
+				?{season:
+					if(season != null,
+						0.5,
+						0.0
+					)
+				}(gs_tbg.getRegionSeason(mapdata.objAvatar, region))
+			}
+			getKeyItems = ?{mapdata:
+				if(gs_tbg.getGameSysWeather(mapdata.objAvatar).objSeasonDatas.size > 0,
+					map(
+						?{seasondata:
+							<object type="MapViewKeyItem">
+								<property name="strDisplayName" from="seasondata.strDisplayName" />
+								<property name="colColor" from="seasondata.colColor"/>
+							</object>
+						},
+						gs_tbg.getGameSysWeather(mapdata.objAvatar).objSeasonDatas
+					),
+					<object type="MapViewKeyItem">
+						<property name="strDisplayName" from="locale.SID.UI.NoSeasons" />
+					</object>
+				)
+			}
+			getRegionToolTip = ?{mapdata, region:
+				?{season:
+					if(season != null,
+						season.strDisplayName,
+						region.strDisplayName
+					)
+				}(gs_tbg.getRegionSeason(mapdata.objAvatar, region))
+			}
+		</script>
+	</template>
+	
+	<objectDef type="MapViewKeyItem" class="CMLObject">
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="colColor" type="Color"/>
+	</objectDef>
+
+</locust>

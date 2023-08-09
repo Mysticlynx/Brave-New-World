@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="UI3DCityBase" superType="UI3DMapModelGO">
+				<!-- Input Properties -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+		<propertyDef name="objResearchCenter" type="gs_tbg.ResearchCenter">
+			self.objCity.refResearchCenter.resolve(self.objMapData.objAvatar)
+		</propertyDef>
+		<propertyDef name="vecFaceDir" type="Vec3D">
+			Vec3D(0.0, -1.0, 0.0)
+		</propertyDef>
+        <propertyDef name="fFacingAngle" type="float">
+			(atan2(self.vecFaceDir.y, self.vecFaceDir.x) * 180 / float.pi) + self.objCity.nRotation
+		</propertyDef>
+                
+		<!-- Internal Properties -->
+		<propertyDef name="objCityTable" type="CityModelTable" from="self.objMapData.objCityModelTable"/>
+
+		<!-- UI3DModelGO properties-->
+		<property name="objGO" from="self.objCity"/>
+		<property name="tmplModel" from="self.objMapModel.tmplModel"/>
+		<property name="strToolTip">
+			if(self.objCity.objCurrentWorkOrder != null AND self.objCity.canCommand(self.objGameRoot, self.objMapData.objNation) == true,
+				locale.FSID.UI.ProducerProducingOutput.format(
+					'Producer', self.objCity.strDisplayName,
+					'Output', self.objCity.objCurrentWorkOrder.tmplFactoryOutput.resolve().strDisplayName)
+					+ '&#010;   ' + locale.SID.UI.MaintenanceCosts + ': $' + (self.objCity.nMaintenanceCost + self.objCity.nResearchExpenses).formatNumber(0, true),
+				self.objCity.strDisplayName + ', ' + self.objCity.refRegion.resolve(self.objGameRoot).refOwner.resolve(self.objGameRoot).strDisplayName)
+				
+				+ '&#010;   ' + locale.SID.UI.IPUs + ': ' + self.objCity.nIPUs
+				+ '&#010;   ' + locale.SID.UI.RPUs + ': ' + self.objCity.nRPUs
+				 
+        </property>
+
+        <!-- UI3DMapModel properties -->
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		<property name="vecPosition" from="self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(self.objCity.vecPosition)"/>
+		<object type="ml3dworld.TransformList" name="objLocalTransforms">
+			<object type="ml3dworld.TransformList" name="objTransforms">
+				<property name="objTransforms" from="def.objMapModel.objTransform"/>
+			</object>
+            <object type="ml3dworld.TransformRotate" name="objTransforms">
+                <property name="fAngle" from="def.fFacingAngle"/>
+                <property name="vecAxis" value="[0.0, 1.0, 0.0]"/>
+            </object>
+		</object>
+
+		<script type="application/javascript"><![CDATA[
+
+		    function adjustElevation()
+		    {
+                var vCityPosition = self.objCity.vecPosition;
+                var land_z = self.objMapData.objMap.fLandLevel; // default if we don't find a collision
+
+                var viewport = self.objMapData.objRoot.objMap.obj3DViewPort;
+                if (viewport != null)
+                {
+                    var vPosition = Vec3D(vCityPosition.x,vCityPosition.y,1000);
+                    var vDirection = Vec3D(0,0,-1);
+                    var vIntersection = viewport.objTerrain.getRayIntersect(vPosition,vDirection);
+                    if (vIntersection != null)
+                    {
+                        log("land at (" + vPosition.x + "," + vPosition.y + ") is " + vIntersection.z);
+                        if (land_z < vIntersection.z)
+                        {
+                            land_z = vIntersection.z;
+                        }
+                    }
+                    //else
+                    //{
+                    //    log("height at " + vPosition.x + "," + vPosition.y + " not found.");
+                    //}
+
+                    // test our query
+                    var vTestPos = viewport.objTerrain.getLandPosition(vCityPosition);
+                    log("vTestPos=" + vTestPos.toString());
+
+                }
+                //else
+                //{
+                //    log("viewport not found.");
+                //}
+
+                // self.objCity.vecPosition = Vec3D(vCityPosition.x,vCityPosition.y,land_z); // this should update all the models that use this
+		    }
+
+		]]></script>
+
+		<!-- Key Binds -->
+<!--		<object type="mlui.KeyBindList" name="objKeyBindList">-->
+<!--			<object type="mlui.KeyBindMethod" name="objKeyBinds">-->
+<!--				<property name="strName" from="locale.SID.UI.Deselect"/>-->
+<!--				<property name="otEventType" value="mlui.EventKeyPressed"/>-->
+<!--				<property name="eKey" value="KEY_CODE_Z"/>-->
+<!--				<script type="application/javascript"><![CDATA[-->
+<!--					function notifyTriggered(owner)-->
+<!--					{-->
+<!--					    log("adjusting elevation for " + def.objCity.strName);-->
+<!--						def.adjustElevation(); // test-->
+<!--					}-->
+<!--				]]></script>-->
+<!--			</object>-->
+<!--        </object>-->
+	</objectDef>
+
+	<objectDef type="UI3DCityCore" superType="UI3DCityBase">
+		<propertyDef name="objMapModel" type="MapModelTemplate">
+            if(self.objCity.bNuked,
+                self.objCityTable.tmplNukedCityModel.resolve(), 
+                self.objCityTable.getMapModelForCity(self.objGameRoot, self.objCity) )
+        </propertyDef>
+		<object name="objGroundModel" type="UI3DMapModelGO">
+			<property name="objGO" from="def.objCity"/>
+			<property name="tmplModel" from="def.objCityTable.getEntryForCityCore(def.objGameRoot, def.objCity).tmplGroundModel.resolve().tmplModel.resolve()"/>
+            <property name="objMap" from="def.objMap"/>
+            <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+            <property name="vecPosition" from="def.vecPosition"/>
+            <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+        </object>
+        
+        <!-- Effect -->
+        <object type="mlui.UIDataEffect" name="objEffect">
+            <property name="tmplEffect" value="SkinnedEffect"/>
+            switch { case mh2data.bShadows:
+            <property name="tmplSurfaceEffects" value="SkinnedShadowEffect"/>            
+            }
+        </object>        
+        
+		<propertyDef name="objCurrentProject" type="gs_tbg.WorkOrder">
+			find(?{order: order.nPriority == 1}, self.objCity.objWorkOrders)
+		</propertyDef>
+		
+		<object type="UI3DMapModelWithAnimationGO" name="objConstructionIndicator" existsWhile="(self.objCurrentProject.tmplFactoryOutput.resolve().tmplCategory == def.objMapData.objFactoryOutputCategoryTemplateCityBuildings) AND def.objMapData.objAvatar.getAttribValue('ConstructionAnimations')">
+			<property name="objGO" from="def.objCity"/>
+			<property name="tmplModel" from="def.objMapData.tmplCityConstructionProjectMapModel.resolve().tmplModel"/>
+			<property name="tmplAnimation">
+				if(def.objCurrentProject.nNumPaidFor GT 0,
+					def.objMapData.tmplCityConstructionProjectMapModel.resolve().tmplAnimation,
+					def.objMapData.tmplCityConstructionProjectMapModel.resolve().tmplAltAnimation)
+			</property>
+			<property name="objMap" from="def.objMap"/>
+			<property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+			<object type="ml3dworld.TransformList" name="objLocalTransforms">
+				<object type="ml3dworld.TransformList" name="objTransforms">
+					<property name="objTransforms" from="def.objMapData.tmplCityConstructionProjectMapModel.resolve().objTransform"/>
+				</object>
+				<object type="ml3dworld.TransformRotate" name="objTransforms">
+					<property name="fAngle" from="def.fFacingAngle"/>
+					<property name="vecAxis" value="[0.0, 1.0, 0.0]"/>
+				</object>
+			</object>
+			<property name="vecPosition">
+				def.vecPosition
+			</property>
+		</object>
+		<object type="UI3DMapModelGO" name="objConstructionGround" existsWhile="(self.objCurrentProject.tmplFactoryOutput.resolve().tmplCategory == def.objMapData.objFactoryOutputCategoryTemplateCityBuildings) AND def.objMapData.objAvatar.getAttribValue('ConstructionAnimations')">
+			<property name="objGO" from="def.objCity"/>
+			<property name="tmplModel" from="def.objCityTable.tmplCityConstructionGroundModel.resolve().tmplModel"/>
+			<property name="objMap" from="def.objMap"/>
+			<property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+			<property name="vecPosition" from="def.vecPosition"/>
+			<property name="objLocalTransforms" from="def.objLocalTransforms"/>
+		</object>
+		
+		<propertyDef name="objIndustryBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateIndustrialEnterprise):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateIndustrialEnterprise)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateIndustrialEnterprise)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateIndustrialPlant):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateIndustrialPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateIndustrialPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateLargeFactory):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateLargeFactory)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateLargeFactory)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateMechanizedFactory):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateMechanizedFactory)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateMechanizedFactory)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateCottageFactory):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateCottageFactory)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateCottageFactory)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objMunitionsPlantBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateMunitionsPlant):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateMunitionsPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateMunitionsPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objNuclearPowerPlantBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateNuclearPowerPlant):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateNuclearPowerPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateNuclearPowerPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objCoalPlant" storesChildren="true" variable="true">
+			switch{
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateCoalPlant):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateCoalPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateCoalPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objRecyclingCenter" storesChildren="true" variable="true">
+			switch{
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateRecyclingCenter):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateRecyclingCenter)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateRecyclingCenter)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objVehiclePlantBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateVehiclePlant):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateVehiclePlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateVehiclePlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objAircraftPlantBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateAircraftPlant):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateAircraftPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateAircraftPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objSyntheticFuelPlantBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateSyntheticFuelPlant):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateSyntheticFuelPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateSyntheticFuelPlant)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+    <propertyDef name="objFoodProcessingPlantsBuilding" storesChildren="true" variable="true">
+      switch{
+      case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateFoodProcessingPlants):
+      [<object type="UI3DMapModelGO">
+        <property name="objGO" from="def.objCity"/>
+        <property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateFoodProcessingPlants)"/>
+        <property name="objMap" from="def.objMap"/>
+        <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+        <property name="vecPosition" from="def.vecPosition"/>
+        <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+      </object>,
+      <object type="UI3DMapModelGO">
+        <property name="objGO" from="def.objCity"/>
+        <property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateFoodProcessingPlants)"/>
+        <property name="objMap" from="def.objMap"/>
+        <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+        <property name="vecPosition" from="def.vecPosition"/>
+        <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+      </object>]
+      default:
+      null
+      }
+    </propertyDef>
+    
+		<propertyDef name="objPortBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objCity.refSeaRegion != null:
+					[<object type="UI3DMapModelWithAnimationGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objMapData.tmplPortMapModel.resolve().tmplModel"/>
+						<property name="tmplAnimation">
+							if(gs_tbg.getGroupsAtLocation(def.objGameRoot,def.objCity).size GT 0,
+								def.objMapData.tmplPortMapModel.resolve().tmplAltAnimation,
+								def.objMapData.tmplPortMapModel.resolve().tmplAnimation
+							)
+						</property>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objMapData.tmplDockMapModel.resolve().tmplModel"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objShipyardBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateIndustrialShipyard):
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateIndustrialShipyard)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>
+				case self.objCity.hasBuilding(self.objMapData.objCityBuildingTemplateShipyard):
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objCityBuildingTemplateShipyard)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objUniversityBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateUniversity):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateUniversity)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateUniversity)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objMilitaryAcademyBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateMilitaryAcademy):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateMilitaryAcademy)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateMilitaryAcademy)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+		
+		<propertyDef name="objNavalAcademyBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateNavalAcademy):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateNavalAcademy)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateNavalAcademy)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+		
+		<propertyDef name="objAirForceAcademyBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateAirForceAcademy):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateAirForceAcademy)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateAirForceAcademy)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+		
+		<propertyDef name="objMedicalCenterBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateMedicalCenter):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateMedicalCenter)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateMedicalCenter)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+		
+		<propertyDef name="objPublicSchoolBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplatePublicSchool):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplatePublicSchool)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplatePublicSchool)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objResearchBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateTechnologyCenter) AND (self.objCurrentProject == null OR (
+							self.objCurrentProject.tmplFactoryOutput.resolve().eBuildingGroup != gs_tbg.BuildingGroup.Research)):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateTechnologyCenter)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateTechnologyCenter)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateResearchFacility) AND (self.objCurrentProject == null OR (
+							self.objCurrentProject.tmplFactoryOutput.resolve().eBuildingGroup != gs_tbg.BuildingGroup.Research)):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateResearchFacility)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateResearchFacility)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objChemicalLabBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateChemicalLab):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateChemicalLab)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateChemicalLab)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objRocketLabBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateRocketLab):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateRocketLab)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateRocketLab)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+
+		<propertyDef name="objJetPropulsionLabBuilding" storesChildren="true" variable="true">
+      switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateJetPropulsionLab):
+      [<object type="UI3DMapModelGO">
+        <property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateJetPropulsionLab)"/>
+        <property name="objMap" from="def.objMap"/>
+        <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+        <property name="vecPosition" from="def.vecPosition"/>
+        <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateJetPropulsionLab)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+		
+		<propertyDef name="objNuclearLabBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateNuclearLab):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateNuclearLab)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateNuclearLab)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+		
+		<propertyDef name="objOrbitalScienceLabBuilding" storesChildren="true" variable="true">
+			switch{
+				case self.objResearchCenter.hasBuilding(self.objMapData.objResearchCenterBuildingTemplateOrbitalScienceLab):
+					[<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateOrbitalScienceLab)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>,
+					<object type="UI3DMapModelGO">
+						<property name="objGO" from="def.objCity"/>
+						<property name="tmplModel" from="def.objCityTable.getGroundModelForBuilding(def.objGameRoot, def.objMapData.objResearchCenterBuildingTemplateOrbitalScienceLab)"/>
+		                <property name="objMap" from="def.objMap"/>
+		                <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+		                <property name="vecPosition" from="def.vecPosition"/>
+		                <property name="objLocalTransforms" from="def.objLocalTransforms"/>
+					</object>]
+				default:
+					null
+			}
+		</propertyDef>
+		
+		<object type="UI3DMapModelWithAnimationGO" name="objSmoke" existsWhile="def.objCity.bDamaged">
+			<property name="objGO" from="def.objCity"/>
+			<property name="tmplModel" from="def.objCityTable.tmplSmoke.resolve().tmplModel"/>
+            <property name="tmplAnimation" from="def.objCityTable.tmplSmoke.resolve().tmplAnimation"/>
+            <property name="objMap" from="def.objMap"/>
+            <property name="vecPointOfInterest" from="def.vecPointOfInterest"/>
+            <property name="vecPosition" from="def.vecPosition"/>
+		    <!-- don't rotate with city -->
+		    <object type="ml3dworld.TransformList" name="objLocalTransforms">
+			    <object type="ml3dworld.TransformList" name="objTransforms">
+				    <property name="objTransforms" from="def.objMapModel.objTransform"/>
+			    </object>
+                <object type="ml3dworld.TransformRotate" name="objTransforms">
+                    <property name="fAngle" value="180"/>
+                    <property name="vecAxis" value="[0.0, 1.0, 0.0]"/>
+                </object>
+		    </object>
+		</object>
+		
+	</objectDef>
+
+	<objectDef type="UI3DCityComposite" superType="common_elements.UI3DModelGO">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+
+		<object type="UI3DCityCore" name="objCityCore">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objCity" from="def.objCity"/>
+		</object>
+
+		<object type="UI3DCityReligiousBuilding" name="objCityReligiousBuildingModel">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objCity" from="def.objCity"/>
+		</object>
+	</objectDef>
+
+    <objectDef type="UI3DCityReligiousBuilding" superType="UI3DCityBase">
+		<propertyDef name="objMapModel" type="MapModelTemplate">
+            self.objCityTable.getReligiousModelForCity(self.objGameRoot, self.objCity)
+        </propertyDef>
+    </objectDef>
+	
+	<objectDef type="UI3DCityFlag" superType="UI3DMapModelWithAnimationGO">
+		<!-- Input Properties -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+
+		<!-- Internal Properties -->
+		<propertyDef name="objMapModel" type="MapModelTemplate">
+            self.objMapData.tmplFlagMapModel.resolve()
+        </propertyDef>
+
+		<!-- UI3DModelGO properties -->
+		<property name="objGO" from="self.objCity"/>
+		<property name="tmplModel" from="self.objMapModel.tmplModel"/>
+		<property name="tmplAnimation" from="self.objMapModel.tmplAnimation"/>
+		<propertyDef name="vecCityLandPos" from="self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(self.objCity.vecPosition)"/>
+
+		<!-- Flag Texture -->
+		<object type="mlui.UIDataMaterial" name="objMaterial" existsWhile="self.objMapModel.strOverrideEffect != ''">
+            <property name="strOverride" from="def.objMapModel.strOverrideEffect"/>
+            <object type="mlmedia.Material" name="objMaterial">
+                <property name="nEmissionTexCoordSet" value="0"/>
+                <object type="mlmedia.SamplerFromTexture" name="objEmissionSampler">
+                    <property name="tmplTexture">
+                        def.objMapData.objFlagModelTextureTable.getTextureForCityFlag(
+                            def.objGameRoot,
+                            def.objCity
+                        )
+                    </property>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>                    
+                    <property name="eMipFilter" value="FILTER_NONE"/>
+                </object>
+            </object>
+        </object>
+
+        <!-- UI3DMapModel properties -->
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		<property name="vecPosition"  from="Vec3D(self.vecCityLandPos.x,self.vecCityLandPos.y, self.vecCityLandPos.z + .25)" />
+		<!--<property name="fScale" from="self.objMapModel.objTransform.fScale" />-->
+		<object type="ml3dworld.TransformList" name="objLocalTransforms">
+            <!--<object type="ml3dworld.TransformTranslate" name="objTransforms">
+                <property name="vecTranslation" from="def.vecPosition"/>
+            </object>-->
+			<object type="ml3dworld.TransformList" name="objTransforms">
+				<property name="objTransforms" from="def.objMapModel.objTransform"/>
+			</object>
+		</object>
+
+    </objectDef>
+            	
+	<!-- Selection Display -->
+	<objectDef type="UI3DCitySelect" superType="UI3DMapModelGO">
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+
+		<propertyDef name="fScale" type="float">
+			?{cities:
+					.0025 + (.0025 * (float(self.objCity.nIPUs) / float(cities.first.nIPUs)))
+			}(sortDescending(?{city: city.nIPUs}, gs_tbg.getAllCities(self.objGameRoot)))
+		</propertyDef>
+
+
+        <!-- Internal -->
+		<propertyDef name="objSelectedModel" type="MapModelTemplate">
+            self.objMapData.objUnitModelTable.tmplSelectionMapModel.resolve()
+        </propertyDef>
+
+		<property name="tmplModel" from="self.objSelectedModel.tmplModel"/>
+        <property name="objGO" from="self.objCity"/>
+
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		<property name="vecPosition" from="self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(self.objCity.vecPosition)" />
+		<!--<property name="vecPosition" from="Vec3D(self.objCity.vecPosition.x, self.objCity.vecPosition.y, 0.0)" />-->
+		<object type="ml3dworld.TransformList" name="objLocalTransforms">
+			<object type="ml3dworld.TransformList" name="objTransforms">
+				<!--<property name="objTransforms" from="def.objTransform"/>-->
+				
+				<object type="ml3dworld.TransformRigidBody" name="objTransforms">
+					<property name="fPhi" from="def.objSelectedModel.objTransform.fPhi"/>
+					<property name="fTheta" from="def.objSelectedModel.objTransform.fTheta"/>
+					<property name="fGamma" from="def.objSelectedModel.objTransform.fGamma"/>
+					<property name="fScale" from="def.fScale"/>
+			</object>
+		</object>
+		</object>
+        
+	</objectDef>
+</locust>

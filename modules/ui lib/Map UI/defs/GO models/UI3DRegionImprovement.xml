@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="UI3DRegionImprovement" superType="mlui.UI3DElement">
+        <!-- Inputs -->
+        <propertyDef name="objGameRoot" type="Object"/>
+        <propertyDef name="objMapData" type="MapData"/>
+        <propertyDef name="objRegion" type="gs_tbg.Region"/>
+        <propertyDef name="vecPosition" type="Vec3D" from="self.objRegion.vecPositions[2]"/>
+        <propertyDef name="fFacingAngle" type="float" default="45"/>
+		
+        <!-- UI3DElement properties -->
+		<!--<propertyDef name="strToolTip" from="UI2DToolTipUnitGroup"/>-->
+
+        <!-- Internal -->
+        <propertyDef name="objModelTableEntry" type="RegionImprovementModelTableEntry">
+            self.objMapData.objRegionImprovementModelTable.getEntryForRegion(self.objRegion)
+        </propertyDef>
+
+		
+        <!-- Models -->
+        <object name="objFortificationModel" type="UI3DRegionImprovementSubModel" existsWhile="self.objModelTableEntry.tmplFortMapModel != null">
+            <property name="strToolTip" from="def.objRegion.objFortificationImprovement.tmplFortificationImprovement.resolve().strDisplayName
+				+ '&#010;   ' + locale.SID.UI.Health + ': ' + def.objRegion.objFortificationImprovement.tmplFortificationImprovement.resolve().nHitPoints"/>
+			<property name="vecPosition" from="def.vecPosition" />
+            <property name="fFacingAngle" from="def.fFacingAngle"/>
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objMapModel" from="def.objModelTableEntry.tmplFortMapModel.resolve()"/>
+            <property name="objRegion" from="def.objRegion"/>
+        </object>
+        <object name="objAAModel" type="UI3DRegionImprovementSubModel" existsWhile="self.objModelTableEntry.tmplAAMapModel != null">
+            <property name="strToolTip" from="def.objRegion.objAADefenseImprovement.tmplAADefenseImprovement.resolve().strDisplayName
+				+ '&#010;   ' + locale.SID.UI.Health + ': ' + def.objRegion.objAADefenseImprovement.tmplAADefenseImprovement.resolve().nHitPoints"/>
+			<property name="vecPosition" from="def.vecPosition"/>
+            <property name="fFacingAngle" from="def.fFacingAngle"/>
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objMapModel" from="def.objModelTableEntry.tmplAAMapModel.resolve()"/>
+            <property name="objRegion" from="def.objRegion"/>
+        </object>
+        <object name="objRadarModel" type="UI3DRegionImprovementSubModel" existsWhile="self.objModelTableEntry.tmplRadarMapModel != null">
+            <property name="strToolTip" from="def.objRegion.objAADefenseImprovement.tmplAADefenseImprovement.resolve().strDisplayName
+				+ '&#010;   ' + locale.SID.UI.Health + ': ' + def.objRegion.objAADefenseImprovement.tmplAADefenseImprovement.resolve().nHitPoints"/>
+			<property name="vecPosition" from="def.vecPosition"/>
+            <property name="fFacingAngle" from="def.fFacingAngle"/>
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objMapModel" from="def.objModelTableEntry.tmplRadarMapModel.resolve()"/>
+            <property name="objRegion" from="def.objRegion"/>
+        </object>
+        <object name="objGroundModel" type="UI3DRegionImprovementSubModel" existsWhile="self.objModelTableEntry.tmplGroundMapModel != null">
+			<property name="vecPosition" from="def.vecPosition"/>
+            <property name="fFacingAngle" from="def.fFacingAngle"/>
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objMapModel" from="def.objModelTableEntry.tmplGroundMapModel.resolve()"/>
+            <property name="objRegion" from="def.objRegion"/>
+        </object>
+        <object name="objCoastalModel" type="UI3DRegionImprovementCoastalSubModel" existsWhile="self.objRegion.objCoastalDefenseImprovement != null">
+            <property name="vecPosition">
+				def.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(
+					?{cities:
+						if(cities.size != 0,
+							cities[0].vecPosition,
+							def.objRegion.vecCoastalPos
+						)
+					}(def.objRegion.getCitiesInRegion(def.objMapData.objAvatar, gs_tbg.getAllCities(def.objMapData.objAvatar)))
+				)
+			</property>
+            <property name="fFacingAngle">
+				?{cities:
+					if(cities.size != 0,
+						cities[0].nRotation,
+						def.objRegion.nCoastalRotation
+					)
+				}(def.objRegion.getCitiesInRegion(def.objMapData.objAvatar, gs_tbg.getAllCities(def.objMapData.objAvatar)))
+			</property>
+            <property name="objMapData" from="def.objMapData"/>
+            <!--<property name="objMapModel" from="def.objMapData.tmplCoastalDefense1MapModel.resolve()"/>-->
+			<property name="objMapModel">
+				switch{
+					case def.objRegion.objCoastalDefenseImprovement.tmplCoastalDefenseImprovement == def.objMapData.objCoastalDefenseImprovementTemplateShoreBatteries:
+						def.objMapData.tmplCoastalDefense1MapModel.resolve()
+					case def.objRegion.objCoastalDefenseImprovement.tmplCoastalDefenseImprovement == def.objMapData.objCoastalDefenseImprovementTemplateIntegratedCoastalDefense:
+						def.objMapData.tmplCoastalDefense2MapModel.resolve()
+				}
+			</property>
+            <property name="objRegion" from="def.objRegion"/>
+        </object>
+    </objectDef>
+    
+    <objectDef type="UI3DRegionImprovementSubModel" superType="UI3DMapModelGO">
+        <propertyDef name="objMapData" type="MapData"/>
+        <propertyDef name="objMapModel" type="MapModelTemplate"/>
+        <propertyDef name="objRegion" type="gs_tbg.Region"/>
+        <propertyDef name="fFacingAngle" type="float"/>
+        
+        <property name="objGO" from="self.objRegion"/>
+        
+        <property name="tmplModel" from="self.objMapModel.tmplModel" />
+        
+        <!-- UI3DMapModel properties -->       
+        <property name="objMap" from="self.objMapData.objMap" />
+        <property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+        <object type="ml3dworld.TransformList" name="objLocalTransforms">
+            <object type="ml3dworld.TransformRotate" name="objTransforms">
+                <property name="fAngle" from="def.fFacingAngle"/>
+                <property name="vecAxis" value="[0.0, 0.0, 1.0]"/>
+            </object>
+            <object type="ml3dworld.TransformList" name="objTransforms">
+                <property name="objTransforms" from="def.objMapModel.objTransform"/>
+            </object>
+        </object>
+    </objectDef>
+	
+	<objectDef type="UI3DRegionImprovementCoastalSubModel" superType="UI3DMapModelGO">
+        <propertyDef name="objMapData" type="MapData"/>
+        <propertyDef name="objMapModel" type="MapModelTemplate"/>
+        <propertyDef name="objRegion" type="gs_tbg.Region"/>
+        <propertyDef name="fFacingAngle" type="float"/>
+        
+        <property name="objGO" from="self.objRegion"/>
+        
+        <property name="tmplModel" from="self.objMapModel.tmplModel" />
+        
+        <!-- UI3DMapModel properties -->       
+        <property name="objMap" from="self.objMapData.objMap" />
+        <property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+        <object type="ml3dworld.TransformList" name="objLocalTransforms">
+            <object type="ml3dworld.TransformRotate" name="objTransforms">
+                <property name="fAngle" from="def.fFacingAngle"/>
+                <property name="vecAxis" value="[0.0, 0.0, 1.0]"/>
+            </object>
+            <object type="ml3dworld.TransformList" name="objTransforms">
+                <property name="objTransforms" from="def.objMapModel.objTransform"/>
+            </object>
+        </object>
+    </objectDef>
+	
+	<objectDef type="UI3DConstructionProject" superType="UI3DMapModelWithAnimationGO">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objProject" type="gs_tbg.RegionProject" from="find(?{project: project.nPriority == 1}, self.objRegion.objRegionProjects)"/>
+		
+		<property name="bVisible">
+			switch{
+				case self.objMapData.objCameraTransform.fDistance GTE self.objMapData.fDropUnitsDistance:
+					false
+				default:
+					true
+			}
+		</property>
+		
+		<property name="strToolTip">
+			?{remainingturns:
+				if(remainingturns GT 1,
+					locale.FSID.UI.RegionProjectTooltip.format('Output', self.objProject.tmplRegionOutput.resolve().strDisplayName, 'Turns', remainingturns),
+					locale.FSID.UI.RegionProjectTooltipSingle.format('Output', self.objProject.tmplRegionOutput.resolve().strDisplayName, 'Turns', remainingturns))
+			}(self.objProject.tmplRegionOutput.resolve().nTurns - self.objProject.nTurns)
+		</property>
+		
+        <!-- Internal -->
+		<propertyDef name="objMapModel" type="MapModelTemplate">
+			switch{
+				case self.objProject.tmplRegionOutput.resolve().tmplCategory == self.objMapData.objRegionOutputCategoryTemplateMilitary:
+					self.objMapData.tmplMilitaryWorkerMapModel.resolve()
+				case self.objProject.tmplRegionOutput.resolve().tmplCategory == self.objMapData.objRegionOutputCategoryTemplateTransportation:
+					self.objMapData.tmplRoadWorkerMapModel.resolve()
+				case self.objProject.tmplRegionOutput.resolve().tmplCategory == self.objMapData.objRegionOutputCategoryTemplateFood:
+					self.objMapData.tmplFarmWorkerMapModel.resolve()
+				case self.objProject.tmplRegionOutput.resolve().tmplCategory == self.objMapData.objRegionOutputCategoryTemplateResources:
+					self.objMapData.tmplResourcesWorkerMapModel.resolve()
+				default:
+					self.objMapData.tmplConstructionProjectMapModel.resolve()
+			}
+        </propertyDef>
+		
+		<property name="tmplModel" from="self.objMapModel.tmplModel"/>
+		<property name="tmplAnimation">
+			if(self.objProject.nNumPaidFor > 0, self.objMapModel.tmplAnimation, self.objMapModel.tmplAltAnimation)
+		</property>
+		
+		<property name="objGO" from="self.objRegion"/>
+		
+		<property name="vecPosition">
+			switch{
+				case self.objProject.tmplRegionOutput == self.objMapData.objRegionOutputTemplateAirbase:
+					self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(Vec3D(self.objRegion.vecPositions[1].x + .18, self.objRegion.vecPositions[1].y - .18, self.objRegion.vecPositions[1].z))
+				case self.objProject.tmplRegionOutput.resolve().tmplCategory == self.objMapData.objRegionOutputCategoryTemplateMilitary:
+					self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(Vec3D(self.objRegion.vecPositions[2].x + .18, self.objRegion.vecPositions[2].y - .18, self.objRegion.vecPositions[2].z))
+				case self.objProject.tmplRegionOutput.resolve().tmplCategory == self.objMapData.objRegionOutputCategoryTemplateTransportation:
+					self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(Vec3D(self.objRegion.vecPositions[1].x + .18, self.objRegion.vecPositions[1].y - .18, self.objRegion.vecPositions[1].z))
+				case self.objProject.tmplRegionOutput.resolve().tmplCategory == self.objMapData.objRegionOutputCategoryTemplateFood:
+					self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(Vec3D(self.objRegion.vecPositions[1].x + .18, self.objRegion.vecPositions[1].y - .18, self.objRegion.vecPositions[0].z))
+				case self.objProject.tmplRegionOutput.resolve().tmplCategory == self.objMapData.objRegionOutputCategoryTemplateResources:
+					self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(Vec3D(self.objRegion.vecPositions[0].x + .18, self.objRegion.vecPositions[0].y - .18, self.objRegion.vecPositions[0].z))
+			}
+		</property>
+		
+		<!-- UI3DMapModel properties -->
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		
+		<object type="ml3dworld.TransformList" name="objLocalTransforms">
+			<object type="ml3dworld.TransformList" name="objTransforms">
+				<property name="objTransforms" from="def.objMapModel.objTransform"/>
+			</object>
+		</object>
+	</objectDef>
+    
+</locust>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<template type="mlmedia.TextureTemplateFromFile" name="TextureOldMiniMap">
+		<property name="fileSource" value="minimap.png"/>
+	</template>	
+	<template type="mlmedia.ImageTemplateSingleTexture" name="ImgOldMiniMap">
+		<property name="colColor" value="#FFFFFF88"/>
+		<property name="amApplyMode" value="MODULATE"/>
+		<property name="tmplTexture" value="TextureOldMiniMap"/>
+		<property name="nTextureU" value="0"/>
+		<property name="nTextureV" value="0"/>
+		<property name="nImageWidth" value="254"/>
+		<property name="nImageHeight" value="119"/>
+		<property name="fmUFillMode" value="FIXED"/>
+		<property name="fmVFillMode" value="FIXED"/>
+	</template>
+	
+</locust>

@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <script type="application/x-locust-query">
+	    getGameSysAIUtility = ?{gameroot:
+		    mlgame.getGameSysOfType(gameroot, GameSysAIUtility)
+	    }
+    </script>        
+
+	<objectDef type="GameSysAIUtility" class="CMLOGameSysAIUtility" superType="mlgame.GameSystem">
+		<replicationRule>false</replicationRule>
+		<propertyDef name="objNationAIPlans" type="AIMilitaryPlan" variable="true" storesChildren="true"/>
+		<propertyDef name="objWarPlans" type="WarPlan" variable="true" storesChildren="true"/>
+		<propertyDef name="objNationForceAllegiancePlans" type="ForceAllegiancePlan" variable="true" storesChildren="true"/>
+		<propertyDef name="objAIUnitGroupAssignments" type="AIUnitGroupAssignment" variable="true" storesChildren="true"/>
+		<propertyDef name="objAINationInformation" type="AINationInformation" variable="true" storesChildren="true"/>
+		<propertyDef name="objAINationProductionSimulators" type="AINationProductionSimulator" variable="true" storesChildren="true"/>
+		<propertyDef name="objNationResearchAIs" type="NationResearchAI" variable="true" storesChildren="true"/>
+		<propertyDef name="objNationDiplomacyAIs" type="NationDiplomacyAI" variable="true" storesChildren="true"/>
+		<propertyDef name="objNationMilitaryAIs" type="NationMilitaryAI" variable="true" storesChildren="true"/>
+		<propertyDef name="objAITriggers" type="AITrigger" variable="true" storesChildren="true"/>
+		<propertyDef name="objRegionColorMapEnemyImpassable" type="RegionColorMap" storesChildren="true"/>
+		<propertyDef name="objRegionColorMapEnemyPassable" type="RegionColorMap" storesChildren="true"/>
+		<propertyDef name="objInvasionColorMap" type="InvasionColorMap" storesChildren="true"/>
+		<propertyDef name="objNationColorMap" type="NationColorMap" storesChildren="true"/>
+		<propertyDef name="objGeographicColorMap" type="GeographicColorMap" storesChildren="true"/>
+		<propertyDef name="objSafeRegionColorMap" type="SafeRegionColorMap" storesChildren="true"/>
+        <propertyDef name="objUnitBranchTemplateArmy" type="UnitBranchTemplate"/>
+        <propertyDef name="objUnitBranchTemplateNavy" type="UnitBranchTemplate"/>
+        <propertyDef name="objUnitBranchTemplateAirForce" type="UnitBranchTemplate"/>
+        <propertyDef name="objUnitBranchTemplateSubmarine" type="UnitBranchTemplate"/>
+        <propertyDef name="objDefaultEconomicStrategyTemplate" type="AIEconomicStrategyTemplate"/>
+        <propertyDef name="objDefenderCompositionsTemplate" type="DefenderCompositionsTemplate"/>
+        <propertyDef name="objDifficultyTemplate" type="DifficultyTemplate"/>
+        <propertyDef name="nUpdateTick" type="int" default="0" desc="incremented every updateSystem"/>
+        <propertyDef name="nAfterTurnPhase" type="int" default="1" desc="phase when this game system does its own AI avatar updates"/>
+        <propertyDef name="nCheckAIOppositionThreshold" type="int" default="100"/><!-- 100 or larger specifically disables this feature -->
+        <propertyDef name="nCheckAIOppositionDiplomaticVariation" type="int" default="20"/><!-- adds rand(0,x) to threshold -->
+        <propertyDef name="nCheckAIOppositionPowerVariation" type="int" default="75"/>
+        <propertyDef name="nCheckAIOppositionDifficultyFactor" type="int" default="1"/>
+        <propertyDef name="nMaxEmergencyMilitaryBuildupTurns" type="int" default="30"/>
+        <propertyDef name="nExtendedEmergencyMilitaryBuildupTurns" type="int" default="15"/>
+		<propertyDef name="bAITestMode" type="bool" default="false"/>
+		<propertyDef name="randGen" type="Random"/>
+
+        <!-- builtin method signatures:
+	        enumPlans(avatar,nation,callback)
+	        removeTerminatedPlans(avatar,nation)
+	        updateUnitAllocations(avatar,nation)
+	        AINationInformation getAINationInformation(avatar,nation)
+	        AINationProductionSimulator getAINationProductionSimulator(avatar,nation)
+	        getDistanceBetweenRegions(gameroot,region1,region2)
+            ResearchAI getResearchAI(avatar,nation)
+	        DiplomacyAI getDiplomacyAI(avatar,nation)
+            getMilitaryAI(avatar,nation)
+            object getGeographicColorMap(avatar)
+	        getNationTerritorialIntegrityPercent(gameRoot,nation)
+            setDiplomacyAIScript(diplomacyAIScript)
+            setUsVsThemTemplate(usVsThemTemplate)
+            setTerritorialIntegrityRangedTemplateList(rangedTemplateList)
+            setPowerDifferentialRangedTemplateList(rangedTemplateList)
+            getAnnexRisk(avatar,nation,regions)
+        -->
+        
+        <script type="application/javascript"><![CDATA[
+        
+			function notifyAITestModeAttributeSet(game, oldVal, newVal)
+			{
+				self.bAITestMode = newVal;
+				if (newVal)
+				{
+				    log("WARN(4) - AI Test Mode ENABLED");
+				}
+			}        
+
+			function handleGameStarted(game,eventGameStarted)
+			{
+				setRandomSeed(eventGameStarted.nSeed);
+			}
+			
+            function preEndTurnUpdate(avatar,script)
+            {
+                script.preEndTurnUpdate(avatar);
+            }
+			
+			function handleNationDestroyed(game,nation)
+			{
+			    // remove triggers that have a refNation property once we can remove the handler also
+                //for (var i in self.objAITriggers)
+                //{
+                //    var trigger = self.objAITriggers[i];
+                //    if (trigger.refNation != undefined)
+                //    {
+                //        var testNation = trigger.refNation.resolve(game);
+                //        if (nation.equals(testNation))
+                //        {
+                //            delete self.objAITriggers[i];
+                //        }
+                //    }
+                //}
+			}
+			
+
+            function setRandomSeed(nSeed)
+			{
+				var strSeed = "seed:" + nSeed
+				self.randGen = strSeed;
+				log("DEBUG: GameSysAIUtility randGen " + strSeed);
+			}
+
+            function getRandomWarPlan(avatar,nation)
+            {
+                // return a random war plan from all possible war plans for specified nation
+                
+                var warPlans = self.objWarPlans.filter({"refNation": nation});
+                var totalWeight = 0;
+                for (var i in warPlans)
+                {
+                    var warPlan = warPlans[i];
+                    totalWeight += warPlan.nWeight;
+                }
+                var r = self.objParentAI.getRandomIntInRange(0,totalWeight-1);
+                var t=0;
+                var chosenPlan = null;
+                for (var i in warPlans)
+                {
+                    var warPlan = warPlans[i];
+                    t += warPlan.nWeight;
+                    if (r <= t)
+                    {
+                        chosenPlan = warPlan;
+                        break;
+                    }
+                }
+                return chosenPlan;
+            } // getRandomWarPlan
+            
+            function MessageFinder(argMessageType,argMessages)
+            {
+                this.messageType = argMessageType;
+                this.messageCriteria = argMessages;
+                this.numSpecificsRemoved = 0;
+                this.response = null;
+
+                this.getRandomMessage = function()
+                {
+                    var fmtString = this.getRandomFormatString();
+                    if (fmtString != null)
+                    {
+                        return this.messageCriteria.getMessage(fmtString);
+                    }
+
+                    logError("unable to find " + this.messageType + " message. Criteria values:");
+                    for (var x in this.messageCriteria)
+                    {
+                        log(x + ":" + this.messageCriteria[x]);
+                    }
+                    return "";
+                }
+
+                // check each format string to see if we have values for all it's keywords
+                this.getValidFormatStrings = function(reasonMessages)
+                {
+                    var bestVariableSources = 0;
+                    var validMessages = new Array();
+                    for (j in reasonMessages)
+                    {
+                        var fmtString = reasonMessages[j];
+
+                        //log("DEBUG: reasonMessages[" + j + "]=" + fmtString);
+
+                        var numVariableSources = this.messageCriteria.numVariableSources(fmtString);
+                        if (numVariableSources < bestVariableSources)
+                            continue;
+
+                        if (numVariableSources > bestVariableSources)
+                        {
+                            bestVariableSources = numVariableSources;
+                            validMessages = new Array();
+                        }
+
+                        validMessages.push(fmtString);
+                    }
+                    return validMessages;
+                } // this.getValidFormatStrings
+
+
+                // gets a random message, trying to use the best reason, matching the AI's style of speech if specified
+                this.getRandomFormatString = function()
+                {
+                    var bWantLog = self.bAITestMode;
+                    
+                    var bestFormatStrings = new Array();
+                    var bestWeight = -1;
+
+                    // format string naming convention: FSID.AI.<category>.<style>.<reason>.<variant>
+                    // i.e.: FSID.AI.DeclareWar.Generic.ForceAllegiance.v0
+                    var messageTypeMessages = locale.FSID.AI[this.messageType];
+
+                    if (messageTypeMessages != undefined)
+                    {
+                        for (var i in this.messageCriteria.objReasons)
+                        {
+                            var rw = this.messageCriteria.objReasons[i];
+                            var weight = rw.nWeight;
+                            if (weight < bestWeight)
+                                continue;
+                                
+                            //if (bWantLog)
+                            //{
+                            //    log("DEBUG: looking for message with reason=" + rw.eReason.name + ", weight=" + weight);
+                            //}
+
+                            var tempStrings = null;
+                            var numStrings = 0;
+                            var styleMessages = messageTypeMessages[this.messageCriteria.strStyleOfSpeach];
+                            if (styleMessages != null)
+                            {
+                                var reasonMessages = styleMessages[rw.eReason.name];
+                                if (reasonMessages != undefined)
+                                {
+                                    tempStrings = this.getValidFormatStrings(reasonMessages);
+                                    numStrings = tempStrings.length;
+                                }
+                            }
+
+                            if ((numStrings == 0) && (this.messageCriteria.strStyleOfSpeach != "Generic"))
+                            {
+                                if (bWantLog)
+                                {
+                                    log("DEBUG: didn't find any matches for " + this.messageType + "." + this.messageCriteria.strStyleOfSpeach + "." + rw.eReason.name + ", reverting to Generic");
+                                }
+                            
+                                var genericMessages = messageTypeMessages.Generic;
+                                if (genericMessages != undefined)
+                                {
+                                    reasonMessages = genericMessages[rw.eReason.name];
+                                    if (reasonMessages != undefined)
+                                    {
+                                        tempStrings = this.getValidFormatStrings(reasonMessages);
+                                        numStrings = tempStrings.length;
+                                    }
+                                }
+                            }
+
+                            if (numStrings > 0)
+                            {
+                                if (weight > bestWeight)
+                                {
+                                    bestFormatStrings = tempStrings;
+                                    bestWeight = weight;
+                                }
+                                else
+                                {
+                                    bestFormatStrings.concat(tempStrings);
+                                }
+                            }
+                            else
+                            {
+                                if (bWantLog)
+                                {
+                                    log("DEBUG: didn't find any matches for " + this.messageType + ".(whatever)." + rw.eReason.name);
+                                }
+                            }
+
+                        } // for reasons
+                    } // if we have any messages
+
+                    var n = bestFormatStrings.length;
+                    if (n > 0)
+                    {
+                        var r = self.randGen.getRandomIntInRange(0,n-1);
+                        return bestFormatStrings[r];
+                    }
+                    return null;
+                } // this.getRandomFormatString
+
+            } // MessageFinder
+
+            function getAppropriateMessage(avatar,messageType,messageCriteria)
+            {
+                var nation = avatar.getAttribValue("Nation").resolve(avatar);
+            
+                // fill in style of speach if not specified
+                if ( (messageCriteria.strStyleOfSpeach == "") || (messageCriteria.strStyleOfSpeach == null) )
+                {
+                    var diplomacyAI = self.getDiplomacyAI(avatar, nation);
+                    messageCriteria.strStyleOfSpeach = diplomacyAI.objAIPersonalityTemplate.strStyleOfSpeach;
+                }
+
+                // add default case there's no string for the specified reason.
+                if (messageCriteria.objReasons.find({"eReason":Reason.NoReason}) == null)
+                    messageCriteria.objReasons.add(ReasonPair.create({"eReason": Reason.NoReason, "nWeight": 0 }));
+
+                var messageFinder = new MessageFinder(messageType,messageCriteria);
+                return messageFinder.getRandomMessage();
+            }
+            
+            // builds an appropriate message for a diplomatic change from reactingNation to actingNation
+            function getDiplomaticChangeMessage(game, actingNation, reactingNation, delta, otReasonEvent, bIsAid )
+            {
+                if (delta > 0)					    
+                    messageType = "DiplomaticBonus";
+                else
+                    messageType = "DiplomaticPenalty";
+                    
+                var eReason = Reason.NoReason;
+                
+                if (otReasonEvent.equals(EventTradeOccurred))
+                {
+                    if (bIsAid)
+                    {
+                        eReason = Reason.ResourceAid;
+                    }            
+                }
+                else if (otReasonEvent.equals(EventMoneyTransferOccurred))
+                {
+                    // aid is presumed
+                    eReason = Reason.FinancialAid;
+                }
+                else if (otReasonEvent.equals(EventTradeAgreementAccepted))
+                {
+                    eReason = Reason.TradeAgreementMade;
+                }
+                else if (otReasonEvent.equals(EventTradeAgreementCancelled))
+                {
+                    eReason = Reason.TradeAgreementCancelled;
+                }
+                else if (otReasonEvent.equals(DeploymentSurveillance))
+                {
+                    eReason = Reason.DeploymentSurveillance;
+                }
+                else if (otReasonEvent.equals(OppositionSupport))
+                {
+                    eReason = Reason.OppositionSupport;
+                }
+                else if (otReasonEvent.equals(PoliticalSupport))
+                {
+                    eReason = Reason.PoliticalSupport;
+                }
+                else if (otReasonEvent.equals(RegionSurveillance))
+                {
+                    eReason = Reason.RegionSurveillance;
+                }
+                else if (otReasonEvent.equals(SabotageRegion))
+                {
+                    eReason = Reason.SabotageRegion;
+                }
+                else if (otReasonEvent.equals(StealResearch))
+                {
+                    eReason = Reason.StealResearch;
+                }
+                
+                if (eReason.equals(Reason.NoReason))
+                {
+                    logWarn("No reason found for " + otReasonEvent);
+                }
+
+                var avatar = reactingNation.refAIAvatar.resolve(game);
+                    
+                var messageCriteria = AIMessageSelectionCriteria.create({ 
+                    "objSendingNation": reactingNation, 
+                    "objReceivingNation": actingNation,
+                    "nAmount": abs(delta) });
+
+                messageCriteria.objReasons.add(ReasonPair.create({"eReason": eReason, "nWeight": 100 }));
+                
+                var message = getAppropriateMessage(avatar,messageType,messageCriteria);
+                return message;
+            }
+        
+            function dumpVarStrNames(things, prefix)
+            {
+                var n = 0;
+                var s = prefix;
+                for (var i in things) {
+                    var r = things[i];
+                    n = n + 1
+                    s = s + r.strName + " ";
+                    if (n >= 10) {
+                        log(s);
+                        n = 0;
+                        s = prefix;
+                    }
+                }
+                if (n > 0) {
+                    log(s);
+                }
+            }
+            
+            function getScopeFlagString(designation) {
+                flags = "";
+                var props = designation.type.propSet;
+                for (var i in props) {
+                    var p = props[i];
+                    if (p.name.charAt(0) == 'b') {
+                        if (designation[p.name]) {
+                            flags += p.name + " ";
+                        }
+                    }
+                }
+                return flags;
+            }
+            
+            function doAIRegionLog(game, region) {
+                // dump AI info pertaining to a region
+                var c = 0;
+                log("AIPlans targeting " + region.strName + ":");
+                for (var i in self.objNationAIPlans) {
+                    var plan = self.objNationAIPlans[i];
+                    var targetsRegion = false;
+                    if (plan.objRegionsToConquer != undefined) {
+                        targetsRegion = plan.objRegionsToConquer.contains(region);
+                    }
+                    
+                    var reqs = plan.objUnitRegionRequirements.filter({objRegion: region});
+                    if (targetsRegion || (reqs.length > 0))
+                    {
+                        c = c + 1;
+                        log(c + ". " + plan.refNation.resolve(game).strDisplayName + " " + plan.strName + ", targetsRegion=" +  targetsRegion);
+                        log("      eStatus:          " + plan.eStatus.name );
+                        log("      strPurpose:       " + plan.strPurpose );
+                        log("      fPriority:        " + plan.fPriority );
+                        log("      fAllocationLevel: " + plan.fAllocationLevel );
+                        if (plan.nPhase !== undefined) {
+                            log("      nPhase: " + plan.nPhase );
+                        }
+                        log("      " + plan);
+                        for (var j in reqs) {
+                            var req = reqs[j];
+                            log("    requirement for strComposition '" + req.strComposition  + "' , percent allocated=" + req.getPercentStrengthAllocated() );
+                        log("");
+                        }
+                    }
+                }
+                
+                var controller = region.refController.resolve(game);
+                if (controller != null) {
+                    log("Nations designating region controller " + controller.strDisplayName + " as enemy:");
+                    for (var i in self.objNationMilitaryAIs) {
+                        var nmai = self.objNationMilitaryAIs[i];
+                        var nation = nmai.refNation.resolve(game);
+                        var avatar = nation.refAIAvatar.resolve(game);
+                        var designation = nmai.getEnemyDesignation(avatar,controller);
+                        if (designation != null) {
+                            log( nation.strDisplayName );
+                            log("  fPriority=                   " + designation.fPriority);
+                            log("  eReasonForDesignation=       " + designation.eReasonForDesignation.name);
+                            log("  scope flags: " + getScopeFlagString(designation) );                            
+                            
+                            for (var j in designation.objLandMassIDRegions) {
+                                var id_region = designation.objLandMassIDRegions[j];
+                                var dlm = nmai.objDesiredLandMasses.find({objTargetLandMassIDRegion: id_region});
+                                var regions_to_conquer = "";
+                                log("  Land mass id: " + id_region.strName + ", fPriority=" + dlm.fPriority);
+                                log("   objRegionsToConquer:");
+                                dumpVarStrNames(dlm.objRegionsToConquer,"     ");
+                                log("   objSourceCities:");
+                                dumpVarStrNames(dlm.objSourceCities,"     ");                                
+                            }
+                        }
+                    }
+                }
+                
+
+                
+            }
+        ]]></script>        
+	</objectDef>
+
+</locust>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI2DLargeRegion" superType="UI2DReportPanel">
+		
+	<!-- Header and Background -->
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" from="636"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconRegion"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="65"/>
+			<property name="nHeight" value="55"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="spdata.objRegionData.objOwner"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="635"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>		
+		
+		<object type="UI2DPanelTop" name="objTop">
+			<property name="nWidth" from="def.nWidth - 8"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="objNation" from="spdata.objRegionData.objController"/>
+			<property name="strDesc" from="spdata.objRegionData.objController.strDisplayName"/>
+			
+			<object type="common_ui.UI2DListHorz" name="objInfoBubbles">
+				<property name="nX" value="2"/>
+				<property name="nY" value="0"/>
+				<property name="haXAlign" value="RIGHT"/>
+				<property name="nSpacing" value="3"/>
+				
+				<!-- placeholder 
+				<object type="mlui.UI2DImage" name="objElements">
+					<property name="tmplImage" value="skin.ImgIDIconWeatherSnow"/>
+					<property name="nWidth" value="28"/>
+					<property name="nHeight" value="28"/>
+					<property name="strToolTip" from="locale.SID.UI.Snow"/>
+				</object>
+				-->
+				<!--<object type="UI2DSeasonIcon" name="objElements" existsWhile="gs_tbg.getRegionSeason(mh2data.objAvatar, spdata.objRegionData.objRegion) != null">-->
+				<!--	<property name="nWidth" value="28"/>-->
+				<!--	<property name="nHeight" value="28"/>-->
+				<!--	<property name="objRegion" from="spdata.objRegionData.objRegion" />-->
+				<!--</object>-->
+				
+				<object type="UI2DInfoBubbleSq" name="objElements">
+					<property name="tmplIcon" from="mh2data.getTerrainIcon(spdata.objRegionData.objRegion.tmplTerrain)"/>
+                    <property name="strToolTip" from="spdata.objRegionData.objRegion.tmplTerrain.resolve().strDisplayName"/>
+                </object>
+				
+				<object type="UI2DSOLargeMinimizeButton" name="objElements">
+					<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+						<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+							<property name="otEventType" value="mlui.EventButtonClicked"/>
+							<script type="application/javascript"><![CDATA[
+								function handle(event, owner)
+								{
+									spdata.showLessInfo();
+								}
+							]]></script>
+						</object>
+					</object>
+				</object>
+				
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objRegionManagementLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown18Left"/>
+			<property name="strText" from="locale.SID.UI.RegionManagement"/>
+			<property name="nX" value="12"/>
+			<property name="nY" from="99 + if(mlui.objUI.nHeight == 600, 4, 0)"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="8"/>
+			<property name="nY" value="136"/>
+			<property name="nWidth" value="878"/>
+			<property name="nHeight" value="548"/>
+		</object>
+		
+		<propertyDef name="objTab" storesChildren="true">
+			switch{
+				case spdata.objRegionData.eTab == RegionSection.PRODUCTION:
+					<object type="UI2DRegionTabProduction">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>		
+				case spdata.objRegionData.eTab == RegionSection.INFRASTRUCTURE:
+					<object type="UI2DRegionTabInfrastructure">
+						<property name="nWidth" value="878"/>
+						<property name="nHeight" value="548"/>
+						<property name="nX" value="8"/>
+						<property name="nY" value="136"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				case spdata.objRegionData.eTab == RegionSection.INFO:
+					<object type="UI2DRegionTabInfo">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+			}
+		</propertyDef>
+		
+		<object type="mlui.UI2DImage" name="objButtonsShadow">
+			<property name="tmplImage" value="skin.ImgReportPanelShadow16x16"/>
+			<property name="nX" value="673"/>
+			<property name="nY" value="101"/>
+			<property name="nWidth" value="213"/>
+			<property name="nHeight" value="48"/>
+			<property name="nDepth" value="-100"/>
+		</object>		
+		
+		<!--<object type="UI2DRegionButtons" name="objRegionButtons">-->
+		<!--	<property name="nX" value="635"/>-->
+		<!--	<property name="nY" value="102"/>-->
+		<!--	<property name="nWidth" value="245"/>-->
+		<!--	<property name="nHeight" value="40"/>-->
+		<!--</object>-->
+		
+		
+		<object type="common_ui.UI2DListHorz" name="objInfoBubbles">
+			<property name="nX" value="14"/>
+			<property name="nY" value="102"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nSpacing" value="1"/>
+		
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.RegionProduction"/>
+				<property name="tmplIcon" value="skin.ImgMinnerIcon"/>
+				<property name="bSelected">
+                    spdata.objRegionData.eTab == RegionSection.PRODUCTION
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								spdata.objRegionData.showRegionProduction(spdata.objRegionData.objRegion);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.RegionProjects"/>
+				<property name="tmplIcon" value="skin.ImgPickaxPersonIcon"/>
+				<property name="bSelected">
+                    spdata.objRegionData.eTab == RegionSection.INFRASTRUCTURE
+                </property>
+				<property name="bVisible">
+					spdata.objRegionData.objController == mh2data.objNation
+				</property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								spdata.objRegionData.showRegionInfrastructure(spdata.objRegionData.objRegion);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.RegionInfo"/>
+				<property name="tmplIcon" value="skin.ImgPickaxHammerIcon"/>
+				<property name="bSelected">
+                    spdata.objRegionData.eTab == RegionSection.INFO
+                </property>
+                				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								spdata.objRegionData.showRegionInfo(spdata.objRegionData.objRegion);
+							}
+						]]></script>
+					</object>					
+				</object>
+			</object>
+		</object>
+		
+	</objectDef>
+</locust>

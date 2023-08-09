@@ -1,0 +1,2255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="NoteGenMethodFormatString" superType="NoteGenMethod" desc="A notification generator that uses a method and a format string">
+        <propertyDef name="fstrMessage" type="FormatString"/>"
+       	<!-- Expected methods:
+		    	handleGameEvent(gameroot, event)
+		-->
+    </objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenEngagementBegan" superType="NoteGenMethodFormatString" desc="A notification generator for an engagement beginning">
+		<property name="otEvents" value="EventEngagementBegan"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					var allAllies = [];
+					event.objEngagement.getAllAllies(game, allAllies);
+
+					message = self.fstrMessage.format({
+						"region": event.objRegion.strDisplayName,
+						"attacker": event.objAttacker.strDisplayName,
+						"defender": event.objDefender.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementBegan"),
+						"objTargetNations": [],
+						"objJumpTarget": event.objEngagement
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenEngagementEnded" superType="NoteGenMethodFormatString" desc="A notification generator for an engagement ending">
+		<property name="otEvents" value="EventEngagementEnded"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					var allAllies = [];
+					event.objEngagement.getAllAllies(game, allAllies);
+
+					message = self.fstrMessage.format({
+						"winner": event.objWinner.strDisplayName,
+						"region": event.objRegion.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementEnded"),
+						"objTargetNations": [],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitDamagedInEngagement" superType="NoteGenMethodFormatString" desc="A notification generator for a unit damaged in an engagement">
+		<property name="otEvents" value="EventUnitDamagedInEngagement"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					var involvedNations = [];
+					event.objEngagement.getInvolvedNations(game, involvedNations);
+
+					message = self.fstrMessage.format({
+						"unit": event.objUnit.strDisplayName,
+						"damage": event.nDamage,
+						"nation": event.objNation.strDisplayName,
+                        "region": event.objEngagement.refRegion.resolve(game).strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDamaged"),
+						"bAllNations": false,
+						"objTargetNations":involvedNations,
+						"objJumpTarget": event.objEngagement
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitDamagedByAA" superType="NoteGenMethodFormatString" desc="A notification generator for a unit damaged by AAA">
+		<property name="otEvents" value="EventUnitDamagedByAA"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+						"unit": event.objUnit.strDisplayName,
+						"damage": event.nDamage,
+						"nation": event.objNation.strDisplayName,
+                        "region": event.objRegion.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDamaged"),
+						"bAllNations": false,
+						"objTargetNations": [event.objNation, event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitDamagedByAerialCombat" superType="NoteGenMethodFormatString" desc="A notification generator for a unit damaged during aerial combat">
+		<property name="otEvents" value="EventUnitDamagedByAerialCombat"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+						"unit": event.objUnit.strDisplayName,
+						"damage": event.nDamage,
+						"nation": event.objNation.strDisplayName,
+                        "region": event.objRegion.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDamaged"),
+						"bAllNations": false,
+						"objTargetNations": [event.objNation, event.objOtherNation],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitDamagedByCoastalDefenses" superType="NoteGenMethodFormatString" desc="A notification generator for a unit damaged by coastal defenses">
+		<property name="otEvents" value="EventUnitDamagedByCoastalDefenses"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+						"unit": event.objUnit.strDisplayName,
+						"damage": event.nDamage,
+						"nation": event.objNation.strDisplayName,
+                        "region": event.objRegion.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDamaged"),
+						"bAllNations": false,
+						"objTargetNations": [event.objNation, event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitDamagedByBombing" superType="NoteGenMethodFormatString" desc="A notification generator for a unit damaged by bombing">
+		<property name="otEvents" value="EventUnitDamagedByBombing"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+                        "nation": event.objUnit.refController.resolve(game).strDisplayName,
+						"unit": event.objUnit.strDisplayName,
+						"damage": event.nDamage,
+                        "region": event.objRegion.strDisplayName,
+                        "bombernation": event.objBomberGroup.refController.resolve(game).strDisplayName,
+                        "bomber": event.objBomberGroup.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDamaged"),
+						"bAllNations": false,
+						"objTargetNations": [event.objUnit.refController.resolve(game), event.objBomberGroup.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitDamagedByGroundFire" superType="NoteGenMethodFormatString" desc="A notification generator for a unit damaged by ground fire">
+		<property name="otEvents" value="EventUnitDamagedByGroundFire"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+                        "nation": event.objUnit.refController.resolve(game).strDisplayName,
+						"unit": event.objUnit.strDisplayName,
+						"damage": event.nDamage,
+                        "region": event.objRegion.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDamaged"),
+						"bAllNations": false,
+						"objTargetNations": [event.objUnit.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitDamagedByShoreBombardment" superType="NoteGenMethodFormatString" desc="A notification generator for a unit damaged by shore bombardment">
+		<property name="otEvents" value="EventUnitDamagedByShoreBombardment"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+                        "nation": event.objUnit.refController.resolve(game).strDisplayName,
+						"unit": event.objUnit.strDisplayName,
+						"damage": event.nDamage,
+                        "region": event.objRegion.strDisplayName,
+                        "bombardingnation": event.objBombardingGroup.refController.resolve(game).strDisplayName,
+                        "bombardinggroup": event.objBombardingGroup.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDamaged"),
+						"bAllNations": false,
+						"objTargetNations": [event.objUnit.refController.resolve(game), event.objBombardingGroup.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification; may need to be modified to add in target nations other than the unit controller, depending on its use -->
+	<objectDef type="NoteGenUnitDamaged" superType="NoteGenMethodFormatString" desc="A notification generator for general unit damage">
+		<property name="otEvents" value="EventUnitDamaged"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"unit": event.objUnit.strDisplayName,
+						"damage": event.nDamage,
+						"nation": event.objNation.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDamaged"),
+						"bAllNations": false,
+						"objTargetNations": [event.objNation],
+						"objJumpTarget": event.objUnit.refUnitGroup.resolve(game)
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenUnitDestroyedInEngagement" superType="NoteGenMethodFormatString" desc="A notification generator for a unit destroyed in an engagement">
+		<property name="otEvents" value="EventUnitDestroyedInEngagement"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					var involvedNations = [];
+					event.objEngagement.getInvolvedNations(game, involvedNations);
+
+					message = self.fstrMessage.format({
+						"nation": event.objNation.strDisplayName,
+						"unit": event.objUnit.strDisplayName,
+                        "region": event.objEngagement.refRegion.resolve(game).strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDestroyed"),
+						"bAllNations": false,
+						"objTargetNations": involvedNations,
+						"objJumpTarget": event.objEngagement.refRegion.resolve(game)
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenUnitDestroyedByAA" superType="NoteGenMethodFormatString" desc="A notification generator for a unit destroyed by AAA">
+		<property name="otEvents" value="EventUnitDestroyedByAA"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+						"nation": event.objNation.strDisplayName,
+						"unit": event.objUnit.strDisplayName,
+                        "region": event.objRegion.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDestroyed"),
+						"bAllNations": false,
+						"objTargetNations": [event.objNation, event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenUnitDestroyedByAerialCombat" superType="NoteGenMethodFormatString" desc="A notification generator for a unit destroyed during aerial combat">
+		<property name="otEvents" value="EventUnitDestroyedByAerialCombat"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+						"nation": event.objNation.strDisplayName,
+						"unit": event.objUnit.strDisplayName,
+                        "region": event.objRegion.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDestroyed"),
+						"bAllNations": false,
+						"objTargetNations": [event.objNation, event.objOtherNation],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenUnitDestroyedByCoastalDefenses" superType="NoteGenMethodFormatString" desc="A notification generator for a unit destroyed by coastal defenses">
+		<property name="otEvents" value="EventUnitDestroyedByCoastalDefenses"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+						"nation": event.objNation.strDisplayName,
+						"unit": event.objUnit.strDisplayName,
+                        "region": event.objRegion.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDestroyed"),
+						"bAllNations": false,
+						"objTargetNations": [event.objNation, event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenUnitDestroyedByBombing" superType="NoteGenMethodFormatString" desc="A notification generator for a unit destroyed by bombing">
+		<property name="otEvents" value="EventUnitDestroyedByBombing"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+                        "nation": event.objUnit.refController.resolve(game).strDisplayName,
+						"unit": event.objUnit.strDisplayName,
+                        "region": event.objRegion.strDisplayName,
+                        "bombernation": event.objBomberGroup.refController.resolve(game).strDisplayName,
+                        "bomber": event.objBomberGroup.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDestroyed"),
+						"bAllNations": false,
+						"objTargetNations": [event.objUnit.refController.resolve(game), event.objBomberGroup.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenUnitDestroyedByGroundFire" superType="NoteGenMethodFormatString" desc="A notification generator for a unit destroyed by ground fire">
+		<property name="otEvents" value="EventUnitDestroyedByGroundFire"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+                        "nation": event.objUnit.refController.resolve(game).strDisplayName,
+						"unit": event.objUnit.strDisplayName,
+                        "region": event.objRegion.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDestroyed"),
+						"bAllNations": false,
+						"objTargetNations": [event.objUnit.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenUnitDestroyedByShoreBombardment" superType="NoteGenMethodFormatString" desc="A notification generator for a unit destroyed by shore bombardment">
+		<property name="otEvents" value="EventUnitDestroyedByShoreBombardment"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					message = self.fstrMessage.format({
+                        "nation": event.objUnit.refController.resolve(game).strDisplayName,
+						"unit": event.objUnit.strDisplayName,
+                        "region": event.objRegion.strDisplayName,
+                        "bombardingnation": event.objBombardingGroup.refController.resolve(game).strDisplayName,
+                        "bombardinggroup": event.objBombardingGroup.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDestroyed"),
+						"bAllNations": false,
+						"objTargetNations": [event.objUnit.refController.resolve(game), event.objBombardingGroup.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification; may need to be modified to add in target nations other than the unit controller, depending on its use -->
+    <objectDef type="NoteGenUnitDestroyed" superType="NoteGenMethodFormatString" desc="A notification generator for a unit destroyed">
+		<property name="otEvents" value="EventUnitDestroyed"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"nation": event.objNation.strDisplayName,
+						"unit": event.objUnit.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitDestroyed"),
+						"bAllNations": false,
+						"objTargetNations": [event.objNation],
+						"objJumpTarget": event.objUnit.refUnitGroup.resolve(game).getRegion(game)
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitRepaired" superType="NoteGenMethodFormatString" desc="A notification generator for a unit Repaired">
+		<property name="otEvents" value="EventUnitRepaired"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"unit": event.objUnit.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitRepaired"),
+						"bAllNations": false,
+						"objTargetNations": [event.objUnit.refController.resolve(game)],
+						"objJumpTarget": event.objUnit.refUnitGroup.resolve(game)
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenUnitProduced" superType="NoteGenMethodFormatString" desc="A notification generator for a unit produced">
+		<property name="otEvents" value="EventUnitProduced"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+			        var strTmplUnit = event.objUnit.objUnitTemplate.strDisplayName;
+				    var strUnitName = strTmplUnit + " " + event.objUnit.strDisplayName;
+
+					message = self.fstrMessage.format({
+						"unit": strUnitName,
+						"city": event.objCity.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+						"tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateCityUnitProduced"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objCity.getController(game)],
+						"objJumpTarget": event.objCity
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenFactoryOutputProduced" superType="NoteGenMethodFormatString" desc="A notification generator for when a factory output is produced">
+		<property name="otEvents" value="EventFactoryOutputProduced"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				 {
+				    var tmplFactoryOutput = event.tmplFactoryOutput.resolve();
+
+				    if (tmplFactoryOutput.instanceOf(FactoryOutputCityBuildingTemplate))
+				    {
+
+				        var tmplCityBuilding = tmplFactoryOutput.tmplCityBuilding.resolve();
+    				    var message = self.fstrMessage.format({
+						    "building": tmplCityBuilding.strDisplayName,
+						    "city": event.objCity.strDisplayName
+					    });
+
+					    local.GActCreateAndAddNotification.execute({
+						    "objGame": game,
+						    "strMessage": message,
+                            "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateCityFactoryOutputProduced"),
+							"bAllNations":false,
+							"objTargetNations" : [event.objCity.getController(game)],
+							"objJumpTarget": event.objCity
+					    });
+					}
+					else if (tmplFactoryOutput.instanceOf(FactoryOutputResearchCenterBuildingTemplate ) )
+					{
+				        var tmplResearchBuilding = tmplFactoryOutput.tmplResearchCenterBuilding.resolve();
+    				    var message = self.fstrMessage.format({
+						    "building": tmplResearchBuilding.strDisplayName,
+						    "city": event.objCity.strDisplayName
+					    });
+
+					    local.GActCreateAndAddNotification.execute({
+						    "objGame": game,
+						    "strMessage": message,
+                            "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateResearchGenFactoryOutputProduced"),
+							"bAllNations":false,
+							"objTargetNations" : [event.objCity.getController(game)],
+							"objJumpTarget": event.objCity
+					    });
+					}
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenRegionChangedController" superType="NoteGenMethodFormatString" desc="A notification generator for a region changed controller">
+		<property name="otEvents" value="EventRegionChangedController"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"newcontroller": event.objNewController.strDisplayName,
+						"region": event.objRegion.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateStabilityGenRegionChangedController"),
+						"objTargetNations": [],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenTradeAgreementAccepted" superType="NoteGenMethod" desc="A notification generator for a trade deal being signed">
+		<property name="otEvents" value="EventTradeAgreementAccepted"/>
+		<script type="application/javascript">
+			<![CDATA[
+
+				function handleGameEvent(event, game)
+				{
+					var proposingNation = event.objTradeAgreement.refProposingNation.resolve(game);
+					var sourceNation = event.objTradeAgreement.refSourceNation.resolve(game);
+					var destNation = event.objTradeAgreement.refDestNation.resolve(game);
+					var resource = event.objTradeAgreement.tmplResource.resolve();
+
+					var fmtString;
+					if (proposingNation.equals(sourceNation))
+						fmtString =locale.FSID.Notification.TradeAgreementReached.ExportProposal;
+					else
+						fmtString =locale.FSID.Notification.TradeAgreementReached.ImportProposal;
+
+					var message = fmtString.format({
+						"proposingNation": proposingNation.strDisplayName,
+						"source": sourceNation.strDisplayName,
+						"dest": destNation.strDisplayName,
+						"resource": resource.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateTradeAgreementAccepted"),
+						"bAllNations": false,
+						"objTargetNations" : [sourceNation,
+											  destNation],
+						"objJumpTarget": proposingNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+	
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenTradeAgreementCancelled" superType="NoteGenMethodFormatString" desc="A notification generator for a trade deal being cancelled">
+		<property name="otEvents" value="EventTradeAgreementCancelled"/>
+		<script type="application/javascript">
+			<![CDATA[
+
+				function handleGameEvent(event, game)
+				{
+					var sourceNation = event.objTradeAgreement.refSourceNation.resolve(game);
+					var destNation = event.objTradeAgreement.refDestNation.resolve(game);
+					var resource = event.objTradeAgreement.tmplResource.resolve();
+
+					var message = self.fstrMessage.format({
+						"source": sourceNation.strDisplayName,
+						"dest": destNation.strDisplayName,
+						"resource": resource.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateTradeAgreementCancelled"),
+						"bAllNations": false,
+						"objTargetNations" : [sourceNation,
+											  destNation],
+						"objJumpTarget": sourceNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenMoneyTransferAccepted" superType="NoteGenMethod" desc="A notification generator for a money transfer being agreed to">
+		<property name="otEvents" value="EventMoneyTransferAccepted"/>
+		<script type="application/javascript">
+			<![CDATA[
+
+				function handleGameEvent(event, game)
+				{
+					var proposingNation = event.objMoneyTransfer.refProposingNation.resolve(game);
+					var sourceNation = event.objMoneyTransfer.refSourceNation.resolve(game);
+					var destNation = event.objMoneyTransfer.refDestNation.resolve(game);
+					var amount = event.objMoneyTransfer.n64Amount;
+
+					var fmtString;
+					if (proposingNation.equals(sourceNation))
+						fmtString =locale.FSID.Notification.MoneyTransferAccepted.SendMoney;
+					else
+						fmtString =locale.FSID.Notification.MoneyTransferAccepted.ReceiveMoney;
+
+					var message = fmtString.format({
+						"proposingNation": proposingNation.strDisplayName,
+						"source": sourceNation.strDisplayName,
+						"dest": destNation.strDisplayName,
+						"amount": amount
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateTradeMoneyTransferAccepted"),
+						"bAllNations": false,
+						"objTargetNations" : [sourceNation,
+											  destNation],
+						"objJumpTarget": proposingNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenMoneyTransferCancelled" superType="NoteGenMethodFormatString" desc="A notification generator for a money transfer being cancelled">
+		<property name="otEvents" value="EventMoneyTransferCancelled"/>
+		<script type="application/javascript">
+			<![CDATA[
+
+				function handleGameEvent(event, game)
+				{
+					var sourceNation = event.objMoneyTransfer.refSourceNation.resolve(game);
+					var destNation = event.objMoneyTransfer.refDestNation.resolve(game);
+					var amount = event.objMoneyTransfer.n64Amount;
+
+					var message = self.fstrMessage.format({
+						"source": sourceNation.strDisplayName,
+						"dest": destNation.strDisplayName,
+						"amount": amount
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateTradeMoneyTransferCancelled"),
+						"bAllNations": false,
+						"objTargetNations" : [sourceNation,
+											  destNation],
+						"objJumpTarget": sourceNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenMoneyTransferOccurred" superType="NoteGenMethodFormatString" desc="A notification generator for a money transfer occurring">
+		<property name="otEvents" value="EventMoneyTransferOccurred"/>
+		<script type="application/javascript">
+			<![CDATA[
+
+				function handleGameEvent(event, game)
+				{
+					var message = self.fstrMessage.format({
+						"source": event.objSource.strDisplayName,
+						"dest": event.objDestination.strDisplayName,
+						"amount": event.n64Amount
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateTradeMoneyTransferOccurred"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objSource,
+											  event.objDestination],
+						"objJumpTarget": event.objSource
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+	
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenDiplomaticRelationsChanged" superType="NoteGenMethod" desc="A notification generator for diplomatic relations change">
+		<property name="otEvents" value="EventDiplomaticRelationsChanged"/>
+		<script type="application/javascript">
+			<![CDATA[
+
+				function handleGameEvent(event, game)
+				{
+					var receivingNation = event.objActingNation;
+					var sendingNation = event.objReactingNation;
+					var message = event.strMessage;
+					
+					//log("DEBUG: " + message);
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomatic"),
+						"bAllNations": false,
+						"objTargetNations" : [receivingNation],
+						"objJumpTarget": sendingNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Broadcast Notification -->
+	<objectDef type="NoteGenWarDeclared" superType="NoteGenMethodFormatString" desc="A notification generator for a war being declared">
+		<property name="otEvents" value="EventWarDeclared"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"declaring": event.objDeclaringNation.strDisplayName,
+						"target": event.objTargetNation.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticWarDeclared"),
+						"objTargetNations": [],
+						"objJumpTarget": event.objDeclaringNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Broadcast Notification -->
+	<objectDef type="NoteGenAllianceCreated" superType="NoteGenMethodFormatString" desc="A notification generator for an alliance being created">
+		<property name="otEvents" value="EventAllianceCreated"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"name": event.objAlliance.strDisplayName
+
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticAllianceCreated"),
+						"objTargetNations": [],
+						"objJumpTarget": event.objAlliance.refLeadNation.resolve(game)
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Broadcast Notification -->
+	<objectDef type="NoteGenAllianceJoined" superType="NoteGenMethodFormatString" desc="A notification generator for a nation joining an alliance">
+		<property name="otEvents" value="EventAllianceJoined"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+				    var nation = event.objAllianceMembership.refNation.resolve(game);
+				    var alliance = event.objAllianceMembership.refAlliance.resolve(game);
+				    if ((nation != null) && (alliance != null)) // if nation and alliance still exists when we process this event
+				    {
+					    message = self.fstrMessage.format({
+						    "nation": nation.strDisplayName,
+						    "alliance": alliance.strDisplayName
+					    });
+					    local.GActCreateAndAddNotification.execute({
+						    "objGame": game,
+						    "strMessage": message,
+                            "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticAllianceJoined"),
+						    "objTargetNations": [],
+						    "objJumpTarget": nation
+					    });
+					}
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Broadcast Notification -->
+	<objectDef type="NoteGenAllianceLeft" superType="NoteGenMethod" desc="A notification generator for a nation leaving an alliance">
+		<property name="otEvents" value="EventAllianceLeft"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					if (event.objAlliance == null) {
+						var fmtString = locale.FSID.Notification.AllianceLeftAndDissolved;
+						message = fmtString.format({
+							"nation": event.objNation.strDisplayName
+						});
+					}
+					else {
+						var fmtString = locale.FSID.Notification.AllianceLeft;
+						message = fmtString.format({
+							"nation": event.objNation.strDisplayName,
+							"alliance": event.objAlliance.strDisplayName
+						});
+					}
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticAllianceLeft"),
+						"objTargetNations": [],
+						"objJumpTarget": event.objNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Broadcast Notification -->
+	<objectDef type="NoteGenNationDefeated" superType="NoteGenMethod" desc="A notification generator for a defeated nation">
+		<property name="otEvents" value="EventNationDefeated"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					var controllerNation = event.objControllerNation;
+					var defeatedNation = event.objDefeatedNation;
+
+					switch(event.eChoice.index)
+					{
+						case NationDefeatChoice.CHOICE_ANNEX.index:
+							var fmtString = locale.FSID.Notification.NationDefeated.Annex;
+							break;
+						case NationDefeatChoice.CHOICE_PUPPET.index:
+							var fmtString = locale.FSID.Notification.NationDefeated.Puppet;
+							break;
+						case NationDefeatChoice.CHOICE_COLONY.index:
+							var fmtString = locale.FSID.Notification.NationDefeated.Colony;
+							break;
+					}
+
+					var message = fmtString.format({
+						"controller": controllerNation.strDisplayName,
+						"defeated": defeatedNation.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticNationDefeated"),
+						"objTargetNations" : [],
+						"objJumpTarget": controllerNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenMilitaryAccessChanged" superType="NoteGenMethod" desc="A notification generator for a nation changing military access">
+		<property name="otEvents" value="EventMilitaryAccessChanged"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					var fmtString;
+					if (event.bGrant)
+						fmtString = locale.FSID.Notification.MilitaryAccessGranted;
+					else
+						fmtString = locale.FSID.Notification.MilitaryAccessRevoked;
+
+					message = fmtString.format({ "grantingNation": event.objGrantingNation.strDisplayName, "receivingNation": event.objReceivingNation.strDisplayName });
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticMilitaryAccessChanged"),
+						"objTargetNations": [],
+						"objJumpTarget": event.objGrantingNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenEmbargoPlaced" superType="NoteGenMethodFormatString" desc="A notification generator for a nation placing an embargo on another nation">
+		<property name="otEvents" value="EventEmbargoPlaced"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					var objDeclaringNation = event.objEmbargo.refInitiatingNation.resolve(game);
+					var objTargetNation = event.objEmbargo.refEmbargoedNation.resolve(game);
+
+					var message = self.fstrMessage.format({
+						"declaring": objDeclaringNation.strDisplayName,
+						"target": objTargetNation.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticEmbargoPlaced"),
+						"objTargetNations": [],
+						"objJumpTarget": objDeclaringNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenEmbargoLifted" superType="NoteGenMethodFormatString" desc="A notification generator for a nation lifting an embargo on another nation">
+		<property name="otEvents" value="EventEmbargoLifted"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					var objDeclaringNation = event.objEmbargo.refInitiatingNation.resolve(game);
+					var objTargetNation = event.objEmbargo.refEmbargoedNation.resolve(game);
+
+					var message = self.fstrMessage.format({
+						"declaring": objDeclaringNation.strDisplayName,
+						"target": objTargetNation.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticEmbargoLifted"),
+						"objTargetNations": [],
+						"objJumpTarget": objDeclaringNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenRegionOutputProduced" superType="NoteGenMethodFormatString" desc="A notification generator for a region output being produced">
+		<property name="otEvents" value="EventRegionOutputProduced"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"region": event.objRegion.strDisplayName,
+						"output": event.tmplRegionOutput.resolve().strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionOutputProduced"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitMoraleChanged" superType="NoteGenMethodFormatString" desc="A notification generator for a unit's morale changing">
+		<property name="otEvents" value="EventUnitMoraleChanged"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"unit": event.objUnit.strDisplayName,
+						"newMorale": event.tmplNewMorale.resolve().strDisplayName,
+						"oldMorale": event.tmplOldMorale.resolve().strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateStabilityUnitMoraleChanged"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objUnit.refController.resolve(game)],
+						"objJumpTarget": event.objUnit.refUnitGroup.resolve(game)
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitExperienceChanged" superType="NoteGenMethodFormatString" desc="A notification generator for a unit's experience changing">
+		<property name="otEvents" value="EventUnitExperienceChanged"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"unit": event.objUnit.strDisplayName,
+						"newExperience": event.tmplNewExperience.resolve().strDisplayName,
+						"oldExperience": event.tmplOldExperience.resolve().strDisplayName
+
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitExperienceChanged"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objUnit.refController.resolve(game)],
+						"objJumpTarget": event.objUnit.refUnitGroup.resolve(game)
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenUnitGroupCommandChanged" superType="NoteGenMethodFormatString" desc="A notification generator for a unit group's commmand changing">
+		<property name="otEvents" value="EventUnitGroupCommandChanged"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"unitGroup": event.objUnitGroup.strDisplayName,
+						"newCommand": event.tmplNewCommand.resolve().strDisplayName,
+						"oldCommand": event.tmplOldCommand.resolve().strDisplayName
+
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementUnitGroupCommandChanged"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objUnitGroup.getController(game)],
+						"objJumpTarget": event.objUnitGroup
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenNationStabilityChanged" superType="NoteGenMethodFormatString" desc="A notification generator for a nation's stability changing">
+		<property name="otEvents" value="EventNationStabilityChanged"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+					message = self.fstrMessage.format({
+						"nation": event.objNation.strDisplayName,
+						"newStability": event.tmplNewStability.resolve().strDisplayName,
+						"oldStability": event.tmplOldStability.resolve().strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateStabilityNationChanged"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objNation],
+						"objJumpTarget": event.objNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenTradeOccurred" superType="NoteGenMethod" desc="A notification generator for a trade occurred">
+		<property name="otEvents" value="EventTradeOccurred"/>
+		<script type="application/javascript">
+			<![CDATA[
+
+				function handleGameEvent(event, game) {
+
+                    for(i in event.objTradeRecord.objTradeResourceRecords) {
+                        record = event.objTradeRecord.objTradeResourceRecords[i];
+
+						var objSourceNation = event.objTradeRecord.refSourceNation.resolve(game);
+						var objDestNation = event.objTradeRecord.refDestNation.resolve(game);
+
+                        if((record.nTradeAmount - record.nDeliveredAmount) > 0)
+                        {
+							var fmtString = locale.FSID.Notification.TradeOccurred.WithLoss;
+                        }
+                        else
+                        {
+                            var fmtString = locale.FSID.Notification.TradeOccurred.WithoutLoss;
+                        }
+
+						var message = fmtString.format({
+                                "SourceNation": objSourceNation.strDisplayName,
+                                "DestNation": objDestNation.strDisplayName,
+								"AmountDelivered": record.nDeliveredAmount,
+                                "AmountTraded": record.nTradeAmount,
+                                "Resource": record.tmplResource.resolve().strDisplayName
+                            });
+
+                        local.GActCreateAndAddNotification.execute({
+                            "objGame": game,
+                            "strMessage": message,
+                            "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateTradeOccurred"),
+							"bAllNations": false,
+							"objTargetNations" : [objSourceNation, objDestNation],
+							"objJumpTarget": objSourceNation
+                        });
+                    }
+				}
+
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenResearchProjectCompleted" superType="NoteGenMethodFormatString" desc="A notification generator for a research project completed">
+		<property name="otEvents" value="EventResearchProjectCompleted"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					var targetNations = getNationsFromResearchProgram(game, event.objResearchProject.refResearchProgram.resolve(game));
+					var objNation = targetNations[0].getMasterNation(game);
+
+					message = self.fstrMessage.format({
+						"topic": event.objResearchProject.tmplResearchTopic.resolve().strDisplayName,
+						"nation": objNation.strDisplayName
+					});
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateResearchProjectCompleted"),
+						"bAllNations": false,
+						"objTargetNations" : targetNations,
+						"objJumpTarget": objNation
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenNationRevoltEvent" superType="NoteGenMethodFormatString" desc="A notification generator for a revolution">
+		<script type="application/javascript">
+                        <![CDATA[
+			function handleGameEvent(event, game)
+			{
+				message = self.fstrMessage.format({
+					"nation": event.objRevoltNation.strDisplayName
+					});
+
+				local.GActCreateAndAddNotification.execute({
+					"objGame": game,
+					"strMessage": message,
+                    "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateGovernmentGenNationRevolt"),
+					"objTargetNations": [],
+					"objJumpTarget": event.objRevoltNation
+				});
+
+				//log("DEBUG: " + message);
+			}
+		]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenNationEvent" superType="NoteGenMethodFormatString" desc="A notification generator involving a nation">
+		<script type="application/javascript"><![CDATA[
+			function handleGameEvent(event, game)
+			{
+				message = self.fstrMessage.format({
+					"nation": event.objNation.strDisplayName
+					});
+
+				local.GActCreateAndAddNotification.execute({
+					"objGame": game,
+					"strMessage": message,
+                    "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateGovernmentGenNation"),
+					"bAllNations": false,
+					"objTargetNations" : [event.objNation],
+					"objJumpTarget": event.objNation
+				});
+
+				//log("DEBUG: " + message);
+			}
+		]]></script>
+	</objectDef>
+
+	<!-- City Specific Notification -->
+	<objectDef type="NoteGenCityEvent" superType="NoteGenMethodFormatString" desc="A notification generator involving a city">
+		<script type="application/javascript"><![CDATA[
+			function handleGameEvent(event, game)
+			{
+				message = self.fstrMessage.format({
+					"city": event.objCity.strDisplayName
+					});
+
+				local.GActCreateAndAddNotification.execute({
+					"objGame": game,
+					"strMessage": message,
+                    "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateCityGenCity"),
+					"bAllNations": false,
+					"objTargetNations" : [event.objCity.objController],
+					"objJumpTarget": event.objCity
+				});
+
+				//log("DEBUG: " + message);
+			}
+		]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenNationIdeologyEvent" superType="NoteGenMethodFormatString" desc="A notification generator involving a nation and an ideology">
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"nation": event.objNation.strDisplayName,
+						"ideology": event.tmplIdeology.resolve().strDisplayName
+						});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateGovernmentGenNationIdeology"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objNation],
+						"objJumpTarget": event.objNation
+					});
+					//log("DEBUG: " + message);
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- City Specific Notification -->
+	<objectDef type="NoteGenNationResearchTopicEvent" superType="NoteGenMethodFormatString" desc="A notification generator involving a nation and a research topic">
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"city": event.objCity.strDisplayName,
+						"topic": event.tmplResearchTopic.resolve().strDisplayName
+						});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateResearchGenNationResearchTopic"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objCity.objController],
+						"objJumpTarget": event.objCity
+					});
+					//log("DEBUG: " + message);
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Region Specific Notification -->
+	<objectDef type="NoteGenRegionResourceEvent" superType="NoteGenMethodFormatString" desc="Base notification generator for something involving a region and a resource">
+		<propertyDef name="fstrOilMessage" type="FormatString" from="self.fstrMessage"/>
+		<propertyDef name="fstrCoalMessage" type="FormatString" from="self.fstrMessage"/>
+		<propertyDef name="fstrMetalsMessage" type="FormatString" from="self.fstrMessage"/>
+		<propertyDef name="fstrFoodMessage" type="FormatString" from="self.fstrMessage"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					switch(event.tmplResource.resolve().strName)
+					{
+						case 'Oil':
+							message = self.fstrOilMessage.format({
+								"region": event.objRegion.strDisplayName,
+								"resource": event.tmplResource.resolve().strDisplayName,
+                                "amount": event.nAmount
+								});
+							break;
+						case 'Coal':
+							message = self.fstrCoalMessage.format({
+								"region": event.objRegion.strDisplayName,
+								"resource": event.tmplResource.resolve().strDisplayName,
+                                "amount": event.nAmount
+								});
+							break;
+						case 'Metals':
+							message = self.fstrMetalsMessage.format({
+								"region": event.objRegion.strDisplayName,
+								"resource": event.tmplResource.resolve().strDisplayName,
+                                "amount": event.nAmount
+								});
+							break;
+						case 'Food':
+							message = self.fstrFoodMessage.format({
+								"region": event.objRegion.strDisplayName,
+								"resource": event.tmplResource.resolve().strDisplayName,
+                                "amount": event.nAmount
+								});
+							break;
+						default:
+							message = self.fstrMessage.format({
+								"region": event.objRegion.strDisplayName,
+								"resource": event.tmplResource.resolve().strDisplayName,
+                                "amount": event.nAmount
+								});
+					}
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionGenRegionResource"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+					//log("DEBUG: " + message);
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Region Specific Notification -->
+	<objectDef type="NoteGenRegionEvent" superType="NoteGenMethodFormatString" desc="Base notification generator for something involving a region">
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"region": event.objRegion.strDisplayName
+						});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionGenRegion"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+					//log("DEBUG: " + message);
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Broadcast Notification -->
+	<objectDef type="NoteGenRegionSeceded" superType="NoteGenMethodFormatString" desc="A notification generator for a region seceding">
+		<property name="otEvents" value="EventRegionSeceded"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+                {
+                    //log("DEBUG: " + event.objOldNation.strName + " lost " + event.objRegion.strName + " from secession to " + event.objNewNation.strName);
+
+                    message = self.fstrMessage.format({
+                        "region": event.objRegion.strDisplayName,
+						"oldNation": event.objOldNation.strDisplayName,
+						"newNation": event.objNewNation.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticGenRegionSeceded"),
+						"objTargetNations" : [],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Broadcast Notification -->
+	<objectDef type="NoteGenCivilWarStarted" superType="NoteGenMethodFormatString" desc="A notification generator for a civil war">
+		<property name="otEvents" value="EventCivilWarStarted"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+                {
+    				message = self.fstrMessage.format({
+						"declaringNation": event.objDeclaringNation.strDisplayName,
+						"targetNation": event.objTargetNation.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticGenCivilWarStarted"),
+						"objTargetNations" : [],
+						"objJumpTarget": event.objDeclaringNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Broadcast Notification -->
+	<objectDef type="NoteGenNationLiberated" superType="NoteGenMethodFormatString" desc="A notification generator for a civil war">
+		<property name="otEvents" value="EventNationLiberated"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+                {
+    				message = self.fstrMessage.format({
+						"liberatedNation": event.objNation.strDisplayName,
+						"liberatorNation": event.objLiberator.strDisplayName,
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticGenNationLiberated"),
+						"objTargetNations" : [],
+						"objJumpTarget": event.objNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Broadcast Notification -->
+	<objectDef type="NoteGenIndependentNationFounded" superType="NoteGenMethodFormatString" desc="A notification generator for the founding of an independent nation at the start of a revolt">
+		<property name="otEvents" value="EventIndependentNationFounded"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+                {
+    				message = self.fstrMessage.format({
+						"newNation": event.objNewNation.strDisplayName,
+						"oldNation": event.objOldNation.strDisplayName,
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticGenIndependentNationFounded"),
+						"objTargetNations" : [],
+						"objJumpTarget": event.objNewNation
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Broadcast Notification -->
+	<objectDef type="NoteGenCityNuked" superType="NoteGenMethodFormatString" desc="A notification generator for a city being destroyed in a nuclear explosion">
+		<property name="otEvents" value="EventCityNuked"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+                {
+    				message = self.fstrMessage.format({
+						"city": event.objCity.strDisplayName,
+						"bomber": event.objBomber.strDisplayName,
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateEngagementGenCityNuked"),
+						"objTargetNations" : [],
+						"objJumpTarget": event.objCity
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Region Specific Notification -->
+	<objectDef type="NoteGenAirbaseDestroyed" superType="NoteGenMethodFormatString" desc="A notification generator for an airbase being destroyed">
+		<property name="otEvents" value="EventAirbaseDestroyed"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"region": event.objRegion.strDisplayName,
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionGenAirbaseDestroyed"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Region Specific Notification -->
+	<objectDef type="NoteGenAADefenseDestroyed" superType="NoteGenMethodFormatString" desc="A notification generator for an anti-air defense being destroyed">
+		<property name="otEvents" value="EventAADefenseDestroyed"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"region": event.objRegion.strDisplayName,
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionGenAADefenseDestroyed"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Region Specific Notification -->
+	<objectDef type="NoteGenCoastalDefenseDestroyed" superType="NoteGenMethodFormatString" desc="A notification generator for a coastal defense being destroyed">
+		<property name="otEvents" value="EventCoastalDefenseDestroyed"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"region": event.objRegion.strDisplayName,
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionGenCoastalDefenseDestroyed"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Region Specific Notification -->
+	<objectDef type="NoteGenFortificationDestroyed" superType="NoteGenMethodFormatString" desc="A notification generator for a fortification being destroyed">
+		<property name="otEvents" value="EventFortificationDestroyed"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"region": event.objRegion.strDisplayName,
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionGenFortificationDestroyed"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Region Specific Notification -->
+	<objectDef type="NoteGenTransportationDestroyed" superType="NoteGenMethodFormatString" desc="A notification generator for a transportation improvement being destroyed">
+		<property name="otEvents" value="EventTransportationDestroyed"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"region": event.objRegion.strDisplayName,
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionGenTransportationDestroyed"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Region Specific Notification -->
+	<objectDef type="NoteGenResourceImprovementDestroyed" superType="NoteGenMethodFormatString" desc="A notification generator for a resource improvement being destroyed">
+		<property name="otEvents" value="EventResourceImprovementDestroyed"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"improvement": event.objResourceImprovement.tmplResourceImprovement.resolve().strDisplayName,
+						"region": event.objRegion.strDisplayName,
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionGenResourceImprovementDestroyed"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- City Specific Notification -->
+	<objectDef type="NoteGenCityBuildingDestroyed" superType="NoteGenMethodFormatString" desc="A notification generator for a city building being destroyed">
+		<property name="otEvents" value="EventCityBuildingDestroyed"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"city": event.objCity.strDisplayName,
+						"building": event.objCityBuilding.tmplCityBuilding.resolve().strDisplayName,
+						});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateCityGenCityBuildingDestroyed"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objCity.objController],
+						"objJumpTarget": event.objCity
+					});
+					//log("DEBUG: " + message);
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- City Specific Notification -->
+	<objectDef type="NoteGenResearchCenterBuildingDestroyed" superType="NoteGenMethodFormatString" desc="A notification generator for a research center building being destroyed">
+		<property name="otEvents" value="EventResearchCenterBuildingDestroyed"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"city": event.objCity.strDisplayName,
+						"building": event.objResearchCenterBuilding.tmplBuilding.resolve().strDisplayName,
+						});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateCityGenResearchCenterBuildingDestroyed"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objCity.objController],
+						"objJumpTarget": event.objCity
+					});
+					//log("DEBUG: " + message);
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Region Specific Notification -->
+	<objectDef type="NoteGenRegionSabotaged" superType="NoteGenMethod" desc="Notification generator for when a region gets sabotaged">
+		<property name="otEvents" value="EventRegionSabotaged"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+                    var recipients = [event.objSaboteur];
+
+                    if(event.bSuccess)
+                    {
+                        var target;
+                        switch(event.eParam.index)
+                        {
+                            case SabotageRegionParam.SABOTAGE_REGION_PARAM_TRANSPORTATION.index:
+                                target = locale.SID.Notification.RegionSabotaged.Target.Transportation;
+                                break;
+                            case SabotageRegionParam.SABOTAGE_REGION_PARAM_FORTIFICATIONS.index:
+                                target = locale.SID.Notification.RegionSabotaged.Target.Fortifications;
+                                break;
+                            case SabotageRegionParam.SABOTAGE_REGION_PARAM_AA_DEFENSE.index:
+                                target = locale.SID.Notification.RegionSabotaged.Target.AADefenses;
+                                break;
+                            case SabotageRegionParam.SABOTAGE_REGION_PARAM_COASTAL_DEFENSE.index:
+                                target = locale.SID.Notification.RegionSabotaged.Target.CoastalDefenses;
+                                break;
+                            case SabotageRegionParam.SABOTAGE_REGION_PARAM_AIRBASE.index:
+                                target = locale.SID.Notification.RegionSabotaged.Target.Airbase;
+                                break;
+                            case SabotageRegionParam.SABOTAGE_REGION_PARAM_CITY.index:
+                                target = locale.SID.Notification.RegionSabotaged.Target.City;
+                                break;
+                            case SabotageRegionParam.SABOTAGE_REGION_PARAM_NAVAL_BASE.index:
+                                //Naval base functionality not implemented
+                                return;
+                                break;
+                            default:
+                                log("Debug: Should not be here");
+                                return;
+                        }
+
+                        if(event.bDiscovered)
+                        {
+                            var fmtString = locale.FSID.Notification.RegionSabotaged.SuccessDiscovered;
+                            recipients.push(event.objTargetRegion.refController.resolve(game));
+                        }
+                        else
+                        {
+                            var fmtString = locale.FSID.Notification.RegionSabotaged.SuccessNotDiscovered;
+                        }
+                        message = fmtString.format({
+                            "saboteur": event.objSaboteur.strDisplayName,
+                            "region": event.objTargetRegion.strDisplayName,
+                            "target": target,
+                            "damage": event.nDamage
+                        });
+                    }
+                    else
+                    {
+                        if(event.bDiscovered)
+                        {
+                            var fmtString = locale.FSID.Notification.RegionSabotaged.FailureDiscovered;
+                            recipients.push(event.objTargetRegion.refController.resolve(game));
+                        }
+                        else
+                        {
+                            var fmtString = locale.FSID.Notification.RegionSabotaged.FailureNotDiscovered;
+                        }
+                        message = fmtString.format({
+                            "saboteur": event.objSaboteur.strDisplayName,
+                            "region": event.objTargetRegion.strDisplayName
+                        });
+                    }
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionGenRegionSabotaged"),
+						"bAllNations": false,
+						"objTargetNations" : recipients,
+						"objJumpTarget": event.objTargetRegion
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenResearchStolen" superType="NoteGenMethod" desc="Notification generator for when research is stolen">
+		<property name="otEvents" value="EventResearchStolen"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+                    var recipients = [event.objSaboteur];
+
+                    if(event.bSuccess)
+                    {
+                        if(event.bDiscovered)
+                        {
+                            var fmtString = locale.FSID.Notification.ResearchStolen.SuccessDiscovered;
+                            recipients.push(event.objTargetNation);
+                        }
+                        else
+                        {
+                            var fmtString = locale.FSID.Notification.ResearchStolen.SuccessNotDiscovered;
+                        }
+                        message = fmtString.format({
+                            "saboteur": event.objSaboteur.strDisplayName,
+                            "nation": event.objTargetNation.strDisplayName,
+                            "RPUs": event.nRPUs
+                        });
+                    }
+                    else
+                    {
+                        if(event.bDiscovered)
+                        {
+                            var fmtString = locale.FSID.Notification.ResearchStolen.FailureDiscovered;
+                            recipients.push(event.objTargetNation);
+                        }
+                        else
+                        {
+                            var fmtString = locale.FSID.Notification.ResearchStolen.FailureNotDiscovered;
+                        }
+                        message = fmtString.format({
+                            "saboteur": event.objSaboteur.strDisplayName,
+                            "nation": event.objTargetNation.strDisplayName
+                        });
+                    }
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticGenResearchStolen"),
+						"bAllNations": false,
+						"objTargetNations" : recipients,
+						"objJumpTarget": event.objSaboteur
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenOppositionSupportConcluded" superType="NoteGenMethod" desc="Notification generator for when an opposition support program is concluded">
+		<property name="otEvents" value="EventOppositionSupportConcluded"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+                    var recipients = [event.objSaboteur];
+
+                    if(event.bSuccess)
+                    {
+                        if(event.bDiscovered)
+                        {
+                            var fmtString = locale.FSID.Notification.OppositionSupportConcluded.SuccessDiscovered;
+                            recipients.push(event.objTargetNation);
+                        }
+                        else
+                        {
+                            var fmtString = locale.FSID.Notification.OppositionSupportConcluded.SuccessNotDiscovered;
+                        }
+                        message = fmtString.format({
+                            "saboteur": event.objSaboteur.strDisplayName,
+                            "nation": event.objTargetNation.strDisplayName,
+                            "ideology": event.tmplIdeology.resolve().strDisplayName,
+                            "points": event.nPoints
+                        });
+                    }
+                    else
+                    {
+                        if(event.bDiscovered)
+                        {
+                            var fmtString = locale.FSID.Notification.OppositionSupportConcluded.FailureDiscovered;
+                            recipients.push(event.objTargetNation);
+                        }
+                        else
+                        {
+                            var fmtString = locale.FSID.Notification.OppositionSupportConcluded.FailureNotDiscovered;
+                        }
+                        message = fmtString.format({
+                            "saboteur": event.objSaboteur.strDisplayName,
+                            "nation": event.objTargetNation.strDisplayName
+                        });
+                    }
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticGenOppositionSupportConcluded"),
+						"bAllNations": false,
+						"objTargetNations" : recipients,
+						"objJumpTarget": event.objSaboteur
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenPoliticalSupportConcluded" superType="NoteGenMethod" desc="Notification generator for when a political support program is concluded">
+		<property name="otEvents" value="EventPoliticalSupportConcluded"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+                	if(event.bSuccess)
+					{
+                        var fmtString = locale.FSID.Notification.PoliticalSupportConcluded.Success;
+                        message = fmtString.format({
+                            "nation": event.objNation.strDisplayName,
+                            "target": event.objTargetNation.strDisplayName,
+                            "points": event.nPoints
+                        });
+					}
+                    else
+                    {
+                        var fmtString = locale.FSID.Notification.PoliticalSupportConcluded.Failure;
+                        message = fmtString.format({
+                            "nation": event.objNation.strDisplayName,
+                            "target": event.objTargetNation.strDisplayName
+                        });
+                    }
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticGenPoliticalSupportConcluded"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objNation, event.objTargetNation],
+						"objJumpTarget": event.objNation
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenInternalSupportConcluded" superType="NoteGenMethod" desc="Notification generator for when an internal support program is concluded">
+		<property name="otEvents" value="EventInternalSupportConcluded"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+                	if(event.bSuccess)
+					{
+                        var fmtString = locale.FSID.Notification.InternalSupportConcluded.Success;
+                        message = fmtString.format({
+                            "points": event.nPoints
+                        });
+					}
+                    else
+                    {
+                        var fmtString = locale.FSID.Notification.InternalSupportConcluded.Failure;
+                        message = fmtString.format({
+                        });
+                    }
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateGovernmentGenInternalSupportConcluded"),
+						"bAllNations": false,
+						"objTargetNations" : [event.objNation],
+						"objJumpTarget": event.objNation
+					});
+				}
+			]]></script>
+	</objectDef>
+
+    <!-- Nation Specific Notification -->
+	<objectDef type="NoteGenRegionSurveillanceConcluded" superType="NoteGenMethod" desc="Notification generator for when a region surveillance program is concluded">
+		<property name="otEvents" value="EventRegionSurveillanceConcluded"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+                    var recipients = [event.objSaboteur];
+
+					if(event.bDiscovered)
+					{
+                        var fmtString = locale.FSID.Notification.RegionSurveillanceConcluded.Discovered;
+                        message = fmtString.format({
+                            "saboteur": event.objSaboteur.strDisplayName,
+                            "region": event.objTargetRegion.strDisplayName,
+                            "nation": event.objTargetRegion.refController.resolve(game).strDisplayName
+						});
+                        recipients.push(event.objTargetRegion.refController.resolve(game));
+					}
+                    else
+                    {
+                        var fmtString = locale.FSID.Notification.RegionSurveillanceConcluded.NotDiscovered;
+                        message = fmtString.format({
+                            "saboteur": event.objSaboteur.strDisplayName,
+                            "region": event.objTargetRegion.strDisplayName
+						});
+                    }
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticGenRegionSurveillanceConcluded"),
+						"bAllNations": false,
+						"objTargetNations" : recipients,
+						"objJumpTarget": event.objSaboteur
+					});
+				}
+			]]></script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenRegionDamagedByBombing" superType="NoteGenMethodFormatString" desc="A notification generator for when a region is damaged by bombing">
+		<property name="otEvents" value="EventRegionDamagedByBombing"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+                    var name;
+
+                    if (event.objTarget.instanceOf(TransportationImprovement))
+				    {
+                        name = event.objTarget.tmplTransportationImprovement.resolve().strDisplayName;
+                    }
+                    else if(event.objTarget.instanceOf(FortificationImprovement))
+                    {
+                        name = event.objTarget.tmplFortificationImprovement.resolve().strDisplayName;
+                    }
+                    else if(event.objTarget.instanceOf(AADefenseImprovement))
+                    {
+                        name = event.objTarget.tmplAADefenseImprovement.resolve().strDisplayName;
+                    }
+                    else if(event.objTarget.instanceOf(CoastalDefenseImprovement))
+                    {
+                        name = event.objTarget.tmplCoastalDefenseImprovement.resolve().strDisplayName;
+                    }
+                    else if(event.objTarget.instanceOf(AirbaseImprovement))
+                    {
+                        name = event.objTarget.tmplUnitBase.resolve().strDisplayName;
+                    }
+
+					message = self.fstrMessage.format({
+                        "name": name,
+						"region": event.objRegion.strDisplayName,
+						"damage": event.nDamage,
+                        "group": event.objUnitGroup.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionDamaged"),
+						"bAllNations": false,
+						"objTargetNations": [event.objRegion.refController.resolve(game), event.objUnitGroup.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenCityDamagedByBombing" superType="NoteGenMethod" desc="A notification generator for when a city is damaged by bombing">
+		<property name="otEvents" value="EventCityDamagedByBombing"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+                    var fmtString;
+
+                	if(event.eBombCityParam.equals(BombCityParam.BOMB_CITY_PARAM_INFRASTRUCTURE_BOMBER))
+					{
+                        fmtString = locale.FSID.Notification.CityDamagedBombingInfrastructure;
+					}
+                    else if(event.eBombCityParam.equals(BombCityParam.BOMB_CITY_PARAM_RESEARCH_BOMBER))
+                    {
+                        fmtString = locale.FSID.Notification.CityDamagedBombingResearch;
+                    }
+                    else if(event.eBombCityParam.equals(BombCityParam.BOMB_CITY_PARAM_INFRASTRUCTURE_MISSILE))
+                    {
+                        fmtString = locale.FSID.Notification.CityDamagedMissileInfrastructure;
+                    }
+                    else if(event.eBombCityParam.equals(BombCityParam.BOMB_CITY_PARAM_RESEARCH_MISSILE))
+                    {
+                        fmtString = locale.FSID.Notification.CityDamagedMissileResearch;
+                    }
+
+					message = fmtString.format({
+						"city": event.objCity.strDisplayName,
+						"damage": event.nDamage,
+                        "bombernation": event.objUnitGroup.refController.resolve(game).strDisplayName,
+                        "group": event.objUnitGroup.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionDamaged"),
+						"bAllNations": false,
+						"objTargetNations": [event.objCity.objController, event.objUnitGroup.refController.resolve(game)],
+						"objJumpTarget": event.objCity
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+    <objectDef type="NoteGenResourceImprovementsDamagedByBombing" superType="NoteGenMethodFormatString" desc="A notification generator for when resource improvements are damaged by bombing">
+		<property name="otEvents" value="EventResourceImprovementsDamagedByBombing"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game)
+				{
+					message = self.fstrMessage.format({
+						"resource": event.objResourceCapacity.tmplResource.resolve().strDisplayName,
+                        "region": event.objResourceCapacity.parent.strDisplayName,
+						"damage": event.nDamage,
+                        "bombernation": event.objUnitGroup.refController.resolve(game).strDisplayName,
+                        "group": event.objUnitGroup.strDisplayName
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateRegionDamaged"),
+						"bAllNations": false,
+						"objTargetNations": [event.objResourceCapacity.parent.refController.resolve(game), event.objUnitGroup.refController.resolve(game)],
+						"objJumpTarget": event.objResourceCapacity.parent
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenNationAnnexed" superType="NoteGenMethodFormatString" desc="A notification generator for a nation annexes another nation">
+		<property name="otEvents" value="EventNationAnnexed"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+					var message = self.fstrMessage.format({
+						"nation": event.objNation.strDisplayName,
+						"annexer": event.objAnnexer.strDisplayName,
+                        "money": event.n64Money
+					});
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateDiplomaticNationAnnexed"),
+						"bAllNations": true,
+						"objTargetNations": [event.objAnnexer],
+						"objJumpTarget": event.objAnnexer
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+	<!-- Nation Specific Notification -->
+	<objectDef type="NoteGenCollateralDamage" superType="NoteGenMethod" desc="A notification generator for an engagement causes collateral damage">
+		<property name="otEvents" value="EventCollateralDamage"/>
+		<script type="application/javascript">
+			<![CDATA[
+				function handleGameEvent(event, game) {
+
+                    var message;
+
+                	if(event.eDamageType.equals(CollateralDamageType.COLLATERAL_DAMAGE_TYPE_REGION_IMPROVEMENT))
+					{
+                        var fmtString = locale.FSID.Notification.CollateralDamageRegionImprovement;
+
+                        var name;
+                        if (event.objTarget.instanceOf(TransportationImprovement))
+                        {
+                            name = event.objTarget.tmplTransportationImprovement.resolve().strDisplayName;
+                        }
+                        else if(event.objTarget.instanceOf(FortificationImprovement))
+                        {
+                            name = event.objTarget.tmplFortificationImprovement.resolve().strDisplayName;
+                        }
+                        else if(event.objTarget.instanceOf(AADefenseImprovement))
+                        {
+                            name = event.objTarget.tmplAADefenseImprovement.resolve().strDisplayName;
+                        }
+                        else if(event.objTarget.instanceOf(CoastalDefenseImprovement))
+                        {
+                            name = event.objTarget.tmplCoastalDefenseImprovement.resolve().strDisplayName;
+                        }
+                        else if(event.objTarget.instanceOf(AirbaseImprovement))
+                        {
+                            name = event.objTarget.tmplUnitBase.resolve().strDisplayName;
+                        }
+
+                        message = fmtString.format({
+                        	"name": name,
+                        	"damage": event.nDamage,
+                            "region": event.objRegion.strDisplayName
+                        });
+					}
+                    else if(event.eDamageType.equals(CollateralDamageType.COLLATERAL_DAMAGE_TYPE_REGION_RESOURCES))
+                    {
+                        var fmtString = locale.FSID.Notification.CollateralDamageRegionResources;
+
+                        message = fmtString.format({
+                        	"damage": event.nDamage,
+                            "region": event.objRegion.strDisplayName
+                        });
+                    }
+                    else if(event.eDamageType.equals(CollateralDamageType.COLLATERAL_DAMAGE_TYPE_CITY_INFRASTRUCTURE))
+                    {
+                        var fmtString = locale.FSID.Notification.CollateralDamageCityInfrastructure;
+
+                        message = fmtString.format({
+                        	"city": event.objTarget.strDisplayName,
+                        	"damage": event.nDamage,
+                            "region": event.objRegion.strDisplayName
+                        });
+                    }
+                    else if(event.eDamageType.equals(CollateralDamageType.COLLATERAL_DAMAGE_TYPE_CITY_RESEARCH))
+                    {
+                        var fmtString = locale.FSID.Notification.CollateralDamageCityResearch;
+
+                        message = fmtString.format({
+                        	"city": event.objTarget.strDisplayName,
+                        	"damage": event.nDamage,
+                            "region": event.objRegion.strDisplayName
+                        });
+                    }
+
+					local.GActCreateAndAddNotification.execute({
+						"objGame": game,
+						"strMessage": message,
+                        "tmplNotification": getTemplateRef(NotificationTemplate, "NotificationTemplateCollateralDamage"),
+						"bAllNations": false,
+						"objTargetNations": [event.objRegion.refController.resolve(game)],
+						"objJumpTarget": event.objRegion
+					});
+				}
+			]]>
+		</script>
+	</objectDef>
+
+</locust>

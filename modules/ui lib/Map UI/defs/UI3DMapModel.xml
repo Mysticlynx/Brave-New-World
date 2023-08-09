@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="UI3DMapModelBase" superType="mlui.UI3DElement" class="CUI3DMapModelBase">
+        <propertyDef name="objMap" type="gs_tbg.GameSysMap" />
+        <propertyDef name="vecPointOfInterest" type="Vec3D" default="[0, 0, 0]" />
+        <propertyDef name="vecPosition" type="Vec3D" default="[0, 0, 0]"/>
+        <propertyDef name="objLocalTransforms" type="ml3dworld.TransformList" storesChildren="true" desc="rotation and scale"/>
+        <propertyDef name="bModelAlwaysChild" type="bool" default="false" desc="option for performance and/or UI selection"/>
+        <propertyDef name="bTest" type="bool" default="false" desc="for debugging"/>
+    </objectDef>
+
+    <objectDef type="UI3DMapModel" superType="UI3DMapModelBase" class="CUI3DMapModel">
+        <propertyDef name="tmplModel" type="TemplateRef" restriction="mlmedia.ModelTemplate"/>
+        <propertyDef name="bLoaded" type="bool" default="false"/><!-- set true once the model has finished loading. -->
+    </objectDef>
+    
+    <objectDef type="UI3DMapModelUnit" superType="UI3DMapModelBase" class="CUI3DMapModelUnit">
+        <propertyDef name="objUnitModelTable" type="UnitModelTable"/>
+        <propertyDef name="objUnit" type="gs_tbg.Unit"/>
+	    <propertyDef name="fRotation" type="float" default="0"/>
+	    <propertyDef name="fScale" type="float" default="0.0025"/>
+	    <propertyDef name="fElevation" type="float" default="0"/>
+        <propertyDef name="strOverrideEffect" type="String"/>
+    </objectDef>
+    
+    <objectDef type="UI3DMapBordersLayer" superType="mlui.UI3DElement" class="CUI3DMapBordersLayer">
+        <propertyDef name="objGameRoot" type="Object" />
+        <propertyDef name="objMap" type="gs_tbg.GameSysMap" />
+		<propertyDef name="tmplBorderAlphaTexture" type="TemplateRef" restriction="mlmedia.TextureTemplate"/>    
+		<propertyDef name="tmplOwnerBorderAlphaTexture" type="TemplateRef" restriction="mlmedia.TextureTemplate"/>            
+		   
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventRegionChangedController"/>
+				<property name="bBroadcast" value="true" />
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.regionChanged(event.objRegion);
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventRegionChangedOwner"/>
+				<property name="bBroadcast" value="true" />
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.regionChanged(event.objRegion);
+					}
+				]]></script>
+			</object>	
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventNationColorChanged"/>
+				<property name="bBroadcast" value="true" />
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.nationColorChanged(event.objNation);
+					}
+				]]></script>
+			</object>	
+		</object>
+        
+    </objectDef>
+	
+    <objectDef type="UI3DMapModelGO" superType="UI3DMapModel">
+        <propertyDef name="objGO" type="Object"/>
+    </objectDef>
+    
+    <objectDef type="UI3DMapModelWithAnimationGO" superType="UI3DMapModel">
+        <propertyDef name="objGO" type="Object"/>
+        <propertyDef name="tmplAnimation" type="TemplateRef" restriction="mlmedia.AnimationTemplate"/>
+        <propertyDef name="bLoop" type="bool" default="true"/>
+        <propertyDef name="fAnimSpeed" type="float" default="1.0"/>
+        <object type="mlui.UIDataAnimation" name="objAnimation" existsWhile="self.bLoaded">
+            <property name="tmplAnimation" from="def.tmplAnimation"/>
+            <property name="bLoop" from="def.bLoop"/>
+            <property name="fAnimSpeed" from="def.fAnimSpeed"/>
+        </object>
+    </objectDef>
+
+    <objectDef type="UI3DMapModelUnitGO" superType="UI3DMapModelUnit">
+        <propertyDef name="objGO" type="Object"/>
+    </objectDef>
+    
+</locust>

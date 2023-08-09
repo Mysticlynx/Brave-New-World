@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Nation Templates -->
+    <objectDef type="NationTemplate" superType="Template" class="CMLONationTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String" desc="default display name for nations using this template"/>
+        <propertyDef name="colColor" type="Color" desc="default color for nations using this nation template"/>
+        <propertyDef name="colAltColors" type="Color" variable="true" desc="colors for other nations using this nation template"/>
+        <propertyDef name="refAI" type="GORef" restriction="mlgame.AI"/>
+        <propertyDef name="tmplCulture" type="TemplateRef" restriction="CultureTemplate"/>
+        <propertyDef name="tmplReligion" type="TemplateRef" restriction="ReligionTemplate"/>
+        <propertyDef name="tmplEthnicities" type="TemplateRef" restriction="EthnicityTemplate" variable="true" storesChildren="true"/>
+        <propertyDef name="tmplDefaultNationality" type="TemplateRef" restriction="NationalityTemplate"/>
+        <propertyDef name="objIdeologies" type="Ideology" variable="true" storesChildren="true"/>
+        <propertyDef name="tmplIdeology" type="TemplateRef" restriction="IdeologyTemplate"/>
+        <propertyDef name="eLowResCountrySet" type="Enum" restriction="CountrySet"/>
+        <propertyDef name="eMediumResCountrySet" type="Enum" restriction="CountrySet"/>
+        <propertyDef name="eMajorsResCountrySet" type="Enum" restriction="CountrySet"/>
+        <propertyDef name="eHighResCountrySet" type="Enum" restriction="CountrySet"/>
+        <propertyDef name="bCanCreate" type="bool" desc="TRUE if this nation can be created during gameplay"/>
+    </objectDef>
+
+    <enumDef name="CountrySet">
+        <value name="Minimal"/>
+        <value name="Generic"/>
+        <value name="Afghani"/>
+        <value name="Albanian"/>
+        <value name="Altaic"/>
+        <value name="American"/>
+        <value name="Anzac"/>
+        <value name="Arabian"/>
+        <value name="Arctic"/>
+        <value name="Argentinian"/>
+        <value name="Australian"/>
+        <value name="Bantu"/>
+        <value name="Belgian"/>
+        <value name="Bolivian"/>
+        <value name="Bosnian"/>
+        <value name="Brazilian"/>
+        <value name="British"/>
+        <value name="Bulgarian"/>
+        <value name="Burmese"/>
+        <value name="Caucasian"/>
+        <value name="Chilean"/>
+        <value name="Chinese"/>
+        <value name="ChineseCom"/>
+        <value name="Columbian"/>
+        <value name="Commonwealth"/>
+        <value name="Croatian"/>
+        <value name="Cuban"/>
+        <value name="Czech"/>
+        <value name="Danish"/>
+        <value name="Dutch"/>
+        <value name="EastAfrican"/>
+        <value name="Egyptian"/>
+        <value name="Ethiopian"/>
+        <value name="Finnish"/>
+        <value name="French"/>
+        <value name="German"/>
+        <value name="Greek"/>
+        <value name="Haitian"/>
+        <value name="Hungarian"/>
+        <value name="Indian"/>
+        <value name="IndoIranian"/>
+        <value name="Irish"/>
+        <value name="Italian"/>
+        <value name="Japanese"/>
+        <value name="Lithuanian"/>
+        <value name="MalayoIndonesian"/>
+        <value name="MalayoPolynesian"/>
+        <value name="Mexican"/>
+        <value name="Moroccan"/>
+        <value name="NorthAfrican"/>
+        <value name="Norwegian"/>
+        <value name="Pakistani"/>
+        <value name="Polish"/>
+        <value name="Portuguese"/>
+        <value name="Romanian"/>
+        <value name="Russian"/>
+        <value name="Saharan"/>
+        <value name="Serbian"/>
+        <value name="SouthEastAsian"/>
+        <value name="SpanishNationalist"/>
+        <value name="SpanishRepublican"/>
+        <value name="Swedish"/>
+        <value name="Swiss"/>
+        <value name="Thai"/>
+        <value name="Tibetan"/>
+        <value name="Turkish"/>
+        <value name="Turkmen"/>
+        <value name="Ukrainian"/>
+        <value name="Vietnamese"/>
+        <value name="WestAfrican"/>
+        <value name="WestIndian"/>
+        <value name="Yugoslavian"/>
+    </enumDef>
+
+    <!-- Culture Templates -->
+    <objectDef type="CultureTemplate" superType="Template" class="CMLOCultureTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="colColor" type="Color"/>
+    </objectDef>
+
+    <!-- Religion Templates -->
+    <objectDef type="ReligionTemplate" superType="Template" class="CMLOReligionTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="colColor" type="Color"/>
+    </objectDef>
+
+    <!-- Nationality Templates -->
+    <objectDef type="NationalityTemplate" superType="Template" class="CMLONationalityTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="tmplEthnicities" type="TemplateRef" restriction="EthnicityTemplate" variable="true" storesChildren="true"/>
+        <propertyDef name="colColor" type="Color"/>
+    </objectDef>
+
+    <!-- Ethnicity Templates -->
+    <objectDef type="EthnicityTemplate" superType="Template" class="CMLOEthnicityTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="colColor" type="Color"/>
+    </objectDef>
+
+    <!-- Stability Modifier Templates -->
+    <objectDef type="StabilityModifierTemplate" class="CMLOStabilityModifierTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="nStabilityModifier" type="int"/>
+    </objectDef>
+
+    <!-- Stability Templates -->
+    <objectDef type="StabilityTemplate" superType="Template" class="CMLOStabilityTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="nMPUGrowthModifier" type="int"/>
+        <propertyDef name="nRegionStabilityModifier" type="int" default="0"/>
+    </objectDef>
+
+    <!-- Ideology Templates -->
+    <objectDef type="IdeologyTemplate" superType="Template" class="CMLOIdeologyTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+    </objectDef>
+
+    <objectDef type="Ideology" class="CMLOIdeology" desc="An ideology and it's current level">
+        <propertyDef name="tmplIdeology" type="TemplateRef" restriction="IdeologyTemplate"/>
+        <propertyDef name="nLevel" type="int"/>
+    </objectDef>
+
+    <objectDef type="ResourceRequirement" class="CMLOResourceRequirement" desc="A resource requirement">
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nAmount" type="int"/>
+    </objectDef>
+
+    <objectDef type="NationHistoryTrade" class="CMLONationHistoryTrade" desc="Trade history">
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nDirectImports" type="int" default="0"/>
+        <propertyDef name="nDirectExports" type="int" default="0"/>
+        <propertyDef name="nDirectLost" type="int" default="0"/>
+        <propertyDef name="nMarketDemand" type="int" default="0"/>
+        <propertyDef name="nMarketImports" type="int" default="0"/>
+        <propertyDef name="nMarketExports" type="int" default="0"/>
+        <propertyDef name="nMarketLost" type="int" default="0"/>
+    </objectDef>
+
+    <objectDef type="NationFinance" class="CMLONationFinance" desc="Finance stats">
+        <replicationRule>
+            ?{avatar, game:
+            avatar.getAttribValue("Nation").resolve(avatar) == self.objNation
+            }
+        </replicationRule>
+        <propertyDef name="objNation" type="Nation" desc="The parent nation of this object"/>
+        <propertyDef name="n64Money" type="int64" default="0"/>
+        <propertyDef name="n64ExportRevenue" type="int64" default="0"/>
+        <propertyDef name="n64WMExportRevenue" type="int64" default="0"/>
+        <propertyDef name="n64GoodsRevenue" type="int64" default="0"/>
+        <propertyDef name="n64TextilesRevenue" type="int64" default="0"/>
+        <propertyDef name="n64WroughtIronRevenue" type="int64" default="0"/>
+        <propertyDef name="n64PetroleumRevenue" type="int64" default="0"/>
+        <propertyDef name="n64AppliancesRevenue" type="int64" default="0"/>
+        <propertyDef name="n64AutomobilesRevenue" type="int64" default="0"/>
+        <propertyDef name="n64CannedGoodsRevenue" type="int64" default="0"/>
+        <propertyDef name="n64FishProductsRevenue" type="int64" default="0"/>
+        <propertyDef name="n64FoodRevenue" type="int64" default="0"/>
+        <propertyDef name="n64MiscRevenue" type="int64" default="0"/>
+        <propertyDef name="n64ImportExpense" type="int64" default="0"/>
+        <propertyDef name="n64WMImportExpense" type="int64" default="0"/>
+        <propertyDef name="n64CityProjectExpense" type="int64" default="0" desc="deprecated"/>
+        <propertyDef name="n64CityMaintenanceExpense" type="int64" default="0"/>
+        <propertyDef name="n64ResearchMaintenanceExpense" type="int64" default="0"/>
+        <propertyDef name="n64RegionProjectExpense" type="int64" default="0" desc="deprecated"/>
+        <propertyDef name="n64RegionMaintenanceExpense" type="int64" default="0"/>
+        <propertyDef name="n64ResProdMaintenanceExpense" type="int64" default="0"/>
+        <propertyDef name="n64TransportationMaintenanceExpense" type="int64" default="0"/>
+        <propertyDef name="n64ResearchExpense" type="int64" default="0" desc="deprecated"/>
+        <propertyDef name="n64EspionageExpense" type="int64" default="0"/>
+        <propertyDef name="n64MilitaryMaintenanceExpense" type="int64" default="0" desc="deprecated"/>
+        <propertyDef name="n64ArmyMaintenanceExpense" type="int64" default="0"/>
+        <propertyDef name="n64AirForceMaintenanceExpense" type="int64" default="0"/>
+        <propertyDef name="n64NavyMaintenanceExpense" type="int64" default="0"/>
+        <propertyDef name="n64NationExpense" type="int64" default="0" desc="deprecated"/>
+        <propertyDef name="n64PreviousMoney" type="int64" default="0"/>
+        <propertyDef name="n64RunningAvgMoneyChange" type="int64" default="0"/>
+    </objectDef>
+
+    <objectDef type="PowerPoints" class="CMLOPowerPoints" desc="Power Points">
+        <propertyDef name="nTotalPoints" type="int" default="0"/>
+        <propertyDef name="nResearchPoints" type="int" default="0"/>
+        <propertyDef name="nIPUPoints" type="int" default="0"/>
+        <propertyDef name="nCoalPoints" type="int" default="0"/>
+        <propertyDef name="nMetalsPoints" type="int" default="0"/>
+        <propertyDef name="nOilPoints" type="int" default="0"/>
+        <propertyDef name="nFoodPoints" type="int" default="0"/>
+        <propertyDef name="nMPUPoints" type="int" default="0"/>
+        <propertyDef name="nMoneyPoints" type="int" default="0"/>
+    </objectDef>
+
+    <objectDef type="NationStatus" class="CMLONationStatus">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="refController" type="GORef" restriction="Nation"/>
+        <propertyDef name="eStatus" type="Enum" restriction="NationStatusType"/>
+    </objectDef>
+
+    <objectDef type="NationStatusIndependent" superType="NationStatus" class="CMLONationStatusIndependent">
+        <property name="strDisplayName" from="locale.SID.UI.Independent"/>
+        <property name="eStatus" value="NATION_STATUS_INDEPENDENT"/>
+    </objectDef>
+
+    <objectDef type="NationStatusPuppet" superType="NationStatus" class="CMLONationStatusPuppet">
+        <property name="strDisplayName" from="locale.SID.UI.Puppet"/>
+        <property name="eStatus" value="NATION_STATUS_PUPPET"/>
+    </objectDef>
+    
+    <objectDef type="MilitaryCategoryValue" class="CMLOMilitaryCategoryValue">
+        <propertyDef name="nCategory" type="int"/><!-- type="Enum" restriction="UnitCategory" -->
+        <propertyDef name="nValue" type="int"/>
+    </objectDef>
+    
+    <objectDef type="NationMilitaryTotals" class="CMLONationMilitaryTotals">
+        <propertyDef name="nLandAttackPower" type="int"/>
+        <propertyDef name="nLandDefensePower" type="int"/>
+        <propertyDef name="nSeaSurfacePower" type="int"/>
+        <propertyDef name="nSeaSubmergedPower" type="int"/>
+        <propertyDef name="nAirPower" type="int"/>
+        <propertyDef name="nArmyArmsCost" type="int"/>
+        <propertyDef name="nAirArmsCost" type="int"/>
+        <propertyDef name="nNavyArmsCost" type="int"/>
+        <propertyDef name="nSubmarineArmsCost" type="int"/>
+        <propertyDef name="nAirBases" type="int"/>
+        <propertyDef name="nNavalBases" type="int"/>
+        <propertyDef name="objCategoryTotals" type="MilitaryCategoryValue" variable="true" storesChildren="true"/>
+    </objectDef>
+
+</locust>

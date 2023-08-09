@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="DPARegionRevolt" class="CMLODPARegionRevolt" superType="DecisionPointAnswer" desc="A decision point answer for when a unit order requires a prompt or confirmation">
+        <propertyDef name="eChoice" type="Enum" restriction="RegionRevoltChoice"/>
+    </objectDef>
+
+</locust>

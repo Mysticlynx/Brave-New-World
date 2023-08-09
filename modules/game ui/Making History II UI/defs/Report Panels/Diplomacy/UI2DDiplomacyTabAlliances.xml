@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="AllianceRowData" class="CMLObject">
+		<propertyDef name="objAlliance" type="gs_tbg.Alliance"/>
+		
+		<propertyDef name="objLeadNation" type="gs_tbg.Nation">
+			self.objAlliance.refLeadNation.resolve(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="objWarStatus" type="gs_tbg.War">
+			find(?{war:(war.objAttackers.contains(self.objLeadNation) AND war.objDefenders.contains(mh2data.objNation))
+				OR (war.objDefenders.contains(self.objLeadNation) AND war.objAttackers.contains(mh2data.objNation))},
+				gs_tbg.getAllWars(mh2data.objAvatar))
+		</propertyDef>
+		
+		<propertyDef name="bWar" type="bool">
+			(find(?{war:(war.objAttackers.contains(self.objLeadNation))
+				OR (war.objDefenders.contains(self.objLeadNation))},
+					gs_tbg.getAllWars(mh2data.objAvatar)) != null)
+		</propertyDef>
+
+		<propertyDef name="objNations" type="gs_tbg.Nation" variable="true"/>
+		<property name="objNations" from="self.objAlliance.getNations(mh2data.objAvatar)"/>
+		
+		<propertyDef name="nTotalPowerPoints" type="int">
+			sum(map(?{nation: nation.objPowerPoints.nTotalPoints}, self.objNations))
+		</propertyDef>
+		<propertyDef name="nIPUs" type="int">
+			sum(
+				map(
+					?{city: city.nIPUs},
+					flattenSet(
+							map(
+								?{nation:
+									gs_tbg.getNationCities(mh2data.objAvatar, nation)
+								},
+								self.objNations
+							)
+					)
+				)
+			)
+		</propertyDef>
+		<propertyDef name="nMPUs" type="int">
+			sum(map(?{nation: nation.nMPUs}, self.objNations))
+		</propertyDef>
+		<propertyDef name="nResearchPoints" type="int">
+			sum(map(?{nation: nation.objPowerPoints.nResearchPoints},self.objNations))
+		</propertyDef>
+		<propertyDef name="nMoney" type="int64">
+			sum(map(?{nation: nation.objFinance.n64Money}, self.objNations))
+		</propertyDef>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DIconButton" superType="mlui.UI2DButton">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+	</objectDef>
+	
+	<enumDef name="AllianceSort">
+        <value name="LEADER"/>
+        <value name="TOTAL"/>
+		<value name="IPUS"/>
+		<value name="MPUS"/>
+		<value name="RESEARCH"/>
+		<value name="MONEY"/>
+		<value name="MEMBERS"/>
+    </enumDef>
+	
+	<objectDef type="UI2DDiplomacyTabAlliances" superType="UI2DDiplomacyTab">
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="AllianceSort.LEADER"/>
+		</object> -->
+		
+	<!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objAlliancesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.Alliances"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objTopBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSliderBGBubble">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="867"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="16"/>
+			<property name="nHeight" value="495"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSliderBG">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="869"/>
+			<property name="nY" value="189"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="491"/>
+		</object>
+
+	<!-- Column Labels -->
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.AllianceName"/>
+				<property name="objData" from="mh2data.objAllianceSortTableData"/>
+				<property name="eSortBy" from="AllianceSort.LEADER"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="182"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objAllianceSortTableData"/>
+				<property name="eSortBy" from="AllianceSort.TOTAL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.WorldPowerPoints"/>
+
+                <object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconPointsSm"/>
+					<property name="nWidth" value="22"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objAllianceSortTableData"/>
+				<property name="eSortBy" from="AllianceSort.IPUS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.IPUs"/>
+
+                <object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconIndustrySm"/>
+					<property name="nWidth" value="16"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objAllianceSortTableData"/>
+				<property name="eSortBy" from="AllianceSort.MPUS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="41"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.MPUs"/>
+
+                <object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconSkilledLaborSm"/>
+					<property name="nWidth" value="23"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objAllianceSortTableData"/>
+				<property name="eSortBy" from="AllianceSort.RESEARCH"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="41"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.RPUs"/>
+
+                <object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+					<property name="nWidth" value="16"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objAllianceSortTableData"/>
+				<property name="eSortBy" from="AllianceSort.MONEY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="48"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.Money"/>
+
+                <object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconFinancialSm"/>
+					<property name="nWidth" value="17"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleColmHeader"/>
+				<property name="strText" value=""/>
+				<property name="nDefaultWidth" value="44"/>
+				<property name="nDefaultHeight" value="23"/>
+				<property name="nDepth" value="100"/>
+	
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.AllianceMembers"/>
+				<property name="objData" from="mh2data.objAllianceSortTableData"/>
+				<property name="eSortBy" from="AllianceSort.MEMBERS"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="422"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+		</object>
+		
+		<object type="AllianceRowData" name="objRowDatas" tiedTo="gs_tbg.getAllAlliances(mh2data.objAvatar)">
+			<property name="objAlliance" from="tiedTo"/>
+		</object>
+		
+	<!-- Alliances Section -->
+		<!--<object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="871"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objAllianceSortTableData.eColm == AllianceSort.LEADER:
+						if(mh2data.objAllianceSortTableData.bAsc,
+							sortAscending(?{data: data.objLeadNation.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objLeadNation.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objAllianceSortTableData.eColm == AllianceSort.TOTAL:
+						if(mh2data.objAllianceSortTableData.bAsc,
+							sortAscending(?{data: data.nTotalPowerPoints}, def.objRowDatas),
+							sortDescending(?{data: data.nTotalPowerPoints}, def.objRowDatas)
+						)
+					case mh2data.objAllianceSortTableData.eColm == AllianceSort.IPUS:
+						if(mh2data.objAllianceSortTableData.bAsc,
+							sortAscending(?{data: data.nIPUs}, def.objRowDatas),
+							sortDescending(?{data: data.nIPUs}, def.objRowDatas)
+						)
+					case mh2data.objAllianceSortTableData.eColm == AllianceSort.MPUS:
+						if(mh2data.objAllianceSortTableData.bAsc,
+							sortAscending(?{data: data.nMPUs}, def.objRowDatas),
+							sortDescending(?{data: data.nMPUs}, def.objRowDatas)
+						)
+					case mh2data.objAllianceSortTableData.eColm == AllianceSort.RESEARCH:
+						if(mh2data.objAllianceSortTableData.bAsc,
+							sortAscending(?{data: data.nResearchPoints}, def.objRowDatas),
+							sortDescending(?{data: data.nResearchPoints}, def.objRowDatas)
+						)
+					case mh2data.objAllianceSortTableData.eColm == AllianceSort.MONEY:
+						if(mh2data.objAllianceSortTableData.bAsc,
+							sortAscending(?{data: data.nMoney}, def.objRowDatas),
+							sortDescending(?{data: data.nMoney}, def.objRowDatas)
+						)
+					case mh2data.objAllianceSortTableData.eColm == AllianceSort.MEMBERS:
+						if(mh2data.objAllianceSortTableData.bAsc,
+							sortAscending(?{data: data.objLeadNation.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objLeadNation.strDisplayName}, def.objRowDatas)
+						)
+				}
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DWorldAlliancesBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>-->
+		
+		<object type="UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="872"/>
+			<property name="nHeight" value="495"/>
+
+			<object type="common_ui.UI2DList" name="objScrollable">
+				<object type="UI2DWorldAlliancesBubble" name="objElements" tiedTo="def.objRowDatas">
+					<property name="objData" from="tiedTo"/>
+					<property name="nWidth" value="858"/>
+				</object>
+				
+				<property name="listElements">
+					switch{
+						case mh2data.objAllianceSortTableData.eColm == AllianceSort.LEADER:
+							if(mh2data.objAllianceSortTableData.bAsc,
+								sortAscending(?{row: row.objData.objLeadNation.strDisplayName}, self.objElements),
+								sortDescending(?{row: row.objData.objLeadNation.strDisplayName}, self.objElements)
+							)
+						case mh2data.objAllianceSortTableData.eColm == AllianceSort.TOTAL:
+							if(mh2data.objAllianceSortTableData.bAsc,
+								sortAscending(?{row: row.objData.nTotalPowerPoints}, self.objElements),
+								sortDescending(?{row: row.objData.nTotalPowerPoints}, self.objElements)
+							)
+						case mh2data.objAllianceSortTableData.eColm == AllianceSort.IPUS:
+							if(mh2data.objAllianceSortTableData.bAsc,
+								sortAscending(?{row: row.objData.nIPUs}, self.objElements),
+								sortDescending(?{row: row.objData.nIPUs}, self.objElements)
+							)
+						case mh2data.objAllianceSortTableData.eColm == AllianceSort.MPUS:
+							if(mh2data.objAllianceSortTableData.bAsc,
+								sortAscending(?{row: row.objData.nMPUs}, self.objElements),
+								sortDescending(?{row: row.objData.nMPUs}, self.objElements)
+							)
+						case mh2data.objAllianceSortTableData.eColm == AllianceSort.RESEARCH:
+							if(mh2data.objAllianceSortTableData.bAsc,
+								sortAscending(?{row: row.objData.nResearchPoints}, self.objElements),
+								sortDescending(?{row: row.objData.nResearchPoints}, self.objElements)
+							)
+						case mh2data.objAllianceSortTableData.eColm == AllianceSort.MONEY:
+							if(mh2data.objAllianceSortTableData.bAsc,
+								sortAscending(?{row: row.objData.nMoney}, self.objElements),
+								sortDescending(?{row: row.objData.nMoney}, self.objElements)
+							)
+						case mh2data.objAllianceSortTableData.eColm == AllianceSort.MEMBERS:
+							if(mh2data.objAllianceSortTableData.bAsc,
+								sortAscending(?{row: row.objData.objLeadNation.strDisplayName}, self.objElements),
+								sortDescending(?{row: row.objData.objLeadNation.strDisplayName}, self.objElements)
+							)
+					}
+				</property>
+				
+			</object>
+		</object>
+		
+		
+		
+	</objectDef>
+
+	<!--Bubble Definitions-->
+	<objectDef type="UI2DAllianceRowBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int" default="0"/>
+
+		<property name="nHeight" value="30"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgRowBubbleWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+	</objectDef>
+	
+	
+	<objectDef type="UI2DAllianceName" superType="mlui.UI2DElement">
+		<propertyDef name="objAlliance" type="gs_tbg.Alliance"/>
+		<propertyDef name="bChangeName" type="bool" default="false"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="tmplTextStyleEdit" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objName" existsWhile="def.bChangeName == false">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objAlliance.strDisplayName"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>			
+		</object>
+		
+		<object type="mlui.UI2DEditableText" name="objEditableText" existsWhile="def.bChangeName == true">
+			<property name="tmplTextStyle" from="def.tmplTextStyleEdit"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth-40"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_ESCAPE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_RETURN"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_GRAVE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_TAB"/>
+			
+			<object type="mlui.KeyBindList" name="objKeyBindList">
+				<object type="mlui.KeyBindMethod" name="objKeyBinds">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<property name="eKey" value="KEY_CODE_RETURN"/>
+					<script type="application/javascript"><![CDATA[
+						function notifyTriggered(owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object><!-- objEditableText -->
+		
+		<object type="UI2DElementMask" name="objAlliancePopupMask" existsWhile="def.bChangeName == false">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="95"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{						
+							if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_RIGHT))
+							{
+                                if(mh2data.objNation.equals(def.objAlliance.refLeadNation.resolve(mh2data.objAvatar)))
+                                {
+                                    def.bChangeName = true;
+                                    def.objEditableText.strText = '';							
+                                    mlui.ActSetKeyboardFocus.execute({"objElement": def.objEditableText});
+                                }
+							}
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objSumbitRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleNationRename"/>
+			<property name="nX" from="def.nWidth-38"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="55"/>
+			<property name="strToolTip" from="locale.SID.UI.Submit"/>
+			
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objCancelRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleNationRenameCancel"/>
+			<property name="nX" from="def.nWidth-19"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="95"/>
+			<property name="strToolTip" from="locale.SID.UI.Cancel"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.bChangeName = false;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<script type="application/javascript"><![CDATA[
+			function executeRename()
+			{
+                if(mh2data.objNation.equals(self.objAlliance.refLeadNation.resolve(mh2data.objAvatar)))
+                {
+                    if(self.objEditableText.strText != '')
+                    {
+                        var action = gs_tbg.GActRenameAlliance.create({
+                            "refAlliance": self.objAlliance, 
+                            "strNewName": self.objEditableText.strText
+                            });
+                        mh2data.objAvatar.sendAction(action);
+                    }
+                }
+                self.objEditableText.strText = '';
+                self.bChangeName = false;
+			}
+		]]></script>
+	</objectDef> <!-- UI2DAllianceName -->
+	
+
+	<objectDef type="UI2DAllianceRowBubbleLeadNation" superType="UI2DAllianceRowBubble">
+		<propertyDef name="objAlliance" type="gs_tbg.Alliance"/>
+		<propertyDef name="objLeadNation" type="gs_tbg.Nation"/>
+		<property name="objLeadNation" from="self.objAlliance.refLeadNation.resolve(mh2data.objAvatar)"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<property name="nWidth" value="858"/>
+		<property name="nHeight" value="30"/>
+
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objLeadNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+		<object type="UI2DAllianceName" name="objAllianceName">
+		    <property name="objAlliance" from="def.objAlliance"/>
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="tmplTextStyleEdit" from="def.tmplTextStyle"/>
+			<property name="nX" value="52"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="130"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DAllianceRowBubbleIcon" superType="UI2DAllianceRowBubble">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+	</objectDef>
+
+	<objectDef type="UI2DAllianceRowBubbleAllies" superType="UI2DAllianceRowBubble">
+		<propertyDef name="objLeadNation" type="gs_tbg.Nation"/>
+		<property name="objLeadNation" from="self.objAlliance.refLeadNation.resolve(mh2data.objAvatar)"/>
+		<property name="nHeight">
+			if(self.objList.nHeight + 4 LT 30, 30, self.objList.nHeight + 4)
+		</property>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objList">
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nEltSpacing" value="1"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nMaxEltsPerRow" value="8"/>
+
+			<object type="UI2DNationFlag46x24" name="objElements" tiedTo="gs_tbg.getNationAllies(mh2data.objAvatar, def.objLeadNation)">
+				<property name="objNation" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="46"/>
+				<property name="nHeight" value="24"/>
+			</object>
+		</object>
+		
+	</objectDef>
+
+	<objectDef type="UI2DAllianceRowBubbleTextCenter" superType="UI2DAllianceRowBubble">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	</objectDef>
+	<!--End Bubble Defs-->
+
+	<objectDef type="UI2DWorldAlliancesBubble" superType="mlui.UI2DElement">
+		<property name="nWidth" value="871"/>
+		<property name="nHeight" from="self.objBubbles.nHeight"/>
+		<propertyDef name="objData" type="AllianceRowData"/>
+		<!--<propertyDef name="objAlliance" type="gs_tbg.Alliance"/>-->
+		<!--<propertyDef name="objLeadNation" type="gs_tbg.Nation"/>-->
+		<!--<property name="objLeadNation" from="self.objAlliance.refLeadNation.resolve(mh2data.objAvatar)"/>-->
+		<propertyDef name="nRow" type="int"/>
+		<!--<propertyDef name="objWarStatus" type="gs_tbg.War">-->
+		<!--	find(?{war:(war.refNationA == self.objLeadNation AND war.refNationB == mh2data.objNation)-->
+		<!--		OR (war.refNationB == self.objLeadNation AND war.refNationA == mh2data.objNation)},-->
+		<!--		gs_tbg.getAllWars(mh2data.objAvatar))-->
+		<!--</propertyDef>-->
+		<!---->
+		<!--<propertyDef name="objAllianceMemberships" type="gs_tbg.AllianceMembership" variable="true"/>-->
+		<!--<property name="objAllianceMemberships" from="self.objAlliance.getMemberships(mh2data.objAvatar)"/>-->
+		<!---->
+		<!--<propertyDef name="objNations" type="gs_tbg.Nation" variable="true"/>-->
+		<!--<property name="objNations" from="self.objAlliance.getNations(mh2data.objAvatar)"/>-->
+
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+
+			<!--Alliance Leader Name/Flag-->
+			<object type="UI2DAllianceRowBubbleLeadNation" name="objElements">
+				<property name="objAlliance" from="def.objData.objAlliance"/>
+        <property name="objLeadNation" from="def.objData.objLeadNation"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+				<property name="nWidth" value="182"/>
+			</object>
+
+			<!--Points-->
+			<object type="UI2DAllianceRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText">
+					def.objData.nTotalPowerPoints.formatNumber(0, true)
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="42"/>
+			</object>
+
+			<!--IPUs-->
+			<object type="UI2DAllianceRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText">
+					def.objData.nIPUs.formatNumber(0, true)
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="42"/>
+			</object>
+
+			<!--MPUs-->
+			<object type="UI2DAllianceRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText">
+					def.objData.nMPUs.formatNumber(0, true)
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="41"/>
+			</object>
+
+			<!--Tech-->
+			<object type="UI2DAllianceRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText">
+					def.objData.nResearchPoints.formatNumber(0, true)
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="41"/>
+			</object>
+
+			<!--Financial Management-->
+			<object type="UI2DAllianceRowBubbleTextCenter" name="objElements">
+				<property name="strText">
+					switch
+					{
+						case def.objData.nMoney GTE 1000000000000i64:
+							'$' + (def.objData.nMoney/1000000000000i64).formatNumber(0, true) + 'T'
+						case def.objData.nMoney GTE 1000000000:
+							'$' + (def.objData.nMoney/1000000000).formatNumber(0, true) + 'B'
+						case def.objData.nMoney GTE 1000000:
+							'$' + (def.objData.nMoney/1000000).formatNumber(0, true) + 'M'
+						default:
+							'$' + (def.objData.nMoney/1000).formatNumber(0, true) + 'K'
+					}
+				</property>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="48"/>
+			</object>
+
+			<!--War Status-->
+			<object type="UI2DAllianceRowBubbleIcon" name="objElements">
+				<property name="nWidth" value="40"/>
+				<property name="nRow" from="def.nRow"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage">
+						if(def.objData.bWar, 'skin.ImgInfoIconWarState', 'skin.ImgInfoIconPeace')
+					</property>
+					<property name="strToolTip">
+						if(def.objData.bWar, locale.SID.UI.AtWar, locale.SID.UI.NotAtWar)
+					</property>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="33"/>
+					<property name="nHeight" value="30"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+				</object>
+			</object>
+
+			<!--Allies list-->
+			<object type="UI2DAllianceRowBubbleAllies" name="objElements">
+				<property name="objLeadNation" from="def.objData.objLeadNation"/>
+				<property name="nWidth" value="420"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+
+		</object>
+
+	</objectDef>
+
+</locust>

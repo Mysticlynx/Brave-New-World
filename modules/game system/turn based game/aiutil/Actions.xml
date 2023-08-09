@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GActCreateAIMilitaryPlan" class="CMLOGActCreateAIMilitaryPlan" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="otType" type="ObjectType" restriction="AIMilitaryPlan"/>
+        <propertyDef name="strPurpose" type="String"/>
+        <propertyDef name="objPlan" type="AIMilitaryPlan"/>
+	</objectDef>
+
+	<objectDef type="GActSetAIMilitaryPlanStatus" class="CMLOGActSetAIMilitaryPlanStatus" superType="mlgame.GameAction">
+        <propertyDef name="objPlan" type="AIMilitaryPlan"/>
+        <propertyDef name="eStatus" type="Enum" restriction="MilitaryPlanStatus"/>
+        <propertyDef name="strReason" type="String" desc="reason for change"/>
+        <propertyDef name="nTurn" type="int" desc="when status was changed"/>       
+	</objectDef>
+    
+	<objectDef type="GActAILog" class="CMLOGActAILog" superType="mlgame.GameAction">
+        <propertyDef name="objTarget" type="Object"/>
+	</objectDef>
+
+	<objectDef type="GActAIRegionLog" superType="mlgame.GActMethod">
+        <propertyDef name="objRegion" type="Region"/>
+		<script type="application/javascript"> <![CDATA[
+            function execute()
+            {
+                getGameSysAIUtility(self.objGame).doAIRegionLog(self.objGame, self.objRegion);
+            }
+		]]></script>
+	</objectDef>
+    
+    
+
+    
+</locust>

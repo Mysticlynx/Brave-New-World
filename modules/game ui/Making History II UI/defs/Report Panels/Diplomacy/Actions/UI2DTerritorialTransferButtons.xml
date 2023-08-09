@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DTerritorialTransferButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupTerritoryData" type="LookupTerritoryData"/>
+
+		<object type="mlui.UI2DButton" name="objDeal">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+			    if(mh2data.otTerritorialTab != UI2DTerritorialTabDeal,
+					'BtnStyleReportTabButtonTerritory', 'BtnStyleReportTabButtonTerritoryC'))
+			"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="120"/>
+			<property name="nDefaultHeight" value="35"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openTerritorialTab(UI2DTerritorialTabDeal);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+    <object type="mlui.UI2DText" name="objLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.TreatyTerms"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="12"/>
+      <property name="nWidth" value="90"/>
+      <property name="nHeight" value="14"/>
+      <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+    </object>
+		
+		<object type="UI2DTerritoryTab" name="objYourRegions">
+			
+			<property name="tmplButtonStyle">
+				switch
+				{
+					case mh2data.otTerritorialTab != UI2DTerritorialTabDeal:
+						switch
+						{
+							case def.objLookupTerritoryData.bYourNation:
+								skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlankWideC')
+							default:
+								skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlankWide')
+						}
+					default:
+						skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlankWide')
+				}
+			</property>
+			<property name="nX" value="122"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="53"/>
+			<property name="nDefaultHeight" value="35"/>
+				
+			<object type="UI2DNationFlag46x24" name="objNationFlag">
+				<property name="objNation" from="mh2data.objNation"/>
+				<property name="haXAlign" value="CENTER"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="nWidth" value="46"/>
+				<property name="nHeight" value="24"/>
+			</object>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objLookupTerritoryData.bYourNation = true;
+							mh2data.openTerritorialTab(UI2DTerritorialTabRegions);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="UI2DTerritoryTab" name="objTheirRegions">
+			
+			<property name="tmplButtonStyle">
+				switch
+				{
+					case mh2data.otTerritorialTab != UI2DTerritorialTabDeal:
+						switch
+						{
+							case def.objLookupTerritoryData.bYourNation:
+								skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlankWide')
+							default:
+								skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlankWideC')
+						}
+					default:
+						skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlankWide')
+				}
+			</property>
+			<property name="nX" value="176"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="53"/>
+			<property name="nDefaultHeight" value="35"/>
+				
+			<object type="UI2DNationFlag46x24" name="objNationFlag">
+				<property name="objNation" from="def.objLookupTerritoryData.objNation"/>
+				<property name="haXAlign" value="CENTER"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="nWidth" value="46"/>
+				<property name="nHeight" value="24"/>
+			</object>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objLookupTerritoryData.bYourNation = false;
+							mh2data.openTerritorialTab(UI2DTerritorialTabRegions);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DTerritoryTab" superType="mlui.UI2DButton">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNationFlag" type="mlui.UI2DElement" storesChildren="true"/>
+			
+	</objectDef>
+</locust>

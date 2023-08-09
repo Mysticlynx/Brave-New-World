@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<!-- Camera -->
+	<objectDef type="UI3DCamera" superType="mlui.UI3DElement">
+		<propertyDef name="objCamera" type="mlui.UICamera" storesChildren="true"/>
+	</objectDef>
+
+	<objectDef type="UI3DMapCamera" superType="mlui.UI3DElement">
+		<propertyDef name="objMapData" type="MapData"/>
+
+		<property name="objTransform" from="self.objMapData.objCameraTransform"/>
+
+		<object type="mlui.UICamera" name="objCamera">
+			<object type="ml3dworld.CameraPerspYFOV" name="objCamera">
+				<property name="fYFOV" from="def.objMapData.fCameraYFOV"/>
+				<property name="fNear" value="1.0"/>
+				<property name="fFar" value="1000.0"/>
+			</object>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="MouseDragCameraData" class="CMLObject">
+		<propertyDef name="bDragging" type="bool" default="false"/>
+		<propertyDef name="bSelecting" type="bool" default="false"/>
+		<propertyDef name="vecCameraStart" type="Vec3D"/>
+	    <propertyDef name="vecClickStart" type="Vec3D"/>
+        <propertyDef name="nPosX" type="int"/>
+        <propertyDef name="nPosY" type="int"/>
+	</objectDef>
+
+</locust>

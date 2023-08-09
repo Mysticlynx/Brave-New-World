@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- AI City Production Templates -->
+	<template type="gs_tbg.AICityDevelopmentTemplate" name="IndustrialCenter">
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="MunitionsPlant"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="VehiclePlant"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+    </template>
+    
+	<template type="gs_tbg.AICityDevelopmentTemplate" name="AirIndustrialCenter">
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="University"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="AirForceAcademy"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="AircraftPlant"/>       
+            <property name="nPhaseStartIPUs" value="30"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+    </template>
+    
+	<template type="gs_tbg.AICityDevelopmentTemplate" name="IndustrialPort">
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="University"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="NavalAcademy"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="Shipyard"/>       
+            <property name="nPhaseStartIPUs" value="30"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="nPortPercent" value="10"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="IndustrialShipyard"/>       
+            <property name="nPhaseStartIPUs" value="100"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="nPortPercent" value="10"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+    </template>
+    
+	<template type="gs_tbg.AICityDevelopmentTemplate" name="ResearchCenter">
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="University"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="3"/>       
+            <property name="nPhaseEndRank" value="3"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="MilitaryAcademy"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="3"/>       
+            <property name="nPhaseEndRank" value="3"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="ResearchFacility"/>       
+            <property name="nPhaseStartIPUs" value="40"/>       
+            <property name="nPhaseStartRank" value="3"/>       
+            <property name="nPhaseEndRank" value="3"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="TechnologyCenter"/>       
+            <property name="nPhaseStartIPUs" value="60"/>       
+            <property name="nPhaseStartRank" value="3"/>       
+            <property name="nPhaseEndRank" value="3"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+    </template>
+    
+	<template type="gs_tbg.AICityDevelopmentTemplate" name="MilitaryResearchCenter">
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="University"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="3"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="MilitaryAcademy"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="2"/>       
+            <property name="nPhaseEndRank" value="2"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="ResearchFacility"/>       
+            <property name="nPhaseStartIPUs" value="40"/>       
+            <property name="nPhaseStartRank" value="4"/>       
+            <property name="nPhaseEndRank" value="4"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="TechnologyCenter"/>       
+            <property name="nPhaseStartIPUs" value="60"/>       
+            <property name="nPhaseStartRank" value="5"/>       
+            <property name="nPhaseEndRank" value="5"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+    </template>
+    
+	<template type="gs_tbg.AICityDevelopmentTemplate" name="HiTechResearchCenter">
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="University"/>       
+            <property name="nPhaseStartIPUs" value="20"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="ChemicalLab"/>       
+            <property name="nPhaseStartIPUs" value="30"/>       
+            <property name="nPhaseStartRank" value="2"/>       
+            <property name="nPhaseEndRank" value="2"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="ResearchFacility"/>       
+            <property name="nPhaseStartIPUs" value="40"/>       
+            <property name="nPhaseStartRank" value="3"/>       
+            <property name="nPhaseEndRank" value="3"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="RocketLab"/>       
+            <property name="nPhaseStartIPUs" value="50"/>       
+            <property name="nPhaseStartRank" value="4"/>       
+            <property name="nPhaseEndRank" value="4"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="TechnologyCenter"/>       
+            <property name="nPhaseStartIPUs" value="60"/>       
+            <property name="nPhaseStartRank" value="5"/>       
+            <property name="nPhaseEndRank" value="5"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="JetPropulsionLab"/>       
+            <property name="nPhaseStartIPUs" value="60"/>       
+            <property name="nPhaseStartRank" value="6"/>       
+            <property name="nPhaseEndRank" value="6"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="OrbitalScienceLab"/>       
+            <property name="nPhaseStartIPUs" value="80"/>       
+            <property name="nPhaseStartRank" value="7"/>       
+            <property name="nPhaseEndRank" value="7"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+    </template>
+    
+	<template type="gs_tbg.AICityDevelopmentTemplate" name="NuclearResearchCenter">
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="University"/>       
+            <property name="nPhaseStartIPUs" value="30"/>       
+            <property name="nPhaseStartRank" value="1"/>       
+            <property name="nPhaseEndRank" value="1"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="ResearchFacility"/>       
+            <property name="nPhaseStartIPUs" value="40"/>       
+            <property name="nPhaseStartRank" value="2"/>       
+            <property name="nPhaseEndRank" value="2"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="NuclearLab"/>       
+            <property name="nPhaseStartIPUs" value="50"/>       
+            <property name="nPhaseStartRank" value="3"/>       
+            <property name="nPhaseEndRank" value="3"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+        <object type="gs_tbg.AICityDevelopmentSequenceItem" name="objCityDevelopmentSequence">
+            <property name="objFactoryOutputTemplate" value="TechnologyCenter"/>       
+            <property name="nPhaseStartIPUs" value="60"/>       
+            <property name="nPhaseStartRank" value="4"/>       
+            <property name="nPhaseEndRank" value="4"/>       
+            <property name="nCityPercent" value="5"/>       
+            <property name="bAllowArmyPrereqs" value="true"/>       
+            <property name="bAllowNavyPrereqs" value="true"/>       
+            <property name="bAllowAirForcePrereqs" value="true"/>       
+            <property name="bAllowSubmarinePrereqs" value="true"/>       
+            <property name="bAllowResearchBuildings" value="true"/>       
+        </object>
+    </template>
+    
+
+    <template type="gs_tbg.AIEconomicStrategyTemplate" name="DefaultEconomicStrategy">
+	    <property name="objCityDevelopmentTemplates" value="IndustrialCenter"/>
+	    <property name="objCityDevelopmentTemplates" value="AirIndustrialCenter"/>
+	    <property name="objCityDevelopmentTemplates" value="IndustrialPort"/>
+	    <property name="objCityDevelopmentTemplates" value="ResearchCenter"/>
+	    <property name="objCityDevelopmentTemplates" value="MilitaryResearchCenter"/>
+	    <property name="objCityDevelopmentTemplates" value="HiTechResearchCenter"/>
+	    <property name="objCityDevelopmentTemplates" value="NuclearResearchCenter"/>
+
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="Mill"/>       
+            <property name="nRecommendedIPUs" value="1"/>       
+        </object>
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="CottageFactory"/>       
+            <property name="nRecommendedIPUs" value="5"/>       
+        </object>
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="MechanizedFactoryUpgrade"/>       
+            <property name="nRecommendedIPUs" value="10"/>       
+        </object>
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="FactoryMillUpgrade"/>       
+            <property name="nRecommendedIPUs" value="15"/>       
+        </object>
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="LargeFactoryUpgrade"/>       
+            <property name="nRecommendedIPUs" value="20"/>       
+        </object>
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="IndustrialPlantUpgrade"/>       
+            <property name="nRecommendedIPUs" value="20"/>       
+        </object>
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="IndustrialEnterpriseUpgrade"/>       
+            <property name="nRecommendedIPUs" value="20"/>       
+        </object>
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="MechanizedFactory"/>       
+            <property name="nRecommendedIPUs" value="20"/>       
+        </object>
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="LargeFactory"/>       
+            <property name="nRecommendedIPUs" value="30"/>       
+        </object>
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="IndustrialPlant"/>       
+            <property name="nRecommendedIPUs" value="40"/>       
+        </object>
+        <object type="gs_tbg.AIFactoryOutputSequenceItem" name="objFactoryProductionSequence">
+            <property name="objFactoryOutputTemplate" value="IndustrialEnterprise"/>       
+            <property name="nRecommendedIPUs" value="50"/>       
+        </object>
+    </template>
+    
+</locust>

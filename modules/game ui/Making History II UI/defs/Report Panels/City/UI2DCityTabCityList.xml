@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DCityTabCityList" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+
+	<!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objProductionAndResearchLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.ProductionAndResearchSummary"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objProductionOrdersAndResearchProjectsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objCityNameLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.CityName"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="144"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationalityLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Nationality"/>
+			<property name="nX" value="151"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="52"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMechanizedIndustriesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.MechanizedIndustries"/>
+			<property name="nX" value="200"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="120"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objIndustryIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconIndustrySm"/>
+			<property name="strToolTip" from="locale.SID.UI.IPUs"/>
+			<property name="nX" value="333"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="16"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objProductionOrderLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.ProductionOrder"/>
+			<property name="nX" value="358"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="189"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTurnsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Turns"/>
+			<property name="nX" value="546"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="48"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objResearchIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+			<property name="nX" value="606"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="17"/>
+			<property name="nHeight" value="20"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objResearchProjectLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.ResearchProject"/>
+			<property name="nX" value="632"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="189"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objResearchProgressLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Progress"/>
+			<property name="nX" value="820"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="48"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSliderBGBubble">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="867"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="16"/>
+			<property name="nHeight" value="495"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSliderBG">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="869"/>
+			<property name="nY" value="189"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="491"/>
+		</object>
+
+		<object type="mlui.UI2DScrollPane" name="objCityList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="871"/>
+			<property name="nHeight" value="495"/>
+
+			<object type="mlui.SliderInfo" name="objHorizInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="868"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="16"/>
+				<property name="nMaxKnobLength" value="16"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="mlui.SliderInfo" name="objVertInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="12"/>
+				<property name="nLength" value="495"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="37"/>
+				<property name="nMaxKnobLength" value="37"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="UI2DCityList" name="objScrollable">
+				<property name="objMH2Data" from="def.objMH2Data"/>
+				<property name="objLookupCitiesInNation" from="def.objLookupCitiesInNation"/>
+
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="858"/>
+				<property name="nHeight" from="((def.objLookupCitiesInNation.objControlledCities.size) - 1) +
+					((def.objLookupCitiesInNation.objControlledCities.size) * 30)
+				"/>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DCityList" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objLookupCitiesInNation" type="LookupCitiesInNation"/>
+
+		<object type="common_ui.UI2DSortedList" name="objList">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="1"/>
+
+			<object type="UI2DCityListBubble" name="objElements" tiedTo="def.objLookupCitiesInNation.objControlledCities">
+				<property name="objMH2Data" from="def.objMH2Data"/>
+				<property name="objCity" from="tiedTo"/>
+
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="858"/>
+				<property name="nHeight" value="30"/>
+			</object>
+
+			<!-- TODO: replace sorter -->
+			<!--<object type="mlutility.Sorter" name="objSorter">
+				<property name="pathToStorage" value="def.objList.objElements"/>
+				<property name="otSortedType" value="UI2DCityListBubble"/>
+				<property name="strSortBy" value="strName"/>
+				<property name="strSortMethod" value="Dictionary"/>
+			</object>-->
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DCityListBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+
+		<propertyDef name="strName" type="String"/>
+		<property name="strName" from="self.objCity.strDisplayName"/>
+
+		<object type="LookupCityData" name="objLookupCityData">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objCity" from="def.objCity"/>
+		</object>
+
+	<!-- City Name -->
+		<object type="mlui.UI2DImage" name="objCityNameBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="144"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objCityName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.objLookupCityData.objCity.strDisplayName"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" value="140"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	<!-- Nationality -->
+		<object type="mlui.UI2DImage" name="objNationalityBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGray"/>
+			<property name="nX" value="143"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="48"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="UI2DNationIcon" name="objNationalityIcon">
+			<property name="objNation" from="def.objLookupCityData.objOwner"/>
+			<property name="nX" value="153"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+	<!-- Production Lines -->
+		<object type="mlui.UI2DImage" name="objMechanizedIndustriesBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGray"/>
+			<property name="nX" value="190"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="120"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+	<!-- Industry -->
+		<object type="mlui.UI2DImage" name="objIndustryBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGray"/>
+			<property name="nX" value="309"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objIndustry">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown12Center"/>
+			<property name="strText" from="def.objLookupCityData.objCity.nIPUs"/>
+			<property name="nX" value="309"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	<!-- Production Order -->
+		<object type="mlui.UI2DImage" name="objProductionOrderBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGray"/>
+			<property name="nX" value="348"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="189"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objProductionOrder">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown12Center"/>
+			<property name="strText" from="if(def.objLookupCityData.objFactoryOutputTemplate != null,
+				def.objLookupCityData.objFactoryOutputTemplate.strDisplayName, 'No Orders')
+			"/>
+			<property name="nX" value="348"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="189"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	<!-- PO Progress -->
+		<object type="mlui.UI2DImage" name="objPOProgressBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGray"/>
+			<property name="nX" value="536"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="48"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objPOProgress" existsWhile="self.objLookupCityData.objCurrentWorkOrder != null">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown12Center"/>
+			<property name="strText" from="def.objLookupCityData.nOrderTurns"/>
+			<property name="nX" value="536"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="48"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	<!-- Research -->
+		<object type="mlui.UI2DImage" name="objResearchBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGray"/>
+			<property name="nX" value="583"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<!-- placeholder --><object type="mlui.UI2DText" name="objResearch">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" value="0"/>
+			<property name="nX" value="583"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	<!-- Research Project -->
+		<object type="mlui.UI2DImage" name="objResearchProjectBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGray"/>
+			<property name="nX" value="622"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="189"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objCurrentResearchProject">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="if(def.objLookupCityData.objResearchProject != null,
+				def.objLookupCityData.objResearchTopicTemplate.strDisplayName, locale.SID.UI.NoProject)
+			"/>
+			<property name="nX" value="622"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="189"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	<!-- RP Progress -->
+		<object type="mlui.UI2DImage" name="objRPProgressBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGray"/>
+			<property name="nX" value="810"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="48"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objRPProgress" existsWhile="self.objLookupCityData.objResearchProject != null">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown12Center"/>
+			<property name="strText" from="def.objLookupCityData.nProjectPercent + '%'"/>
+			<property name="nX" value="810"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="48"/>
+			<property name="nHeight" value="12"/>
+		</object>
+	</objectDef>
+</locust>

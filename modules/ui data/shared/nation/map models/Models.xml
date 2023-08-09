@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Common -->
+    <template type="mapui.MapModelTemplate" name="MapModelNoDisplay" >
+    </template>
+		
+	<!-- Port -->
+    <template type="mapui.MapModelTemplate" name="MapModelCityPort">
+        <property name="tmplModel" value="models.ModelTmplPort" />
+        <property name="tmplAnimation" value="models.AnimTmplPortEmpty" />
+        <property name="tmplAltAnimation" value="models.AnimTmplPortBusy" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+			<property name="fPhi" value="0"/>
+			<property name="fTheta" value="90.0"/>
+			<property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.05"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelCityDock">
+        <property name="tmplModel" value="models.ModelTmplDock" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+			<property name="fPhi" value="0"/>
+			<property name="fTheta" value="90.0"/>
+			<property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.05"/>
+        </object>
+    </template>
+
+    <!-- Region Improvements -->
+    <template type="mapui.MapModelTemplate" name="MapModelDeep_Coal_Mine">
+        <property name="tmplModel" value="models.ModelTmplDeep_Coal_Mine" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.03"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelCoal_Mine">
+        <property name="tmplModel" value="models.ModelTmplCoal_Mine" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.03"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelCoal_Pit">
+        <property name="tmplModel" value="models.ModelTmplCoal_Pit" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.03"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelRaw_Coal">
+        <property name="tmplModel" value="models.ModelTmplRaw_Coal" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.08"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelDeep_Metals_Mine">
+        <property name="tmplModel" value="models.ModelTmplDeep_Metals_Mine" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.03"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelMetals_Mine">
+        <property name="tmplModel" value="models.ModelTmplMetals_Mine" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.03"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelMetals_Pit">
+        <property name="tmplModel" value="models.ModelTmplMetals_Pit" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.03"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelRaw_Metals">
+        <property name="tmplModel" value="models.ModelTmplRaw_Metals" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.08"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelOil_Refinery">
+        <property name="tmplModel" value="models.ModelTmplOil_Refinery" />
+        <property name="tmplAnimation" value="models.AnimTmplOil_Refinery" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.01"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelDeep_Oil_Well">
+        <property name="tmplModel" value="models.ModelTmplDeep_Oil_Well" />
+        <property name="tmplAnimation" value="models.AnimTmplDeep_Oil_Well" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.01"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelOil_Well">
+        <property name="tmplModel" value="models.ModelTmplOil_Well" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.01"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelRaw_Oil">
+        <property name="tmplModel" value="models.ModelTmplRaw_Oil" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.08"/>
+        </object>
+    </template>
+    
+	<!-- Defense improvements -->
+    <template type="mapui.MapModelTemplate" name="MapModelAntiAirBatteries">
+        <property name="tmplModel" value="models.ModelTmplAntiAirBatteries" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0025"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelAntiAirBatteriesGround">
+        <property name="tmplModel" value="models.ModelTmplAntiAirBatteriesGround" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0025"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelEarlyWarningRadar">
+        <property name="tmplModel" value="models.ModelTmplEarlyWarningRadar" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0025"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelGroundControlledInterception">
+        <property name="tmplModel" value="models.ModelTmplGroundControlledInterception" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0025"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelFlakTowers">
+        <property name="tmplModel" value="models.ModelTmplFlakTowers" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0025"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelEarthworks">
+        <property name="tmplModel" value="models.ModelTmplEarthworks" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0025"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelConcreteFortifications">
+        <property name="tmplModel" value="models.ModelTmplConcreteFortifications" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0025"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelFortifiedDefenseLine">
+        <property name="tmplModel" value="models.ModelTmplFortifiedDefenseLine" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0025"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelRegionDefenseGround">
+        <property name="tmplModel" value="models.ModelTmplRegionDefenseGround" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0025"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelCoastalDefense1">
+        <property name="tmplModel" value="models.ModelTmplCoastalDefense1" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+			<property name="fPhi" value="0"/>
+			<property name="fTheta" value="90.0"/>
+			<property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.05"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelCoastalDefense2">
+        <property name="tmplModel" value="models.ModelTmplCoastalDefense2" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+			<property name="fPhi" value="0"/>
+			<property name="fTheta" value="90.0"/>
+			<property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.05"/>
+        </object>
+    </template>
+	
+    <!-- World Edge -->
+    <template type="mapui.MapModelTemplate" name="MapModelWorldEdgeNorth">
+        <property name="tmplModel" value="models.ModelTmplWorldEdgeNorth" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="0.0"/>
+            <property name="fTheta" value="0.0"/>
+            <property name="fGamma" value="0.0"/>
+            <property name="fScale" value=".245"/>
+        </object>
+    </template>
+	
+    <!-- Unit bases -->
+    <template type="mapui.MapModelTemplate" name="MapModelUnitBase_Air">
+        <property name="tmplModel" value="models.ModelTmplUnitBase_Air" />
+        <property name="tmplAnimation" value="models.AnimTmplUnitBase_Air" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0059"/>
+        </object>
+    </template>
+	
+	<!-- Construction project indicator -->
+    <template type="mapui.MapModelTemplate" name="MapModelFarmWorker">
+        <property name="tmplModel" value="models.ModelTmplFarmWorker" />
+        <property name="tmplAnimation" value="models.AnimTmplFarmWorker" />
+        <property name="tmplAltAnimation" value="models.AnimTmplFarmWorkerIdle" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="-120.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0045"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelMilitaryWorker">
+        <property name="tmplModel" value="models.ModelTmplMilitaryWorker" />
+        <property name="tmplAnimation" value="models.AnimTmplMilitaryWorker" />
+        <property name="tmplAltAnimation" value="models.AnimTmplMilitaryWorkerIdle" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="-120.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0045"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelResourcesWorker">
+        <property name="tmplModel" value="models.ModelTmplResourcesWorker" />
+        <property name="tmplAnimation" value="models.AnimTmplResourcesWorker" />
+        <property name="tmplAltAnimation" value="models.AnimTmplResourcesWorkerIdle" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="-120.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0045"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelRoadWorker">
+        <property name="tmplModel" value="models.ModelTmplRoadWorker" />
+        <property name="tmplAnimation" value="models.AnimTmplRoadWorker" />
+        <property name="tmplAltAnimation" value="models.AnimTmplRoadWorkerIdle" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="-120.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.0045"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelCityConstructionProject">
+        <property name="tmplModel" value="models.ModelTmplCityConstructionProject" />
+        <property name="tmplAnimation" value="models.AnimTmplCityConstructionProjectBuilding" />
+        <property name="tmplAltAnimation" value="models.AnimTmplCityConstructionProjectIdle" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+			<property name="fPhi" value="0"/>
+			<property name="fTheta" value="90.0"/>
+			<property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.05"/>
+        </object>
+    </template>
+    
+    <!-- Combat -->
+    <template type="mapui.MapModelTemplate" name="MapModelDefaultCombat">
+        <property name="tmplModel" value="models.ModelTmplEngagement" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="90.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.085"/>
+        </object>
+    </template>
+    
+    <!-- Interdiction -->
+    <template type="mapui.MapModelTemplate" name="MapModelDefaultInterdiction">
+        <property name="tmplModel" value="models.ModelTmplInterdiction" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="270.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.085"/>
+        </object>
+    </template>
+	
+	<!-- Flag -->
+	<template type="mapui.MapModelTemplate" name="MapModelFlag">
+		<property name="tmplModel" value="models.ModelTmplFlag" />
+        <property name="tmplAnimation" value="models.AnimTmplFlag" />
+		<property name="strOverrideEffect" value="lambert2-fx" />
+		<object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="285.0"/>
+            <property name="fTheta" value="85.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.034"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelFlagPole">
+        <property name="tmplModel" value="models.ModelTmplFlagPole" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="100.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.034"/>
+        </object>
+    </template>
+			
+    <!-- Units -->
+    <template type="mapui.MapModelTemplate" name="MapModelDefaultUnitGroupSelected">
+        <property name="tmplModel" value="models.ModelTmplGroupSelect" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="180.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value=".0025"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelStackIndicator">
+        <property name="tmplModel" value="models.ModelTmplStackIndicator" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="180.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value=".012"/>
+        </object>
+    </template>
+    <template type="mapui.MapModelTemplate" name="MapModelDefaultUnitGroupDecal">
+        <property name="tmplModel" value="models.ModelTmplUnitGroup_Decal" />
+        <object type="ml3dworld.TransformRigidBody" name="objTransform">
+            <property name="fPhi" value="90.0"/>
+            <property name="fTheta" value="90.0"/>
+            <property name="fGamma" value="90.0"/>
+            <property name="fScale" value="0.005"/>
+        </object>
+    </template>
+
+</locust>

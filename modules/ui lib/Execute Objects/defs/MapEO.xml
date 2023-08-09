@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="ExecuteObjectMapData" class="CMLObject">
+    </objectDef>
+
+	<objectDef type="EOMapDataSelectNation" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objNation" type="gs_tbg.Nation"/>
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                log("selecting nation");
+                self.objMapData.selectNation(self.objNation);
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="EOMapDataSelectRegion" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objRegion" type="gs_tbg.Region" />
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                log("selecting region");
+                self.objMapData.selectRegion(self.objRegion);
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="EOMapDataSelectCity" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objCity" type="gs_tbg.City" />
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                log("selecting city");
+                self.objMapData.selectCity(self.objCity);
+            }
+
+        ]]></script>
+    </objectDef>
+
+    <objectDef type="EOMapDataSelectGroup" superType="ExecuteObjectMapData">
+		<propertyDef name="objRoot" type="Object"/>
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                log("selecting group");
+				self.objMapData.selectUnitGroup(self.objGroup)
+                self.objMapData.objStacks.selectAndDisplaySpecificUnitGroup(self.objGroup);
+            }
+
+        ]]></script>
+    </objectDef>
+
+    <objectDef type="EOMapDataDumpAILogForGroup" superType="ExecuteObjectMapData">
+		<propertyDef name="objRoot" type="Object"/>
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+        <script type="application/javascript"><![CDATA[
+            function execute()
+            {
+                var action = gs_tbg.GActAILog.create({objTarget: self.objGroup });
+                self.objMapData.objAvatar.sendAction(action);
+            }
+        ]]></script>
+    </objectDef>      
+    
+    
+    <objectDef type="EOMapDataAIRegionLog" superType="ExecuteObjectMapData">
+		<propertyDef name="objRoot" type="Object"/>
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objRegion" type="gs_tbg.Region"/>
+        <script type="application/javascript"><![CDATA[
+            function execute()
+            {
+                var action = gs_tbg.GActAIRegionLog.create({objRegion: self.objRegion });
+                self.objMapData.objAvatar.sendAction(action);
+            }
+        ]]></script>
+    </objectDef>      
+    
+
+	<objectDef type="EOMapDataSelectGroupInEngagement" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                log("selecting group");
+                self.objMapData.selectUnitGroup(self.objGroup);
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="HEOMapDataLoadAtomBombSubMenu" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+		<propertyDef name="objUnits" type="gs_tbg.Unit" variable="true"/>
+		<propertyDef name="objRoot" type="mlui.UI2DElement"/>
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+				log("creating load atom bomb submenu");
+				var menudata = common_elements.MenuData.create({
+					});
+
+				for(var b in self.objUnits)
+				{
+					var menuitem = common_elements.MenuItem.create({
+						"strDisplayName": self.objUnits[b].strDisplayName,
+						"objExecuteObject": EOMapDataLoadAtomBomb.create({
+							"objMapData": self.objMapData,
+							"refUnit": self.objUnits[b]
+						})
+					});
+					menudata.objItems.add(menuitem);
+				}
+
+				mlui.ActSendEventToUIElement.execute({
+					"objElement": self.objRoot,
+					"objEvent": common_elements.EventRequestPopUpSubMenu.create({
+							"objMenuData": menudata
+					})
+				});
+            }
+
+        ]]></script>
+    </objectDef>
+
+    <objectDef type="EOMapDataLoadAtomBomb" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="refUnit" type="GORef" restriction="gs_tbg.Unit"/>
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+				var action = gs_tbg.GActLoadAtomicBomb.create({
+						"refUnit": self.refUnit
+					});
+					self.objMapData.objAvatar.sendAction(action);
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="EOMapDataSabotageRegion" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objRegion" type="gs_tbg.Region"/>
+        <propertyDef name="eSabotageRegionParam" type="Enum" restriction="gs_tbg.SabotageRegionParam"/>
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+				var action = gs_tbg.GActStartSabotageRegion.create({
+						"refNation": self.objMapData.objNation,
+						"refTargetRegion": self.objRegion,
+						"eSabotageRegionParam": self.eSabotageRegionParam
+					});
+					self.objMapData.objAvatar.sendAction(action);
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="HEOMapDataSabotageRegionSubMenu" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="objRoot" type="mlui.UI2DElement"/>
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+				log("creating sabotage region submenu");
+				var menudata = common_elements.MenuData.create({
+					});
+
+				//if(self.objRegion.objTransportationImprovement != null)
+				//{
+					menuitem = common_elements.MenuItem.create({
+						"strDisplayName": locale.SID.UI.Transportation,
+						"objExecuteObject": EOMapDataSabotageRegion.create({
+							"objMapData": self.objMapData,
+							"objRegion": self.objRegion,
+							"eSabotageRegionParam": gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_TRANSPORTATION
+						})
+					});
+					menudata.objItems.add(menuitem);
+				//}
+
+				if(self.objRegion.objFortificationImprovement != null)
+				{
+					menuitem = common_elements.MenuItem.create({
+						"strDisplayName": locale.SID.UI.Fortifications,
+						"objExecuteObject": EOMapDataSabotageRegion.create({
+							"objMapData": self.objMapData,
+							"objRegion": self.objRegion,
+							"eSabotageRegionParam": gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_FORTIFICATIONS
+						})
+					});
+					menudata.objItems.add(menuitem);
+				}
+
+				if(self.objRegion.objAADefenseImprovement != null)
+				{
+					menuitem = common_elements.MenuItem.create({
+						"strDisplayName": locale.SID.UI.AntiAirDefenses,
+						"objExecuteObject": EOMapDataSabotageRegion.create({
+							"objMapData": self.objMapData,
+							"objRegion": self.objRegion,
+							"eSabotageRegionParam": gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_AA_DEFENSE
+						})
+					});
+					menudata.objItems.add(menuitem);
+				}
+				if(self.objRegion.objCoastalDefenseImprovement != null)
+				{
+					menuitem = common_elements.MenuItem.create({
+						"strDisplayName": locale.SID.UI.CoastalDefenses,
+						"objExecuteObject": EOMapDataSabotageRegion.create({
+							"objMapData": self.objMapData,
+							"objRegion": self.objRegion,
+							"eSabotageRegionParam": gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_COASTAL_DEFENSE
+						})
+					});
+					menudata.objItems.add(menuitem);
+				}
+				if(self.objRegion.objAirbaseImprovement != null)
+				{
+					menuitem = common_elements.MenuItem.create({
+						"strDisplayName": locale.SID.UI.Airbase,
+						"objExecuteObject": EOMapDataSabotageRegion.create({
+							"objMapData": self.objMapData,
+							"objRegion": self.objRegion,
+							"eSabotageRegionParam": gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_AIRBASE
+						})
+					});
+					menudata.objItems.add(menuitem);
+				}
+				//if(self.objRegion.objTransportationImprovement != null)
+				//{
+				//	menuitem = common_elements.MenuItem.create({
+				//		"strDisplayName": locale.SID.UI.NavalBase,
+				//		"objExecuteObject": EOMapDataSabotageRegion.create({
+				//			"objMapData": self.objMapData,
+				//			"objRegion": self.objRegion,
+				//			"eSabotageRegionParam": gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_NAVAL_BASE
+				//		})
+				//	});
+				//	menudata.objItems.add(menuitem);
+				//}
+				//var menutitle = common_elements.MenuTitle.create({
+				//	"strTableTitle": title
+				//});
+				//menudata.objTitle = menutitle;
+
+				mlui.ActSendEventToUIElement.execute({
+					"objElement": self.objRoot,
+					"objEvent": common_elements.EventRequestPopUpSubMenu.create({
+							"objMenuData": menudata
+					})
+				});
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="EOMapDataSetCityProduction" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objCity" type="gs_tbg.City" />
+		<propertyDef name="objOutput" type="gs_tbg.FactoryOutputTemplate" />
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+				if(self.objOutput.tmplCategory.equals(self.objMapData.objModuleSD.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'Industrial')))
+				{
+					var action = gs_tbg.GActAddWorkOrder.create({
+						"refCity": self.objCity,
+						"tmplFactoryOutput": self.objOutput,
+						"nPriority": 1,
+						"bRepeating": true
+					});
+					self.objMapData.objAvatar.sendAction(action);
+				}
+				else
+				{
+					var action = gs_tbg.GActAddWorkOrder.create({
+						"refCity": self.objCity,
+						"tmplFactoryOutput": self.objOutput,
+						"nPriority": 1
+					});
+					self.objMapData.objAvatar.sendAction(action);
+				}
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="EOMapDataCancelCityProduction" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objCity" type="gs_tbg.City" />
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+				workorders = self.objCity.objWorkOrders
+				for(i in workorders)
+				{
+					var action = gs_tbg.GActRemoveWorkOrder.create({
+						"refCity": self.objCity,
+						"objWorkOrder": workorders[i]
+					});
+					self.objMapData.objAvatar.sendAction(action);
+				}
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="EOMapDataSetCityResearch" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objCity" type="gs_tbg.City" />
+		<propertyDef name="objProject" type="gs_tbg.ResearchTopicTemplate" />
+        <propertyDef name="objResearchProject" type="gs_tbg.ResearchProject"  />
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+				var action = gs_tbg.GActSetResearchProject.create({
+					"refCity": self.objCity,
+					"tmplResearchTopic": self.objProject
+				});
+				self.objMapData.objAvatar.sendAction(action);
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="EOMapDataCancelCityResearch" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objCity" type="gs_tbg.City" />
+        <script type="application/javascript"><![CDATA[
+            function execute()
+            {
+				var action = gs_tbg.GActClearResearchProject.create({
+					"refCity": self.objCity
+				});
+				self.objMapData.objAvatar.sendAction(action);
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="HEOOpenCityResearchSubMenu" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+		<propertyDef name="objRoot" type="mlui.UI2DElement"/>
+        <propertyDef name="objValidResearchTopics" type="gs_tbg.ResearchTopicTemplate" variable="true"/>        
+        
+		<script type="application/javascript"><![CDATA[
+            function execute()
+            {
+                log("creating city research submenu");
+				var menudata = common_elements.MenuData.create({
+					});
+
+				var title = "";
+				var currentproject;
+				self.objCity.getAvailableResearchTopics(self.objMapData.objAvatar, self.objValidResearchTopics);
+				if(self.objCity.refResearchCenter.resolve(self.objMapData.objAvatar).refResearchProject != null)
+				{
+					currentproject = self.objCity.refResearchCenter.resolve(self.objMapData.objAvatar).refResearchProject.resolve(self.objMapData.objAvatar).tmplResearchTopic.resolve();
+					title = locale.FSID.UI.ResearchingProject.format('Project', currentproject.strDisplayName);
+				}
+
+				if(self.objValidResearchTopics.size > 0)
+				{
+					var menuitem;
+					for(i in self.objValidResearchTopics)
+					{
+						if(self.objValidResearchTopics[i] != currentproject)
+						{
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": self.objValidResearchTopics[i].strDisplayName,
+								"objExecuteObject": EOMapDataSetCityResearch.create({
+									"objMapData": self.objMapData,
+									"objCity": self.objCity,
+									"objProject": self.objValidResearchTopics[i],
+                                    "objResearchProject" : gs_tbg.getResearchProject(self.objRoot.objMH2Data.objAvatar, self.objValidResearchTopics[i],  self.objRoot.objMH2Data.objNation)
+								})
+                                ,
+                                "otToolTip" : common_elements.UI2DCityResearchCostToolTip
+							});
+							menudata.objItems.add(menuitem);
+						}
+					}
+				}
+
+				if(currentproject != null)
+				{
+					menuitem = common_elements.MenuItem.create({
+						"strDisplayName": locale.SID.UI.CancelResearch,
+						"objExecuteObject": EOMapDataCancelCityResearch.create({
+							"objMapData": self.objMapData,
+							"objCity": self.objCity
+						})
+					});
+					menudata.objItems.add(menuitem);
+				}
+
+				var menutitle = common_elements.MenuTitle.create({
+					"strTableTitle": title
+				});
+				menudata.objTitle = menutitle;
+
+				mlui.ActSendEventToUIElement.execute({
+					"objElement": self.objRoot,
+					"objEvent": common_elements.EventRequestPopUpSubMenu.create({
+							"objMenuData": menudata
+					})
+				});
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="HEOOpenCityProductionSubMenu" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+		<propertyDef name="objRoot" type="mlui.UI2DElement"/>
+		<propertyDef name="objOutputs" type="gs_tbg.FactoryOutputTemplate" variable="true"/>
+
+		<script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                log("creating city production submenu");
+				var menudata = common_elements.MenuData.create({
+					});
+
+				var title = ""
+
+				self.objCity.getAvailableFactoryOutputs(self.objMapData.objAvatar, self.objOutputs);
+
+				if(self.objOutputs.size > 0)
+				{
+					var menuitem;
+					var curworkorder = self.objCity.objCurrentWorkOrder;
+					for(i in self.objOutputs)
+					{
+						if(curworkorder == null || !curworkorder.tmplFactoryOutput.equals(self.objOutputs[i]))
+						{
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": self.objOutputs[i].strDisplayName,
+								"objExecuteObject": EOMapDataSetCityProduction.create({
+									"objMapData": self.objMapData,
+									"objCity": self.objCity,
+									"objOutput": self.objOutputs[i]
+								})
+                                ,
+                                "otToolTip" : common_elements.UI2DCityProductionCostToolTip
+							});
+							menudata.objItems.add(menuitem);
+						}
+					}
+				}
+
+				if(self.objCity.objCurrentWorkOrder != null)
+				{
+					title = locale.FSID.UI.ProducingOutput.format('Output', self.objCity.objCurrentWorkOrder.tmplFactoryOutput.resolve().strDisplayName)
+					menuitem = common_elements.MenuItem.create({
+						"strDisplayName": locale.SID.UI.CancelWorkOrders,
+						"objExecuteObject": EOMapDataCancelCityProduction.create({
+							"objMapData": self.objMapData,
+							"objCity": self.objCity
+						})
+					});
+					menudata.objItems.add(menuitem);
+				}
+
+				var menutitle = common_elements.MenuTitle.create({
+					"strTableTitle": title
+				});
+				menudata.objTitle = menutitle;
+
+				mlui.ActSendEventToUIElement.execute({
+					"objElement": self.objRoot,
+					"objEvent": common_elements.EventRequestPopUpSubMenu.create({
+							"objMenuData": menudata
+					})
+				});
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="EOMapDataSetRegionProduction" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objRegion" type="gs_tbg.Region" />
+		<propertyDef name="objOutput" type="gs_tbg.RegionOutputTemplate" />
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                var action = gs_tbg.GActAddRegionProject.create({
+									"refRegion": self.objRegion,
+									"tmplRegionOutput": self.objOutput,
+									"nPriority": 1
+								});
+				self.objMapData.objAvatar.sendAction(action);
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="EOMapDataCancelRegionProduction" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objRegion" type="gs_tbg.Region" />
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+				projects = self.objRegion.objRegionProjects
+				for(i in projects)
+				{
+					var action = gs_tbg.GActRemoveRegionProject.create({
+										"refRegion": self.objRegion,
+										"objRegionProject": projects[i]
+									});
+					self.objMapData.objAvatar.sendAction(action);
+				}
+            }
+
+        ]]></script>
+    </objectDef>
+
+	<objectDef type="HEOOpenRegionProductionSubMenu" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="objRoot" type="mlui.UI2DElement"/>
+		<propertyDef name="objOutputs" type="gs_tbg.RegionOutputTemplate" variable="true"/>
+
+		<script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                log("creating region production submenu");
+				var menudata = common_elements.MenuData.create({
+					});
+
+				self.objRegion.getAvailableRegionOutputs(self.objMapData.objAvatar, null, self.objOutputs)
+				var projects = self.objRegion.objRegionProjects;
+				var curproject;
+				for(var i in projects)
+				{
+					if(projects[i].nPriority == 1)
+					{
+						curproject = projects[i];
+					}
+				}
+
+				var title = ""
+				if(curproject != null)
+				{
+					title = locale.FSID.UI.ProducingOutput.format('Output', curproject.tmplRegionOutput.resolve().strDisplayName)
+				}
+
+				if(self.objOutputs.size > 0)
+				{
+					var menuitem
+					for(i in self.objOutputs)
+					{
+						menuitem = common_elements.MenuItem.create({
+							"strDisplayName": self.objOutputs[i].strDisplayName,
+							"objExecuteObject": EOMapDataSetRegionProduction.create({
+								"objMapData": self.objMapData,
+								"objRegion": self.objRegion,
+								"objOutput": self.objOutputs[i]
+							})
+                            ,
+                            "otToolTip" : common_elements.UI2DRegionProductionCostToolTip
+						});
+						menudata.objItems.add(menuitem);
+					}
+				}
+
+				if(self.objRegion.objCurrentRegionProject != null)
+				{
+					menuitem = common_elements.MenuItem.create({
+						"strDisplayName": locale.SID.UI.CancelRegionProjects,
+						"objExecuteObject": EOMapDataCancelRegionProduction.create({
+							"objMapData": self.objMapData,
+							"objRegion": self.objRegion
+						})
+					});
+					menudata.objItems.add(menuitem);
+				}
+
+				var menutitle = common_elements.MenuTitle.create({
+					"strTableTitle": title
+				});
+				menudata.objTitle = menutitle;
+
+				mlui.ActSendEventToUIElement.execute({
+					"objElement": self.objRoot,
+					"objEvent": common_elements.EventRequestPopUpSubMenu.create({
+							"objMenuData": menudata
+					})
+				});
+            }
+
+        ]]></script>
+    </objectDef>
+
+</locust>

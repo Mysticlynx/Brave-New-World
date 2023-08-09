@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <objectDef type="SeasonDataCombatModifier" class="CMLOSeasonDataCombatModifier">
+        <goDef gameSystem="GameSysUnit" storageProperty="objSeasonDataCombatModifiers">
+            <keyProperty name="refSeasonData"/>
+        </goDef>
+        <propertyDef name="refSeasonData" type="GORef" restriction="SeasonData"/>
+        <propertyDef name="objAttackModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+        <propertyDef name="objDefenseModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+    </objectDef>
+    
+    <objectDef type="SeasonCombatModifier" class="CMLOSeasonCombatModifier">
+        <goDef gameSystem="GameSysUnit" storageProperty="objSeasonCombatModifiers">
+            <keyProperty name="refSeason"/>
+        </goDef>
+        <propertyDef name="refSeason" type="GORef" restriction="Season"/>
+        <propertyDef name="objAttackModifiers" type="CombatModifier" variable="true"/>
+        <propertyDef name="objDefenseModifiers" type="CombatModifier" variable="true"/>
+    </objectDef>
+
+</locust>

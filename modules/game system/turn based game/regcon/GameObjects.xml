@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="VictoryConditionAllRegions" class="CMLOVictoryConditionAllRegions" superType="VictoryCondition" desc="A victory condition that tests for a nation controlling all regions">
+    </objectDef>
+
+    <objectDef type="VictoryConditionRegions" class="CMLOVictoryConditionRegions" superType="VictoryCondition" desc="A victory condition that tests for a given nation controlling specific regions">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refRegions" type="GORef" variable="true" restriction="Region"/>
+    </objectDef>
+    
+    <objectDef type="DPRegionRevolt" class="CMLODPRegionRevolt" superType="DecisionPoint" desc="A decision point for when a region wants to revolt and join another nation">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refCurrentNation" type="GORef" restriction="Nation"/>
+    </objectDef>
+
+</locust>

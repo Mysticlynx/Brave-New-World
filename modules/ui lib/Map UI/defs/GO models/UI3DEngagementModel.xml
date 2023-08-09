@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+		
+    <objectDef type="UI3DEngagementModel" superType="mlui.UI3DElement">
+        <!-- Inputs -->
+        <propertyDef name="objGameRoot" type="Object"/>
+        <propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objEngagement" type="gs_tbg.Engagement"/>
+        <propertyDef name="objGO" type="Object" from="self.objEngagement"/>
+		<propertyDef name="bConcluded" type="bool">
+			self.objEngagement.eEngagementStatus == gs_tbg.EngagementStatus.ENGAGEMENT_STATUS_ENDED
+		</propertyDef>
+
+		<!-- Internals -->
+		<propertyDef name="objRegion" type="gs_tbg.Region">
+            self.objEngagement.refRegion.resolve(self.objGameRoot)
+        </propertyDef>
+
+		<object name="objUI3DActiveEngagementModels" type="UI3DActiveEngagementModels"  existsWhile="!self.bConcluded">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objEngagement" from="def.objEngagement"/>
+			<property name="objGO" from="def.objGO"/>
+			<property name="objRegion" from="def.objRegion"/>
+		</object>
+		
+		<object name="objUI3DConcludedEngagementModel" type="UI3DConcludedEngagementModel" existsWhile="self.bConcluded">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objEngagement" from="def.objEngagement"/>
+			<property name="objGO" from="def.objGO"/>
+			<property name="objRegion" from="def.objRegion"/>
+		</object>
+    </objectDef>
+	
+	<objectDef type="UI3DConcludedEngagementModel" superType="mlui.UI3DElement">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objEngagement" type="gs_tbg.Engagement"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="objGO" type="Object"/>
+	
+		<propertyDef name="objFlagPoleMapModel" type="MapModelTemplate" from="self.objMapData.tmplFlagPoleMapModel.resolve()"/>
+		
+		<object name="objPoleModel" type="UI3DMapModelGO">
+			<property name="objGO" from="def.objGO"/>
+			<property name="tmplModel" from="def.objFlagPoleMapModel.tmplModel"/>
+			<property name="objMap" from="def.objMapData.objMap" />
+			<property name="vecPointOfInterest" from="def.objMapData.objCameraTransform.vecLookAt" />
+			<property name="vecPosition" from="def.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(def.objRegion.vecPositions[2])" />
+			<object type="ml3dworld.TransformList" name="objLocalTransforms" >
+				<object type="ml3dworld.TransformTranslate" name="objTransforms">
+				</object>
+				<object type="ml3dworld.TransformList" name="objTransforms" >
+					<object type="ml3dworld.TransformRigidBody" name="objTransforms">
+						<property name="fPhi" from="def.objFlagPoleMapModel.objTransform.fPhi" />
+						<property name="fTheta" from="def.objFlagPoleMapModel.objTransform.fTheta" />
+						<property name="fGamma" from="def.objFlagPoleMapModel.objTransform.fGamma" />
+						<property name="fScale" from="def.objFlagPoleMapModel.objTransform.fScale * .5" />
+					</object>
+				</object>
+			</object>
+		</object>
+		
+		<object name="objUI3DConcludedEngagementFlagModel" type="UI3DConcludedEngagementFlagModel" >
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objEngagement" from="def.objEngagement"/>
+			<property name="objGO" from="def.objGO"/>
+			<property name="objRegion" from="def.objRegion"/>			
+		</object>
+				
+	</objectDef>
+	
+	<objectDef type="UI3DConcludedEngagementFlagModel" superType="UI3DMapModelWithAnimationGO">
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objEngagement" type="gs_tbg.Engagement"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+	
+		<!-- Internals -->
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="objMapModel" type="MapModelTemplate">
+            self.objMapData.tmplFlagMapModel.resolve()
+        </propertyDef>
+		<propertyDef name="objAttackerGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<propertyDef name="objDefenderGroups" type="gs_tbg.UnitGroup" variable="true"/>
+
+        <!-- UI3DModelGO Properties -->
+		<property name="tmplModel" from="self.objMapModel.tmplModel"/>
+		<property name="tmplAnimation" from="self.objMapModel.tmplAnimation"/>
+		<propertyDef name="vecRegionLandPos" from="self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(self.objRegion.vecPositions[2])"/>
+        		
+		<!-- Flag Texture -->
+		<object type="mlui.UIDataMaterial" name="objMaterial" existsWhile="self.objMapModel.strOverrideEffect != ''">
+            <property name="strOverride" from="def.objMapModel.strOverrideEffect"/>
+            <object type="mlmedia.Material" name="objMaterial">
+                <property name="nEmissionTexCoordSet" value="0"/>
+                <object type="mlmedia.SamplerFromTexture" name="objEmissionSampler">
+                    <property name="tmplTexture">
+                       if(
+						def.objRegion.tmplTerrain.resolve().bWater, 
+							def.objMapData.objFlagModelTextureTable.getTextureForNationFlag(
+									def.objGameRoot,
+									if(def.objAttackerGroups.size GT 0,
+										def.objEngagement.refAttacker.resolve(def.objGameRoot),
+										def.objEngagement.refDefender.resolve(def.objGameRoot)
+									)
+								)
+							, 
+							def.objMapData.objFlagModelTextureTable.getTextureForRegionFlag(
+									def.objGameRoot,
+									def.objRegion
+								)
+						)
+                    </property>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>                                       
+                    <property name="eMipFilter" value="FILTER_NONE"/>
+                </object>
+            </object>
+        </object>
+		
+        <!-- UI3DMapModel properties -->
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		<property name="vecPosition" from="Vec3D(self.vecRegionLandPos.x, self.vecRegionLandPos.y, self.vecRegionLandPos.z + .20)" />
+		<object type="ml3dworld.TransformList" name="objLocalTransforms" >
+            <object type="ml3dworld.TransformTranslate" name="objTransforms">
+            </object>
+			<object type="ml3dworld.TransformList" name="objTransforms" >
+				<object type="ml3dworld.TransformRigidBody" name="objTransforms">
+					<property name="fPhi" from="def.objMapModel.objTransform.fPhi" />
+					<property name="fTheta" from="def.objMapModel.objTransform.fTheta" />
+					<property name="fGamma" from="def.objMapModel.objTransform.fGamma" />
+					<property name="fScale" from="def.objMapModel.objTransform.fScale * .5" />
+				</object>
+			</object>
+		</object>
+		
+		<property name="strToolTip" from="locale.FSID.UI.BattleOf.format('Region', self.objRegion.strDisplayName)"/>
+		
+		<script type="application/javascript">
+                        <![CDATA[
+			function notifyAddedToUI()
+			{
+				if(self.objEngagement.instanceOf(gs_tbg.SeaEngagement))
+				{
+					result = self.objEngagement.getInvolvedUnitGroups(self.objGameRoot, true, self.objAttackerGroups);
+					result = self.objEngagement.getInvolvedUnitGroups(self.objGameRoot, false, self.objDefenderGroups);
+				}
+			}
+		]]></script>
+		
+	</objectDef>
+	
+	<objectDef type="UI3DActiveEngagementModels" superType="mlui.UI3DElement">
+        <propertyDef name="objGameRoot" type="Object"/>
+        <propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objEngagement" type="gs_tbg.Engagement"/>
+        <propertyDef name="objGO" type="Object" from="self.objEngagement"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		
+		<propertyDef name="objAllGroups" type="gs_tbg.UnitGroup" variable="true">
+		    gs_tbg.getGroupsAtLocation(self.objGameRoot,self.objRegion)
+		</propertyDef>
+		
+		<propertyDef name="objAttackerGroups" type="gs_tbg.UnitGroup" variable="true">
+			filter(?{group: group.refController == self.objEngagement.refAttacker AND group.tmplUnitBranch != self.objMapData.objUnitBranchTemplateAirForce}, self.objAllGroups)
+		</propertyDef>
+		<propertyDef name="objAttackerAirGroups" type="gs_tbg.UnitGroup" variable="true">
+			filter(?{group: group.refController == self.objEngagement.refAttacker AND group.tmplUnitBranch == self.objMapData.objUnitBranchTemplateAirForce}, self.objAllGroups)
+		</propertyDef>
+		<propertyDef name="objDefenderGroups" type="gs_tbg.UnitGroup" variable="true">
+			filter(?{group: group.refController == self.objEngagement.refDefender AND group.tmplUnitBranch != self.objMapData.objUnitBranchTemplateAirForce}, self.objAllGroups)
+		</propertyDef>
+		<propertyDef name="objDefenderAirGroups" type="gs_tbg.UnitGroup" variable="true">
+			filter(?{group: group.refController == self.objEngagement.refDefender AND group.tmplUnitBranch == self.objMapData.objUnitBranchTemplateAirForce}, self.objAllGroups)
+		</propertyDef>
+
+		<propertyDef name="objAttackerGroup" type="gs_tbg.UnitGroup">
+			self.objAttackerGroups.getArbitraryValue()
+		</propertyDef>
+		<propertyDef name="objAttackerAirGroup" type="gs_tbg.UnitGroup">
+			self.objAttackerAirGroups.getArbitraryValue()
+		</propertyDef>
+		<propertyDef name="objDefenderGroup" type="gs_tbg.UnitGroup">
+			self.objDefenderGroups.getArbitraryValue()
+		</propertyDef>
+		<propertyDef name="objDefenderAirGroup" type="gs_tbg.UnitGroup">
+			self.objDefenderAirGroups.getArbitraryValue()
+		</propertyDef>
+
+		<propertyDef name="objAttackerUnits" type="gs_tbg.Unit" variable="true">
+            self.objAttackerGroup.getUnits(self.objGameRoot)
+		</propertyDef>
+		<propertyDef name="objAttackerAirUnits" type="gs_tbg.Unit" variable="true">
+            self.objAttackerAirGroup.getUnits(self.objGameRoot)
+		</propertyDef>
+		<propertyDef name="objDefenderUnits" type="gs_tbg.Unit" variable="true">
+            self.objDefenderGroup.getUnits(self.objGameRoot)
+		</propertyDef>
+		<propertyDef name="objDefenderAirUnits" type="gs_tbg.Unit" variable="true">
+            self.objDefenderAirGroup.getUnits(self.objGameRoot)
+		</propertyDef>
+		
+		<object type="UI3DUnitGroupInEngagement" name="objAttackerModel" existsWhile="self.objAttackerGroup != null">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objUnitGroup" from="def.objAttackerGroup"/>
+            <property name="objDisplayUnit" from="def.objAttackerUnits.getArbitraryValue()"/>
+			<property name="strToolTip" from="self.objUnitGroup.refController.resolve(self.objGameRoot).strDisplayName"/>
+            <property name="objGO" from="def.objGO"/>
+            <property name="vecPosition">
+						Vec3D(
+							if(def.objAttackerAirGroup != null,
+								def.objRegion.vecPositions[2].x + 0.6,
+								def.objRegion.vecPositions[2].x + 0.4),
+							def.objRegion.vecPositions[2].y,
+							def.objRegion.vecPositions[2].z
+						)
+            </property>
+            <property name="fFacingAngle">
+				switch{
+					case self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateNavy:
+						270
+					case self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateSubmarine:
+						0
+					default:
+						180
+				}
+            </property>
+        </object>
+		<object type="UI3DUnitGroupDecal" name="objUnitGroupDecal" existsWhile="def.objAttackerGroup.tmplUnitBranch == def.objMapData.objUnitBranchTemplateArmy AND
+																									?{animCategory:
+																										animCategory == gs_tbg.AnimationCategory.Infantry OR
+																										animCategory == gs_tbg.AnimationCategory.MobileInfantry OR
+																										animCategory == gs_tbg.AnimationCategory.Artillery
+																									}(def.objAttackerUnits.getArbitraryValue().objUnitTemplate.eAnimationCategory)">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objUnitGroup" from="def.objAttackerGroup"/>
+            <property name="vecPosition">
+						self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(Vec3D(
+							if(def.objAttackerAirGroup != null,
+								def.objRegion.vecPositions[2].x + 0.6,
+								def.objRegion.vecPositions[2].x + 0.4),
+							def.objRegion.vecPositions[2].y,
+							def.objRegion.vecPositions[2].z
+						))
+            </property>
+		</object>
+		<object type="UI3DUnitGroupInEngagement" name="objAttackerAirModel" existsWhile="self.objAttackerAirGroup != null">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objUnitGroup" from="def.objAttackerAirGroup"/>
+            <property name="objDisplayUnit" from="def.objAttackerAirUnits.getArbitraryValue()"/>
+			<property name="strToolTip" from="self.objUnitGroup.refController.resolve(self.objGameRoot).strDisplayName"/>
+            <property name="objGO" from="def.objGO"/>
+            <property name="vecPosition">
+						Vec3D(
+							def.objRegion.vecPositions[2].x + 0.3,
+							def.objRegion.vecPositions[2].y,
+							def.objRegion.vecPositions[2].z - 0.2
+						)
+            </property>
+            <property name="fFacingAngle" value="0"/>
+        </object>
+
+		<object type="UI3DUnitGroupInEngagement" name="objDefenderModel" existsWhile="self.objDefenderGroup != null">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objUnitGroup" from="def.objDefenderGroup"/>
+            <property name="objDisplayUnit" from="def.objDefenderUnits.getArbitraryValue()"/>
+			<property name="strToolTip" from="self.objUnitGroup.refController.resolve(self.objGameRoot).strDisplayName"/>
+            <property name="objGO" from="def.objGO"/>
+            <property name="vecPosition">
+						Vec3D(
+							if(def.objDefenderAirGroup != null,
+								def.objRegion.vecPositions[2].x - 0.6,
+								def.objRegion.vecPositions[2].x - 0.4),
+							def.objRegion.vecPositions[2].y,
+							def.objRegion.vecPositions[2].z
+						)
+            </property>
+            <property name="fFacingAngle">
+				switch{
+					case self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateNavy:
+						90
+					case self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateSubmarine:
+						180
+					default:
+						0
+				}
+            </property>
+        </object>
+		<object type="UI3DUnitGroupDecal" name="objUnitGroupDecal" existsWhile="def.objDefenderGroup.tmplUnitBranch == def.objMapData.objUnitBranchTemplateArmy AND
+																									?{animCategory:
+																										animCategory == gs_tbg.AnimationCategory.Infantry OR
+																										animCategory == gs_tbg.AnimationCategory.MobileInfantry OR
+																										animCategory == gs_tbg.AnimationCategory.Artillery
+																									}(def.objDefenderUnits.getArbitraryValue().objUnitTemplate.eAnimationCategory)">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objUnitGroup" from="def.objDefenderGroup"/>
+            <property name="vecPosition">
+						self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(Vec3D(
+							if(def.objDefenderAirGroup != null,
+								def.objRegion.vecPositions[2].x - 0.6,
+								def.objRegion.vecPositions[2].x - 0.4),
+							def.objRegion.vecPositions[2].y,
+							def.objRegion.vecPositions[2].z
+						))
+            </property>
+		</object>
+		
+		<object type="UI3DUnitGroupInEngagement" name="objDefenderAirModel" existsWhile="self.objDefenderAirGroup != null">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objUnitGroup" from="def.objDefenderAirGroup"/>
+            <property name="objDisplayUnit" from="def.objDefenderAirUnits.getArbitraryValue()"/>
+			<property name="strToolTip" from="self.objUnitGroup.refController.resolve(self.objGameRoot).strDisplayName"/>
+            <property name="objGO" from="def.objGO"/>
+            <property name="vecPosition">
+						Vec3D(
+							def.objRegion.vecPositions[2].x - 0.3,
+							def.objRegion.vecPositions[2].y,
+							def.objRegion.vecPositions[2].z - 0.2
+						)
+            </property>
+            <property name="fFacingAngle" value="0"/>
+        </object>
+	</objectDef>
+</locust>

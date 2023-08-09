@@ -1,0 +1,1438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UnitGroupData" class="CMLObject">
+		<propertyDef name="eSection" type="Enum" restriction="UnitGroupSection"/>
+		<propertyDef name="refUnitGroup" type="GORef" restriction="gs_tbg.UnitGroup"/>
+		<propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup">
+		    self.refUnitGroup.resolve(mh2data.objAvatar)
+		</propertyDef>
+		<propertyDef name="nHealth" type="int">
+			((self.objUnitGroup.nHitPoints * 100) / if(self.objUnitGroup.nMaxHitPoints != 0, self.objUnitGroup.nMaxHitPoints, 1))
+		</propertyDef>
+		<propertyDef name="nRange" type="int">
+			switch{
+				case self.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce'):
+					self.objUnitGroup.nMissionRange
+				default:
+					self.objUnitGroup.nSpeed
+			}
+		</propertyDef>
+		<propertyDef name="objUnitsInGroup" type="gs_tbg.Unit" storesChildren="true" variable="true">
+			self.objUnitGroup.getUnits(mh2data.objAvatar)
+		</propertyDef>
+	</objectDef>
+	
+	<objectDef type="UnitGroupSelections" class="CMLObject">
+		<propertyDef name="objGroupsToMerge" type="gs_tbg.UnitGroup" variable="true"/>
+		<propertyDef name="objUnitsToSplit" type="gs_tbg.Unit" variable="true"/>
+		<propertyDef name="objTransportedUnitsToSplit" type="gs_tbg.UnitGroup" variable="true"/>
+		<propertyDef name="bValidSplit" type="bool"/>
+		
+		<propertyDef name="nCapacity" type="int">
+			spdata.objUnitGroupData.objUnitGroup.getTransportCapacity(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="nNewGroupCapacity" type="int"/>
+		<propertyDef name="nOldGroupCapacity" type="int">
+			self.nCapacity - self.nNewGroupCapacity
+		</propertyDef>
+		
+	</objectDef>
+	
+	<enumDef name="UnitGroupSection">
+        <value name="INFO"/>
+        <value name="MERGE"/>
+		<value name="SPLIT"/>
+		<value name="LIST"/>
+		<value name="CARRIERS"/>
+		<value name="TRANSPORTS"/>
+		<value name="PARATROOPERS"/>
+    </enumDef>
+	
+	<objectDef type="UI2DSelectionPanelGroup" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<property name="nWidth" from="self.objUnitGroup.nWidth"/>
+		
+		<property name="nHeight">
+			if(spdata.objUnitGroupData.eSection == UnitGroupSection.INFO,
+				self.objUnitGroup.nHeight,
+				self.objUnitGroup.nHeight
+			)
+		</property>
+		
+		<object type="UnitGroupSelections" name="objUnitGroupSelections">
+			<property name="objGroupsToMerge">
+				switch{
+					case def.objUnitGroup.objSection.instanceOf(UI2DGroupTabMerge):
+						map(
+							?{cod:
+								cod.objChosenObject
+							},
+							filter(
+								?{cod:
+									cod.bChosen
+								},
+								def.objUnitGroup.objSection.objScrollpane.objScrollable.objMergeChosenObjectData
+							)
+						)
+				}
+			</property>
+			<property name="objUnitsToSplit">
+				switch{
+					case def.objUnitGroup.objSection.instanceOf(UI2DGroupTabSplit):
+						map(
+							?{cod:
+								cod.objChosenObject
+							},
+							filter(
+								?{cod:
+									cod.bChosen
+								},
+								def.objUnitGroup.objSection.objScrollpane.objScrollable.objSplitChosenObjectData
+							)
+						)
+				}
+			</property>
+			<property name="objTransportedUnitsToSplit">
+				switch{
+					case def.objUnitGroup.objSection.instanceOf(UI2DGroupTabSplit):
+						map(
+							?{cod:
+								cod.objChosenObject
+							},
+							filter(
+								?{cod:
+									cod.bChosen
+								},
+								def.objUnitGroup.objSection.objScrollpane.objScrollable.objSplitTransportChosenObjectData
+							)
+						)
+				}
+			</property>
+			<property name="nNewGroupCapacity">
+				switch{
+					case def.objUnitGroup.objSection.instanceOf(UI2DGroupTabSplit):
+						sum(
+							map(
+								?{cod:
+									cod.objChosenObject.getTransportCapacity(mh2data.objAvatar)
+								},
+								filter(
+									?{cod:
+										cod.bChosen
+									},
+									def.objUnitGroup.objSection.objScrollpane.objScrollable.objSplitChosenObjectData
+								)
+							)
+						)
+				}
+			</property>
+			
+			<property name="bValidSplit">
+				switch{
+					case def.objUnitGroup.objSection.instanceOf(UI2DGroupTabSplit):
+						if(self.nCapacity == 0,
+							self.objUnitsToSplit.size GT 0 AND self.objUnitsToSplit.size LT spdata.objUnitGroupData.objUnitGroup.nUnitCount,
+							self.objTransportedUnitsToSplit.size LTE self.nNewGroupCapacity AND self.objUnitsToSplit.size LT spdata.objUnitGroupData.objUnitGroup.nUnitCount AND
+							(def.objUnitGroup.objSection.objScrollpane.objScrollable.objSplitTransportChosenObjectData.size - self.objTransportedUnitsToSplit.size) LTE self.nOldGroupCapacity AND
+							self.objUnitsToSplit.size GT 0
+						)
+				}
+			</property>
+			
+		</object>
+		
+		<object type="UI2DUnitGroup" name="objUnitGroup">
+			<property name="vaYAlign" value="TOP"/>
+			<property name="objUnitGroupSelections" from="def.objUnitGroupSelections"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DUnitGroup" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<propertyDef name="objUnitGroupSelections" type="UnitGroupSelections"/>
+		<property name="nWidth" value="351"/>
+		<property name="nHeight" from="220 + self.objSection.nHeight"/>
+
+		<script type="application/javascript"><![CDATA[
+			function notifyAddedToUI()
+			{
+				//log("Creating a UI2DSelectionPanelGroup");
+			}
+		]]></script>
+		
+	<!-- Header and Background -->
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<propertyDef name="objPanelCrestBranch" storesChildren="true">
+			switch{
+				case spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army'):
+					<object type="mlui.UI2DImage">
+						<property name="tmplImage" value="skin.ImgPanelCrestIconGroupArmy"/>
+						<property name="nX" value="0"/>
+						<property name="nY" value="14"/>
+						<property name="nWidth" value="92"/>
+						<property name="nHeight" value="49"/>
+						<property name="nDepth" value="-1"/>
+					</object>
+				case spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy'):
+					<object type="mlui.UI2DImage">
+						<property name="tmplImage" value="skin.ImgPanelCrestIconGroupNaval"/>
+						<property name="nX" value="0"/>
+						<property name="nY" value="2"/>
+						<property name="nWidth" value="95"/>
+						<property name="nHeight" value="61"/>
+						<property name="nDepth" value="-1"/>
+					</object>
+				case spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce'):
+					<object type="mlui.UI2DImage">
+						<property name="tmplImage" value="skin.ImgPanelCrestIconGroupAir"/>
+						<property name="nX" value="0"/>
+						<property name="nY" value="18"/>
+						<property name="nWidth" value="103"/>
+						<property name="nHeight" value="45"/>
+						<property name="nDepth" value="-1"/>
+					</object>
+				case spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Submarine'):
+					<object type="mlui.UI2DImage">
+						<property name="tmplImage" value="skin.ImgPanelCrestIconGroupSub"/>
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="nWidth" value="95"/>
+						<property name="nHeight" value="64"/>
+						<property name="nDepth" value="-1"/>
+					</object>
+			}
+		</propertyDef>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="spdata.objUnitGroupData.objUnitGroup.refController.resolve(mh2data.objAvatar)"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="40"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="33"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelBG">
+			<property name="tmplImage" value="skin.ImgDetailPanel"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="98"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" from="def.nHeight - self.nY - 28"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelBGTop">
+			<property name="tmplImage" value="skin.ImgPanelTopBG"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="64"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="32"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBottomBG">
+			<property name="tmplImage" value="skin.ImgOlive"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+	
+		<object type="UI2DGroupDetailPanel" name="objGroupDetail">
+			<property name="nX" value="3"/>
+			<property name="nY" value="65"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="124"/>
+		</object>
+    
+		<propertyDef name="objSection" storesChildren="true">
+			switch{
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.MERGE:
+					<object type="UI2DGroupTabMerge">
+						<property name="nY" value="28"/>
+						<property name="vaYAlign" value="BOTTOM"/>
+					</object>
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.SPLIT:
+					<object type="UI2DGroupTabSplit">
+						<property name="nY" value="28"/>
+						<property name="vaYAlign" value="BOTTOM"/>
+					</object>
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.LIST:
+					<object type="UI2DGroupTabUnits">
+						<property name="nY" value="28"/>
+						<property name="vaYAlign" value="BOTTOM"/>
+					</object>
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.CARRIERS:
+					<object type="UI2DGroupTabCarriers">
+						<property name="nY" value="28"/>
+						<property name="vaYAlign" value="BOTTOM"/>
+					</object>
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.TRANSPORTS:
+					<object type="UI2DGroupTabGroupsOnTransports">
+						<property name="nY" value="28"/>
+						<property name="vaYAlign" value="BOTTOM"/>
+					</object>
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.PARATROOPERS:
+					<object type="UI2DGroupTabParatroopers">
+						<property name="nY" value="28"/>
+						<property name="vaYAlign" value="BOTTOM"/>
+					</object>
+				default:
+					<object type="mlui.UI2DElement">
+					</object>
+			}
+		</propertyDef>
+
+
+		<object type="UI2DGroupButtons" name="objGroupButtons" existsWhile="mh2data.objNation == spdata.objUnitGroupData.objUnitGroup.refController.resolve(mh2data.objAvatar)">
+			<property name="objUnitGroupSelections" from="def.objUnitGroupSelections"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="21"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objExpandButton" existsWhile="mh2data.objNation != spdata.objUnitGroupData.objUnitGroup.refController.resolve(mh2data.objAvatar)">
+			<property name="tmplButtonStyle">
+				if(
+					spdata.objUnitGroupData.eSection == UnitGroupSection.INFO,
+					'skin.BtnStyleGroupButtonOpen',
+					'skin.BtnStyleGroupButtonClose'
+				)
+			</property>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(spdata.objUnitGroupData.eSection.equals(UnitGroupSection.INFO)){
+								spdata.objUnitGroupData.showUnitGroupList(spdata.objUnitGroupData.objUnitGroup)
+							}
+							else{
+								spdata.objUnitGroupData.showUnitGroupInfo(spdata.objUnitGroupData.objUnitGroup)
+							};
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+	<!-- Foreground -->
+		<object type="mlui.UI2DImage" name="objPanelBorder">
+			<property name="tmplImage" value="skin.ImgPanelBorderSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="62"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" from="def.nHeight - 62"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="93"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<!--<object type="mlui.UI2DImage" name="objPanelHL">-->
+		<!--	<property name="tmplImage" value="skin.ImgPanelHL"/>-->
+		<!--	<property name="nX" value="0"/>-->
+		<!--	<property name="nY" value="304"/>-->
+		<!--	<property name="nWidth" value="351"/>-->
+		<!--	<property name="nHeight" value="8"/>-->
+		<!--	<property name="haXAlign" value="LEFT"/>-->
+		<!--	<property name="vaYAlign" value="BOTTOM"/>-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--</object>-->
+	</objectDef>
+	
+	<objectDef type="UI2DUnitGroupName" superType="mlui.UI2DElement">
+		<propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+		<propertyDef name="bChangeName" type="bool" default="false"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="tmplTextStyleEdit" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objName" existsWhile="def.bChangeName == false">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objUnitGroup.strDisplayName"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object type="mlui.UI2DEditableText" name="objEditableText" existsWhile="def.bChangeName == true">
+			<property name="tmplTextStyle" from="def.tmplTextStyleEdit"/>
+			<property name="nX" from="0"/>
+			<property name="nY" from="0"/>
+			<property name="nWidth" from="179"/>
+			<property name="nHeight" from="16"/>
+			<property name="nDepth" value="50"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_ESCAPE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_RETURN"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_GRAVE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_TAB"/>
+			
+			<object type="mlui.KeyBindList" name="objKeyBindList">
+				<object type="mlui.KeyBindMethod" name="objKeyBinds">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<property name="eKey" value="KEY_CODE_RETURN"/>
+					<script type="application/javascript"><![CDATA[
+						function notifyTriggered(owner) {
+							if(def.objEditableText.strText != '')
+							{
+								var action = gs_tbg.GActRenameUnitGroup.create({
+									"strNewName": def.objEditableText.strText,
+									"refUnitGroup": def.objUnitGroup
+								});
+							mh2data.objAvatar.sendAction(action);
+							def.objEditableText.strText = '';
+							def.bChangeName = false;
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DGroupDetailPanel" superType="mlui.UI2DElement">
+
+		<object type="UI2DNationIcon" name="objControllerIcon">
+			<property name="objNation" from="spdata.objUnitGroupData.objUnitGroup.refController.resolve(mh2data.objAvatar)"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="nDepth" value="100"/>
+		</object>
+		
+		<propertyDef name="eRightMouseButton" type="Enum" restriction="mlui.MouseButton"/>
+			<property name="eRightMouseButton" value="MOUSE_BUTTON_RIGHT"/>
+			
+		<object type="mlui.UI2DButton" name="objSumbitRename" existsWhile="def.objUnitGroupName.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleGroupRename"/>
+			<property name="nX" value="213"/>
+			<property name="nY" value="3"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="nDepth" value="55"/>
+			<property name="strToolTip" from="locale.SID.UI.Submit"/>
+			
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objUnitGroupName.objEditableText.strText != '')
+							{
+								var action = gs_tbg.GActRenameUnitGroup.create({
+									"strNewName": def.objUnitGroupName.objEditableText.strText,
+									"refUnitGroup": spdata.objUnitGroupData.objUnitGroup
+								});
+							mh2data.objAvatar.sendAction(action);
+							def.objUnitGroupName.objEditableText.strText = '';
+							def.objUnitGroupName.bChangeName = false;
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objCancelRename" existsWhile="def.objUnitGroupName.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleGroupRenameCancel"/>
+			<property name="nX" value="233"/>
+			<property name="nY" value="3"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="nDepth" value="95"/>
+			<property name="strToolTip" from="locale.SID.UI.Cancel"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objUnitGroupName.bChangeName = false;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+			
+		<object type="UI2DElementMask" name="objUnitGroupPopupMask" existsWhile="def.objUnitGroupName.bChangeName == false">
+			<property name="nX" value="32"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" from="def.objUnitGroupName.objName.nWidth"/>
+			<property name="nHeight" value="16"/>
+			<property name="nDepth" value="95"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(mh2data.objNation == spdata.objUnitGroupData.objUnitGroup.refController.resolve(mh2data.objAvatar))
+							{
+								if (event.eButton.equals(def.eRightMouseButton))
+								{
+									def.objUnitGroupName.bChangeName = true;
+        							def.objUnitGroupName.objEditableText.strText = '';							
+									mlui.ActSetKeyboardFocus.execute({"objElement": def.objUnitGroupName.objEditableText});
+								}
+							}
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="UI2DUnitGroupName" name="objUnitGroupName">
+			<property name="objUnitGroup" from="spdata.objUnitGroupData.objUnitGroup"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14LeftFIT"/>
+			<property name="tmplTextStyleEdit" value="locale.TxtStyleArialWhite14LeftFitForEditing"/>
+            <property name="nX" value="32"/>
+            <property name="nY" value="3"/>
+            <property name="nWidth" value="283"/>
+            <property name="nHeight" value="14"/>
+		</object>
+    
+    
+		<object type="mlui.UI2DText" name="objLocation">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" from="spdata.objUnitGroupData.objUnitGroup.refLocation.resolve(mh2data.objAvatar).strDisplayName"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="UI2DGroupIDIcons" name="objGroupIDIcons">
+			<property name="nX" value="188"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="28"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+	<!-- Details Background -->
+		<object type="mlui.UI2DImage" name="objDetailsBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleBrownTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="341"/>
+			<property name="nHeight" value="89"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objDetailsBG2">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="38"/>
+			<property name="nWidth" value="335"/>
+			<property name="nHeight" value="83"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objDetailsBGGradient">
+			<property name="tmplImage" value="skin.ImgGradientGraySm"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="39"/>
+			<property name="nWidth" value="333"/>
+			<property name="nHeight" value="37"/>
+		</object>
+		
+		<propertyDef name="objGroupVitals" storesChildren="true">
+			switch{
+				case spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army'):
+					<object type="UI2DArmyGroupVitals">
+						<property name="nX" value="8"/>
+						<property name="nY" value="42"/>
+						<property name="nWidth" value="345"/>
+						<property name="nHeight" value="43"/>
+						<property name="nDepth" value="5"/>
+					</object>
+				case spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy'):
+					<object type="UI2DNavyGroupVitals">
+						<property name="nX" value="8"/>
+						<property name="nY" value="42"/>
+						<property name="nWidth" value="345"/>
+						<property name="nHeight" value="43"/>
+						<property name="nDepth" value="5"/>
+					</object>
+				case spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce'):
+					<object type="UI2DAirGroupVitals">
+						<property name="nX" value="8"/>
+						<property name="nY" value="42"/>
+						<property name="nWidth" value="345"/>
+						<property name="nHeight" value="43"/>
+						<property name="nDepth" value="5"/>
+					</object>
+				case spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Submarine'):
+					<object type="UI2DSubGroupVitals">
+						<property name="nX" value="8"/>
+						<property name="nY" value="42"/>
+						<property name="nWidth" value="345"/>
+						<property name="nHeight" value="43"/>
+						<property name="nDepth" value="5"/>
+					</object>
+			}
+		</propertyDef>
+
+	<!-- Group Orders section -->
+	<propertyDef name="bShowOrderDetails" type="bool"/>
+	<property name="bShowOrderDetails" from="gs_tbg.areAlliesOrSame(mh2data.objAvatar,mh2data.objNation,spdata.objUnitGroupData.objUnitGroup.refController.resolve(mh2data.objAvatar))"/>
+	
+	<propertyDef name="objOrder" type="gs_tbg.UnitOrder"/>
+	<property name="objOrder" from="spdata.objUnitGroupData.objUnitGroup.objUnitOrder"/>
+    <propertyDef name="objOrderToolTip" type="String"/>
+    <property name="objOrderToolTip">
+        switch
+        {
+            case self.bShowOrderDetails == false: ''
+        
+            case self.objOrder == null: locale.SID.UI.NoOrders
+            
+            case self.objOrder.type == gs_tbg.UnitOrderMove:
+               locale.SID.UI.MoveTo + ' ' + mh2data.getOrderText(self.objOrder) 
+               + '  ' + '(' + mh2data.getOrderText2(self.objOrder) + ')'
+               
+            case self.objOrder.type == gs_tbg.UnitOrderRangedAttack:
+                locale.SID.UI.MissileAttack + ' ' + mh2data.getOrderText(self.objOrder)
+                
+            case self.objOrder.type == gs_tbg.UnitOrderRetreat:
+                locale.FSID.UI.RetreatTo.format('Region', mh2data.getOrderText(self.objOrder))
+                
+            case self.objOrder.type == gs_tbg.UnitOrderMoveIntoPort:
+                locale.SID.UI.UnitOrderMoveIntoPort + ' ' + mh2data.getOrderText(self.objOrder)
+                
+            case self.objOrder.type == gs_tbg.UnitOrderMoveFromPort:
+                locale.SID.UI.MoveTo + ' ' + mh2data.getOrderText(self.objOrder)
+                                      
+            case self.objOrder.type == gs_tbg.UnitOrderShoreBombardment:
+                locale.SID.UI.ShoreBombard + ' ' + mh2data.getOrderText(self.objOrder)
+                
+            case self.objOrder.type == gs_tbg.UnitOrderAirPatrol:
+               locale.SID.UI.Patrolling + ' ' + mh2data.getOrderText(self.objOrder) 
+               
+            case self.objOrder.type == gs_tbg.UnitOrderBombRegion:
+                locale.SID.UI.BombRegion + ' ' + mh2data.getOrderText(self.objOrder)
+                
+            case self.objOrder.type == gs_tbg.UnitOrderBombCity:
+                locale.SID.UI.Bomb + ' ' + mh2data.getOrderText(self.objOrder)
+                
+            case self.objOrder.type == gs_tbg.UnitOrderBombResource:
+                locale.SID.UI.Bomb + ' ' + mh2data.getOrderText(self.objOrder) 
+                
+            case self.objOrder.type == gs_tbg.UnitOrderDropParatrooper:
+                 locale.FSID.UI.DropParatrooper.format('Region', mh2data.getOrderText(self.objOrder))
+                 
+            case self.objOrder.type == gs_tbg.UnitOrderDropAtomicBomb:
+               locale.FSID.UI.DropAtomicBomb.format('City', mh2data.getOrderText(self.objOrder))
+               
+            case self.objOrder.type == gs_tbg.UnitOrderSubAttack:
+                locale.SID.UI.SubAttack
+                
+            default:
+                locale.FSID.UI.RebaseGroup.format('Destination', mh2data.getOrderText(self.objOrder)) 
+        }
+    </property>
+
+		<object type="mlui.UI2DImage" name="objGroupOrdersBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="8"/>
+			<property name="nY" value="88"/>
+			<property name="nWidth" value="202"/>
+			<property name="nHeight" value="30"/>
+      <property name="nDepth" value="100"/>
+      <property name="strToolTip" from="def.objOrderToolTip"/>
+		</object>
+    
+    <object type="UI2DCenteredIcon" name="objOrderIcon">
+			<property name="tmplImage">
+				if(def.objOrder == null, 'skin.ImgInfoIconNoOrder', mh2data.getOrderInfo(def.objOrder).tmplIcon)
+			</property>
+			<property name="nX" value="7" />
+			<property name="nY" value="89" />
+			<property name="nWidth" value="30" />
+			<property name="nHeight" value="29" />
+      <property name="nDepth" value="100"/>
+      <property name="strToolTip" from="def.objOrderToolTip"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNoOrderText" existsWhile="self.objOrder == null">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="if (def.bShowOrderDetails,locale.SID.UI.NoOrders,'')"/>
+			<property name="nX" value="37"/>
+			<property name="nY" value="98"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="14"/>
+      <property name="nDepth" value="100"/>
+      <property name="strToolTip" from="def.objOrderToolTip"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objOrderText" existsWhile="self.objOrder != null">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" >
+			       if (def.bShowOrderDetails,mh2data.getOrderText(def.objOrder),'')
+			</property>
+			<property name="nX" value="38"/>
+			<property name="nY" value="98"/>
+			<property name="nWidth" value="152"/>
+			<property name="nHeight" value="14"/>
+      <property name="nDepth" value="100"/>
+      <property name="strToolTip" from="def.objOrderToolTip"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTurns" existsWhile="self.objOrder.type == gs_tbg.UnitOrderMove AND self.bShowOrderDetails">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Right"/>
+			<property name="strText" from="mh2data.getOrderText2(def.objOrder)"/>
+			<property name="nX" value="146"/>
+			<property name="nY" value="98"/>
+			<property name="nWidth" value="60"/>
+			<property name="nHeight" value="12"/>
+      <property name="nDepth" value="100"/>
+      <property name="strToolTip" from="def.objOrderToolTip"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objRangeBG">
+      <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+      <property name="nX" value="212"/>
+      <property name="nY" value="88"/>
+      <property name="nWidth" value="70"/>
+      <property name="nHeight" value="30"/>
+    </object>
+    
+    <object type="UI2DCenteredIcon" name="objRangeIcon" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch != sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')">
+			<property name="tmplImage" value="skin.ImgUnitIconSpeed" />
+			<property name="nX" value="213" />
+			<property name="nY" value="88" />
+			<property name="nWidth" value="30" />
+			<property name="nHeight" value="29" />
+      <property name="strToolTip" from="locale.SID.UI.GroupMovementSpeed"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DCenteredIcon" name="objRangeIcon" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')">
+			<property name="tmplImage" value="skin.ImgInfoIconRangeNavyAirSm" />
+			<property name="nX" value="212" />
+			<property name="nY" value="87" />
+			<property name="nWidth" value="30" />
+			<property name="nHeight" value="29" />
+      <property name="strToolTip" from="locale.SID.UI.GroupMovementRange"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+    
+    <object type="mlui.UI2DText" name="objRangeText">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+      <property name="strText" from="spdata.objUnitGroupData.nRange.formatNumber(0, true)"/>
+      <property name="nX" value="241"/>
+      <property name="nY" value="98"/>
+      <property name="nWidth" value="42"/>
+      <property name="nHeight" value="14"/>
+      <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objWeightBG" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')">
+      <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+      <property name="nX" value="284"/>
+      <property name="nY" value="88"/>
+      <property name="nWidth" value="53"/>
+      <property name="nHeight" value="30"/>
+      <property name="strToolTip" from="locale.SID.UI.GroupTransportWeight"/>
+    </object>
+
+    <object type="UI2DCenteredIcon" name="objWeightIcon" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')">
+      <property name="tmplImage" value="skin.ImgGroupIconWeight" />
+      <property name="nX" value="284" />
+      <property name="nY" value="88" />
+      <property name="nWidth" value="30" />
+      <property name="nHeight" value="29" />
+      <property name="strToolTip" from="locale.SID.UI.GroupTransportWeight"/>
+      <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objWeightText" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+      <!--NEED WEIGHT PROPERTY DATA FOR GROUP-->
+      <property name="strText" from="spdata.objUnitGroupData.objUnitGroup.getTransportCapacityNeeded(mh2data.objAvatar)"/>
+      <property name="nX" value="310"/>
+      <property name="nY" value="98"/>
+      <property name="nWidth" value="42"/>
+      <property name="nHeight" value="14"/>
+      <property name="strToolTip" from="locale.SID.UI.GroupTransportWeight"/>
+      <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+    </object>
+      
+  </objectDef>
+	
+	<objectDef type="UI2DUnitGroupVital" superType="mlui.UI2DElement">
+		<propertyDef name="strValue" type="String"/>
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		
+		<property name="nWidth" from="33 + if(self.objVitalValue.nWidth LTE 33, 0,
+			(self.objVitalValue.nWidth - 33))"/>
+		
+		<object type="mlui.UI2DImage" name="objVitalIcon">
+			<property name="tmplImage" from="def.tmplImage"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objVitalValue">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strValue"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="27"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DArmyGroupVitals" superType="mlui.UI2DElement">
+		<propertyDef name="tmplCommandLevel" type="gs_tbg.UnitGroupCommandTemplate">
+			spdata.objUnitGroupData.objUnitGroup.getGroupCommand(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="tmplMoraleLevel" type="gs_tbg.UnitMoraleTemplate">
+			spdata.objUnitGroupData.objUnitGroup.getGroupMorale(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="nGroupDamage" type="int">
+			sum(map(?{unit: unit.objUnitTemplate.nAttackDamage}, spdata.objUnitGroupData.objUnitsInGroup))
+		</propertyDef>
+		
+		<!-- Unit vitals, vertical pairs of icon and stats -->
+		<object type="common_ui.UI2DListHorz" name="objUnitStatsList">
+			<property name="nSpacing" value="9"/>
+			<property name="nY" value="0"/>
+			<property name="nX" value="0"/>
+	
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+                <property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nLandAttackPower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconGroundAttack"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsLand
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nLandAttackPower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nLandDefensePower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconGroundDefense"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsInvasion
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nLandDefensePower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nAirPower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconAirAttack"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsAir
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nAirPower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+			
+			<object type="UI2DUnitGroupHealth" name="objElements">
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nHitPoints) + '/' +
+				(spdata.objUnitGroupData.objUnitGroup.nMaxHitPoints)"/>
+				<property name="fPercent" from="float(spdata.objUnitGroupData.objUnitGroup.nHitPoints) /
+					float(spdata.objUnitGroupData.objUnitGroup.nMaxHitPoints)"/>
+				<property name="strToolTip" from="locale.SID.UI.GroupHP"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nMorale + spdata.objUnitGroupData.objUnitGroup.refController.resolve(mh2data.objAvatar).nNationMoraleModifier) + '%'"/>
+				<property name="tmplImage">
+					if(spdata.objUnitGroupData.objUnitGroup.nMorale GTE 50, 'skin.ImgGroupIconMoraleHigh',
+						if(spdata.objUnitGroupData.objUnitGroup.nMorale LTE 25, 'skin.ImgGroupIconMoraleLow', 'skin.ImgGroupIconMoraleMed'))
+				</property>
+				<property name="strToolTip" from="
+					locale.SID.UI.MoraleLevel + ': ' + def.tmplMoraleLevel.strDisplayName + '&#010;  ' +
+					locale.SID.UI.CombatModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK},
+						def.tmplMoraleLevel.objCombatModifiers).nModifierValue + '%'"/>
+			</object>
+			
+			<!--<object type="UI2DUnitGroupVital" name="objElements">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>-->
+			<!--	<property name="nY" value="0"/>-->
+			<!--	<property name="nX" value="0"/>-->
+			<!--	<property name="nHeight" value="43"/>-->
+			<!--	<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nCommand + 'x'"/>-->
+			<!--	<property name="tmplImage" value="skin.ImgGroupIconCommand"/>-->
+			<!--	<property name="strToolTip" from="-->
+			<!--		locale.SID.UI.CommandLevel + ': ' + def.tmplCommandLevel.strDisplayName + '&#010;  ' +-->
+			<!--		locale.SID.UI.CombatModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK},-->
+			<!--			def.tmplCommandLevel.objCombatModifiers).nModifierValue + '%' + '&#010;  ' +-->
+			<!--		locale.SID.UI.DamageModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_ATTACK_DAMAGE},-->
+			<!--			def.tmplCommandLevel.objCombatModifiers).nModifierValue"/>-->
+			<!--</object>-->
+			
+			<object type="UI2DUnitGroupVital" name="objElements" existsWhile="spdata.objUnitGroupData.objUnitGroup.nArmsCarry GTE 1">
+				<property name="tmplTextStyle">
+					if(spdata.objUnitGroupData.objUnitGroup.nArms LTE spdata.objUnitGroupData.objUnitGroup.nArmsCost,
+						'locale.TxtStyleArialRed14CenterFIT', 'locale.TxtStyleArialBlue14CenterFIT')
+				</property>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<!--<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nArms + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCarry"/>-->
+        <property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nArms * 100) / spdata.objUnitGroupData.objUnitGroup.nArmsCarry + '%'"/>
+        <property name="tmplImage" value="skin.ImgGroupIconArms"/>
+				<property name="strToolTip" from="
+					locale.SID.UI.ArmsSupply + ': ' + spdata.objUnitGroupData.objUnitGroup.nArms + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCarry
+					+ '&#010;' + locale.SID.UI.ArmsConsumption + ': ' + spdata.objUnitGroupData.objUnitGroup.nRestArmsCost + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCost"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements" existsWhile="spdata.objUnitGroupData.objUnitGroup.nOilCarry GTE 1">
+				<property name="tmplTextStyle">
+					if(spdata.objUnitGroupData.objUnitGroup.nOil LTE spdata.objUnitGroupData.objUnitGroup.nOilCost,
+						'locale.TxtStyleArialRed14CenterFIT', 'locale.TxtStyleArialBlue14CenterFIT')
+				</property>	
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<!--<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nOil + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCarry"/>-->
+        <property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nOil * 100) / spdata.objUnitGroupData.objUnitGroup.nOilCarry + '%'"/>
+				<property name="tmplImage" value="skin.ImgGroupIconSupply"/>
+				<property name="strToolTip" from="
+					locale.SID.UI.OilSupply + ': ' + spdata.objUnitGroupData.objUnitGroup.nOil + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCarry
+					+ '&#010;' + locale.SID.UI.OilConsumption + ': ' + spdata.objUnitGroupData.objUnitGroup.nRestOilCost + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCost"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DAirGroupVitals" superType="mlui.UI2DElement">
+		<propertyDef name="tmplCommandLevel" type="gs_tbg.UnitGroupCommandTemplate">
+			spdata.objUnitGroupData.objUnitGroup.getGroupCommand(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="tmplMoraleLevel" type="gs_tbg.UnitMoraleTemplate">
+			spdata.objUnitGroupData.objUnitGroup.getGroupMorale(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="nGroupDamage" type="int">
+			sum(map(?{unit: unit.objUnitTemplate.nAttackDamage}, spdata.objUnitGroupData.objUnitsInGroup))
+		</propertyDef>
+		
+		<!-- Unit vitals, vertical pairs of icon and stats -->
+		<object type="common_ui.UI2DListHorz" name="objUnitStatsList">
+			<property name="nSpacing" value="9"/>
+			<property name="nY" value="0"/>
+			<property name="nX" value="0"/>
+			
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nAirPower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconAirAttack"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsAir
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nAirPower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+	
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nLandAttackPower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconAirGroundAttack"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsLand
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nLandAttackPower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nSeaSurfacePower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconNavalAttack"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsNavy
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nSeaSurfacePower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+			
+			<object type="UI2DUnitGroupHealth" name="objElements">
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nHitPoints) + '/' +
+				(spdata.objUnitGroupData.objUnitGroup.nMaxHitPoints)"/>
+				<property name="fPercent" from="float(spdata.objUnitGroupData.objUnitGroup.nHitPoints) /
+					float(spdata.objUnitGroupData.objUnitGroup.nMaxHitPoints)"/>
+			</object>
+			
+			<!--<object type="UI2DUnitGroupVital" name="objElements">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>-->
+			<!--	<property name="nY" value="0"/>-->
+			<!--	<property name="nX" value="0"/>-->
+			<!--	<property name="nHeight" value="43"/>-->
+			<!--	<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nMorale + '%'"/>-->
+			<!--	<property name="tmplImage">-->
+			<!--		if(spdata.objUnitGroupData.objUnitGroup.nMorale GTE 70, 'skin.ImgGroupIconMoraleHigh',-->
+			<!--			if(spdata.objUnitGroupData.objUnitGroup.nMorale LTE 30, 'skin.ImgGroupIconMoraleLow', 'skin.ImgGroupIconMoraleMed'))-->
+			<!--	</property>-->
+			<!--	<property name="strToolTip" from="-->
+			<!--		locale.SID.UI.MoraleLevel + ': ' + def.tmplMoraleLevel.strDisplayName + '&#010;  ' +-->
+			<!--		locale.SID.UI.CombatModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK},-->
+			<!--			def.tmplMoraleLevel.objCombatModifiers).nModifierValue + '%'"/>-->
+			<!--</object>-->
+			
+			<!--<object type="UI2DUnitGroupVital" name="objElements">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>-->
+			<!--	<property name="nY" value="0"/>-->
+			<!--	<property name="nX" value="0"/>-->
+			<!--	<property name="nHeight" value="43"/>-->
+			<!--	<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nCommand + 'x'"/>-->
+			<!--	<property name="tmplImage" value="skin.ImgGroupIconCommand"/>-->
+			<!--	<property name="strToolTip" from="-->
+			<!--		locale.SID.UI.CommandLevel + ': ' + def.tmplCommandLevel.strDisplayName + '&#010;  ' +-->
+			<!--		locale.SID.UI.CombatModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK},-->
+			<!--			def.tmplCommandLevel.objCombatModifiers).nModifierValue + '%' + '&#010;  ' +-->
+			<!--		locale.SID.UI.DamageModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_ATTACK_DAMAGE},-->
+			<!--			def.tmplCommandLevel.objCombatModifiers).nModifierValue"/>-->
+			<!--</object>-->
+			
+			<object type="UI2DUnitGroupVital" name="objElements" existsWhile="spdata.objUnitGroupData.objUnitGroup.nArmsCarry GTE 1">
+				<property name="tmplTextStyle">
+					if(spdata.objUnitGroupData.objUnitGroup.nArms LTE spdata.objUnitGroupData.objUnitGroup.nArmsCost,
+						'locale.TxtStyleArialRed14CenterFIT', 'locale.TxtStyleArialBlue14CenterFIT')
+				</property>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<!--<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nArms + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCarry"/>-->
+        <property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nArms * 100) / spdata.objUnitGroupData.objUnitGroup.nArmsCarry + '%'"/>
+				<property name="tmplImage" value="skin.ImgGroupIconArms"/>
+				<property name="strToolTip" from="
+					locale.SID.UI.ArmsSupply + ': ' + spdata.objUnitGroupData.objUnitGroup.nArms + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCarry
+					+ '&#010;' + locale.SID.UI.ArmsConsumption + ': ' + spdata.objUnitGroupData.objUnitGroup.nRestArmsCost + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCost"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements" existsWhile="spdata.objUnitGroupData.objUnitGroup.nOilCarry GTE 1">
+				<property name="tmplTextStyle">
+					if(spdata.objUnitGroupData.objUnitGroup.nOil LTE spdata.objUnitGroupData.objUnitGroup.nOilCost,
+						'locale.TxtStyleArialRed14CenterFIT', 'locale.TxtStyleArialBlue14CenterFIT')
+				</property>	
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<!--<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nOil + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCarry"/>-->
+        <property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nOil * 100) / spdata.objUnitGroupData.objUnitGroup.nOilCarry + '%'"/>
+				<property name="tmplImage" value="skin.ImgGroupIconSupply"/>
+				<property name="strToolTip" from="
+					locale.SID.UI.OilSupply + ': ' + spdata.objUnitGroupData.objUnitGroup.nOil + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCarry
+					+ '&#010;' + locale.SID.UI.OilConsumption + ': ' + spdata.objUnitGroupData.objUnitGroup.nRestOilCost + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCost"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DNavyGroupVitals" superType="mlui.UI2DElement">
+		<propertyDef name="tmplCommandLevel" type="gs_tbg.UnitGroupCommandTemplate">
+			spdata.objUnitGroupData.objUnitGroup.getGroupCommand(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="tmplMoraleLevel" type="gs_tbg.UnitMoraleTemplate">
+			spdata.objUnitGroupData.objUnitGroup.getGroupMorale(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="nGroupDamage" type="int">
+			sum(map(?{unit: unit.objUnitTemplate.nAttackDamage}, spdata.objUnitGroupData.objUnitsInGroup))
+		</propertyDef>
+		
+		<!-- Unit vitals, vertical pairs of icon and stats -->
+		<object type="common_ui.UI2DListHorz" name="objUnitStatsList">
+			<property name="nSpacing" value="9"/>
+			<property name="nY" value="0"/>
+			<property name="nX" value="0"/>
+	
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nSeaSurfacePower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconNavalAttack"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsNavy
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nSeaSurfacePower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nSeaSubmergedPower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconSubAttack"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsSub
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nSeaSubmergedPower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nAirPower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconAirAttack"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsAir
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nAirPower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+			
+			<object type="UI2DUnitGroupHealth" name="objElements">
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nHitPoints) + '/' +
+				(spdata.objUnitGroupData.objUnitGroup.nMaxHitPoints)"/>
+				<property name="fPercent" from="float(spdata.objUnitGroupData.objUnitGroup.nHitPoints) /
+					float(spdata.objUnitGroupData.objUnitGroup.nMaxHitPoints)"/>
+			</object>
+			
+			<!--<object type="UI2DUnitGroupVital" name="objElements">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>-->
+			<!--	<property name="nY" value="0"/>-->
+			<!--	<property name="nX" value="0"/>-->
+			<!--	<property name="nHeight" value="43"/>-->
+			<!--	<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nMorale + '%'"/>-->
+			<!--	<property name="tmplImage">-->
+			<!--		if(spdata.objUnitGroupData.objUnitGroup.nMorale GTE 70, 'skin.ImgGroupIconMoraleHigh',-->
+			<!--			if(spdata.objUnitGroupData.objUnitGroup.nMorale LTE 30, 'skin.ImgGroupIconMoraleLow', 'skin.ImgGroupIconMoraleMed'))-->
+			<!--	</property>-->
+			<!--	<property name="strToolTip" from="-->
+			<!--		locale.SID.UI.MoraleLevel + ': ' + def.tmplMoraleLevel.strDisplayName + '&#010;  ' +-->
+			<!--		locale.SID.UI.CombatModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK},-->
+			<!--			def.tmplMoraleLevel.objCombatModifiers).nModifierValue + '%'"/>-->
+			<!--</object>-->
+			
+			<!--<object type="UI2DUnitGroupVital" name="objElements">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>-->
+			<!--	<property name="nY" value="0"/>-->
+			<!--	<property name="nX" value="0"/>-->
+			<!--	<property name="nHeight" value="43"/>-->
+			<!--	<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nCommand + 'x'"/>-->
+			<!--	<property name="tmplImage" value="skin.ImgGroupIconCommand"/>-->
+			<!--	<property name="strToolTip" from="-->
+			<!--		locale.SID.UI.CommandLevel + ': ' + def.tmplCommandLevel.strDisplayName + '&#010;  ' +-->
+			<!--		locale.SID.UI.CombatModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK},-->
+			<!--			def.tmplCommandLevel.objCombatModifiers).nModifierValue + '%' + '&#010;  ' +-->
+			<!--		locale.SID.UI.DamageModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_ATTACK_DAMAGE},-->
+			<!--			def.tmplCommandLevel.objCombatModifiers).nModifierValue"/>-->
+			<!--</object>-->
+			
+			<object type="UI2DUnitGroupVital" name="objElements" existsWhile="spdata.objUnitGroupData.objUnitGroup.nArmsCarry GTE 1">
+				<property name="tmplTextStyle">
+					if(spdata.objUnitGroupData.objUnitGroup.nArms LTE spdata.objUnitGroupData.objUnitGroup.nArmsCost,
+						'locale.TxtStyleArialRed14CenterFIT', 'locale.TxtStyleArialBlue14CenterFIT')
+				</property>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<!--<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nArms + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCarry"/>-->
+        <property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nArms * 100) / spdata.objUnitGroupData.objUnitGroup.nArmsCarry + '%'"/>
+				<property name="tmplImage" value="skin.ImgGroupIconArms"/>
+				<property name="strToolTip" from="
+					locale.SID.UI.ArmsSupply + ': ' + spdata.objUnitGroupData.objUnitGroup.nArms + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCarry
+					+ '&#010;' + locale.SID.UI.ArmsConsumption + ': ' + spdata.objUnitGroupData.objUnitGroup.nRestArmsCost + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCost"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements" existsWhile="spdata.objUnitGroupData.objUnitGroup.nOilCarry GTE 1">
+				<property name="tmplTextStyle">
+					if(spdata.objUnitGroupData.objUnitGroup.nOil LTE spdata.objUnitGroupData.objUnitGroup.nOilCost,
+						'locale.TxtStyleArialRed14CenterFIT', 'locale.TxtStyleArialBlue14CenterFIT')
+				</property>	
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<!--<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nOil + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCarry"/>-->
+        <property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nOil * 100) / spdata.objUnitGroupData.objUnitGroup.nOilCarry + '%'"/>
+				<property name="tmplImage" value="skin.ImgGroupIconSupply"/>
+				<property name="strToolTip" from="
+					locale.SID.UI.OilSupply + ': ' + spdata.objUnitGroupData.objUnitGroup.nOil + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCarry
+					+ '&#010;' + locale.SID.UI.OilConsumption + ': ' + spdata.objUnitGroupData.objUnitGroup.nRestOilCost + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCost"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DSubGroupVitals" superType="mlui.UI2DElement">
+		<propertyDef name="tmplCommandLevel" type="gs_tbg.UnitGroupCommandTemplate">
+			spdata.objUnitGroupData.objUnitGroup.getGroupCommand(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="tmplMoraleLevel" type="gs_tbg.UnitMoraleTemplate">
+			spdata.objUnitGroupData.objUnitGroup.getGroupMorale(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="nGroupDamage" type="int">
+			sum(map(?{unit: unit.objUnitTemplate.nAttackDamage}, spdata.objUnitGroupData.objUnitsInGroup))
+		</propertyDef>
+		
+		<!-- Unit vitals, vertical pairs of icon and stats -->
+		<object type="common_ui.UI2DListHorz" name="objUnitStatsList">
+			<property name="nSpacing" value="9"/>
+			<property name="nY" value="0"/>
+			<property name="nX" value="0"/>
+			
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nSeaSubmergedPower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconSubAttack"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsSub
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nSeaSubmergedPower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nSeaSurfacePower / 10"/>
+				<property name="tmplImage" value="skin.ImgUnitIconNavalAttack"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackVsNavy
+					+ '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+						+ ' ' + locale.SID.UI.PerTurn
+					+ '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(spdata.objUnitGroupData.objUnitGroup.nSeaSurfacePower) / 100).formatNumber(1, true)
+						+ ' ' + locale.SID.UI.PerTurn
+				"/>
+			</object>
+			
+			<object type="UI2DUnitGroupHealth" name="objElements">
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="(spdata.objUnitGroupData.objUnitGroup.nHitPoints) + '/' +
+				(spdata.objUnitGroupData.objUnitGroup.nMaxHitPoints)"/>
+				<property name="fPercent" from="float(spdata.objUnitGroupData.objUnitGroup.nHitPoints) /
+					float(spdata.objUnitGroupData.objUnitGroup.nMaxHitPoints)"/>
+			</object>
+			
+			<!--<object type="UI2DUnitGroupVital" name="objElements">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>-->
+			<!--	<property name="nY" value="0"/>-->
+			<!--	<property name="nX" value="0"/>-->
+			<!--	<property name="nHeight" value="43"/>-->
+			<!--	<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nMorale + '%'"/>-->
+			<!--	<property name="tmplImage">-->
+			<!--		if(spdata.objUnitGroupData.objUnitGroup.nMorale GTE 70, 'skin.ImgGroupIconMoraleHigh',-->
+			<!--			if(spdata.objUnitGroupData.objUnitGroup.nMorale LTE 30, 'skin.ImgGroupIconMoraleLow', 'skin.ImgGroupIconMoraleMed'))-->
+			<!--	</property>-->
+			<!--	<property name="strToolTip" from="-->
+			<!--		locale.SID.UI.MoraleLevel + ': ' + def.tmplMoraleLevel.strDisplayName + '&#010;  ' +-->
+			<!--		locale.SID.UI.CombatModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK},-->
+			<!--			def.tmplMoraleLevel.objCombatModifiers).nModifierValue + '%'"/>-->
+			<!--</object>-->
+			
+			<!--<object type="UI2DUnitGroupVital" name="objElements">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>-->
+			<!--	<property name="nY" value="0"/>-->
+			<!--	<property name="nX" value="0"/>-->
+			<!--	<property name="nHeight" value="43"/>-->
+			<!--	<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nCommand + 'x'"/>-->
+			<!--	<property name="tmplImage" value="skin.ImgGroupIconCommand"/>-->
+			<!--	<property name="strToolTip" from="-->
+			<!--		locale.SID.UI.CommandLevel + ': ' + def.tmplCommandLevel.strDisplayName + '&#010;  ' +-->
+			<!--		locale.SID.UI.CombatModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK},-->
+			<!--			def.tmplCommandLevel.objCombatModifiers).nModifierValue + '%' + '&#010;  ' +-->
+			<!--		locale.SID.UI.DamageModifier + ': ' + find(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_ATTACK_DAMAGE},-->
+			<!--			def.tmplCommandLevel.objCombatModifiers).nModifierValue"/>-->
+			<!--</object>-->
+			
+			<object type="UI2DUnitGroupVital" name="objElements" existsWhile="spdata.objUnitGroupData.objUnitGroup.nArmsCarry GTE 1">
+				<property name="tmplTextStyle">
+					if(spdata.objUnitGroupData.objUnitGroup.nArms LTE spdata.objUnitGroupData.objUnitGroup.nArmsCost,
+						'locale.TxtStyleArialRed14CenterFIT', 'locale.TxtStyleArialBlue14CenterFIT')
+				</property>
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nArms + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCarry"/>
+				<property name="tmplImage" value="skin.ImgGroupIconArms"/>
+				<property name="strToolTip" from="
+					locale.SID.UI.ArmsSupply + ': ' + spdata.objUnitGroupData.objUnitGroup.nArms + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCarry
+					+ '&#010;' + locale.SID.UI.ArmsConsumption + ': ' + spdata.objUnitGroupData.objUnitGroup.nRestArmsCost + '/' + spdata.objUnitGroupData.objUnitGroup.nArmsCost"/>
+			</object>
+			
+			<object type="UI2DUnitGroupVital" name="objElements" existsWhile="spdata.objUnitGroupData.objUnitGroup.nOilCarry GTE 1">
+				<property name="tmplTextStyle">
+					if(spdata.objUnitGroupData.objUnitGroup.nOil LTE spdata.objUnitGroupData.objUnitGroup.nOilCost,
+						'locale.TxtStyleArialRed14CenterFIT', 'locale.TxtStyleArialBlue14CenterFIT')
+				</property>	
+				<property name="nY" value="0"/>
+				<property name="nX" value="0"/>
+				<property name="nHeight" value="43"/>
+				<property name="strValue" from="spdata.objUnitGroupData.objUnitGroup.nOil + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCarry"/>
+				<property name="tmplImage" value="skin.ImgGroupIconSupply"/>
+				<property name="strToolTip" from="
+					locale.SID.UI.OilSupply + ': ' + spdata.objUnitGroupData.objUnitGroup.nOil + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCarry
+					+ '&#010;' + locale.SID.UI.OilConsumption + ': ' + spdata.objUnitGroupData.objUnitGroup.nRestOilCost + '/' + spdata.objUnitGroupData.objUnitGroup.nOilCost"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DUnitGroupHealth" superType="mlui.UI2DElement">
+		<propertyDef name="strValue" type="String"/>
+		<propertyDef name="fPercent" type="float"/>
+		
+		<property name="nWidth" from="33 + if(self.objVitalValue.nWidth LTE 33, 0,
+			(self.objVitalValue.nWidth - 33))"/>
+		
+		<object type="GroupHealthIcon" name="objHealth">
+			<property name="nX" value="0"/>
+			<property name="nY" value="16"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="1"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" from="(def.fPercent * 25)"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objHealthBG">
+			<property name="tmplImage" value="skin.ImgUnitHealthIconBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="2"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objVitalValue">
+			<property name="tmplTextStyle">
+				if(def.fPercent LTE 0.3, 'locale.TxtStyleArialRed14CenterFIT', 'locale.TxtStyleArialBlue14CenterFIT')
+			</property>	
+			<property name="strText" from="def.strValue"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="27"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="GroupHealthIcon" superType="mlui.UI2DElement">
+		<object type="mlui.UI2DImage" name="objHealth">
+			<property name="tmplImage" value="skin.ImgUnitHealthIcon"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+		</object>
+	</objectDef>
+
+</locust>

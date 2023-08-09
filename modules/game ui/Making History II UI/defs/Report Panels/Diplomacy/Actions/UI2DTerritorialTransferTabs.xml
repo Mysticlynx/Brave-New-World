@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DTerritorialTransferTabs" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupTerritoryData" type="LookupTerritoryData"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="438"/>
+		</object>	
+
+		<object type="UI2DTerritorialTabDeal" name="objDeal" existsWhile="mh2data.otTerritorialTab == UI2DTerritorialTabDeal">
+			<property name="objLookupTerritoryData" from="def.objLookupTerritoryData"/>
+		
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DTerritorialTabRegions" name="objRegions" existsWhile="mh2data.otTerritorialTab == UI2DTerritorialTabRegions">
+			<property name="objLookupTerritoryRegionsData" from="if(def.objLookupTerritoryData.bYourNation,
+				def.objLookupTerritoryData.objYourRegions, def.objLookupTerritoryData.objTheirRegions)
+			"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+    
+    <object type="UI2DNationFlag46x24" name="objNationFlag" existsWhile="mh2data.otTerritorialTab == UI2DTerritorialTabDeal">
+      <property name="objNation" from="mh2data.objNation"/>
+      <property name="nX" value="10"/>
+      <property name="nY" value="11"/>
+      <property name="nWidth" value="46"/>
+      <property name="nHeight" value="24"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objOfferedLabel" existsWhile="mh2data.otTerritorialTab == UI2DTerritorialTabDeal">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.OfferedRegions"/>
+      <property name="nX" value="10"/>
+      <property name="nY" value="37"/>
+      <property name="nWidth" value="120"/>
+      <property name="nHeight" value="13"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objHorzLine" existsWhile="mh2data.otTerritorialTab == UI2DTerritorialTabDeal">
+      <property name="tmplImage" value="skin.ImgTan"/>
+      <property name="nX" value="0"/>
+      <property name="nY" value="72"/>
+      <property name="nWidth" value="290"/>
+      <property name="nHeight" value="1"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objIcon" existsWhile="(def.objLookupTerritoryData.objYourRegions.objChosenRegions.size != 0) AND (mh2data.otTerritorialTab == UI2DTerritorialTabDeal)">
+      <property name="tmplImage" value="skin.ImgInfoIconPointsSm"/>
+      <property name="nX" value="10"/>
+      <property name="nY" value="49"/>
+      <property name="nWidth" value="22"/>
+      <property name="nHeight" value="20"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objElements" existsWhile="(def.objLookupTerritoryData.objYourRegions.objChosenRegions.size == 0) AND (mh2data.otTerritorialTab == UI2DTerritorialTabDeal)">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+      <property name="strText" from="locale.SID.UI.None"/>
+      <property name="nX" value="10"/>
+      <property name="nY" value="49"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objElements" existsWhile="(def.objLookupTerritoryData.objYourRegions.objChosenRegions.size != 0) AND (mh2data.otTerritorialTab == UI2DTerritorialTabDeal)">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="sum(map(?{region: region.objPowerPoints.nTotalPoints}, def.objLookupTerritoryData.objYourRegions.objChosenRegions)).formatNumber(0, true)"/>	
+			<property name="nX" value="35"/>
+			<property name="nY" value="51"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+    <object type="UI2DNationFlag46x24" name="objOtherNationFlag" existsWhile="mh2data.otTerritorialTab == UI2DTerritorialTabDeal">
+      <property name="objNation" from="def.objLookupTerritoryData.objNation"/>
+      <property name="nX" value="145"/>
+      <property name="nY" value="11"/>
+      <property name="nWidth" value="46"/>
+      <property name="nHeight" value="24"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objRequestedLabel" existsWhile="mh2data.otTerritorialTab == UI2DTerritorialTabDeal">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.RequestedRegions"/>
+      <property name="nX" value="145"/>
+      <property name="nY" value="37"/>
+      <property name="nWidth" value="120"/>
+      <property name="nHeight" value="13"/>
+    </object>
+    
+    <object type="mlui.UI2DImage" name="objIcon" existsWhile="(def.objLookupTerritoryData.objTheirRegions.objChosenRegions.size != 0) AND (mh2data.otTerritorialTab == UI2DTerritorialTabDeal)">   
+      <property name="tmplImage" value="skin.ImgInfoIconPointsSm"/>
+      <property name="nX" value="145"/>
+      <property name="nY" value="49"/>
+      <property name="nWidth" value="22"/>
+      <property name="nHeight" value="20"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objElements" existsWhile="(def.objLookupTerritoryData.objTheirRegions.objChosenRegions.size == 0) AND (mh2data.otTerritorialTab == UI2DTerritorialTabDeal)">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+      <property name="strText" from="locale.SID.UI.None"/>
+      <property name="nX" value="145"/>
+      <property name="nY" value="49"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="12"/>
+    </object>
+    
+    <object type="mlui.UI2DText" name="objElements" existsWhile="(def.objLookupTerritoryData.objTheirRegions.objChosenRegions.size != 0) AND (mh2data.otTerritorialTab == UI2DTerritorialTabDeal)">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+      <property name="strText" from="sum(map(?{region: region.objPowerPoints.nTotalPoints}, def.objLookupTerritoryData.objTheirRegions.objChosenRegions)).formatNumber(0, true)"/>
+      <property name="nX" value="170"/>
+      <property name="nY" value="49"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="12"/>
+    </object>
+  </objectDef>
+	
+	<objectDef type="UI2DProposedTransfer" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupTerritoryData" type="LookupTerritoryData"/>
+		<property name="nHeight" from="
+			if(self.objLookupTerritoryData.objYourRegions.objChosenRegions.size GTE
+				self.objLookupTerritoryData.objTheirRegions.objChosenRegions.size,
+					self.objOfferedRegions.nHeight + 0,
+					self.objRequestedRegions.nHeight + 0
+			)
+		"/>
+    
+		<object type="common_ui.UI2DList" name="objOfferedRegions">
+			<property name="nX" value="10"/>
+			<property name="nY" value="0"/>
+			<property name="nSpacing" value="2"/>
+			
+			<object type="mlui.UI2DText" name="objElements" tiedTo="def.objLookupTerritoryData.objYourRegions.objChosenRegions">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+				<property name="strText" from="tiedTo.strDisplayName"/>	
+				<property name="nWidth" value="200"/>
+				<property name="nHeight" value="12"/>
+			</object>	
+			
+		</object>
+
+		<object type="common_ui.UI2DList" name="objRequestedRegions">
+			<property name="nX" value="145"/>
+      <property name="nY" value="0"/>
+			<property name="nSpacing" value="2"/>
+			
+			<object type="mlui.UI2DText" name="objElements" tiedTo="def.objLookupTerritoryData.objTheirRegions.objChosenRegions">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+				<property name="strText" from="tiedTo.strDisplayName"/>	
+				<property name="nWidth" value="200"/>
+				<property name="nHeight" value="12"/>
+			</object>		
+		</object>	
+	</objectDef>
+	
+	<objectDef type="UI2DTerritorialTabDeal" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupTerritoryData" type="LookupTerritoryData"/>
+		
+		<object type="mlui.UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="0"/>
+			<property name="nY" value="75"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="300"/>	
+			<property name="nDepth" value="100"/>
+
+			<object type="mlui.SliderInfo" name="objHorizInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="300"/>
+
+				<property name="nButtonLength" value="11"/>
+				<property name="nMinKnobLength" value="16"/>
+				<property name="nMaxKnobLength" value="16"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="mlui.SliderInfo" name="objVertInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="300"/>
+
+				<property name="nButtonLength" value="11"/>
+				<property name="nMinKnobLength" value="39"/>
+				<property name="nMaxKnobLength" value="39"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="UI2DProposedTransfer" name="objScrollable">
+				<property name="objLookupTerritoryData" from="def.objLookupTerritoryData"/>
+				<property name="nWidth" value="278"/>
+			</object>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objHorzLine">
+      <property name="tmplImage" value="skin.ImgTan"/>
+      <property name="nX" value="0"/>
+      <property name="nY" value="375"/>
+      <property name="nWidth" value="290"/>
+      <property name="nHeight" value="1"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="384"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<propertyDef name="bDemand" type="bool">
+			self.objLookupTerritoryData.objYourRegions.objChosenRegions.size == 0
+				AND self.objLookupTerritoryData.objTheirRegions.objChosenRegions.size != 0
+		</propertyDef>
+
+		<object type="mlui.UI2DTextButton" name="objTransferButton">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText">
+				switch{
+					case def.objLookupTerritoryData.objYourRegions.objChosenRegions.size != 0
+						AND def.objLookupTerritoryData.objTheirRegions.objChosenRegions.size == 0:
+							locale.SID.UI.OfferRegions
+					case def.objLookupTerritoryData.objYourRegions.objChosenRegions.size == 0
+						AND def.objLookupTerritoryData.objTheirRegions.objChosenRegions.size != 0:
+							locale.SID.UI.RequestRegions
+					default:
+							locale.SID.UI.ProposeTerritoryTransfer
+				}
+			</property>	
+			<property name="nX" value="31"/>
+			<property name="nY" value="394"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						
+							var term1 = gs_tbg.TerritorialTransferTerm.create({
+								"objRegions"  : def.objLookupTerritoryData.objTheirRegions.objChosenRegions,
+								"objTransferer"  : def.objLookupTerritoryData.objNation
+							});
+							
+							var term2 = gs_tbg.TerritorialTransferTerm.create({
+								"objRegions"  : def.objLookupTerritoryData.objYourRegions.objChosenRegions,
+								"objTransferer"  : mh2data.objNation
+							});
+							
+							var action = gs_tbg.GActProposeTerritorialTransfer.create({
+								"refProposingNation": mh2data.objNation,
+								"refReceivingNation": def.objLookupTerritoryData.objNation,
+								"objTerms": [term1, term2],
+								"bDemand": def.bDemand,
+								"strMessage": locale.SID.UI.TerritorialTransferTreaty
+							});
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DTerritorialTabRegions" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupTerritoryRegionsData" type="LookupTerritoryRegionsData"/>
+		
+		<object type="mlui.UI2DText" name="objYourNationLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="def.objLookupTerritoryRegionsData.objNation.strDisplayName"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objRegionsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Regions"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="207"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objNatAbbrevLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.NatAbbrev"/>
+			<property name="nX" value="208"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="10"/>
+		</object>		
+		
+		<object type="mlui.UI2DText" name="objValuesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Points"/>
+			<property name="nX" value="239"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="35"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objHorzLine">
+			<property name="tmplImage" value="skin.ImgTan"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="1"/>
+		</object>
+		
+		<object type="mlui.UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="0"/>
+			<property name="nY" value="36"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="402"/>	
+			<property name="nDepth" value="100"/>
+
+			<object type="mlui.SliderInfo" name="objHorizInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="290"/>
+
+				<property name="nButtonLength" value="11"/>
+				<property name="nMinKnobLength" value="16"/>
+				<property name="nMaxKnobLength" value="16"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="mlui.SliderInfo" name="objVertInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="404"/>
+
+				<property name="nButtonLength" value="11"/>
+				<property name="nMinKnobLength" value="39"/>
+				<property name="nMaxKnobLength" value="39"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="UI2DTerritoryRegionList" name="objScrollable">
+				<property name="objLookupTerritoryRegionsData" from="def.objLookupTerritoryRegionsData"/>
+				
+				<property name="nWidth" value="278"/>
+				<property name="nHeight" from="def.objLookupTerritoryRegionsData.objRegions.size"/>
+			</object>
+		</object>		
+	</objectDef>
+	
+	<objectDef type="UI2DTerritoryRegionList" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupTerritoryRegionsData" type="LookupTerritoryRegionsData"/>
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		
+		<object type="mlui.UILMFlow" name="objFlow">
+			<property name="listElements" from="sortAscending(?{data: data.objRegion.strDisplayName}, def.objElements)"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="0"/>
+		</object>
+		
+		<object type="UI2DTerritoryRegion" name="objElements" tiedTo="self.objLookupTerritoryRegionsData.objRegions">
+			<property name="objLookupTerritoryRegionsData" from="def.objLookupTerritoryRegionsData"/>
+			<property name="objRegion" from="tiedTo"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="278"/>
+			<property name="nHeight" value="31"/>
+		</object>		
+	</objectDef>
+	
+	<objectDef type="UI2DTerritoryRegion" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupTerritoryRegionsData" type="LookupTerritoryRegionsData"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		
+		<propertyDef name="bChosen" type="bool"/>
+		<property name="bChosen" from="self.objLookupTerritoryRegionsData.objChosenRegions.contains(self.objRegion)"/>
+		
+		<object type="mlui.UI2DImage" name="objHighlight" existsWhile="self.bChosen">
+			<property name="tmplImage" value="skin.ImgPeach"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="274"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-1"/>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objRegionBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBr"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="208"/>
+			<property name="nHeight" value="31"/>
+		</object>		
+		
+		<object type="mlui.UI2DTextButton" name="objRegionName">
+			<property name="tmplTextButtonStyle" from="skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,
+				if(def.bChosen, 'TxtBtnStyleRed12LeftCenter', 'TxtBtnStyleBlue12LeftHighlightCenter'))
+			"/>
+			<property name="strText" from="def.objRegion.strDisplayName"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="269"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="nDepth" value="100"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.bChosen)
+							{
+								var indx;
+								indx = def.objLookupTerritoryRegionsData.objChosenRegions.indexOf(def.objRegion);
+								delete def.objLookupTerritoryRegionsData.objChosenRegions[indx];
+							}
+							else
+							{
+								def.objLookupTerritoryRegionsData.objChosenRegions.add(def.objRegion);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objRegionBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBr"/>
+			<property name="nX" value="208"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="31"/>
+			<property name="nHeight" value="31"/>
+		</object>
+
+    <object type="LookupNationIcons" name="objLookupNationIcons">
+      <property name="tmplNation" from="def.objRegion.tmplNation"/>
+      <property name="tmplIdeology" from="def.objRegion.refOwner.resolve(mh2data.objAvatar).tmplIdeology"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objIcon">
+      <property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28"/>
+      <property name="nX" value="209"/>
+      <property name="nY" value="1"/>
+      <property name="nWidth" value="23"/>
+      <property name="nHeight" value="23"/>
+      <property name="nDepth" value="100"/>
+      <property name="strToolTip">
+        def.objRegion.tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName  + ' ' + locale.SID.UI.Nationality
+      </property>
+    </object>
+
+		<object type="mlui.UI2DImage" name="objRegionBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBr"/>
+			<property name="nX" value="239"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="36"/>
+			<property name="nHeight" value="31"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="def.objRegion.objPowerPoints.nTotalPoints"/>
+			<property name="nX" value="239"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="35"/>
+			<property name="nHeight" value="12"/>
+		</object>		
+	</objectDef>
+</locust>

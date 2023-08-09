@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI3DMapLight" superType="mlui.UI3DElement">
+		<object type="mlui.UIDataLights" name="objDataLights">
+			<object type="ml3dworld.LightDirectional" name="objLights">
+				<property name="colColor" value="#f6ffe0FF"/>
+				<property name="vecDirection" value="[1, 1, -1]"/>
+			</object>
+
+			<object type="ml3dworld.LightAmbient" name="objLights">
+				<property name="colColor" value="#fdf5deFF"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI3DModelLight" superType="mlui.UI3DElement">
+		<object type="mlui.UIDataLights" name="objDataLights">
+			<object type="ml3dworld.LightDirectional" name="objLights">
+				<property name="colColor" value="#fdf5deFF"/>
+				<property name="vecDirection" value="[1, 1, -1]"/>
+			</object>
+
+			<object type="ml3dworld.LightAmbient" name="objLights">
+				<property name="colColor" value="#b2d5f7FF"/>
+			</object>
+		</object>
+	</objectDef>
+	    
+</locust>

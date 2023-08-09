@@ -1,0 +1,4075 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+<!-- Highlight -->
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialHighlight13Left">
+    <property name="colColor" value="#754C23FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="13"/>
+    <property name="nBaseline" value="11"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+  
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialHighlight14Left">
+		<property name="colColor" value="#754C23FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialHighlight12Left">
+		<property name="colColor" value="#754C23FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialHighlight12LeftCenter">
+		<property name="colColor" value="#754C23FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialHighlight18Left">
+		<property name="colColor" value="#754C23FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialHighlight10Center">
+		<property name="colColor" value="#754C23FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="BOTTOM"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+<!-- Arial -->
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite30Center">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="30"/>
+		<property name="nBaseline" value="25"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/> 
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite30CenterWrap">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="30"/>
+		<property name="nBaseline" value="25"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite19Left">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="19"/>
+		<property name="nBaseline" value="15"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite18Left">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite16Left">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite16Center">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite16LeftFIT">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite16Editable">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite14Left">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite14LeftFIT">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite14LeftFitForEditing">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite14LeftWrap">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite14Center">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite14CenterMiddle">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="13"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite14CenterMiddleFIT">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="true"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite14CenterMiddleFitForEditing">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="true"/>
+	</template>
+	
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite13CenterMiddleFIT">
+    <property name="colColor" value="#FFFFFFFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="13"/>
+    <property name="nBaseline" value="11"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="CENTER"/>
+    <property name="vaVAlign" value="MIDDLE"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="true"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite13Right">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="13"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite13Center">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="13"/>
+		<property name="nBaseline" value="10"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed13Center">
+        <!-- Light red for top bar -->
+        <property name="colColor" value="#FFCCCCFF"/>
+        <property name="strFontFace" value="Arial"/>
+        <property name="nFontSize" value="13"/>
+        <property name="nBaseline" value="10"/>
+        <property name="bIsBold" value="true"/>
+        <property name="bIsItalic" value="false"/>
+        <property name="bIsUnderline" value="false"/>
+        <property name="bIsStrikeOut" value="false"/>
+        <property name="haHAlign" value="CENTER"/>
+        <property name="vaVAlign" value="TOP"/>
+        <property name="bAntiAlias" value="true"/>
+        <property name="bAutoWrap" value="false"/>
+        <property name="bHSizeToFit" value="false"/>
+        <property name="bVSizeToFit" value="false"/>
+        <property name="nMinWidth" value="0"/>
+        <property name="nMinHeight" value="0"/>
+        <property name="bUseOutline" value="false"/>
+    </template>
+
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed13Left">
+        <!-- Light red for top bar -->
+        <property name="colColor" value="#790000FF"/>
+        <property name="strFontFace" value="Arial"/>
+        <property name="nFontSize" value="13"/>
+        <property name="nBaseline" value="11"/>
+        <property name="bIsBold" value="true"/>
+        <property name="bIsItalic" value="false"/>
+        <property name="bIsUnderline" value="false"/>
+        <property name="bIsStrikeOut" value="false"/>
+        <property name="haHAlign" value="LEFT"/>
+        <property name="vaVAlign" value="TOP"/>
+        <property name="bAntiAlias" value="true"/>
+        <property name="bAutoWrap" value="false"/>
+        <property name="bHSizeToFit" value="false"/>
+        <property name="bVSizeToFit" value="false"/>
+        <property name="nMinWidth" value="0"/>
+        <property name="nMinHeight" value="0"/>
+        <property name="bUseOutline" value="false"/>
+    </template>
+
+
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite13Left">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="13"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite12LeftWrap">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite12LeftWrapCustomForIntro">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="14"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite12LeftWrapNoReSize">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="14"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite10Wrap">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite10Center">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite10CenterDisabled">
+		<property name="colColor" value="#C0BAB9FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite11Wrap">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="11"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>		
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite13Wrap">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="13"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite12Left">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite12Center">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite11Left">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="11"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite11Center">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="11"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite11CenterFIT">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="11"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack11CenterFIT">
+		<property name="colColor" value="#000000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="11"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite10Left">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialWhite12Right">
+		<property name="colColor" value="#FFFFFFFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGray14CenterMiddle">
+		<property name="colColor" value="#D7D7D7FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="13"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+    
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGray12Left">
+		<property name="colColor" value="#D7D7D7FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGray14LeftFIT">
+    <property name="colColor" value="#D7D7D7FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="14"/>
+    <property name="nBaseline" value="11"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGray14Left">
+		<property name="colColor" value="#D7D7D7FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGray16LeftFIT">
+    <property name="colColor" value="#D7D7D7FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="16"/>
+    <property name="nBaseline" value="12"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGray18LeftFIT">
+		<property name="colColor" value="#D7D7D7FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialMedGray13Center">
+        <property name="colColor" value="#5F5F5FFF"/>
+        <property name="strFontFace" value="Arial"/>
+        <property name="nFontSize" value="13"/>
+        <property name="nBaseline" value="10"/>
+        <property name="bIsBold" value="true"/>
+        <property name="bIsItalic" value="false"/>
+        <property name="bIsUnderline" value="false"/>
+        <property name="bIsStrikeOut" value="false"/>
+        <property name="haHAlign" value="CENTER"/>
+        <property name="vaVAlign" value="TOP"/>
+        <property name="bAntiAlias" value="true"/>
+        <property name="bAutoWrap" value="false"/>
+        <property name="bHSizeToFit" value="false"/>
+        <property name="bVSizeToFit" value="false"/>
+        <property name="nMinWidth" value="0"/>
+        <property name="nMinHeight" value="0"/>
+        <property name="bUseOutline" value="false"/>
+    </template>
+
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialMedGray14Center">
+        <property name="colColor" value="#5F5F5FFF"/>
+        <property name="strFontFace" value="Arial"/>
+        <property name="nFontSize" value="14"/>
+        <property name="nBaseline" value="11"/>
+        <property name="bIsBold" value="true"/>
+        <property name="bIsItalic" value="false"/>
+        <property name="bIsUnderline" value="false"/>
+        <property name="bIsStrikeOut" value="false"/>
+        <property name="haHAlign" value="CENTER"/>
+        <property name="vaVAlign" value="TOP"/>
+        <property name="bAntiAlias" value="true"/>
+        <property name="bAutoWrap" value="false"/>
+        <property name="bHSizeToFit" value="false"/>
+        <property name="bVSizeToFit" value="false"/>
+        <property name="nMinWidth" value="0"/>
+        <property name="nMinHeight" value="0"/>
+        <property name="bUseOutline" value="false"/>
+    </template>
+
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack16Middle">
+		<property name="colColor" value="#000000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="13"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+    
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack13Center">
+		<property name="colColor" value="#000000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="13"/>
+		<property name="nBaseline" value="10"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack14Left">
+		<property name="colColor" value="#000000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack14Editable">
+		<property name="colColor" value="#000000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack12Right">
+		<property name="colColor" value="#000000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack12Left">
+		<property name="colColor" value="#000000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack13Right">
+		<property name="colColor" value="#000000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="13"/>
+		<property name="nBaseline" value="10"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack30CenterWrap">
+    <property name="colColor" value="#000000FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="18"/>
+    <property name="nBaseline" value="15"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="CENTER"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="true"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="true"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack34CenterWrap">
+		<property name="colColor" value="#000000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="15"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+  
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack42CenterWrap">
+    <property name="colColor" value="#000000FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="42"/>
+    <property name="nBaseline" value="40"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="CENTER"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="true"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="true"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialSalmon13Center">
+		<property name="colColor" value="#F69679FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="13"/>
+		<property name="nBaseline" value="10"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialPeach12Center">
+    <property name="colColor" value="#EDD0A0FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="12"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="CENTER"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+  
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialPeach12Left">
+		<property name="colColor" value="#EDD0A0FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialPeach12LeftFIT">
+		<property name="colColor" value="#EDD0A0FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkPeach12Left">
+		<property name="colColor" value="#A67C51FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialYellow11Left">
+		<property name="colColor" value="#FFF799FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="11"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialYellow12Right">
+		<property name="colColor" value="#FFF799FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+    
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialYellow30Center">
+		<property name="colColor" value="#FFF799FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="30"/>
+		<property name="nBaseline" value="25"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown10Left">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown10LeftSizeToFit">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown10LeftWrap">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown10Center">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown12LeftWrap">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown12Left">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown12LeftCenter">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown12LeftHFit">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlack12LeftHFit">
+		<property name="colColor" value="#000000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown12Center">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown14Left">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown16CenterMiddle">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+		
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown14LeftFit">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBrown14LeftWrap">
+		<property name="colColor" value="#726257FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialLightBrown10Left">
+		<property name="colColor" value="#754C23FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialLightBrown12Left">
+    <property name="colColor" value="#754C23FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="12"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+  
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialLightBrown10LeftWrap">
+		<property name="colColor" value="#754C23FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialLighterBrown20LeftWrap">
+		<property name="colColor" value="#754C2375"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="20"/>
+		<property name="nBaseline" value="19"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialLighterBrown20Center">
+		<property name="colColor" value="#754C2375"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="20"/>
+		<property name="nBaseline" value="19"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialLightBrown12Center">
+		<property name="colColor" value="#754C23FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialLightBrown14Center">
+    <property name="colColor" value="#754C23FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="14"/>
+    <property name="nBaseline" value="11"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="CENTER"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown10Left">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown10Center">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown10CenterWrap">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>		
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown11Left">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="11"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown12LeftSizeToFit">
+    <property name="colColor" value="#534640FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="12"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown12Left">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown13LeftFIT">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="13"/>
+		<property name="nBaseline" value="10"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown24LeftMiddle">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="24"/>
+		<property name="nBaseline" value="18"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown13Left">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="13"/>
+		<property name="nBaseline" value="10"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown14Left">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+    
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown16Left">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+    
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown16LeftFit">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown16LeftFitForEditing">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+		
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkBrown12Center">
+		<property name="colColor" value="#534640FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown18Left">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown16Left">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="13"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown14Left">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown14LeftFit">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+    
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown14Center">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown13Left">
+    <property name="colColor" value="#362F2DFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="13"/>
+    <property name="nBaseline" value="10"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown12Left">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown13LeftFit">
+    <property name="colColor" value="#362F2DFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="13"/>
+    <property name="nBaseline" value="10"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+  
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown13LeftFitForEditing">
+    <property name="colColor" value="#362F2DFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="13"/>
+    <property name="nBaseline" value="10"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown12LeftWrap">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown12LeftSizeToFit">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown12Center">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown11LeftWrap">
+    <property name="colColor" value="#362F2DFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="11"/>
+    <property name="nBaseline" value="8"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="true"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown10Left">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown10Center">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown10CenterMiddle">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkerBrown10CenterWrap">
+		<property name="colColor" value="#362F2DFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue10Right">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue10Left">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue10LeftFIT">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue10CenterWrap">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue10Center">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="BOTTOM"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue10LeftWrap">
+    <property name="colColor" value="#2B485FFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="10"/>
+    <property name="nBaseline" value="7"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="true"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue12Left">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+    
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue12LeftFIT">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue13LeftFIT">
+        <property name="colColor" value="#2B485FFF"/>
+        <property name="strFontFace" value="Arial"/>
+        <property name="nFontSize" value="13"/>
+        <property name="nBaseline" value="11"/>
+        <property name="bIsBold" value="true"/>
+        <property name="bIsItalic" value="false"/>
+        <property name="bIsUnderline" value="false"/>
+        <property name="bIsStrikeOut" value="false"/>
+        <property name="haHAlign" value="LEFT"/>
+        <property name="vaVAlign" value="TOP"/>
+        <property name="bAntiAlias" value="true"/>
+        <property name="bAutoWrap" value="false"/>
+        <property name="bHSizeToFit" value="true"/>
+        <property name="bVSizeToFit" value="false"/>
+        <property name="nMinWidth" value="0"/>
+        <property name="nMinHeight" value="0"/>
+        <property name="bUseOutline" value="false"/>
+    </template>
+
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed13LeftFIT">
+        <property name="colColor" value="#790000FF"/>
+        <property name="strFontFace" value="Arial"/>
+        <property name="nFontSize" value="13"/>
+        <property name="nBaseline" value="11"/>
+        <property name="bIsBold" value="true"/>
+        <property name="bIsItalic" value="false"/>
+        <property name="bIsUnderline" value="false"/>
+        <property name="bIsStrikeOut" value="false"/>
+        <property name="haHAlign" value="LEFT"/>
+        <property name="vaVAlign" value="TOP"/>
+        <property name="bAntiAlias" value="true"/>
+        <property name="bAutoWrap" value="false"/>
+        <property name="bHSizeToFit" value="true"/>
+        <property name="bVSizeToFit" value="false"/>
+        <property name="nMinWidth" value="0"/>
+        <property name="nMinHeight" value="0"/>
+        <property name="bUseOutline" value="false"/>
+    </template>
+
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue13Left">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="13"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlueLite13Left">
+    <property name="colColor" value="#2B485F99"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="13"/>
+    <property name="nBaseline" value="11"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue13Right">
+    <property name="colColor" value="#2B485FFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="13"/>
+    <property name="nBaseline" value="11"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="RIGHT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue12Center">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue12LeftWrap">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue12LeftSizeToFit">
+    <property name="colColor" value="#2B485FFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="12"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+  
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue12LeftSizeToFitForEditing">
+    <property name="colColor" value="#2B485FFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="12"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue14Right">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue14RightFIT">
+    <property name="colColor" value="#2B485FFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="14"/>
+    <property name="nBaseline" value="11"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="RIGHT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue14Left">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+    
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue14LeftWrap">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue14LeftFIT">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlueLite14Left">
+		<property name="colColor" value="#2B485F99"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue14LeftSizeToFit">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+    
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue14Center">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue14CenterFIT">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue14CenterMiddle">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue13Center">
+    <property name="colColor" value="#2B485FFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="13"/>
+    <property name="nBaseline" value="11"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="CENTER"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue14LeftCenterFIT">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue13CenterFIT">
+    <property name="colColor" value="#2B485FFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="13"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="CENTER"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue12CenterFIT">
+    <property name="colColor" value="#2B485FFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="12"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="CENTER"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue12LeftCenterFIT">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue12CenterMiddleFIT">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue12Right">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue16Left">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue16LeftFIT">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue16LeftMiddle">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue16Center">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue16CenterMiddle">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+    
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue18Left">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+    
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue18LeftFIT">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue18Center">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue18CenterWrap">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="true"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+    
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue18RightMiddle">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue20Left">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="20"/>
+		<property name="nBaseline" value="15"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue20RightMiddle">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="20"/>
+		<property name="nBaseline" value="15"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+    <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBlue20LeftFIT">
+		<property name="colColor" value="#2B485FFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="20"/>
+		<property name="nBaseline" value="15"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialLighterBlue12LeftSizeToFit">
+    <property name="colColor" value="#336d97FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="12"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGreen12LeftSizeToFit">
+    <property name="colColor" value="#3F6617FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="12"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="true"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGreen10Right">
+		<property name="colColor" value="#3F6617FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGreen12Left">
+		<property name="colColor" value="#3F6617FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGreen12Center">
+		<property name="colColor" value="#3F6617FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGreen14Left">
+		<property name="colColor" value="#3F6617FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGreen14Center">
+		<property name="colColor" value="#3F6617FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGreen14Right">
+		<property name="colColor" value="#3F6617FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGreen18Left">
+		<property name="colColor" value="#3F6617FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed12LeftCenter">
+    <property name="colColor" value="#790000FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="12"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="MIDDLE"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed18Left">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="18"/>
+		<property name="nBaseline" value="14"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed16Left">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed14Left">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed14Center">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed14CenterFIT">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed14Right">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialBloodRed13Center">
+    <property name="colColor" value="#790000FF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="13"/>
+    <property name="nBaseline" value="11"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="CENTER"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed12Left">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+    
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed12Right">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+    
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed12CenterMiddleFit">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed12LeftWrap">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed12LeftFIT">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed12Center">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed10Right">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed10Center">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="8"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="BOTTOM"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialRed10LeftWrap">
+		<property name="colColor" value="#790000FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="10"/>
+		<property name="nBaseline" value="7"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>	
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGold16Left">
+		<property name="colColor" value="#A67C51FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="16"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGold14Left">
+		<property name="colColor" value="#A67C51FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGold14CenterMiddle">
+		<property name="colColor" value="#A67C51FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="14"/>
+		<property name="nBaseline" value="12"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="CENTER"/>
+		<property name="vaVAlign" value="MIDDLE"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="true"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGold12Right">
+		<property name="colColor" value="#A67C51FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialGold12Left">
+		<property name="colColor" value="#A67C51FF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="9"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="LEFT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="false"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+	
+	<template type="mlmedia.TextStyleTemplate" name="TxtStyleArialOrange12Right">
+		<property name="colColor" value="#FFAA1BFF"/>
+		<property name="strFontFace" value="Arial"/>
+		<property name="nFontSize" value="12"/>
+		<property name="nBaseline" value="11"/>
+		<property name="bIsBold" value="true"/>
+		<property name="bIsItalic" value="false"/>
+		<property name="bIsUnderline" value="false"/>
+		<property name="bIsStrikeOut" value="false"/>
+		<property name="haHAlign" value="RIGHT"/>
+		<property name="vaVAlign" value="TOP"/>
+		<property name="bAntiAlias" value="true"/>
+		<property name="bAutoWrap" value="false"/>
+		<property name="bHSizeToFit" value="true"/>
+		<property name="bVSizeToFit" value="false"/>
+		<property name="nMinWidth" value="0"/>
+		<property name="nMinHeight" value="0"/>
+		<property name="bUseOutline" value="false"/>
+	</template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkOrange12Left">
+    <property name="colColor" value="#c55c1dFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="12"/>
+    <property name="nBaseline" value="9"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+  <template type="mlmedia.TextStyleTemplate" name="TxtStyleArialDarkOrange14Left">
+    <property name="colColor" value="#c55c1dFF"/>
+    <property name="strFontFace" value="Arial"/>
+    <property name="nFontSize" value="14"/>
+    <property name="nBaseline" value="12"/>
+    <property name="bIsBold" value="true"/>
+    <property name="bIsItalic" value="false"/>
+    <property name="bIsUnderline" value="false"/>
+    <property name="bIsStrikeOut" value="false"/>
+    <property name="haHAlign" value="LEFT"/>
+    <property name="vaVAlign" value="TOP"/>
+    <property name="bAntiAlias" value="true"/>
+    <property name="bAutoWrap" value="false"/>
+    <property name="bHSizeToFit" value="false"/>
+    <property name="bVSizeToFit" value="false"/>
+    <property name="nMinWidth" value="0"/>
+    <property name="nMinHeight" value="0"/>
+    <property name="bUseOutline" value="false"/>
+  </template>
+
+</locust>

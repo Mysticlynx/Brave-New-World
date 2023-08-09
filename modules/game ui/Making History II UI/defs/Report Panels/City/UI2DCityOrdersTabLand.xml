@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DCityOrdersTabLand" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupCityData" type="LookupCityData"/>
+
+		<object type="WorkOrderListData" name="objWorkOrderListData">
+			<property name="objFactoryOutputs" from="def.objLookupLandFactoryOutputs.objLandUnitOutputs"/>
+		</object>
+
+		<object type="LookupUnitFactoryOutputs" name="objLookupLandFactoryOutputs">
+			<property name="objAvatar" from="def.objLookupCityData.objMH2Data.objAvatar"/>
+			<property name="objCity" from="def.objLookupCityData.objCity"/>
+		</object>
+
+		<object type="UI2DWorkOrderList" name="objWorkOrderList">
+			<property name="objLookupCityData" from="def.objLookupCityData"/>
+			<property name="objWorkOrderListData" from="def.objWorkOrderListData"/>
+
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="385"/>
+		</object>
+	</objectDef>
+</locust>

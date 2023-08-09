@@ -1,0 +1,52 @@
+struct SGMaterial {
+	sampler2D emissionSampler;
+};
+
+uniform float4x4 sgModelViewProj;
+uniform SGMaterial sgMaterial;
+uniform sampler2D shadowSampler; 
+
+struct VertexOutput {
+	float4 position : POSITION;
+	float2 texCoord : TEXCOORD0;
+    float4 uvShadow : TEXCOORD1;
+};
+
+
+VertexOutput vertexProgram(
+	float3 position  : POSITION,
+	float2 texCoord  : TEXCOORD0 )
+{
+	VertexOutput output;
+	output.position = mul(sgModelViewProj, float4(position, 1));   	
+	output.texCoord = texCoord;
+    output.uvShadow = output.position;
+	return output;
+}
+
+struct FragmentOutput {
+	float4 color : COLOR;
+};
+
+FragmentOutput fragmentProgram(
+	float2 texCoord : TEXCOORD0,
+    float4 uvShadow : TEXCOORD1  ) 
+{
+    float4 color = tex2D(sgMaterial.emissionSampler, texCoord);
+    if (color.a < 0.1)
+        discard;
+
+    // get shadow.  Could soften by averaging multiple samples
+    float view_x = uvShadow.x / uvShadow.w;
+    float view_y = uvShadow.y / uvShadow.w;
+    float2 uv = float2(0.5 + 0.5*view_x, 0.5-0.5*view_y);    
+    float shadow_alpha = 0.5 - tex2D(shadowSampler, uv).r * 0.5;
+    
+    float3 shadow_color = float3(0,0,0);
+        
+	FragmentOutput output;
+	output.color = float4(lerp(color.rgb,shadow_color,shadow_alpha), color.a);
+        
+	return output;
+}
+

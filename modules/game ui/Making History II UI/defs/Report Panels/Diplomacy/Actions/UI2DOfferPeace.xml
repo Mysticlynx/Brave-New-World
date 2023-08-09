@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DOfferPeace" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objSender" type="Object"/>
+		<propertyDef name="objReceiver" type="Object"/>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPeaceIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconPeace"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="26"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objPeaceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.PeaceTreaty"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objPeaceBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialRed10LeftWrap"/>
+			<property name="strText" from="locale.SID.UI.PeaceBlurb"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="240"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>		
+		
+		<!-- Negotiation Buttons -->
+		<object type="mlui.UI2DText" name="objNegotionationLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Negotiationwith"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="UI2DNegotiationButton" name="objNegButtonSender">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="56"/>
+			<property name="nWidth" value="60"/>
+			<property name="nHeight" value="50"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objToLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="locale.SID.UI.to"/>
+			<property name="nX" value="94"/>
+			<property name="nY" value="68"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="UI2DNegotiationButton" name="objNegButtonReceiver">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="114"/>
+			<property name="nY" value="56"/>
+			<property name="nWidth" value="60"/>
+			<property name="nHeight" value="50"/>
+		</object>
+
+		<!-- Peace Tabs -->
+		<object type="LookupPeaceData" name="objLookupPeaceData">
+			<property name="objMH2Data" from="mh2data"/>
+			<property name="objNation" from="def.objNation"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objGrayLine">
+			<property name="tmplImage" value="skin.ImgLightGray"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="UI2DOfferPeaceButtons" name="objOfferPeaceButtons">
+			<property name="nX" value="133"/>
+			<property name="nY" value="117"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		
+		<object type="UI2DOfferPeaceTabs" name="objOfferPeaceTabs">
+			<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="142"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="379"/>
+		</object>		
+	</objectDef>
+	
+	<objectDef type="UI2DNegotiationButton" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<propertyDef name="objAllianceMembership" type="gs_tbg.AllianceMembership"/>
+		<property name="objAllianceMembership">
+			find(?{membership: membership.refNation == self.objNation}, gs_tbg.getAllAllianceMemberships(mh2data.objAvatar))
+		</property>		
+		
+		<propertyDef name="objAlliance" type="gs_tbg.Alliance"/>
+		<property name="objAlliance" from="self.objAllianceMembership.refAlliance.resolve(mh2data.objAvatar)"/>
+		
+		<propertyDef name="objChosenObject" type="Object"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="54"/>
+			<property name="nHeight" value="32"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcon" existsWhile="self.objChosenObject.instanceOf(gs_tbg.Alliance)">
+			<property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate, if(def.objAlliance.refLeadNation == def.objNation, 'ImgInfoIconAllianceLeaderSm' , 'ImgInfoIconAllianceSm'))"/>
+			<property name="nX" value="14"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="UI2DNationFlag46x24" name="objFlag" existsWhile="self.objChosenObject.instanceOf(gs_tbg.Nation)">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+		
+		<object type="mlui.UI2DTextButton" name="objText">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue14LeftHighlight"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="38"/>
+			<property name="nDefaultWidth" value="100"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="strText" from="if(def.objChosenObject.instanceOf(gs_tbg.Alliance),
+				locale.SID.UI.Alliance, locale.SID.UI.Nation)
+			"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objChosenObject.instanceOf(gs_tbg.Alliance) || def.objAlliance == null)
+							{
+								def.objChosenObject = def.objNation;
+							}
+							else
+							{
+								def.objChosenObject = def.objAlliance;
+							}
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventAddedToUI"/>
+				<property name="strName" value="EventAddedToUI"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.objUIObject == def)
+						{
+							if(def.objAlliance != null)
+							{
+								def.objChosenObject = def.objAlliance;	
+							}
+							else
+							{
+								def.objChosenObject = def.objNation;
+							}
+						}
+					}
+				]]></script>
+			</object>
+		</object>
+	</objectDef>
+</locust>

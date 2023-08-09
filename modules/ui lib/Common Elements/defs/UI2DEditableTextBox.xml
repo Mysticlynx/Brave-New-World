@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI2DEditableTextBoxNumbers" superType="mlui.UI2DElement">
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="nValue" type="int">
+			if(self.strText=='',0,int(self.strText))
+		</propertyDef>
+		<propertyDef name="bEditing" type="bool" default="false"/>
+		<propertyDef name="nGameValue" type="int"/>
+		
+		<script type="application/javascript"><![CDATA[
+			function submit(value) {
+			}
+			function validKey(value) {
+			}
+			function invalidKey(value) {
+			}
+		]]></script>
+		
+		<!--<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--	<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--		<property name="otEventType" value="mlui.EventMouseButtonDown"/>-->
+		<!--		<script type="application/javascript"><![CDATA[-->
+		<!--			function handle(event, owner)-->
+		<!--			{-->
+		<!--				log("Set Keyboard Focus");-->
+		<!--				mlui.objUI.setKeyboardFocus(def);-->
+		<!--				def.bEditing = true;-->
+		<!--				def.strText = '';-->
+		<!--				def.clearTextBox();-->
+		<!--			}-->
+		<!--		]]></script>-->
+		<!--	</object>			-->
+		<!--</object>-->
+		
+		<object type="mlui.KeyBindList" name="objKeyBindList">
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_ESCAPE"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						mlui.objUI.clearKeyboardFocus()
+						def.bEditing = false;
+					}
+				]]></script>
+			</object>
+			
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_RETURN"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						def.submit(def.nValue);
+						mlui.objUI.clearKeyboardFocus();
+						def.validKey()
+						def.bEditing = false;
+					}
+				]]></script>
+			</object>
+			
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_BACK"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length > 0){
+							def.validKey()
+							def.strText = def.strText.substring(0, def.strText.length-1);
+						}
+						else{
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+			
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_1"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length < 7){
+							def.strText = def.strText + '1'
+							def.validKey()
+						}
+						else{
+							// play sound
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+		
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_2"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length < 7){
+							def.strText = def.strText + '2'
+							def.validKey()
+						}
+						else{
+							// play sound
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_3"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length < 7){
+							def.strText = def.strText + '3'
+							def.validKey()
+						}
+						else{
+							// play sound
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_4"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length < 7){
+							def.strText = def.strText + '4'
+							def.validKey()
+						}
+						else{
+							// play sound
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_5"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length < 7){
+							def.strText = def.strText + '5'
+							def.validKey()
+						}
+						else{
+							// play sound
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_6"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length < 7){
+							def.strText = def.strText + '6'
+							def.validKey()
+						}
+						else{
+							// play sound
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_7"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length < 7){
+							def.strText = def.strText + '7'
+							def.validKey()
+						}
+						else{
+							// play sound
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_8"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length < 7){
+							def.strText = def.strText + '8'
+							def.validKey()
+						}
+						else{
+							// play sound
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_9"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length < 7){
+							def.strText = def.strText + '9'
+							def.validKey()
+						}
+						else{
+							// play sound
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_0"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner) {
+						if(def.strText.length < 7){
+							def.strText = def.strText + '0'
+							def.validKey()
+						}
+						else{
+							// play sound
+							def.invalidKey()
+						}
+					}
+				]]></script>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="haXAlign" value="CENTER"/>		
+			<property name="strText">
+				if(def.bEditing,
+					if(def.strText == '',
+						'',
+						def.nValue.formatNumber(0, true)
+					),
+					def.nGameValue.formatNumber(0, true)
+				)
+			</property>
+		</object>
+		
+		<script type="application/javascript"><![CDATA[
+			function clearTextBox(owner) {
+				self.objText.strText = '';
+			}
+		]]></script>
+		
+	</objectDef>
+	
+</locust>

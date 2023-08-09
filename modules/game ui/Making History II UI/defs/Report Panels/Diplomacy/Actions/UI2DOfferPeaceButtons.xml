@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DOfferPeaceButtons" superType="mlui.UI2DElement">
+		
+		<object type="mlui.UI2DTextButton" name="objDemands">
+			<property name="tmplTextButtonStyle" from="skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,
+			    if(mh2data.otOfferPeaceTab != UI2DOfferPeaceTabDemands,
+					'TxtBtnStyleReportTabButtonSubTab2', 'TxtBtnStyleReportTabButtonSubTab2C'))
+			"/>
+			<property name="strText" from="locale.SID.UI.Demands"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="77"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openOfferPeaceTab(UI2DOfferPeaceTabDemands);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>		
+		
+		<object type="mlui.UI2DTextButton" name="objConcessions">
+			<property name="tmplTextButtonStyle" from="skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,
+			    if(mh2data.otOfferPeaceTab != UI2DOfferPeaceTabConcessions,
+					'TxtBtnStyleReportTabButtonSubTab2', 'TxtBtnStyleReportTabButtonSubTab2C'))
+			"/>
+			<property name="strText" from="locale.SID.UI.Concessions"/>
+			<property name="nX" value="78"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="77"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openOfferPeaceTab(UI2DOfferPeaceTabConcessions);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+</locust>

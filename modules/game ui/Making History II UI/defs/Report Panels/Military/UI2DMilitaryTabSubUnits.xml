@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DMilitaryTabSubUnits" superType="mlui.UI2DElement">
+
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="MilitaryUnitsSort.NAME"/>
+		</object> -->
+    
+		<object type="mlui.UI2DText" name="objNavalUnitsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.NavalSub"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objArmyGroupsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+    
+        <object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="162"/>
+				
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.GroupName"/>
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.TECH"/>
+				<property name="bAsc" value="true"/>
+        <property name="strText" from="locale.SID.UI.Tech"/>
+				<property name="nWidth" value="39"/>
+        <property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.UnitName"/>
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.NAME"/>
+				<property name="bAsc" value="true"/>
+        <property name="nWidth" value="172"/>
+        <property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Location"/>
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.LOCATION"/>
+				<property name="bAsc" value="true"/>
+        <property name="nWidth" value="170"/>
+       <property name="nHeight" value="23"/>
+			</object>
+          
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Orders"/>
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.ORDERS"/>
+				<property name="bAsc" value="true"/>
+        <property name="nWidth" value="34"/>
+        <property name="nHeight" value="23"/>
+			</object>
+          
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.SubmarineGroup"/>
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.GROUP"/>
+				<property name="bAsc" value="true"/>
+        <property name="nWidth" value="172"/>
+        <property name="nHeight" value="23"/>
+			</object>
+          
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Type"/>
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.TYPE"/>
+				<property name="bAsc" value="true"/>
+        <property name="nWidth" value="39"/>
+        <property name="nHeight" value="23"/>
+			</object>
+
+      <object type="UI2DTableHeaderGenericButton" name="objElements">
+        <property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+        <property name="eSortBy" from="MilitaryUnitsSort.NATIONALITY"/>
+        <property name="bAsc" value="false"/>
+        <property name="nWidth" value="32"/>
+        <property name="nHeight" value="23"/>
+        <property name="strToolTip" from="locale.SID.UI.UnitNationality" />
+
+        <object type="mlui.UI2DImage" name="objElement">
+          <property name="tmplImage" value="skin.ImgInfoIconMilitaryMPUsSm"/>
+          <property name="nWidth" value="15"/>
+          <property name="nHeight" value="11"/>
+          <property name="haXAlign" value="CENTER"/>
+          <property name="vaYAlign" value="MIDDLE"/>
+          <property name="nDepth" value="50"/>
+        </object>
+      </object>
+    
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.ATTACK"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="35"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.AttackStrength" />
+				
+				<object type="mlui.UI2DImage" name="objElement">
+          <property name="tmplImage" value="skin.ImgInfoIconOffenseTny"/>
+          <property name="nX" value="-1"/>
+          <property name="nWidth" value="15"/>
+          <property name="nHeight" value="11"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+          
+      <object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.HEALTH"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="39"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.Health" />
+				
+				<object type="mlui.UI2DImage" name="objElement">
+          <property name="tmplImage" value="skin.ImgInfoIconHealthTny"/>
+          <property name="nX" value="0"/>
+          <property name="nWidth" value="15"/>
+          <property name="nHeight" value="11"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+          
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.MORALE"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="35"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.Morale" />
+				
+				<object type="mlui.UI2DImage" name="objElement">
+          <property name="tmplImage" value="skin.ImgInfoIconMoraleTny"/>
+          <property name="nWidth" value="15"/>
+          <property name="nHeight" value="11"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+          
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.EXP"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="35"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.Experience" />
+				
+				<object type="mlui.UI2DImage" name="objElement">
+          <property name="tmplImage" value="skin.ImgInfoIconExperienceTny"/>
+          <property name="nX" value="-1"/>
+          <property name="nWidth" value="15"/>
+          <property name="nHeight" value="11"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+          
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objSubMilitaryUnitsSortTableData"/>
+				<property name="eSortBy" from="MilitaryUnitsSort.UPGRADE"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="32"/>
+				<property name="nHeight" value="23"/>
+				<property name="strToolTip" from="locale.SID.UI.Upgrade" />
+				
+				<object type="mlui.UI2DImage" name="objElement">
+          <property name="tmplImage" value="skin.ImgInfoIconUpgrade"/>
+          <property name="nX" value="-1"/>
+          <property name="nY" value="1"/>
+          <property name="nWidth" value="15"/>
+          <property name="nHeight" value="11"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			
+		</object>
+          
+		<propertyDef name="objRowDatas" type="MilitaryUnitListData" storesChildren="true" variable="true">
+			map(?{unit:
+					<object type="MilitaryUnitListData">
+						<property name="objUnit" from="unit"/>
+					</object>
+				}, filter(?{ unit: unit.objUnitTemplate.tmplUnitSubBranch.resolve().tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Submarine')}, gs_tbg.getNationUnits(mh2data.objAvatar,mh2data.objNation) )
+			)
+		</propertyDef>   
+        
+             <object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" from="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.TECH:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: data.objUnitTemplate.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objUnitTemplate.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.NAME:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: data.objUnit.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objUnit.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.LOCATION:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: data.strLocation}, def.objRowDatas),
+							sortDescending(?{data: data.strLocation}, def.objRowDatas)
+						)					
+                    case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.ORDERS:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: data.strUnitOrder}, def.objRowDatas),
+							sortDescending(?{data: data.strUnitOrder}, def.objRowDatas)
+						)
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.GROUP:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: data.objGroup.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objGroup.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.TYPE:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: String(data.objUnitTemplate.eUnitCategory)}, def.objRowDatas),
+							sortDescending(?{data: String(data.objUnitTemplate.eUnitCategory)}, def.objRowDatas)
+						)
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.NATIONALITY:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: data.objController.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objController.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.ATTACK:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: data.nAttack}, def.objRowDatas),
+							sortDescending(?{data: data.nAttack}, def.objRowDatas)
+						)
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.HEALTH:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: data.nHealthPercent}, def.objRowDatas),
+							sortDescending(?{data: data.nHealthPercent}, def.objRowDatas)
+						)
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.MORALE:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: data.objUnit.nMorale}, def.objRowDatas),
+							sortDescending(?{data: data.objUnit.nMorale}, def.objRowDatas)
+						)
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.EXP:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortAscending(?{data: data.objUnit.nExperience}, def.objRowDatas),
+							sortDescending(?{data: data.objUnit.nExperience}, def.objRowDatas)
+						)
+					case mh2data.objSubMilitaryUnitsSortTableData.eColm == MilitaryUnitsSort.UPGRADE:
+						if(mh2data.objSubMilitaryUnitsSortTableData.bAsc,
+							sortDescending(?{data: data.strUpgrade}, def.objRowDatas),
+							sortAscending(?{data: data.strUpgrade}, def.objRowDatas)
+						)
+				}
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DMilitaryUnitListBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+   
+        
+	</objectDef>
+
+</locust>

@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="ArmyGroupRowData" class="CMLObject">
+		<propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+		
+		<propertyDef name="objLocation" >
+            self.objGroup.refLocation.resolve(mh2data.objAvatar)
+    </propertyDef>
+
+    <propertyDef name="strUnitOrder" type="String" > 
+      if(self.objGroup.objUnitOrder != null, 
+      'a' + self.objGroup.objUnitOrder.eType.name, 
+      'b') 
+    </propertyDef>
+
+  </objectDef>
+	
+	<enumDef name="ArmyGroupSort">
+    <value name="NAME"/>
+    <value name="LOCATION"/>
+    <value name="ORDERS"/>
+		<value name="INFANTRY"/>
+		<value name="ARMORED"/>
+		<value name="ARTILERY"/>
+		<value name="MISSILES"/>
+		<value name="SPEED"/>
+		<value name="ATTACK"/>
+		<value name="DEFATTACK"/>
+		<value name="AIRATTACK"/>
+		<value name="HEALTH"/>
+		<value name="COMMAND"/>
+		<value name="ARMS"/>
+		<value name="OIL"/>
+    </enumDef>
+	
+	<objectDef type="UI2DMilitaryTabArmyGroups" superType="mlui.UI2DElement">
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="ArmyGroupSort.NAME"/>
+		</object> -->
+		
+		<object type="mlui.UI2DImage" name="objArmyGroupsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objArmyGroupsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.ArmyGroups"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.GroupName"/>
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.NAME"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="175"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Location"/>
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.LOCATION"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="168"/>
+				<property name="nHeight" value="23"/>
+			</object>
+
+      <object type="UI2DTableHeaderTextButton" name="objElements">
+        <property name="strText" from="locale.SID.UI.Orders"/>
+        <property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+        <property name="eSortBy" from="ArmyGroupSort.ORDERS"/>
+        <property name="bAsc" value="true"/>
+        <property name="nWidth" value="34"/>
+        <property name="nHeight" value="23"/>
+      </object>
+
+      <object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.INFANTRY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryTabGround"/>
+					<property name="nWidth" value="20"/>
+					<property name="nHeight" value="12"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.ARMORED"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryTabArmor"/>
+					<property name="nWidth" value="28"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.ARTILERY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryTabArtillery"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.MISSILES"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgMilitaryTabMissiles"/>
+					<property name="nWidth" value="26"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.ATTACK"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconOffenseTny"/>
+					<property name="nWidth" value="15"/>
+					<property name="nHeight" value="14"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.DEFATTACK"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconDefenseTny"/>
+					<property name="nWidth" value="17"/>
+					<property name="nHeight" value="15"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.AIRATTACK"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconAirAttackTny"/>
+					<property name="nWidth" value="12"/>
+					<property name="nHeight" value="12"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.HEALTH"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="39"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconHealthTny"/>
+					<property name="nWidth" value="11"/>
+					<property name="nHeight" value="11"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.ARMS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="39"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconArms21x21"/>
+          <property name="nY" value="1"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.OIL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="39"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconFuelSupplyTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objArmyGroupSortTableData"/>
+				<property name="eSortBy" from="ArmyGroupSort.SPEED"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgUnitIconSpeedTny"/>
+          <property name="nY" value="2"/>
+					<property name="nWidth" value="20"/>
+					<property name="nHeight" value="19"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+		</object>
+		
+		<propertyDef name="objRowDatas" type="ArmyGroupRowData" storesChildren="true" variable="true">
+			map(?{group:
+				<object type="ArmyGroupRowData">
+					<property name="objGroup" from="group"/>
+				</object>
+			    }, filter(?{ group: group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')}, gs_tbg.getNationGroups(mh2data.objAvatar,mh2data.objNation) )
+			)
+		</propertyDef>
+   
+    <object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.NAME:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(?{data: data.objGroup.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objGroup.strDisplayName}, def.objRowDatas)  
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.LOCATION:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(?{data: data.objLocation.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objLocation.strDisplayName}, def.objRowDatas)
+						)
+          case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.ORDERS:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(?{data: data.strUnitOrder}, def.objRowDatas),
+							sortDescending(?{data: data.strUnitOrder}, def.objRowDatas)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.INFANTRY:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Infantry).size
+									+ data.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.MobileInfantry).size
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Infantry).size
+									+ data.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.MobileInfantry).size
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.ARMORED:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Armored).size
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Armored).size
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.ARTILERY:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Artillery).size
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Artillery).size
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.MISSILES:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.MissileLaunchers).size
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.MissileLaunchers).size
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.SPEED:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.nSpeed
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.nSpeed
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.ATTACK:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.nLandAttackPower
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.nLandAttackPower
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.DEFATTACK:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.nLandDefensePower
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.nLandDefensePower
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.AIRATTACK:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.nAirPower
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.nAirPower
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.HEALTH:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.nHitPoints 
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.nHitPoints 
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.COMMAND:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.nCommand
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.nCommand
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.ARMS:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.nArms
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.nArms
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objArmyGroupSortTableData.eColm == ArmyGroupSort.OIL:
+						if(mh2data.objArmyGroupSortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.objGroup.nOil
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.objGroup.nOil
+								},
+								def.objRowDatas
+							)
+						)
+				}
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DArmyGroupListBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DArmyGroupListBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="ArmyGroupRowData"/>
+		<propertyDef name="nRow" type="int"/>
+		        
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+
+		<!-- Name -->
+			<object type="UI2DUnitGroupNameBubble" name="objElements">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftSizeToFit"/>
+				<property name="objGroup" from="def.objData.objGroup"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="175"/>
+				<property name="nHeight" value="30"/>
+			</object>
+
+      <!-- Location -->
+			<object type="UI2DRegionNameBubble" name="objElements">
+        <property name="objRegion" from="def.objData.objLocation"/>
+        <property name="bVisible">
+            def.objData.objLocation.instanceOf(gs_tbg.Region)
+        </property>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftSizeToFit"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="183"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="168"/>
+				<property name="nHeight" value="30"/>
+			</object>
+      
+		<!-- Transport -->
+    <object type="UI2DCityNameBubble" name="objElements">
+        <property name="strText" from="def.objData.objLocation.strDisplayName"/>
+        <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12LeftSizeToFit"/>
+        <property name="nRow" from="def.nRow"/>
+				<property name="nX" value="183"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="168"/>
+				<property name="nHeight" value="30"/>
+        <property name="bVisible">
+              !def.objData.objLocation.instanceOf(gs_tbg.Region)
+        </property>
+        <property name="strToolTip" from="locale.SID.UI.Loaded"/>
+      </object>
+
+      <!-- Orders -->
+      <object type="UI2DWorldNationsRowBubbleIcon" name="objElements">
+        <property name="nWidth" value="34"/>
+        <property name="nRow" from="def.nRow"/>
+
+        <object type="UI2DCenteredIcon" name="objOrderIcon" >
+          <property name="tmplImage">
+            if(def.objData.objGroup.objUnitOrder == null,
+            'skin.ImgInfoIconNoOrder', mh2data.getOrderInfo(def.objData.objGroup.objUnitOrder).tmplIcon)
+          </property>
+          <property name="nX" value="0" />
+          <property name="nY" value="0" />
+          <property name="nWidth" value="34" />
+          <property name="nHeight" value="30" />
+          <property name="strToolTip" >
+              switch
+              {
+                  case def.objData.objGroup.objUnitOrder == null: locale.SID.UI.NoOrders
+                  
+                  case def.objData.objGroup.objUnitOrder.type == gs_tbg.UnitOrderMove:
+                     locale.SID.UI.MoveTo + ' ' + mh2data.getOrderText(def.objData.objGroup.objUnitOrder) 
+                     + '  ' + '(' + mh2data.getOrderText2(def.objData.objGroup.objUnitOrder) + ')'
+                     
+                  case def.objData.objGroup.objUnitOrder.type == gs_tbg.UnitOrderRangedAttack:
+                      locale.SID.UI.MissileAttack + ' ' + mh2data.getOrderText(def.objData.objGroup.objUnitOrder)
+                      
+                  case def.objData.objGroup.objUnitOrder.type == gs_tbg.UnitOrderRetreat:
+                      locale.FSID.UI.RetreatTo.format('Region', mh2data.getOrderText(def.objData.objGroup.objUnitOrder)) 
+                     
+                  case def.objData.objGroup.objUnitOrder.type == gs_tbg.UnitOrderBombRegion:
+                      locale.SID.UI.BombRegion + ' ' + mh2data.getOrderText(def.objData.objGroup.objUnitOrder)
+                      
+                  case def.objData.objGroup.objUnitOrder.type == gs_tbg.UnitOrderBombCity:
+                      locale.SID.UI.Bomb + ' ' + mh2data.getOrderText(def.objData.objGroup.objUnitOrder)
+                      
+                  case def.objData.objGroup.objUnitOrder.type == gs_tbg.UnitOrderBombResource:
+                      locale.SID.UI.Bomb + ' ' + mh2data.getOrderText(def.objData.objGroup.objUnitOrder) 
+                      
+                  case def.objData.objGroup.objUnitOrder.type == gs_tbg.UnitOrderDropParatrooper:
+                       locale.FSID.UI.DropParatrooper.format('Region', mh2data.getOrderText(def.objData.objGroup.objUnitOrder))
+                       
+                  case def.objData.objGroup.objUnitOrder.type == gs_tbg.UnitOrderDropAtomicBomb:
+                     locale.FSID.UI.DropAtomicBomb.format('City', mh2data.getOrderText(def.objData.objGroup.objUnitOrder))
+                     
+                  default:
+                      locale.FSID.UI.RebaseGroup.format('Destination', mh2data.getOrderText(def.objData.objGroup.objUnitOrder)) 
+              }
+          </property>
+        </object>
+      </object>
+		
+		<!-- Infantry -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="(def.objData.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Infantry).size)
+					+ (def.objData.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.MobileInfantry).size)"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="428"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="30"/>
+			</object>
+			
+		<!-- Armor -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="def.objData.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Armored).size"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="461"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="30"/>
+			</object>
+			
+		<!-- Artillery -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="def.objData.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Artillery).size"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="494"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="30"/>
+			</object>
+		
+		<!-- Missiles -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="def.objData.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.MissileLaunchers).size"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="527"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="44"/>
+				<property name="nHeight" value="30"/>
+			</object>
+		
+		<!-- Offense -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="def.objData.objGroup.nLandAttackPower / 10"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="593"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="30"/>
+			</object>
+	
+		<!-- Defence -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="def.objData.objGroup.nLandDefensePower / 10"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="630"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="30"/>
+			</object>
+			
+		<!-- Defence -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="def.objData.objGroup.nAirPower / 10"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="630"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="30"/>
+			</object>
+		
+		<!-- Health -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+        <property name="strText" from="(def.objData.objGroup.nHitPoints * 100) / (def.objData.objGroup.nMaxHitPoints) + '%'"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="667"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="39"/>
+				<property name="nHeight" value="30"/>
+        <property name="strToolTip" from="def.objData.objGroup.nHitPoints + '/' + def.objData.objGroup.nMaxHitPoints"/>
+			</object>
+	
+		<!-- Supply -->
+			<!-- Arms -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="(def.objData.objGroup.nArms * 100) / (def.objData.objGroup.nArms) + '%'"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="755"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="39"/>
+				<property name="nHeight" value="30"/>
+        <property name="strToolTip" from="def.objData.objGroup.nArms + '/' + def.objData.objGroup.nArmsCarry"/>
+			</object>
+      
+			<!-- Oil -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+        <property name="strText">
+          if(def.objData.objGroup.nOilCarry == 0, '',(def.objData.objGroup.nOil * 100) / (def.objData.objGroup.nOilCarry) + '%')
+        </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="806"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="39"/>
+				<property name="nHeight" value="30"/>
+        <property name="strToolTip">
+          if(def.objData.objGroup.nOilCarry == 0, locale.SID.UI.NoFuelUse,(def.objData.objGroup.nOil + '/' + def.objData.objGroup.nOilCarry))
+        </property>
+			</object>
+		
+		<!-- Speed -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="def.objData.objGroup.nSpeed"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="559"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="30"/>
+			</object>
+		</object>
+	</objectDef>
+</locust>

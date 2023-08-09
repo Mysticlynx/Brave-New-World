@@ -1,0 +1,705 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <string id="SID.BFW.Army.DisplayName.AfghanistanArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.AlbaniaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ArgentinaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.AustraliaArmy1" value="1-й военный округ"/>
+    <string id="SID.BFW.Army.DisplayName.AustriaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.AustriaArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.BelgiumArmy1" value="Брюссельская армия"/>
+    <string id="SID.BFW.Army.DisplayName.BelgiumArmy2" value="Льежская армия"/>
+    <string id="SID.BFW.Army.DisplayName.BelgiumArmy3" value="1-я колониальная армия"/>
+    <string id="SID.BFW.Army.DisplayName.BoliviaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.BrazilArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.BrazilArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.BrazilArmy3" value="3-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.BrazilArmy4" value="4-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.BulgariaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.CanadaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChileArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy3" value="3-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy4" value="4-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy5" value="5-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy6" value="6-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy7" value="7-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy8" value="8-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy9" value="9-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy10" value="10-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy11" value="11-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy12" value="12-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy13" value="13-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy14" value="14-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy15" value="15-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy16" value="16-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy17" value="17-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy18" value="18-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy19" value="19-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy20" value="20-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy21" value="21-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy22" value="22-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ChinaArmy23" value="23-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.TibetArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ColombiaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.CommunistChinaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.CommunistChinaArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.CubaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.CzechoslovakiaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.CzechoslovakiaArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.CzechoslovakiaArmy3" value="3-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.CzechoslovakiaArmy4" value="4-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.CzechoslovakiaArmy5" value="Резервная армия"/>
+    <string id="SID.BFW.Army.DisplayName.DenmarkArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.EcuadorArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.EstoniaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.EgyptArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.FinlandArmy1" value="Армия Хельсинки"/>
+    <string id="SID.BFW.Army.DisplayName.FinlandArmy2" value="Армия перешейка"/>
+    <string id="SID.BFW.Army.DisplayName.FinlandArmy3" value="Группа &quot;Северная Финляндия&quot;"/>
+    <string id="SID.BFW.Army.DisplayName.FinlandArmy4" value="Группа &quot;Лапландия&quot;"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy3" value="3-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy4" value="4-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy5" value="5-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy6" value="6-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy7" value="Иностранный легион"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy8" value="7-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy9" value="8-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy10" value="1-я колониальная армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy19" value="2-я колониальная армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy11" value="3-я колониальная армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy21" value="1-я алжирская армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy17" value="1-я марокканская армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy12" value="4-я колониальная армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy13" value="5-я колониальная армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy14" value="6-я колониальная армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy18" value="1-я камбоджийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy15" value="7-я колониальная армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy20" value="1-я левантийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.FranceArmy16" value="1-я африканская армия"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy1" value="1-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy2" value="2-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy3" value="3-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy4" value="4-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy5" value="5-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy6" value="6-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy7" value="7-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy8" value="8-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy9" value="9-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy10" value="10-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy11" value="11-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy12" value="12-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GermanyArmy13" value="13-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.GreeceArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.GuatemalaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.HungaryArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.IraqArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.IrelandArmy1" value="Восточное командование"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy1" value="1-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy2" value="2-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy3" value="3-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy4" value="4-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy5" value="5-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy6" value="6-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy7" value="7-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy8" value="8-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy9" value="9-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy10" value="10-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy11" value="11-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy12" value="12-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy13" value="13-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy14" value="14-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy15" value="15-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy16" value="16-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy17" value="17-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy18" value="18-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy19" value="19-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.ItalyArmy20" value="20-й корпус"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy3" value="3-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy4" value="4-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy5" value="5-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy6" value="6-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy7" value="7-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy8" value="8-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy9" value="9-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy10" value="Корейская армия"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy11" value="Гарнизон Порт-Артура"/>
+    <string id="SID.BFW.Army.DisplayName.JapanArmy12" value="10-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.KuwaitArmy1" value="Гвардия эмира"/>
+    <string id="SID.BFW.Army.DisplayName.LatviaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.LithuaniaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ManchuriaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ManchuriaArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.ManchuriaArmy3" value="3-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.MexicoArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.NepalArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.NetherlandsArmy1" value="Армия 'Арнем'"/>
+    <string id="SID.BFW.Army.DisplayName.NetherlandsArmy2" value="Армия 'Амерсфорт'"/>
+    <string id="SID.BFW.Army.DisplayName.NetherlandsArmy3" value="1-я колониальная армия"/>
+    <string id="SID.BFW.Army.DisplayName.NetherlandsArmy4" value="1-я индонезийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.NewZealandArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.NorwayArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.PersiaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.PeruArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.PolandArmy1" value="Брестская армия"/>
+    <string id="SID.BFW.Army.DisplayName.PolandArmy2" value="Краковская армия"/>
+    <string id="SID.BFW.Army.DisplayName.PolandArmy3" value="Познаньская армия"/>
+    <string id="SID.BFW.Army.DisplayName.PolandArmy4" value="Варшавская армия"/>
+    <string id="SID.BFW.Army.DisplayName.PortugalArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.QatarArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.RomaniaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.RomaniaArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.RomaniaArmy3" value="3-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.RomaniaArmy4" value="4-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.SaudiArabiaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.SaudiArabiaArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.SiamArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.RepublicanSpainArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.RepublicanSpainArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.NationalistSpainArmy3" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.NationalistSpainArmy4" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.NationalistSpainArmy5" value="1-я марокканская армия"/>
+    <string id="SID.BFW.Army.DisplayName.SwedenArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.SwitzerlandArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.SwitzerlandArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.TurkeyArmy1" value="Стамбульская армия"/>
+    <string id="SID.BFW.Army.DisplayName.TurkeyArmy2" value="Баликесирская армия"/>
+    <string id="SID.BFW.Army.DisplayName.TurkeyArmy3" value="Эрзурумская армия"/>
+    <string id="SID.BFW.Army.DisplayName.TurkeyArmy4" value="Курдская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy1" value="1-я индийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy2" value="2-я индийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy3" value="3-я индийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy4" value="4-я индийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy5" value="5-я индийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy6" value="6-я индийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy7" value="7-я индийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy8" value="8-я индийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy9" value="Китайское командование"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy10" value="Восточное командование"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy11" value="Египетская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy12" value="Лондонский округ"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy13" value="Гарнизон Мальты"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy14" value="Северное командование"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy15" value="Шотландское командование"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy16" value="Южное командование"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy17" value="Западное командование"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy18" value="Гибралтарская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy19" value="Кипрская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy20" value="Палестинская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy21" value="Армия Гамбии"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy22" value="Армия Сьерра-Леоне"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy23" value="Армия Золотого Берега"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy24" value="Нигерийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy25" value="1-я африканская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy26" value="2-я африканская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy27" value="3-я африканская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy28" value="4-я африканская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy29" value="5-я африканская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy30" value="6-я африканская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy31" value="Суданская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy32" value="Сомалийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy33" value="Саудовская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy34" value="Иракская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy35" value="Маврикийская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy36" value="Бирманская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy37" value="Малайское командование"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy38" value="Саравакское командорвание"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy39" value="Армия Папау"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedKingdomArmy40" value="Армия Соломоновых островов"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedStatesArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedStatesArmy2" value="2-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedStatesArmy3" value="3-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedStatesArmy4" value="Войска Панамского канала"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedStatesArmy5" value="1-я филиппинская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UnitedStatesArmy6" value="2-я филиппинская армия"/>
+    <string id="SID.BFW.Army.DisplayName.UruguayArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy1" value="1-я Краснознаменная армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy19" value="18-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy2" value="2-я Краснознаменная армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy3" value="3-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy4" value="4-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy5" value="5-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy6" value="6-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy20" value="19-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy7" value="7-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy8" value="8-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy9" value="9-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy10" value="10-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy11" value="11-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy12" value="12-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy13" value="13-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy14" value="14-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy15" value="15-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy17" value="16-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.USSRArmy18" value="17-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.YemenArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.VenezuelaArmy1" value="1-я армия"/>
+    <string id="SID.BFW.Army.DisplayName.YugoslaviaArmy1" value="1-я территориальная армия"/>
+    <string id="SID.BFW.Army.DisplayName.YugoslaviaArmy2" value="2-я территориальная армия"/>
+
+    <string id="SID.BFW.Air.DisplayName.BelgiumAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.BrazilAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.BrazilAir2" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.CanadaAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.ChileAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.ChinaAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.ChinaAir2" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.ColombiaAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.CzechoslovakiaAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.CzechoslovakiaAir2" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.CzechoslovakiaAir3" value="3-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.DenmarkAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.EstoniaAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.EstoniaAir2" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.FranceAir1" value="1-я африканская группа"/>
+    <string id="SID.BFW.Air.DisplayName.FranceAir2" value="21-я истребительная группа"/>
+    <string id="SID.BFW.Air.DisplayName.FranceAir3" value="22-я истребительная группа"/>
+    <string id="SID.BFW.Air.DisplayName.FranceAir4" value="24-я истребительная группа"/>
+    <string id="SID.BFW.Air.DisplayName.FranceAir5" value="25-я истребительная группа"/>
+    <string id="SID.BFW.Air.DisplayName.FranceAir6" value="1-я бомбардировочная группа"/>
+    <string id="SID.BFW.Air.DisplayName.FranceAir7" value="2-я бомбардировочная группа"/>
+    <string id="SID.BFW.Air.DisplayName.FranceAir8" value="1-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.GermanyAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.GermanyAir2" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.GermanyAir3" value="3-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.GermanyAir4" value="4-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.GermanyAir5" value="5-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.GermanyAir6" value="6-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.GermanyAir7" value="7-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.GreeceAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.ItalyAir1" value="1-е авиакомандование"/>
+    <string id="SID.BFW.Air.DisplayName.ItalyAir2" value="2-е авиакомандование"/>
+    <string id="SID.BFW.Air.DisplayName.ItalyAir3" value="Авиакрыло 'Орел'"/>
+    <string id="SID.BFW.Air.DisplayName.ItalyAir4" value="3-е авиакомандование"/>
+    <string id="SID.BFW.Air.DisplayName.JapanAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.JapanAir2" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.JapanAir3" value="3-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.JapanAir4" value="4-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.JapanAir5" value="5-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.JapanAir6" value="6-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.JapanAir7" value="1-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.JapanAir8" value="2-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.JapanAir9" value="3-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.LatviaAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.LithuaniaAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.MexicoAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.NetherlandsAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.NewZealandAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.NorwayAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.PersiaAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.PolandAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.PortugalAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.RomaniaAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.RomaniaAir2" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.RomaniaAir3" value="3-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.RomaniaAir4" value="4-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.SiamAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.RepublicanSpainAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.NationalistSpainAir1" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.SwedenAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.SwitzerlandAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.TurkeyAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.TurkeyAir2" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir2" value="1-я индийская воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir3" value="1-я истребительная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir4" value="2-я истребительная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir5" value="3-я истребительная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir6" value="4-я истребительная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir7" value="Королевская иракская авиагруппа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir8" value="1-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir9" value="2-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir10" value="3-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedKingdomAir11" value="4-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedStatesAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedStatesAir2" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedStatesAir3" value="3-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedStatesAir5" value="4-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedStatesAir7" value="Филиппинская авиагруппа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedStatesAir8" value="1-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedStatesAir9" value="2-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedStatesAir10" value="3-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.UnitedStatesAir11" value="4-я авианосная группа"/>
+    <string id="SID.BFW.Air.DisplayName.USSRAir1" value="1-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.USSRAir2" value="2-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.USSRAir3" value="3-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.USSRAir4" value="4-я воздушная армия"/>
+    <string id="SID.BFW.Air.DisplayName.YugoslaviaAir1" value="1-я авиагруппа"/>
+    <string id="SID.BFW.Air.DisplayName.YugoslaviaAir2" value="2-я авиагруппа"/>
+
+    <string id="SID.BFW.Fleet.DisplayName.ArgentinaFleet1" value="Аргентинский флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.ArgentinaFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.AustraliaFleet1" value="Австралийский флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.BrazilFleet1" value="Бразильский флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.BrazilFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.CanadaFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.ChileFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.ChileFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.ChinaFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.ColombiaFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.CubaFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.DenmarkFleet1" value="Датский флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.DenmarkFleet2" value="Подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.EcuadorFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.EstoniaFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.FinlandFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.FinlandFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.FranceFleet1" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.FranceFleet2" value="Северо-атлантическая эскадра"/>
+    <string id="SID.BFW.Fleet.DisplayName.FranceFleet3" value="Марокканская эскадра"/>
+    <string id="SID.BFW.Fleet.DisplayName.FranceFleet4" value="Средиземноморская эскадра"/>
+    <string id="SID.BFW.Fleet.DisplayName.FranceFleet5" value="Ближневосточная эскадра"/>
+    <string id="SID.BFW.Fleet.DisplayName.GermanyFleet1" value="Флот Открытого моря"/>
+    <string id="SID.BFW.Fleet.DisplayName.GermanyFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.GreeceFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.GreeceFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.GreeceFleet3" value="Транспортный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.ItalyFleet1" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.ItalyFleet2" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet3" value="2-е авианосное соединение"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet4" value="2-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet5" value="2-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet6" value="3-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet8" value="1-й резервный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet9" value="2-й резервный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet10" value="Охранное соединение Йокосука"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet11" value="Дивизион подлодок Йокосука"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet12" value="Охранное соединение Куре"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet13" value="Дивизион подлодок Куре"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet14" value="Охранное соединение Сасебо"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet15" value="Дивизион подлодок Сасебо"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet16" value="1-й транспортный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.JapanFleet17" value="2-й транспортный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.NetherlandsFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.NetherlandsFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.NewZealandFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.NorwayFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.NorwayFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.PeruFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.PolandFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.PortugalFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.RomaniaFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.SiamFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.NationalistSpainFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.NationalistSpainFleet2" value="2-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.RepublicanSpainFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.SwedenFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.SwedenFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.TurkeyFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.TurkeyFleet2" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedKingdomFleet1" value="Североморский флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedKingdomFleet2" value="Африканская эскадра"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedKingdomFleet3" value="Китайская эскадра"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedKingdomFleet4" value="Средиземноморский флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedKingdomFleet5" value="Флот метрополии"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedKingdomFleet6" value="Западно-индийская эскадра"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedKingdomFleet7" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedKingdomFleet8" value="5-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedStatesFleet1" value="1-я атлантическая эскадра"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedStatesFleet3" value="3-е боевое соединение"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedStatesFleet9" value="2-я тихоокеанская эскадра"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedStatesFleet10" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedStatesFleet12" value="3-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.UnitedStatesFleet15" value="6-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.USSRFleet1" value="Балтийский флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.USSRFleet2" value="Черноморский флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.USSRFleet4" value="Тихоокеанский флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.USSRFleet5" value="1-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.USSRFleet6" value="2-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.USSRFleet7" value="3-й подводный флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.VenezuelaFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.YugoslaviaFleet1" value="1-й флот"/>
+    <string id="SID.BFW.Fleet.DisplayName.YugoslaviaFleet2" value="1-й подводный флот"/>
+
+
+
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip5" value="Ла Аргентина"/>
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip6" value="Бернардино Ривадавия"/>
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip7" value="Мариано Морено"/>
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip8" value="Пуэйрредон"/>
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip9" value="Бельграно"/>
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip10" value="Веинтисинко де Майо"/>
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip11" value="Альмиранте Браун"/>
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip12" value="Ла Либертад"/>
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip13" value="Индепенденсия"/>
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip14" value="Морено"/>
+    <string id="SID.BFW.Ship.DisplayName.ArgentinaShip15" value="Ривадавия"/>
+    <string id="SID.BFW.Ship.DisplayName.AustraliaShip2" value="Сидней"/>
+    <string id="SID.BFW.Ship.DisplayName.AustraliaShip3" value="Перт"/>
+    <string id="SID.BFW.Ship.DisplayName.AustraliaShip4" value="Хобарт"/>
+    <string id="SID.BFW.Ship.DisplayName.AustraliaShip5" value="Аделаида"/>
+    <string id="SID.BFW.Ship.DisplayName.AustraliaShip6" value="Австралия"/>
+    <string id="SID.BFW.Ship.DisplayName.AustraliaShip7" value="Канберра"/>
+    <string id="SID.BFW.Ship.DisplayName.BrazilShip2" value="Риу-Гранди-ду-Сул"/>
+    <string id="SID.BFW.Ship.DisplayName.BrazilShip3" value="Байя"/>
+    <string id="SID.BFW.Ship.DisplayName.BrazilShip4" value="Минас-Жерайс"/>
+    <string id="SID.BFW.Ship.DisplayName.BrazilShip5" value="Сан-Паулу"/>
+    <string id="SID.BFW.Ship.DisplayName.ChileShip2" value="Чакабуко"/>
+    <string id="SID.BFW.Ship.DisplayName.ChileShip3" value="Альмиранте Латорре"/>
+    <string id="SID.BFW.Ship.DisplayName.ChinaShip4" value="Гуандун"/>
+    <string id="SID.BFW.Ship.DisplayName.ChinaShip5" value="Гуанси"/>
+    <string id="SID.BFW.Ship.DisplayName.ChinaShip6" value="Хайнань"/>
+    <string id="SID.BFW.Ship.DisplayName.ChinaShip7" value="Хэбэй"/>
+    <string id="SID.BFW.Ship.DisplayName.ChinaShip8" value="Шаньси"/>
+    <string id="SID.BFW.Ship.DisplayName.DenmarkShip1" value="Педер Скрам"/>
+    <string id="SID.BFW.Ship.DisplayName.DenmarkShip2" value="Нильс Юль"/>
+    <string id="SID.BFW.Ship.DisplayName.FinlandShip1" value="Ильмаринен"/>
+    <string id="SID.BFW.Ship.DisplayName.FinlandShip2" value="Вяйнямейнен"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip7" value="Тионвиль"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip8" value="Жанна д'Арк"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip9" value="Эмиль Бертен"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip10" value="Жан Бар"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip12" value="Ля Гализоньер"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip13" value="Турвиль"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip14" value="Саффрен"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip15" value="Дюкень"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip18" value="Плуто"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip19" value="Дюпле"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip20" value="Кольбер"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip21" value="Алжери"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip22" value="Фош"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip23" value="Пари"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip24" value="Вольтер"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip25" value="Курбе"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip26" value="Бретань"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip27" value="Лоррейн"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip28" value="Прованс"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip29" value="Беарн"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip31" value="Ламотт-Пике"/>
+    <string id="SID.BFW.Ship.DisplayName.FranceShip32" value="Примоге"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip4" value="Нюрнберг"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip5" value="Лейпциг"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip6" value="Кёнигсберг"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip7" value="Кёльн"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip8" value="Карлсруэ"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip9" value="Эмден"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip10" value="Аркона"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip11" value="Дойчланд"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip12" value="Адмирал Шеер"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip13" value="Адмирал граф Шпее"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip14" value="Шлезвиг-Гольштейн"/>
+    <string id="SID.BFW.Ship.DisplayName.GermanyShip15" value="Шлезиен"/>
+    <string id="SID.BFW.Ship.DisplayName.GreeceShip4" value="Георгиос Аверов"/>
+    <string id="SID.BFW.Ship.DisplayName.GreeceShip5" value="Эллис"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip7" value="Таранто"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip8" value="Раймондо Монтекукколи"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip9" value="Луиджи Кадорна"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip10" value="Банде Нере"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip11" value="Эуженио ди Савойя"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip12" value="Дука д'Аоста"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip13" value="Бартоломео Коллеони"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip14" value="Муцио Аттендоло"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip15" value="Бари"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip16" value="Армандо Диаз"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip17" value="Альберто ди Джуссано"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip18" value="Альберико де Барбиано"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip19" value="Зара"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip20" value="Триесте"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip21" value="Тренто"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip22" value="Сан-Джорджио"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip23" value="Пола"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip24" value="Гориция"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip25" value="Фиуме"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip26" value="Больцано"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip27" value="Джулио Чезаре"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip28" value="Дуилио"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip29" value="Конти ди Кавур"/>
+    <string id="SID.BFW.Ship.DisplayName.ItalyShip30" value="Андреа Дория"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip5" value="Тацута"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip6" value="Ои"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip7" value="Тама"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip8" value="Кума"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip9" value="Хюга"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip10" value="Муцу"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip11" value="Нагато"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip15" value="Хосё"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip16" value="Рюхо"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip21" value="Юра"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip22" value="Аоба"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip23" value="Ториуми"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip24" value="Такао"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip25" value="Атаго"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip26" value="Майя"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip27" value="Кинугаса"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip28" value="Фурутака"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip38" value="Токива"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip39" value="Цусима"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip40" value="Тэнрю"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip41" value="Хирадо"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip42" value="Акаги"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip43" value="Якумо"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip44" value="Нака"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip45" value="Исе"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip47" value="Дзуйкаку"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip51" value="Китаками"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip52" value="Хией"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip53" value="Ямасиро"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip60" value="Абукума"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip61" value="Натори"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip62" value="Кисо"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip63" value="Нати"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip64" value="Миоко"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip65" value="Могами"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip66" value="Како"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip72" value="Нагара"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip73" value="Юбари"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip74" value="Конго"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip75" value="Хагуро"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip76" value="Асигара"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip77" value="Микума"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip78" value="Чокай"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip79" value="Кага"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip83" value="Сёкаку"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip84" value="Тайхо"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip85" value="Унрю"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip86" value="Дзинцу"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip89" value="Фусо"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip90" value="Исудзу"/>
+    <string id="SID.BFW.Ship.DisplayName.JapanShip91" value="Кину"/>
+    <string id="SID.BFW.Ship.DisplayName.NetherlandsShip3" value="Ява"/>
+    <string id="SID.BFW.Ship.DisplayName.NetherlandsShip4" value="Гельдерланд"/>
+    <string id="SID.BFW.Ship.DisplayName.NetherlandsShip5" value="Де Рейтер"/>
+    <string id="SID.BFW.Ship.DisplayName.NewZealandShip2" value="Ахиллес"/>
+    <string id="SID.BFW.Ship.DisplayName.PortugalShip2" value="Карвалью Араужу"/>
+    <string id="SID.BFW.Ship.DisplayName.PortugalShip3" value="Република"/>
+    <string id="SID.BFW.Ship.DisplayName.NationalistSpainShip2" value="Альмиранте Сервера"/>
+    <string id="SID.BFW.Ship.DisplayName.RepublicanSpainShip2" value="Принсипе Альфонсо"/>
+    <string id="SID.BFW.Ship.DisplayName.RepublicanSpainShip3" value="Мигель де Сервантес"/>
+    <string id="SID.BFW.Ship.DisplayName.SwedenShip4" value="Клас Флеминг"/>
+    <string id="SID.BFW.Ship.DisplayName.SwedenShip5" value="Фильгия"/>
+    <string id="SID.BFW.Ship.DisplayName.SwedenShip6" value="Готланд"/>
+    <string id="SID.BFW.Ship.DisplayName.TurkeyShip3" value="Салих Рейс"/>
+    <string id="SID.BFW.Ship.DisplayName.TurkeyShip4" value="Искандерун"/>
+    <string id="SID.BFW.Ship.DisplayName.TurkeyShip5" value="Меджидие"/>
+    <string id="SID.BFW.Ship.DisplayName.TurkeyShip6" value="Хамидие"/>
+    <string id="SID.BFW.Ship.DisplayName.TurkeyShip7" value="Явуз"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip1" value="Фьюриес"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip2" value="Вэлиент"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip3" value="Нельсон"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip4" value="Калипсо"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip5" value="Дели"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip6" value="Данедин"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip8" value="Дорсетшир"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip9" value="Даная"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip10" value="Эмералд"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip11" value="Энтерпрайз"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip14" value="Норфолк"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip15" value="Бервик"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip16" value="Камберленд"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip17" value="Эффингем"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip18" value="Кент"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip19" value="Суффолк"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip20" value="Хокинс"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip21" value="Кейптаун"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip22" value="Кардифф"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip23" value="Диомед"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip26" value="Глориес"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip27" value="Игл"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip28" value="Куин Элизабет"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip29" value="Малайя"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip30" value="Ривендж"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip31" value="Уорспайт"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip32" value="Рипалс"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip33" value="Худ"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip34" value="Шропшир"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip35" value="Суссекс"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip36" value="Йорк"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip37" value="Африди"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip38" value="Калькутта"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip39" value="Церес"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip40" value="Девоншир"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip41" value="Дурбан"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip42" value="Эксетер"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip47" value="Виндиктив"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip48" value="Рэмиллес"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip49" value="Резолюшн"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip50" value="Родни"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip51" value="Ройял Оук"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip52" value="Ройял Соверейн"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip53" value="Ринаун"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip54" value="Лондон"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip55" value="Фробишер"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip56" value="Каир"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip57" value="Каледон"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip58" value="Карлайл"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip59" value="Коломбо"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip60" value="Ковентри"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip61" value="Куракоа"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip62" value="Карли"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip63" value="Орион"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip66" value="Аякс"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip67" value="Карадок"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip68" value="Донтлес"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip69" value="Деспатч"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedKingdomShip70" value="Нептун"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip1" value="Куинси"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip3" value="Лексингтон"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip4" value="Лэнгли"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip5" value="Аризона"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip6" value="Мэриленд"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip7" value="Нью-Йорк"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip8" value="Западная Вирджиния"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip9" value="Новый Орлеан"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip10" value="Тускалуза"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip11" value="Пенсакола"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip12" value="Честер"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip13" value="Луисвилль"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip14" value="Чикаго"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip15" value="Хьюстон"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip16" value="Огаста"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip17" value="Портлэнд"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip18" value="Индианаполис"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip19" value="Нью-Джерси"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip20" value="Астория"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip21" value="Миннеаполис"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip22" value="Сан-Диего"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip23" value="Винсеннес"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip29" value="Рейнджер"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip30" value="Саратога"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip31" value="Калифорния"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip32" value="Миссисипи"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip33" value="Невада"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip34" value="Нью-Мексико"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip35" value="Оклахома"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip36" value="Пенсильвания"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip37" value="Теннесси"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip38" value="Техас"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip39" value="Юта"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip40" value="Северная Дакота"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip41" value="Южная Дакота"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip42" value="Нортхэмптон"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip43" value="Сан-Франциско"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip44" value="Омаха"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip45" value="Милуоки"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip46" value="Цинциннати"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip47" value="Роли"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip48" value="Детройт"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip49" value="Ричмонд"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip50" value="Конкорд"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip51" value="Трентон"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip52" value="Марблхед"/>
+    <string id="SID.BFW.Ship.DisplayName.UnitedStatesShip53" value="Мемфис"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip2" value="Киров"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip3" value="Ворошилов"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip4" value="Максим Горький"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip5" value="Красный Крым"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip6" value="Октябрьская революция"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip7" value="Марат"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip9" value="Советский Союз"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip10" value="Советская Украина"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip11" value="Советская Белоруссия"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip12" value="Червона Украина"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip13" value="Красный Кавказ"/>
+    <string id="SID.BFW.Ship.DisplayName.USSRShip14" value="Парижская Коммуна"/>
+    <string id="SID.BFW.Ship.DisplayName.YugoslaviaShip2" value="Дубровник"/>
+
+    <string id="SID.BFW.Season.DisplayName.Blizzards" value="Снежная буря"/>
+
+</locust>

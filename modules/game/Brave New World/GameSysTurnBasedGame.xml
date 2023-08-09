@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<object type="gs_tbg.GameSysTurnBasedGame" name="objGameSysTurnBasedGame">
+        <property name="strScenarioAbbr" value="TGQ"/>
+        <object type="gs_tbg.TurnBasedGame" name="objTurnBasedGame">
+            <property name="dateCurrentDate" value="1/20/1933"/>
+        </object>
+	</object>
+</locust>

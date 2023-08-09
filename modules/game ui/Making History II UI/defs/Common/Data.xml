@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<!--<objectDef type="AllianceData" class="CMLObject">-->
+	<!--	<propertyDef name="objAllianceCities" type="gs_tbg.City" variable="true"/>-->
+	<!--	<propertyDef name="objAllianceWars" type="gs_tbg.War" variable="true"/>-->
+	<!--	<propertyDef name="objAllianceResources" type="gs_tbg.NationResource" variable="true"/>-->
+	<!--</objectDef>-->
+
+	<objectDef type="WorkOrderListData" class="CMLObject">
+		<propertyDef name="objFactoryOutputs" type="gs_tbg.FactoryOutputTemplate" variable="true"/>
+	</objectDef>
+
+	<objectDef type="RegionOrderListData" class="CMLObject">
+		<propertyDef name="objRegionOutputs" type="gs_tbg.RegionOutputTemplate" variable="true"/>
+	</objectDef>
+	
+	<objectDef type="ResearchProjectListData" class="CMLObject">
+		<propertyDef name="objResearchProjects" type="gs_tbg.ResearchTopicTemplate" variable="true"/>
+		<propertyDef name="objResearchProjectsBlocked" type="gs_tbg.ResearchTopicTemplate" variable="true"/>
+	</objectDef>
+	
+	<!-- Order Info -->
+	<objectDef type="OrderInfoData" class="CMLObject">
+		<propertyDef name="otOrder" type="ObjectType"/>
+		<propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+	</objectDef>
+	
+	<objectDef type="ChosenObjectData" class="CMLObject">
+		<propertyDef name="objChosenObject" type="Object"/>
+		
+		<propertyDef name="bChosen" type="bool" default="false"/>
+		
+		<script type="application/javascript"><![CDATA[
+			function toggleChosen()
+			{
+				self.bChosen = !self.bChosen;
+			}
+		]]></script>
+	</objectDef>
+	
+	<objectDef type="CityListData" class="CMLObject">
+		<propertyDef name="objItems" type="gs_tbg.City" variable="true"/>
+		<property name="objItems">
+				if(mh2data.objMapData.objSelectedObject.instanceOf(gs_tbg.City),
+				gs_tbg.getNationCities(mh2data.objAvatar,
+					mh2data.objMapData.objSelectedObject.refRegion.resolve(mh2data.objAvatar).refController.resolve(mh2data.objAvatar)), null)
+		</property>
+	</objectDef>
+	
+	<objectDef type="RegionListData" class="CMLObject">
+		<propertyDef name="objItems" type="gs_tbg.Region" variable="true"/>
+		<property name="objItems">
+				if(mh2data.objMapData.objSelectedObject.instanceOf(gs_tbg.Region),
+				gs_tbg.getControlledRegions(mh2data.objAvatar,
+					mh2data.objMapData.objSelectedObject.refController.resolve(mh2data.objAvatar)), null)
+		</property>
+	</objectDef>	
+	
+	<objectDef type="NationListData" class="CMLObject">
+		<propertyDef name="objItems" type="gs_tbg.Nation" variable="true"/>
+		<property name="objItems">
+			filter(?{nation: nation != mh2data.objNation}, mh2data.getAllNations())
+		</property>
+	</objectDef>
+	
+	<objectDef type="ListNavigator" class="CMLObject">
+		<propertyDef name="objList" type="Object"/>
+		
+		<script type="application/javascript"><![CDATA[
+			function openNext()
+			{
+				var cur = mh2data.objMapData.objSelectedObject;
+				var curIndex = self.objList.objItems.indexOf(cur);
+				
+				if(curIndex < 0)
+				{
+					log("ERROR: curIndex set below zero");
+					return;
+				}
+				
+				var nextIndex = curIndex + 1;
+				var length = self.objList.objItems.length;
+				
+				if(nextIndex >= length)
+				{
+					nextIndex = 0;
+				}
+				
+				while(self.objList.objItems[nextIndex] == null)
+				{
+					nextIndex++;
+
+					if(nextIndex >= length)
+					{
+						nextIndex = 0;
+					}
+				}
+				
+				var next = self.objList.objItems[nextIndex];
+				
+				mh2data.setSelectedObject(next);
+			}
+			
+			function openPrev()
+			{
+				var cur = mh2data.objMapData.objSelectedObject;
+				var curIndex = self.objList.objItems.indexOf(cur);
+				var length = self.objList.objItems.length;
+				
+				if(curIndex > length)
+				{
+					log("ERROR: curIndex set above length");
+					return;
+				}
+				
+				var prevIndex = curIndex - 1;
+				
+				if(prevIndex < 0)
+				{
+					prevIndex = length - 1;
+				}
+				
+				while(self.objList.objItems[prevIndex] == null)
+				{
+					prevIndex--;
+
+					if(prevIndex < 0)
+					{
+						prevIndex = length - 1;
+					}
+				}
+				
+				var prev = self.objList.objItems[prevIndex];
+				
+				mh2data.setSelectedObject(prev);
+			}			
+		]]></script>
+	</objectDef>
+</locust>

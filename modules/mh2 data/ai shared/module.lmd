@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="mh2 data"
+	name="ai shared"
+	version="1.0"
+	locustVersion="2.11"
+>
+	<import module="mlcore" default="true"/>
+	<import module="lib:mlgame" as="mlgame"/>
+	<import module="script:javascript" as="mljs"/>
+	<import module="lib:mh2 common" as="mh2_common"/>
+	<import module="lib:Making History AI" as="makinghistory_ai"/>
+	<import module="game system:turn based game" as="gs_tbg"/>
+	<import module="mh2 data:shared" as="sd"/>
+
+	<include>
+		defs/AITemplates.xml
+		defs/MilitaryTemplates.xml
+	</include>
+</locustModule>

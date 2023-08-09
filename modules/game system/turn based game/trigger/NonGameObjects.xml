@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="TriggerCondition" class="CMLObject" desc="Base condition class for TriggerModular">
+        <!-- commented out snippet for creating derived TriggerCondition
+        <script type="application/javascript"><![CDATA[ 
+            function isSatisfied(game)
+            {
+                // implement this
+                return false;
+            }
+        ]]></script>
+        -->
+    </objectDef>
+    
+    <!-- TriggerEffect definitions -->
+    <objectDef type="TriggerEffect" class="CMLObject" desc="Base class for TriggerModular effects">
+        <!-- commented out snippet for creating derived TriggerEffect
+        <script type="application/javascript"><![CDATA[ 
+            function executeEffect(game,trigger)
+            {
+                // implement this
+            }
+        ]]></script>
+        -->
+    </objectDef>
+    
+    <objectDef type="TriggerConditionPrerequisiteTriggers" superType="TriggerCondition">
+        <propertyDef name="refPrerequisiteTriggers" type="GORef" restriction="TriggerEffect" variable="true"/>
+        function isSatisfied(game)
+        {
+            for (var i in self.refPrerequisiteTriggers)
+            {
+                var prereq = self.refPrerequisiteTriggers[i].resolve(game);
+                if (!prereq.bTriggered)
+                    return false;
+            }
+            return true;
+        }
+    </objectDef>
+
+    <objectDef type="TriggerConditionMinimumTurn" superType="TriggerCondition">
+        <propertyDef name="nTurn" type="int"/>
+        <script type="application/javascript"><![CDATA[ 
+            function isSatisfied(game)
+            {
+                var currentTurn = getGameSysTurnBasedGame(game).objTurnBasedGame.nTurn;
+                return (currentTurn >= self.nTurn);
+            }
+        ]]></script>
+    </objectDef>
+
+    <objectDef type="TriggerConditionStartDate" superType="TriggerCondition">
+        <propertyDef name="dateStart" type="Date"/>
+        <script type="application/javascript"><![CDATA[ 
+            function isSatisfied(game)
+            {
+                var currentDate = getGameSysTurnBasedGame(game).objTurnBasedGame.dateCurrentDate;
+                return currentDate.gte(self.dateStart);
+            }
+        ]]></script>
+    </objectDef>
+
+    <objectDef type="TriggerConditionDateRange" superType="TriggerCondition">
+        <propertyDef name="dateStart" type="Date"/>
+        <propertyDef name="dateEnd" type="Date"/>
+        <script type="application/javascript"><![CDATA[ 
+            function isSatisfied(game)
+            {
+                var currentDate = getGameSysTurnBasedGame(game).objTurnBasedGame.dateCurrentDate;
+                return (currentDate.gte(self.dateStart) && currentDate.lte(self.dateEnd));
+            }
+        ]]></script>
+    </objectDef>
+
+    <objectDef type="TriggerConditionRandomChance" superType="TriggerCondition">
+        <propertyDef name="nPercentChance" type="int" default="50"/>
+        <script type="application/javascript"><![CDATA[ 
+            function isSatisfied(game)
+            {
+                var randGen = getGameSysTrigger(game).randGen;
+                var roll = randGen.getRandomIntInRange(0,99);
+                return (roll < self.nPercentChance);
+            }
+        ]]></script>
+    </objectDef>
+
+    <objectDef type="TriggerEffectChangeNationInternationalPosition" superType="TriggerEffect">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objAIInternationalPositionTemplate" type="AIInternationalPositionTemplate"/>
+        <script type="application/javascript"><![CDATA[ 
+            function executeEffect(game,trigger)
+            {
+                action = AITriggerActionChangeInternationalPosition.create({"refNation": self.refNation, "objAIInternationalPositionTemplate": self.objAIInternationalPositionTemplate});
+                game.sendEvent(EventAITriggerFired.create({"objGame": game,"objAction": action }));
+            }
+        ]]></script>
+    </objectDef>
+    
+
+</locust>

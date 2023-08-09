@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<object type="mapui.CityModelTable" name="MapModelCityTableDefault">		
+		<property name="tmplCityConstructionGroundModel" value="city_models.MapModelCityConstruction_Ground"/>
+		<property name="tmplNukedCityModel" value="city_models.MapModelMiscNuked-City"/>
+		<property name="tmplSmoke" value="city_models.MapModelMiscSmoke"/>
+		<!-- Core building models -->
+		
+		<object type="mapui.CoreModelTableEntry" name="objCoreEntries">
+		    <property name="eArchitecture" value="American"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityAmerican_Core"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.CoreModelTableEntry" name="objCoreEntries">
+		    <property name="eArchitecture" value="Anglo"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityAnglo_Core"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.CoreModelTableEntry" name="objCoreEntries">
+		    <property name="eArchitecture" value="CentralEuropean"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityCentral-European_Core"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.CoreModelTableEntry" name="objCoreEntries">
+		    <property name="eArchitecture" value="French"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityFrench_Core"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.CoreModelTableEntry" name="objCoreEntries">
+		    <property name="eArchitecture" value="Germanic"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityGermanic_Core"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.CoreModelTableEntry" name="objCoreEntries">
+		    <property name="eArchitecture" value="Latin"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityLatin_Core"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.CoreModelTableEntry" name="objCoreEntries">
+		    <property name="eArchitecture" value="MiddleEast"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityMiddle-East_Core"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		
+		<!-- Religious building models -->
+		
+		<object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+		    <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Buddhism')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityBuddhist_Temple"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+		    <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Catholic')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityCatholic_Cathedral"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+		    <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Hinduism')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityHindu_Temple"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+		    <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Orthodox')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityOrthodox_Church"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+		    <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Pagan')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityPagan_Temple"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+		    <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Protestant')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityProtestant_Church"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+		    <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'ShiaIslam')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityShia_Mosque"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+		    <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Shinto')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityShinto_Shrine"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+		    <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Sikh')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCitySikh_Temple"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+		<object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+		    <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'SunniIslam')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCitySunni_Mosque"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+		</object>
+    <!-- Religions without unique model -->
+    <object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+      <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Mormon')"/>
+      <property name="tmplMapModel" value="city_models.MapModelCityProtestant_Church"/>
+      <property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+    </object>
+    <object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+      <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Jewish')"/>
+      <property name="tmplMapModel" value="city_models.MapModelCityCatholic_Cathedral"/>
+      <property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+    </object>
+    <object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+      <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Atheism')"/>
+      <property name="tmplMapModel" value="city_models.MapModelCityCatholic_Cathedral"/>
+      <property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+    </object>
+    <object type="mapui.ReligiousModelTableEntry" name="objReligiousEntries">
+      <property name="tmplReligion" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ReligionTemplate,'Secular')"/>
+      <property name="tmplMapModel" value="city_models.MapModelCityCatholic_Cathedral"/>
+      <property name="tmplGroundModel" value="city_models.MapModelCityCity-Core_Ground"/>
+    </object>
+
+		<!-- Building models -->
+
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'AirForceAcademy')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityAirforce_Academy"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityAirforce-Academy_Ground"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'MedicalCenter')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityMedical_Center"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityMedical-Center_Ground"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'MilitaryAcademy')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityMilitary_Academy"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityMilitary-Academy_Ground"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'NavalAcademy')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityNaval_Academy"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityNaval-Academy_Ground"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'University')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityUniversity"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityUniversity_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'AircraftPlant')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityAircraft_Plant"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityAircraft-Plant_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'CottageFactory')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityCottage-Factory"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityIndustry_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'FoodProcessingPlants')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityFood-Processing_Plant"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityFood-Processing-Plant_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'IndustrialEnterprise')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityIndustrial_Enterprise"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityIndustry_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'IndustrialPlant')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityIndustrial_Plant"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityIndustry_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'LargeFactory')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityLarge_Factory"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityIndustry_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'MechanizedFactory')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityMechanized_Factory"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityIndustry_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'MunitionsPlant')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityMunitions_Factory"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityMunitions-Factory_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'NuclearPowerPlant')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityNuclear_Power-Plant"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityEnergy_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'CoalPlant')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityCoal_Plant"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityEnergy_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'VehiclePlant')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityVehicle_Plant"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityVehicle-Plant_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'SyntheticFuelPlant')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCitySynthetic_Fuel_Plant"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCitySynthetic-Fuel-Plant_Ground"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'IndustrialShipyard')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityNaval_Base"/>
+		</object>
+		<object type="mapui.CityBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.CityBuildingTemplate,'Shipyard')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityShipyard"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'ChemicalLab')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityChemical_Lab"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityChemical-Lab_Ground"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'JetPropulsionLab')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityJet_Lab"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityJet-Lab_Ground"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'NuclearLab')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityNuke_Lab"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityNuke-Lab_Ground"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'OrbitalScienceLab')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityOrbital_Lab"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityOrbital-Lab_Ground"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'ResearchFacility')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityResearch_Facility"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityResearch_Ground"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'RocketLab')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityRocket_Lab"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityRocket-Lab_Ground"/>
+		</object>
+		<object type="mapui.ResearchBuildingModelTableEntry" name="objBuildingEntries">
+		    <property name="tmplBuilding" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResearchCenterBuildingTemplate,'TechnologyCenter')"/>
+		    <property name="tmplMapModel" value="city_models.MapModelCityTechnology_Center"/>
+			<property name="tmplGroundModel" value="city_models.MapModelCityResearch_Ground"/>
+		</object>
+	
+	</object>
+
+</locust>

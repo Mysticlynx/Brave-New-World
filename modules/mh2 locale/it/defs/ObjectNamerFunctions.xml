@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<script type="application/javascript"><![CDATA[
+
+		function getObjectNamerSuffix(nValue)
+		{
+			var nMod100 = nValue % 100;
+			if(Math.floor(nMod100 / 10) == 1)
+			{
+				// it's a teen.
+				return "&#176;";
+			}
+			var nMod10 = nMod100 % 10;
+			switch(nMod10)
+			{
+				case 1: return "&#176;";
+				case 2: return "&#176;";
+				case 3: return "&#176;";
+				default: return "&#176;";
+			}	
+		}
+
+	]]></script>
+	
+	<script type="application/x-locust-query"><![CDATA[
+			formatNumberRank = ?{nValue:
+				String(nValue) + 
+				?{nMod100, nMod10:
+					switch {
+						case nMod100 / 10 == 1:
+							"&#176;"
+						case nMod10 == 1:
+							"&#176;"
+						case nMod10 == 2:
+							"&#176;"
+						case nMod10 == 3:
+							"&#176;"	
+						default:
+							"&#176;"
+					}
+				}(nValue % 100, nValue % 10)
+			}
+			allowNaziSymbol = ?{: true }
+	]]></script>
+
+</locust>

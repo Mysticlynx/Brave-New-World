@@ -1,0 +1,1453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="AIPlanSeaInvasion" superType="AIPlanInvasionBase">
+        <propertyDef name="objUnloadRegion" type="gs_tbg.Region"/><!-- where we're going to unload (next to land we're invading) -->
+        
+        <propertyDef name="nPhase" type="int" default="0"/>
+        <propertyDef name="strLandComposition" type="String" default="DefaultArmy"/>
+        <propertyDef name="refTacticalSubPlan" type="GORef" restriction="gs_tbg.AIMilitaryPlan"/>
+        <propertyDef name="bWaitForTacticalSubPlan" type="bool" default="false" desc="set true if we wait for tactical subplan to ok things before unloading"/>
+        <propertyDef name="nChanceToProceedWithoutSupport" type="int" default="20" desc="chance of proceeding despite tactical subplan if unopposed"/>
+        <propertyDef name="nMinLandStrengthNeeded" type="int" default="1"/>
+        <propertyDef name="nMinSeaSurfaceStrengthNeeded" type="int" default="10000"/>
+        <propertyDef name="nMinSubmergedStrengthNeeded" type="int" default="0"/>
+        <propertyDef name="nMinAirStrengthNeeded" type="int" default="1200"/>
+        <propertyDef name="objRefuelPortCity" type="gs_tbg.City"/>
+        
+
+        <!--<property name="strComposition" value="InvasionFleet"/>-->
+        <!-- or InvasionFleetWithAirSupport of we are getting bombed -->
+
+        <script type="application/javascript"><![CDATA[
+        
+        // enum for phases
+        var AttackPhase =
+        {
+            Start:0,
+            Buildup:1,
+            CrossSea:2,
+            ReadyToUnload:3,
+            Unload:4,
+            FinishUnload:5,
+            Success:6,
+            Failure:7,
+            ObtainAccess:8,
+            Refuel:9,
+            Bombard:10,
+        }
+
+        // javascript object which contains commonly used
+        // cached variables and local functions
+        function TempContext(avatar)
+        {
+            this.avatar = avatar;
+            this.turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+            this.nation = self.refNation.resolve(avatar);
+            this.pad = getPAD(avatar,PADMakingHistoryAI);
+            this.paratrooperSubPlan = null;
+            this.tacticalSubPlan = null;
+            if (self.bUseParatroopers)
+            {
+                if (self.refParatrooperSubPlan != null)
+                    this.paratrooperSubPlan = self.refParatrooperSubPlan.resolve(this.avatar);
+            }
+
+            if (self.refTacticalSubPlan != null)
+            {
+                this.tacticalSubPlan = self.refTacticalSubPlan.resolve(this.avatar);
+            }
+
+            this.setStatus = function(status,reason)
+            {
+                this.avatar.sendAction(
+                    gs_tbg.GActSetAIMilitaryPlanStatus.create({
+                        "objPlan": self,
+                        "eStatus": status,
+                        "strReason": reason,
+                        "nTurn": this.turn
+                        }) );
+            }
+
+            
+            this.cancelSubPlans = function()
+            {
+                if (this.paratrooperSubPlan != null)
+                {
+                    this.paratrooperSubPlan.cancel(this.avatar);
+                }
+
+                if (this.tacticalSubPlan != null)
+                {
+                    this.tacticalSubPlan.cancel(this.avatar);
+                }
+            }
+            
+            this.increaseAirSupport = function(enemyAirStrength)
+            {
+                var desiredStrength = 100 + enemyAirStrength * 1.5;
+                if (self.nMinAirStrengthNeeded == 0)
+                {
+                    self.nMinAirStrengthNeeded = 1 + desiredStrength;
+                    
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: indicating fleet composition should provide air support");
+                    }
+                }
+                else
+                {
+                    if (self.nMinAirStrengthNeeded < desiredStrength)
+                    {
+                        self.nMinAirStrengthNeeded = desiredStrength;
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: increased air strength needed to " + self.nMinAirStrengthNeeded);
+                        }
+                    }
+                    else
+                    {
+                        self.nMinAirStrengthNeeded += 500; // just increase 500 at a time if already > desired
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: increased air strength needed to " + self.nMinSeaSurfaceStrengthNeeded);
+                        }                            
+                    }
+                }
+            }
+            
+            this.increaseSurfaceStrengthToDefeat = function(enemyNavyStrength)
+            {
+                var desiredStrength = 100 + enemyNavyStrength * 1.5;
+                if (self.nMinSeaSurfaceStrengthNeeded < desiredStrength)
+                {
+                    self.nMinSeaSurfaceStrengthNeeded = desiredStrength;
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: increased sea surface strength needed to " + self.nMinSeaSurfaceStrengthNeeded);
+                    }
+                }
+                else
+                {
+                    self.nMinSeaSurfaceStrengthNeeded += 500; // just increase 500 at a time if already > desired
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: increased sea surface strength needed to " + self.nMinSeaSurfaceStrengthNeeded);
+                    }                            
+                }
+            }
+            
+            this.increaseSubmergedStrengthToDefeat = function(enemySubStrength)
+            {
+                var desiredStrength = 100 + enemySubStrength * 1.5;
+                if (self.nMinSubmergedStrengthNeeded < desiredStrength)
+                {
+                    self.nMinSubmergedStrengthNeeded = desiredStrength;
+                    
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: increased sea submerged strength needed to " + self.nMinSubmergedStrengthNeeded);
+                    }
+                }
+                else
+                {
+                    self.nMinSubmergedStrengthNeeded += 500;
+                    
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: increased sea submerged strength needed to " + self.nMinSubmergedStrengthNeeded);
+                    }
+                }
+            }
+            
+            this.decreaseChanceToProceedWithoutSupport = function()
+            {
+                self.nChanceToProceedWithoutSupport = self.nChanceToProceedWithoutSupport / 3;
+                
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: decreased chance to proceed without support to " + self.nChanceToProceedWithoutSupport);
+                }
+            }
+
+            this.handleUnitDestroyed = function(unit, event, assignment)
+            {
+                // one of the units assigned to us got destroyed.
+                
+                var unitGroup = unit.refUnitGroup.resolve(this.avatar);
+                var region = unitGroup.getRegion(this.avatar);
+                
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: " + unit.strDisplayName + " destroyed in " + region.strName + ", event=" + event);
+                }
+                
+                if (region.isWater())
+                {
+                    if (event.instanceOf(gs_tbg.EventUnitDestroyedInEngagement))
+                    {
+                        // What strength enemy fleet did we run into?
+                        var region = event.objEngagement.refRegion.resolve(this.avatar);
+                        
+                        var enemyNavyStrength = 0;
+                        var enemySubStrength = 0;
+                        var unitGroups = new Array();
+                        self.objMilitaryAI.getEnemyUnitGroupsInRegion(this.avatar,region,true,unitGroups)
+                        for (var g in unitGroups)
+                        {
+                            var unitGroup = unitGroups[g];
+	                        if (self.objGameSysAIUtility.objUnitBranchTemplateSubmarine.equals(unitGroup.tmplUnitBranch))
+	                        {
+    	                        enemySubStrength += unitGroup.getEffectiveCombatStrength(this.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_SEA_SURFACE);
+    	                    }
+    	                    else if (self.objGameSysAIUtility.objUnitBranchTemplateNavy.equals(unitGroup.tmplUnitBranch))
+    	                    {
+    	                        enemyNavyStrength += unitGroup.getEffectiveCombatStrength(this.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_SEA_SURFACE);
+    	                    }
+                        }
+                    
+                        // make sure we reserve more surface strength in case we don't make it to the unload phase
+                        this.increaseSurfaceStrengthToDefeat(enemyNavyStrength);
+                        
+                        if (enemySubStrength > 0)
+                        {
+                            this.increaseSubmergedStrengthToDefeat(enemySubStrength);
+                        }
+                    } // if we lost a unit in a navy battle
+                    else if (event.instanceOf(gs_tbg.EventUnitDestroyedByBombing))
+                    {
+                        enemyAirStrength = unitGroup.getEffectiveCombatStrength(this.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_AIR);
+                        this.increaseAirSupport(enemyAirStrength);
+                    }
+                    else // shore bombardment or enemy fighters or something else
+                    {
+                        if (self.nChanceToProceedWithoutSupport > 0)
+                        {
+                            this.decreaseChanceToProceedWithoutSupport();
+                        }
+                        
+                        this.increaseSubmergedStrengthToDefeat(500);
+                        this.increaseAirSupport(500);
+                    }
+                } // if we lost a unit while at sea
+            }
+
+            this.setPhase = function(phase,reason)
+            {
+                if (self.nPhase != phase)
+                {
+                    if (reason == undefined)
+                        reason = "";
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: " + self + "setting phase from " + self.nPhase + " to " + phase + ", reason: " + reason);
+                    }
+
+                    self.nPhase = phase;
+
+                    if (phase == AttackPhase.CrossSea)
+                    {
+                        if (this.paratrooperSubPlan != null)
+                        {
+                            this.paratrooperSubPlan.setCanAssemble(this.avatar,true);
+                        }
+                    }
+                    if (phase == AttackPhase.ReadyToUnload)
+                    {
+                        // triggers declaration of war if needed
+                        if (!self.declareWarIfNeeded(this.avatar, this.nation))
+                        {
+                            reason = reason + ", then declareWarIfNeeded failed.";
+                            log("DEBUG: " + self + " failed: " + reason);
+                            this.cancelSubPlans();
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_FAILED, reason);
+                            return;
+                        }
+
+                        if (this.paratrooperSubPlan != null)
+                        {
+                            this.paratrooperSubPlan.setCanDrop(this.avatar,true);
+                        }
+                        if (this.tacticalSubPlan != null)
+                        {
+                            this.tacticalSubPlan.setCanAttack(this.avatar,true);
+                        }
+                    }
+
+                    // set plan status if applicable
+                    switch(self.nPhase)
+                    {
+                        case AttackPhase.Success:
+                            if (reason != undefined)
+                            {
+                                if (this.pad.bWantMilitaryAILog)
+                                {
+                                    log("DEBUG: AIPlanSeaInvasion succeeded: " + reason);
+                                }
+                            }
+                            this.cancelSubPlans();
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_SUCCEEDED,reason);
+                            break;
+
+                        case AttackPhase.Failure:
+                            if (this.pad.bWantMilitaryAILog)
+                            {
+                                log("DEBUG: AIPlanSeaInvasion failed: " + reason);
+                            }
+                            this.cancelSubPlans();
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_FAILED, reason);
+                            break;
+                    }
+                }
+            } // this.setPhase
+
+
+            this.getAttackForceStrengthLimit = function()
+            {
+                return self.objParentAI.getAttackForceStrengthLimit();
+            }
+
+
+            this.updateRequirementsForRegions = function(objRegions, totalLandCombatStrength, strComposition)
+            {
+                var bCanBuildComp = self.objMilitaryAI.canBuildComposition(this.avatar,strComposition);
+                if (!bCanBuildComp)
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: " + this.nation.strDisplayName + " can't build " + strComposition);
+                    }
+
+                    return;
+                }
+            
+                var numActualRegions = 0;
+                for (var i in objRegions)
+                    numActualRegions++;
+
+                var combatStrengthPerRegion = (totalLandCombatStrength / numActualRegions) + 0.5;
+                
+                if (combatStrengthPerRegion < 1)
+                {
+                    combatStrengthPerRegion = 1; 
+                }
+                                        
+                // cap force size to prevent infinite arms race
+                var strengthLimit = this.getAttackForceStrengthLimit();
+                if (strengthLimit < self.nMinLandStrengthNeeded)
+                    strengthLimit = self.nMinLandStrengthNeeded;
+                    
+                var totalFailures = self.objDesiredLandMass.nLandInvasionFailures + self.objDesiredLandMass.nSeaInvasionFailures;
+                if (totalFailures > 0)
+                {
+                    // raise the limit
+                    strengthLimit += (strengthLimit * totalFailures);
+                }
+
+
+                combatStrengthPerRegion = Math.min(combatStrengthPerRegion,strengthLimit);
+                var seaSurfaceStrengthNeeded = self.nMinSeaSurfaceStrengthNeeded;
+                var submergedStrengthNeeded = self.nMinSubmergedStrengthNeeded;
+                var airStrengthNeeded = self.nMinAirStrengthNeeded;
+
+                for (var i in objRegions)
+                {
+                    var region = objRegions[i];
+                    var reqs = self.getOrCreateUnitRegionRequirements(region,strComposition);
+                    reqs.strPreferredComposition = self.strPreferredComposition;
+                    
+                    // reqs.setCombatStrengthNeeded(this.avatar,self,combatStrengthPerRegion);
+                    var objStrength = reqs.getCombatStrengthNeeded(); // creates object if needed
+                    
+                    objStrength.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK, combatStrengthPerRegion);
+                    
+                    if (seaSurfaceStrengthNeeded > 0)
+                        objStrength.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_SEA_SURFACE, seaSurfaceStrengthNeeded);
+                        
+                    if (submergedStrengthNeeded > 0)
+                        objStrength.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_SEA_SUBMERGED, submergedStrengthNeeded);
+                        
+                    if (airStrengthNeeded > 0)
+                        objStrength.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_AIR, airStrengthNeeded);
+                    
+                    reqs.nLastUpdateTurn = this.turn;
+                    reqs.fKeepPriority = 1.0;
+                    reqs.fAddPriority = reqs.fKeepPriority;
+                    reqs.nTurnsUntilNeeded = 10;
+                }
+            } // this.updateRequirementsForRegions
+
+
+            this.updateBuildupRequirements = function()
+            {
+                // determine appropriate attack & defense power for buildup phase
+                var enemyResponseStrength = self.estimateMilitaryResponse(this.avatar);
+                var arrivedStrength = self.objParentAI.objMilitaryAIScript.getLandInvasionArrivedStrength(this.avatar,self);
+                var netEnemyStrength = enemyResponseStrength - arrivedStrength;
+
+                var minFleetStrength = 100; // tweak point
+                if (netEnemyStrength < minFleetStrength)
+                    netEnemyStrength = minFleetStrength; 
+
+                var attackRatio = self.objMilitaryAI.fDesiredAttackRatio;
+                var totalLandCombatStrength = enemyResponseStrength * attackRatio;
+                this.updateRequirementsForRegions(self.objBuildupRegions, totalLandCombatStrength, self.strComposition);
+            }
+
+            this.updateCrossSeaRequirements = function()
+            {
+                // make sure we keep requestiong requirements for our completed compositions so they don't get de-allocated
+                for (var i in self.objBuildupRegions)
+                {
+                    var region = self.objBuildupRegions[i];
+                    var reqs = self.getOrCreateUnitRegionRequirements(region,self.strComposition);
+                    // no changes
+                    reqs.fAddPriority = 0; // don't add any during this phase
+                    reqs.nLastUpdateTurn = this.turn;
+                }
+            }
+
+            this.updatePlanRoutesRequirements = function()
+            {
+                // maintain our initial landing composition
+                var reqs = self.getOrCreateUnitRegionRequirements(self.objStartLandRegion,self.strLandComposition);
+                reqs.nLastUpdateTurn = this.turn;
+            }
+
+            // make sure we have a valid objUnloadRegion and objStartLandRegion
+            this.verifyUnloadRegion = function()
+            {
+                if (self.objStartLandRegion != null)
+                {
+                    if ( !self.objMilitaryAI.isValidSeaInvasionLandRegion(this.avatar, self.objDesiredLandMass, self.objSourceCity, self.objStartLandRegion) )
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: " + this.nation.strName + " AIPlanSeaInvasion from " + self.objSourceCity.strName + " unload region " + self.objStartLandRegion.strName + " is no longer valid.");
+                        }
+                        self.objUnloadRegion = null;
+                        self.objStartLandRegion = null;
+                    }
+                }
+                
+                if ((self.objUnloadRegion == null) || (self.objStartLandRegion == null))
+                {
+                    if (!self.objParentAI.objMilitaryAIScript.determineSeaInvasionUnloadAndLandRegions(this.avatar,self))
+                    {
+                        log("DEBUG: " + this.nation.strName + " AIPlanSeaInvasion from " + self.objSourceCity.strName + " cannot find unload region.");
+                        return false;
+                    }
+                }
+                                
+                return true;
+            }               
+            
+            this.advanceStartPhase = function()
+            {
+                if (!this.verifyUnloadRegion())
+                {
+                    this.setPhase(AttackPhase.Failure,"no unload region");
+                    return;
+                }
+                
+                // see if we need to ask for military access (in case land region is controlled by an ally)
+                var destLandController = self.objStartLandRegion.refController.resolve(this.avatar)
+                var destLandOwner = self.objStartLandRegion.refOwner.resolve(this.avatar);
+                if ( (!destLandController.equals(destLandOwner)) && (!this.nation.equals(destLandOwner)) )
+                {
+                    // is this owned by an ally?
+                    if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,destLandOwner,true))
+                    {
+                        if (!self.objGameSysNationRelations.hasNationLandAccess(this.avatar,this.nation,destLandOwner))
+                        {
+                            // ask for access from ally
+                            self.objParentAI.objDiplomacyAI.requestMilitaryAccessToLiberateRegion(this.avatar,self.objStartLandRegion);
+                            this.setPhase(AttackPhase.ObtainAccess);
+                            return;
+                        }
+                    }
+                }
+                
+                
+                // we build our fleet at self.objSourceCity
+                self.objBuildupRegions.clear();
+                self.objBuildupRegions.add(self.objSourceCity.refRegion.resolve(this.avatar));
+                
+                if ((self.bUseParatroopers==true) && (self.refParatrooperSubPlan == null))
+                {
+                    self.objParentAI.objMilitaryAIScript.createParatrooperSubPlan(this.avatar, this.nation, self, this.turn); 
+                    this.paratrooperSubPlan = self.refParatrooperSubPlan.resolve(this.avatar);
+                }
+
+                // pick a tactic
+                var chosenTactic = null;
+                var tacticRoll = self.objParentAI.getRandomFloat();
+                var totalWeight = 0;
+                var strategy = self.objMilitaryAI.objStrategyTemplate;
+                for (var i in strategy.objTacticWeights)
+                {
+                    var tacticWeight = strategy.objTacticWeights[i];
+                    if (tacticWeight.nWeight < 1)
+                        continue;
+
+                    if (this.canUseTactic(tacticWeight.eTactic))
+                    {
+                        totalWeight += tacticWeight.nWeight;
+                        if ( (chosenTactic == null) || (tacticRoll < tacticWeight.nWeight/totalWeight) )
+                            chosenTactic = tacticWeight.eTactic;
+                    }
+                }
+
+                if (chosenTactic != null)
+                {
+                    self.objParentAI.objMilitaryAIScript.createTacticalSubPlan(this.avatar, this.nation, self, chosenTactic, this.turn); 
+                    this.tacticalSubPlan = self.refTacticalSubPlan.resolve(this.avatar);
+                    self.bWaitForTacticalSubPlan = true;
+                }
+                
+                if (self.nMinAirStrengthNeeded > 1200)
+                {
+                    var strComposition = "InvasionFleetWithAirSupport";
+                
+                    if (!self.objMilitaryAI.canBuildCompositionNear(this.avatar, self.objSourceCity, strComposition))
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: " + this.nation.strName + " learning to build " + strComposition + " near " + self.objSourceCity.strName);
+                        }
+                    
+                        var nWeight = 1;
+                        self.objMilitaryAI.learnToBuildCompositionAtCity(this.avatar, self.objSourceCity, strComposition, nWeight);
+                    }
+                    self.strComposition = strComposition;
+                    
+                    // we need an airbase at the buildup region so we can load planes
+                    var buildupRegion = self.objSourceCity.refRegion.resolve(this.avatar);
+                    if (buildupRegion.objAirbaseImprovement == null)
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: " + self + " " + self.objSourceCity.strName + " needs an airbase.");
+                        }
+                        
+                        if (!self.objMilitaryAI.objDesiredAirbaseRegions.contains(buildupRegion))
+                        {
+                            if (this.pad.bWantMilitaryAILog)
+                            {
+                                log("DEBUG: adding to objDesiredAirbaseRegions.");
+                            }
+                            self.objMilitaryAI.objDesiredAirbaseRegions.add(buildupRegion);
+                            this.pad.bUpdateRegionExclusions = true; // tells production AI to re-evaluate locations for airbases, defense etc
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    self.strComposition = "InvasionFleet";
+                }
+                
+                this.setPhase(AttackPhase.Buildup);
+            } // this.advanceStartPhase
+            
+            this.advanceObtainAccessPhase = function()
+            {
+                if (!this.verifyUnloadRegion())
+                {
+                    this.setPhase(AttackPhase.Failure,"no unload region");
+                    return;
+                }
+                
+                // see if we need to ask for military access (in case land region is controlled by an ally)
+                var destLandOwner = self.objStartLandRegion.refOwner.resolve(this.avatar);
+                if (!this.nation.equals(destLandOwner))
+                {
+                    // is this owned by an ally?
+                    if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,destLandOwner,true))
+                    {
+                        if (!self.objGameSysNationRelations.hasNationLandAccess(this.avatar,this.nation,destLandOwner))
+                        {
+                            this.setPhase(AttackPhase.Failure,"failed to obtain access to unload region");
+                            return;
+                        }
+                    }
+                }
+                
+                this.setPhase(AttackPhase.Start, "obtained access");
+            }
+            
+
+            // check progress during AttackPhase.Buildup
+            this.advanceBuildupPhase = function()
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: AIPlanSeaInvasion by " + this.nation.strName + " from " + self.objSourceCity.strName + " to " + self.objStartLandRegion.strName + " advanceBuildupPhase()");
+                }
+                
+                if (!this.verifyUnloadRegion())
+                {
+                    this.setPhase(AttackPhase.Failure,"no unload region");
+                    return;
+                }
+                
+                if (this.pad.bWantMilitaryAILog)
+                    self.objParentAI.objMilitaryAIScript.logAssignmentsForPlan(this.avatar,self);
+                
+                var region = self.objBuildupRegions.getArbitraryValue(); // currently only one
+                if (region == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"no buildup region.");
+                    return;
+                }
+
+                var reqs = self.getUnitRegionRequirements(region,self.strComposition);
+                if (reqs == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"no buildup requirements for " + self.strComposition);
+                    return;
+                }
+                            
+                var arrivedGroups = new Array();
+                var enRouteGroups = new Array();
+                var percentArrivedPower = self.getAssignedUnitGroups(this.avatar, region, self.strComposition, arrivedGroups, enRouteGroups);
+                
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    var nNumNavyGroups = 0;
+                    if (enRouteGroups.length > 0)			
+                    {
+                        log("DEBUG: AIPlanSeaInvasion enRouteGroups (buildup phase):");
+                        for (var g in enRouteGroups)
+                        {
+                            var group = enRouteGroups[g];
+                            if (self.objGameSysAIUtility.objUnitBranchTemplateNavy.equals(group.tmplUnitBranch))
+                            {
+                                nNumNavyGroups++;
+                            }
+                            self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar, group, true); 
+                        }
+                    }
+                    if (arrivedGroups.length > 0)
+                    {
+                        log("DEBUG: AIPlanSeaInvasion arrivedGroups (buildup phase):");
+                        for (var g in arrivedGroups)
+                        {
+                            var group = arrivedGroups[g];
+                            if (self.objGameSysAIUtility.objUnitBranchTemplateNavy.equals(group.tmplUnitBranch))
+                            {
+                                nNumNavyGroups++;
+                            }
+                            self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar, group, true); 
+                        }
+                    }
+                    if (percentArrivedPower > 0)
+                    {
+                        log("DEBUG: percentArrivedPower=" + percentArrivedPower + ", nNumNavyGroups=" + nNumNavyGroups);
+                    }
+                }
+                        
+                if (percentArrivedPower > 95)
+                {
+                    if (self.canCombineIntoNavyGroup(this.avatar,arrivedGroups,this.pad.bWantMilitaryAILog))
+                    {
+                        if (this.paratrooperSubPlan != null)
+                        {
+                            if (!this.paratrooperSubPlan.haveForces(this.avatar))
+                            {
+                                // wait for paratroopers to have their forces also
+                                if (this.pad.bWantMilitaryAILog)
+                                {
+                                    log("DEBUG: waiting for paratrooper forces");
+                                }
+                                return;
+                            }
+                        }
+                        var fleetGroup = self.combineIntoNavyGroup(this.avatar,arrivedGroups);
+                        self.setCompleteComposition(this.avatar,region,self.strComposition,fleetGroup);
+                        
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: completed fleetGroup=" + fleetGroup);
+                            self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar,fleetGroup, true);
+                        }
+
+                        if (self.objRefuelPortCity != null)
+                        {
+                            this.setPhase(AttackPhase.Refuel);
+                            this.advanceRefuelPhase();
+                        }
+                        else
+                        {
+                            this.setPhase(AttackPhase.CrossSea);
+                            this.advanceCrossSeaPhase();
+                        }
+                    }
+                    else
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: Can't combine into single fleet group.");
+                        }
+                    }
+                }                                            
+            } // this.advanceBuildupPhase
+
+            this.advanceRefuelPhase = function()
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: AIPlanSeaInvasion by " + this.nation.strName + " from " + self.objSourceCity.strName + " to " + self.objStartLandRegion.strName + " advanceRefuelPhase()");
+                }  
+                
+                if (self.objRefuelPortCity == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"no refuel port");
+                    return;
+                }
+                
+                var region = self.objBuildupRegions.getArbitraryValue(); // currently only one                
+                var fleetGroup = self.getCompleteComposition(this.avatar,region,self.strComposition);
+                if (fleetGroup == null)
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                        log("no fleet group! back to buildup phase :-(");
+                    
+                    if (self.nMinAirStrengthNeeded > 0)
+                        self.strComposition = "InvasionFleetWithAirSupport";
+                    else
+                        self.strComposition = "InvasionFleet";
+                        
+                    this.setPhase(AttackPhase.Buildup);
+                    return;
+                }
+                
+                var portLandRegion = self.objRefuelPortCity.refRegion.resolve(this.avatar);
+                
+                var currentRegion = fleetGroup.getRegion(this.avatar);
+                if (currentRegion.equals(portLandRegion))
+                {
+                    // wait til we're fully supplied then go to next phase
+                    if ((fleetGroup.nOil == fleetGroup.nOilCarry) &&
+                       (fleetGroup.nArms == fleetGroup.nArmsCarry) )
+                    {
+                        this.setPhase(AttackPhase.CrossSea);
+                        this.advanceCrossSeaPhase();
+                    }
+                    return;
+                }
+                
+                var portController = portLandRegion.refController.resolve(this.avatar);
+                if (!portController.equals(this.nation))
+                {
+                    if (!self.objGameSysNationRelations.hasNationPortAccess(this.avatar,this.nation,portController))
+                    {
+                        this.setPhase(AttackPhase.Failure,"no access to refuel port");
+                        return;
+                    }
+                }
+
+                if (currentRegion.equals(region))
+                {
+                    // make sure fleet group is out of port
+                    if (self.objParentAI.objMilitaryAIScript.orderUnitGroup_exitPort(this.avatar,fleetGroup))
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: " + fleetGroup.strName + " leaving port of " + region.strName);
+                        }
+                        return;
+                    }
+                }
+                    
+                // move fleetGroup to region where we can unload
+                if (self.objParentAI.objMilitaryAIScript.orderUnitGroup_enterPort(this.avatar,fleetGroup,self.objRefuelPortCity))
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: " + fleetGroup.strName + " moving to " + self.objRefuelPortCity.strName );
+                        self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar, fleetGroup, true);
+                    }                
+                    return;
+                }
+            } // advanceRefuelPhase
+            
+            
+            this.advanceCrossSeaPhase = function()
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: AIPlanSeaInvasion by " + this.nation.strName + " from " + self.objSourceCity.strName + " to " + self.objStartLandRegion.strName + " advanceCrossSeaPhase()");
+                }            
+                
+                if (!this.verifyUnloadRegion())
+                {
+                    this.setPhase(AttackPhase.Failure,"no unload region");
+                    return;
+                }
+            
+                var region = self.objBuildupRegions.getArbitraryValue(); // currently only one
+                var fleetGroup = self.getCompleteComposition(this.avatar,region,self.strComposition);
+                if (fleetGroup == null)
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                        log("no fleet group! back to buildup phase :-(");
+                    
+                    if (self.nMinAirStrengthNeeded > 0)
+                        self.strComposition = "InvasionFleetWithAirSupport";
+                    else
+                        self.strComposition = "InvasionFleet";
+                        
+                    this.setPhase(AttackPhase.Buildup);
+                    return;
+                }
+                
+                if (self.objUnloadRegion == null)
+                {
+                    log("DEBUG: advanceCrossSeaPhase - no unload region");
+                    this.setPhase(AttackPhase.Failure,"no unload region");
+                    return;
+                }
+
+                // make sure fleet group is out of port
+                if (self.objParentAI.objMilitaryAIScript.orderUnitGroup_exitPort(this.avatar,fleetGroup))
+                    return;
+                    
+                // if there is no opposition, we may choose not to wait
+                var unitGroups = new Array();
+                
+                self.objMilitaryAI.getEnemyUnitGroupsInRegion(this.avatar,self.objUnloadRegion,true,unitGroups);
+                var nNumOpposingSeaGroups = unitGroups.length;
+                
+                self.objMilitaryAI.getEnemyUnitGroupsInRegion(this.avatar,self.objStartLandRegion,true,unitGroups);
+                var nNumOpposingLandGroups = unitGroups.length;
+                
+                var bRelativelySafeLanding = true;
+                if (nNumOpposingSeaGroups > 0)
+                {
+                    bRelativelySafeLanding = false;
+                }
+                else if (nNumOpposingLandGroups > 0)
+                {
+                    var landController = self.objStartLandRegion.refController.resolve(this.avatar);
+                    if (!landController.equals(this.nation))
+                    {
+                        bRelativelySafeLanding = false;
+                    }
+                }
+                
+                var currentRegion = fleetGroup.getRegion(this.avatar);
+                var bArrived = currentRegion.equals(self.objUnloadRegion);
+
+                if ( (self.bWaitForTacticalSubPlan==true) && (this.tacticalSubPlan != null) )
+                {
+                    if (this.tacticalSubPlan.readyToCrossSea == undefined)
+                    {
+                        logWarn("Working around tacticalSubPlan issue." + self); // unknown cause, maybe duplicate key from earlier error?
+                        self.refTacticalSubPlan = null;
+                        this.tacticalSubPlan = null;
+                    }
+                    else if (!this.tacticalSubPlan.readyToCrossSea(this.avatar))
+                    {
+                        var bWaitForSubPlan = true;
+                        if (bRelativelySafeLanding)
+                        {
+                            var randomPercent = self.objParentAI.getRandomIntInRange(0,100);
+                            if (randomPercent < self.nChanceToProceedWithoutSupport)
+                            {
+                                if (this.pad.bWantMilitaryAILog)
+                                {
+                                    log("DEBUG: decided not to wait for " + this.tacticalSubPlan);
+                                }
+                                self.bWaitForTacticalSubPlan = false; // don't wait in the next phase either!
+                                bWaitForSubPlan = false;
+                            }
+                            else if (this.pad.bWantMilitaryAILog)
+                            {
+                                log("DEBUG: decided to wait, randomPercent=" + randomPercent);
+                            }
+                        }
+                        
+                        if (bWaitForSubPlan)
+                        {
+                            if (this.pad.bWantMilitaryAILog)
+                            {
+                                log("DEBUG: waiting for " + this.tacticalSubPlan + " before crossing sea.");
+                            }
+                            return;
+                        }
+                    } // if subplan says to wait
+                } // if we have a subplan we should wait for
+
+                if ((!bRelativelySafeLanding) && (!bArrived))
+                {
+                    // recheck unload region in case we can find a better one
+                    var oldStartLandRegion = self.objStartLandRegion;
+                    var oldUnloadRegion = self.objUnloadRegion;
+                    if (!self.objParentAI.objMilitaryAIScript.determineSeaInvasionUnloadAndLandRegions(this.avatar,self))
+                    {
+                        this.setPhase(AttackPhase.Failure,"no unload region");
+                        return;
+                    }
+                    
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        if ( !(oldUnloadRegion.equals(self.objUnloadRegion) ) )
+                        {
+                            log("DEBUG: changed objUnloadRegion region from " + oldUnloadRegion.strName + " to " +  self.objUnloadRegion.strName);
+                            if (currentRegion)
+                            {
+                                log("DEBUG: currentRegion was " + currentRegion.strName + ", bArrived=" + bArrived); // puzzle
+                            }
+
+                        }
+                        
+                        if ( !(oldStartLandRegion.equals(self.objStartLandRegion) ) )
+                        {
+                            log("DEBUG: changed objStartLandRegion region from " + oldStartLandRegion.strName + " to " +  self.objStartLandRegion.strName);                           
+                        }
+                    }
+                }
+                
+                // move fleetGroup to region where we can unload
+                if (self.objParentAI.objMilitaryAIScript.orderUnitGroup_moveToRegion(this.avatar,fleetGroup,self.objUnloadRegion))
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: " + fleetGroup.strName + " moving to " + self.objUnloadRegion.strName );
+                        self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar, fleetGroup, true);
+                    }                
+                    return;
+                }
+
+                this.setPhase(AttackPhase.ReadyToUnload, "reached " + self.objUnloadRegion.strName ); // declares war if needed
+                if (bArrived)
+                {
+                    this.advanceReadyToUnloadPhase(); // give orders to unload ASAP
+                }
+                                
+            } // this.advanceCrossSeaPhase
+
+            
+            this.advanceReadyToUnloadPhase = function()
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: AIPlanSeaInvasion by " + this.nation.strName + " from " + self.objSourceCity.strName + " to " + self.objStartLandRegion.strName + " advanceReadyToUnloadPhase()");
+                }
+            
+                if ((self.bWaitForTacticalSubPlan==true) && (this.tacticalSubPlan != null) )
+                {
+                    if (!this.tacticalSubPlan.readyToUnload(this.avatar))
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: " + self + " waiting for " + this.tacticalSubPlan + " before unloading.");
+                        }
+                        return;
+                    }
+                }
+
+                var region = self.objBuildupRegions.getArbitraryValue(); // currently only one
+                var fleetGroup = self.getCompleteComposition(this.avatar,region,self.strComposition);
+                if (fleetGroup == null)
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                        log("no fleet group! back to buildup phase :-(");
+                        
+                    if (self.nMinAirStrengthNeeded > 0)
+                        self.strComposition = "InvasionFleetWithAirSupport";
+                    else
+                        self.strComposition = "InvasionFleet";
+                        
+                    this.setPhase(AttackPhase.Buildup);
+                    return;
+                }
+
+                // Time to start unloading 
+                var landRegion = self.objStartLandRegion;
+                
+                // give fleetGroup orders to unload all of it's land units to landRegion
+                var transportedGroups = new Array();
+                self.objGameSysUnit.getUnitGroupsAtLocation(this.avatar,fleetGroup,transportedGroups);
+                if (transportedGroups.length < 1)
+                {
+				    var dlm = self.objDesiredLandMass;
+                    if (dlm != null)
+                    {
+                        dlm.nSeaInvasionFailures += 1;
+                        
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: increased dlm sea invasion failures to " + dlm.nSeaInvasionFailures);
+                        }
+                    }
+                
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar,fleetGroup, true);
+                    }
+                    this.setPhase(AttackPhase.Failure,"where'd my troops go?");
+                    return;
+                }
+                
+                for (var i in transportedGroups)
+                {
+                    var transportedUnitGroup = transportedGroups[i];
+                    self.objParentAI.objMilitaryAIScript.orderUnitGroup_unloadToRegion(this.avatar,transportedUnitGroup,landRegion,this.pad.bWantMilitaryAILog);
+                }
+
+                this.setPhase(AttackPhase.Unload);
+            } // this.advanceReadyToUnloadPhase
+
+            this.getBombValue = function(otAction,region)
+            {
+                if (otAction.equals(gs_tbg.GActSetBombRegionTransportationOrder))
+                    return 0;
+
+                if (otAction.equals(gs_tbg.GActSetBombRegionFortificationOrder))
+                    return 18;
+
+                if (otAction.equals(gs_tbg.GActSetBombRegionAADefenseOrder))
+                    return 15;
+
+                if (otAction.equals(gs_tbg.GActSetBombRegionCoastalDefenseOrder))
+                    return 20;
+                    
+                if (otAction.equals(gs_tbg.GActSetBombRegionUnitsOrder))
+                {
+                    // check if there are actually units here since this order can be given
+                    // even when enemies are not present.
+                    var unitGroups = new Array();
+                    self.objMilitaryAI.getEnemyUnitGroupsInRegion(this.avatar,region,true,unitGroups);
+                    if (unitGroups.size > 0)
+                        return 18;
+                    else
+                        return 0;
+                }
+
+                if (otAction.equals(gs_tbg.GActSetBombRegionAirbaseOrder))
+                    return 15;
+
+                // shore bombardment orders                    
+                if (otAction.equals(gs_tbg.GActSetShoreBombardmentCoastalOrder))
+                {
+                    return 20;
+                }
+                
+                if (otAction.equals(gs_tbg.GActSetShoreBombardmentCityInfrastructureOrder))
+                {
+                    return 3;
+                }
+                
+                if (otAction.equals(gs_tbg.GActSetShoreBombardmentCityPortOrder))
+                {
+                    return 5;
+                }
+                
+                if (otAction.equals(gs_tbg.GActSetShoreBombardmentCityResearchOrder))
+                {
+                    return 3;
+                }
+                    
+                if (self.objGameSysAIUtility.bTestMode)
+                {
+                    logWarn("Unexpected order type " + otAction);
+                }
+
+                return 0;
+            } // getBombValue
+
+
+            // returns action type and sets this.bombTarget
+            this.getBombAction = function(fleetGroup,region)
+            {
+                this.bombTarget = region;
+                
+                var otBestBombAction = null;
+                var bestBombValue = 0; // must be greater than this
+                var result = fleetGroup.getValidActionsForTarget(this.avatar,region);
+                if (result == null)
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: no valid actions for region " + region.strName);
+                }
+                else
+                {
+                    var actions = result.objUnitGroupActions;
+                    if (actions.size == 0)
+                    {
+                        // Nothing we can do for the region. See if there's a city we can target instead
+                        var cities = self.objGameSysCity.objCities.filter({ "refRegion": region});
+                        for (var j in cities)
+                        {
+                            var city = cities[j];
+                            result = fleetGroup.getValidActionsForTarget(this.avatar,city);
+                            if (result.objUnitGroupActions.size > 0)
+                            {
+                                if (this.pad.bWantMilitaryAILog)
+                                {
+                                    log("DEBUG: targeting city instead of region");
+                                }
+                            
+                                actions = result.objUnitGroupActions;
+                                this.bombTarget = city;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: " + actions.size + " possible actions for fleet " + fleetGroup.strName + " vs. " + region.strName);
+                        
+                    for (var a in actions)
+                    {
+                        var action = actions[a];
+                        var bombValue = this.getBombValue(action.otAction,region);
+                        
+                        if (this.pad.bWantMilitaryAILog)
+                            log("DEBUG: value of " + action.otAction + "=" + bombValue);
+                        
+                        if (bombValue > bestBombValue)
+                        {
+                            otBestBombAction = action.otAction;
+                            bestBombValue = bombValue;
+                        }
+                    }
+                }
+                return otBestBombAction;
+            } // getBombAction
+
+
+            this.advanceBombardPhase = function()
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: AIPlanSeaInvasion by " + this.nation.strName + " from " + self.objSourceCity.strName + " to " + self.objStartLandRegion.strName + " advanceBombardPhase()");
+                }            
+            
+                var region = self.objBuildupRegions.getArbitraryValue(); // currently only one           
+                var fleetGroup = self.getCompleteComposition(this.avatar, region,self.strComposition);
+                if (fleetGroup == null)
+                {
+                    this.setPhase(AttackPhase.Failure, "destroyed during bombard phase");
+                    return;
+                }
+
+                var currentRegion = fleetGroup.getRegion(this.avatar);
+                var controller = self.objStartLandRegion.refController.resolve(this.avatar);
+                if (self.objMilitaryAI.isDesignatedOrActualEnemy(this.avatar,controller))
+                {
+                    if (fleetGroup.objUnitOrder == null)
+                    {
+                        var otBombAction = this.getBombAction(fleetGroup, self.objStartLandRegion); // also sets this.bombTarget
+                        if (otBombAction != null)
+                        {
+                            if (this.pad.bWantMilitaryAILog)
+                            {
+                                log("DEBUG: sendAction " + otBombAction + " from " + currentRegion.strName + " by " + fleetGroup.strName + " target " + self.objStartLandRegion.strName);
+                            }
+                            var bombAction = otBombAction.create({"refUnitGroup": fleetGroup, "objTarget": this.bombTarget });
+                            this.avatar.sendAction(bombAction);
+                            return; // stay in this phase
+                        }
+                    }
+                    else
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: " + fleetGroup.strDisplayName + " continuing with " + fleetGroup.objUnitOrder );
+                        }
+                        return; // stay in this phase
+                    }
+                }
+
+                this.setPhase(AttackPhase.FinishUnload);
+            } // advanceBombardPhase
+
+
+            this.advanceUnloadPhase = function()
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: AIPlanSeaInvasion by " + this.nation.strName + " from " + self.objSourceCity.strName + " to " + self.objStartLandRegion.strName + " advanceUnloadPhase()");
+                }            
+            
+                var region = self.objBuildupRegions.getArbitraryValue(); // currently only one
+                var landRegion = self.objStartLandRegion;
+            
+                // collect groups that have unloaded into a single army
+                var arrivedGroups = new Array();
+                var enRouteGroups = new Array();
+                var percentArrivedPower = self.getAssignedUnitGroups(this.avatar, region, self.strComposition, arrivedGroups, enRouteGroups);
+
+                // go thru enRouteGroups (all should be considerred 'en route' since the completed composition is using the port region assignment)
+                // and pick out the ones at the landRegion
+                var landGroups = new Array();
+                for (var i in enRouteGroups)
+                {
+                    var group = enRouteGroups[i];
+                    var testRegion = group.getRegion(this.avatar);
+                    if (testRegion.equals(landRegion))
+                        landGroups.push(group);
+                }
+                if (this.pad.bWantMilitaryAILog)
+                    log("DEBUG: " + landGroups.length + " landed groups found.");
+                    
+                if (landGroups.length < 1)
+                {
+				    var dlm = self.objDesiredLandMass;
+                    if (dlm != null)
+                    {
+                        dlm.nSeaInvasionFailures += 1;
+                        
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: increased dlm sea invasion failures to " + dlm.nSeaInvasionFailures);
+                        }
+                    }
+                    this.setPhase(AttackPhase.Failure,"Did all my land troops get destroyed?");
+                    return;
+                }
+                
+                var firstGroup = null;
+                
+                // merge land groups together
+                if (landGroups.length > 1)
+                {
+                    var mergeOrder = gs_tbg.GActMergeUnitGroups.create();
+                    for (var i in landGroups)
+                    {
+                        var group = landGroups[i];
+                        if (firstGroup == null)
+                        {
+                            firstGroup = group;
+                            mergeOrder.refUnitGroupToMergeInto = firstGroup;
+                        }
+                        else
+                        {
+                            mergeOrder.refUnitGroupsToMerge.add(group);
+                        }
+                    }
+                    this.avatar.sendAction(mergeOrder);
+                }
+                else
+                {
+                    firstGroup = landGroups[0];
+                }
+                                
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: regrouped units onto region " + landRegion.strName);
+                    self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar,firstGroup, true);
+                }
+                
+                // release our merged land group from the sea invasion so it can be accepted by the land invasion
+                self.releaseFromAssignment(this.avatar, firstGroup);
+                self.objParentAI.objMilitaryAIScript.createLandInvasionIfNeeded(this.avatar,self,firstGroup);
+                
+                // see if the fleet group can stick around and bombard the shore to help
+                var fleetGroup = self.getCompleteComposition(this.avatar,region,self.strComposition);
+                if (fleetGroup != null)
+                {
+                    var otBombAction = this.getBombAction(fleetGroup,landRegion);
+                    
+                    if (otBombAction != null)
+                    {
+                        // we can help the invasion
+                        this.setPhase(AttackPhase.Bombard);
+                    }
+                }                
+                
+                this.setPhase(AttackPhase.FinishUnload);
+                
+            } // this.advanceUnloadPhase
+            
+            this.advanceFinishUnloadPhase = function()
+            {
+                if (this.paratrooperSubPlan != null)
+                {
+                    this.paratrooperSubPlan.detachFromParent(this.avatar);
+                }
+                this.setPhase(AttackPhase.Success,"Finished unload.");               
+            }
+
+            this.canUseTactic = function(eTactic)
+            {
+                if (!eTactic.equals(gs_tbg.Tactic.SoftenUpShoreDefenses))
+                    return false;
+                    
+                // check for oil shortage
+                var desiredOil = this.pad.getDesiredResourceAmount(self.objParentAI.objOilTemplate);
+                if (self.objNationOil.nAmount < desiredOil)
+                    return false;
+                    
+                // check for arms shortage
+                var desiredArms = this.pad.getDesiredResourceAmount(self.objParentAI.objArmsTemplate);
+                if (self.objNationArms.nAmount < desiredArms)
+                    return false;
+
+                var otType = self.objParentAI.objMilitaryAIScript.getPlanTypeForTactic(eTactic);
+                if (otType == null)
+                    return false;
+
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: plan type for " + eTactic.name + " is " + otType);
+                }
+
+                var bCanUse = true;
+
+                var strSubPlanComposition = self.objParentAI.objMilitaryAIScript.strNavalBombardComposition;
+                if (!self.objMilitaryAI.canBuildCompositionNear(this.avatar,self.objSourceCity,strSubPlanComposition))
+                {
+                    bCanUse = false;
+
+                    var nWeight = 1; // tweak point
+                    self.objMilitaryAI.learnToBuildCompositionAtCity(this.avatar, self.objSourceCity, strSubPlanComposition, nWeight);
+
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: " + this.nation.strName + " cannot build " + strSubPlanComposition + " near " + self.objSourceCity.strName);
+                    }
+                }
+
+                var composition = self.objMilitaryAI.getComposition(this.avatar,strSubPlanComposition);
+                if (composition.containsUnitBranchElements(this.avatar, self.objGameSysAIUtility.objUnitBranchTemplateAirForce))
+                {
+                    // we need an airbase at the buildup region so we can load planes
+                    var buildupRegion = self.objSourceCity.refRegion.resolve(this.avatar);
+                    if (buildupRegion.objAirbaseImprovement == null)
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                            log("DEBUG: " + self + " " + self.objSourceCity.strName + " needs an airbase.");
+                        if (!self.objMilitaryAI.objDesiredAirbaseRegions.contains(buildupRegion))
+                        {
+                            if (this.pad.bWantMilitaryAILog)				
+                                log("DEBUG: adding to objDesiredAirbaseRegions.");
+                            self.objMilitaryAI.objDesiredAirbaseRegions.add(buildupRegion);
+                            this.pad.bUpdateRegionExclusions = true; // tells production AI to re-evaluate locations for airbases, defense etc
+                        }
+
+                        bCanUse = false;
+                    }
+                }
+
+                if (this.pad.bTestBoostResources)
+                {
+                    return true; // force it to try anyway
+                }
+
+                return bCanUse;
+            } // this.canUseTactic
+
+        } // TempContext
+
+        // expected method
+        function advance(avatar)
+        {
+            var data = new TempContext(avatar);
+            if (self.objDesiredLandMass == null)
+            {
+                // nothing to conquer (may have won)
+                data.setPhase(AttackPhase.Success,"No desired land mass.");
+                return;
+            }
+
+            switch(self.nPhase)
+            {
+                case AttackPhase.Start:
+                    data.advanceStartPhase();
+                    break;
+                    
+                case AttackPhase.ObtainAccess:
+                    data.advanceObtainAccessPhase();
+                    break;
+                    
+                case AttackPhase.Buildup:
+                    data.advanceBuildupPhase();
+                    break;
+                    
+                case AttackPhase.Refuel:
+                    data.advanceRefuelPhase();
+                    break;
+                    
+                case AttackPhase.CrossSea:
+                    data.advanceCrossSeaPhase();
+                    break;
+
+                case AttackPhase.ReadyToUnload:
+                    data.advanceReadyToUnloadPhase();
+                    break;
+                    
+                case AttackPhase.Unload:
+                    data.advanceUnloadPhase();
+                    break;
+                
+                case AttackPhase.Bombard:
+                    data.advanceBombardPhase();
+                    break;
+                
+                case AttackPhase.FinishUnload:
+                    data.advanceFinishUnloadPhase();
+                    break;
+                                        
+                // case AttackPhase.Success:
+                // case AttackPhase.Failure:
+            }
+        } // advance
+
+        // expected method
+        function updateUnitRequirements(avatar)
+        {
+            if (self.objDesiredLandMass == null)
+                return; // plan successful or cancelled
+
+            var data = new TempContext(avatar);
+            switch(self.nPhase)
+            {
+                case AttackPhase.Buildup:
+                    data.updateBuildupRequirements();
+                    break;
+                    
+                case AttackPhase.Refuel:
+                case AttackPhase.CrossSea:
+                case AttackPhase.ReadyToUnload:
+                case AttackPhase.Unload:
+                case AttackPhase.Bombard:               
+                    data.updateCrossSeaRequirements();
+                    break;
+            }
+        }
+        
+        // sea invasions recheck their unload regions anyway so we don't need a handleMilitaryAccessLost function
+		// function handleMilitaryAccessLost(avatar)
+		//{
+		//}
+		
+		function handleCancel(avatar)
+		{
+            var data = new TempContext(avatar);
+            data.cancelSubPlans();
+		}
+		
+		function handleUnitDestroyed(avatar, unit, event, assignment)
+		{
+            var data = new TempContext(avatar);
+            data.handleUnitDestroyed(unit, event, assignment);
+		}
+        
+        function isPastBuildupPhase() {
+            switch(self.nPhase)
+            {
+                case AttackPhase.Start:
+                case AttackPhase.Buildup:
+                case AttackPhase.ObtainAccess:
+                    return false;
+            }
+            return true;
+        }
+
+        ]]></script>
+    </objectDef>
+</locust>

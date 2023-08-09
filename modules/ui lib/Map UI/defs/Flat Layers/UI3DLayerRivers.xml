@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<!-- Rivers -->
+	<objectDef type="UI3DLayerRivers" superType="mlui.UI3DLayer">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>    
+
+		<object type="ml3dworld.TransformTranslate" name="objTransform">
+			<property name="vecTranslation">
+				Vec3D(0, 0, 0.27)
+			</property>
+		</object>                        
+    
+		<object type="UI3DRiver" name="objRivers" tiedTo="gs_tbg.getAllMapRivers(self.objGameRoot)">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objMapRiver" from="tiedTo"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI3DRiver" superType="UI3DMapModel">
+		<!-- Input -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objMapRiver" type="gs_tbg.MapRiver"/>
+		<propertyDef name="objMap" type="gs_tbg.GameSysMap"/>
+		
+		<propertyDef name="strToolTip" from="self.objMapRiver.strDisplayName 
+			+ '&#010;   ' + locale.SID.UI.CrossingPenalty + ': ' +
+				gs_tbg.getGameSysUnit(self.objGameRoot).nRiverCrossingMovementPenalty + '%'"/>
+		
+		<property name="tmplModel" from="self.objMapRiver.tmplDisplayModel"/>
+		
+	
+		<object type="mlui.UIDataMaterial" name="objMaterial">
+			<object type="mlmedia.Material" name="objMaterial">
+                <property name="eAlphaMode" value="ALPHA_MASK" />            
+                <property name="fTransparency" value="0.0"/>          
+				<property name="colEmission" value="#2a4c7eFF"/>                
+			</object>
+		</object>
+		
+		<!-- UI3DMapModel properties -->
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		
+	</objectDef>
+    
+    
+</locust>

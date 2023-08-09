@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DToolTipUnitGroup" superType="mlui.UI2DToolTip">
+		<propertyDef name="objMapData" type="MapData" from="self.objElement.objMapData"/><!-- Anything which uses this tooltip needs to have an objMapData -->
+		<propertyDef name="nHorizPadding" type="int" default="14"/>
+		<propertyDef name="nVertPadding" type="int" default="4"/>
+		
+		<propertyDef name="objGroupStack" type="UnitGroupStack" from="self.objElement.objMapData.objStacks.getStackForUnitGroup(self.objElement.objUnitGroup)"/>
+		
+		<property name="nWidth">
+			sortDescending(?{bubble: bubble.nWidth}, self.objGroupBubble).first.nWidth + self.nHorizPadding
+		</property>
+		<property name="nHeight">
+			self.objGroupStack.objUnitGroups.size * 61
+		</property>
+		<property name="nOffsetX" value="32"/>
+		<property name="nOffsetY" value="32"/>
+		
+		<object type="mlui.UI2DImage" name="objBorder">
+			<property name="tmplImage" value="default_media.ImgToolTipBorder"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="0"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="default_media.ImgToolTipBackground"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth"  from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nDepth" value="1"/>
+		</object>
+		
+        <propertyDef name="objUnitGroups" type="gs_tbg.UnitGroup" variable="true" >
+            filter(?{group: group != null}, self.objGroupStack.objUnitGroups)
+        </propertyDef>
+        
+		<object type="UnitGroupToolTipElement" name="objGroupBubble" tiedTo="self.objUnitGroups">
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY">
+				def.objUnitGroups.indexOf(tiedTo) * 61
+			</property>
+			<property name="objUnitGroup" from="tiedTo"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="nHeight" from="61"/>
+			<property name="nDepth" value="2"/>
+		</object>
+	</objectDef>
+  
+	<objectDef type="UnitGroupToolTipElement" superType="mlui.UI2DElement">
+		<propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		
+		<property name="nWidth">
+			if(self.objText.nWidth GTE 120, self.objText.nWidth, 120)
+		</property>
+		
+		<propertyDef name="nHealth" type="int">
+			((self.objUnitGroup.nHitPoints * 100) / if(self.objUnitGroup.nMaxHitPoints != 0, self.objUnitGroup.nMaxHitPoints, 1))
+		</propertyDef>
+    
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+			<property name="strText" from="def.objUnitGroup.strDisplayName"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" value="16"/>
+			<property name="nDepth" value="3"/>
+		</object>
+		
+		<object type="UnitGroupHealthBar" name="objHealthBar">
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" from="16"/>
+			<property name="nPercent" from="def.nHealth"/>
+			<property name="nDepth" value="4"/>
+		</object>
+		
+		<propertyDef name="objGroupCombatStats" storesChildren="true">
+			switch{
+				case self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateArmy:
+					<object type="UI2DArmyToolTip">
+						<property name="objGroup" from="def.objUnitGroup"/>
+						<property name="nY" value="33"/>
+						<property name="haXAlign" value="CENTER"/>
+						<property name="nHeight" value="25"/>
+						<property name="nDepth" value="5"/>
+					</object>
+				case self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateNavy:
+					<object type="UI2DNavyToolTip">
+						<property name="objGroup" from="def.objUnitGroup"/>
+						<property name="nY" value="33"/>
+						<property name="haXAlign" value="CENTER"/>
+						<property name="nHeight" value="25"/>
+						<property name="nDepth" value="5"/>
+					</object>
+				case self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateAirForce:
+					<object type="UI2DAirToolTip">
+						<property name="objGroup" from="def.objUnitGroup"/>
+						<property name="nY" value="33"/>
+						<property name="haXAlign" value="CENTER"/>
+						<property name="nHeight" value="25"/>
+						<property name="nDepth" value="5"/>
+					</object>
+				case self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateSubmarine:
+					<object type="UI2DSubToolTip">
+						<property name="objGroup" from="def.objUnitGroup"/>
+						<property name="nY" value="33"/>
+						<property name="haXAlign" value="CENTER"/>
+						<property name="nHeight" value="25"/>
+						<property name="nDepth" value="5"/>
+					</object>
+			}
+		</propertyDef>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DArmyToolTip" superType="mlui.UI2DElement">
+		<propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+		
+		<property name="nWidth">
+			self.objDefenseValue.nX + self.objDefenseValue.nWidth
+		</property>
+		
+		<object type="mlui.UI2DImage" name="objGroundIcon">
+			<property name="tmplImage" value="skin.ImgUnitIconGroundAttack"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objGroundValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+			<property name="strText" from="def.objGroup.nLandAttackPower / 10"/>
+			<property name="nX" value="28"/>
+			<property name="nY" value="8"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objDefenseIcon">
+			<property name="tmplImage" value="skin.ImgUnitIconGroundDefense"/>
+			<property name="nX" from="def.objGroundValue.nX + def.objGroundValue.nWidth + 5"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objDefenseValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+			<property name="strText" from="def.objGroup.nLandDefensePower / 10"/>
+			<property name="nX" from="def.objGroundValue.nX + def.objGroundValue.nWidth + 30"/>
+			<property name="nY" value="8"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DNavyToolTip" superType="mlui.UI2DElement">
+		<propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+		
+		<property name="nWidth">
+			self.objSubValue.nX + self.objSubValue.nWidth
+		</property>
+		
+		<object type="mlui.UI2DImage" name="objSeaIcon">
+			<property name="tmplImage" value="skin.ImgUnitIconNavalAttack"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSeaValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+			<property name="strText" from="def.objGroup.nSeaSurfacePower / 10"/>
+			<property name="nX" value="28"/>
+			<property name="nY" value="8"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSubIcon">
+			<property name="tmplImage" value="skin.ImgUnitIconSubAttack"/>
+			<property name="nX" from="def.objSeaValue.nX + def.objSeaValue.nWidth + 5"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSubValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+			<property name="strText" from="def.objGroup.nSeaSubmergedPower / 10"/>
+			<property name="nX" from="def.objSeaValue.nX + def.objSeaValue.nWidth + 30"/>
+			<property name="nY" value="8"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DAirToolTip" superType="mlui.UI2DElement">
+		<propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+		
+		<property name="nWidth">
+			self.objGroundValue.nX + self.objGroundValue.nWidth
+		</property>
+		
+		<object type="mlui.UI2DImage" name="objAirIcon">
+			<property name="tmplImage" value="skin.ImgUnitIconAirAttack"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objAirValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+			<property name="strText" from="def.objGroup.nAirPower / 10"/>
+			<property name="nX" value="28"/>
+			<property name="nY" value="8"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objGroundIcon">
+			<property name="tmplImage" value="skin.ImgUnitIconGroundAttack"/>
+			<property name="nX" from="def.objAirValue.nX + def.objAirValue.nWidth + 5"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objGroundValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+			<property name="strText" from="def.objGroup.nLandAttackPower / 10"/>
+			<property name="nX" from="def.objAirValue.nX + def.objAirValue.nWidth + 30"/>
+			<property name="nY" value="8"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DSubToolTip" superType="mlui.UI2DElement">
+		<propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+		
+		<property name="nWidth">
+			self.objSurfaceValue.nX + self.objSurfaceValue.nWidth
+		</property>
+		
+		<object type="mlui.UI2DImage" name="objSubIcon">
+			<property name="tmplImage" value="skin.ImgUnitIconSubAttack"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSubValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+			<property name="strText" from="def.objGroup.nSeaSubmergedPower / 10"/>
+			<property name="nX" value="28"/>
+			<property name="nY" value="8"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSurfaceIcon">
+			<property name="tmplImage" value="skin.ImgUnitIconNavalAttack"/>
+			<property name="nX" from="def.objSubValue.nX + def.objSubValue.nWidth + 5"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurfaceValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14CenterFIT"/>
+			<property name="strText" from="def.objGroup.nSeaSurfacePower / 10"/>
+			<property name="nX" from="def.objSubValue.nX + def.objSubValue.nWidth + 30"/>
+			<property name="nY" value="8"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UnitGroupHealthBar" superType="mlui.UI2DElement">
+		<propertyDef name="nPercent" type="int"/>
+		
+		<object type="mlui.UI2DImage" name="objHealthBarBG">
+			<property name="tmplImage" value="skin.ImgHealthBarBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" from="16"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				if(def.nPercent LTE 0.3, #7FFF00FF,
+					if(def.nPercent LTE 0.7, #FFE303FF, #C4DF9BFF))
+			</property>	
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" from="(0.95 * def.nPercent)"/>
+			<property name="nHeight" value="13"/>
+		</object>
+	</objectDef>
+	
+    <objectDef type="UI3DUnitGroup" superType="mlui.UI3DElement">
+        <!-- Inputs -->
+        <propertyDef name="objGameRoot" type="Object"/>
+        <propertyDef name="objMapData" type="MapData"/>
+        <propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+        <propertyDef name="objGO" type="Object" from="self.objUnitGroup"/>
+		<propertyDef name="objGroupStack" type="UnitGroupStack"/>       
+        <propertyDef name="objDisplayUnit" type="gs_tbg.Unit"/>
+        <propertyDef name="vecPosition" type="Vec3D"/>
+        <propertyDef name="fFacingAngle" type="float"/>
+		
+		<property name="bVisible">
+			switch{
+				case self.objMapData.objCameraTransform.fDistance GTE self.objMapData.fDropUnitsDistance:
+					false
+				default:
+					if(self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateSubmarine AND
+						self.objUnitGroup.refController.resolve(self.objGameRoot) != self.objMapData.objNation,
+						gs_tbg.getNationDetectionForRegion(self.objGameRoot, self.objMapData.objNation, self.objUnitGroup.getRegion(self.objGameRoot)),
+						true)
+			}
+		</property>
+		
+        <!-- UI3DElement properties -->
+		<propertyDef name="strToolTip" from="UI2DToolTipUnitGroup"/>
+
+        <!-- Internal -->
+		<propertyDef name="vecCurPosition" type="Vec3D" from="self.vecPosition"/>
+		<propertyDef name="vecCurLandPosition" type="Vec3D">
+			if(self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateNavy OR self.objUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateSubmarine,
+				self.vecCurPosition,
+				self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(self.vecCurPosition))
+		</propertyDef>
+		
+        <!-- Models -->
+        <object name="objMapModelUnit" type="UI3DMapModelUnitGO">
+            <property name="objGO" from="def.objGO"/>
+            
+            <!-- UI3DMapModelBase properties -->       
+            <property name="objMap" from="def.objMapData.objMap" />
+            <property name="vecPosition">
+                Vec3D(def.vecCurPosition.x,def.vecCurPosition.y,def.vecCurPosition.z+def.objMapModelUnit.fElevation)           
+            </property>
+            <property name="vecPointOfInterest" from="def.objMapData.objCameraTransform.vecLookAt" />
+            <object type="ml3dworld.TransformList" name="objLocalTransforms">
+                <object type="ml3dworld.TransformRotate" name="objTransforms">
+                    <property name="fAngle" from="def.fFacingAngle"/>
+                    <property name="vecAxis" value="[0.0, 0.0, 1.0]"/>
+                </object>
+	            <object type="ml3dworld.TransformRigidBody" name="objTransforms">
+                    <property name="fPhi">
+                        	?{mu: if(mu!=null,mu.fRotation,0.0)}(def.objMapModelUnit)
+                    </property>
+                    <property name="fTheta" value="90.0"/>
+                    <property name="fGamma" value="90.0"/>
+                    <property name="fScale">
+                        ?{mu: if(mu!=null,mu.fScale,0.0025)}(def.objMapModelUnit)
+                    </property>
+	            </object>
+            </object>
+            
+            <!-- UI3DMapModelUnit properties -->
+            <property name="objUnitModelTable" from="def.objMapData.objUnitModelTable"/>
+	        <property name="objUnit" from="def.objDisplayUnit"/>
+        </object>
+        
+        <!-- Decal -->
+        <object type="mlui.UIDataMaterial" name="objMaterial" existsWhile="self.objMapModelUnit.strOverrideEffect != ''">
+            <property name="strOverride" from="def.objMapModelUnit.strOverrideEffect"/>
+            <object type="mlmedia.Material" name="objMaterial">
+				<property name="eAlphaMode" value="ALPHA_BLEND"/>
+                <property name="nEmissionTexCoordSet" value="0"/>
+                <object type="mlmedia.SamplerFromTexture" name="objEmissionSampler">
+                    <property name="tmplTexture">
+                        def.objMapData.objFlagModelTextureTable.getEntry(
+                            def.objUnitGroup.refController.resolve(def.objGameRoot).tmplNationality,
+                            def.objUnitGroup.refController.resolve(def.objGameRoot).tmplIdeology
+                        ).tmplDecal128x128
+                    </property>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>                    
+                    <property name="eMipFilter" value="FILTER_NONE"/>
+                </object>
+            </object>
+        </object>
+
+        <!-- Effect -->
+        <object type="mlui.UIDataEffect" name="objEffect">
+            <property name="tmplEffect" value="SkinnedEffect"/>
+            switch { case mh2data.bShadows:
+            <property name="tmplSurfaceEffects" value="SkinnedShadowEffect"/>            
+            }
+        </object>
+        
+    </objectDef>
+
+    <objectDef type="UI3DUnitGroupInEngagement" superType="UI3DUnitGroup">
+        <!--
+            The new UI3DMapModelUnit object selects the model and animation for an engagement. 
+            We don't currently need to do anything special here.
+        -->
+    </objectDef>
+    
+	<!-- Selection Display -->
+	<objectDef type="UI3DGroupStackSelect" superType="UI3DMapModelGO">
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objGroupStack" type="UnitGroupStack"/>
+
+        <!-- Internal -->
+		<propertyDef name="objSelectedModel" type="MapModelTemplate">
+            self.objMapData.objUnitModelTable.tmplSelectionMapModel.resolve()
+        </propertyDef>
+
+		<property name="tmplModel" from="self.objSelectedModel.tmplModel"/>	
+        <property name="objGO" from="self"/>
+		
+		<!-- UI3DMapModel properties -->
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		<property name="vecPosition">
+            Vec3D(self.objGroupStack.vecCurPosition.x, self.objGroupStack.vecCurPosition.y, 0.27)
+        </property>        
+		<object type="ml3dworld.TransformList" name="objLocalTransforms">
+			<object type="ml3dworld.TransformList" name="objTransforms">
+				<property name="objTransforms" from="def.objSelectedModel.objTransform"/>
+			</object>
+		</object>
+		
+		<object type="mlui.UIDataMaterial" name="objMaterial" existsWhile="self.objGroupStack.objUnitGroups.size GT 1 AND
+																			self.objGroupStack.objHeadUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateArmy">
+            <property name="strOverride" value="lambert3-fx"/>
+            <object type="mlmedia.Material" name="objMaterial">
+                <property name="nEmissionTexCoordSet" value="0"/>
+                <object type="mlmedia.SamplerFromTexture" name="objEmissionSampler">
+                    <property name="tmplTexture" value="skin.SelectedStackIndicatorArmy"/>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>                    
+                    <property name="eMipFilter" value="FILTER_NONE"/>
+                </object>
+            </object>
+        </object>
+		<object type="mlui.UIDataMaterial" name="objMaterial" existsWhile="self.objGroupStack.objUnitGroups.size GT 1 AND
+																			self.objGroupStack.objHeadUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateAirForce">
+            <property name="strOverride" value="lambert3-fx"/>
+            <object type="mlmedia.Material" name="objMaterial">
+                <property name="nEmissionTexCoordSet" value="0"/>
+                <object type="mlmedia.SamplerFromTexture" name="objEmissionSampler">
+                    <property name="tmplTexture" value="skin.SelectedStackIndicatorAirForce"/>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>                    
+                    <property name="eMipFilter" value="FILTER_NONE"/>
+                </object>
+            </object>
+        </object>
+		<object type="mlui.UIDataMaterial" name="objMaterial" existsWhile="self.objGroupStack.objUnitGroups.size GT 1 AND
+																			(self.objGroupStack.objHeadUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateNavy OR
+																			self.objGroupStack.objHeadUnitGroup.tmplUnitBranch == self.objMapData.objUnitBranchTemplateSubmarine)">
+            <property name="strOverride" value="lambert3-fx"/>
+            <object type="mlmedia.Material" name="objMaterial">
+                <property name="nEmissionTexCoordSet" value="0"/>
+                <object type="mlmedia.SamplerFromTexture" name="objEmissionSampler">
+                    <property name="tmplTexture" value="skin.SelectedStackIndicatorNavy"/>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>                    
+                    <property name="eMipFilter" value="FILTER_NONE"/>
+                </object>
+            </object>
+        </object>
+	</objectDef>
+</locust>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<object type="gs_tbg.GameSysVictoryCondition" name="objGameSysVictoryCondition">
+        <!-- Turn Limits Victory  -->
+        <!-- Capture Cities Victory  -->
+        <object type="gs_tbg.VictoryConditionTurnLimit" name="objVictoryConditions" >
+            <property name="strName" value="TurnLimit"/>
+            <property name="nTurns" value="999999"/>
+            <property name="bActive" value="true"/>
+        </object>
+        <!-- Capture Cities Victory  -->
+        <object type="gs_tbg.VictoryConditionCities" name="objVictoryConditions" >
+            <property name="strName" value="GermanyCities"/>
+            <property name="refNation" value="Germany"/>
+            <property name="refCities" value="Berlin"/>
+            <property name="refCities" value="Munich"/>
+            <property name="refCities" value="Frankfurt"/>
+            <property name="refCities" value="Moscow"/>
+            <property name="refCities" value="London"/>
+            <property name="refCities" value="Paris"/>
+            <property name="nHoldTurns" value="1"/>
+        </object>
+        <!-- Capture Cities Victory  -->
+        <object type="gs_tbg.VictoryConditionCities" name="objVictoryConditions" >
+            <property name="strName" value="ItalyCities"/>
+            <property name="refNation" value="Italy"/>
+            <property name="refCities" value="Rome"/>
+            <property name="refCities" value="Milan"/>
+            <property name="refCities" value="Taranto"/>
+            <property name="refCities" value="Gibraltar"/>
+            <property name="refCities" value="Valletta"/>
+            <property name="refCities" value="Cairo"/>
+            <property name="nHoldTurns" value="1"/>
+        </object>
+        <!-- Capture Cities Victory  -->
+        <object type="gs_tbg.VictoryConditionCities" name="objVictoryConditions" >
+            <property name="strName" value="JapanCities"/>
+            <property name="refNation" value="Japan"/>
+            <property name="refCities" value="Tokyo"/>
+            <property name="refCities" value="Osaka"/>
+            <property name="refCities" value="Nagoya"/>
+            <property name="refCities" value="Honolulu"/>
+            <property name="refCities" value="Nanking"/>
+            <property name="refCities" value="Canberra"/>
+            <property name="nHoldTurns" value="1"/>
+        </object>
+        <!-- Capture Cities Victory  -->
+        <object type="gs_tbg.VictoryConditionCities" name="objVictoryConditions" >
+            <property name="strName" value="USSRCities"/>
+            <property name="refNation" value="USSR"/>
+            <property name="refCities" value="Moscow"/>
+            <property name="refCities" value="Leningrad"/>
+            <property name="refCities" value="Stalingrad"/>
+            <property name="refCities" value="Berlin"/>
+            <property name="refCities" value="Hsinking"/>
+            <property name="refCities" value="Ankara"/>
+            <property name="nHoldTurns" value="1"/>
+        </object>
+        <!-- Capture Cities Victory  -->
+        <object type="gs_tbg.VictoryConditionCities" name="objVictoryConditions" >
+            <property name="strName" value="FranceCities"/>
+            <property name="refNation" value="France"/>
+            <property name="refCities" value="Paris"/>
+            <property name="refCities" value="Marseilles"/>
+            <property name="refCities" value="Algiers"/>
+            <property name="refCities" value="Berlin"/>
+            <property name="refCities" value="Rome"/>
+            <property name="refCities" value="Mainz"/>
+            <property name="nHoldTurns" value="1"/>
+        </object>
+        <!-- Capture Cities Victory  -->
+        <object type="gs_tbg.VictoryConditionCities" name="objVictoryConditions" >
+            <property name="strName" value="UnitedKingdomCities"/>
+            <property name="refNation" value="UnitedKingdom"/>
+            <property name="refCities" value="London"/>
+            <property name="refCities" value="Manchester"/>
+            <property name="refCities" value="Birmingham"/>
+            <property name="refCities" value="Berlin"/>
+            <property name="refCities" value="Rome"/>
+            <property name="refCities" value="Tokyo"/>
+            <property name="nHoldTurns" value="1"/>
+        </object>
+        <!-- Capture Cities Victory  -->
+        <object type="gs_tbg.VictoryConditionCities" name="objVictoryConditions" >
+            <property name="strName" value="UnitedStatesCities"/>
+            <property name="refNation" value="UnitedStates"/>
+            <property name="refCities" value="WashingtonDC"/>
+            <property name="refCities" value="NewYork"/>
+            <property name="refCities" value="LosAngeles"/>
+            <property name="refCities" value="Berlin"/>
+            <property name="refCities" value="Rome"/>
+            <property name="refCities" value="Tokyo"/>
+            <property name="nHoldTurns" value="1"/>
+        </object>
+        <!-- Capture Cities Victory  -->
+        <object type="gs_tbg.VictoryConditionCities" name="objVictoryConditions" >
+            <property name="strName" value="ChinaCities"/>
+            <property name="refNation" value="China"/>
+            <property name="refCities" value="Nanking"/>
+            <property name="refCities" value="Chungking"/>
+            <property name="refCities" value="Shanghai"/>
+            <property name="refCities" value="Hsinking"/>
+            <property name="refCities" value="Taihoku"/>
+            <property name="refCities" value="Tokyo"/>
+            <property name="nHoldTurns" value="1"/>
+        </object>
+
+    </object>
+</locust>

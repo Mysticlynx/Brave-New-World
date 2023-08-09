@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	
+	
+	<objectDef type="UI2DLostConnectionScreen" superType="mlui.UI2DDefaultLostConnectionScreen">
+		<object type="mlui.UI2DImage" name="objBlack">
+			<property name="colColor" value="#000000C0"/>
+			<property name="tmplImage" value="skin.ImgWhite"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+        
+        <!-- suppress base elements -->
+		<object type="mlui.UI2DText" name="objInfo">
+			<property name="strText" value=""/>
+		</object>
+		<object type="mlui.UI2DText" name="objQuit">
+			<property name="strText" value=""/>
+		</object>        
+        
+        <object type="mlui.UI2DText" name="objStatusText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite30Center"/>
+			<property name="strText" from="'  ' + locale.SID.UI.LostConnectionReconnecting + '  '"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" value="200"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="50"/>
+		</object>        
+        
+        <object type="mlui.UI2DText" name="objExitText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite30Center"/>
+			<property name="strText">
+			?{numDots:
+			    "  " + "." * numDots + " " * (10-numDots)
+			}(int(mlui.objUI.fTime * 4.0) % 10)
+            </property>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" value="250"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="50"/>
+		</object>
+        
+        <object type="mlui.UI2DTextButton" name="objExitButton">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>        
+			<property name="strText" from="locale.SID.UI.ExitGame"/>
+			<property name="haXAlign" value="CENTER"/>
+            <property name="nY" value="400"/>
+            <property name="nWidth" value="200"/>
+            <property name="nHeight" value="60"/>
+            
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {
+                            quick_exit(0);
+                        }
+                    ]]></script>
+                </object>
+            </object>
+        </object>        
+	</objectDef>
+	
+</locust>

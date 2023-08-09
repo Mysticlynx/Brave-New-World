@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DDiplomacyTabWars" superType="UI2DDiplomacyTab">
+		<object type="mlui.UI2DText" name="objAlliancesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.Wars"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objAttackers">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Nations"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="429"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objDefenders">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Nations"/>
+			<property name="nX" value="439"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="429"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objTopBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSliderBGBubble">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="867"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="16"/>
+			<property name="nHeight" value="495"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSliderBG">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="869"/>
+			<property name="nY" value="189"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="491"/>
+		</object>
+
+	<!-- Alliances Section -->
+		<object type="mlui.UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="871"/>
+			<property name="nHeight" value="495"/>
+
+			<object type="mlui.SliderInfo" name="objHorizInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="867"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="16"/>
+				<property name="nMaxKnobLength" value="16"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="mlui.SliderInfo" name="objVertInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="12"/>
+				<property name="nLength" value="495"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="37"/>
+				<property name="nMaxKnobLength" value="37"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="UI2DWorldWarsList2" name="objScrollable">
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="867"/>
+			</object>
+		</object>
+		
+		<!--<object type="UI2DWorldWars" name="objWorldAlliances">-->
+		<!--	<property name="nX" value="10"/>-->
+		<!--	<property name="nY" value="187"/>-->
+		<!--	<property name="nWidth" value="871"/>-->
+		<!--	<property name="nHeight" value="495"/>-->
+		<!--</object>-->
+	</objectDef>
+	
+	<objectDef type="UI2DWorldWarsList2" superType="common_ui.UI2DList">
+		<property name="nSpacing" value="2"/>
+		
+		<object type="UI2DWorldWarsBubble2" name="objElements" tiedTo="gs_tbg.getAllWars(mh2data.objAvatar)">
+			<property name="objWar" from="tiedTo"/>
+			<property name="nWidth" value="858"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DWorldWarsBubble2" superType="mlui.UI2DElement">
+		<propertyDef name="objWar" type="gs_tbg.War"/>
+		
+		<property name="nHeight" from="self.objBubbles.nHeight"/>
+
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			
+			<object type="UI2DWarsRowBubbleMembers2" name="objElements">
+				<property name="objNations" from="def.objWar.objAttackers"/>
+				<property name="objWar" from="def.objWar"/>
+				<property name="nWidth" value="429"/>
+			</object>
+			
+			<object type="UI2DWarsRowBubbleMembers2" name="objElements">
+				<property name="objNations" from="def.objWar.objDefenders"/>
+				<property name="objWar" from="def.objWar"/>
+				<property name="nWidth" value="429"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DWarsRowBubbleMembers" superType="UI2DAllianceRowBubble">
+		<propertyDef name="objNations" type="gs_tbg.Nation" variable="true"/>
+
+			<object type="common_ui.UI2DListHorz" name="objIcon">
+				<property name="nX" value="3"/>
+				<property name="nY" value="3"/>
+				<property name="nSpacing" value="1"/>
+
+				<object type="UI2DNationFlag46x24" name="objElements" tiedTo="def.objNations">
+					<property name="objNation" from="tiedTo"/>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="46"/>
+					<property name="nHeight" value="24"/>
+				</object>
+			</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DWorldWars" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="871"/>
+		<property name="nHeight" value="495"/>
+
+		<object type="UI2DWorldWarsList" name="objList">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+		</object>
+
+	</objectDef>
+	
+	<objectDef type="UI2DWorldWarsList" superType="mlui.UI2DElement">
+		<property name="nWidth" from="self.objList.nWidth"/>
+		<property name="nHeight" from="self.objList.nHeight"/>
+
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="871"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				sortAscending(?{war: war.objAttackers.getArbitraryValue().strDisplayName}, gs_tbg.getAllWars(mh2data.objAvatar))
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DWorldWarsBubble"/>
+			<property name="strPropForItem" value="objWar"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+
+	</objectDef>
+	
+	<objectDef type="UI2DWarsRowBubbleMembers2" superType="mlui.UI2DElement">
+		<propertyDef name="objNations" type="gs_tbg.Nation" variable="true"/>
+		<propertyDef name="objWar" type="gs_tbg.War"/>
+		
+			<property name="nHeight" from="self.objBG.nHeight"/>
+
+			<object type="mlui.UI2DImage" name="objBG">
+				<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="def.nWidth"/>
+				<property name="nHeight">
+					switch{
+						case def.objWar.objAttackers.size GTE def.objWar.objDefenders.size:
+							if(def.objWar.objAttackers.size GT 9,
+								if(def.objWar.objAttackers.size GT 18, 78, 54), 30)
+							
+						default:
+							if(def.objWar.objDefenders.size GT 9,
+								if(def.objWar.objDefenders.size GT 18, 78, 54), 30)
+					}
+				</property>	
+				<property name="nDepth" value="-100"/>
+			</object>
+			
+			<object type="common_ui.UI2DFancyFlow" name="objIcon">
+				<property name="nX" value="3"/>
+				<property name="nY" value="3"/>
+				<property name="nEltSpacing" value="2"/>
+				<property name="nRowSpacing" value="1"/>
+				<property name="nMaxEltsPerRow" value="9"/>
+	
+				<object type="UI2DNationFlag46x24" name="objElements" tiedTo="def.objNations">
+					<property name="objNation" from="tiedTo"/>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="46"/>
+					<property name="nHeight" value="24"/>
+				</object>
+			</object>
+
+	</objectDef>
+	
+	<objectDef type="UI2DWorldWarsBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objWar" type="gs_tbg.War"/>
+		<propertyDef name="nRow" type="int"/>
+
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			
+			<object type="UI2DWarsRowBubbleMembers" name="objElements">
+				<property name="objNations" from="def.objWar.objAttackers"/>
+				<property name="nWidth" value="429"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+			
+			<object type="UI2DWarsRowBubbleMembers" name="objElements">
+				<property name="objNations" from="def.objWar.objDefenders"/>
+				<property name="nWidth" value="429"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+		</object>
+	</objectDef>
+</locust>

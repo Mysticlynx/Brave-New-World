@@ -1,0 +1,1785 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="UI2DSummaryPanelNotifications" superType="UI2DSummaryPanel">
+		<propertyDef name="tmplNotification" type="Object" variable="true" />
+		<propertyDef name="tmplFilter" type="ObjectType" />
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="328"/>		
+				
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineR">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<propertyDef name="bShowMenu" type="bool" default="false" />
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineL">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DScrollPane" name="objNotificationBubbles">
+			<property name="nX" value="0"/>
+			<property name="nY" from="if(def.tmplNotification.size == 0, 30, 0)"/>
+			<property name="nWidth" from="def.nWidth - 1"/>
+			<property name="nHeight" from="if(def.tmplNotification.size == 0, def.nHeight - 31, def.nHeight)"/>
+			
+			<object type="UI2DNotificationList" name="objScrollable">
+				<property name="tmplNotification" from="def.tmplNotification"/>
+				<property name="tmplFilter" from="def.tmplFilter"/>
+			</object>
+		</object>		
+		
+		<object type="common_ui.UI2DList" name="objFilterButtons" existsWhile="self.bShowMenu">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="1"/>				
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.All"/>
+				<property name="nDefaultWidth" from="def.nWidth-2"/>
+				<property name="nDefaultHeight" value="28"/>	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.bShowMenu = false;
+								def.tmplFilter = null;
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>	
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.Engagement"/>
+				<property name="nDefaultWidth" from="def.nWidth-2"/>
+				<property name="nDefaultHeight" value="28"/>	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.bShowMenu = false;
+								def.tmplFilter = gs_notify.NotificationTemplateEngagement;
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.DiplomaticSummary" />
+				<property name="nDefaultWidth" from="def.nWidth-2"/>
+				<property name="nDefaultHeight" value="28"/>	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.bShowMenu = false;
+								def.tmplFilter = gs_notify.NotificationTemplateDiplomatic;
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.Government"/>
+				<property name="nDefaultWidth" from="def.nWidth-2"/>
+				<property name="nDefaultHeight" value="28"/>	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.bShowMenu = false;
+								def.tmplFilter = gs_notify.NotificationTemplateGovernment;
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>				
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.Trade"/>
+				<property name="nDefaultWidth" from="def.nWidth-2"/>
+				<property name="nDefaultHeight" value="28"/>	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.bShowMenu = false;
+								def.tmplFilter = gs_notify.NotificationTemplateTrade;
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.Region"/>
+				<property name="nDefaultWidth" from="def.nWidth-2"/>
+				<property name="nDefaultHeight" value="28"/>	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.bShowMenu = false;
+								def.tmplFilter = gs_notify.NotificationTemplateRegion;
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.City"/>
+				<property name="nDefaultWidth" from="def.nWidth-2"/>
+				<property name="nDefaultHeight" value="28"/>	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.bShowMenu = false;
+								def.tmplFilter = gs_notify.NotificationTypeCity;
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.Research"/>
+				<property name="nDefaultWidth" from="def.nWidth-2"/>
+				<property name="nDefaultHeight" value="28"/>	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.bShowMenu = false;
+								def.tmplFilter = gs_notify.NotificationTemplateResearch;
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>					
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+				<property name="strText" from="locale.SID.UI.Stability"/>
+				<property name="nDefaultWidth" from="def.nWidth-2"/>
+				<property name="nDefaultHeight" value="28"/>	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.bShowMenu = false;
+								def.tmplFilter = gs_notify.NotificationTemplateStability;
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>			
+		</object>	
+
+        
+		<object type="mlui.UI2DTextButton" name="objCurrentFilter" existsWhile="!self.bShowMenu">
+			<property name="bVisible" from="def.tmplNotification.size == 0" />
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" >
+			switch
+			{
+				case def.tmplFilter == gs_notify.NotificationTemplateEngagement:
+					locale.SID.UI.Engagement
+				case def.tmplFilter == gs_notify.NotificationTemplateDiplomatic:
+					locale.SID.UI.DiplomaticSummary
+				case def.tmplFilter == gs_notify.NotificationTemplateGovernment:
+					locale.SID.UI.Government
+				case def.tmplFilter == gs_notify.NotificationTemplateTrade:
+					locale.SID.UI.Trade
+				case def.tmplFilter == gs_notify.NotificationTemplateRegion:
+					locale.SID.UI.Region
+				case def.tmplFilter == gs_notify.NotificationTemplateCity:
+					locale.SID.UI.City
+				case def.tmplFilter == gs_notify.NotificationTemplateResearch:
+					locale.SID.UI.Research
+				case def.tmplFilter == gs_notify.NotificationTemplateStability:
+					locale.SID.UI.Stability
+				default:
+					locale.SID.UI.All
+			}
+			</property>
+			<property name="nDefaultWidth" from="def.nWidth-2"/>
+			<property name="nDefaultHeight" value="28"/>	
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.bShowMenu = true;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>	
+				
+	</objectDef>
+	
+	<objectDef type="UI2DNotificationListB" superType="mlui.UI2DElement">
+		<propertyDef name="tmplNotificationCategory" type="TemplateRef" restriction="gs_notify.CategoryTemplate"/>
+		
+		<propertyDef name="objPerAvatarData" type="gs_notify.PADNotification"/>
+			<property name="objPerAvatarData" >
+				mh2data.objAvatar.getPerAvatarData(gs_notify.PADNotification)
+			</property>
+		
+		<property name="nWidth" from="self.objList.nWidth"/>
+		<property name="nHeight" from="self.objList.nHeight"/>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="252"/>
+			<property name="nHeight" value="327"/>
+			<property name="listItems">
+				sortDescending(?{notification: notification.nTurn},
+					filter(?{notification: notification.nTurn GT gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.nTurn - 3},
+						filter(?{notification: (notification.tmplCategories.contains(def.tmplNotificationCategory))
+							|| (def.tmplNotificationCategory == null)} ,def.objPerAvatarData.objNotifications)
+					)
+				)
+			</property>
+			<property name="nRowWidth" value="237"/>
+			<property name="nRowHeight" value="28"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DNotificationBubble"/>
+			<property name="strPropForItem" value="objNotification"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DNotificationList" superType="mlui.UI2DElement">
+		<propertyDef name="tmplNotification" type="Object" variable="true"/>
+		<propertyDef name="tmplFilter" type="ObjectType" />
+		<propertyDef name="objPerAvatarData" type="gs_notify.PADNotification"/>
+		<property name="objPerAvatarData" >
+			mh2data.objAvatar.getPerAvatarData(gs_notify.PADNotification)
+		</property>
+		
+		<propertyDef name="objNotifications" type="gs_notify.Notification" variable="true">
+			filter(?{notification: (notification.nTurn GT gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.nTurn - 3)}
+                ,
+				if(self.tmplFilter == null
+                    ,
+                    filter(?{notifications: if(notifications == null, false, (self.tmplNotification.size == 0 OR self.tmplNotification.contains(notifications.tmplNotification)))},
+                        self.objPerAvatarData.objNotifications)		
+                    ,
+                    filter(?{notifications: notifications.tmplNotification.resolve().instanceOf(self.tmplFilter)},
+                        self.objPerAvatarData.objNotifications)		                    
+                )
+			)
+		</propertyDef>
+		
+		<object type="mlui.UILMFlow" name="objFlow">
+			<property name="listElements">
+				sortDescending(?{element: element.objNotification.nTurn}, def.objElements)
+			</property>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="nSpacing" value="1"/>
+		</object>
+		
+		<object type="UI2DNotificationBubble" name="objElements" tiedTo="self.objNotifications">
+			<property name="objNotification" from="tiedTo"/>	
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DNotificationBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objNotification" type="gs_notify.Notification"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<property name="nWidth" value="237"/>
+		<property name="nHeight">
+			if((self.objNotificationText.nY + self.objNotificationText.nHeight) GT self.objImg2.nHeight,
+				self.objNotificationText.nY + self.objNotificationText.nHeight,
+				self.objImg2.nHeight
+			)
+		</property>
+		
+		<object type="mlui.UI2DImage" name="objImg">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBubble3x3"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="235"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objImg2">
+			<property name="tmplImage" from="mh2data.objNotificationDisplayTable.getEntry(def.objNotification.tmplNotification.resolve()).tmplImage"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objNotificationText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11Wrap"/>
+			<property name="strText" from="def.objNotification.strMessage"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="195"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objNotificationClickable">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="235"/>
+			<property name="nDefaultHeight" from="def.nHeight"/>
+			<property name="nDepth" value="150"/>
+	
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						    if (def.objNotification.refJumpTarget == null)
+						        return;
+						        
+							notification = def.objNotification.refJumpTarget.resolve(mh2data.objAvatar);
+							if (notification == null)
+							    return;
+							    
+                            if(notification.instanceOf(gs_tbg.Region))
+                            {
+                                mh2data.objMapData.selectRegion(notification);
+                                mapRegion = gs_tbg.getGameSysMap(mh2data.objAvatar).objMapRegions.find({"refRegion": notification});
+                                if (mapRegion != null)
+                                {
+                                    mh2data.objMapData.lookAt(mapRegion.vecCenter);
+                                    <!--mh2data.objMapData.zoomToClosest();-->
+                                }
+                            }
+                            else if(notification.instanceOf(gs_tbg.Engagement))
+                            {
+                                mh2data.objMapData.selectEngagement(notification);		
+                                mh2data.objMapData.lookAt(notification.refRegion.resolve(mh2data.objAvatar).vecPositions[0]);
+                                <!--mh2data.objMapData.zoomToClosest();-->						
+                            }							
+							else if(notification.instanceOf(gs_tbg.Nation))
+                            {
+								mh2data.objMapData.selectNation(notification);
+    						    capCity = gs_tbg.getGameSysCity(mh2data.objAvatar).objCapitalCityNations.find({"refNation": notification});
+								if (capCity.refCapitalCity != null)
+								{
+									city = capCity.refCapitalCity.resolve(mh2data.objAvatar);
+									if (city != null)
+									{
+										mh2data.objMapData.lookAt(city.vecPosition);
+										<!--mh2data.objMapData.zoomToClosest();-->
+									}
+								}
+							}	
+							else if(notification.instanceOf(gs_tbg.Unit))
+                            {
+								group = notification.refUnitGroup.resolve(mh2data.objAvatar);
+								mh2data.objMapData.selectUnitGroup(group);
+							}	
+							else if(notification.instanceOf(gs_tbg.UnitGroup))
+                            {
+								mh2data.objMapData.selectUnitGroup(notification);
+							}	
+							else if(notification.instanceOf(gs_tbg.City))
+                            {
+								mh2data.objMapData.selectCity(notification);
+								mh2data.objMapData.lookAt(notification.vecPosition);
+								<!--mh2data.objMapData.zoomToClosest();-->
+							}	
+							else 
+                            {
+                                log("notification type not recognized " + notification);
+							}	
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DSummaryPanelTurns" superType="UI2DSummaryPanel">
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="326"/>		
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineR">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineL">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="252"/>
+			<property name="nHeight" value="327"/>
+			<property name="listItems">				
+					sortAscending(?{player: player.strIdentity},
+						union(
+							filter(?{avatar: avatar.objPerAvatarData.size == 3}, mh2data.objAvatar.objOtherAvatars), 							
+							[find(?{avatar: avatar.objPerAvatarData.size != 3}, mh2data.objAvatar.objOtherAvatars), mh2data.objAvatar]							
+						)
+					)
+			</property>
+			<property name="nRowWidth" value="235"/>
+			<property name="nRowHeight" value="28"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DTurnBubble"/>
+			<property name="strPropForItem" value="objAvatar"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DSummaryPanelVictoryConditions" superType="UI2DSummaryPanel">
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="326"/>
+		
+		<propertyDef name="objVictoryCondition" type="Object">
+			find(?{condition: condition.instanceOf(gs_tbg.VictoryConditionCities) AND condition.refNation.resolve(mh2data.objAvatar) == mh2data.objNation},
+				gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).objVictoryConditions)
+		</propertyDef>
+		
+		<propertyDef name="objVictoryConditionCities" type="Object" variable="true" restriction="gs_tbg.City">
+			map(?{city: city.resolve(mh2data.objAvatar)}, self.objVictoryCondition.refCities)
+		</propertyDef>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineR">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineL">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="252"/>
+			<property name="nHeight" value="327"/>
+			<property name="listItems">				
+					sortAscending(?{victoryCity: victoryCity.strDisplayName}, def.objVictoryConditionCities)
+			</property>
+			<property name="nRowWidth" value="235"/>
+			<property name="nRowHeight" value="28"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DVictoryBubble"/>
+			<property name="strPropForItem" value="objCity"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DVictoryBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<property name="objNation" from="self.objCity.objController"/>
+		
+		<property name="nWidth" value="235"/>
+		<property name="nHeight" value="28"/>
+		
+		<object type="mlui.UI2DImage" name="objImg">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBubble"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="235"/>
+			<property name="nHeight" from="28"/>
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="6"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="vaYAlign" value="MIDDLE"/>			
+		</object>
+		
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="strText" from="def.objCity.strDisplayName"/>
+			<property name="nX" value="59"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+		</object>
+				
+	</objectDef>
+	
+	<objectDef type="UI2DTurnBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objAvatar" type="mlgame.Avatar"/>
+		<propertyDef name="bRepresntCollectiveAI" type="bool" >
+			self.objAvatar.objPerAvatarData.size != 3
+		</propertyDef>
+		<propertyDef name="nRow" type="int"/>
+		
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<property name="objNation" from="if(self.bRepresntCollectiveAI, null, self.objAvatar.getAttribValue('Nation').resolve(mh2data.objAvatar))"/>
+		
+		<property name="nWidth" value="235"/>
+		<property name="nHeight" value="28"/>
+		
+		<object type="mlui.UI2DImage" name="objImg">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBubble"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="235"/>
+			<property name="nHeight" from="28"/>
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag" existsWhile="self.objNation != null" >
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="6"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="vaYAlign" value="MIDDLE"/>			
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objImg" existsWhile="self.objNation == null" >
+			<property name="tmplImage" value="skin.ImgAIControlFlag"/>
+			<property name="nX" value="6"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" from="24"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Left"/>
+			<property name="strText" >
+				if(def.bRepresntCollectiveAI, 
+					locale.SID.UI.AIControlled, 
+					def.objNation.strDisplayName
+				)
+			</property>
+			<property name="nX" value="55"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+		</object>
+				
+		<object type="mlui.UI2DText" name="objController">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" >
+				if(def.bRepresntCollectiveAI, 
+					(filter(?{avatar:(find(?{PAD: PAD.instanceOf(gs_tbg.PADTurnBasedGame) AND PAD.bEndedTurn}, avatar.objPerAvatarData)) != null},
+						filter(?{avatar: avatar.bConnected AND avatar.objPerAvatarData.size != 3},
+							mh2data.objAvatar.objOtherAvatars))).length + ' / ' +  (filter(?{avatar:
+								avatar.bConnected AND avatar.objPerAvatarData.size != 3}, mh2data.objAvatar.objOtherAvatars)).length, 
+									def.objAvatar.strIdentity
+				) + ' ' +
+				if(def.bRepresntCollectiveAI, '', '(' +
+					if(def.objAvatar.bConnected, locale.SID.UI.Connected, locale.SID.UI.Disconnected) + ')'
+				)
+			</property>
+			<property name="nX" value="55"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<propertyDef name="objPADTBG" type="bool">
+			if(self.bRepresntCollectiveAI,				
+				((filter(?{avatar:(find(?{PAD: PAD.instanceOf(gs_tbg.PADTurnBasedGame) AND PAD.bEndedTurn}, avatar.objPerAvatarData)) != null},
+					filter(?{avatar: avatar.bConnected AND avatar.objPerAvatarData.size != 3}, mh2data.objAvatar.objOtherAvatars))).length >= 
+						(filter(?{avatar: avatar.bConnected AND avatar.objPerAvatarData.size != 3}, mh2data.objAvatar.objOtherAvatars)).length),
+							find(?{PAD: PAD.instanceOf(gs_tbg.PADTurnBasedGame)}, self.objAvatar.objPerAvatarData).bEndedTurn
+			)
+		</propertyDef>
+		
+		<object type="mlui.UI2DImage" name="objTurnStatus">
+			<property name="tmplImage">
+				if(def.objPADTBG, 'skin.ImgSummaryPanelTurnEnded', 'skin.ImgSummaryPanelTurnPending')
+			</property>	
+			<property name="nX" value="5"/>
+			<property name="nWidth" value="17"/>
+			<property name="nHeight" from="27"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+	</objectDef>
+	
+	
+	<enumDef name="RankSorter">
+        <value name="POWER"/>
+        <value name="IPU"/>
+        <value name="MPU"/>
+        <value name="TECH"/>
+        <value name="WEALTH"/>
+    </enumDef>
+	
+	<objectDef type="UI2DSummaryPanelWorldPowers" superType="UI2DSummaryPanel">
+		<propertyDef name="eRankSorter" type="Enum" restriction="RankSorter"/>
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="326"/>		
+		
+		<object type="mlui.UI2DImage" name="objImg">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBubble"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="248"/>
+			<property name="nHeight" from="28"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcons">
+			<property name="tmplImage" value="skin.ImgWorldPowerIcons"/>
+			<property name="nX" value="59"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="168"/>
+			<property name="nHeight" from="22"/>
+		</object>
+		
+		<object type="UI2DElementMask" name="objPowerMask">
+			<property name="nX" value="59"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" from="38"/>
+			<property name="nHeight" from="30"/>
+			<property name="nDepth" value="100"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.eRankSorter = RankSorter.POWER
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="UI2DElementMask" name="objPowerMask">
+			<property name="nX" value="97"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" from="38"/>
+			<property name="nHeight" from="30"/>
+			<property name="nDepth" value="100"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.eRankSorter = RankSorter.IPU
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="UI2DElementMask" name="objPowerMask">
+			<property name="nX" value="135"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" from="38"/>
+			<property name="nHeight" from="30"/>
+			<property name="nDepth" value="100"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.eRankSorter = RankSorter.MPU
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="UI2DElementMask" name="objPowerMask">
+			<property name="nX" value="173"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" from="38"/>
+			<property name="nHeight" from="30"/>
+			<property name="nDepth" value="100"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.eRankSorter = RankSorter.TECH
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="UI2DElementMask" name="objPowerMask">
+			<property name="nX" value="211"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" from="38"/>
+			<property name="nHeight" from="30"/>
+			<property name="nDepth" value="100"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.eRankSorter = RankSorter.WEALTH
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="mlui.UI2DText" name="objNotificationText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlack12Left"/>
+			<property name="strText" from="locale.SID.UI.Rank"/>
+			<property name="nX" value="12"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="45"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineR">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineL">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="33"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="292"/>
+		</object>
+		
+		<object type="UI2DWorldPowersList" name="objWorldPowers">
+			<property name="eRankSorter" from="def.eRankSorter"/>
+			<property name="nY" value="33"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DWorldPowersList" superType="mlui.UI2DElement">
+		<propertyDef name="eRankSorter" type="Enum" restriction="RankSorter"/>
+		
+		<property name="nWidth" from="self.objList.nWidth"/>
+		<property name="nHeight" from="self.objList.nHeight"/>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="252"/>
+			<property name="nHeight" value="294"/>
+			<property name="listItems">
+				switch{
+					case def.eRankSorter == RankSorter.POWER:
+						sortAscending(?{teamRank: teamRank.nTotalRank},
+							gs_tbg.getTeamRanks(mh2data.objAvatar))
+					case def.eRankSorter == RankSorter.IPU:
+						sortAscending(?{teamRank: teamRank.nIPURank},
+							gs_tbg.getTeamRanks(mh2data.objAvatar))
+					case def.eRankSorter == RankSorter.MPU:
+						sortAscending(?{teamRank: teamRank.nMPURank},
+							gs_tbg.getTeamRanks(mh2data.objAvatar))
+					case def.eRankSorter == RankSorter.TECH:
+						sortAscending(?{teamRank: teamRank.nTechRank},
+							gs_tbg.getTeamRanks(mh2data.objAvatar))
+					case def.eRankSorter == RankSorter.WEALTH:
+						sortAscending(?{teamRank: teamRank.nWealthRank},
+							gs_tbg.getTeamRanks(mh2data.objAvatar))
+					default:
+						sortAscending(?{teamRank: teamRank.nTotalRank},
+							gs_tbg.getTeamRanks(mh2data.objAvatar))
+				}
+			</property>
+			<property name="nRowWidth" value="237"/>
+			<property name="nRowHeight" value="28"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DWorldPowerBubble"/>
+			<property name="strPropForItem" value="objTeamRank"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+	
+    <objectDef type="UI2DIdeologyFlag28x28" superType="mlui.UI2DElement">
+		<propertyDef name="objIdeology" type="gs_tbg.IdeologyTemplate"/>
+        <!--<propertyDef name="bSelectable" type="bool" default="true"/>-->
+        <object type="mlui.UI2DImage" name="objFlag">
+            <property name="tmplImage">
+				switch {
+				    case def.objIdeology.strName == 'Democratic':
+				        'skin.ImgNationCrestDemocratic'
+					case def.objIdeology.strName == 'Communist':
+					    'skin.ImgNationCrestCommunist'
+					case def.objIdeology.strName == 'Fascist':
+						'skin.ImgNationCrestFascist'
+					default: 
+					    'skin.ImgNationCrestAuthoritarian'
+					}
+            </property>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nWidth" value="46"/>
+            <property name="nHeight" value="24"/>
+        </object>
+
+        <object type="mlui.UI2DButton" name="objButton">
+            <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nDefaultWidth" value="46"/>
+            <property name="nDefaultHeight" value="24"/>
+            <property name="strToolTip" from="def.objIdeology.strDisplayName"/>
+        </object>
+    </objectDef>
+    
+    <objectDef type="UI2DAllianceFlag46x24" superType="UI2DNationFlag46x24">
+        <propertyDef name="objTeamID" type="Object"/>
+        <property name="bSelectable" value="false"/>
+        <object type="mlui.UI2DButton" name="objButton">
+            <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nDefaultWidth" value="46"/>
+            <property name="nDefaultHeight" value="24"/>
+            <property name="strToolTip" from="if(def.objTeamID.instanceOf(gs_tbg.Alliance),locale.FSID.Notification.AllianceNoun.format('alliance',def.objTeamID.strDisplayName),def.objTeamID.strDisplayName)"/>
+        </object>
+    </objectDef>
+    
+		
+	<objectDef type="UI2DWorldPowerBubble" superType="mlui.UI2DElement">
+        <propertyDef name="eScoringMode" type="Enum" restriction="gs_tbg.ScoringMode"/>
+        <property name="eScoringMode" from="gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).eScoringMode"/>
+        
+		<propertyDef name="objTeamRank" type="gs_tbg.TeamRank"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<property name="objNation">
+			switch
+				{
+				case self.eScoringMode == gs_tbg.ScoringMode.CONQUEST:
+					self.objTeamRank.objTeamID
+				case self.eScoringMode == gs_tbg.ScoringMode.NATION:
+					self.objTeamRank.objTeamID
+				case self.eScoringMode == gs_tbg.ScoringMode.ALLIANCE:
+					if (self.objTeamRank.objTeamID.instanceOf(gs_tbg.Nation), self.objTeamRank.objTeamID, self.objTeamRank.objTeamID.refLeadNation.resolve(mh2data.objAvatar) )
+				case self.eScoringMode == gs_tbg.ScoringMode.IDEOLOGY:
+					null
+				}
+		</property>
+		
+		<property name="nWidth" value="237"/>
+		<property name="nHeight" value="30"/>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag" existsWhile="(def.eScoringMode == gs_tbg.ScoringMode.CONQUEST) OR (def.eScoringMode == gs_tbg.ScoringMode.NATION)">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="5"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="vaYAlign" value="MIDDLE"/>			
+		</object>
+		
+		<object type="UI2DAllianceFlag46x24" name="objAllianceFlag" existsWhile="def.eScoringMode == gs_tbg.ScoringMode.ALLIANCE">
+			<property name="objNation" from="def.objNation"/>
+			<property name="objTeamID" from="def.objTeamRank.objTeamID"/>
+			<property name="nX" value="5"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="vaYAlign" value="MIDDLE"/>			
+		</object>
+		
+		<object type="UI2DIdeologyFlag28x28" name="objIdeologyFlag" existsWhile="def.eScoringMode == gs_tbg.ScoringMode.IDEOLOGY">
+			<property name="objIdeology" from="def.objTeamRank.objTeamID"/>
+			<property name="nX" value="5"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="vaYAlign" value="MIDDLE"/>			
+		</object>
+		
+		<!-- TODO: ideology flags -->
+		
+		<object type="mlui.UI2DText" name="objWorldPowerValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11Center"/>
+			<property name="strText" from="locale.formatNumberRank(def.objTeamRank.nTotalRank)"/>
+			<property name="nX" value="54"/>
+			<property name="nWidth" value="35"/>
+			<property name="nHeight" value="11"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+            <property name="strToolTip" from="def.objTeamRank.nTotalPoints.formatNumber(0,true) + ' ' + locale.SID.UI.Points"/>
+        </object>
+		
+		<object type="mlui.UI2DText" name="objIPUsValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11Center"/>
+			<property name="strText" from="locale.formatNumberRank(def.objTeamRank.nIPURank)"/>
+			<property name="nX" value="91"/>
+			<property name="nWidth" value="35"/>
+			<property name="nHeight" value="11"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+            <property name="strToolTip" from="def.objTeamRank.nIPUPoints.formatNumber(0,true) + ' ' + locale.SID.UI.Points"/>
+        </object>
+		
+		<object type="mlui.UI2DText" name="objMPUsValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11Center"/>
+			<property name="strText" from="locale.formatNumberRank(def.objTeamRank.nMPURank)"/>
+			<property name="nX" value="127"/>
+			<property name="nWidth" value="35"/>
+			<property name="nHeight" value="11"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+            <property name="strToolTip" from="def.objTeamRank.nMPUPoints.formatNumber(0,true) + ' ' + locale.SID.UI.Points"/>
+        </object>
+		
+		<object type="mlui.UI2DText" name="objTechValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11Center"/>
+			<property name="strText" from="locale.formatNumberRank(def.objTeamRank.nTechRank)"/>
+			<property name="nX" value="163"/>
+			<property name="nWidth" value="35"/>
+			<property name="nHeight" value="11"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+            <property name="strToolTip" from="def.objTeamRank.nTechPoints.formatNumber(0,true) + ' ' + locale.SID.UI.Points"/>
+        </object>
+		
+		<object type="mlui.UI2DText" name="objMoneyValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11Center"/>
+			<property name="strText" from="locale.formatNumberRank(def.objTeamRank.nWealthRank)"/>	
+			<property name="nX" value="198"/>
+			<property name="nWidth" value="35"/>
+			<property name="nHeight" value="11"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+            <property name="strToolTip" from="def.objTeamRank.nWealthPoints.formatNumber(0,true) + ' ' + locale.SID.UI.Points"/>
+        </object>
+		
+	</objectDef>
+	
+	
+	<enumDef name="SummaryPanelTrade">
+		<value name="RESOURCE"/>
+		<value name="MONEY"/>
+    </enumDef>
+	
+	<objectDef type="UI2DSummaryPanelTrade" superType="UI2DSummaryPanel">
+		<propertyDef name="eTab" type="Enum" restriction="SummaryPanelTrade"/>
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="326"/>		
+		
+		<object type="UI2DSummaryPanelTradeTab" name="objResourceTab">
+			<property name="strText" from="locale.SID.UI.Resources"/>
+			<property name="bSelected" from="def.eTab == SummaryPanelTrade.RESOURCE"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.eTab = SummaryPanelTrade.RESOURCE
+						}
+					]]></script>
+				</object>
+			</object>
+			
+		</object>
+		<object type="UI2DSummaryPanelTradeTab" name="objMoneyTab">
+			<property name="nX" value="129"/>
+			<property name="strText" from="locale.SID.UI.Money"/>
+			<property name="bSelected" from="def.eTab == SummaryPanelTrade.MONEY"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.eTab = SummaryPanelTrade.MONEY
+						}
+					]]></script>
+				</object>
+			</object>
+			
+		</object>
+		
+		<object type="UI2DSummaryPanelTradeResource" name="objTradeResources" existsWhile="self.eTab == SummaryPanelTrade.RESOURCE">
+			<property name="nY" value="29"/>
+		</object>
+		
+		<object type="UI2DSummaryPanelTradeMoney" name="objTradeMoney" existsWhile="self.eTab == SummaryPanelTrade.MONEY">
+			<property name="nY" value="29"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DSummaryPanelTradeTab" superType="mlui.UI2DButton">
+		<propertyDef name="bSelected" type="bool"/>
+		<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+		
+		<propertyDef name="strText" type="String"/>
+		<property name="nWidth" value="125"/>
+		<property name="nHeight" from="28"/>
+				
+		<object type="mlui.UI2DImage" name="objImg">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBubble"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="125"/>
+			<property name="nHeight" from="28"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objImportExport">
+			<property name="tmplTextStyle">
+				if(!def.bSelected,
+					'locale.TxtStyleArialBlack11CenterFIT',
+					'locale.TxtStyleArialWhite11CenterFIT'
+				)
+			</property>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nHeight" value="11"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="haXAlign" value="CENTER"/>	
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DSummaryPanelTradeResource" superType="UI2DSummaryPanel">
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="326"/>		
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineR">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineL">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<propertyDef name="objNationAgreements" type="gs_tbg.TradeAgreement" variable="true">
+			union(
+				filter(?
+					{importta: importta.refDestNation == mh2data.objNation},
+						gs_tbg.getAllTradeAgreements(mh2data.objAvatar)),
+				filter(?
+					{exportta: exportta.refSourceNation == mh2data.objNation},
+						gs_tbg.getAllTradeAgreements(mh2data.objAvatar)))
+		</propertyDef>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="252"/>
+			<property name="nHeight" value="296"/>
+			<property name="listItems">
+				sortAscending(?{agreement: agreement.tmplResource.resolve().strDisplayName},
+					union(filter(?{agreement1: agreement1.eStatus.equals(gs_tbg.TradeAgreementStatus.PROPOSED)},
+						def.objNationAgreements),
+							filter(?{agreement2: agreement2.eStatus.equals(gs_tbg.TradeAgreementStatus.ACCEPTED)},
+								def.objNationAgreements)))
+			</property>
+			<property name="nRowWidth" value="235"/>
+			<property name="nRowHeight" value="28"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DTradeSummaryBubble"/>
+			<property name="strPropForItem" value="objTradeAgreement"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DSummaryPanelTradeMoney" superType="UI2DSummaryPanel">
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="326"/>		
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineR">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineL">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<propertyDef name="objMoneyTransfers" type="gs_tbg.MoneyTransfer" variable="true">
+			union(
+				filter(?
+					{importta: importta.refDestNation == mh2data.objNation},
+						gs_tbg.getAllMoneyTransfers(mh2data.objAvatar)),
+				filter(?
+					{exportta: exportta.refSourceNation == mh2data.objNation},
+						gs_tbg.getAllMoneyTransfers(mh2data.objAvatar)))
+		</propertyDef>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="252"/>
+			<property name="nHeight" value="296"/>
+			<property name="listItems">
+				sortAscending(?{agreement: agreement.n64Amount},
+					union(filter(?{agreement1: agreement1.eStatus.equals(gs_tbg.MoneyTransferStatus.PROPOSED)},
+							def.objMoneyTransfers),
+								filter(?{agreement2: agreement2.eStatus.equals(gs_tbg.MoneyTransferStatus.ACCEPTED)},
+									def.objMoneyTransfers))
+				)
+			</property>
+			<property name="nRowWidth" value="235"/>
+			<property name="nRowHeight" value="28"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DMoneySummaryBubble"/>
+			<property name="strPropForItem" value="objMoneyTransfer"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DTradeSummaryBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objTradeAgreement" type="gs_tbg.TradeAgreement"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<propertyDef name="objNation" type="gs_tbg.Nation">
+			if(self.objTradeAgreement.refDestNation == mh2data.objNation,
+				self.objTradeAgreement.refSourceNation.resolve(mh2data.objAvatar),
+					self.objTradeAgreement.refDestNation.resolve(mh2data.objAvatar))
+		</propertyDef>
+		
+		<propertyDef name="bImporting" type="bool">
+			self.objTradeAgreement.refSourceNation == self.objNation
+		</propertyDef>
+		
+		<property name="nWidth" value="235"/>
+		<property name="nHeight" value="28"/>
+		
+		<object type="mlui.UI2DImage" name="objImg">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBubble"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="235"/>
+			<property name="nHeight" from="28"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage">
+				mh2data.objTradeResourceDisplayTable.getEntry(def.objTradeAgreement.tmplResource).tmplImage
+			</property>	
+			<property name="nX" value="4"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" from="28"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objImportExport">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11CenterFIT"/>
+			<property name="strText">
+				if(def.objTradeAgreement.bAid == false,
+					if(def.bImporting, locale.SID.UI.ImportFrom, locale.SID.UI.ExportTo),
+					if(def.bImporting, locale.SID.UI.AidFrom, locale.SID.UI.AidTo))
+			</property>
+			<property name="nX" value="32"/>
+			<property name="nHeight" value="11"/>
+			<property name="vaYAlign" value="MIDDLE"/>	
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="101"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="vaYAlign" value="MIDDLE"/>			
+		</object>
+		
+		<object type="mlui.UI2DText" name="objNumPerTurn">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11CenterFIT"/>
+			<property name="strText">
+				def.objTradeAgreement.nAmount + ' ' + locale.SID.UI.SlashTurn
+			</property>
+			<property name="nX" from="def.objNationFlag.nX + 50"/>
+			<property name="nHeight" value="11"/>
+			<property name="vaYAlign" value="MIDDLE"/>	
+		</object>
+		
+		<propertyDef name="bProposal" type="bool">
+			self.objTradeAgreement.eStatus.equals(gs_tbg.TradeAgreementStatus.PROPOSED)
+		</propertyDef>
+		
+		<propertyDef name="nTradeBalance" type="int">
+			gs_tbg.getNationResource(
+				mh2data.objAvatar, self.objTradeAgreement.refSourceNation.resolve(mh2data.objAvatar),
+					self.objTradeAgreement.tmplResource).nAmount - self.objTradeAgreement.nAmount
+		</propertyDef>
+		
+		<propertyDef name="bCantAfford" type="bool">
+			self.nTradeBalance LTE 0
+		</propertyDef>
+		
+		<object type="mlui.UI2DImage" name="objTradeStatus" existsWhile="def.bProposal == true OR def.bCantAfford == true">
+			<property name="tmplImage">
+				if(def.bProposal, 'skin.ImgTradeProposal', if(def.bCantAfford, 'skin.ImgTradeProblem', null))
+			</property>	
+			<property name="nX" value="4"/>
+			<property name="nWidth" value="17"/>
+			<property name="nHeight" from="21"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objNotificationClickable">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="235"/>
+			<property name="nDefaultHeight" from="def.nHeight"/>
+			<property name="nDepth" value="150"/>
+			<property name="strToolTip">
+				def.objTradeAgreement.nAmount + ' ' +
+				def.objTradeAgreement.tmplResource.resolve().strDisplayName + ' ' +
+				def.objImportExport.strText + ' ' +
+				def.objNation.strDisplayName + ' ' +
+					if(def.bProposal, locale.SID.UI.Proposed, if(def.bCantAfford,
+						'- ' + locale.SID.UI.Short + ' ' + abs(def.nTradeBalance).formatNumber(0, true), ' '))
+					
+			</property>
+	
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.objSelectedTradeAgreement.setTradeAgreement(def.objTradeAgreement);
+                            mh2data.strDiplomaticMessage = "";
+							spdata.objDiplomacyData.showInfo(def.objNation);
+							spdata.bIsMoreInfo = true;
+							mh2data.openDiplomaticActionAll(UI2DTradeAgreementRcvd)
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DMoneySummaryBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objMoneyTransfer" type="gs_tbg.MoneyTransfer"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<propertyDef name="objNation" type="gs_tbg.Nation">
+			if(self.objMoneyTransfer.refDestNation == mh2data.objNation,
+				self.objMoneyTransfer.refSourceNation.resolve(mh2data.objAvatar),
+					self.objMoneyTransfer.refDestNation.resolve(mh2data.objAvatar))
+		</propertyDef>
+		
+		<propertyDef name="bImporting" type="bool">
+			self.objMoneyTransfer.refSourceNation == self.objNation
+		</propertyDef>
+		
+		<property name="nWidth" value="235"/>
+		<property name="nHeight" value="28"/>
+		
+		<object type="mlui.UI2DImage" name="objImg">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBubble"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="235"/>
+			<property name="nHeight" from="28"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" value="skin.ImgNotificationMoney"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" from="28"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objImportExport">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11CenterFIT"/>
+			<property name="strText">
+				if(def.bImporting, locale.SID.UI.ImportFrom, locale.SID.UI.ExportTo)
+			</property>
+			<property name="nX" value="32"/>
+			<property name="nHeight" value="11"/>
+			<property name="vaYAlign" value="MIDDLE"/>	
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="101"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="vaYAlign" value="MIDDLE"/>			
+		</object>
+		
+		<object type="mlui.UI2DText" name="objNumPerTurn">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11CenterFIT"/>
+			<property name="strText">
+				'$' + def.objMoneyTransfer.n64Amount.formatNumber(0, true) +  if(!def.objMoneyTransfer.bOneTime, ' ' + locale.SID.UI.SlashTurn, '')
+			</property>
+			<property name="nX" from="def.objNationFlag.nX + 50"/>
+			<property name="nHeight" value="11"/>
+			<property name="vaYAlign" value="MIDDLE"/>	
+		</object>
+		
+		<propertyDef name="bProposal" type="bool">
+			self.objMoneyTransfer.eStatus.equals(gs_tbg.MoneyTransferStatus.PROPOSED)
+		</propertyDef>
+		
+		<object type="mlui.UI2DButton" name="objNotificationClickable">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="235"/>
+			<property name="nDefaultHeight" from="def.nHeight"/>
+			<property name="nDepth" value="150"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						
+							mh2data.objSelectedMoneyTransfer = def.objMoneyTransfer;
+                            mh2data.strDiplomaticMessage = "";
+							spdata.objDiplomacyData.showInfo(def.objNation);
+							spdata.bIsMoreInfo = true;
+							mh2data.openDiplomaticActionAll(UI2DMoneyTransferRcvd)
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+	
+	<!-- unified interface to Engagement and AirEncounter -->
+	<objectDef type="EngagementWrapper">
+		<propertyDef name="objEngagementOrEncounter" type="Object"/>
+		<propertyDef name="bIsEngagement" type="bool" from="self.objEngagementOrEncounter.instanceOf(gs_tbg.Engagement)"/><!-- is it either a land or a sea engagement? -->
+		<propertyDef name="bIsSeaEngagement" type="bool" from="self.objEngagementOrEncounter.instanceOf(gs_tbg.SeaEngagement)"/>
+		<propertyDef name="bIsAirEncounter" type="bool" from="self.objEngagementOrEncounter.instanceOf(gs_tbg.AirEncounter)"/>
+		
+		<propertyDef name="objGroupsInRegion" type="gs_tbg.UnitGroup" variable="true">
+		    self.getGroupsInRegion()
+		</propertyDef>
+		
+		<propertyDef name="objMyGroups" type="gs_tbg.UnitGroup" variable="true">
+		    if (self.bIsEngagement, filter(?{group: group.refController == mh2data.objNation}, self.objGroupsInRegion), [])
+		</propertyDef>	
+		
+		<propertyDef name="nPercent" type="int">
+		    if (self.bIsEngagement, 
+                let denom = self.objEngagementOrEncounter.nAttackerUtility + self.objEngagementOrEncounter.nDefenderUtility { (self.objEngagementOrEncounter.nAttackerUtility * 100) / (if(denom GT 0,denom,1)) },
+		        50)
+		</propertyDef>
+		
+		<propertyDef name="nDeadAttackers" type="int">
+		    if (self.bIsEngagement,
+			    self.objEngagementOrEncounter.nDeadLandAttackers + self.objEngagementOrEncounter.nDeadAirAttackers + self.objEngagementOrEncounter.nDeadSeaAttackers,
+			    self.objEngagementOrEncounter.nUnitsKilledByAirCombat + self.objEngagementOrEncounter.nUnitsKilledByAA)
+		</propertyDef>
+		
+		<propertyDef name="nDeadDefenders" type="int">
+		    if (self.bIsEngagement,
+			    self.objEngagementOrEncounter.nDeadLandDefenders + self.objEngagementOrEncounter.nDeadAirDefenders + self.objEngagementOrEncounter.nDeadSeaDefenders,
+			    self.objEngagementOrEncounter.nEnemyUnitsKilledByAirCombat)
+		</propertyDef>
+		
+	    <script type="application/x-locust-query">
+	        getEngagementIcon = ?{: skin.getTemplate(mlmedia.ImageTemplate, 
+	            switch {
+	                case self.bIsAirEncounter: 'ImgNotificationAirForce'
+	                case self.bIsSeaEngagement: 'ImgNotificationNavy'
+	                default: 'ImgNotificationArmy'
+	            } )
+		    }
+		    
+            getRegion = ?{: 
+                if (self.bIsEngagement, self.objEngagementOrEncounter.refRegion.resolve(mh2data.objAvatar), self.objEngagementOrEncounter.objRegion)
+            }
+            
+            getAttacker = ?{: 
+                if (self.bIsEngagement, self.objEngagementOrEncounter.refAttacker.resolve(mh2data.objAvatar), self.objEngagementOrEncounter.objNation)
+            }
+            
+            getDefender = ?{:
+                if (self.bIsEngagement, self.objEngagementOrEncounter.refDefender.resolve(mh2data.objAvatar), self.objEngagementOrEncounter.objEnemyNation)
+            }
+            
+		    getGroupsInRegion = ?{ :
+			    gs_tbg.getGroupsAtLocation(mh2data.objAvatar, self.getRegion())
+			}
+			
+			getToolTip = ?{:
+			    if (self.bIsEngagement,
+				    locale.FSID.UI.BattleOf.format('Region', self.getRegion().strDisplayName) + "\n" +
+					    locale.SID.UI.Casualties + ": " + if(self.getAttacker() == mh2data.objNation, self.nDeadAttackers, self.nDeadDefenders) + "\n" +
+						locale.SID.UI.Kills + ": " + if(self.getAttacker() == mh2data.objNation, self.nDeadDefenders, self.nDeadAttackers),
+						
+				        locale.FSID.UI.BattleOf.format('Region', self.getRegion().strDisplayName) + "\n" +
+					        locale.SID.UI.Casualties + ": " + if(self.getAttacker() == mh2data.objNation, self.nDeadAttackers, self.nDeadDefenders) + "\n" +
+						    locale.SID.UI.Kills + ": " + if(self.getAttacker() == mh2data.objNation, self.nDeadDefenders, self.nDeadAttackers)
+					)
+			}
+            
+            getStartDate = ?{: 
+                if (self.bIsEngagement, 
+                    self.objEngagementOrEncounter.dateStart, 
+                    gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.dateCurrentDate) 
+            } 
+	    </script>
+	</objectDef>
+	
+	
+	<objectDef type="UI2DSummaryPanelEngagements" superType="UI2DSummaryPanel">
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="326"/>		
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineR">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineL">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object name="objWrappedEngagements" type="EngagementWrapper" tiedTo="filter(?{engagement: engagement.refAttacker == mh2data.objNation OR engagement.refDefender == mh2data.objNation},gs_tbg.getAllEngagements(mh2data.objAvatar))">
+            <property name="objEngagementOrEncounter" from="tiedTo"/>
+		</object>
+		
+		<object name="objWrappedAirEncounters" type="EngagementWrapper" tiedTo="gs_tbg.getNationAirEncounters(mh2data.objAvatar, mh2data.objNation)">
+            <property name="objEngagementOrEncounter" from="tiedTo"/>
+		</object>
+		
+        <object type="UI2DDynamicList" name="objList">
+            <property name="nWidth" value="252"/>
+            <property name="nHeight" value="327"/>
+            <property name="listItems">
+                sortAscending(?{wrapper: wrapper.getStartDate()}, union(def.objWrappedEngagements,def.objWrappedAirEncounters) )
+            </property>
+			<property name="nRowWidth" value="235"/>
+			<property name="nRowHeight" value="42"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DEngagementSummaryBubble"/>
+			<property name="strPropForItem" value="objEngagementWrapper"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DEngagementSummaryBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objEngagementWrapper" type="EngagementWrapper"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<property name="nWidth" value="235"/>
+		<property name="nHeight" value="44"/>
+		
+		<object type="mlui.UI2DImage" name="objImg">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBubble3x3"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="235"/>
+			<property name="nHeight" from="44"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objEngagementTypeIcon">
+			<property name="tmplImage" from="def.objEngagementWrapper.getEngagementIcon()"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="32"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objRegionName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11CenterFIT"/>
+			<property name="strText">
+				def.objEngagementWrapper.getRegion().strDisplayName
+			</property>
+			<property name="nX" value="31"/>
+			<property name="nY" value="3"/>
+			<property name="nHeight" value="11"/>
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objEngagementWrapper.getAttacker()"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objHealthBarBG">
+			<property name="tmplImage" value="skin.ImgHealthBarBG"/>
+			<property name="nX" value="83"/>
+			<property name="nY" value="20"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" from="16"/>
+		</object>
+		
+		<propertyDef name="nPercent" type="int" from="self.objEngagementWrapper.nPercent"/>
+		<propertyDef name="nDeadAttackers" type="int" from="self.objEngagementWrapper.nDeadAttackers"/>
+		<propertyDef name="nDeadDefenders" type="int" from="self.objEngagementWrapper.nDeadDefenders"/>
+		
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				if(def.nPercent LTE 0.3, #7FFF00FF,
+					if(def.nPercent LTE 0.7, #FFE303FF, #C4DF9BFF))
+			</property>	
+			<property name="nX" value="84"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" from="(0.95 * def.nPercent)"/>
+			<property name="nHeight" value="13"/>
+			<property name="strToolTip" from="(def.nPercent * 100).formatNumber(0, true)"/>
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objEngagementWrapper.getDefender()"/>
+			<property name="nX" value="183"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objNotificationClickable">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="235"/>
+			<property name="nDefaultHeight" from="def.nHeight"/>
+			<property name="nDepth" value="150"/>
+			<property name="strToolTip">
+			    def.objEngagementWrapper.getToolTip()
+			</property>
+	
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						    if (def.objEngagementWrapper.bIsEngagement)
+						    {
+							    mh2data.setSelectedObject(def.objEngagementWrapper.objEngagementOrEncounter);
+							}
+							mh2data.objMapData.lookAt(def.objEngagementWrapper.getRegion().vecPositions[0]);
+							<!--mh2data.objMapData.zoomToClosest();-->
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DSummaryPanelEspionage" superType="UI2DSummaryPanel">
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="253"/>
+		<property name="nHeight" value="326"/>		
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineR">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelSliderLineL">
+			<property name="tmplImage" value="skin.ImgGray"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" from="325"/>
+		</object>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="252"/>
+			<property name="nHeight" value="327"/>
+			<property name="listItems">
+				sortAscending(?{program: program.nCost}, 
+					find(?{programSet: programSet.refNation == mh2data.objNation}, 
+						gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar).objNationalProgramSets).objNationalPrograms)
+			</property>
+			<property name="nRowWidth" value="235"/>
+			<property name="nRowHeight" value="42"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DEspionageSummaryBubble"/>
+			<property name="strPropForItem" value="objNationalProgram"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DEspionageSummaryBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objNationalProgram" type="gs_tbg.NationalProgram"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<property name="nWidth" value="235"/>
+		<property name="nHeight" value="44"/>
+		
+		<object type="mlui.UI2DImage" name="objImg">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBubble3x3"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="235"/>
+			<property name="nHeight" from="44"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objRegionName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite11CenterFIT"/>
+			<property name="strText">
+                switch{
+                case def.objNationalProgram.instanceOf(gs_tbg.DeploymentSurveillance):
+                locale.SID.UI.ConductSurveillance
+                case def.objNationalProgram.instanceOf(gs_tbg.RegionSurveillance):
+                locale.SID.UI.ConductSurveillance
+                case def.objNationalProgram.instanceOf(gs_tbg.StealResearch):
+                locale.SID.UI.StealResearch
+                case def.objNationalProgram.instanceOf(gs_tbg.SabotageRegion):
+                locale.SID.UI.Sabotage + ' ' + def.objNationalProgram.refTargetRegion.resolve(mh2data.objAvatar).strDisplayName
+                case def.objNationalProgram.instanceOf(gs_tbg.PoliticalSupport):
+                locale.SID.UI.SupportRuling + ' ' + def.objNationalProgram.tmplIdeology.resolve().strDisplayName + ' ' + locale.SID.UI.Party
+                case def.objNationalProgram.instanceOf(gs_tbg.InternalSupport):
+                locale.SID.UI.ConductInternalPropaganda
+                case def.objNationalProgram.instanceOf(gs_tbg.OppositionSupport):
+                locale.SID.UI.Support + ' ' + def.objNationalProgram.tmplIdeology.resolve().strDisplayName + ' ' + locale.SID.UI.Opposition
+                default:
+                'default'
+                }
+            </property>
+			<property name="nX" value="31"/>
+			<property name="nY" value="3"/>
+			<property name="nHeight" value="11"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconInternalAffairs"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" from="28"/>
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objNationalProgram.refTargetNation.resolve(mh2data.objAvatar)"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+		
+	</objectDef>
+</locust>

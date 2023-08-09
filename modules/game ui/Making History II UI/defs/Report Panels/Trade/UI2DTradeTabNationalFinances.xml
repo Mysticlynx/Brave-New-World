@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DTradeTabNationalFinances" superType="mlui.UI2DElement">
+				
+		<object type="NationFinanceTabData" name="objFinanceTabData">
+		</object>
+		
+	<!-- National Finances -->
+		<object type="mlui.UI2DText" name="objFinancialReportsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.FinancialReports"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objLeftPane">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="310"/>
+			<property name="nWidth" value="183"/>
+			<property name="nHeight" value="369"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objFinanceHeader">
+			<property name="tmplImage" value="skin.ImgTradeFinanceHeader"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="159"/>
+			<property name="nWidth" value="183"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="UI2DFinanceRightPanel" name="objFinanceRight">
+			<property name="objFinanceTabData" from="def.objFinanceTabData"/>
+			<property name="objNationFinance" from="mh2data.objNation.objFinance"/>
+			<property name="nX" value="195"/>
+			<property name="nY" value="159"/>
+			<property name="nWidth" from="700"/>
+			<property name="nHeight" from="550"/>
+		</object>
+		
+		<object type="UI2DFinanceButtons" name="objFinanceButtons">
+			<property name="objFinanceTabData" from="def.objFinanceTabData"/>
+			<property name="objNationFinance" from="mh2data.objNation.objFinance"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="186"/>
+			<property name="nWidth" from="183"/>
+			<property name="nHeight" from="168"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DFinancePanel" superType="mlui.UI2DElement">
+		
+		<propertyDef name="objFinancePanel" type="mlui.UI2DElement" storesChildren="true"/>
+		
+		<property name="nWidth" value="689"/>
+		<property name="nHeight" value="520"/>
+		
+		<object type="mlui.UI2DImage" name="objFinancePanelBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="689"/>
+			<property name="nHeight" value="520"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="NationFinanceTabData" class="CMLObject">
+		<propertyDef name="otFinanceTab" type="ObjectType" default="UI2DFinanceTabSummary"/>
+		
+		<script type="application/javascript"><![CDATA[
+			
+			function openFinanceTab(tab)
+				{
+				self.otFinanceTab = tab;
+				}
+		]]></script>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DFinanceButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objFinanceTabData" type="NationFinanceTabData"/>
+		<propertyDef name="objNationFinance" type="gs_tbg.NationFinance"/>
+		
+		<!--<object type="mlui.UI2DText" name="objTreasuryReportButtonLabel">
+			<property name="tmplTextStyle">
+				if(def.objFinanceTabData.otFinanceTab != UI2DFinanceTabTreasury,'locale.TxtStyleArialBrown12Left', 'locale.TxtStyleArialWhite12Left')
+			</property>
+			<property name="strText" from="locale.SID.UI.TreasuryReport"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="178"/>
+			<property name="nHeight" value="14"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objTreasuryButton">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 
+			        if(def.objFinanceTabData.otFinanceTab != UI2DFinanceTabTreasury,'BtnStyleFinancePanelLeft', 'BtnStyleFinancePanelLeftC'))"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="183"/>
+			<property name="nDefaultHeight" value="30"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objFinanceTabData.openFinanceTab(UI2DFinanceTabTreasury);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>-->		
+		
+		<object type="mlui.UI2DText" name="objSummaryButtonLabel">
+			<property name="tmplTextStyle">
+				if(def.objFinanceTabData.otFinanceTab != UI2DFinanceTabSummary,'locale.TxtStyleArialBrown12Left', 'locale.TxtStyleArialWhite12Left')
+			</property>
+			<property name="strText" from="locale.SID.UI.LastTurnSummary"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="178"/>
+			<property name="nHeight" value="14"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objSummaryButton">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 
+			    if(def.objFinanceTabData.otFinanceTab != UI2DFinanceTabSummary, 'BtnStyleFinancePanelLeft', 'BtnStyleFinancePanelLeftC'))"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="183"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="strToolTip" from="locale.SID.UI.LastTurnSummary"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objFinanceTabData.openFinanceTab(UI2DFinanceTabSummary);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>			
+		
+		<object type="mlui.UI2DText" name="objProductionButtonLabel">
+			<property name="tmplTextStyle">
+				if(def.objFinanceTabData.otFinanceTab != UI2DFinanceTabProduction,'locale.TxtStyleArialBrown12Left', 'locale.TxtStyleArialWhite12Left')
+			</property>
+			<property name="strText" from="locale.SID.UI.Income"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="73"/>
+			<property name="nWidth" value="178"/>
+			<property name="nHeight" value="14"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objProductionButton">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+			        if(def.objFinanceTabData.otFinanceTab != UI2DFinanceTabProduction, 'BtnStyleFinancePanelLeft', 'BtnStyleFinancePanelLeftC'))"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="62"/>
+			<property name="nDefaultWidth" value="183"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="strToolTip" from="locale.SID.UI.Income"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objFinanceTabData.openFinanceTab(UI2DFinanceTabProduction);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>		
+		
+		<object type="mlui.UI2DText" name="objInfrastructureButtonLabel">
+			<property name="tmplTextStyle">
+				if(def.objFinanceTabData.otFinanceTab != UI2DFinanceTabInfrastructure,'locale.TxtStyleArialBrown12Left', 'locale.TxtStyleArialWhite12Left')
+			</property>
+			<property name="strText" from="locale.SID.UI.Spending"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="178"/>
+			<property name="nHeight" value="14"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objInfrastructureButton">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+			        if(def.objFinanceTabData.otFinanceTab != UI2DFinanceTabInfrastructure, 'BtnStyleFinancePanelLeft', 'BtnStyleFinancePanelLeftC'))"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="31"/>
+			<property name="nDefaultWidth" value="183"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="strToolTip" from="locale.SID.UI.Spending"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objFinanceTabData.openFinanceTab(UI2DFinanceTabInfrastructure);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+        
+
+		<object type="mlui.UI2DText" name="objTradeButtonLabel">
+			<property name="tmplTextStyle">
+				if(def.objFinanceTabData.otFinanceTab != UI2DFinanceTabTrade,'locale.TxtStyleArialBrown12Left', 'locale.TxtStyleArialWhite12Left')
+			</property>
+			<property name="strText" from="locale.SID.UI.Trade"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="103"/>
+			<property name="nWidth" value="178"/>
+			<property name="nHeight" value="14"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objTradeButton">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+			        if(def.objFinanceTabData.otFinanceTab != UI2DFinanceTabTrade, 'BtnStyleFinancePanelLeft', 'BtnStyleFinancePanelLeftC'))"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="93"/>
+			<property name="nDefaultWidth" value="183"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="strToolTip" from="locale.SID.UI.Trade"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objFinanceTabData.openFinanceTab(UI2DFinanceTabTrade);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DFinanceRightPanel" superType="mlui.UI2DElement">
+		<propertyDef name="otFinanceTab" type="ObjectType" default="UI2DFinanceTabTreasury"/>
+		<propertyDef name="objFinanceTabData" type="NationFinanceTabData"/>
+		<propertyDef name="objNationFinance" type="gs_tbg.NationFinance"/>
+
+		
+		<object type="UI2DFinanceTabTreasury" name="objTreasury" existsWhile="def.objFinanceTabData.otFinanceTab == UI2DFinanceTabTreasury">
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DFinanceTabSummary" name="objSummary" existsWhile="def.objFinanceTabData.otFinanceTab == UI2DFinanceTabSummary">
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DFinanceTabInfrastructure" name="objInfrastructure" existsWhile="def.objFinanceTabData.otFinanceTab == UI2DFinanceTabInfrastructure">
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DFinanceTabProduction" name="objProduction" existsWhile="def.objFinanceTabData.otFinanceTab == UI2DFinanceTabProduction">
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DFinanceTabTrade" name="objTrade" existsWhile="def.objFinanceTabData.otFinanceTab == UI2DFinanceTabTrade">
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+	</objectDef>	
+	
+</locust>

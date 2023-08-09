@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DTerritorialTransfer" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objSender" type="Object"/>
+		<propertyDef name="objReceiver" type="Object"/>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconTerritory"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" value="30"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.TerritorialTransferTreaty"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10LeftWrap"/>
+			<property name="strText" from="locale.SID.UI.TerritoryBlurb"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="240"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<!-- Territory Tabs -->
+		<object type="LookupTerritoryData" name="objLookupTerritoryData">
+			<property name="objMH2Data" from="mh2data"/>
+			<property name="objNation" from="def.objNation"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objGrayLine">
+			<property name="tmplImage" value="skin.ImgTan"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="82"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="1"/>
+		</object>
+
+		<object type="UI2DTerritorialTransferButtons" name="objButtons">
+			<property name="objLookupTerritoryData" from="def.objLookupTerritoryData"/>
+			<property name="nX" value="55"/>
+			<property name="nY" value="48"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="35"/>
+			<property name="nDepth" value="150"/>
+		</object>
+		
+		<object type="UI2DTerritorialTransferTabs" name="objTabs">
+			<property name="objLookupTerritoryData" from="def.objLookupTerritoryData"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="83"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="438"/>
+		</object>		
+	</objectDef>
+</locust>

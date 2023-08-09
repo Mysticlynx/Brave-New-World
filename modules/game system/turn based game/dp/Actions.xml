@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="GActAnswerDecisionPoint" class="CMLOGActAnswerDecisionPoint" superType="mlgame.GameAction">
+        <propertyDef name="objDecisionPoint" type="DecisionPoint"/>
+        <propertyDef name="objAnswer" type="DecisionPointAnswer"/>
+    </objectDef>
+
+</locust>

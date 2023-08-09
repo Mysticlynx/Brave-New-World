@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="Unit" class="CMLOUnit" desc="A unit">
+        <goDef gameSystem="GameSysUnit" storageProperty="objUnits">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="objUnitTemplate" type="UnitTemplate"/>
+		<propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="refController" type="GORef" restriction="Nation"/>
+        <propertyDef name="refOwner" type="GORef" restriction="Nation"/>
+        <propertyDef name="bRepairing" type="bool" default="true"/>
+		<propertyDef name="bHasIndividualOrder" type="bool" default="false" />
+        <propertyDef name="objNationTemplate" type="NationTemplate"/>
+        <propertyDef name="nHitPoints" type="int" default="0"/>
+        <propertyDef name="nExperience" type="int" default="0"/>
+        <propertyDef name="nMorale" type="int" default="50"/>
+        <propertyDef name="objUnitUpgrades" type="UnitUpgrade" variable="true" storesChildren="true"/>
+        <propertyDef name="tmplUpgradeUnit" type="TemplateRef" restriction="UnitTemplate"/>
+		<propertyDef name="objUnitItems" type="UnitItem" variable="true" storesChildren="true"/>
+		<!-- builtin method signatures:
+			int getModifiedAttackDamage(gameroot, attacker)
+			int getModifiedToHit(gameroot, attacker, eCombatProperty)
+			UnitExperienceTemplate getUnitExperienceTemplate(gameroot)
+			UnitMoraleTemplate getUnitMoraleTemplate(gameroot)
+			UnitBranchTemplate getUnitBranchTemplate()
+		-->
+		
+		<replicationRule>
+            ?{avatar, game: self.refUnitGroup.resolve(game).isGroupVisibleToAvatar(avatar,game) }
+        </replicationRule>
+
+
+		<script type="application/x-locust-query">
+			getUnitLevel = ?{gameroot:
+				find(?{
+					level: self.nExperience LTE level.nUpperBound AND self.nExperience GTE level.nLowerBound},
+						getGameSysUnit(gameroot).tmplUnitExperienceLevels.resolve().rangedTemplates
+							).tmplRef
+			}
+
+			canCommand = ?{gameroot, nation:
+				self.refController.resolve(gameroot).canCommand(nation)
+			}
+
+			getTransportCapacity = ?{gameroot:
+				if(self.objUnitTemplate.hasCapability(UnitCapCanTransport),
+				   self.objUnitTemplate.getCapability(UnitCapCanTransport).nCapacity,
+				   0
+				)
+			}
+			
+			getCarrierCapacity = ?{gameroot:
+				if(self.objUnitTemplate.hasCapability(UnitCapCarrier),
+				   self.objUnitTemplate.getCapability(UnitCapCarrier).nCapacity,
+				   0
+				)
+			}
+
+			getTransportCapacityUsed = ?{gameroot:
+				if(self.objUnitTemplate.hasCapability(UnitCapTransportable),
+				   self.objUnitTemplate.getCapability(UnitCapTransportable).nCapacityNeeded,
+				   0
+				)
+			}
+			
+			getTransportCapacityNeeded = ?{gameroot:
+				if(self.objUnitTemplate.hasCapability(UnitCapTransportable),
+				   self.objUnitTemplate.getCapability(UnitCapTransportable).nCapacityNeeded,
+				   0
+				)
+			}
+
+			hasIndividualOrder = ?{gameroot:
+				self.bHasIndividualOrder
+			}
+
+			hasNukes = ?{gameroot:
+				true
+			}
+
+			hasCarrierCapacity = ?{gameroot:
+				true
+			}
+
+			belongsToBranch = ?{gameroot, unit_branch:
+				self.objUnitTemplate.tmplUnitSubBranch.resolve().tmplUnitBranch.resolve() == unit_branch.resolve()
+			}
+
+		</script>
+    </objectDef>
+
+    <objectDef type="UnitGroup" class="CMLOUnitGroup" desc="A group of units">
+        <replicationRule>
+            ?{avatar, game: self.isGroupVisibleToAvatar(avatar,game) }
+        </replicationRule>
+        <goDef gameSystem="GameSysUnit" storageProperty="objUnitGroups">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="refLocation" type="GORef"/>
+		<propertyDef name="nPosIndex" type="int" default="-1"/>
+		<propertyDef name="objDisplayUnit" type="Unit"/>
+        <propertyDef name="refController" type="GORef" restriction="Nation"/>
+        <propertyDef name="tmplUnitBranch" type="TemplateRef" restriction="UnitBranchTemplate"/>
+        <propertyDef name="eStatus" type="Enum" restriction="UnitGroupStatus"/>
+        <propertyDef name="bInSupply" type="bool" default="false"/>
+        <propertyDef name="bRepairing" type="bool" default="true"/>
+        <propertyDef name="bAcceptingNewlyProducedUnits" type="bool" default="true"/>
+        <propertyDef name="objUnitOrder" type="UnitOrder" storesChildren="true"/>
+        <propertyDef name="nUnitCount" type="int" default="0"/>
+        <propertyDef name="nCommand" type="int" default="0"/>
+        <propertyDef name="nMilitaryMPUs" type="int" default="0"/>
+		<propertyDef name="nGoodsDemand" type="int" default="0"/>
+		<propertyDef name="nFoodDemand" type="int" default="0"/>
+        <propertyDef name="nHitPoints" type="int" default="0"/>
+        <propertyDef name="nMaxHitPoints" type="int" default="0"/>
+        <propertyDef name="nExperience" type="int" default="0"/>
+        <propertyDef name="nMorale" type="int" default="0"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0" desc="$ maintenance cost per turn"/>
+        <propertyDef name="nSpeed" type="int" default="0" desc="speed for the unit group"/>
+        <propertyDef name="nMissionRange" type="int" default="0" desc="air mission/missile range for the unit group"/>
+        <propertyDef name="nRebaseRange" type="int" default="0" desc="rebase range for the unit group"/>
+        <propertyDef name="nRestOilCost" type="int" default="0" desc="Oil cost per turn of idle"/>
+        <propertyDef name="nOilCost" type="int" default="0" desc="Oil cost per turn of moving/patrolling/etc"/>
+        <propertyDef name="nOilCarry" type="int" default="0" desc="Maximum oil that can be carried by this unit"/>
+        <propertyDef name="nOil" type="int" default="0" desc="Oil currently carried by this unit"/>
+        <propertyDef name="bPaidOilCost" type="bool" default="true" desc="Paid oil cost for this turns activity"/>
+        <propertyDef name="nRestArmsCost" type="int" default="0" desc="Arms cost per turn of idle"/>
+        <propertyDef name="nArmsCost" type="int" default="0" desc="Arms cost per turn of fighting/bombing/etc"/>
+        <propertyDef name="nArmsCarry" type="int" default="0" desc="Maximum arms that can be carried by this unit group"/>
+        <propertyDef name="nArms" type="int" default="0" desc="Arms currently carried by this unit"/>
+        <propertyDef name="bPaidArmsCost" type="bool" default="true" desc="Paid arms cost for this turns activity"/>
+        <propertyDef name="nLandAttackPower" type="int" default="0"/>
+        <propertyDef name="nLandDefensePower" type="int" default="0"/>
+        <propertyDef name="nAirPower" type="int" default="0"/>
+        <propertyDef name="nSeaSurfacePower" type="int" default="0"/>
+        <propertyDef name="nSeaSubmergedPower" type="int" default="0"/>
+        <propertyDef name="nInfrastructurePower" type="int" default="0"/>
+        <propertyDef name="nEffectiveHitPoints" type="int" default="0"/>
+		<propertyDef name="objAccessTicket" type="AccessTicket" storesChildren="true"/>
+        <propertyDef name="objUnitGroupItems" type="UnitGroupItem" variable="true" storesChildren="true"/>
+		<!-- builtin method signatures:
+			UnitGroupActions getValidActionsForSelf(gameroot)
+			UnitGroupActions getValidActionsForTarget(gameroot, target)
+			bool getInSupply(gameroot)
+			int getCombatPower(gameroot,eCombatProperty)
+			int getEffectiveCombatStrength(gameroot,eCombatProperty)
+			UnitGroupCommandTemplate getUnitGroupCommandTemplate(gameroot)
+			
+			builtin query signatures:
+			region getRegion(gameroot)
+		-->
+
+		<script type="application/x-locust-query">
+		    getApparentRegion = ?{gameroot:
+		        switch {
+		            case self.objUnitOrder == null: self.getRegion(gameroot)
+    		        case self.objUnitOrder.instanceOf(UnitOrderBombRegion):      self.objUnitOrder.refRegion.resolve(gameroot)
+    		        case self.objUnitOrder.instanceOf(UnitOrderBombCity):        self.objUnitOrder.refCity.resolve(gameroot).refRegion.resolve(gameroot)
+    		        case self.objUnitOrder.instanceOf(UnitOrderBombNavalBase):   self.objUnitOrder.refNavalBase.resolve(gameroot).refRegion.resolve(gameroot)
+    		        case self.objUnitOrder.instanceOf(UnitOrderBombResource):    self.objUnitOrder.objResourceCapacity.parent
+    		        case self.objUnitOrder.instanceOf(UnitOrderAirPatrol):       self.objUnitOrder.refRegion.resolve(gameroot)
+    		        default: self.getRegion(gameroot)
+		        }
+		    }
+		    
+		    isGroupVisibleToAvatar = ?{avatar,game: 
+                if (game.areNationGroupsVisible(avatar, self.refController.resolve(game)), true,
+                    let region=self.getRegion(game)
+                    {
+                        switch {
+                            case region==null: false
+                            case game.isRegionVisible(avatar,region): true
+                            default:
+                                let region2=self.getApparentRegion(game) {
+                                    if(region==region2,false,game.isRegionVisible(avatar,region2))
+                                }
+                        }
+                    }
+                )
+		    }
+		    
+			getGroupMorale = ?{gameroot:
+				find(?{
+					level: self.nMorale LTE level.nUpperBound AND self.nMorale GTE level.nLowerBound},
+						getGameSysUnit(gameroot).tmplUnitMoraleLevels.resolve().rangedTemplates
+							).tmplRef
+			}
+
+			getGroupCommand = ?{gameroot:
+				find(?{
+					level: self.nCommand LTE level.nUpperBound AND self.nCommand GTE level.nLowerBound},
+						getGameSysUnit(gameroot).tmplUnitGroupCommandLevels.resolve().rangedTemplates
+							).tmplRef
+			}
+
+			//anonymous query with recursion, pretty leet
+			canView = ?{gameroot, visibilityList:
+				?{location:
+					switch {
+						case location.instanceOf(Region):
+							visibilityList.getRegionIsUnfogged(location)
+						case location.instanceOf(UnitGroup):
+							location.canView(gameroot, visibilityList)
+						case location.instanceOf(Unit):
+							location.refUnitGroup.resolve(gameroot).canView(gameroot, visibilityList)
+						case location.instanceOf(City):
+							visibilityList.getRegionIsUnfogged(location.refRegion.resolve(gameroot))
+						case location.instanceOf(NavalBase):
+							visibilityList.getRegionIsUnfogged(location.refRegion.resolve(gameroot))
+						default:
+							false
+					}
+				}(self.refLocation.resolve(gameroot))
+			}
+
+			canCommand = ?{gameroot, nation:
+				self.refController.resolve(gameroot).canCommand(nation)
+			}
+
+			getController = ?{gameroot:
+			    let controller=self.refController.resolve(gameroot) {
+				    switch {
+					    case controller.objStatus.instanceOf(NationStatusPuppet): controller.objStatus.refController.resolve(gameroot)
+					    default: controller
+				    }
+				}
+			}
+
+			getUnits = ?{gameroot: 
+			    getGameSysUnit(gameroot).getGroupUnits(self) 
+			}
+
+			getUnitsByUnitCategory = ?{gameroot, unit_category:
+				filter(?{unit: unit.objUnitTemplate.eUnitCategory == unit_category}, self.getUnits(gameroot))
+			}
+
+			getUnitsByUnitTemplate = ?{gameroot, unit_template:
+                getGameSysUnit(gameroot).getGroupUnitsByUnitTemplate(self,unit_template) 
+			}
+
+			getUnitsWithUnitCapability = ?{gameroot, unit_capability:
+				filter(?{unit: unit.objUnitTemplate.hasCapability(unit_capability)}, self.getUnits(gameroot))
+			}
+
+			getUnitTemplates = ?{gameroot:
+				map(?{unit: unit.objUnitTemplate}, self.getUnits(gameroot))
+			}
+
+			getUnitCapabilities = ?{gameroot:
+				flattenSet(
+					map(
+						?{unit_template: unit_template.objUnitCapabilities},
+						self.getUnitTemplates(gameroot)
+					)
+				)
+			}
+
+			getUnitCapabilitiesByType = ?{gameroot, unit_capability_type:
+                filter(?{cap: cap != null}, map(?{unit_template: unit_template.getCapability(unit_capability_type)}, self.getUnitTemplates(gameroot)))
+			}
+
+			getMergeGroups = ?{gameroot, nation:
+				filter(?{group: group.refLocation == self.refLocation AND group != self
+					AND group.refController == nation AND group.tmplUnitBranch == self.tmplUnitBranch}, getAllUnitGroups(gameroot))
+			}
+
+			//carriers are units in the naval group that have air groups on them
+			getCarrierUnits = ?{gameroot:
+				filter(?{unit: unit.objUnitTemplate.hasCapability(UnitCapCarrier)}, self.getUnits(gameroot))
+			}
+
+			//groups on transports are directly positioned on the naval or air group
+			getGroupsOnTransports = ?{gameroot:
+				filter(?{group: group.refLocation == self AND group != self},
+					getAllUnitGroups(gameroot))
+			}
+
+			getUnitsOnTransports = ?{gameroot:
+				flattenSet(map(?{group: group.getUnits(gameroot)},
+					self.getGroupsOnTransports(gameroot)))
+			}
+
+			getParatroopers = ?{gameroot:
+				filter(?{unit: unit.objUnitTemplate.hasCapability(UnitCapParatrooper)},
+					self.getUnitsOnTransports(gameroot))
+			}
+
+			getTransportCapacity = ?{gameroot:
+				sum(
+					map(
+						?{unit : unit.getTransportCapacity(gameroot)},
+						self.getUnits(gameroot)
+					)
+				)
+			}
+
+			getTransportCapacityUsed = ?{gameroot:
+				sum(
+					map(
+						?{unit : unit.getTransportCapacityUsed(gameroot)},
+						self.getUnitsOnTransports(gameroot)
+					)
+				)
+			}
+			
+			getTransportCapacityNeeded = ?{gameroot:
+				sum(
+					map(
+						?{unit : unit.getTransportCapacityNeeded(gameroot)},
+						self.getUnits(gameroot)
+					)
+				)
+			}
+
+			getCarrierCapacity = ?{gameroot:
+				//self.getUnitCapabilitiesByType(gameroot, UnitCapCarrier).size
+				
+				sum(
+					map(
+						?{unit : unit.getCarrierCapacity(gameroot)},
+						self.getUnitsWithUnitCapability(gameroot, UnitCapCarrier)
+					)
+				)
+			}
+
+			getCarrierCapacityUsed = ?{gameroot:
+				//self.getUnitCapabilitiesByType(gameroot, UnitCapCarrierPlane).size
+				//self.getGroupsOnCarriers(gameroot, self.getCarrierUnits(gameroot)).size
+				flattenSet(
+					map(
+						?{group: group.getUnitsWithUnitCapability(gameroot, UnitCapCarrierPlane)},
+						flattenSet(
+							map(
+								?{unit: getAllUnitGroupsOnUnit(gameroot, unit)},
+								self.getUnitsWithUnitCapability(gameroot, UnitCapCarrier)
+							)
+						)
+					)
+				).size
+			}
+
+			isInPort = ?{gameroot:
+				self.refLocation.resolve(gameroot).instanceOf(City) OR self.refLocation.resolve(gameroot).instanceOf(NavalBase)
+			}
+		</script>
+	</objectDef>
+
+    <objectDef type="PatrollerData" class="CMLOPatrollerData" desc="A patroller data">
+        <goDef gameSystem="GameSysUnit" storageProperty="objPatrollerDatas">
+            <keyProperty name="refUnitGroup"/>
+            <keyProperty name="refRegion"/>
+        </goDef>
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+    </objectDef>
+
+    <objectDef type="NavalBase" class="CMLONavalBase" desc="A naval base">
+        <goDef gameSystem="GameSysUnit" storageProperty="objNavalBases">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="refSeaRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="tmplNavalBase" type="TemplateRef" restriction="NavalBaseTemplate"/>
+    </objectDef>
+
+    <objectDef type="DPUnitOrder" class="CMLODPUnitOrder" superType="DecisionPoint" desc="A decision point for when a unit order requires a prompt or confirmation">
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+		<propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+    </objectDef>
+
+	<objectDef type="HistoricNames" class="CMLOHistoricNames">
+		<propertyDef name="strName" type="String"/>
+		<propertyDef name="nCount" type="int" default="0"/>
+    </objectDef>
+
+    <objectDef type="ObjectNamer" class="CMLONamer">
+		<replicationRule>false</replicationRule>       
+		<propertyDef name="fmtString" type="FormatString"/>
+		<propertyDef name="nNextOrdinal" type="int" default="1"/>
+		<propertyDef name="objHistoricNames" type="HistoricNames" variable="true" storesChildren="true"/>
+
+		<script type="application/javascript"><![CDATA[
+		
+		    // expected method
+		    function getObjectNamerSuffix(n)
+		    {
+				return locale.getObjectNamerSuffix(n);
+		    }
+
+		]]></script>
+
+    </objectDef>
+
+    <objectDef type="UnitNamer" class="CMLOUnitNamer" superType="ObjectNamer">
+        <goDef gameSystem="GameSysUnit" storageProperty="objUnitNamers">
+            <keyProperty name="refNation"/>
+            <keyProperty name="strNamingClass"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="strNamingClass" type="String"/>
+    </objectDef>
+
+    <objectDef type="UnitGroupNamer" class="CMLOUnitGroupNamer" superType="ObjectNamer">
+        <goDef gameSystem="GameSysUnit" storageProperty="objUnitGroupNamers">
+            <keyProperty name="refNation"/>
+            <keyProperty name="tmplUnitBranch"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="tmplUnitBranch" type="TemplateRef" restriction="UnitBranchTemplate"/>
+    </objectDef>
+
+</locust>

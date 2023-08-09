@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GActProposeTradeAgreement" class="CMLOGActProposeTradeAgreement" superType="mlgame.GameAction">
+		<propertyDef name="refProposingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refSourceNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refDestNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="nAmount" type="int" default="10"/>
+        <propertyDef name="nDuration" type="int" default="-1"/>
+        <propertyDef name="bAid" type="bool" default="false"/>
+        <propertyDef name="nPrice" type="int" default="0"/>
+		<propertyDef name="strProposeMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="GActAcceptTradeAgreement" class="CMLOGActAcceptTradeAgreement" superType="mlgame.GameAction">
+		<propertyDef name="refTradeAgreement" type="GORef" restriction="TradeAgreement"/>
+		<propertyDef name="strAcceptMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="GActRejectTradeAgreement" class="CMLOGActRejectTradeAgreement" superType="mlgame.GameAction">
+		<propertyDef name="refTradeAgreement" type="GORef" restriction="TradeAgreement"/>
+		<propertyDef name="strRejectMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="GActWithdrawTradeAgreement" class="CMLOGActWithdrawTradeAgreement" superType="mlgame.GameAction">
+		<propertyDef name="refTradeAgreement" type="GORef" restriction="TradeAgreement"/>
+	</objectDef>
+
+	<objectDef type="GActReduceTradeAgreement" class="CMLOGActReduceTradeAgreement" superType="mlgame.GameAction">
+		<propertyDef name="refTradeAgreement" type="GORef" restriction="TradeAgreement"/>
+		<propertyDef name="nNewAmount" type="int"/>
+	</objectDef>
+
+	<objectDef type="GActCancelTradeAgreement" class="CMLOGActCancelTradeAgreement" superType="mlgame.GameAction">
+		<propertyDef name="refTradeAgreement" type="GORef" restriction="TradeAgreement"/>
+        <propertyDef name="strCancelMessage" type="String"/>
+		<propertyDef name="objCancelingNation" type="Nation" desc="which nation canceled the agreement"/>
+	</objectDef>
+
+	<objectDef type="GActProposeMoneyTransfer" class="CMLOGActProposeMoneyTransfer" superType="mlgame.GameAction">
+		<propertyDef name="refProposingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refSourceNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refDestNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="n64Amount" type="int64" default="0"/>
+		<propertyDef name="bOneTime" type="bool" default="false"/>
+		<propertyDef name="strProposeMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="GActAcceptMoneyTransfer" class="CMLOGActAcceptMoneyTransfer" superType="mlgame.GameAction">
+		<propertyDef name="refMoneyTransfer" type="GORef" restriction="MoneyTransfer"/>
+		<propertyDef name="strAcceptMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="GActRejectMoneyTransfer" class="CMLOGActRejectMoneyTransfer" superType="mlgame.GameAction">
+		<propertyDef name="refMoneyTransfer" type="GORef" restriction="MoneyTransfer"/>
+		<propertyDef name="strRejectMessage" type="String"/>
+	</objectDef>
+
+	<objectDef type="GActWithdrawMoneyTransfer" class="CMLOGActWithdrawMoneyTransfer" superType="mlgame.GameAction">
+		<propertyDef name="refMoneyTransfer" type="GORef" restriction="MoneyTransfer"/>
+	</objectDef>
+
+	<objectDef type="GActModifyMoneyTransfer" class="CMLOGActModifyMoneyTransfer" superType="mlgame.GameAction">
+		<propertyDef name="refMoneyTransfer" type="GORef" restriction="MoneyTransfer"/>
+        <propertyDef name="refModifier" type="GORef" restriction="Nation"/>
+		<propertyDef name="n64NewAmount" type="int64"/>
+	</objectDef>
+
+	<objectDef type="GActCancelMoneyTransfer" class="CMLOGActCancelMoneyTransfer" superType="mlgame.GameAction">
+		<propertyDef name="refMoneyTransfer" type="GORef" restriction="MoneyTransfer"/>
+        <propertyDef name="strCancelMessage" type="String"/>
+		<propertyDef name="objCancelingNation" type="Nation" desc="which nation canceled the money transfer"/>
+	</objectDef>
+
+</locust>

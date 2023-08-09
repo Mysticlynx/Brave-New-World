@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- Interdiction -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileInterdiction" >
+		<property name="fileSource" value="Interdiction.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplInterdiction" >
+		<property name="tmplFile" value="TmplNestFileInterdiction"/>
+	</template>
+    
+	<!-- Engagements -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileEngagement" >
+		<property name="fileSource" value="Engagement.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplEngagement" >
+		<property name="tmplFile" value="TmplNestFileEngagement"/>
+	</template>
+	
+	<!-- Flag -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileFlagPole" >
+		<property name="fileSource" value="pole.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplFlagPole" >
+		<property name="tmplFile" value="TmplNestFileFlagPole"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileFlag" >
+		<property name="fileSource" value="CityFlag.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplFlag" >
+		<property name="tmplFile" value="TmplNestFileFlag"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplFlag" >
+		<property name="tmplFile" value="TmplNestFileFlag"/>
+	</template>
+	
+	<!-- Group select -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileGroupSelect" >
+		<property name="fileSource" value="GroupSelect.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplGroupSelect" >
+		<property name="tmplFile" value="TmplNestFileGroupSelect"/>
+	</template>
+	
+	<!-- Raw resources -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileRaw_Coal" >
+		<property name="fileSource" value="Raw_Coal.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplRaw_Coal" >
+		<property name="tmplFile" value="TmplNestFileRaw_Coal"/>
+	</template>
+	
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileRaw_Metals" >
+		<property name="fileSource" value="Raw_Metals.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplRaw_Metals" >
+		<property name="tmplFile" value="TmplNestFileRaw_Metals"/>
+	</template>
+	
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileRaw_Oil" >
+		<property name="fileSource" value="Raw_Oil.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplRaw_Oil" >
+		<property name="tmplFile" value="TmplNestFileRaw_Oil"/>
+	</template>
+	
+	<!-- Port -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFilePort" >
+		<property name="fileSource" value="Port.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplPort" >
+		<property name="tmplFile" value="TmplNestFilePort"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplPortEmpty">
+		<property name="tmplFile" value="TmplNestFilePort" />
+		<property name="strClipName" value="Empty"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplPortBusy">
+		<property name="tmplFile" value="TmplNestFilePort" />
+		<property name="strClipName" value="Busy"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileDock" >
+		<property name="fileSource" value="Dock.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplDock" >
+		<property name="tmplFile" value="TmplNestFileDock"/>
+	</template>
+	
+	<!-- Fortification Improvements -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileEarthworks" >
+		<property name="fileSource" value="Earthworks.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplEarthworks" >
+		<property name="tmplFile" value="TmplNestFileEarthworks"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileBunkers" >
+		<property name="fileSource" value="Bunkers.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplConcreteFortifications" >
+		<property name="tmplFile" value="TmplNestFileBunkers"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileAdvanced-Bunkers" >
+		<property name="fileSource" value="Advanced-Bunkers.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplFortifiedDefenseLine" >
+		<property name="tmplFile" value="TmplNestFileAdvanced-Bunkers"/>
+	</template>
+	
+	<!-- Anti-air defenses -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileAA-Guns" >
+		<property name="fileSource" value="AA-Guns.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplAntiAirBatteries" >
+		<property name="tmplFile" value="TmplNestFileAA-Guns"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileEarly-Warning-Radar" >
+		<property name="fileSource" value="Early-Warning-Radar.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplEarlyWarningRadar" >
+		<property name="tmplFile" value="TmplNestFileEarly-Warning-Radar"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileAdvanced-Radar" >
+		<property name="fileSource" value="Advanced-Radar.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplGroundControlledInterception" >
+		<property name="tmplFile" value="TmplNestFileAdvanced-Radar"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileFlak-Towers" >
+		<property name="fileSource" value="Flak-Towers.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplFlakTowers" >
+		<property name="tmplFile" value="TmplNestFileFlak-Towers"/>
+	</template>
+	
+	<!-- Coastal Defenses-->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileRegionDefenseCoastal1" >
+		<property name="fileSource" value="Coastal_Defense_L1.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplCoastalDefense1" >
+		<property name="tmplFile" value="TmplNestFileRegionDefenseCoastal1"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileRegionDefenseCoastal2" >
+		<property name="fileSource" value="Coastal_Defense_L2.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplCoastalDefense2" >
+		<property name="tmplFile" value="TmplNestFileRegionDefenseCoastal2"/>
+	</template>
+	
+	<!-- Ground -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileRegionDefenseGround" >
+		<property name="fileSource" value="Ground.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplRegionDefenseGround" >
+		<property name="tmplFile" value="TmplNestFileRegionDefenseGround"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileAntiAirBatteriesGround" >
+		<property name="fileSource" value="Ground_Gun.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplAntiAirBatteriesGround" >
+		<property name="tmplFile" value="TmplNestFileAntiAirBatteriesGround"/>
+	</template>
+	
+	
+	<!-- Resource Improvements -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileCoal_Pit" >
+		<property name="fileSource" value="Coal_Pit.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplCoal_Pit" >
+		<property name="tmplFile" value="TmplNestFileCoal_Pit"/>
+	</template>
+
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileCoal_Mine" >
+		<property name="fileSource" value="Coal_Mine.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplCoal_Mine" >
+		<property name="tmplFile" value="TmplNestFileCoal_Mine"/>
+	</template>
+
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileDeep_Coal_Mine" >
+		<property name="fileSource" value="Deep_Coal_Mine.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplDeep_Coal_Mine" >
+		<property name="tmplFile" value="TmplNestFileDeep_Coal_Mine"/>
+	</template>
+	
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileMetals_Pit" >
+		<property name="fileSource" value="Metals_Pit.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplMetals_Pit" >
+		<property name="tmplFile" value="TmplNestFileMetals_Pit"/>
+	</template>
+
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileMetals_Mine" >
+		<property name="fileSource" value="Metals_Mine.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplMetals_Mine" >
+		<property name="tmplFile" value="TmplNestFileMetals_Mine"/>
+	</template>
+
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileDeep_Metals_Mine" >
+		<property name="fileSource" value="Deep_Metals_Mine.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplDeep_Metals_Mine" >
+		<property name="tmplFile" value="TmplNestFileDeep_Metals_Mine"/>
+	</template>
+	
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileOil_Well" >
+		<property name="fileSource" value="Oil_Well.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplOil_Well" >
+		<property name="tmplFile" value="TmplNestFileOil_Well"/>
+	</template>
+	
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileDeep_Oil_Well" >
+		<property name="fileSource" value="Deep_Oil_Well.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplDeep_Oil_Well" >
+		<property name="tmplFile" value="TmplNestFileDeep_Oil_Well"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplDeep_Oil_Well">
+		<property name="tmplFile" value="TmplNestFileDeep_Oil_Well" />
+	</template>
+	
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileOil_Refinery" >
+		<property name="fileSource" value="Oil_Refinery.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplOil_Refinery" >
+		<property name="tmplFile" value="TmplNestFileOil_Refinery"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplOil_Refinery">
+		<property name="tmplFile" value="TmplNestFileOil_Refinery" />
+	</template>
+	
+	<!-- Airbase -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileUnitBase_Air" >
+		<property name="fileSource" value="UnitBase_Air.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplUnitBase_Air" >
+		<property name="tmplFile" value="TmplNestFileUnitBase_Air"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplUnitBase_Air" >
+		<property name="tmplFile" value="TmplNestFileUnitBase_Air"/>
+	</template>
+	
+	<!-- Unit decal -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileUnitGroup_Decal" >
+		<property name="fileSource" value="UnitGroup_Decal.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplUnitGroup_Decal" >
+		<property name="tmplFile" value="TmplNestFileUnitGroup_Decal"/>
+	</template>
+	
+	<!-- Stack indicator -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileWorldEdgeNorth" >
+		<property name="fileSource" value="Worlds_edge.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplWorldEdgeNorth" >
+		<property name="tmplFile" value="TmplNestFileWorldEdgeNorth"/>
+	</template>
+	
+	
+	<!-- World Edge -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileStackIndicator" >
+		<property name="fileSource" value="Stack_Indicator.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplStackIndicator" >
+		<property name="tmplFile" value="TmplNestFileStackIndicator"/>
+	</template>
+	
+	<!-- Region project in progress indicator -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileFarmWorker" >
+		<property name="fileSource" value="FarmWorker.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplFarmWorker" >
+		<property name="tmplFile" value="TmplNestFileFarmWorker"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplFarmWorker" >
+		<property name="tmplFile" value="TmplNestFileFarmWorker"/>
+		<property name="strClipName" value="Building"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplFarmWorkerIdle" >
+		<property name="tmplFile" value="TmplNestFileFarmWorker"/>
+		<property name="strClipName" value="Idle"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileMilitaryWorker" >
+		<property name="fileSource" value="MilitaryWorker.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplMilitaryWorker" >
+		<property name="tmplFile" value="TmplNestFileMilitaryWorker"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplMilitaryWorker" >
+		<property name="tmplFile" value="TmplNestFileMilitaryWorker"/>
+		<property name="strClipName" value="Building"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplMilitaryWorkerIdle" >
+		<property name="tmplFile" value="TmplNestFileMilitaryWorker"/>
+		<property name="strClipName" value="Idle"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileResourcesWorker" >
+		<property name="fileSource" value="ResourcesWorker.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplResourcesWorker" >
+		<property name="tmplFile" value="TmplNestFileResourcesWorker"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplResourcesWorker" >
+		<property name="tmplFile" value="TmplNestFileResourcesWorker"/>
+		<property name="strClipName" value="Building"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplResourcesWorkerIdle" >
+		<property name="tmplFile" value="TmplNestFileResourcesWorker"/>
+		<property name="strClipName" value="Idle"/>
+	</template>
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileRoadWorker" >
+		<property name="fileSource" value="RoadWorker.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplRoadWorker" >
+		<property name="tmplFile" value="TmplNestFileRoadWorker"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplRoadWorker" >
+		<property name="tmplFile" value="TmplNestFileRoadWorker"/>
+		<property name="strClipName" value="Building"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplRoadWorkerIdle" >
+		<property name="tmplFile" value="TmplNestFileRoadWorker"/>
+		<property name="strClipName" value="Idle"/>
+	</template>
+	
+	<!-- City building constrution indicator -->
+	<template type="mlmedia.NestFileTemplate" name="TmplNestFileCityConstructionProject" >
+		<property name="fileSource" value="City-Builder.nst" />
+	</template>
+	<template type="mlmedia.ModelTemplateNest" name="ModelTmplCityConstructionProject" >
+		<property name="tmplFile" value="TmplNestFileCityConstructionProject"/>
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplCityConstructionProjectBuilding" >
+		<property name="tmplFile" value="TmplNestFileCityConstructionProject"/>
+		<property name="strClipName" value="Building" />
+	</template>
+	<template type="mlmedia.AnimationTemplateNest" name="AnimTmplCityConstructionProjectIdle" >
+		<property name="tmplFile" value="TmplNestFileCityConstructionProject"/>
+		<property name="strClipName" value="Idle" />
+	</template>
+</locust>

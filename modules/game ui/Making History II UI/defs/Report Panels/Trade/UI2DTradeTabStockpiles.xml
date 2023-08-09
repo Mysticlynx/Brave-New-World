@@ -1,0 +1,839 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DTradeTabStockpiles" superType="mlui.UI2DElement">
+
+	<!-- Stockpile Management Section -->
+		<object type="mlui.UI2DText" name="objStockpileManagementLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.StockpileManagement"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objStockpileManagementBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="874"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWMArmsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconArmsTny"/>
+			<property name="nX" value="208"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="19"/>
+			<property name="nHeight" value="21"/>
+			<property name="strToolTip" from="locale.SID.UI.Arms"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWMMetalsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMetalsTny"/>
+			<property name="nX" value="358"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="20"/>
+			<property name="nHeight" value="19"/>
+			<property name="strToolTip" from="locale.SID.UI.Metals"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWMCoalIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconCoalTny"/>
+			<property name="nX" value="508"/>
+			<property name="nY" value="165"/>
+			<property name="nWidth" value="18"/>
+			<property name="nHeight" value="18"/>
+			<property name="strToolTip" from="locale.SID.UI.Coal"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWMOilIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconOilTny"/>
+			<property name="nX" value="654"/>
+			<property name="nY" value="166"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="16"/>
+			<property name="strToolTip" from="locale.SID.UI.Oil"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWMFoodIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconFoodTny"/>
+			<property name="nX" value="803"/>
+			<property name="nY" value="162"/>
+			<property name="nWidth" value="15"/>
+			<property name="nHeight" value="22"/>
+			<property name="strToolTip" from="locale.SID.UI.Food"/>
+		</object>
+
+		<object type="UI2DStockpileManagement" name="objStockpileManagement">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="874"/>
+			<property name="nHeight" value="495"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DStockpileManagement" superType="mlui.UI2DElement">
+
+	<!-- Stockpile Management Labels -->
+
+       
+
+
+	<!-- Stockpile Management Resources -->
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+        <property name="objNation" from="mh2data.objNation"/>
+
+        <propertyDef name="objNationHistory" type="gs_tbg.NationHistory"/>
+        <property name="objNationHistory">
+			find(?{history: history.refNation == self.objNation}, gs_tbg.getAllNationHistories(mh2data.objAvatar))
+        </property>
+		
+		<object type="UI2DStockpileBubbleText" name="objElements">
+			<property name="nWidth" value="134"/>
+			<property name="nY" value="10"/>
+			<property name="strText" from="locale.SID.UI.StockpileTarget"/>
+		</object>
+		
+		<object type="UI2DStockpileBubbleText" name="objElements">
+			<property name="nY" value="43"/>
+			<property name="nWidth" value="134"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="UI2DStockpileBubbleText" name="objElements">
+			<property name="nY" value="76"/>
+			<property name="nWidth" value="134"/>
+			<property name="nHeight" value="31"/>
+			<property name="strText" from="locale.SID.UI.MarketOrder"/>
+		</object>
+		
+		<object type="common_ui.UI2DList" name="objList">
+			<property name="nX" value="0"/>
+			<property name="nY" value="127"/>
+			<property name="nSpacing" value="35"/>
+				
+			<!-- Domestic -->
+			<object type="common_ui.UI2DList" name="objElements">
+				<property name="nSpacing" value="8"/>
+				
+				<object type="UI2DStockpileBubbleText" name="objElements">
+					<property name="nWidth" value="134"/>
+					<property name="strText" from="locale.SID.UI.CurrentStockpile"/>
+				</object>
+				
+				<object type="UI2DStockpileBubbleText" name="objElements">
+					<property name="nWidth" value="134"/>
+					<property name="strText" from="locale.SID.UI.MarketPrice"/>
+				</object>
+				
+				<object type="UI2DStockpileBubbleText" name="objElements">
+					<property name="nWidth" value="134"/>
+					<property name="strText" from="locale.SID.UI.StockpileValue"/>
+				</object>
+				
+			</object>
+			
+			<!-- Last Turn -->
+			<object type="common_ui.UI2DList" name="objElements">
+				<property name="nSpacing" value="8"/>
+				
+				<object type="UI2DStockpileBubbleText" name="objElements">
+					<property name="nWidth" value="134"/>
+					<property name="strText" from="locale.SID.UI.Produced"/>
+				</object>
+				
+				<object type="UI2DStockpileBubbleText" name="objElements">
+					<property name="nWidth" value="134"/>
+					<property name="strText" from="locale.SID.UI.Consumed"/>
+				</object>
+				
+				<object type="UI2DStockpileBubbleText" name="objElements">
+					<property name="nWidth" value="134"/>
+					<property name="strText" from="locale.SID.UI.TradeSummary"/>
+				</object>
+				
+			</object>
+			
+			<!-- World Market -->
+			<object type="common_ui.UI2DList" name="objElements">
+				<property name="nSpacing" value="8"/>
+				
+				<object type="UI2DStockpileBubbleText" name="objElements">
+					<property name="nWidth" value="134"/>
+					<property name="strText" from="locale.SID.UI.MarketDemand"/>
+				</object>
+				
+				<object type="UI2DStockpileBubbleText" name="objElements">
+					<property name="nWidth" value="134"/>
+					<property name="strText" from="locale.SID.UI.MarketSupply"/>
+				</object>
+			</object>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objHorzList">
+			<property name="nY" value="12"/>
+			<property name="nX" value="133"/>
+			<property name="nSpacing" value="-1"/>
+			
+			<object type="UI2DStockpileManagementResource" name="objElements">
+				<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Arms')"/>
+				<property name="objNationHistory" from="def.objNationHistory"/>
+				<property name="bBubbleClear" value="false"/>
+			</object>
+	
+			<object type="UI2DStockpileManagementResource" name="objElements">
+				<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')"/>
+				<property name="objNationHistory" from="def.objNationHistory"/>
+				<property name="bBubbleClear" value="true"/>
+			</object>
+	
+			<object type="UI2DStockpileManagementResource" name="objElements">
+				<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')"/>
+				<property name="objNationHistory" from="def.objNationHistory"/>
+				<property name="bBubbleClear" value="false"/>
+			</object>
+	
+			<object type="UI2DStockpileManagementResource" name="objElements">
+				<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')"/>
+				<property name="objNationHistory" from="def.objNationHistory"/>
+				<property name="bBubbleClear" value="true"/>
+			</object>
+	
+			<object type="UI2DStockpileManagementResource" name="objElements">
+				<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')"/>
+				<property name="objNationHistory" from="def.objNationHistory"/>
+				<property name="bBubbleClear" value="false"/>		
+			</object>	
+			
+		</object>
+		
+	</objectDef>
+
+	<objectDef type="UI2DStockpileManagementResource" superType="mlui.UI2DElement">
+		<property name="nWidth" value="149"/>
+		<property name="nHeight" value="495"/>
+		
+		<propertyDef name="bBubbleClear" type="bool"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+		<propertyDef name="objNationHistory" type="gs_tbg.NationHistory"/>
+
+		<object type="LookupNationResource" name="objLookupNationResource">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="tmplResource" from="def.tmplResource"/>
+		</object>
+
+		<object type="LookupTradeResourceData" name="objLookupTradeResourceData">
+			<property name="objNationHistory" from="def.objNationHistory"/>
+			<property name="tmplResource" from="def.tmplResource"/>
+		</object>
+
+		<object type="LookupSupplyAndDemand" name="objLookupSupplyAndDemand">
+			<property name="tmplResource" from="def.tmplResource"/>
+		</object>
+
+		<object type="LookupNationTradeAgreements" name="objLookupNationTradeAgreements">
+			<property name="objNation" from="mh2data.objNation"/>
+		</object>
+
+		<object type="LookupTradeAgreementResource" name="objLookupTradeAgreementResource">
+			<property name="objLookupNationTradeAgreements" from="def.objLookupNationTradeAgreements"/>
+			<property name="tmplResource" from="def.tmplResource"/>
+		</object>
+
+		<propertyDef name="objResourceTemplate" type="gs_tbg.ResourceTemplate"/>
+        <property name="objResourceTemplate" from="self.tmplResource.resolve()"/>
+
+		<propertyDef name="objPriceAdjustTemplate" type="gs_tbg.PriceAdjustTemplate"/>
+        <property name="objPriceAdjustTemplate" from="self.objLookupSupplyAndDemand.objSupplyAndDemand.tmplPriceAdjust.resolve()"/>
+
+		<propertyDef name="nMarketPrice" type="int64"/>
+        <property name="nMarketPrice" from="self.objResourceTemplate.nPrice * self.objPriceAdjustTemplate.fPriceAdjust"/>
+
+	<!-- Stockpile Targets -->
+		<!--<object type="mlui.UI2DImage" name="objStockpileTargetBG">-->
+		<!--	<property name="tmplImage" value="skin.ImgReportBubbleGrayTan"/>-->
+		<!--	<property name="nX" value="0"/>-->
+		<!--	<property name="nY" value="0"/>-->
+		<!--	<property name="nWidth" value="149"/>-->
+		<!--	<property name="nHeight" value="30"/>-->
+		<!--	<property name="nDepth" value="-100"/>-->
+		<!--</object>-->
+
+		<!--<object type="mlui.UI2DImage" name="objStockpileTargetButton">-->
+		<!--	<property name="tmplImage" value="skin.ImgStockpileButton"/>-->
+		<!--	<property name="nX" value="1"/>-->
+		<!--	<property name="nY" value="1"/>-->
+		<!--	<property name="nWidth" value="121"/>-->
+		<!--	<property name="nHeight" value="42"/>-->
+		<!--	<property name="nDepth" value="-100"/>-->
+		<!--</object>-->
+
+		<!--<object type="mlui.UI2DText" name="objStockpileTarget">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Center"/>-->
+		<!--	<property name="strText" from="String(def.objLookupNationResource.objNationResource.nDesiredStockpile.formatNumber(0, true))"/>-->
+		<!--	<property name="nX" value="0"/>-->
+		<!--	<property name="nY" value="8"/>-->
+		<!--	<property name="nWidth" value="121"/>-->
+		<!--	<property name="nHeight" value="12"/>-->
+		<!--</object>-->
+		
+		<object type="UI2DStockpileTextInput" name="objStockpileInput">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nWidth" from="def.nWidth - 10"/>
+			<property name="nHeight" value="26"/>
+			<property name="objLookupNationResource" from="def.objLookupNationResource"/>
+			<property name="tmplResource" from="def.tmplResource"/>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objStockpileSetTargetBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanBeige"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="31"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+            <!-- Stockpile Set Target Buttons -->
+        <object type="mlui.UI2DTextButton" name="objPlusOne">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue10CenterHighlight"/>
+			<property name="strText" value="10"/>
+			<property name="nX" value="24"/>
+			<property name="nY" value="33"/>
+			<property name="nDefaultWidth" value="30"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActSetAutotrade.create({
+								"refNation": mh2data.objNation,
+								"tmplResource": def.tmplResource,
+								"eAutotradeState": def.objLookupNationResource.objNationResource.eAutotradeState,
+								"nStockpileLevel": def.objLookupNationResource.objNationResource.nDesiredStockpile += 10
+							});
+							mh2data.objAvatar.sendAction(action);
+						}
+					]]></script>
+                                </object>
+                        </object>
+                </object>
+
+		<object type="mlui.UI2DTextButton" name="objPlusTen">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue10CenterHighlight"/>
+			<property name="strText" value="100"/>
+			<property name="nX" value="58"/>
+			<property name="nY" value="33"/>
+			<property name="nDefaultWidth" value="30"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActSetAutotrade.create({
+								"refNation": mh2data.objNation,
+								"tmplResource": def.tmplResource,
+								"eAutotradeState": def.objLookupNationResource.objNationResource.eAutotradeState,
+								"nStockpileLevel": def.objLookupNationResource.objNationResource.nDesiredStockpile += 100
+							});
+							mh2data.objAvatar.sendAction(action);
+						}
+					]]></script>
+                                </object>
+                        </object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objPlusHundred">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue10CenterHighlight"/>
+			<property name="strText" value="1000"/>
+			<property name="nX" value="92"/>
+			<property name="nY" value="33"/>
+			<property name="nDefaultWidth" value="30"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActSetAutotrade.create({
+								"refNation": mh2data.objNation,
+								"tmplResource": def.tmplResource,
+								"eAutotradeState": def.objLookupNationResource.objNationResource.eAutotradeState,
+								"nStockpileLevel": def.objLookupNationResource.objNationResource.nDesiredStockpile += 1000
+							});
+							mh2data.objAvatar.sendAction(action);
+						}
+					]]></script>
+                                </object>
+                        </object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objMinusOne">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleRed10CenterHighlight"/>
+			<property name="strText" value="-10"/>
+			<property name="nX" value="24"/>
+			<property name="nY" value="47"/>
+			<property name="nDefaultWidth" value="30"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupNationResource.objNationResource.nDesiredStockpile <= 1)
+                                {
+                                    var action = gs_tbg.GActSetAutotrade.create({
+                                        "refNation": mh2data.objNation,
+                                        "tmplResource": def.tmplResource,
+                                        "eAutotradeState": def.objLookupNationResource.objNationResource.eAutotradeState,
+                                        "nStockpileLevel": def.objLookupNationResource.objNationResource.nDesiredStockpile = 0
+                                    });
+                                    mh2data.objAvatar.sendAction(action);
+                                }
+                            else
+                                {
+                                    var action = gs_tbg.GActSetAutotrade.create({
+                                        "refNation": mh2data.objNation,
+                                        "tmplResource": def.tmplResource,
+                                        "eAutotradeState": def.objLookupNationResource.objNationResource.eAutotradeState,
+                                        "nStockpileLevel": def.objLookupNationResource.objNationResource.nDesiredStockpile -= 10
+                                    });
+                                    mh2data.objAvatar.sendAction(action);
+                                }
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objMinusTen">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleRed10CenterHighlight"/>
+			<property name="strText" value="-100"/>
+			<property name="nX" value="58"/>
+			<property name="nY" value="47"/>
+			<property name="nDefaultWidth" value="30"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupNationResource.objNationResource.nDesiredStockpile <= 10)
+                                {
+                                    var action = gs_tbg.GActSetAutotrade.create({
+                                        "refNation": mh2data.objNation,
+                                        "tmplResource": def.tmplResource,
+                                        "eAutotradeState": def.objLookupNationResource.objNationResource.eAutotradeState,
+                                        "nStockpileLevel": def.objLookupNationResource.objNationResource.nDesiredStockpile = 0
+                                    });
+                                    mh2data.objAvatar.sendAction(action);
+                                }
+                            else
+                                {
+                                    var action = gs_tbg.GActSetAutotrade.create({
+                                        "refNation": mh2data.objNation,
+                                        "tmplResource": def.tmplResource,
+                                        "eAutotradeState": def.objLookupNationResource.objNationResource.eAutotradeState,
+                                        "nStockpileLevel": def.objLookupNationResource.objNationResource.nDesiredStockpile -= 100
+                                    });
+                                    mh2data.objAvatar.sendAction(action);
+                                }
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objMinusHundred">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleRed10CenterHighlight"/>
+			<property name="strText" value="-1000"/>
+			<property name="nX" value="92"/>
+			<property name="nY" value="47"/>
+			<property name="nDefaultWidth" value="30"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupNationResource.objNationResource.nDesiredStockpile <= 100)
+                                {
+                                    var action = gs_tbg.GActSetAutotrade.create({
+                                        "refNation": mh2data.objNation,
+                                        "tmplResource": def.tmplResource,
+                                        "eAutotradeState": def.objLookupNationResource.objNationResource.eAutotradeState,
+                                        "nStockpileLevel": def.objLookupNationResource.objNationResource.nDesiredStockpile = 0
+                                    });
+                                    mh2data.objAvatar.sendAction(action);
+                                }
+                            else
+                                {
+                                    var action = gs_tbg.GActSetAutotrade.create({
+                                        "refNation": mh2data.objNation,
+                                        "tmplResource": def.tmplResource,
+                                        "eAutotradeState": def.objLookupNationResource.objNationResource.eAutotradeState,
+                                        "nStockpileLevel": def.objLookupNationResource.objNationResource.nDesiredStockpile -= 1000
+                                    });
+                                    mh2data.objAvatar.sendAction(action);
+                                }
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DStockpileButton" name="objMarketOrderButton">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="tmplResource" from="def.tmplResource"/>
+			<property name="eAutotradeState" from="def.objLookupNationResource.objNationResource.eAutotradeState"/>
+			<property name="nDesiredStockpile" from="def.objLookupNationResource.objNationResource.nDesiredStockpile"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="64"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="31"/>
+			<property name="nDepth" value="50"/>
+		</object>
+
+		<object type="common_ui.UI2DList" name="objList">
+			<property name="nX" value="0"/>
+			<property name="nY" value="115"/>
+			<property name="nSpacing" value="35"/>
+				
+			<!-- Domestic -->
+			<object type="common_ui.UI2DList" name="objElements">
+				<property name="nSpacing" value="8"/>
+				
+				<object type="UI2DStockpileBubble" name="objElements">
+					<property name="nWidth" value="149"/>
+					<property name="bBubbleClear" value="false"/>
+					<property name="n64Value" from="def.objLookupNationResource.objNationResource.nAmount"/>
+				</object>
+				
+				<object type="UI2DStockpileBubble" name="objElements">
+					<property name="nWidth" value="149"/>
+					<property name="bBubbleClear" from="def.bBubbleClear"/>
+					<property name="bDollarSign" value="true"/>
+					<property name="n64Value" from="def.nMarketPrice"/>
+				</object>
+				
+				<object type="UI2DStockpileBubble" name="objElements">
+					<property name="nWidth" value="149"/>
+					<property name="bBubbleClear" from="def.bBubbleClear"/>
+					<property name="bDollarSign" value="true"/>
+					<property name="n64Value" from="def.objLookupNationResource.objNationResource.nAmount * def.nMarketPrice"/>
+				</object>
+				
+			</object>
+			
+			<!-- Last Turn -->
+			<object type="common_ui.UI2DList" name="objElements">
+				<property name="nSpacing" value="8"/>
+				
+				<object type="UI2DStockpileBubble" name="objElements">
+					<property name="nWidth" value="149"/>
+					<property name="bBubbleClear" from="def.bBubbleClear"/>
+					<property name="n64Value" from="def.objLookupNationResource.objNationResource.nProduced"/>
+				</object>
+				
+				<object type="UI2DStockpileBubble" name="objElements">
+					<property name="nWidth" value="149"/>
+					<property name="bBubbleClear" from="def.bBubbleClear"/>
+					<property name="n64Value" from="def.objLookupNationResource.objNationResource.nConsumed"/>
+				</object>
+				
+				<object type="UI2DStockpileBubble" name="objElements">
+					<property name="nWidth" value="149"/>
+					<property name="bBubbleClear" from="def.bBubbleClear"/>
+					<property name="n64Value" from="def.objLookupTradeResourceData.nDirectTotal + def.objLookupTradeResourceData.nMarketTotal"/>
+				</object>
+				
+			</object>
+			
+			<!-- World Market -->
+			<object type="common_ui.UI2DList" name="objElements">
+				<property name="nSpacing" value="8"/>
+				
+				<object type="UI2DStockpileBubble" name="objElements">
+					<property name="nWidth" value="149"/>
+					<property name="bBubbleClear" from="def.bBubbleClear"/>
+					<property name="n64Value" from="def.objLookupSupplyAndDemand.objSupplyAndDemand.nDemand"/>
+				</object>
+				
+				<object type="UI2DStockpileBubble" name="objElements">
+					<property name="nWidth" value="149"/>
+					<property name="bBubbleClear" from="def.bBubbleClear"/>
+					<property name="n64Value" from="def.objLookupSupplyAndDemand.objSupplyAndDemand.nSupply"/>
+				</object>
+			</object>
+		</object>
+		
+	</objectDef>
+
+	<objectDef type="UI2DStockpileBubble" superType="mlui.UI2DElement">
+		<property name="nHeight" value="30"/>
+		<propertyDef name="bBubbleClear" type="bool" default="false"/>
+		<propertyDef name="bDollarSign" type="bool" default="false"/>
+		<propertyDef name="n64Value" type="int64"/>
+		
+		<object type="mlui.UI2DImage" name="objTradeAgreementsBG">
+			<property name="tmplImage">
+				if(def.bBubbleClear,
+					'skin.ImgReportBubbleGrayClear',
+					'skin.ImgTradeBubbleTan'
+				)
+			</property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTradeAgreements">
+			<property name="tmplTextStyle">
+				if(def.n64Value LT 0,
+					'locale.TxtStyleArialRed12Center',
+					'locale.TxtStyleArialDarkBrown12Center'
+				)
+			</property>
+			<property name="strText">
+				if(def.bDollarSign, '$', '') + abs(def.n64Value).formatNumber(0, true)
+			</property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DStockpileBubbleText" superType="mlui.UI2DElement">
+		<property name="nHeight" value="30"/>
+		<propertyDef name="strText" type="String"/>
+		
+		<object type="mlui.UI2DImage" name="objTradeAgreementsBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTradeAgreements">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="0"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nWidth" from="def.nWidth - 10"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+	</objectDef>
+
+	<objectDef type="UI2DStockpileTextInput" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupNationResource" type="LookupNationResource"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+		<propertyDef name="colBorderColor" type="Color" default="#666666FF"/>
+		
+		<object type="mlui.UI2DImage" name="objLeft">
+			<property name="tmplImage" value="skin.ImgWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+			<property name="colColor" from="def.colBorderColor"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objTop">
+			<property name="tmplImage" value="skin.ImgWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="1"/>
+			<property name="nDepth" value="-100"/>
+			<property name="colColor" from="def.colBorderColor"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objRight">
+			<property name="tmplImage" value="skin.ImgWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nWidth" value="1"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+			<property name="colColor" from="def.colBorderColor"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objBottom">
+			<property name="tmplImage" value="skin.ImgWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="1"/>
+			<property name="nDepth" value="-100"/>
+			<property name="colColor" from="def.colBorderColor"/>
+		</object>
+		
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.colBorderColor = '#990000FF';
+					}
+				]]></script>
+			</object>			
+		</object>
+		
+		<object type="common_elements.UI2DEditableTextBoxNumbers" name="objInput">
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nGameValue" from="def.objLookupNationResource.objNationResource.nDesiredStockpile"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16CenterMiddle"/>
+			
+			<script type="application/javascript"><![CDATA[
+				function submit(value) {
+					var action = gs_tbg.GActSetAutotrade.create({
+									"refNation": mh2data.objNation,
+									"tmplResource": def.tmplResource,
+									"eAutotradeState": def.objLookupNationResource.objNationResource.eAutotradeState,
+									"nStockpileLevel": self.nValue
+								});
+								mh2data.objAvatar.sendAction(action);
+				}
+				function validKey(){
+					def.colBorderColor = '#666666FF';
+				}
+				function invalidKey(){
+					def.colBorderColor = '#990000FF';
+				}
+			]]></script>
+			
+		</object>
+		
+	</objectDef>
+
+    <objectDef type="UI2DStockpileButton" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+		<propertyDef name="eAutotradeState" type="Enum" restriction="gs_tbg.AutotradeState"/>
+		<propertyDef name="nDesiredStockpile" type="int"/>
+
+		<object type="mlui.UI2DButton" name="objStockpileButton">
+			<property name="tmplButtonStyle" value="skin.BtnStockpileOption"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="def.nWidth"/>
+			<property name="nDefaultHeight" value="31"/>
+			<property name="strToolTip" from="locale.SID.UI.ToggleAutotradeState"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							//TODO: Check canCommand
+							if(def.eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_DISABLED))
+							{
+								var action = gs_tbg.GActSetAutotrade.create({
+									"refNation": def.objNation,
+									"tmplResource": def.tmplResource,
+									"eAutotradeState": gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_ONLY,
+									"nStockpileLevel": def.nDesiredStockpile
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+							else if(def.eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_ONLY))
+							{
+								var action = gs_tbg.GActSetAutotrade.create({
+									"refNation": def.objNation,
+									"tmplResource": def.tmplResource,
+									"eAutotradeState": gs_tbg.AutotradeState.AUTOTRADE_STATE_SELL_ONLY,
+									"nStockpileLevel": def.nDesiredStockpile
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+							else if(def.eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_SELL_ONLY))
+							{
+								var action = gs_tbg.GActSetAutotrade.create({
+									"refNation": def.objNation,
+									"tmplResource": def.tmplResource,
+									"eAutotradeState": gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_AND_SELL,
+									"nStockpileLevel": def.nDesiredStockpile
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+							else if(def.eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_AND_SELL))
+							{
+								var action = gs_tbg.GActSetAutotrade.create({
+									"refNation": def.objNation,
+									"tmplResource": def.tmplResource,
+									"eAutotradeState": gs_tbg.AutotradeState.AUTOTRADE_STATE_DISABLED,
+									"nStockpileLevel": def.nDesiredStockpile
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+							else
+							{
+								log("Autotrade state is not recognized");
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+			
+		</object>
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14CenterMiddle"/>
+			<property name="strText">
+				if(def.eAutotradeState == gs_tbg.AutotradeState.AUTOTRADE_STATE_DISABLED,
+					locale.SID.UI.None,
+					if(def.eAutotradeState == gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_ONLY,
+						locale.SID.UI.BuyOnly,
+						if(def.eAutotradeState == gs_tbg.AutotradeState.AUTOTRADE_STATE_SELL_ONLY,
+							locale.SID.UI.SellOnly,
+							locale.SID.UI.BuyOrSell
+						)
+					)
+				)
+			</property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="16"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	</objectDef>
+</locust>

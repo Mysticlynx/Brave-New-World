@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <!-- Nation Rank -->
+    <objectDef type="NationRank" class="CMLONationRank">
+        <goDef gameSystem="GameSysNation" storageProperty="objNationRanks">
+            <keyProperty name="refNation"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="nTotalRank" type="int" default="0" desc="overall rank of the nation"/>
+        <propertyDef name="nIPURank" type="int" default="0" desc="rank of the nation based on IPUs"/>
+        <propertyDef name="nMPURank" type="int" default="0" desc="rank of the nation based on MPUs"/>
+        <propertyDef name="nTechRank" type="int" default="0" desc="rank of the nation based on technology researched"/>
+        <propertyDef name="nWealthRank" type="int" default="0" desc="rank of the nation based on wealth"/>
+        <propertyDef name="nMilitaryRank" type="int" default="0" desc="rank of the nation based on military"/>
+    </objectDef>
+
+</locust>

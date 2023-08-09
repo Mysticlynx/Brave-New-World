@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="VictoryCondition" class="CMLOVictoryCondition" desc="A victory condition">
+        <goDef gameSystem="GameSysVictoryCondition" storageProperty="objVictoryConditions">
+            <keyProperty name="strName"/>
+        </goDef>
+		<propertyDef name="strName" type="String"/>
+        <propertyDef name="bConditionMet" type="bool" default="false"/>
+        <propertyDef name="bActive" type="bool" default="false"/>
+    </objectDef>
+
+    <objectDef type="TeamRank" class="CMLOTeamRank">
+        <goDef gameSystem="GameSysVictoryCondition" storageProperty="objTeamRanks">
+            <keyProperty name="objTeamID"/>
+        </goDef>
+        <propertyDef name="objTeamID" type="Object"/>
+        <propertyDef name="nTotalRank" type="int" default="0" desc="overall rank of the nation"/>
+        <propertyDef name="nIPURank" type="int" default="0" desc="rank of the nation based on IPUs"/>
+        <propertyDef name="nMPURank" type="int" default="0" desc="rank of the nation based on MPUs"/>
+        <propertyDef name="nTechRank" type="int" default="0" desc="rank of the nation based on technology researched"/>
+        <propertyDef name="nWealthRank" type="int" default="0" desc="rank of the nation based on wealth"/>
+        <propertyDef name="nMilitaryRank" type="int" default="0" desc="rank of the nation based on military"/>
+	    <propertyDef name="nTotalPoints" type="int" default="0"/>
+	    <propertyDef name="nIPUPoints" type="int" default="0"/>
+	    <propertyDef name="nMPUPoints" type="int" default="0"/>
+	    <propertyDef name="nTechPoints" type="int" default="0"/>
+	    <propertyDef name="nWealthPoints" type="int" default="0"/>
+	    <propertyDef name="nResourcePoints" type="int" default="0"/>
+    </objectDef>
+
+</locust>

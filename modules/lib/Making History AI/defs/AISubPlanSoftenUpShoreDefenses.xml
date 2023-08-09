@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- subplan intented to be used as part of a larger invasion -->
+    <objectDef type="AISubPlanSoftenUpShoreDefenses" superType="gs_tbg.AIMilitaryPlan">
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        <propertyDef name="objParentPlan" type="gs_tbg.AIMilitaryPlan"/>
+        <propertyDef name="objMilitaryAI" type="gs_tbg.NationMilitaryAI"/>
+        <propertyDef name="nPhase" type="int" default="0"/>
+        <propertyDef name="objBuildupRegion" type="gs_tbg.Region"/>
+        <propertyDef name="objShoreRegionsToSoften" type="gs_tbg.Region" variable="true"/>
+        <propertyDef name="objCurrentShoreRegion" type="gs_tbg.Region"/>
+        <propertyDef name="objCurrentSeaRegion" type="gs_tbg.Region"/>
+        
+        <propertyDef name="bOkToAttack" type="bool" default="false"/>
+        <propertyDef name="nTurnsAttacking" type="int" default="0"/>
+        <propertyDef name="fMaxLandAttackStrength" type="float" default="8000"/><!-- tweak point -->
+        <propertyDef name="bNothingFoundToBomb" type="bool" default="false"/>
+
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <propertyDef name="objGameSysCity" type="gs_tbg.GameSysCity"/>
+        <propertyDef name="objGameSysRegion" type="gs_tbg.GameSysRegion"/>
+        <propertyDef name="objGameSysNation" type="gs_tbg.GameSysNation"/>
+        <propertyDef name="objGameSysNationRelations" type="gs_tbg.GameSysNationRelations"/>
+        <propertyDef name="objGameSysUnit" type="gs_tbg.GameSysUnit"/>
+
+        <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+        <property name="objGameSysTurnBasedGame" from="self.objParentAI.objGameSysTurnBasedGame"/>
+        <property name="objGameSysCity" from="self.objParentAI.objGameSysCity"/>
+        <property name="objGameSysRegion" from="self.objParentAI.objGameSysRegion"/>
+        <property name="objGameSysNation" from="self.objParentAI.objGameSysNation"/>
+        <property name="objGameSysNationRelations" from="self.objParentAI.objGameSysNationRelations"/>
+        <property name="objGameSysUnit" from="self.objParentAI.objGameSysUnit"/>
+
+        <property name="strComposition" value="BombardShoreGroup"/>
+        <!--<property name="strPreferredComposition" value="BombardShoreCarrierGroup"/>-->
+
+        <!-- expected methods (called by parent plan):
+            cancel
+            setCanAttack(avatar,bValue)
+            bool readyToCrossSea(avatar)
+            bool readyToUnload(avatar)
+        -->
+
+        <script type="application/javascript"><![CDATA[
+        
+        // enum for phases
+        var AttackPhase =
+        {
+            Start:0,
+            Buildup:1,
+            CrossSea:2,
+            PickTargets:3,
+            AttackTargets:4,
+            Success:5,
+            Failure:6,
+        }
+
+        // javascript object which contains commonly used
+        // cached variables and local functions
+        function TempContext(avatar)
+        {
+            this.avatar = avatar;
+            this.turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+            this.nation = self.refNation.resolve(avatar);
+            this.pad = getPAD(avatar,PADMakingHistoryAI);
+
+            this.setStatus = function(status,reason)
+            {
+                this.avatar.sendAction(
+                    gs_tbg.GActSetAIMilitaryPlanStatus.create({
+                        "objPlan": self,
+                        "eStatus": status,
+                        "strReason": reason,
+                        "nTurn": this.turn
+                        }) );
+            }
+
+            this.setPhase = function(phase,reason)
+            {
+                if (reason == undefined)
+                    reason = "";
+                if (self.nPhase != phase)
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: " + self + " changing to phase " + phase + " " + reason);
+
+                    self.nPhase = phase;
+
+                    // set plan status if applicable
+                    switch(self.nPhase)
+                    {
+                        case AttackPhase.Success:
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_SUCCEEDED,reason);
+                            break;
+
+                        case AttackPhase.Failure:
+                            log("DEBUG: " + self + " failed " + reason);
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_FAILED, reason);
+                            break;
+                    }
+                }
+            }
+
+            this.updateBuildupRequirements = function()
+            {
+                var bUsingCarrierComposition = (self.strComposition == "BombardShoreCarrierGroup");
+            
+                var attackRatio = self.objMilitaryAI.fDesiredAttackRatio;
+                var highestEnemyDefense = 1;
+                
+                var infrastructureStrengthNeeded = 1;
+                var seaSurfaceStrengthNeeded = 1;
+                //var submergedStrengthNeeded = 1;
+                var airStrengthNeeded = 1;
+                
+                for (var r in self.objShoreRegionsToSoften)
+                {
+                    // determine the strongest enemy presence along our path
+                    var region = self.objShoreRegionsToSoften[r];
+
+                    var regionDefense = 0;
+                    var unitGroups = new Array();
+                    self.objMilitaryAI.getEnemyUnitGroupsInRegion(this.avatar,region,true,unitGroups)
+                    for (var g in unitGroups)
+                    {
+                        var unitGroup = unitGroups[g];
+	                    var defenseStrength = unitGroup.getEffectiveCombatStrength(this.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_DEFENSE);
+                        regionDefense += defenseStrength;
+                    }
+                    
+                    if (highestEnemyDefense < regionDefense)
+                        highestEnemyDefense = regionDefense;
+                } // for shore regions
+                
+                if (highestEnemyDefense > self.fMaxLandAttackStrength)
+                    highestEnemyDefense = self.fMaxLandAttackStrength;
+                
+                var reqs = self.getOrCreateUnitRegionRequirements(self.objBuildupRegion,self.strComposition);
+                reqs.strPreferredComposition = self.strPreferredComposition;
+                
+                //reqs.setCombatStrengthNeeded(this.avatar,self,highestEnemyDefense);
+                
+                var objStrength = reqs.getCombatStrengthNeeded(); // creates object if needed
+                
+                
+                objStrength.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_SEA_SURFACE, seaSurfaceStrengthNeeded);
+                // objStrength.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_SEA_SUBMERGED, submergedStrengthNeeded);
+
+                if (bUsingCarrierComposition)
+                {
+                    objStrength.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK, highestEnemyDefense);
+                    //objStrength.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_DEFENSE, 1);
+                    objStrength.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_INFRASTRUCTURE, infrastructureStrengthNeeded);
+                    objStrength.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_AIR, airStrengthNeeded);
+                }
+                
+                reqs.nLastUpdateTurn = this.turn;
+                reqs.fKeepPriority = 1.0;
+                reqs.fAddPriority = reqs.fKeepPriority;
+                reqs.nTurnsUntilNeeded = 10;
+            } // updateBuildupRequirements
+
+            this.updateCompletedCompositionRequirements = function()
+            {
+                var region = self.objBuildupRegion;
+                var group = self.getCompleteComposition(this.avatar, region, self.strComposition);
+                if (group != null)
+                {
+                    // just maintain their status.
+                    var reqs = self.getOrCreateUnitRegionRequirements(region,self.strComposition);
+                    reqs.nLastUpdateTurn = this.turn;
+                    reqs.fAddPriority = 0; // don't add any more
+                }
+            }
+
+            this.handleStartPhase = function()
+            {
+                if (self.objParentPlan.objSourceCity == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"no source city.");
+                    return;
+                }
+
+                if (self.objParentPlan.objSourceCity.refSeaRegion == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"source city is not a port.");
+                    return;
+                }
+
+                if (self.objParentPlan.objSourceCity.refSeaRegion.resolve(this.avatar) == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"source city is not a port.");
+                    return;
+                }
+
+                self.objBuildupRegion = self.objParentPlan.objSourceCity.refRegion.resolve(this.avatar);
+                if (self.objBuildupRegion == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"no buildup region.");
+                    return;
+                }
+
+                var normalComposition = "BombardShoreGroup";
+                if (self.strComposition == normalComposition)
+                {
+                    var advancedComposition = "BombardShoreCarrierGroup";
+                    var bCanBuildAdvancedComposition = self.objMilitaryAI.canBuildCompositionNear(this.avatar, self.objParentPlan.objSourceCity, advancedComposition);
+                    if (bCanBuildAdvancedComposition)
+                    {
+                        self.strComposition = advancedComposition;
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: switching to advanced composition for " + self);
+                        }
+                    }
+                    else
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: using normal composition for " + self);
+                        }
+                    }                    
+                }
+
+                self.objShoreRegionsToSoften.clear();
+                var dlm = self.objParentPlan.objDesiredLandMass;
+                if (dlm == null)
+                {
+					if (this.pad.bWantMilitaryAILog)
+						log("DEBUG: AISubPlanSoftenUpShoreDefenses - no desired land mass."); // possible win
+                    this.setPhase(AttackPhase.Success,"no desired land mass.");
+                    return;
+                }
+                
+                var landRegions = new Array();
+                var pathCosts = new Array();
+                self.objMilitaryAI.getSeaInvasionLandRegions(this.avatar, dlm, self.objParentPlan.objSourceCity, landRegions, pathCosts);
+
+                var bFoundEnemyRegion = false;
+                for (var r in landRegions)
+                {
+                    var region = landRegions[r];
+                    var controller = region.refController.resolve(this.avatar);
+                    if (self.objMilitaryAI.isDesignatedOrActualEnemy(this.avatar,controller))
+                    {
+                        self.objShoreRegionsToSoften.add(region);
+                        bFoundEnemyRegion = true;
+                    }
+                }
+
+                if (!bFoundEnemyRegion)
+                {
+                    this.setPhase(AttackPhase.Failure,"no enemy shore regions.");
+                    return;
+                }
+
+                this.setPhase(AttackPhase.Buildup);
+                //this.advanceBuildupPhase(); <- need to update requirements before advancing
+            }
+
+            this.advanceBuildupPhase = function()
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: AISubPlanSoftenUpShoreDefenses by " + this.nation.strName + " from " + self.objParentPlan.objSourceCity.strName + " to " + self.objParentPlan.objStartLandRegion.strName + " advanceBuildupPhase()");
+                }            
+            
+                var arrivedGroups = new Array();
+                var enRouteGroups = new Array();
+                var percentArrivedPower = self.getAssignedUnitGroups(this.avatar, self.objBuildupRegion, self.strComposition, arrivedGroups, enRouteGroups);
+
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    var nNumNavyGroups = 0;
+                    var nNumAirGroups = 0;
+                    if (enRouteGroups.length > 0)			
+                    {
+                        log("DEBUG: enRouteGroups:");
+                        for (var g in enRouteGroups)
+                        {
+                            var group = enRouteGroups[g];
+                            if (self.objGameSysAIUtility.objUnitBranchTemplateNavy.equals(group.tmplUnitBranch))
+                            {
+                                nNumNavyGroups++;
+                            }
+                            else if (self.objGameSysAIUtility.objUnitBranchTemplateAirForce.equals(group.tmplUnitBranch))
+                            {
+                                nNumAirGroups++;
+                            }
+                            self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar, group, true); 
+                        }
+                    }
+                    if (arrivedGroups.length > 0)
+                    {
+                        log("DEBUG: arrivedGroups (buildup phase):");
+                        for (var g in arrivedGroups)
+                        {
+                            var group = arrivedGroups[g];
+                            if (self.objGameSysAIUtility.objUnitBranchTemplateNavy.equals(group.tmplUnitBranch))
+                            {
+                                nNumNavyGroups++;
+                            }
+                            else if (self.objGameSysAIUtility.objUnitBranchTemplateAirForce.equals(group.tmplUnitBranch))
+                            {
+                                nNumAirGroups++;
+                            }
+                            self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar, group, true); 
+                        }
+                    }
+                    log("DEBUG: percentArrivedPower=" + percentArrivedPower + ",nNumNavyGroups=" + nNumNavyGroups + ",nNumAirGroups=" + nNumAirGroups);
+                    //self.logCompositionAssignedStrengths(this.avatar, self.objBuildupRegion, self.strComposition);
+                    
+                } // if this.pad.bWantMilitaryAILog
+
+                if (percentArrivedPower < 95)
+                    return;
+
+                if (!self.canCombineIntoNavyGroup(this.avatar,arrivedGroups,this.pad.bWantMilitaryAILog))
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        log("DEBUG: Can't combine into single fleet group.");
+                    }
+                    return;
+                }
+
+                var fleetGroup = self.combineIntoNavyGroup(this.avatar,arrivedGroups);
+                self.setCompleteComposition(this.avatar,self.objBuildupRegion,self.strComposition,fleetGroup);
+                
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: completed fleetGroup=" + fleetGroup);
+                    self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar,fleetGroup, true);
+                }
+
+                self.setCompleteComposition(this.avatar, self.objBuildupRegion, self.strComposition, fleetGroup);
+
+                // Could pick different soften region here
+                self.objCurrentShoreRegion = self.objShoreRegionsToSoften.getArbitraryValue(); 
+                self.objCurrentSeaRegion = self.objMilitaryAI.getAdjacentSeaRegion(this.avatar,self.objCurrentShoreRegion);
+                if (self.objCurrentSeaRegion == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"no sea region adjacent to " + self.objCurrentShoreRegion.strName);
+                    return;
+                }
+
+                this.setPhase(AttackPhase.CrossSea);
+                this.advanceCrossSeaPhase();
+            }
+
+            this.advanceCrossSeaPhase = function()
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: AISubPlanSoftenUpShoreDefenses by " + this.nation.strName + " from " + self.objParentPlan.objSourceCity.strName + " to " + self.objParentPlan.objStartLandRegion.strName + " advanceCrossSeaPhase()");
+                }            
+            
+                var fleetGroup = self.getCompleteComposition(this.avatar,self.objBuildupRegion,self.strComposition);
+                if (fleetGroup == null)
+                {
+                    log("DEBUG: no fleet group! back to start phase.");
+                    this.setPhase(AttackPhase.Start);
+                    return;
+                }
+                
+                if (self.objCurrentSeaRegion == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"no destination sea region");
+                    return;
+                }
+
+                // make sure fleet group is out of port
+                if (self.objParentAI.objMilitaryAIScript.orderUnitGroup_exitPort(this.avatar,fleetGroup))
+                    return;
+                
+                // move fleetGroup adjacent to first target region 
+                if (self.objParentAI.objMilitaryAIScript.orderUnitGroup_moveToRegion(this.avatar,fleetGroup,self.objCurrentSeaRegion))
+                    return;
+
+                this.setPhase(AttackPhase.PickTargets);
+                this.advancePickTargetsPhase();
+            }
+
+            this.getBombValue = function(otAction,region)
+            {
+                if (otAction.equals(gs_tbg.GActSetBombRegionTransportationOrder))
+                    return 0;
+
+                if (otAction.equals(gs_tbg.GActSetBombRegionFortificationOrder))
+                    return 18;
+
+                if (otAction.equals(gs_tbg.GActSetBombRegionAADefenseOrder))
+                    return 15;
+
+                if (otAction.equals(gs_tbg.GActSetBombRegionCoastalDefenseOrder))
+                    return 20;
+                    
+                if (otAction.equals(gs_tbg.GActSetBombRegionUnitsOrder))
+                {
+                    // check if there are actually units here since this order can be given
+                    // even when enemies are not present.
+                    var unitGroups = new Array();
+                    self.objMilitaryAI.getEnemyUnitGroupsInRegion(this.avatar,region,true,unitGroups);
+                    if (unitGroups.size > 0)
+                        return 18;
+                    else
+                        return 0;
+                }
+
+                if (otAction.equals(gs_tbg.GActSetBombRegionAirbaseOrder))
+                    return 5;
+
+                // shore bombardment orders                    
+                if (otAction.equals(gs_tbg.GActSetShoreBombardmentCoastalOrder))
+                {
+                    return 20;
+                }
+                
+                if (otAction.equals(gs_tbg.GActSetShoreBombardmentCityInfrastructureOrder))
+                {
+                    return 3;
+                }
+                
+                if (otAction.equals(gs_tbg.GActSetShoreBombardmentCityPortOrder))
+                {
+                    return 5;
+                }
+                
+                if (otAction.equals(gs_tbg.GActSetShoreBombardmentCityResearchOrder))
+                {
+                    return 3;
+                }
+                    
+                if (self.objGameSysAIUtility.bTestMode)
+                {
+                    logWarn("Unexpected order type " + otAction);
+                }
+
+                return 0;
+            }
+
+            // returns action type and sets this.bombTarget
+            this.getBombAction = function(fleetGroup,region)
+            {
+                this.bombTarget = region;
+                
+                var otBestBombAction = null;
+                var bestBombValue = 0; // must be greater than this
+                var result = fleetGroup.getValidActionsForTarget(this.avatar,region);
+                if (result == null)
+                {
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: no valid actions for region " + region.strName);
+                }
+                else
+                {
+                    var actions = result.objUnitGroupActions;
+                    if (actions.size == 0)
+                    {
+                        // Nothing we can do for the region. See if there's a city we can target instead
+                        var cities = self.objGameSysCity.objCities.filter({ "refRegion": region});
+                        for (var j in cities)
+                        {
+                            var city = cities[j];
+                            result = fleetGroup.getValidActionsForTarget(this.avatar,city);
+                            if (result.objUnitGroupActions.size > 0)
+                            {
+                                if (this.pad.bWantMilitaryAILog)
+                                {
+                                    log("DEBUG: targeting city instead of region");
+                                }
+                            
+                                actions = result.objUnitGroupActions;
+                                this.bombTarget = city;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: " + actions.size + " possible actions for fleet " + fleetGroup.strName + " vs. " + region.strName);
+                        
+                    for (var a in actions)
+                    {
+                        var action = actions[a];
+                        var bombValue = this.getBombValue(action.otAction,region);
+                        
+                        if (this.pad.bWantMilitaryAILog)
+                            log("DEBUG: value of " + action.otAction + "=" + bombValue);
+                        
+                        if (bombValue > bestBombValue)
+                        {
+                            otBestBombAction = action.otAction;
+                            bestBombValue = bombValue;
+                        }
+                    }
+                }
+                return otBestBombAction;
+            }
+
+            this.advancePickTargetsPhase = function()
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: AISubPlanSoftenUpShoreDefenses by " + this.nation.strName + " from " + self.objParentPlan.objSourceCity.strName + " to " + self.objParentPlan.objStartLandRegion.strName + " advancePickTargetsPhase()");
+                }            
+            
+                var fleetGroup = self.getCompleteComposition(this.avatar,self.objBuildupRegion,self.strComposition);
+                if (fleetGroup == null)
+                {
+                    log("DEBUG: no fleet group! back to start phase.");
+                    this.setPhase(AttackPhase.Start);
+                    return;
+                }
+                
+                var controller = self.objCurrentShoreRegion.refController.resolve(this.avatar);
+                if (!self.objMilitaryAI.isDesignatedOrActualEnemy(this.avatar,controller))
+                {
+                    log("DEBUG: no current shore region! back to start phase.");
+                    this.setPhase(AttackPhase.Start);
+                    return;
+                }
+
+                var region = self.objCurrentShoreRegion;
+                var otBombAction = this.getBombAction(fleetGroup,region);
+
+                if (fleetGroup.objUnitOrder != null)
+                {
+                    log("cancelling fleetGroup order: " + fleetGroup.objUnitOrder);
+                    var cancelOrder = gs_tbg.GActCancelUnitOrder.create({"refUnitGroup": fleetGroup});
+                    this.avatar.sendAction(cancelOrder);
+                }
+                
+                if (otBombAction != null)
+                {
+                    self.bNothingFoundToBomb = false;
+                    if (this.pad.bWantMilitaryAILog)
+                    {
+                        var currentRegion = fleetGroup.getRegion(this.avatar);
+                        log("DEBUG: sendAction " + otBombAction + " from " + currentRegion.strName + " by " + fleetGroup.strName + " target " + region.strName);
+                    }
+                    var bombAction = otBombAction.create({"refUnitGroup": fleetGroup, "objTarget": this.bombTarget});
+                    this.avatar.sendAction( bombAction );
+                    // Note: We might not get our order until the decision point is confirmed.
+                }
+
+                self.nTurnsAttacking = 0;
+                this.setPhase(AttackPhase.AttackTargets);
+            }
+
+            this.advanceAttackTargetsPhase = function()
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: AISubPlanSoftenUpShoreDefenses by " + this.nation.strName + " from " + self.objParentPlan.objSourceCity.strName + " to " + self.objParentPlan.objStartLandRegion.strName + " advanceAttackTargetsPhase()");
+                }            
+            
+                var fleetGroup = self.getCompleteComposition(this.avatar,self.objBuildupRegion,self.strComposition);
+                if (fleetGroup == null)
+                {
+                    log("DEBUG: no fleet group! back to start phase.");
+                    this.setPhase(AttackPhase.Start);
+                    return;
+                }
+
+                var currentRegion = fleetGroup.getRegion(this.avatar);
+                var bNeedNewOrders = true;
+                var bTimeToMoveOn = false;
+                
+                var controller = self.objCurrentShoreRegion.refController.resolve(this.avatar);
+                if (!self.objMilitaryAI.isDesignatedOrActualEnemy(this.avatar,controller))
+                {
+                    bTimeToMoveOn = true;
+                }
+                else
+                {
+                    if (fleetGroup.objUnitOrder != null)
+                    {
+                        bNeedNewOrders = false;                                        
+                        if (fleetGroup.objUnitOrder.instanceOf(gs_tbg.UnitOrderBombRegion))
+                        {
+                            if (fleetGroup.objUnitOrder.eBombRegionParam.equals(gs_tbg.BombRegionParam.BOMB_REGION_PARAM_UNITS))
+                            {
+                                var unitGroups = new Array();
+                                self.objMilitaryAI.getEnemyUnitGroupsInRegion(this.avatar,self.objCurrentShoreRegion,true,unitGroups);
+                                if (unitGroups.size == 0)
+                                {
+                                    bNeedNewOrders = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!bNeedNewOrders)
+                    {
+                        self.nTurnsAttacking++;
+                        if (self.nTurnsAttacking < 8)
+                            return;
+                        bTimeToMoveOn = true;
+                    }
+                }
+
+                if (!bTimeToMoveOn)
+                {
+                    var otBombAction = this.getBombAction(fleetGroup, self.objCurrentShoreRegion); // also sets this.bombTarget
+                    if (otBombAction != null)
+                    {
+                        if (this.pad.bWantMilitaryAILog)
+                        {
+                            log("DEBUG: sendAction " + otBombAction + " from " + currentRegion.strName + " by " + fleetGroup.strName + " target " + self.objCurrentShoreRegion.strName);
+                        }
+                        var bombAction = otBombAction.create({"refUnitGroup": fleetGroup, "objTarget": this.bombTarget });
+                        this.avatar.sendAction(bombAction);
+                        return;
+                    }
+                }
+
+                // pick another region to attack
+                var bestShoreRegion = null;
+                var bestSeaRegion = null;
+                var bestDistance;
+
+                var totalWeight = 0;
+                var regionRoll = self.objParentAI.getRandomFloat();
+
+                for (var i in self.objShoreRegionsToSoften)
+                {
+                    var region = self.objShoreRegionsToSoften[i];
+                    if (region.equals(self.objCurrentShoreRegion))
+                        continue;
+                        
+                    var controller = region.refController.resolve(this.avatar);
+                    if (!self.objMilitaryAI.isDesignatedOrActualEnemy(this.avatar,controller))
+                        continue;
+
+                    var seaRegion = self.objMilitaryAI.getAdjacentSeaRegion(this.avatar,region);
+                    if (seaRegion == null)
+                        continue;
+
+                    var otBombAction = this.getBombAction(fleetGroup, region);
+                    if (otBombAction == null)
+                        continue;
+
+                    var dist;
+                    if (seaRegion.equals(currentRegion))
+                        dist = 0.0
+                    else
+                        dist = self.objGameSysAIUtility.getDistanceBetweenRegions(this.avatar,currentRegion,seaRegion);
+
+                    var weight = 100 / (100 + dist);
+                    totalWeight += weight;
+                    if (regionRoll > weight/totalWeight) 
+                        continue;
+
+                    bestShoreRegion = region;
+                    bestSeaRegion = seaRegion;
+                    bestDistance = dist;
+                }
+
+                if (bestShoreRegion != null)
+                {
+                    log("DEBUG: changing to shore region " + bestShoreRegion.strName);
+                    self.objCurrentShoreRegion = bestShoreRegion;
+                    self.objCurrentSeaRegion = bestSeaRegion;
+                    this.setPhase(AttackPhase.CrossSea);
+                    return;
+                }
+
+                // Could have either lost all bomb capability or there was nothing else to bomb.
+                log("DEBUG: nothing found to bomb.");
+                self.bNothingFoundToBomb = true;
+                this.setPhase(AttackPhase.Start);
+            }
+
+        } // TempContext
+
+        // expected methods
+        function advance(avatar)
+        {
+            // make sure priority matches parent
+            self.fPriority = self.objParentPlan.fPriority;
+            var data = new TempContext(avatar);
+
+            switch(self.nPhase)
+            {
+
+                case AttackPhase.Start:
+                    data.handleStartPhase();
+                    break;
+
+                case AttackPhase.Buildup:
+                    data.advanceBuildupPhase();
+                    break;
+
+                case AttackPhase.CrossSea:
+                    data.advanceCrossSeaPhase();
+                    break;
+
+                case AttackPhase.PickTargets:
+                    data.advancePickTargetsPhase();
+                    break;
+
+                case AttackPhase.AttackTargets:
+                    data.advanceAttackTargetsPhase();
+                    break;
+            }
+        }
+
+        // expected method
+        function updateUnitRequirements(avatar)
+        {
+            var data = new TempContext(avatar);
+
+            switch(self.nPhase)
+            {
+                case AttackPhase.Start:
+                    break;
+                    
+                case AttackPhase.Buildup:
+                    data.updateBuildupRequirements();
+                    break;
+                    
+                case AttackPhase.CrossSea:
+                case AttackPhase.PickTargets:
+                case AttackPhase.AttackTargets:
+                    data.updateCompletedCompositionRequirements();
+                    break;
+                    
+                default:
+                    throw "Bad nPhase value";
+                    break;
+            }
+        }
+        
+        // expected method
+        function cancel(avatar)
+        {
+            var data = new TempContext(avatar);
+            data.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_CANCELLED,"cancelled");
+            self.objParentPlan = null;
+            self.objMilitaryAI = null;
+        }
+        
+        // expected method
+        function detachFromParent(avatar)
+        {
+            self.bDetachedFromParentPlan = true;
+        }
+        
+        // expected method - indicates we can move into enemy regions
+        function setCanAttack(avatar,bCanAttack)
+        {
+            // log("DEBUG: " + this.nation.strName + " " + self + " notified ok to attack.");
+            self.bOkToAttack = bCanAttack;
+        }
+
+        function readyToCrossSea(avatar)
+        {
+            switch(self.nPhase)
+            {
+                case AttackPhase.Start:
+                case AttackPhase.Buildup:
+                    if (self.bNothingFoundToBomb)
+                        return true;
+                    return false;
+
+                case AttackPhase.CrossSea:
+                case AttackPhase.PickTargets:
+                    return false;
+                                        
+                case AttackPhase.AttackTargets:
+                    return true;
+            }
+        }
+
+        function readyToUnload(avatar)
+        {
+            switch(self.nPhase)
+            {
+                case AttackPhase.Start:
+                case AttackPhase.Buildup:
+                    if (self.bNothingFoundToBomb)
+                        return true;
+                    return false;
+                    
+                case AttackPhase.CrossSea:
+                case AttackPhase.PickTargets:
+                    return false;
+
+                case AttackPhase.AttackTargets:
+                    return true;
+            }
+        }
+        
+        function cleanup()
+        {
+            self.objParentAI = null;
+            self.objParentPlan = null;
+            self.objMilitaryAI = null;
+        }
+
+        ]]></script>
+    </objectDef>
+    
+</locust>

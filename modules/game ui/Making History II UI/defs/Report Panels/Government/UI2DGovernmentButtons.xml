@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI2DNationalityTabIcon" superType="mlui.UI2DButton">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objIcon" type="mlui.UI2DElement" storesChildren="true"/>
+		
+		<property name="tmplButtonStyle" from="if(mh2data.otGovernmentTab != UI2DGovernmentTabPrograms,
+			skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlank'),
+			skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlankC'))
+		"/>
+			
+	</objectDef>
+	
+	<objectDef type="UI2DGovernmentButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<property name="nWidth" from="self.objTabs.nWidth"/>
+		<property name="nHeight" from="self.objTabs.nHeight"/>
+		
+		<object type="common_ui.UI2DListHorz" name="objTabs">
+			<property name="nSpacing" value="1"/>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.GovernmentPrograms"/>
+				<property name="tmplIcon" value="skin.ImgGovProgramsIcon"/>
+				<property name="bSelected">
+                    mh2data.otGovernmentTab == UI2DGovernmentTabPrograms
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								mh2data.openGovernmentTab(UI2DGovernmentTabPrograms);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.Nationalities"/>
+				<property name="tmplIcon" value="skin.ImgPeopleIcon"/>
+				<property name="bSelected">
+                    mh2data.otGovernmentTab == UI2DGovernmentTabNationalities
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								mh2data.openGovernmentTab(UI2DGovernmentTabNationalities);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.Subordinates"/>
+				<property name="tmplIcon" value="skin.ImgWorldIcon"/>
+				<property name="bSelected">
+                    mh2data.otGovernmentTab == UI2DGovernmentTabSubordinates
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								mh2data.openGovernmentTab(UI2DGovernmentTabSubordinates);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DGovInfoTabFlag" name="objElements">
+				<property name="bSelected" from="mh2data.otGovernmentTab == UI2DGovernmentTabInfo"/>
+				<property name="nX" value="123"/>
+				<property name="nY" value="0"/>
+				<property name="nDefaultWidth" value="52"/>
+				<property name="nDefaultHeight" value="35"/>
+				<property name="strToolTip" from="locale.SID.UI.NationInfo"/>
+					
+				<object type="UI2DNationFlag46x24" name="objNationFlag">
+					<property name="objNation" from="def.objNation"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nWidth" value="46"/>
+					<property name="nHeight" value="24"/>
+				</object>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								mh2data.openGovernmentTab(UI2DGovernmentTabInfo);
+							}
+						]]></script>
+					</object>					
+				</object>
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DGovInfoTabFlag" superType="mlui.UI2DButton">
+		<propertyDef name="bSelected" type="bool" default="false"/>
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNationFlag" type="mlui.UI2DElement" storesChildren="true"/>
+		
+		<property name="tmplButtonStyle" from="if(self.bSelected,
+			skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlankWideC'),
+			skin.getTemplateRef(mlmedia.ButtonStyleTemplate,'BtnStyleReportTabButtonBlankWide')
+			)
+		"/>
+			
+	</objectDef>
+</locust>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="SummaryPanelData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objPanel" type="Object"/>
+
+		<object type="SummaryPanelExtraData" name="objExtraData">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+		</object>
+		
+		<script type="application/javascript"><![CDATA[
+			function setPanel(type, tmplNotificationCategory){
+				self.objPanel = type.create({'nY':36, 'nX':34, 'haXAlign':'RIGHT', 'objSummaryPanelExtraData':self.objExtraData})
+				if (type == UI2DSummaryPanelNotifications  && tmplNotificationCategory.size != 0){
+					for(var i = 0; i < self.objPanel.tmplNotification.length; i++)
+                    {
+                        delete self.objPanel.tmplNotification[i];
+                    }
+                    
+					for(var i = 0; i < tmplNotificationCategory.length; i++)
+                    {
+                        self.objPanel.tmplNotification.add(tmplNotificationCategory[i])
+                    }
+				}
+			}
+			function clearPanel(){
+				self.objPanel = null
+			}
+		]]></script>
+
+	</objectDef>
+
+	<objectDef type="SummaryPanelExtraData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objMessages" type="SummaryPanelChatMessage" variable="true"/>
+        <propertyDef name="bUnseenChatMessages" type="bool" default="false"/>
+		<object type="SummaryPanelRequestData" name="objRequestData">
+		</object>
+	</objectDef>
+
+	<objectDef type="SummaryPanelChatMessage" class="CMLObject">
+		<propertyDef name="strMessage" type="String"/>
+		<propertyDef name="strRecipient" type="String"/>
+	</objectDef>
+	
+	<objectDef type="SummaryPanelRequestData" class="CMLObject">
+		<propertyDef name="objTreaties" type="Object" variable="true">
+			filter(
+				?{treaty:
+					treaty.eStatus == gs_tbg.TreatyStatus.PROPOSED AND
+					(treaty.refProposingNation.resolve(mh2data.objAvatar) != mh2data.objNation AND treaty.refReceivingNation.resolve(mh2data.objAvatar) == mh2data.objNation)
+				}, gs_tbg.getGameSysNationRelations(mh2data.objAvatar).objTreaties
+			)
+		</propertyDef>
+		
+		<propertyDef name="objTrades" type="Object" variable="true">
+			filter(
+				?{trades:
+					trades.eStatus == gs_tbg.TradeAgreementStatus.PROPOSED AND
+					(trades.refProposingNation.resolve(mh2data.objAvatar) == mh2data.objNation OR trades.refReceivingNation.resolve(mh2data.objAvatar) == mh2data.objNation)
+				}, gs_tbg.getAllTradeAgreements(mh2data.objAvatar)
+			)
+		</propertyDef>
+		<propertyDef name="objMoneyTransfer" type="Object" variable="true">
+			filter(
+				?{money:
+					money.eStatus == gs_tbg.MoneyTransferStatus.PROPOSED AND
+					(money.refProposingNation.resolve(mh2data.objAvatar) == mh2data.objNation OR money.refReceivingNation.resolve(mh2data.objAvatar) == mh2data.objNation)
+				}, gs_tbg.getAllMoneyTransfers(mh2data.objAvatar)
+			)
+		</propertyDef>
+		
+		
+		
+		<propertyDef name="objRequests" type="SummaryPanelRequestWrapper" storesChildren="true" variable="true"/>
+		
+		<propertyDef name="objNewTradeRequests" type="SummaryPanelRequestWrapper" storesChildren="true" variable="true">
+			filter(?{request: request.bNew == true}, self.objTradeRequests)
+		</propertyDef>
+		<propertyDef name="objNewMoneyRequests" type="SummaryPanelRequestWrapper" storesChildren="true" variable="true">
+			filter(?{request: request.bNew == true}, self.objMoneyRequests)
+		</propertyDef>
+		<propertyDef name="objNewTreatyRequests" type="SummaryPanelRequestWrapper" storesChildren="true" variable="true">
+			filter(?{request: request.bNew == true}, self.objTreatyRequests)
+		</propertyDef>
+		
+		<object type="SummaryPanelRequestWrapper" name="objTreatyRequests" tiedTo="def.objTreaties">
+			<property name="objRequest" from="tiedTo"/>
+		</object>
+		<object type="SummaryPanelRequestWrapper" name="objTradeRequests" tiedTo="def.objTrades">
+			<property name="objRequest" from="tiedTo"/>
+		</object>
+		<object type="SummaryPanelRequestWrapper" name="objMoneyRequests" tiedTo="def.objMoneyTransfer">
+			<property name="objRequest" from="tiedTo"/>
+		</object>
+		
+		<object type="SummaryPanelRequestWrapper" name="objRequests" tiedTo="def.objTreaties">
+			<property name="objRequest" from="tiedTo"/>
+		</object>
+		
+		<!--<object type="SummaryPanelRequestWrapper" name="objRequests" tiedTo="def.objTrades">-->
+		<!--	<property name="objRequest" from="tiedTo"/>-->
+		<!--</object>-->
+	</objectDef>
+	
+	<objectDef type="SummaryPanelRequestWrapper" class="CMLObject">
+		<propertyDef name="objRequest" type="Object"/>
+		<propertyDef name="bNew" type="bool" default="true"/>
+	</objectDef>
+	
+	<objectDef type="UI2DSummaryPanelLayout" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objPanel" type="Object" storesChildren="true"/>
+		<propertyDef name="bOpen" type="bool"/>
+
+		<property name="bOpen" from="self.objPanel != null"/>
+
+		<property name="nX" value="3"/>
+		<property name="nWidth" from="if(self.bOpen, 291, 37)"/>
+		<property name="nHeight" value="368"/>
+		<property name="haXAlign" value="RIGHT"/>
+		<property name="vaYAlign" value="TOP"/>
+		<property name="objPanel" from="spdata.objSummaryPanelData.objPanel"/>
+
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="bBroadcast" value="true"/>
+				<property name="otEventType" value="gs_tbg.EventChatMessageSent"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						spdata.objSummaryPanelData.objExtraData.objMessages.add(
+							SummaryPanelChatMessage.create({
+									'strMessage': event.strMessage,
+									'strRecipient': event.strRecipient
+									})
+						);
+						
+						var bChatPanelClosed = true;
+						if (spdata.objSummaryPanelData.objPanel != null)
+                        {
+                            if (spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelChat))
+                            {
+                                bChatPanelClosed = false;
+                            }
+                        }
+                        
+                        spdata.objSummaryPanelData.objExtraData.bUnseenChatMessages = bChatPanelClosed;
+					}
+				]]></script>
+			</object>
+		</object>
+
+		<!-- Background -->
+		<object type="mlui.UI2DImage" name="objSummaryPanelMaxBGTop">
+			<property name="tmplImage" value="skin.ImgSummaryPanelMaxBGTop"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" from="def.nWidth - 4"/>
+			<property name="nHeight" value="33"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSummaryPanelButtonBackground">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBtnBG"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" from="def.nHeight - 37"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSummaryPanelBackground">
+			<property name="tmplImage" value="skin.ImgPanelDark"/>
+			<property name="nX" from="def.objSummaryPanelButtonBackground.nWidth + 2"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" from="def.nWidth - 3 - self.nX"/>
+			<property name="nHeight" from="def.nHeight - 37"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+
+		<!-- Content -->
+
+		<object type="mlui.UI2DImage" name="objSummaryIcon">
+			<property name="tmplImage" value="skin.ImgSummaryIcon"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName" existsWhile="self.bOpen">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="strText">
+				switch
+				{
+					case spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelWorldPowers):
+						locale.SID.UI.WorldPowerSummary
+					case spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelVictoryConditions):
+						locale.SID.UI.VictoryConditions
+					case spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelChat):
+						locale.SID.UI.GlobalChat
+					case spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelTurns):
+						locale.SID.UI.TurnStatus
+					case spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelTrade):
+						locale.SID.UI.TradeAgreements
+					case spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelEngagements):
+						locale.SID.UI.ActiveEngagements
+					case spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelEspionage):
+						locale.SID.UI.EspionageSummary
+					case spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelRequests):
+						locale.SID.UI.TreatyRequests
+					case spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelNotifications):
+						switch
+						{							
+                            case spdata.objSummaryPanelData.objPanel.tmplNotification.size == 0:
+								locale.SID.UI.TurnSummary
+							case def.hasTemplateType(gs_notify.NotificationTemplateDiplomatic):
+								locale.SID.UI.DiplomaticSummary
+							case def.hasTemplateType(gs_notify.NotificationTemplateCity):
+                                locale.SID.UI.CityTurnSummary
+							case def.hasTemplateType(gs_notify.NotificationTemplateRegion):
+                                locale.SID.UI.RegionTurnSummary
+							case def.hasTemplateType(gs_notify.NotificationTemplateResearch):
+                                locale.SID.UI.ResearchTurnSummary
+                            default:
+                                locale.SID.UI.TurnSummary                 
+						}
+				}
+			</property>	
+			<property name="nX" value="35"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="265"/>
+			<property name="nHeight" value="14"/>
+		</object>
+        
+        <script type="application/x-locust-query"> <![CDATA[
+            hasTemplateType = ?{tmplType:
+                find(?{tmpl: tmpl.instanceOf(tmplType)}, spdata.objSummaryPanelData.objPanel.tmplNotification) != null
+            }
+        ]]></script>
+        
+
+		<object type="mlui.UI2DText" name="objDate" existsWhile="self.bOpen">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" from="gs_tbg.getGameSysTurnBasedGame(def.objMH2Data.objAvatar).objTurnBasedGame.dateCurrentDate"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="20"/>
+			<property name="nWidth" value="265"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="UI2DSummaryPanelButtons" name="objButtons">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" value="232"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="TOP"/>
+		</object>
+
+		<!-- Foreground -->
+		<object type="mlui.UI2DImage" name="objSummaryPanelForeground">
+			<property name="tmplImage" value="skin.ImgPanelBorder"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSummaryPanelMinHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="30"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="8"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DSummaryPanel" superType="mlui.UI2DElement">
+		<propertyDef name="objSummaryPanelExtraData" type="SummaryPanelExtraData"/>
+	</objectDef>
+
+</locust>

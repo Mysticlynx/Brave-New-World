@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GActEndTurn" class="CMLOGActEndTurn" superType="mlgame.GameAction">
+		<propertyDef name="objAvatar" type="mlgame.Avatar"/>
+	</objectDef>
+
+	<objectDef type="GActSendChatMessage" superType="mlgame.GActMethod">
+		<propertyDef name="strMessage" type="String"/>
+        <propertyDef name="strRecipient" type="String"/>
+
+		<script type="application/javascript"> <![CDATA[
+
+    	function execute()
+		{
+			self.objGame.sendEvent(EventChatMessageSent.create({"strMessage": self.strMessage,"strRecipient": self.strRecipient}));
+		}
+		]]></script>
+	</objectDef>
+
+</locust>

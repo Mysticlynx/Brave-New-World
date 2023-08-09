@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<!-- Engagements -->
+	<objectDef type="UI3DLayerEngagements" superType="mlui.UI3DLayer">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>    
+
+        <object type="ml3dworld.TransformTranslate" name="objTransform">
+			<property name="vecTranslation">
+				Vec3D(0, 0, 0.27)
+			</property>
+		</object>                        
+
+		<object type="UI3DEngagement" name="objEngagements" tiedTo="gs_tbg.getAllEngagements(self.objGameRoot)">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objEngagement" from="tiedTo"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI3DEngagement" superType="UI3DMapModelGO">
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objEngagement" type="gs_tbg.Engagement"/>
+
+        <!-- Internals -->
+		<propertyDef name="objRegion" type="gs_tbg.Region">
+            self.objEngagement.refRegion.resolve(self.objGameRoot)
+        </propertyDef>
+
+		<propertyDef name="objMapModel" type="MapModelTemplate">
+            self.objMapData.tmplEngagementMapModel.resolve()
+        </propertyDef>
+
+        <!-- UI3DModelGO Properties -->
+		<property name="objGO" from="self.objEngagement"/>
+		<property name="tmplModel" from="self.objMapModel.tmplModel"/>
+        
+        <!-- UI3DMapModel properties -->
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		<property name="vecPosition" from=" Vec3D(self.objRegion.vecPositions[2].x,  self.objRegion.vecPositions[2].y, 0.0)" />
+		<object type="ml3dworld.TransformList" name="objLocalTransforms" >
+            <object type="ml3dworld.TransformTranslate" name="objTransforms">
+            </object>
+			<object type="ml3dworld.TransformList" name="objTransforms" >
+				<property name="objTransforms" from="def.objMapModel.objTransform" />
+			</object>
+		</object>
+		
+		<property name="strToolTip" from="locale.FSID.UI.BattleOf.format('Region', self.objRegion.strDisplayName)"/>
+	</objectDef>
+    
+</locust>

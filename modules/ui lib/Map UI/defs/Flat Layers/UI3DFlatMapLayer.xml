@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="FlatMapLayer" class="CMLObject">
+		<propertyDef name="otUILayer" type="ObjectType"/>
+		<propertyDef name="bIgnoreMouse" type="bool"/>
+		<propertyDef name="nDepth" type="int"/>
+	</objectDef>
+	
+	<objectDef type="UI3DFlatMapLayer" superType="mlui.UI3DLayer">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objLayer" type="FlatMapLayer"/>
+		<propertyDef name="objMap" type="gs_tbg.GameSysMap" from="gs_tbg.getGameSysMap(self.objGameRoot)"/>
+		<property name="nDepth" from="self.objLayer.nDepth"/>
+		<property name="bClearColorBuffer" value="false"/>
+		<property name="bClearDepthBuffer" value="false"/>
+		<property name="bUseDepthBuffer" value="false"/>
+		<property name="eMouseBehavior">
+			if(self.objLayer.bIgnoreMouse,
+				mlui.MouseBehavior.MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN,
+				mlui.MouseBehavior.MOUSE_BHVR_IGNORE_THIS_ELEMENT)
+		</property>
+		
+	</objectDef>
+</locust>

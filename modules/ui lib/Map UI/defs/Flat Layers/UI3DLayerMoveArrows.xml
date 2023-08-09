@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="UI3DLayerMoveArrowBase" superType="mlui.UI3DLayer">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>    
+		<object type="ml3dworld.TransformTranslate" name="objTransform">
+			<property name="vecTranslation">
+				Vec3D(0, 0, 0.27)
+			</property>
+		</object>                
+    
+        <!-- Internal -->
+        <propertyDef name="objAvatar" type="mlgame.Avatar" from="self.objGameRoot"/>
+        <propertyDef name="objMoveArrows" type="UI3DMoveArrowSmooth" variable="true" storesChildren="true"/>
+
+        <propertyDef name="objNation" type="gs_tbg.Nation"/>
+        <property name="objNation" from="self.objAvatar.getAttribValue('Nation').resolve(self.objAvatar)"/>
+
+        <propertyDef name="objGroupsWithPath" type="gs_tbg.UnitGroup" variable="true" from="self.getGroupsWithPath()"/>
+
+        <script type="application/x-locust-query">
+            getGroupsWithPath = ?{:
+                filter(?{group: group.objUnitOrder.instanceOf(gs_tbg.UnitOrderMove)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderRebase)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderSeaPatrol)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderAirPatrol)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderBombRegion)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderBombCity)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderBombResource)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderDropParatrooper)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderDropAtomicBomb)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderLoadOnTransports)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderLoadOnCarrier)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderUnloadFromTransports)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderUnloadFromCarrier)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderRetreat)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderMoveFromPort)
+                        OR group.objUnitOrder.instanceOf(gs_tbg.UnitOrderRangedAttack)
+                        },
+                    self.getControlledGroupsWithOrders())
+            }
+
+            getControlledGroupsWithOrders = ?{:
+                // Filter these to only those with unit orders and are actually
+                // in stacks.
+                filter(?{group: group.objUnitOrder != null}, 
+                    // Filter down to only groups that are controlled by this nation
+                    gs_tbg.getNationGroups(self.objAvatar,self.objNation)
+                )
+            }
+        </script>
+
+    </objectDef>
+
+    <!--<objectDef type="UI3DLayerSelectedMoveArrow" superType="UI3DLayerMoveArrowBase">
+        <propertyDef name="objSelectedGroupWithPath" type="gs_tbg.UnitGroup">
+            find(?{group: group == self.objMapData.objSelectedObject}, self.objGroupsWithPath)
+        </propertyDef>
+        <object type="UI3DMoveArrowSmooth" name="objMoveArrows" existsWhile="self.objSelectedGroupWithPath != null">
+            <property name="objAvatar" from="def.objAvatar"/>
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objUnitGroup" from="def.objSelectedGroupWithPath"/>
+            <property name="objOrder" from="self.objUnitGroup.objUnitOrder"/>
+        </object>
+    </objectDef>-->
+
+    <objectDef type="UI3DLayerMoveArrows" superType="UI3DLayerMoveArrowBase">
+        <object type="UI3DMoveArrowSmooth" name="objMoveArrows" tiedTo="self.getGroupsWithPath()">
+            <property name="objAvatar" from="def.objAvatar"/>
+            <property name="objMapData" from="def.objMapData"/>
+            <property name="objUnitGroup" from="tiedTo"/>
+            <property name="objOrder" from="tiedTo.objUnitOrder"/>
+        </object>
+    </objectDef>
+
+    <objectDef type="UI3DMoveArrowSmooth" class="CUI3DMoveArrowSmooth" superType="mlui.UI3DElement">
+        <!-- Inputs -->
+        <propertyDef name="objAvatar" type="mlgame.Avatar"/>
+        <propertyDef name="objMapData" type="MapData"/>
+        <propertyDef name="fThickness" type="float" default="0.0675" />
+        <propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+        <propertyDef name="objOrder" type="gs_tbg.UnitOrder"/>
+        <propertyDef name="vecUnitPosition" type="Vec3D"/>
+
+        <!-- Internal -->
+        <!-- Color -->
+        <object type="mlui.UIDataMaterial" name="objMaterial">
+            <object type="mlmedia.Material" name="objMaterial">
+                <property name="colEmission">
+                    switch {
+                        case def.objMapData.objSelectedObject == def.objUnitGroup AND def.objOrder.eType == gs_tbg.UnitOrderType.Aggressive:
+                            #FF0000FF
+                        case def.objMapData.objSelectedObject == def.objUnitGroup AND def.objOrder.eType == gs_tbg.UnitOrderType.Strategic:
+                            #FFFF00FF
+                        case def.objMapData.objSelectedObject == def.objUnitGroup:
+                            #12E312FF
+                        case def.objOrder.eType == gs_tbg.UnitOrderType.Aggressive:
+                            #BD0000FF
+                        case def.objOrder.eType == gs_tbg.UnitOrderType.Strategic:
+                            #DCD500FF
+                        default:
+                            #09B909FF
+                    }
+                </property>
+            </object>
+        </object>
+
+        <!-- Positioning -->
+        <property name="vecUnitPosition">
+            self.objMapData.getPositionOfUnitGroup(self.objUnitGroup)
+        </property>
+    </objectDef>
+
+</locust>

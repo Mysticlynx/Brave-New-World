@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	type="unit_models"
+	name="shared"
+	locustVersion="2.11"
+>
+	<import module="lib:media" as="mlmedia"/>
+	<import module="ui lib:Map UI" as="mapui"/>
+	<import module="lib:3d_world" as="ml3dworld"/>
+
+	<include>
+		model.xml
+	</include>
+</locustModule>

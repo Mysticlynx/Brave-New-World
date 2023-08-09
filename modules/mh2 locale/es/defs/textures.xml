@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<template type="mlmedia.TextureTemplateFromFile" name="TextureEndGameTitle">
+	    <property name="fileSource" value="art/title.png" /> 
+	</template>
+
+	<template type="mlmedia.TextureTemplateFromFile" name="TextureMH2Logo">
+		<property name="fileSource" value="art/UIMH2Logo.png"/>
+	</template>	
+	
+	<template type="mlmedia.TextureTemplateFromFile" name="TextureEndGameDemoPurchase">
+	    <property name="fileSource" value="art/Demo_Screen_1.png" /> 
+	</template>
+
+	<template type="mlmedia.TextureTemplateFromFile" name="TextureDemoStartBG">
+	    <property name="fileSource" value="art/demo_start_bg.png" /> 
+	</template>
+
+	<template type="mlmedia.TextureTemplateFromFile" name="TextureStartBG">
+	    <property name="fileSource" value="art/start_bg.png" /> 
+	</template>
+
+	<template type="mlmedia.TextureTemplateFromFile" name="TextureDemoRelease">
+	    <property name="fileSource" value="art/DemoRelease.png" /> 
+	</template>
+	
+  <template type="mlmedia.TextureTemplateFromFile" name="TextureGroupIconWeight">
+    <property name="fileSource" value="art/UIGroupIconWeight.png"/>
+  </template>
+	
+
+</locust>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysResource" class="CMLOGameSysResource" superType="mlgame.GameSystem">
+        <propertyDef name="tmplResourceList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="tmplArms" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="tmplFood" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="tmplCoal" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="tmplMetals" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="tmplOil" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="tmplAtomicBombs" type="TemplateRef" restriction="ResourceTemplate"/>
+    </objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysResource = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysResource)
+		}
+
+		getAllResources = ?{gameroot:
+			map(?{ref: ref.resolve()}, getGameSysResource(gameroot).tmplResourceList.resolve().tmplRefs)
+		}
+		
+	</script>
+
+</locust>

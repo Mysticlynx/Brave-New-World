@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">	
+	<objectDef type="UI2DGroupBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objChosenObjectData" type="ChosenObjectData"/>
+		<propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage">
+        if(
+        def.objChosenObjectData == null OR def.objChosenObjectData.bChosen,
+        'skin.ImgReportBubbleTanBeige',
+        'skin.ImgReportBubbleTanWhite'
+        )
+      </property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+    <object type="UI2DUnitButton" name="objElements" existsWhile="def.objChosenObjectData != null">
+      <property name="nX" value="304"/>
+      <property name="nY" value="3"/>
+      <property name="tmplButtonStyle">
+        if(def.objChosenObjectData == null OR def.objChosenObjectData.bChosen,
+        'skin.BtnStyleRegionProjectsQueueCancel', 'skin.BtnStyleRegionProjectsAddToQueue')
+      </property>
+      <property name="nDefaultWidth" value="21"/>
+      <property name="nDefaultHeight" value="21"/>
+      <property name="strToolTip" from="locale.SID.UI.SelectGroup"/>
+      <property name="nDepth" value="100"/>
+      
+      <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+          <property name="otEventType" value="mlui.EventMouseButtonDown"/>
+          <script type="application/javascript">
+            <![CDATA[
+						function handle(event, owner)
+						{
+							if (event.eButton.equals(def.eLeftMouseButton))
+							{
+								def.objChosenObjectData.toggleChosen();
+							}
+						}
+					]]>
+          </script>
+        </object>
+      </object>
+    </object>
+		
+	<!-- ID -->
+    <propertyDef name="objController" type="gs_tbg.Nation"/>
+		<property name="objController" from="self.objGroup.refController.resolve(mh2data.objAvatar)"/>
+	
+		<object type="UI2DNationIcon" name="objControllerIcon">
+			<property name="objNation" from="def.objGroup.refController.resolve(mh2data.objAvatar)"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="nDepth" value="100"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objNameLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown13Left"/>
+			<property name="strText" from="def.objGroup.strDisplayName"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objOpen" existsWhile="def.objChosenObjectData == null">
+      <property name="tmplButtonStyle" value="skin.BtnStyleRegionProjectsQueueStart"/>
+      <property name="nX" value="304"/>
+      <property name="nY" value="3"/>
+			<property name="nDefaultWidth" value="21"/>
+			<property name="nDefaultHeight" value="21"/>
+			<property name="nDepth" value="200"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            if(def.objChosenObjectData != null)
+                            {
+                                def.objChosenObjectData.toggleChosen();
+                                mh2data.setSelectedObject(def.objGroup);
+                            }
+                            else
+                            {
+                                mh2data.objMapData.selectUnitGroup(def.objGroup);
+                            }
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+        
+        <propertyDef name="bArmy" type="bool" >
+            self.objGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')
+        </propertyDef>
+        <propertyDef name="bNavy" type="bool" >
+            self.objGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy') OR self.objGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Submarine')
+        </propertyDef>
+        <propertyDef name="bAirForce" type="bool" >
+            self.objGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')
+        </propertyDef>
+		
+		<propertyDef name="tmplCommandLevel" type="gs_tbg.UnitGroupCommandTemplate">
+			self.objGroup.getGroupCommand(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="tmplMoraleLevel" type="gs_tbg.UnitMoraleTemplate">
+			self.objGroup.getGroupMorale(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="nGroupDamage" type="int">
+			sum(map(?{unit: unit.objUnitTemplate.nAttackDamage}, self.objGroup.getUnits(mh2data.objAvatar)))
+		</propertyDef>
+        
+        
+        <object name="objUnitTypeSpecific" type="common_ui.UI2DListHorz">
+            <property name="nX" value="22"/>
+			      <property name="nY" value="16"/>
+            <property name="haXAlign" value="LEFT"/>
+            <property name="nSpacing" value="1"/>
+          <property name="nDepth" value="100"/>
+            
+        <!-- Army -->
+            <!-- Ground Attack -->                        
+                <object type="UI2DStatusTag" name="objElements" existsWhile="def.bArmy">
+                    <!--<property name="strText" from="(float(def.objGroup.nLandAttackPower) / 10).formatNumber(1, true)"/>-->
+                  <property name="strText" from="(def.objGroup.nLandAttackPower / 10)"/>
+                    <object type="mlui.UI2DImage" name="objIcon">
+                        <property name="tmplImage" value="skin.ImgInfoIconOffenseTny"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="3"/>
+                        <property name="nWidth" value="15"/>
+                        <property name="nHeight" value="11"/>
+                        <property name="haXAlign" value="CENTER" />
+                    </object>
+                    <property name="strToolTip" from="locale.SID.UI.AttackVsInvasion
+                        + '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+                            + ' ' + locale.SID.UI.PerTurn
+                        + '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(def.objGroup.nLandAttackPower) / 100).formatNumber(1, true)
+                            + ' ' + locale.SID.UI.PerTurn
+                    "/>
+                </object>
+            <!-- Defense -->                        
+                <object type="UI2DStatusTag" name="objElements" existsWhile="def.bArmy"> 
+                    <property name="strText" from="def.objGroup.nLandDefensePower / 10"/>
+                    <object type="mlui.UI2DImage" name="objIcon">
+                        <property name="tmplImage" value="skin.ImgInfoIconDefenseTny"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="3"/>
+                        <property name="nWidth" value="15"/>
+                        <property name="nHeight" value="11"/>
+                        <property name="haXAlign" value="CENTER" />
+                    </object>
+                    <property name="strToolTip" from="locale.SID.UI.AttackVsInvasion
+                        + '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+                            + ' ' + locale.SID.UI.PerTurn
+                        + '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(def.objGroup.nLandDefensePower) / 100).formatNumber(1, true)
+                            + ' ' + locale.SID.UI.PerTurn
+                    "/>
+                </object>
+            <!-- Air Attack -->                        
+                <object type="UI2DStatusTag" name="objElements" existsWhile="def.bArmy">   
+                    <property name="strText" from="def.objGroup.nAirPower / 10"/>
+                    <object type="mlui.UI2DImage" name="objIcon">
+                        <property name="tmplImage" value="skin.ImgInfoIconAirAttackTny"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="3"/>
+                        <property name="nWidth" value="15"/>
+                        <property name="nHeight" value="11"/>
+                        <property name="haXAlign" value="CENTER" />
+                    </object>
+                    <property name="strToolTip" from="locale.SID.UI.AttackVsAir
+                        + '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+                            + ' ' + locale.SID.UI.PerTurn
+                        + '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(def.objGroup.nAirPower) / 100).formatNumber(1, true)
+                            + ' ' + locale.SID.UI.PerTurn
+                    "/>
+                </object>      
+                      
+        <!-- Navy and Subs -->
+            <!-- Naval Attack -->                        
+                <object type="UI2DStatusTag" name="objElements" existsWhile="def.bNavy">  
+                    <property name="strText" from="def.objGroup.nSeaSurfacePower / 10"/>
+                    <object type="mlui.UI2DImage" name="objIcon">
+                        <property name="tmplImage" value="skin.ImgInfoIconSeaAttackTny"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="3"/>
+                        <property name="nWidth" value="15"/>
+                        <property name="nHeight" value="11"/>
+                        <property name="haXAlign" value="CENTER" />
+                    </object>
+                    <property name="strToolTip" from="locale.SID.UI.AttackVsNavy
+                        + '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+                            + ' ' + locale.SID.UI.PerTurn
+                        + '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(def.objGroup.nSeaSurfacePower) / 100).formatNumber(1, true)
+                            + ' ' + locale.SID.UI.PerTurn
+                    "/>
+                </object>
+            <!-- Sub Attack -->                        
+                <object type="UI2DStatusTag" name="objElements" existsWhile="def.bNavy">  
+                    <property name="strText" from="def.objGroup.nSeaSubmergedPower / 10"/>
+                    <object type="mlui.UI2DImage" name="objIcon">
+                        <property name="tmplImage" value="skin.ImgInfoIconSubAttackTny"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="3"/>
+                        <property name="nWidth" value="15"/>
+                        <property name="nHeight" value="11"/>
+                        <property name="haXAlign" value="CENTER" />
+                    </object>
+                    <property name="strToolTip" from="locale.SID.UI.AttackVsSub
+                        + '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+                            + ' ' + locale.SID.UI.PerTurn
+                        + '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(def.objGroup.nSeaSubmergedPower) / 100).formatNumber(1, true)
+                            + ' ' + locale.SID.UI.PerTurn
+                    "/>
+                </object>
+            <!-- Air Attack -->                        
+                <object type="UI2DStatusTag" name="objElements"  existsWhile="def.bNavy">  
+                    <property name="strText" from="def.objGroup.nAirPower / 10"/>
+                    <object type="mlui.UI2DImage" name="objIcon">
+                        <property name="tmplImage" value="skin.ImgInfoIconAirAttackTny"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="3"/>
+                        <property name="nWidth" value="15"/>
+                        <property name="nHeight" value="11"/>
+                        <property name="haXAlign" value="CENTER" />
+                    </object>
+                    <property name="strToolTip" from="locale.SID.UI.AttackVsAir
+                        + '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+                            + ' ' + locale.SID.UI.PerTurn
+                        + '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(def.objGroup.nAirPower) / 100).formatNumber(1, true)
+                            + ' ' + locale.SID.UI.PerTurn
+                    "/>
+                </object>
+                
+        <!-- Air Force -->
+                
+            <!-- Air Attack -->                        
+                <object type="UI2DStatusTag" name="objElements"  existsWhile="def.bAirForce">  
+                    <property name="strText" from="def.objGroup.nAirPower / 10"/>
+                    <object type="mlui.UI2DImage" name="objIcon">
+                        <property name="tmplImage" value="skin.ImgInfoIconAirAttackTny"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="3"/>
+                        <property name="nWidth" value="15"/>
+                        <property name="nHeight" value="11"/>
+                        <property name="haXAlign" value="CENTER" />
+                    </object>
+                    <property name="strToolTip" from="locale.SID.UI.AttackVsAir
+                        + '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+                            + ' ' + locale.SID.UI.PerTurn
+                        + '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(def.objGroup.nAirPower) / 100).formatNumber(1, true)
+                            + ' ' + locale.SID.UI.PerTurn
+                    "/>
+                </object>
+            <!-- Ground Attack -->                        
+                <object type="UI2DStatusTag" name="objElements" existsWhile="def.bAirForce">  
+                    <property name="strText" from="def.objGroup.nLandAttackPower / 10"/>
+                    <object type="mlui.UI2DImage" name="objIcon">
+                        <property name="tmplImage" value="skin.ImgUnitIconAirGroundAttackTny"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="3"/>
+                        <property name="nWidth" value="15"/>
+                        <property name="nHeight" value="11"/>
+                        <property name="haXAlign" value="CENTER" />
+                    </object>
+                    <property name="strToolTip" from="locale.SID.UI.AttackVsLand
+                        + '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+                            + ' ' + locale.SID.UI.PerTurn
+                        + '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(def.objGroup.nLandAttackPower) / 100).formatNumber(1, true)
+                            + ' ' + locale.SID.UI.PerTurn
+                    "/>
+                </object>
+            <!-- Naval Attack -->                        
+                <object type="UI2DStatusTag" name="objElements" existsWhile="def.bAirForce">   
+                    <property name="strText" from="def.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Bombers).size"/>
+                    <object type="mlui.UI2DImage" name="objIcon">
+                        <property name="tmplImage" value="skin.ImgInfoIconSeaAttackTny"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="3"/>
+                        <property name="nWidth" value="15"/>
+                        <property name="nHeight" value="11"/>
+                        <property name="haXAlign" value="CENTER" />
+                    </object>
+                    <property name="strToolTip" from="locale.SID.UI.AttackVsNavy
+                        + '&#010;   ' + locale.SID.UI.MaximumDamage + ': ' + def.nGroupDamage
+                            + ' ' + locale.SID.UI.PerTurn
+                        + '&#010;   ' + locale.SID.UI.AverageDamage + ': ' + (float(def.objGroup.nSeaSurfacePower) / 100).formatNumber(1, true)
+                            + ' ' + locale.SID.UI.PerTurn
+                    "/>
+                </object>
+
+          <!-- Health -->
+          <object type="UI2DStatusTag" name="objElements" existsWhile="def.bArmy OR def.bAirForce OR def.bNavy">
+            <property name="strText" from="(def.objGroup.nHitPoints) + '/' + if(def.objGroup.nMaxHitPoints != 0, def.objGroup.nMaxHitPoints, 1)"/>
+            <object type="mlui.UI2DImage" name="objIcon">
+              <property name="tmplImage" value="skin.ImgInfoIconHealthTny"/>
+              <property name="nX" value="0"/>
+              <property name="nY" value="3"/>
+              <property name="nWidth" value="12"/>
+              <property name="nHeight" value="12"/>
+              <property name="haXAlign" value="CENTER" />
+            </object>
+            <property name="strToolTip" from="locale.SID.UI.GroupHP"/>
+          </object>
+          
+          <!-- Arms -->
+          <object type="UI2DStatusTag" name="objElements" existsWhile="def.bArmy OR def.bAirForce OR def.bNavy">  
+            <property name="strText" from="if(def.objGroup.nArmsCarry GT 0,(def.objGroup.nArms * 100) / (def.objGroup.nArmsCarry) + '%','')"/>
+            <object type="mlui.UI2DImage" name="objIcon">
+              <property name="tmplImage" value="skin.ImgInfoIconArms21x21"/>
+              <property name="nX" value="0"/>
+              <property name="nY" value="1"/>
+              <property name="nWidth" value="15"/>
+              <property name="nHeight" value="15"/>
+              <property name="haXAlign" value="CENTER" />
+            </object>
+            <property name="strToolTip" from="
+					locale.SID.UI.ArmsSupply + ': ' + def.objGroup.nArms + '/' + def.objGroup.nArmsCarry
+					+ '&#010;' + locale.SID.UI.ArmsConsumption + ': ' + def.objGroup.nRestArmsCost + '/' + def.objGroup.nArmsCost"/>
+          </object>
+
+          <!-- Army Supply -->
+          <object type="UI2DStatusTag" name="objElements" existsWhile="def.bArmy AND ((def.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Artillery).size) + (def.objGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Armored).size)) > 0">
+            <property name="strText" from="if (def.objGroup.nOilCarry==0,0,(def.objGroup.nOil * 100) / (def.objGroup.nOilCarry)) + '%'"/>
+            <object type="mlui.UI2DImage" name="objIcon">
+              <property name="tmplImage" value="skin.ImgInfoIconFuelSupplyTny"/>
+              <property name="nX" value="0"/>
+              <property name="nY" value="3"/>
+              <property name="nWidth" value="12"/>
+              <property name="nHeight" value="12"/>
+              <property name="haXAlign" value="CENTER" />
+            </object>
+            <property name="strToolTip" from="
+					locale.SID.UI.OilSupply + ': ' + def.objGroup.nOil + '/' + def.objGroup.nOilCarry
+					+ '&#010;' + locale.SID.UI.OilConsumption + ': ' + def.objGroup.nRestOilCost + '/' + def.objGroup.nOilCost"/>
+          </object>
+          
+          <!-- Supply -->
+          <object type="UI2DStatusTag" name="objElements" existsWhile="def.bAirForce OR def.bNavy">
+            <property name="strText" from="if (def.objGroup.nOilCarry==0,0,(def.objGroup.nOil * 100) / (def.objGroup.nOilCarry)) + '%'"/>
+            <object type="mlui.UI2DImage" name="objIcon">
+              <property name="tmplImage" value="skin.ImgInfoIconFuelSupplyTny"/>
+              <property name="nX" value="0"/>
+              <property name="nY" value="3"/>
+              <property name="nWidth" value="12"/>
+              <property name="nHeight" value="12"/>
+              <property name="haXAlign" value="CENTER" />
+            </object>
+            <property name="strToolTip" from="
+					locale.SID.UI.OilSupply + ': ' + def.objGroup.nOil + '/' + def.objGroup.nOilCarry
+					+ '&#010;' + locale.SID.UI.OilConsumption + ': ' + def.objGroup.nRestOilCost + '/' + def.objGroup.nOilCost"/>
+          </object>
+
+          <!-- Speed -->
+          <object type="UI2DStatusTag" name="objElements" existsWhile="def.bArmy OR def.bNavy AND def.objChosenObjectData != null">
+            <property name="strText" from="def.objGroup.nSpeed"/>
+            <object type="mlui.UI2DImage" name="objIcon">
+              <property name="tmplImage" value="skin.ImgUnitIconSpeedTny"/>
+              <property name="nX" value="0"/>
+              <property name="nY" value="3"/>
+              <property name="nWidth" value="28"/>
+              <property name="nHeight" value="28"/>
+              <property name="haXAlign" value="CENTER" />
+            </object>
+            <property name="strToolTip" from="locale.SID.UI.GroupMovementRange"/>
+          </object>
+
+          <!-- Range -->
+          <object type="UI2DStatusTag" name="objElements" existsWhile="def.bAirForce">
+            <property name="strText" from="def.objGroup.nMissionRange"/>
+            <object type="mlui.UI2DImage" name="objIcon">
+              <property name="tmplImage" value="skin.ImgInfoIconRangeNavyAirSm"/>
+              <property name="nX" value="0"/>
+              <property name="nY" value="0"/>
+              <property name="nWidth" value="28"/>
+              <property name="nHeight" value="28"/>
+              <property name="haXAlign" value="CENTER" />
+            </object>
+            <property name="strToolTip" from="locale.SID.UI.GroupMovementRange"/>
+          </object>
+          
+        </object>
+
+    <!--Group Composition-->
+    <object type="mlui.UI2DText" name="objCompLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.UnitsInGroup"/>
+      <property name="nX" value="30"/>
+      <property name="nY" value="52"/>
+      <property name="nWidth" from="100"/>
+      <property name="nHeight" value="10"/>
+    </object>
+    
+    <!--Army-->
+    <object type="UI2DArmyCompDisplay" name="objArmyIDIcons" existsWhile="def.bArmy">
+      <property name="objUnitGroup" from="def.objGroup"/>
+      <property name="bJustifyLeft" value="true"/>
+      <property name="nX" value="30"/>
+      <property name="nY" value="59"/>
+      <property name="nWidth" value="155"/>
+      <property name="nHeight" value="28"/>
+      <property name="nDepth" value="100"/>
+    </object>
+
+    <!-- Air Force -->
+    <object type="UI2DAirCompDisplay" name="objAirIDIcons" existsWhile="def.bAirForce">
+      <property name="objUnitGroup" from="def.objGroup"/>
+      <property name="bJustifyLeft" value="true"/>
+      <property name="nX" value="30"/>
+      <property name="nY" value="59"/>
+      <property name="nWidth" value="155"/>
+      <property name="nHeight" value="28"/>
+      <property name="nDepth" value="100"/>
+    </object>
+
+    <!--Navy-->
+    <object type="UI2DNavalCompDisplay" name="objNavalIDIcons" existsWhile="def.bNavy">
+      <property name="objUnitGroup" from="def.objGroup"/>
+      <property name="bJustifyLeft" value="true"/>
+      <property name="nX" value="30"/>
+      <property name="nY" value="59"/>
+      <property name="nWidth" value="155"/>
+      <property name="nHeight" value="28"/>
+      <property name="nDepth" value="100"/>
+    </object>
+
+    
+  </objectDef>
+	
+	<objectDef type="UI2DGroupBubbleToggle" superType="UI2DGroupBubble">
+		<propertyDef name="eLeftMouseButton" type="Enum" restriction="mlui.MouseButton"/>
+        <property name="eLeftMouseButton" value="MOUSE_BUTTON_LEFT"/>		
+		
+		<object type="UI2DElementMask" name="objGroupPopupMask">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if (event.eButton.equals(def.eLeftMouseButton))
+							{
+								def.objChosenObjectData.toggleChosen();
+							}
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DStatusTag" superType="mlui.UI2DElement">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="strText" type="String"/>
+		
+		<property name="nWidth" from="if(self.objText.nWidth GT 38, self.objText.nWidth + 4, 38)"/>
+		<property name="nHeight" value="30"/>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13CenterFIT"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="21"/>
+			<property name="nHeight" value="12"/>
+            <property name="haXAlign" value="CENTER" />
+		</object>
+	</objectDef>
+    
+	<objectDef type="UI2DStatusTagTextRight" superType="mlui.UI2DElement">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="strText" type="String"/>
+		
+		<property name="nWidth" from="self.objText.nWidth + self.objText.nX + 3"/>
+		<property name="nHeight" value="30"/>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftCenterFIT"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" from="def.objIcon.nWidth + 5"/>
+			<property name="nY" value="3"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+	</objectDef>
+    
+</locust>

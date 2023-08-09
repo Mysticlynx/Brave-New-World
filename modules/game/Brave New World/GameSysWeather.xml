@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<object type="gs_tbg.GameSysWeather" name="objGameSysWeather">
+		
+		<!--SeasonDatas -->
+		<object type="gs_tbg.SeasonData" name="objSeasonDatas">
+			<property name="strName" value="Blizzards"/>
+			<property name="strDisplayName" from="locale.SID.TGQ.Season.DisplayName.Blizzards"/>
+			<property name="colColor" value="#7DA7D9FF"/>
+			<property name="dateStart" value="10/1/1900"/>
+			<property name="dateEnd" value="3/1/1900"/>
+			<property name="nMovementPenalty" value="50"/>
+			<property name="nSupplyPenalty" value="50"/>
+			<property name="eSeasonType" value="Winter"/>
+			<property name="refRegions" value="Muscovy"/>
+			<property name="refRegions" value="Tver"/>
+			<property name="refRegions" value="Tula"/>
+			<property name="refRegions" value="Bryansk"/>
+			<property name="refRegions" value="Smolensk"/>
+			<property name="refRegions" value="Novgorod"/>
+			<property name="refRegions" value="Ingermanland"/>
+			<property name="refRegions" value="Kalinin"/>
+			<property name="refRegions" value="Kaluga"/>
+			<property name="refRegions" value="Vologda"/>
+			<property name="refRegions" value="Uglich"/>
+			<property name="refRegions" value="Vladimir"/>
+			<property name="refRegions" value="Ryazan"/>
+			<property name="refRegions" value="Simbirsk"/>
+			<property name="refRegions" value="Nizhny"/>
+			<property name="refRegions" value="Volga"/>
+			<property name="refRegions" value="Semyonovsky"/>
+			<property name="refRegions" value="Yaroslavl"/>
+			<property name="refRegions" value="Totma"/>
+			<property name="refRegions" value="Onega"/>
+			<property name="refRegions" value="Olonets"/>
+			<property name="refRegions" value="WhiteKarelia"/>
+			<property name="refRegions" value="Kola"/>
+			<property name="refRegions" value="NorthernDvina"/>
+			<property name="refRegions" value="Kirov"/>
+			<property name="refRegions" value="Nenetsia"/>
+			<property name="refRegions" value="Komi"/>
+			<property name="refRegions" value="Kama"/>
+			<property name="refRegions" value="Ufa"/>
+			<property name="refRegions" value="WesternSiberia"/>
+			<property name="refRegions" value="Yamalia"/>
+			<property name="refRegions" value="Tatar"/>
+			<property name="refRegions" value="Bashkiria"/>
+			<property name="refRegions" value="Orenburg"/>
+			<property name="refRegions" value="Kurgan"/>
+			<property name="refRegions" value="SouthernUrals"/>
+		</object>
+		
+		<!--Seasons -->
+		
+	</object>
+	
+</locust>

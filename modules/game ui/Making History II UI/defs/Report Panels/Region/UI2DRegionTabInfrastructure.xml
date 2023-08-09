@@ -1,0 +1,1229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DRegionTabInfrastructure" superType="mlui.UI2DElement">
+		
+		<object type="mlui.UI2DText" name="objStatusLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.Projects"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>	
+		
+		<object type="UI2DRegionProjects" name="objProjects">
+			<property name="nX" value="3"/>
+			<property name="nY" value="25"/>
+		</object>
+		
+		<object type="UI2DRegionProjectsQueue" name="objProjectsQueue">
+			<property name="objRegion" from="spdata.objRegionData.objRegion"/>
+			<property name="nX" value="438"/>
+			<property name="nY" value="25"/>
+		</object>
+		
+	</objectDef>
+	
+	
+	<objectDef type="UI2DRegionInfrastructureBubble" superType="mlui.UI2DElement">
+		
+		<!-- placeholder --><object type="mlui.UI2DText" name="objBuildingName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterWrap"/>
+			<property name="strText" value="Placeholder"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="84"/>
+			<property name="nHeight" value="22"/>
+			<property name="nDepth" value="100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBuildingBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="20"/>
+			<property name="nWidth" value="84"/>
+			<property name="nHeight" value="84"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBuildingBG2">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+
+		<!-- placeholder --> <object type="mlui.UI2DImage" name="objBuildingIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconBuildingSm"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="27"/>
+			<property name="nWidth" value="71"/>
+			<property name="nHeight" value="73"/>
+		</object>	
+	</objectDef>	
+	
+<!-- NEW REGION PROJECTS -->
+	<objectDef type="UI2DRegionProjects" superType="mlui.UI2DElement">
+		<property name="nWidth" value="436"/>
+		<property name="nHeight" value="520"/>
+		
+		<object type="RegionProjectData" name="objData">
+			<property name="objRegion" from="spdata.objRegionData.objRegion"/>
+		</object>
+		
+		<object type="gs_tbg.AvailableRegionOutputsLookup" name="objAvailableRegionOutputsLookup">
+		    <property name="objGameRoot" from="mh2data.objAvatar"/>
+		    <property name="objRegion" from="spdata.objRegionData.objRegion"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgRegionProjectsBG"/>
+			<property name="nWidth" value="520"/>
+			<property name="nHeight" value="436"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objListBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="420"/>
+			<property name="nHeight" value="479"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objTabs">
+			<property name="nX" value="13"/>
+			<property name="nY" value="13"/>
+			<property name="nSpacing" value="3"/>
+			
+			<object type="UI2DRegionProjectTab" name="objElements">
+				<object type="RegionProjectTabData" name="objTabData">
+					<property name="objAvailableRegionOutputsLookup" from="def.objAvailableRegionOutputsLookup"/>
+					<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Military')"/>
+				</object>
+				<property name="strText" from="locale.SID.UI.Military"/>
+				<property name="strId" value="military"/>
+				<property name="objData" from="def.objData"/>
+			</object>
+			
+			<object type="UI2DRegionProjectTab" name="objElements">
+				<object type="RegionProjectTabData" name="objTabData">
+					<property name="objAvailableRegionOutputsLookup" from="def.objAvailableRegionOutputsLookup"/>
+					<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources')"/>
+				</object>
+				<property name="strText" from="locale.SID.UI.Resources"/>
+				<property name="strId" value="resources"/>
+				<property name="objData" from="def.objData"/>
+			</object>
+			
+			<object type="UI2DRegionProjectTab" name="objElements">
+				<object type="RegionProjectTabData" name="objTabData">
+					<property name="objAvailableRegionOutputsLookup" from="def.objAvailableRegionOutputsLookup"/>
+					<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food')"/>
+				</object>
+				<property name="strText" from="locale.SID.UI.Food"/>
+				<property name="strId" value="food"/>
+				<property name="objData" from="def.objData"/>
+			</object>
+			
+			<object type="UI2DRegionProjectTab" name="objElements">
+				<object type="RegionProjectTabData" name="objTabData">
+					<property name="objAvailableRegionOutputsLookup" from="def.objAvailableRegionOutputsLookup"/>
+					<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Transportation')"/>
+				</object>
+				<property name="strText" from="locale.SID.UI.Transportation"/>
+				<property name="strId" value="transportation"/>
+				<property name="objData" from="def.objData"/>
+			</object>
+			
+		</object>
+		
+		<object type="UI2DRegionProjectList" name="objRegionProjectList">
+			<property name="objData" from="def.objData"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="39"/>
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="475"/>
+		</object>
+		
+		<script type="application/javascript"><![CDATA[
+			function notifyAddedToUI()
+			{
+				var elements = self.objTabs.objElements;
+				if(spdata.objRegionData.tmplSelectedOutputCategory==null){
+					for(var i in elements){
+						if(elements[i].strId == 'military'){
+							self.objData.objSelectedTabData = elements[i].objTabData;
+						}
+					}
+				}
+				else{
+					for(var i in elements){
+						if(elements[i].objTabData.tmplCategory == spdata.objRegionData.tmplSelectedOutputCategory){
+							self.objData.objSelectedTabData = elements[i].objTabData;
+							return;						
+						}
+					}
+				}
+			}
+		]]></script>
+		
+	</objectDef>
+	
+	<objectDef type="RegionProjectData" class="CMLObject">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="objSelectedTabData" type="RegionProjectTabData"/>
+		<script type="application/javascript"><![CDATA[
+			function changeSelectedTab(newTab)
+			{
+				self.objSelectedTabData = newTab;	
+			}
+		]]></script>
+	</objectDef>
+	
+	<objectDef type="RegionProjectTabData" class="CMLObject">
+		<propertyDef name="objAvailableRegionOutputsLookup" type="gs_tbg.AvailableRegionOutputsLookup"/>
+		<propertyDef name="tmplCategory" type="TemplateRef" restriction="gs_tbg.RegionOutputCategoryTemplate"/>
+		
+		<propertyDef name="objOutput" type="gs_tbg.RegionOutputTemplate" variable="true">
+			filter(
+				?{output: output.tmplCategory == self.tmplCategory}, self.objAvailableRegionOutputsLookup.objValidRegionOutputs
+			)
+		</propertyDef>
+	</objectDef>
+	
+	<objectDef type="UI2DRegionProjectList" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="RegionProjectData"/>
+
+		<object type="UI2DScrollPane" name="objScrollPane">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			
+			<object type="common_ui.UI2DList" name="objScrollable">
+				<property name="nTopSpacing" value="5"/>
+				<property name="nBottomSpacing" value="5"/>
+				<property name="nSpacing" value="2"/>
+	
+				<object type="UI2DRegionProjectListBubble" name="objElements" tiedTo="def.objData.objSelectedTabData.objOutput">
+					<property name="objRegionOutputTemplate" from="tiedTo"/>
+					<property name="objRegion" from="def.objData.objRegion"/>
+					<property name="nWidth" value="400"/>
+					<property name="nHeight" value="83"/>
+				</object>
+				
+			</object>
+			
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DOrderIconBox" superType="mlui.UI2DElement">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		
+		<object type="mlui.UI2DImage" name="objOrderIconBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DRegionProjectListBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="objRegionOutputTemplate" type="gs_tbg.RegionOutputTemplate"/>
+		<propertyDef name="bCanCommand" type="bool">
+			self.objRegion.canCommand(mh2data.objAvatar, mh2data.objNation)
+		</propertyDef>
+
+		<object type="mlui.UI2DImage" name="objWorkOrderBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="83"/>
+		</object>
+		
+		<object type="UI2DElementMask" name="objAddOrderMask">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="400"/>
+			<property name="nHeight" value="83"/>
+			<property name="nDepth" value="95"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+					<property name="otEventType" value="mlui.EventMouseButtonDblClick" />
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.bCanCommand)
+							{
+								var action = gs_tbg.GActAddRegionProject.create({
+									"refRegion": def.objRegion,
+									"tmplRegionOutput": def.objRegionOutputTemplate
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DOrderIconBox" name="objOrderIcon">
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage">
+					switch {
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Transportation'):
+							mh2data.objTransportationProdDisplayTable.getEntry(def.objRegionOutputTemplate.tmplTransportationImprovement).tmplImage
+						
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Military'):
+							switch {
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.CoastalDefenseOutputTemplate):
+									mh2data.objCoastalDefenseDisplayTable.getEntry(def.objRegionOutputTemplate.tmplCoastalDefenseImprovement).tmplImage
+								
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.FortificationOutputTemplate):
+									mh2data.objFortificationDisplayTable.getEntry(def.objRegionOutputTemplate.tmplFortificationImprovement).tmplImage
+									
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.AADefenseOutputTemplate):
+									mh2data.objAADefenseDisplayTable.getEntry(def.objRegionOutputTemplate.tmplAADefenseImprovement).tmplImage
+									
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.AirbaseOutputTemplate):
+									"skin.ImgRegionAirBaseLG"
+									
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.NavalBaseOutputTemplate):
+									"skin.ImgRegionNavalBaseLG"
+									
+								default:
+									"skin.ImgInfoIconBuildingSm"
+							}
+						
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(def.objRegionOutputTemplate).tmplImage
+						
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(def.objRegionOutputTemplate).tmplImage
+						
+						default:
+							"skin.ImgInfoIconBuildingSm"
+						
+					}
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="77"/>
+				<property name="nHeight" value="76"/>
+				<property name="haXAlign" value="CENTER"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="nDepth" value="50"/>
+			</object>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown13Left"/>
+			<property name="strText" from="def.objRegionOutputTemplate.strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="275"/>
+			<property name="nHeight" value="13"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objType">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10Left"/>
+			<property name="strText" from="def.objRegionOutputTemplate.strShortDescription"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="16"/>
+			<property name="nWidth" value="300"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objProductionRequirements">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ProductionRequirements"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="49"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objClockIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconClockSm"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="59"/>
+			<property name="nWidth" value="19"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objBuildTimeValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftFIT"/>
+			<property name="strText" from="def.objRegionOutputTemplate.nTurns"/>
+			<property name="nX" value="106"/>
+			<property name="nY" value="66"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objBuildTimeTurns">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="if(def.objRegionOutputTemplate.nTurns == 1,
+				locale.SID.UI.Turn, locale.SID.UI.Turns)
+			"/>
+			<property name="nX" from="def.objBuildTimeValue.nX + def.objBuildTimeValue.nWidth + 3"/>
+			<property name="nY" value="68"/>
+			<property name="nWidth" value="50"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMPUIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMPU21x21"/>
+			<property name="nX" value="160"/>
+			<property name="nY" value="61"/>
+			<property name="nWidth" value="19"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMPUValue">
+			<property name="tmplTextStyle">
+				if(mh2data.objNation.nMPUs GTE def.objRegionOutputTemplate.nMPURequirement,
+					"locale.TxtStyleArialBlue12LeftFIT", "locale.TxtStyleArialRed12LeftFIT")
+			</property>
+			<property name="strText" from="def.objRegionOutputTemplate.nMPURequirement"/>
+			<property name="nX" value="184"/>
+			<property name="nY" value="66"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objProjectRequirementsList">
+      <property name="nX" value="212"/>
+			<property name="nY" value="62"/>
+			<property name="nSpacing" value="2"/>
+
+			<object type="UI2DResourceRequirements" name="objElements" tiedTo="def.objRegionOutputTemplate.objResourceRequirements">
+				<property name="objResourceRequirement" from="tiedTo"/>
+
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="30"/>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			</object>
+		</object>
+		
+		<object type="UI2DInfoButton" name="objInfoButton">
+			<property name="objTmpl" from="def.objRegionOutputTemplate"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="2"/>
+			<property name="nDepth" value="105"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objButtonAdd">
+			<property name="tmplButtonStyle" value="skin.BtnStyleRegionProjectsAddToQueue"/>
+			<property name="bVisible" from="def.bCanCommand"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="105"/>
+			<property name="strToolTip" from="locale.SID.UI.Add"/>
+		
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActAddRegionProject.create({
+								"refRegion": def.objRegion,
+								"tmplRegionOutput": def.objRegionOutputTemplate
+							});
+							mh2data.objAvatar.sendAction(action);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DRegionProjectTab" superType="mlui.UI2DButton">
+		<propertyDef name="objData" type="RegionProjectData"/>
+		<propertyDef name="objTabData" type="RegionProjectTabData" storesChildren="true"/>
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="strId" type="String"/>
+		<property name="nWidth" value="100"/>
+		<property name="nHeight" value="25"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage">
+				skin.getTemplateRef(mlmedia.ImageTemplate,
+			    if(def.objData.objSelectedTabData == def.objTabData,
+					'ImgReportTabButtonSubTabC', 'ImgReportTabButtonSubTab'))
+			</property>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="25"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCompletedPercent">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventButtonClicked"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.objData.objSelectedTabData = def.objTabData;
+						spdata.objRegionData.tmplSelectedOutputCategory = def.objTabData.tmplCategory;
+					}
+				]]></script>
+			</object>					
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DRegionProjectsQueue" superType="mlui.UI2DElement">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<property name="nWidth" value="436"/>
+		<property name="nHeight" value="520"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgRegionProjectsBG"/>
+			<property name="nWidth" value="520"/>
+			<property name="nHeight" value="436"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objWorkOrderBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="83"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objDirections" existsWhile="spdata.objRegionData.objRegion.objRegionProjects.size LTE 0">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLighterBrown20Center"/>
+			<property name="strText" from="locale.SID.UI.NoProjectsQueued"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="39"/>
+			<property name="nWidth" value="400"/>
+		</object>
+		
+		<object type="UI2DRegionProjectsCurrent" name="objCurrentProject" existsWhile="self.objRegion.objRegionProjects.size GT 0">
+			<property name="nX" value="13"/>
+			<property name="nY" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objProjectListBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="99"/>
+			<property name="nWidth" value="420"/>
+			<property name="nHeight" value="417"/>
+		</object>
+		
+		<object type="UI2DRegionProjectQueueElements" name="objProjectQueue">
+			<property name="nX" value="13"/>
+			<property name="nY" value="101"/>
+			<property name="nWidth" value="414"/>
+			<property name="nHeight" value="412"/>
+		</object>
+		
+	</objectDef>
+	
+<!-- Current Project -->
+	<objectDef type="UI2DRegionProjectsCurrent" superType="mlui.UI2DElement">
+		<propertyDef name="objCurrentProject" type="gs_tbg.RegionProject">
+			find(?{project: project.nPriority == 1}, spdata.objRegionData.objRegion.objRegionProjects)
+		</propertyDef>
+		<propertyDef name="bCanCommand" type="bool">
+			spdata.objRegionData.objRegion.canCommand(mh2data.objAvatar, mh2data.objNation)
+		</propertyDef>
+		
+		<propertyDef name="objRegionOutputTemplate" type="gs_tbg.RegionOutputTemplate"/>
+
+    <propertyDef name="bSuppliesNeeded" type="bool" default="false"/>
+    
+    <property name="objRegionOutputTemplate" from="self.objCurrentProject.tmplRegionOutput.resolve()"/>
+		<property name="nWidth" value="400"/>
+		<property name="nHeight" value="83"/>
+		
+		<object type="mlui.UI2DImage" name="objWorkOrderBG">
+			<property name="tmplImage" value="skin.ImgBubbleTanLime"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="83"/>
+		</object>
+
+		<object type="UI2DOrderIconBox" name="objOrderIcon">
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage">
+					switch {
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Transportation'):
+							mh2data.objTransportationProdDisplayTable.getEntry(def.objRegionOutputTemplate.tmplTransportationImprovement).tmplImage
+						
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Military'):
+							switch {
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.CoastalDefenseOutputTemplate):
+									mh2data.objCoastalDefenseDisplayTable.getEntry(def.objRegionOutputTemplate.tmplCoastalDefenseImprovement).tmplImage
+								
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.FortificationOutputTemplate):
+									mh2data.objFortificationDisplayTable.getEntry(def.objRegionOutputTemplate.tmplFortificationImprovement).tmplImage
+									
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.AADefenseOutputTemplate):
+									mh2data.objAADefenseDisplayTable.getEntry(def.objRegionOutputTemplate.tmplAADefenseImprovement).tmplImage
+									
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.AirbaseOutputTemplate):
+									"skin.ImgRegionAirBaseLG"
+									
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.NavalBaseOutputTemplate):
+									"skin.ImgRegionNavalBaseLG"
+									
+								default:
+									"skin.ImgInfoIconBuildingSm"
+							}
+						
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(def.objRegionOutputTemplate).tmplImage
+						
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(def.objRegionOutputTemplate).tmplImage
+						
+						default:
+							"skin.ImgInfoIconBuildingSm"
+						
+					}
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="77"/>
+				<property name="nHeight" value="76"/>
+				<property name="haXAlign" value="CENTER"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="nDepth" value="50"/>
+			</object>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+
+    <property name="bSuppliesNeeded" from="self.objCurrentProject.nNumPaidFor == 0"/>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown13LeftFIT"/>
+			<property name="strText" from="def.objCurrentProject.tmplRegionOutput.resolve().strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="3"/>
+			<property name="nHeight" value="13"/>
+		</object>
+
+    <object type="UI2DSuppliesNeeded" name="objSupplisNeeded"  existsWhile="def.bSuppliesNeeded" >
+      <property name="nX" value="85"/>
+      <property name="nY" value="28"/>
+      <property name="nWidth" value="120"/>
+      <property name="nHeight" value="17"/>
+    </object>
+		
+    
+    <propertyDef name="nProjectPercent" type="int" from="(self.objCurrentProject.nTurns * 100) / self.objCurrentProject.tmplRegionOutput.resolve().nTurns"/>
+    
+    <object type="mlui.UI2DText" name="objCompletedPercent" existsWhile="!def.bSuppliesNeeded" >
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue18Left"/>
+      <property name="strText" from="def.nProjectPercent + '%'"/>
+      <property name="nX" value="85"/>
+      <property name="nY" value="29"/>
+      <property name="nWidth" value="55"/>
+      <property name="nHeight" value="18"/>
+    </object>
+    
+		<object type="mlui.UI2DImage" name="objCompletedMeter" existsWhile="!def.bSuppliesNeeded" >
+			<property name="tmplImage" value="skin.ImgMeterBG"/>
+			<property name="nX" value="132"/>
+			<property name="nY" value="28"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" value="15"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objMeterFill" existsWhile="!def.bSuppliesNeeded" >
+      <property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterGreen')"/>
+      <property name="nX" value="133"/>
+      <property name="nY" value="29"/>
+      <property name="nWidth" from="def.nProjectPercent"/>
+      <property name="nHeight" value="13"/>
+    </object>
+
+		<!-- placeholder -->
+    <object type="mlui.UI2DText" name="objType">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10Left"/>
+			<property name="strText" from="def.objRegionOutputTemplate.tmplCategory.resolve().strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="16"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objProductionRequirements">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ProductionRequirements"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="49"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objClockIcon" >
+			<property name="tmplImage" value="skin.ImgInfoIconClockSm"/>
+			<property name="nX" value="85"/>
+      <property name="nY" value="58"/>
+			<property name="nWidth" value="19"/>
+			<property name="nHeight" value="22"/>
+      <property name="strToolTip" from="locale.SID.UI.TurnsToComplete"/>
+		</object>
+
+    <object type="mlui.UI2DText" name="objTurns">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftFIT"/>
+      <property name="strText" from="def.objRegionOutputTemplate.nTurns - def.objCurrentProject.nTurns"/>
+      <property name="nX" value="106"/>
+      <property name="nY" value="64"/>
+      <property name="nHeight" value="12"/>
+      <property name="strToolTip" from="locale.SID.UI.TurnsToComplete"/>
+    </object>
+
+		<object type="mlui.UI2DText" name="objBuildTimeValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftFIT"/>
+			<property name="strText" from="def.objRegionOutputTemplate.nTurns - def.objCurrentProject.nTurns"/>
+			<property name="nX" value="106"/>
+			<property name="nY" value="64"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objMPUIcon">
+      <property name="tmplImage" value="skin.ImgInfoIconMPU21x21"/>
+      <property name="nX" value="130"/>
+      <property name="nY" value="59"/>
+      <property name="nWidth" value="19"/>
+      <property name="nHeight" value="22"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objMPUValue">
+      <property name="tmplTextStyle">
+        if(mh2data.objNation.nMPUs GTE def.objRegionOutputTemplate.nMPURequirement,
+        "locale.TxtStyleArialBlue12LeftFIT", "locale.TxtStyleArialRed12LeftFIT")
+      </property>
+      <property name="strText" from="def.objRegionOutputTemplate.nMPURequirement"/>
+      <property name="nX" value="151"/>
+      <property name="nY" value="65"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="common_ui.UI2DListHorz" name="objProjectRequirementsList">
+      <property name="nX" value="177"/>
+      <property name="nY" value="61"/>
+      <property name="nSpacing" value="2"/>
+
+      <object type="UI2DResourceRequirements" name="objElements" tiedTo="def.objRegionOutputTemplate.objResourceRequirements">
+        <property name="objResourceRequirement" from="tiedTo"/>
+
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="50"/>
+        <property name="nHeight" value="30"/>
+        <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+      </object>
+    </object>
+
+    <object type="common_ui.UI2DListHorz" name="objProjectRequirementsList">
+      <property name="nX" value="2"/>
+      <property name="nY" value="2"/>
+      <property name="haXAlign" value="RIGHT"/>
+      <property name="nSpacing" value="2"/>
+
+      <object type="mlui.UI2DButton" name="objElements">
+        <property name="tmplButtonStyle" value="skin.BtnStyleRegionProjectsQueueCancel"/>
+        <property name="strToolTip" from="locale.SID.UI.Cancel"/>
+        <property name="bVisible" from="def.bCanCommand"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="21"/>
+        <property name="nHeight" value="21"/>
+
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+          <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+            <property name="otEventType" value="mlui.EventButtonClicked"/>
+            <script type="application/javascript">
+              <![CDATA[
+							function handle(event, owner)
+							{
+								var action = gs_tbg.GActRemoveRegionProject.create({
+									"refRegion": spdata.objRegionData.objRegion,
+									"objRegionProject": def.objRegionProject
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						]]>
+            </script>
+          </object>
+        </object>
+
+      </object>
+    </object>
+      
+      <!--**********************-->
+    
+    
+    
+    
+    
+    
+
+		<object type="common_ui.UI2DListHorz" name="objProjectButtons">
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nSpacing" value="2"/>
+
+			<object type="mlui.UI2DButton" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleRegionProjectsQueueCancel"/>
+				<property name="strToolTip" from="locale.SID.UI.Cancel"/>
+				<property name="bVisible" from="def.bCanCommand"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="21"/>
+				<property name="nHeight" value="21"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								var regionProject = def.objCurrentProject
+								
+								var action = gs_tbg.GActRemoveRegionProject.create({
+									"refRegion": spdata.objRegionData.objRegion,
+									"objRegionProject": regionProject
+								});
+								mh2data.objAvatar.sendAction(action);
+							
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+			<object type="mlui.UI2DButton" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleRegionProjectsQueuePause"/>
+				<property name="strToolTip" from="locale.SID.UI.Pause"/>
+				<property name="bVisible" from="def.bCanCommand"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="21"/>
+				<property name="nHeight" value="21"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								var action = gs_tbg.GActSetRegionProjectPriority.create({
+									"refRegion": spdata.objRegionData.objRegion,
+									"objRegionProject": def.objCurrentProject,
+									"nPriority": spdata.objRegionData.objRegion.objRegionProjects.size
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DRegionProjectQueueElements" superType="mlui.UI2DElement">
+		<propertyDef name="objCurrentProject" type="gs_tbg.RegionProject">
+			find(?{project: project.nPriority == 1}, spdata.objRegionData.objRegion.objRegionProjects)
+		</propertyDef>
+		
+		<propertyDef name="nTurn" type="int">
+			gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.nTurn
+		</propertyDef>
+		
+		<property name="nWidth" value="414"/>
+		<property name="nHeight" value="412"/>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="414"/>
+			<property name="nHeight" value="412"/>
+			<property name="listItems">
+				sortAscending(?{workOrder: workOrder.nPriority},
+					filter(?{project: project != def.objCurrentProject}, 
+						spdata.objRegionData.objRegion.objRegionProjects))
+			</property>
+			<property name="nRowWidth" value="400"/>
+			<property name="nRowHeight" value="83"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DRegionProjectQueueBubble"/>
+			<property name="strPropForItem" value="objRegionProject"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DRegionProjectQueueBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objRegionProject" type="gs_tbg.RegionProject"/>
+		<propertyDef name="bCanCommand" type="bool">
+			spdata.objRegionData.objRegion.canCommand(mh2data.objAvatar, mh2data.objNation)
+		</propertyDef>
+		
+		<propertyDef name="objRegionOutputTemplate" type="gs_tbg.RegionOutputTemplate"/>
+		<property name="objRegionOutputTemplate" from="self.objRegionProject.tmplRegionOutput.resolve()"/>
+
+		<propertyDef name="nPriority" type="int"/>
+		<property name="nPriority" from="self.objRegionProject.nPriority"/>
+
+		<propertyDef name="nProjectPercent" type="int"/>
+		<property name="nProjectPercent" from="(self.objRegionProject.nTurns * 100) / self.objRegionOutputTemplate.nTurns"/>
+
+		<propertyDef name="nProjectTurns" type="int"/>
+		<property name="nProjectTurns" from="self.objRegionOutputTemplate.nTurns - self.objRegionProject.nTurns"/>
+		
+		<property name="nWidth" value="400"/>
+		<property name="nHeight" value="83"/>
+		
+		<object type="mlui.UI2DImage" name="objRegionProjectBG">
+			<property name="tmplImage">
+				switch{
+					case def.nProjectPercent != 0:			
+            'skin.ImgReportBubbleGrayPeachBSq'
+					default:
+						'skin.ImgReportBubbleTanBeige'
+				}
+			</property>	
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="83"/>
+		</object>
+
+		<object type="UI2DOrderIconBox" name="objOrderIcon">
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage">
+					switch {
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Transportation'):
+							mh2data.objTransportationProdDisplayTable.getEntry(def.objRegionOutputTemplate.tmplTransportationImprovement).tmplImage
+						
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Military'):
+							switch {
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.CoastalDefenseOutputTemplate):
+									mh2data.objCoastalDefenseDisplayTable.getEntry(def.objRegionOutputTemplate.tmplCoastalDefenseImprovement).tmplImage
+								
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.FortificationOutputTemplate):
+									mh2data.objFortificationDisplayTable.getEntry(def.objRegionOutputTemplate.tmplFortificationImprovement).tmplImage
+									
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.AADefenseOutputTemplate):
+									mh2data.objAADefenseDisplayTable.getEntry(def.objRegionOutputTemplate.tmplAADefenseImprovement).tmplImage
+									
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.AirbaseOutputTemplate):
+									"skin.ImgRegionAirBaseLG"
+									
+								case def.objRegionOutputTemplate.instanceOf(gs_tbg.NavalBaseOutputTemplate):
+									"skin.ImgRegionNavalBaseLG"
+									
+								default:
+									"skin.ImgInfoIconBuildingSm"
+							}
+						
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(def.objRegionOutputTemplate).tmplImage
+						
+						case def.objRegionOutputTemplate.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(def.objRegionOutputTemplate).tmplImage
+						
+						default:
+							"skin.ImgInfoIconBuildingSm"
+						
+					}
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="77"/>
+				<property name="nHeight" value="76"/>
+				<property name="haXAlign" value="CENTER"/>
+				<property name="vaYAlign" value="MIDDLE"/>
+				<property name="nDepth" value="50"/>
+			</object>
+      
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown13Left"/>
+			<property name="strText" from="def.objRegionOutputTemplate.strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="13"/>
+		</object>
+
+		<!-- placeholder --><object type="mlui.UI2DText" name="objType">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10Left"/>
+			<property name="strText" from="def.objRegionOutputTemplate.tmplCategory.resolve().strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="16"/>
+			<property name="nWidth" value="175"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objCompletedPercent" existsWhile="def.nProjectPercent > 0" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18Left"/>
+			<property name="strText" from="def.nProjectPercent + '%'"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="29"/>
+			<property name="nWidth" value="55"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objCompletedMeter" existsWhile="def.nProjectPercent > 0">
+			<property name="tmplImage" value="skin.ImgMeterBG"/>
+			<property name="nX" value="132"/>
+			<property name="nY" value="28"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" value="15"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objMeterFill"  existsWhile="def.nProjectPercent > 0">
+      <property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterGreen')"/>
+      <property name="nX" value="133"/>
+      <property name="nY" value="29"/>
+      <property name="nWidth" from="def.nProjectPercent"/>
+      <property name="nHeight" value="13"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objProductionRequirements">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.ProductionRequirements"/>
+      <property name="nX" value="85"/>
+      <property name="nY" value="49"/>
+      <property name="nWidth" value="155"/>
+      <property name="nHeight" value="10"/>
+    </object>
+
+		<object type="mlui.UI2DImage" name="objClockIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconClockSm"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="59"/>
+			<property name="nWidth" value="19"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objBuildTimeValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftFIT"/>
+			<property name="strText" from="def.nProjectTurns"/>
+			<property name="nX" value="106"/>
+			<property name="nY" value="66"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMPUIcon" existsWhile="def.nProjectPercent == 0">
+			<property name="tmplImage" value="skin.ImgInfoIconMPU21x21"/>
+      <property name="nX" value="130"/>
+      <property name="nY" value="59"/>
+			<property name="nWidth" value="19"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMPUValue" existsWhile="def.nProjectPercent == 0">
+			<property name="tmplTextStyle">
+				if(mh2data.objNation.nMPUs GTE def.objRegionOutputTemplate.nMPURequirement,
+					"locale.TxtStyleArialBlue12LeftFIT", "locale.TxtStyleArialRed12LeftFIT")
+			</property>
+			<property name="strText" from="def.objRegionOutputTemplate.nMPURequirement"/>
+      <property name="nX" value="151"/>
+      <property name="nY" value="65"/>
+      <property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objFactoryRequirementsList" existsWhile="def.nProjectPercent == 0">
+      <property name="nX" value="177"/>
+      <property name="nY" value="61"/>
+			<property name="nSpacing" value="2"/>
+
+			<object type="UI2DResourceRequirements" name="objElements" tiedTo="def.objRegionOutputTemplate.objResourceRequirements">
+				<property name="objResourceRequirement" from="tiedTo"/>
+
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="30"/>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			</object>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objProjectRequirementsList">
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nSpacing" value="2"/>
+
+			<object type="mlui.UI2DButton" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleRegionProjectsQueueCancel"/>
+				<property name="strToolTip" from="locale.SID.UI.Cancel"/>
+				<property name="bVisible" from="def.bCanCommand"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="21"/>
+				<property name="nHeight" value="21"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								var action = gs_tbg.GActRemoveRegionProject.create({
+									"refRegion": spdata.objRegionData.objRegion,
+									"objRegionProject": def.objRegionProject
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+			<object type="mlui.UI2DButton" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleRegionProjectsQueueDown"/>
+				<property name="strToolTip" from="locale.SID.UI.MoveDownInQueue"/>
+				<property name="bVisible" from="def.bCanCommand"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="21"/>
+				<property name="nHeight" value="21"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								var action = gs_tbg.GActSetRegionProjectPriority.create({
+									"refRegion": spdata.objRegionData.objRegion,
+									"objRegionProject": def.objRegionProject,
+									"nPriority": def.objRegionProject.nPriority + 1
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+			<object type="mlui.UI2DButton" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleRegionProjectsQueueUp"/>
+				<property name="strToolTip" from="locale.SID.UI.MoveUpInQueue"/>
+				<property name="bVisible" from="def.bCanCommand"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="21"/>
+				<property name="nHeight" value="21"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								var action = gs_tbg.GActSetRegionProjectPriority.create({
+									"refRegion": spdata.objRegionData.objRegion,
+									"objRegionProject": def.objRegionProject,
+									"nPriority": def.objRegionProject.nPriority - 1
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+			<object type="mlui.UI2DButton" name="objElements">
+				<property name="tmplButtonStyle" value="skin.BtnStyleRegionProjectsQueueStart"/>
+				<property name="strToolTip" from="locale.SID.UI.SetAsCurrentProject"/>
+				<property name="bVisible" from="def.bCanCommand"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="21"/>
+				<property name="nHeight" value="21"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								var action = gs_tbg.GActSetRegionProjectPriority.create({
+									"refRegion": spdata.objRegionData.objRegion,
+									"objRegionProject": def.objRegionProject,
+									"nPriority": 1
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DRegionProjectProgressBar" superType="mlui.UI2DElement">
+		<propertyDef name="nPercent" type="int"/>
+		<property name="nWidth" value="102"/>
+		<property name="nHeight" value="15"/>
+			
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgMeterBG"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" value="15"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor" value="#C4DF9BFF"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" from="def.nPercent"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+	</objectDef>
+	
+</locust>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <objectDef type="SOData" class="CMLObject">
+		<propertyDef name="bIsMoreInfo" type="bool" default="false"/>
+	
+    </objectDef>
+    
+    <objectDef type="UI2DSOLayer" superType="mlui.UI2DElement">
+		<property name="bVisible" from="reportdata.showLowerLayers()"/>
+        <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+        
+        <propertyDef name="objPanel" storesChildren="true">
+            switch{
+                case mh2data.objSelectedObject.instanceOf(gs_tbg.Nation) AND mh2data.objSelectedObject != mh2data.objNation:
+					if(spdata.bIsMoreInfo,
+						<object type="UI2DLargeDiplomatic">
+							<property name="objNation" from="mh2data.objSelectedObject"/>
+							<property name="nDepth" value="100"/>
+						</object>,
+						<object type="UI2DSelectionPanelNation">
+							<property name="objNation" from="mh2data.objSelectedObject"/>
+							<property name="nDepth" value="100"/>
+						</object>
+					)
+				case mh2data.objSelectedObject.instanceOf(gs_tbg.UnitGroup):
+					<object type="UI2DSelectionPanelGroup">
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="vaYAlign" value="BOTTOM"/>
+						<property name="nDepth" value="100"/>
+					</object>
+				case mh2data.objSelectedObject.instanceOf(gs_tbg.City):
+					if(spdata.bIsMoreInfo,
+						<object type="UI2DLargeCity">
+							<property name="vaYAlign" value="BOTTOM"/>
+							<property name="nDepth" value="100"/>
+						</object>,
+						<object type="UI2DSelectionPanelCity">
+							<property name="vaYAlign" value="BOTTOM"/>
+							<property name="nDepth" value="100"/>
+						</object>
+					)
+				case mh2data.objSelectedObject.instanceOf(gs_tbg.Region):
+					switch{
+						case mh2data.objSelectedObject.tmplTerrain.resolve().bWater:
+							<object type="UI2DSelectionPanelSeaRegion">
+								<property name="vaYAlign" value="BOTTOM"/>
+								<property name="nDepth" value="100"/>
+							</object>
+						case spdata.bIsMoreInfo:
+							<object type="UI2DLargeRegion">
+								<property name="vaYAlign" value="BOTTOM"/>
+								<property name="nDepth" value="100"/>
+							</object>
+						default:
+							<object type="UI2DSelectionPanelRegion">
+								<property name="vaYAlign" value="BOTTOM"/>
+								<property name="nDepth" value="100"/>
+							</object>
+					}
+                case mh2data.objSelectedObject.instanceOf(gs_tbg.Engagement):
+                    <object type="UI2DSelectionPanelEngagement">
+                        <property name="vaYAlign" value="BOTTOM"/>
+						<property name="nDepth" value="100"/>
+                    </object>
+            }
+        </propertyDef>
+        
+    </objectDef>
+    
+</locust>

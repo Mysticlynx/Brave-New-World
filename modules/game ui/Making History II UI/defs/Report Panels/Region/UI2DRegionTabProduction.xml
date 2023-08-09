@@ -1,0 +1,1286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DRegionTabProduction" superType="mlui.UI2DElement">
+		
+	<!-- Resource Production -->	
+		<object type="mlui.UI2DText" name="objResourceProductionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.ResourceProduction"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>				
+
+		<object type="mlui.UI2DImage" name="objCoalPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" from="def.objUI2DResourceTypeCoal.nX - 2"/>
+			<property name="nY" from="def.objUI2DResourceTypeCoal.nY - 2"/>
+			<property name="nWidth" from="def.objUI2DResourceTypeCoal.nWidth + 4"/>
+			<property name="nHeight" from="def.objUI2DResourceTypeCoal.nHeight + 4"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="UI2DResourceType" name="objUI2DResourceTypeCoal">
+			<property name="nX" value="12"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="215"/>
+			<property name="nHeight" value="510"/>
+			<property name="strResource" from="locale.SID.UI.Coal"/>
+			<property name="strResourceOutput" value="Coal Mines"/>
+			<property name="tmplResourceImage" value="skin.ImgInfoIconCoal" />
+			<property name="objRegion" >
+				spdata.objRegionData.objRegion
+			</property>
+			<property name="objResources" >
+				find(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')},
+					spdata.objRegionData.objRegion.objResourceCapacities)
+			</property>
+			
+			<object type="UI2DResourceModifiers" name="objResourceModifiers">		
+				<property name="nSupplyMod" from="-(100 - spdata.objRegionData.objRegion.nArmsLimit)" />
+			</object>
+		</object>
+		
+		<object type="LookupTerrainIcon" name="objLookupTerrainIcon">
+			<property name="tmplTerrain" from="spdata.objRegionData.objRegion.tmplTerrain"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMetalsPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" from="def.objUI2DResourceTypeMetals.nX - 2"/>
+			<property name="nY" from="def.objUI2DResourceTypeMetals.nY - 2"/>
+			<property name="nWidth" from="def.objUI2DResourceTypeMetals.nWidth + 4"/>
+			<property name="nHeight" from="def.objUI2DResourceTypeMetals.nHeight + 4"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		<object type="UI2DResourceType" name="objUI2DResourceTypeMetals">
+			<property name="nX" value="230"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="215"/>
+			<property name="nHeight" value="510"/>
+			<property name="strResource" from="locale.SID.UI.Metals"/>
+			<property name="strResourceOutput" value="Metals Mines"/>
+			<property name="tmplResourceImage" value="skin.ImgInfoIconMetals" />
+			<property name="objRegion" >
+				spdata.objRegionData.objRegion
+			</property>
+			<property name="objResources" >
+				find(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')},
+					spdata.objRegionData.objRegion.objResourceCapacities)
+			</property>
+			
+			<object type="UI2DResourceModifiers" name="objResourceModifiers" >		
+				<property name="nSupplyMod" from="-(100 - spdata.objRegionData.objRegion.nArmsLimit)" />	
+			</object>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objOilPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" from="def.objUI2DResourceTypeOil.nX - 2"/>
+			<property name="nY" from="def.objUI2DResourceTypeOil.nY - 2"/>
+			<property name="nWidth" from="def.objUI2DResourceTypeOil.nWidth + 4"/>
+			<property name="nHeight" from="def.objUI2DResourceTypeOil.nHeight + 4"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		<object type="UI2DResourceType" name="objUI2DResourceTypeOil">
+			<property name="nX" value="448"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="215"/>
+			<property name="nHeight" value="510"/>
+			<property name="strResource" from="locale.SID.UI.Oil"/>
+			<property name="strResourceOutput" value="Oil Fields"/>
+			<property name="tmplResourceImage" value="skin.ImgInfoIconOil" />
+			<property name="objRegion" >
+				spdata.objRegionData.objRegion
+			</property>
+			<property name="objResources" >
+				find(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')},
+					spdata.objRegionData.objRegion.objResourceCapacities)
+			</property>
+			
+			<object type="UI2DResourceModifiers" name="objResourceModifiers" >		
+				<property name="nSupplyMod" from="-(100 - spdata.objRegionData.objRegion.nArmsLimit)" />	
+			</object>
+			
+		</object>	
+				
+		<object type="mlui.UI2DImage" name="objFoodPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" from="def.objUI2DResourceTypeFood.nX - 2"/>
+			<property name="nY" from="def.objUI2DResourceTypeFood.nY - 2"/>
+			<property name="nWidth" from="def.objUI2DResourceTypeFood.nWidth + 4"/>
+			<property name="nHeight" from="def.objUI2DResourceTypeFood.nHeight + 4"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		<object type="UI2DResourceType" name="objUI2DResourceTypeFood">
+			<property name="nX" value="666"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="215"/>
+			<property name="nHeight" value="510"/>
+			<property name="strResource" from="locale.SID.UI.Food"/>
+			<property name="strResourceOutput" value="Farms"/>
+			<property name="tmplResourceImage" value="skin.ImgInfoIconFood" />
+			<property name="objRegion" >
+				spdata.objRegionData.objRegion
+			</property>
+			<property name="objResources" >
+				find(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')},
+					spdata.objRegionData.objRegion.objResourceCapacities)
+			</property>	
+			<object type="UI2DFoodModifiers" name="objFoodModifiers" >		
+				<property name="tmplModifierImageA"  from="def.objLookupTerrainIcon.tmplIcon22x22" />
+				<property name="nModifierPercentA" from="spdata.objRegionData.objRegion.tmplTerrain.resolve().nFoodProductionModifier" />
+				<property name="tmplModifierImageB" value="skin.ImgInfoIconSupplySm" />
+				<property name="nModifierPercentB" from="-(100 - spdata.objRegionData.objRegion.nArmsLimit)" />	
+			</object>		
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objResourceBuildingListBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" from="11"/>
+			<property name="nY" from="252"/>
+			<property name="nWidth" from="872"/>
+			<property name="nHeight" from="430"/>
+		</object>
+		
+		<object type="UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="11"/>
+			<property name="nY" value="255"/>
+			<property name="nWidth" value="872"/>
+			<property name="nHeight" value="425"/>
+
+			<object type="UI2DTotalRegionProductionList" name="objScrollable">
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="850"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DTotalRegionProductionList" superType="mlui.UI2DElement">
+		
+		<property name="nWidth" from="self.objList.nWidth"/>
+		<property name="nHeight" from="self.dist([self.objCoalList, self.objMetalsList, self.objOilList, self.objFarmsList])"/>
+			
+		<propertyDef name="objMetalsResource" type="gs_tbg.ResourceCapacity" storesChildren="true"/>
+			<property name="objMetalsResource">
+				find(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')},
+					spdata.objRegionData.objRegion.objResourceCapacities)
+			</property>
+			
+		<propertyDef name="objOilResource" type="gs_tbg.ResourceCapacity" storesChildren="true"/>
+			<property name="objOilResource">
+				find(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')},
+					spdata.objRegionData.objRegion.objResourceCapacities)
+			</property>
+			
+		<propertyDef name="objCoalResource" type="gs_tbg.ResourceCapacity" storesChildren="true"/>
+			<property name="objCoalResource">
+				find(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')},
+					spdata.objRegionData.objRegion.objResourceCapacities)
+			</property>
+		
+		<propertyDef name="objFoodResource" type="gs_tbg.ResourceCapacity" storesChildren="true"/>
+			<property name="objFoodResource">
+				find(?{capacity: capacity.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')},
+					spdata.objRegionData.objRegion.objResourceCapacities)
+			</property>
+			
+		<propertyDef name="objCoalProjects" type="gs_tbg.RegionProject" variable="true" >
+            filter(?{project: if(project.tmplRegionOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources'), 
+                    project.tmplRegionOutput.resolve().tmplResourceImprovement.resolve().tmplResource.resolve() ==  sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')   , 
+                    false)}, 
+                spdata.objRegionData.objRegion.objRegionProjects)
+        </propertyDef>        
+		<propertyDef name="objMetalProjects" type="gs_tbg.RegionProject" variable="true" >
+            filter(?{project: if(project.tmplRegionOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources'), 
+                    project.tmplRegionOutput.resolve().tmplResourceImprovement.resolve().tmplResource.resolve() ==  sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')   , 
+                    false)}, 
+                spdata.objRegionData.objRegion.objRegionProjects)
+        </propertyDef>        
+		<propertyDef name="objOilProjects" type="gs_tbg.RegionProject" variable="true" >
+            filter(?{project: if(project.tmplRegionOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources'), 
+                    project.tmplRegionOutput.resolve().tmplResourceImprovement.resolve().tmplResource.resolve() ==  sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')   , 
+                    false)}, 
+                spdata.objRegionData.objRegion.objRegionProjects)
+        </propertyDef>        
+		<propertyDef name="objFoodProjects" type="gs_tbg.RegionProject" variable="true" >
+            filter(?{project: project.tmplRegionOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food')}, 
+                spdata.objRegionData.objRegion.objRegionProjects)
+        </propertyDef>
+        
+		<propertyDef name="objCoalImprovements" type="gs_tbg.ResourceImprovement" variable="true" >
+            filter(?{improvement: 
+                    find(?{project: ( project.objParam != null ) AND ( project.objParam == improvement )}, self.objCoalProjects) == null
+                }, 
+                self.objCoalResource.objImprovements)
+        </propertyDef>        
+		<propertyDef name="objMetalImprovements" type="gs_tbg.ResourceImprovement" variable="true" >
+            filter(?{improvement: 
+                    find(?{project: ( project.objParam != null ) AND ( project.objParam == improvement )}, self.objMetalProjects) == null
+                }, 
+                self.objMetalsResource.objImprovements)
+        </propertyDef>        
+		<propertyDef name="objOilImprovements" type="gs_tbg.ResourceImprovement" variable="true" >
+             filter(?{improvement: 
+                    find(?{project: ( project.objParam != null ) AND ( project.objParam == improvement )}, self.objOilProjects) == null
+                }, 
+                self.objOilResource.objImprovements)
+        </propertyDef>        
+		<propertyDef name="objFoodImprovements" type="gs_tbg.ResourceImprovement" variable="true" >
+             filter(?{improvement: 
+                    find(?{project: ( project.objParam != null ) AND ( project.objParam == improvement )}, self.objFoodProjects) == null
+                }, 
+                self.objFoodResource.objImprovements)
+        </propertyDef>
+        
+        <propertyDef name="nFilledSlots" type="int">self.objCoalResource.nImprovementSlots - (self.objCoalImprovements.size + self.objCoalProjects.size)</propertyDef>        
+		<propertyDef name="objCoalElements" type="CMLOResourceRowData" variable="true" storesChildren="true" />
+		<object type="CMLOResourceRowData" name="objCoalElements" tiedTo="union(self.objCoalImprovements, self.objCoalProjects, range(0, self.nFilledSlots))"> 
+			<property name="objRegion" from="spdata.objRegionData.objRegion"/>	
+			<property name="tmplResource" from="def.objCoalResource.tmplResource" />
+			<property name="objResourceImprovement" from="if(tiedTo.instanceOf(gs_tbg.ResourceImprovement), tiedTo, null)" />		
+			<property name="objRegionProject" from="if(tiedTo.instanceOf(gs_tbg.RegionProject), tiedTo, null)" />		
+        </object>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objCoalList" existsWhile="self.objCoalElements.length GT 0">
+			<property name="nX" value="2"/>
+			<property name="nY" from="0"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nMaxEltsPerRow" value="9"/>
+			
+			<object type="UI2DResourceBuildingBubble" name="objElements" tiedTo="def.objCoalElements">
+				<property name="objResourceRowData" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="90"/>
+				<property name="nHeight" from="140"/>
+			</object>
+		</object>
+        
+				
+		<propertyDef name="objMetalsElements" type="CMLOResourceRowData" variable="true" storesChildren="true" />
+		<object type="CMLOResourceRowData" name="objMetalsElements" tiedTo="union(self.objMetalImprovements, self.objMetalProjects, range(self.objMetalImprovements.size + self.objMetalProjects.size, self.objMetalsResource.nImprovementSlots))"> 
+			<property name="objRegion" from="spdata.objRegionData.objRegion"/>	
+			<property name="tmplResource" from="def.objMetalsResource.tmplResource" />
+			<property name="objResourceImprovement" from="if(tiedTo.instanceOf(gs_tbg.ResourceImprovement), tiedTo, null)" />	
+			<property name="objRegionProject" from="if(tiedTo.instanceOf(gs_tbg.RegionProject), tiedTo, null)" />			
+        </object>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objMetalsList" existsWhile="self.objMetalsElements.length GT 0">
+			<property name="nX" value="2"/>
+			<property name="nY" from="def.dist([def.objCoalList])"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nMaxEltsPerRow" value="9"/>
+			
+			<object type="UI2DResourceBuildingBubble" name="objElements" tiedTo="def.objMetalsElements">
+				<property name="objResourceRowData" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="90"/>
+				<property name="nHeight" from="140"/>
+			</object>
+		</object>
+				
+		<propertyDef name="objOilElements" type="CMLOResourceRowData" variable="true" storesChildren="true" />
+		<object type="CMLOResourceRowData" name="objOilElements" tiedTo="union(self.objOilImprovements, self.objOilProjects, range(self.objOilImprovements.size + self.objOilProjects.size, self.objOilResource.nImprovementSlots))"> 
+			<property name="objRegion" from="spdata.objRegionData.objRegion"/>	
+			<property name="tmplResource" from="def.objOilResource.tmplResource" />
+			<property name="objResourceImprovement" from="if(tiedTo.instanceOf(gs_tbg.ResourceImprovement), tiedTo, null)" />
+			<property name="objRegionProject" from="if(tiedTo.instanceOf(gs_tbg.RegionProject), tiedTo, null)" />				
+        </object>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objOilList" existsWhile="self.objOilElements.length GT 0">
+			<property name="nX" value="2"/>
+			<property name="nY" from="def.dist([def.objCoalList, def.objMetalsList] )"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nMaxEltsPerRow" value="9"/>
+			
+			<object type="UI2DResourceBuildingBubble" name="objElements" tiedTo="def.objOilElements">
+				<property name="objResourceRowData" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="90"/>
+				<property name="nHeight" from="140"/>
+			</object>
+		</object>
+        
+		<propertyDef name="objFoodElements" type="CMLOResourceRowData" variable="true" storesChildren="true" />
+		<object type="CMLOResourceRowData" name="objFoodElements" tiedTo="union(self.objFoodImprovements, self.objFoodProjects, range(self.objFoodImprovements.size + self.objFoodProjects.size, self.objFoodResource.nImprovementSlots))"> 
+			<property name="objRegion" from="spdata.objRegionData.objRegion"/>	
+			<property name="tmplResource" from="def.objFoodResource.tmplResource" />
+			<property name="objResourceImprovement" from="if(tiedTo.instanceOf(gs_tbg.ResourceImprovement), tiedTo, null)" />
+			<property name="objRegionProject" from="if(tiedTo.instanceOf(gs_tbg.RegionProject), tiedTo, null)" />				
+        </object>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objFarmsList" existsWhile="self.objFoodElements.length GT 0">
+			<property name="nX" value="2"/>
+			<property name="nY" from="def.dist([def.objCoalList, def.objMetalsList, def.objOilList])"/>
+			<property name="nY" from="def.dist([def.objCoalList, def.objMetalsList, def.objOilList])"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nMaxEltsPerRow" value="9"/>
+			
+			<object type="UI2DResourceBuildingBubble" name="objElements" tiedTo="def.objFoodElements">
+				<property name="objResourceRowData" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="90"/>
+				<property name="nHeight" from="140"/>
+			</object>
+		</object>
+        
+		<script type="application/x-locust-query">			
+			dist = ?{objects:
+				sum(map(?{object: if(object != null, object.nHeight + 2, 0) },  objects))
+			}	
+		</script>
+		
+	</objectDef>
+	
+	<objectDef type="CMLOResourceRowData" class="CMLObject">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>	
+        
+		<propertyDef name="objResourceImprovement" type="gs_tbg.ResourceImprovement" />	
+        <propertyDef name="objRegionProject" type="gs_tbg.RegionProject" />
+        
+		<propertyDef name="objResourceImprovementTemplate" type="gs_tbg.ResourceImprovementTemplate"/>
+		<property name="objResourceImprovementTemplate" >
+            switch
+            {
+                case self.objResourceImprovement != null:
+                    self.objResourceImprovement.tmplResourceImprovement.resolve()
+                case self.objRegionProject != null:
+                    self.objRegionProject.tmplRegionOutput.resolve().tmplResourceImprovement.resolve()
+            }
+        </property>
+        
+	</objectDef>
+	
+	<objectDef type="UI2DResourceType" superType="mlui.UI2DElement">
+		<!-- inputs -->
+		<propertyDef name="strResource" type="String" />
+		<propertyDef name="strResourceOutput" type="String" />
+		<propertyDef name="tmplResourceImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		
+		<propertyDef name="objResourceModifiers" type="UI2DResourceModifiers" storesChildren="true" />
+		<propertyDef name="objFoodModifiers" type="UI2DFoodModifiers" storesChildren="true" />
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>		
+		<propertyDef name="objResources" type="gs_tbg.ResourceCapacity" storesChildren="true"/>
+		
+		<!-- internals -->
+		<propertyDef name="objElements" type="CMLOResourceRowData" variable="true" storesChildren="true" />
+		<object type="CMLOResourceRowData" name="objElements" tiedTo="self.objResources.objImprovements">
+			<property name="objRegion" from="def.objRegion"/>	
+			<property name="tmplResource" from="def.objResources.tmplResource" />
+			<property name="objResourceImprovement" from="tiedTo"/>	
+		</object>
+		
+		<object type="CMLOResourceRowData" name="objBuildImprovementSlot" existsWhile="self.objResources.nImprovementSlots GT self.objResources.objImprovements.length" >
+			<property name="objRegion" from="def.objRegion"/>	
+			<property name="tmplResource" from="def.objResources.tmplResource" />
+		</object>
+		
+		<propertyDef name="nImprovementSlots" type="int" >
+			self.objResources.nImprovementSlots
+		</propertyDef>
+		
+		<propertyDef name="bBuildMoreImprovementSlots" type="bool" >
+			(self.objElements.length != null AND self.objElements.length LT self.objResources.nImprovementSlots)
+		</propertyDef>
+		<!-- UI stuff -->	
+		<object type="mlui.UI2DImage" name="objPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="200"/>
+			<property name="nDepth" value="-100"/>
+		</object>					
+		<object type="mlui.UI2DImage" name="objResourceLargeImg">
+			<property name="tmplImage" from="def.tmplResourceImage"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="40"/>
+		</object>		
+		<object type="mlui.UI2DText" name="objOutputTextHeader">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown14Left"/>
+			<property name="strText" from="def.strResource + ' ' + locale.SID.UI.Output"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		<object type="mlui.UI2DText" name="objBaseProductionTextHeader" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText" >
+				if(def.objResources != null AND def.objResources.nProduced GT 0 , def.objResources.nProduced.formatNumber(0, true), '0')
+			</property>
+			<property name="nX" value="35"/>
+			<property name="nY" value="20"/>
+			<property name="nHeight" value="18"/>
+		</object>		
+		<object type="mlui.UI2DText" name="objOutputTextPerTurn" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="locale.SID.UI.PerTurn"/>
+			<property name="nX" from="def.objBaseProductionTextHeader.nWidth + 40"/>
+			<property name="nY" value="26"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="16"/>
+		</object>	
+		<propertyDef name="objRegionOutputTemplate" type="gs_tbg.RegionOutputTemplate" >
+			switch
+			{
+				case self.objResources.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil'):
+					sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'OilExploration')
+				case self.objResources.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal'):
+					sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'CoalExploration')
+				case self.objResources.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals'):
+					sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'MetalsExploration')					
+			}
+		</propertyDef>	
+		
+		
+		<object type="gs_tbg.AvailableRegionOutputsLookup" name="objAvailableRegionOutputsLookup">
+		    <property name="objGameRoot" from="mh2data.objAvatar"/>
+		    <property name="objRegion" from="spdata.objRegionData.objRegion"/>
+		</object>
+		
+		<propertyDef name="objOutput" type="gs_tbg.RegionOutputTemplate" >
+			find(
+				?{output: output == self.objRegionOutputTemplate}, self.objAvailableRegionOutputsLookup.objValidRegionOutputs
+			)
+		</propertyDef>
+		
+		<object type="mlui.UI2DButton" name="objBtnSurveyImprovement" existsWhile="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar) == mh2data.objNation">			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleRegionSurveyImprovement')"/>
+			<property name="bVisible" from="def.objOutput != null" />
+			<property name="nX" value="175"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" from="38"/>
+			<property name="nDefaultHeight" from="38"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActAddRegionProject.create({
+								"refRegion": def.objRegion,
+								"tmplRegionOutput": def.objOutput
+							});
+							mh2data.objAvatar.sendAction(action);
+							<!--spdata.objRegionData.showRegionInfrastructure(spdata.objRegionData.objRegion);-->
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>	
+		
+		<object type="mlui.UI2DText" name="objMaintenanceText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.Maintenance"/>
+			<property name="bVisible" from="def.objResources.nMaintenanceCost GT 0" />
+			<property name="nX" value="8"/>
+			<property name="nY" value="43"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>		
+		<object type="mlui.UI2DImage" name="objLeftPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" from="6"/>
+			<property name="nY" from="55"/>
+			<property name="nWidth" from="90"/>
+			<property name="nHeight" from="30"/>
+			<property name="nDepth" value="-100"/>
+			<property name="bVisible" from="def.objResources.nMaintenanceCost GT 0" />
+		</object>		
+		<object type="mlui.UI2DText" name="objTextMaintenance" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGreen12Left"/>
+			<property name="strText" from="'$' + def.objResources.nMaintenanceCost.formatNumber(0, true)"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="65"/>
+			<property name="nWidth" from="100"/>
+			<property name="nHeight" from="25"/>
+			<property name="bVisible" from="def.objResources.nMaintenanceCost GT 0" />
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="MaintenanceCostBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nMaintenanceCost" type="int"/>
+		<object type="mlui.UI2DText" name="objFoodMaintenanceCostsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.MaintenanceCosts"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objFoodMaintenanceCostsBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="116"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objFoodMaintenanceCostsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMaintenanceSm"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="13"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="26"/>
+		</object>	
+		
+		<object type="mlui.UI2DText" name="objMaintenanceCosts">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGreen12Left"/>
+			<property name="strText" from="'$' + def.nMaintenanceCost.formatNumber(0, true)"/>
+			<property name="nX" value="29"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+	</objectDef>
+		
+	<objectDef type="UI2DResourceBuildingBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objResourceRowData" type="CMLOResourceRowData"/>
+		<propertyDef name="nRow" type="int" />
+		
+		<object type="UI2DResourceBuildingBubbleDone" name="objResourceBuildingBubbleDone" existsWhile="self.objResourceRowData.objResourceImprovement != null" >
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="objResourceRowData" from="def.objResourceRowData"/>
+			<property name="nDepth" value="10" />
+		</object>
+		
+		<object type="UI2DResourceBuildingBubbleInProgress" name="objResourceBuildingBubbleInProgress" existsWhile="self.objResourceRowData.objRegionProject != null" >
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="objResourceRowData" from="def.objResourceRowData"/>
+			<property name="nDepth" value="10" />
+		</object>
+		
+		<object type="UI2DResourceBuildingBubbleMissing" name="objResourceBuildingBubbleMissing" existsWhile="self.objResourceBuildingBubbleDone == null AND self.objResourceBuildingBubbleInProgress == null " >
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="objResourceRowData" from="def.objResourceRowData"/>
+			<property name="nDepth" value="10" />
+		</object>
+		
+	</objectDef>
+	
+    <objectDef type="EventStartRegionProject" superType="mlevent.Event" >
+		<propertyDef name="objRegionOutputTemplate" type="gs_tbg.RegionOutputTemplate" />
+		<script type="application/javascript"><![CDATA[
+			function execute(event, owner)
+			{
+				var action = gs_tbg.GActAddRegionProject.create({
+					"refRegion": spdata.objRegionData.objRegion,
+					"tmplRegionOutput": def.objRegionOutputTemplate
+				});
+				mh2data.objAvatar.sendAction(action);
+			}
+		]]></script>
+    </objectDef>
+	
+    <objectDef type="EventUpgradeRegionProject" superType="mlevent.Event" >
+		<propertyDef name="objRegionOutputTemplate" type="gs_tbg.RegionOutputTemplate" />
+		<propertyDef name="objResourceImprovement" type="gs_tbg.ResourceImprovement" />	
+		<script type="application/javascript"><![CDATA[
+			function execute(event, owner)
+			{
+				var action = gs_tbg.GActAddRegionProject.create({
+					"refRegion": spdata.objRegionData.objRegion,
+					"tmplRegionOutput": self.objRegionOutputTemplate,
+                    "objParam": self.objResourceImprovement
+				});
+				mh2data.objAvatar.sendAction(action);
+			}
+		]]></script>
+    </objectDef>
+    
+    <objectDef type="UI2DResourceBuildingBubbleDone" superType="mlui.UI2DElement" >
+        <propertyDef name="objResourceRowData" type="CMLOResourceRowData"/>
+		<propertyDef name="nRow" type="int" />
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBuildingBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" from="80"/>
+			<property name="nHeight" from="79"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objBuildingIcon" existsWhile="self.objResourceRowData.objResourceImprovementTemplate != null" >
+			<property name="tmplImage">
+				mh2data.objResourceProducerDisplayTable.getEntry(def.objResourceRowData.objResourceImprovementTemplate).tmplImage
+			</property>	
+			<property name="nX" value="7"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+			<property name="strToolTip" from="def.objResourceRowData.objResourceImprovementTemplate.strDisplayName"/>
+		</object>
+		
+		<object type="UI2DBldgHealthBar" name="objHealth" existsWhile="self.objResourceRowData.objResourceImprovementTemplate != null" >
+			<property name="fPercent" from="float(float(def.objResourceRowData.objResourceImprovement.nHitPoints) / float(def.objResourceRowData.objResourceImprovementTemplate.nHitPoints))"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="115"/>
+			<property name="nHeight" value="4"/>
+			<property name="nWidth" value="80"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objResourceBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="86"/>
+			<property name="nWidth" from="80"/>
+			<property name="nHeight" from="25"/>
+		</object>
+		
+		<object type="UI2DResourceIcon" name="objResourceIcon">
+			<property name="tmplResource" from="def.objResourceRowData.tmplResource"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="83"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="30"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objResourcesOutputText" existsWhile="self.objResourceRowData.objResourceImprovementTemplate != null" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue20RightMiddle"/>
+			<property name="strText" from="def.objResourceRowData.objResourceImprovementTemplate.nAmount"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="88"/>
+			<property name="nWidth" from="def.nWidth-10"/>
+			<property name="nHeight" from="30"/>
+		</object>
+
+        <propertyDef name="objValidRegionOutputs" type="gs_tbg.RegionOutputTemplate" variable="true" >
+			filter(?{output: 
+					output.canQueue(mh2data.objAvatar, spdata.objRegionData.objRegion, self.objResourceRowData.objResourceImprovement)},
+				gs_tbg.getAllRegionOutputs(mh2data.objAvatar))
+		</propertyDef>
+        
+        
+		<object type="EventUpgradeRegionProject" name="EventUpgradeRegionProjects" tiedTo="def.objValidRegionOutputs">
+			<property name="objRegionOutputTemplate" from="tiedTo"/>
+			<property name="objResourceImprovement" from="def.objResourceRowData.objResourceImprovement"/>
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					var action = gs_tbg.GActAddRegionProject.create({
+						"refRegion": spdata.objRegionData.objRegion,
+						"tmplRegionOutput": self.objRegionOutputTemplate,
+                        "objParam" :  self.objResourceImprovement
+					});
+					mh2data.objAvatar.sendAction(action);					
+				}
+			]]></script>
+		</object>
+        
+		<!--<object type="mlui.UI2DButton" name="objResourceRepair" existsWhile="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar) == mh2data.objNation">			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonRepair')"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="120"/>
+			<property name="nDepth" value="3"/>
+			<property name="nDefaultWidth" from="19"/>
+			<property name="nDefaultHeight" from="19"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							log("TODO :: repair" );
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>-->	
+      
+		<object type="mlui.UI2DButton" name="objResourceUp" existsWhile="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar) == mh2data.objNation">			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonUpgrade')"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="120"/>
+			<property name="nDepth" value="3"/>
+			<property name="nDefaultWidth" from="19"/>
+			<property name="nDefaultHeight" from="19"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							log("" + def.objResourceRowData);
+							log("" + def.objValidRegionOutputs);
+                            
+                            menuX = def.nScreenX;
+							menuY = def.nScreenY + 120;
+							
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": 300,
+								"nDefaultItemHeight": 24
+							});
+							
+							var menuitem;
+							
+							for(var i = 0; i < def.EventUpgradeRegionProjects.length; i++)
+							{
+								log("" + def.EventUpgradeRegionProjects + " " + i);
+								log("" + def.EventUpgradeRegionProjects[i]);
+								menuitem = common_elements.MenuItem.create({
+									"strDisplayName": def.EventUpgradeRegionProjects[i].objRegionOutputTemplate.strDisplayName,
+									"objExecuteObject": def.EventUpgradeRegionProjects[i]
+								});
+								menudata.objItems.add(menuitem);							
+							}
+							
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>	
+		<object type="mlui.UI2DButton" name="objResourceCancel" existsWhile="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar) == mh2data.objNation">			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonDestroy')"/>
+			<property name="nX" value="45"/>
+			<property name="nY" value="120"/>
+			<property name="nDepth" value="3"/>
+			<property name="nDefaultWidth" from="19"/>
+			<property name="nDefaultHeight" from="19"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objResourceRowData.objRegion.canCommand(mh2data.objAvatar, mh2data.objNation))
+							{
+								var action = gs_tbg.GActDismantleResourceImprovement.create({
+									"refRegion": def.objResourceRowData.objRegion,
+									"objResourceImprovement": def.objResourceRowData.objResourceImprovement
+								});
+								mh2data.objAvatar.sendAction(action);		
+							}
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>			
+		<object type="mlui.UI2DButton" name="objResourceEncyc">			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonInfo')"/>
+			<property name="nX" value="65"/>
+			<property name="nY" value="120"/>
+			<property name="nDepth" value="3"/>
+			<property name="nDefaultWidth" from="19"/>
+			<property name="nDefaultHeight" from="19"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{				
+							encydata.objEncyclopediaData.showRegions();
+							var entry = def.getEncyEntry();
+							encydata.objEncyclopediaData.objSelected = entry.objEntry;
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+        
+		
+		<script type="application/x-locust-query">			
+			getEncyEntry = ?{:				
+				find(?{entry: entry.objEntry.instanceOf(gs_tbg.ResourceProducerOutputTemplate) AND entry.objEntry.tmplResourceImprovement.resolve()  == self.objResourceRowData.objResourceImprovementTemplate }, encydata.objEncyclopediaData.objEntries)
+			}					
+			getAvailRes = ?{resource:				
+				find(?{capacity: capacity.tmplResource == resource},
+					spdata.objRegionData.objRegion.objResourceCapacities)
+			}
+		</script>	
+    </objectDef>
+    
+    <objectDef type="UI2DResourceBuildingBubbleInProgress" superType="mlui.UI2DElement" >
+        <propertyDef name="objResourceRowData" type="CMLOResourceRowData"/>
+		<propertyDef name="nRow" type="int" />
+		<property name="strToolTip" from="locale.SID.UI.InRegionProductionQueue"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBuildingBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" from="80"/>
+			<property name="nHeight" from="79"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objBuildingIcon" existsWhile="self.objResourceRowData.objResourceImprovementTemplate != null" >
+			<property name="tmplImage">
+				mh2data.objResourceProducerDisplayTable.getEntry(def.objResourceRowData.objResourceImprovementTemplate).tmplImage
+			</property>	
+			<property name="nX" value="7"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+			<property name="strToolTip" from="def.objResourceRowData.objResourceImprovementTemplate.strDisplayName"/>
+		</object>
+        
+        <object type="UI2DBldgHealthBar" name="objHealth" >
+			<property name="fPercent" from="100"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="115"/>
+			<property name="nHeight" value="4"/>
+			<property name="nWidth" value="80"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objResourceBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="86"/>
+			<property name="nWidth" from="80"/>
+			<property name="nHeight" from="25"/>
+		</object>       
+        
+		<object type="mlui.UI2DText" name="objResourcesOutputText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="if(def.objResourceRowData.objRegionProject.objParam == null, locale.SID.UI.Building, locale.SID.UI.Upgrading )"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="88"/>
+			<property name="nWidth" from="def.nWidth-20"/>
+			<property name="nHeight" from="30"/>
+		</object>       
+        
+		<object type="mlui.UI2DButton" name="objResourceRepair" existsWhile="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar) == mh2data.objNation">			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonRepair')"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="120"/>
+			<property name="nDepth" value="3"/>
+			<property name="nDefaultWidth" from="19"/>
+			<property name="nDefaultHeight" from="19"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							log("should be greyed out" );
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>	
+		<object type="mlui.UI2DButton" name="objResourceUp" existsWhile="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar) == mh2data.objNation">			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonUpgrade')"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="120"/>
+			<property name="nDepth" value="3"/>
+			<property name="nDefaultWidth" from="19"/>
+			<property name="nDefaultHeight" from="19"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							log("should be greyed out" );
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>	
+		<object type="mlui.UI2DButton" name="objResourceCancel" existsWhile="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar) == mh2data.objNation">			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonDestroy')"/>
+			<property name="nX" value="45"/>
+			<property name="nY" value="120"/>
+			<property name="nDepth" value="3"/>
+			<property name="nDefaultWidth" from="19"/>
+			<property name="nDefaultHeight" from="19"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{							
+							log("should be greyed out" );
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>			
+		<object type="mlui.UI2DButton" name="objResourceEncyc">			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonInfo')"/>
+			<property name="nX" value="65"/>
+			<property name="nY" value="120"/>
+			<property name="nDepth" value="3"/>
+			<property name="nDefaultWidth" from="19"/>
+			<property name="nDefaultHeight" from="19"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{				
+							log("should be greyed out" + def );
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+        
+        <propertyDef name="fPercentDone" type="float" >
+            if( (self.objResourceRowData.objRegionProject.nTurns) == 0,
+                1,
+                1 - float(self.objResourceRowData.objRegionProject.nTurns) /  float(self.objResourceRowData.objRegionProject.tmplRegionOutput.resolve().nTurns)
+            )
+        </propertyDef>
+        
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="nDepth" value="5"/>
+			<property name="vaYAlign" value="BOTTOM"/>		
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				#FFFFFFCC
+			</property>	
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" >
+                float(def.nHeight) * def.fPercentDone
+            </property>
+			<property name="nWidth" from="def.nWidth"/>
+		</object>          
+        
+    </objectDef>
+	
+	
+	<objectDef type="UI2DResourceBuildingBubbleMissing" superType="mlui.UI2DElement" >
+	
+		<propertyDef name="objResourceRowData" type="CMLOResourceRowData"/>		
+		<object type="gs_tbg.AvailableRegionOutputsLookup" name="objAvailableRegionOutputsLookup">
+		    <property name="objGameRoot" from="mh2data.objAvatar"/>
+		    <property name="objRegion" from="spdata.objRegionData.objRegion"/>
+		</object>
+				
+		<propertyDef name="objOutput" type="gs_tbg.RegionOutputTemplate" variable="true" >
+			if(self.objResourceRowData.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food'),
+				filter(
+					?{output: output.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food')}, self.objAvailableRegionOutputsLookup.objValidRegionOutputs
+				)
+			,
+				filter(
+					?{output: output.instanceOf(gs_tbg.ResourceProducerOutputTemplate) AND output.tmplResourceImprovement.resolve().tmplResource == self.objResourceRowData.tmplResource}, self.objAvailableRegionOutputsLookup.objValidRegionOutputs
+				)
+			)
+		</propertyDef>
+				
+		<object type="EventStartRegionProject" name="EventStartRegionProjects" tiedTo="def.objOutput">
+			<property name="objRegionOutputTemplate" from="tiedTo"/>
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					var action = gs_tbg.GActAddRegionProject.create({
+						"refRegion": spdata.objRegionData.objRegion,
+						"tmplRegionOutput": self.objRegionOutputTemplate
+					});
+					mh2data.objAvatar.sendAction(action);					
+				}
+			]]></script>
+		</object>
+		
+		
+		<object type="mlui.UI2DImage" name="objBG2" >
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="100"/>
+		</object>	
+		<object type="mlui.UI2DImage" name="objBuildingBG2" >
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" from="80"/>
+			<property name="nHeight" from="79"/>
+			<property name="nDepth" value="101"/>
+		</object>	
+		<object type="mlui.UI2DText" name="objAvailableSlotText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold14CenterMiddle"/>
+			<property name="strText">
+				switch
+				{
+					case def.objResourceRowData.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals'):
+						locale.SID.UI.AvailableMetalSlot
+					case def.objResourceRowData.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal'):
+						locale.SID.UI.AvailableCoalSlot
+					case def.objResourceRowData.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil'):
+						locale.SID.UI.AvailableOilSlot
+					case def.objResourceRowData.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food'):
+						locale.SID.UI.AvailableFarmSlot
+				}
+			</property>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" from="80"/>
+			<property name="nHeight" from="79"/>
+			<property name="nDepth" value="102"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objAvaiableSlotButton" existsWhile="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar) == mh2data.objNation" >
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleHighlight')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="def.nWidth"/>
+			<property name="nDefaultHeight" from="def.nHeight"/>
+			<property name="nDepth" value="103"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							
+							menuX = def.nScreenX;
+							menuY = def.nScreenY;
+							
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": 200,
+								"nDefaultItemHeight": 24
+							});
+							
+							var menuitem;
+							
+							for(var i = 0; i < def.EventStartRegionProjects.length; i++)
+							{
+								log("" + def.EventStartRegionProjects + " " + i);
+								log("" + def.EventStartRegionProjects[i]);
+								menuitem = common_elements.MenuItem.create({
+									"strDisplayName": def.EventStartRegionProjects[i].objRegionOutputTemplate.strDisplayName,
+									"objExecuteObject": def.EventStartRegionProjects[i]
+								});
+								menudata.objItems.add(menuitem);							
+							}
+							
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>		
+	
+	</objectDef>
+	
+	<objectDef type="UI2DResourceModifiers" superType="mlui.UI2DElement">
+		<propertyDef name="nSupplyMod" type="int" />
+		
+		<property name="nX" value="100" />
+		<property name="nY" value="43"/>
+		<property name="nHeight" value="42" />
+		<property name="nWidth" value="100" />
+		
+		<object type="mlui.UI2DText" name="objModifiersText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.OutputModifiers"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" from="10"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objLeftPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" from="0"/>
+			<property name="nY" from="12"/>
+			<property name="nWidth" from="75"/>
+			<property name="nHeight" from="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSupplyIcon" >
+			<property name="tmplImage" value="skin.ImgInfoIconSupplySm"/>
+			<property name="nX" from="5"/>
+			<property name="nY" value="9" />
+			<property name="nWidth" from="18"/>
+			<property name="nHeight" from="30"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>		
+			
+		<object type="mlui.UI2DText" name="objSupplyMod" >
+			<property name="strText" from="def.nSupplyMod.formatNumber(0, true) + '%'"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftCenterFIT"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="14" />
+			<property name="nHeight" from="30"/>
+			<property name="strToolTip" from="locale.SID.UI.RegionResupplyPenalty"/>
+		</object>
+	</objectDef>
+  		
+	<objectDef type="UI2DFoodModifiers" superType="mlui.UI2DElement">
+		<propertyDef name="tmplModifierImageA" type="TemplateRef" restriction="mlmedia.ImageTemplate" />
+		<propertyDef name="nModifierPercentA" type="int" />
+		<propertyDef name="tmplModifierImageB" type="TemplateRef" restriction="mlmedia.ImageTemplate" />
+		<propertyDef name="nModifierPercentB" type="int" />	
+		<propertyDef name="nModifierText" type="String" />
+	
+		<property name="nX" value="100" />
+		<property name="nY" value="43"/>
+		<property name="nHeight" value="42" />
+		<property name="nWidth" value="113" />
+			
+		<object type="mlui.UI2DText" name="objModifiersText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.OutputModifiers"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="10"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objLeftPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" from="0"/>
+			<property name="nY" from="12"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>		
+				
+		<object type="mlui.UI2DImage" name="objTerrainIcon" >
+			<property name="tmplImage" from="def.tmplModifierImageA"/>
+			<property name="nY" value="6" />
+			<property name="nX" value="5"/>
+			<property name="nWidth" from="18"/>
+			<property name="nHeight" from="30"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>		
+			
+		<object type="mlui.UI2DText" name="objTerrainMod"  >
+			<property name="strText" from="def.nModifierPercentA.formatNumber(0, true) + '%'"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftCenterFIT"/>
+			<property name="nX" value="29"/>
+			<property name="nY" value="13" />
+			<property name="nHeight" from="30"/>
+			<property name="strToolTip" from="locale.SID.UI.TerrainPenalty"/>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objSupplyIcon" >
+			<property name="tmplImage" from="def.tmplModifierImageB"/>
+			<property name="nX" from="def.objTerrainMod.nX + def.objTerrainMod.nWidth + 4"/>
+			<property name="nY" value="9" />
+			<property name="nWidth" from="18"/>
+			<property name="nHeight" from="30"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>		
+			
+		<object type="mlui.UI2DText" name="objSupplyMod" >
+			<property name="strText" from="def.nModifierPercentB.formatNumber(0, true) + '%'"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftCenterFIT"/>
+			<property name="nX" from="def.objSupplyIcon.nX + def.objSupplyIcon.nWidth + 2"/>
+			<property name="nY" value="14" />
+			<property name="nHeight" from="30"/>
+			<property name="strToolTip" from="locale.SID.UI.RegionResupplyPenalty"/>
+		</object>		
+			
+		<object type="mlui.UI2DText" name="objModText" >
+			<property name="strText" from="def.nModifierText"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12LeftCenterFIT"/>
+			<property name="nX" from="def.objSupplyMod.nX + def.objSupplyMod.nWidth + 2"/>
+			<property name="nY" value="14" />
+			<property name="nHeight" from="30"/>
+		</object>					
+		
+	</objectDef>
+		
+	<objectDef type="UI2DBldgHealthBarVert" superType="mlui.UI2DElement">
+		<propertyDef name="fPercent" type="float"/>
+		<property name="nWidth" value="58"/>
+		<property name="nHeight" value="7"/>
+		
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				#BEBE64FF
+			</property>	
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nWidth" from="def.nWidth"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				if(def.fPercent LTE 0.3, #CC0000FF,
+					if(def.fPercent LTE 0.7, #EDEF1DFF, #578426FF))
+			</property>	
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nHeight" from="(def.nHeight-4) * def.fPercent"/>
+			<property name="nWidth" from="def.nWidth - 4"/>
+			<property name="strToolTip" from="(def.fPercent * 100).formatNumber(0, true) + '%'"/>
+		</object>
+		
+	</objectDef>
+	
+	
+</locust>

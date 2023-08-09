@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- for water effect -->
+	<template type="mlmedia.TextureTemplateFromFile" name="TextureWater">
+		<property name="fileSource" value="art/Water.dds"/>
+	</template>
+
+    <!-- tmplBlendTexture1 red -->
+	<template type="mlmedia.TextureTemplateFromFile" name="MountainTerrain">
+		<property name="bAutoGenMipMapLevels" value="true"/>
+		<property name="fileSource" value="art/Mountain.dds"/>
+	</template>
+    
+    <!-- tmplBlendTexture1 green -->
+	<!--<template type="mlmedia.TextureTemplateFromFile" name="GrassTerrain">
+		<property name="bAutoGenMipMapLevels" value="true"/>
+		<property name="fileSource" value="art/Grass.png"/>
+	</template>-->
+    
+    <!-- tmplBlendTexture1 blue -->
+	<!--<template type="mlmedia.TextureTemplateFromFile" name="IceTerrain">
+		<property name="bAutoGenMipMapLevels" value="true"/>
+		<property name="fileSource" value="art/Ice.png"/>
+	</template>-->
+    
+    <!-- tmplBlendTexture2 red -->
+	<!--<template type="mlmedia.TextureTemplateFromFile" name="SandTerrain">
+		<property name="bAutoGenMipMapLevels" value="true"/>
+		<property name="fileSource" value="art/Sand.png"/>
+	</template>-->
+
+    <!-- tmplBlendTexture2 green -->
+	<!--<template type="mlmedia.TextureTemplateFromFile" name="DirtTerrain">
+		<property name="bAutoGenMipMapLevels" value="true"/>
+		<property name="fileSource" value="art/Dirt.png"/>
+	</template>-->
+    
+    <!-- tmplBlendTexture2 blue -->
+	<!--<template type="mlmedia.TextureTemplateFromFile" name="HillTerrain">
+		<property name="bAutoGenMipMapLevels" value="true"/>
+		<property name="fileSource" value="art/Hill.png"/>
+	</template>-->
+    
+	<template type="mlmedia.TextureTemplateFromFile" name="DetailChannels">
+		<property name="bAutoGenMipMapLevels" value="true"/>
+		<property name="fileSource" value="art/DetailChannels.png"/>
+	</template>
+
+	<template type="mlmedia.TextureTemplateFromFile" name="BorderAlpha">
+		<property name="fileSource" value="art/borderAlpha.png"/>
+	</template>
+	<template type="mlmedia.TextureTemplateFromFile" name="OwnerBorderAlpha">
+		<property name="fileSource" value="art/ownerBorderAlpha.png"/>
+	</template>
+
+	
+	<!-- ***************** samplers ***************** -->
+
+	<object type="mlmedia.SamplerFromTexture" name="SamplerWater">
+		<property name="tmplTexture" value="TextureWater"/>
+		<property name="eWrapS" value="WRAP_TILE"/>
+		<property name="eWrapT" value="WRAP_TILE"/>
+		<property name="eMinFilter" value="FILTER_LINEAR"/>
+		<property name="eMagFilter" value="FILTER_LINEAR"/>
+		<property name="eMipFilter" value="FILTER_LINEAR"/>
+		<property name="colBorderColor" value="#00FF00FF"/>
+	</object>
+
+</locust>

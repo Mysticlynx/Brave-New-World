@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="MapSamplerFromUI" class="CMLOMapSamplerFromUI" superType="mlui.SamplerFromUI">
+	    <propertyDef name="objTerrain" type="mlui.UI3DLayer"/>
+		<propertyDef name="frstCamera" type="Frustum"/>
+		<propertyDef name="fSeaLevel" type="float"/>
+    	<!-- builtin methods:
+    	    translatePickCoords  (to override expected property in base class)
+    	-->
+	</objectDef>
+    
+</locust>

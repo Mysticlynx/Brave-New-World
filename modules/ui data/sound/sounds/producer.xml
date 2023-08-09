@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<template type="mlmedia.SoundTemplate" name="Producer Coal">
+		<property name="fileSource" value="producer/producer_coal.ogg"/>
+	</template>
+
+	<template type="mlmedia.SoundTemplate" name="Producer Metals">
+		<property name="fileSource" value="producer/producer_metals.ogg"/>
+	</template>
+
+	<template type="mlmedia.SoundTemplate" name="Producer Oil">
+		<property name="fileSource" value="producer/producer_oil.ogg"/>
+	</template>
+</locust>

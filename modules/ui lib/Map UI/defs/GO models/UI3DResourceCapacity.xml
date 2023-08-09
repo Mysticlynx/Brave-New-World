@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="UI3DRegionResources" superType="mlui.UI3DElement">
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="objResourcesWithModels" type="gs_tbg.ResourceCapacity" variable="true">
+			filter(?{resource: resource.tmplResource.resolve().strName != 'Food'}, self.objRegion.objResourceCapacities)
+		</propertyDef>
+
+        <!-- Internal -->
+		<object type="UI3DResourceCapacity" name="objResources" tiedTo="self.objResourcesWithModels">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objRegion" from="def.objRegion"/>
+            <property name="objResourceCapacity" from="tiedTo"/>
+		</object>
+    </objectDef>
+
+	<objectDef type="UI3DResourceCapacity" superType="UI3DMapModelWithAnimationGO">
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+        <propertyDef name="objResourceCapacity" type="gs_tbg.ResourceCapacity"/>
+		
+        <!-- Internal -->
+		<propertyDef name="strToolTip" from="UI2DToolTipResourceCapacity"/>
+		<propertyDef name="objMapModel" type="MapModelTemplate">
+            self.objMapData.objResourceCapacityModelTable.getMapModelForResourceCapacity(self.objResourceCapacity)
+        </propertyDef>
+		<propertyDef name="objNonFoodRegionResources" type="gs_tbg.ResourceCapacity" variable="true">
+			filter(?{resource: resource.tmplResource.resolve().strName != 'Food'}, self.objRegion.objResourceCapacities)
+		</propertyDef>
+		<propertyDef name="nIndex" type="int" from="self.objNonFoodRegionResources.indexOf(self.objResourceCapacity)"/>
+		<propertyDef name="vecOffset" type="Vec3D">
+			switch{
+				case self.objNonFoodRegionResources.indexOf(self.objResourceCapacity) == 0:
+					'[0, 0, 0]'
+				case self.objNonFoodRegionResources.indexOf(self.objResourceCapacity) == 1:
+					'[-.3, -.4, 0]'
+				case self.objNonFoodRegionResources.indexOf(self.objResourceCapacity) == 2:
+					'[.3, -.35, 0]'
+				default:
+					'[0, 0, 0]'
+			}
+		</propertyDef>
+
+		<!-- UI3DModelWithAnimationGO properties -->
+        <property name="objGO" from="self.objResourceCapacity"/>
+		<property name="tmplModel" from="self.objMapModel.tmplModel"/>
+        <property name="tmplAnimation" from="self.objMapModel.tmplAnimation"/>
+
+        <!-- Effect -->
+		<object type="mlui.UIDataEffect" name="objEffect">
+			<property name="tmplEffect" value="SkinnedEffect"/>
+            switch { case mh2data.bShadows:
+            <property name="tmplSurfaceEffects" value="SkinnedShadowEffect"/>
+            }
+        </object>
+
+        <!-- param for direction of shadow in model space so it can be rotated when the model gets rotated -->
+        <object type="mlui.UIDataFXParamSet" name="objParamSet">
+            <object type="ml3dworld.FXParamVec3" name="objParams">
+                <property name="strName" value="vecModelShadow"/>
+                <property name="vecValue">
+                    let a = 135.0 * float.pi / 180.0 
+                    { Vec3D(cos(a),sin(a),0) }
+                </property>
+            </object>
+        </object>        
+
+        <!-- UI3DMapModel properties -->
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+        <!-- Transform -->
+		<property name="vecPosition" from="Vec3D(self.objRegion.vecPositions[0].x + self.vecOffset.x, self.objRegion.vecPositions[0].y + self.vecOffset.y, self.objRegion.vecPositions[0].z + self.vecOffset.z)"/>
+		<!--<property name="fScale" from="self.objMapModel.objTransform.fScale" />-->
+		<object type="ml3dworld.TransformList" name="objLocalTransforms">
+			<property name="objTransforms" from="def.objMapModel.objTransform"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DToolTipResourceCapacity" superType="mlui.UI2DToolTip">
+		<propertyDef name="nHorizPadding" type="int" default="14"/>
+		<propertyDef name="nVertPadding" type="int" default="4"/>
+
+		<property name="nWidth">
+			sortDescending(?{text: text.nWidth}, self.objText).first.nWidth + self.nHorizPadding
+		</property>
+		<property name="nHeight">
+			if(self.objElement.objRegion.refController.resolve(self.objElement.objGameRoot) != self.objElement.objMapData.objNation,
+				self.objCapacities.size * 16,
+					(self.objCapacities.size * 16) + 16
+			)
+		</property>
+		<property name="nOffsetX" value="32"/>
+		<property name="nOffsetY" value="32"/>
+
+		<object type="mlui.UI2DImage" name="objBorder">
+			<property name="tmplImage" value="default_media.ImgToolTipBorder"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="0"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="default_media.ImgToolTipBackground"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth"  from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nDepth" value="1"/>
+		</object>
+		<propertyDef name="objCapacities" type="gs_tbg.ResourceCapacity" variable="true">
+			filter(?{capacity: capacity.nImprovementSlots GT 0}, self.objElement.objRegion.objResourceCapacities)
+        </propertyDef>
+		<object type="mlui.UI2DText" name="objText" tiedTo="self.objCapacities">
+			<property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+			<property name="strText">
+				if(tiedTo.nBaseProduction GT 0,
+					locale.FSID.UI.ResourceProducerTooltip.format(
+						'Resource', tiedTo.tmplResource.resolve().strDisplayName,
+						'Producing', tiedTo.nBaseProduction,
+						'Reserves',	(tiedTo.nImprovementSlots - tiedTo.objImprovements.size)
+						),
+					locale.FSID.UI.ResourceReserveTooltip.format(
+						'Resource', tiedTo.tmplResource.resolve().strDisplayName,
+						'Reserves',	tiedTo.nImprovementSlots
+						)
+				)
+			</property>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY">
+				def.objCapacities.indexOf(tiedTo) * 16
+			</property>
+			<property name="nWidth" value="256"/>
+			<property name="nHeight" value="16"/>
+			<property name="nDepth" value="2"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objText2"
+				existsWhile="self.objElement.objRegion.refController.resolve(self.objElement.objGameRoot) == self.objElement.objMapData.objNation">
+			<property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+			<property name="strText">
+				locale.SID.UI.Maintenance + ': $' + sum(map(?{capacity: capacity.nMaintenanceCost}, def.objCapacities)).formatNumber(0, true)
+			</property>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY">
+				(def.objCapacities.size * 16)
+			</property>
+			<property name="nWidth" value="256"/>
+			<property name="nHeight" value="16"/>
+			<property name="nDepth" value="2"/>
+		</object>
+	</objectDef>
+</locust>

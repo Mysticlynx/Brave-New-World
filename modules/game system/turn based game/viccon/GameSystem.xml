@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysVictoryCondition" class="CMLOGameSysVictoryCondition" superType="mlgame.GameSystem">
+        <propertyDef name="objVictoryConditions" type="VictoryCondition" variable="true" storesChildren="true"/>
+        <propertyDef name="eScoringMode" type="Enum" restriction="ScoringMode" default="IDEOLOGY"/>
+        <propertyDef name="bUseNationSpecificVCs" type="bool" default="false"/>
+        <propertyDef name="objTeamRanks" type="TeamRank" variable="true" storesChildren="true"/>
+        
+        <script type="application/javascript"><![CDATA[
+            function getScoringModeDisplayName(eScoringMode)
+            {
+                return locale.SID.UI.ScoringMode[eScoringMode.name];
+            }
+        ]]></script>
+        
+	    <script type="application/x-locust-query">
+		    getNationTeamID = ?{gameroot,nation:
+		        switch {
+		            case self.eScoringMode == ScoringMode.IDEOLOGY:
+		                nation.tmplIdeology.resolve()
+		                
+		            case self.eScoringMode == ScoringMode.ALLIANCE:
+		                let alliance = getNationAlliance(gameroot,nation) { if(alliance!=null,alliance,nation) } 
+		                
+		            default:
+		                nation
+		        }
+		    }
+	    </script>
+        
+	</objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysVictoryCondition = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysVictoryCondition)
+		}
+	</script>
+</locust>

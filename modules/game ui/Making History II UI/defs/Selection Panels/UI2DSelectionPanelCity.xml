@@ -1,0 +1,1252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="CitySelectionData" class="CMLObject">
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+		
+		<propertyDef name="nMoney" type="int">
+			if(self.objCurrentWorkOrder.tmplFactoryOutput.resolve().instanceOf(gs_tbg.FactoryOutputMoneyTemplate),
+				self.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount * self.objCity.nIPUs,
+				0
+			)
+		</propertyDef>
+		
+		<propertyDef name="eExpand" type="Enum" restriction="CitySection"/>
+		<propertyDef name="eTab" type="Enum" restriction="CitySection"/>
+		
+		<propertyDef name="objCapitalCity" type="gs_tbg.City">
+			self.objController.getGOExtension(gs_tbg.CapitalCityNation, mh2data.objAvatar).refCapitalCity.resolve(mh2data.objAvatar)
+		</propertyDef>
+		<propertyDef name="objOwner" type="gs_tbg.Nation">
+			self.objCity.refRegion.resolve(mh2data.objAvatar).refOwner.resolve(mh2data.objAvatar)
+		</propertyDef>
+		<propertyDef name="objController" type="gs_tbg.Nation">
+			self.objCity.objController
+		</propertyDef>
+		<propertyDef name="objCurrentWorkOrder" type="gs_tbg.WorkOrder">
+			find(?{order: order.nPriority == 1}, self.objCity.objWorkOrders)
+		</propertyDef>
+		
+		<propertyDef name="tmplDefaultWorkOrder" type="TemplateRef" restriction="gs_tbg.FactoryOutputTemplate">
+			gs_tbg.getGameSysCity(mh2data.objAvatar).tmplDefaultBuild
+		</propertyDef>
+		<propertyDef name="tmplProductionTabCategory" type="TemplateRef" restriction="gs_tbg.FactoryOutputCategoryTemplate"/>
+		<propertyDef name="nOrderTurnsBase" type="int">
+			if(
+				self.objCity.nIPUs != 0,
+				(self.objCurrentWorkOrder.tmplFactoryOutput.resolve().nIPUs - self.objCurrentWorkOrder.nIPUs) / self.objCity.nIPUs,
+				0
+			)
+		</propertyDef>		
+		<propertyDef name="nOrderTurns" type="int">
+			if(
+				(self.objCurrentWorkOrder.tmplFactoryOutput.resolve().nIPUs - self.objCurrentWorkOrder.nIPUs)
+				% self.objCity.nIPUs != 0,
+				self.nOrderTurnsBase + 1,
+				self.nOrderTurnsBase
+			)
+		</propertyDef>
+
+		<propertyDef name="nOrderPercent" type="int">
+			if(
+				self.objCurrentWorkOrder.tmplFactoryOutput.resolve().nIPUs != 0,
+				self.objCurrentWorkOrder.nIPUs * 100 / self.objCurrentWorkOrder.tmplFactoryOutput.resolve().nIPUs,
+				0
+			)
+		</propertyDef>
+		
+		<propertyDef name="objResearchProject" type="gs_tbg.ResearchProject">
+			self.objCity.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject.resolve(mh2data.objAvatar)
+		</propertyDef>
+		
+		<propertyDef name="nProjectPercent" type="int">
+			if(
+				self.objResearchProject.tmplResearchTopic.resolve().nPointsRequired != 0,
+				self.objResearchProject.nPoints * 100 / self.objResearchProject.tmplResearchTopic.resolve().nPointsRequired,
+				0
+			)
+		</propertyDef>
+		
+		<propertyDef name="objCompletedResearchProjects" type="gs_tbg.ResearchProject" variable="true">
+		    gs_tbg.getNationCompletedResearchProjects(mh2data.objAvatar,self.objController)
+		</propertyDef>
+		
+		<propertyDef name="bResearchCenter" type="bool" >
+			self.objCity.nRPUs GT 0
+		</propertyDef>   
+		
+		<propertyDef name="fResearchTurnsDenominator" type="float" >			
+		if(self.bResearchCenter,
+			if(self.objResearchProject != null,
+				sum(						
+					map(
+						?{city:
+							if(self.objResearchProject == city.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject.resolve(mh2data.objAvatar),
+								city.nRPUs ,
+								0
+							)
+						},
+						filter(?{city: city.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject != null }, gs_tbg.getNationCities(mh2data.objAvatar, self.objController) )
+					)
+				)
+				,
+				1
+			)
+			, 
+			1
+		)
+		</propertyDef>	
+		
+		<propertyDef name="fResearchTurnsNumerator" type="float" >
+			if(self.bResearchCenter,
+				if(self.objResearchProject != null,
+					(self.objResearchProject.tmplResearchTopic.resolve().nPointsRequired - self.objResearchProject.nPoints)
+				,
+				1
+				)
+			, 
+			1
+			)
+		</propertyDef>		
+		
+		<propertyDef name="nResearchTurns" type="int">
+			if(self.bResearchCenter,
+				if(self.objResearchProject != null,
+					(self.fResearchTurnsNumerator / self.fResearchTurnsDenominator + 0.99)
+				,
+				0
+				)
+			,
+			0
+			)
+		</propertyDef>
+		
+	</objectDef>
+		
+	<enumDef name="CitySection">
+        <value name="NONE"/>
+        <value name="PORT"/>
+		<value name="RESEARCH"/>
+		<value name="RESEARCH_LIST"/>
+		<value name="RESEARCH_TREE"/>
+		<value name="PRODUCTION"/>
+		<value name="PRODUCTION_LIST"/>
+		<value name="INFRASTRUCTURE"/>
+		<value name="REGIONSTATS"/>
+		<value name="REGIONASSETS"/>
+    </enumDef>
+    
+	
+	<objectDef type="UI2DSelectionPanelCity" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<property name="nHeight" from="self.objPanel.nHeight"/>
+		<property name="nWidth" from="self.objPanel.nWidth"/>
+		
+		<object type="UI2DPanelCity" name="objPanel">
+			<property name="objData" from="spdata.objCityData"/>
+			<property name="vaYAlign" value="TOP"/>
+			<property name="nDepth" value="110"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DPanelCity" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<propertyDef name="objData" type="CitySelectionData"/>
+		
+		<propertyDef name="objUnitGroupsInPort" type="gs_tbg.UnitGroup" variable="true" />
+		<property name="objUnitGroupsInPort">
+		    gs_tbg.getGroupsAtLocation(mh2data.objAvatar,self.objData.objCity)
+		</property>
+
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="351"/>
+		<property name="nHeight" from="213 + self.objPort.nHeight"/>
+		<property name="haXAlign" value="LEFT"/>
+		<property name="vaYAlign" value="BOTTOM"/>
+		
+	<!-- Header and Background -->
+		<!-- Header and Background -->
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="34"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>	
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconCity"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="65"/>
+			<property name="nHeight" value="55"/>
+			<property name="haXAlign" value="LEFT"/>
+		</object>
+
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objData.objOwner"/>
+
+			<property name="nX" value="22"/>
+			<property name="nY" value="33"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>			
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="26"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelBG">
+			<property name="tmplImage" value="skin.ImgDetailPanel"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="91"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="95"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelBGTop">
+			<property name="tmplImage" value="skin.ImgPanelTopBG"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="57"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="32"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBottomBG">
+			<property name="tmplImage" value="skin.ImgOlive"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+<!-- Foreground -->
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="86"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<!--<object type="mlui.UI2DImage" name="objPanelHL">-->
+		<!--	<property name="tmplImage" value="skin.ImgPanelHL"/>-->
+		<!--	<property name="nX" value="0"/>-->
+		<!--	<property name="nY" value="304"/>-->
+		<!--	<property name="nWidth" value="351"/>-->
+		<!--	<property name="nHeight" value="8"/>-->
+		<!--	<property name="haXAlign" value="LEFT"/>-->
+		<!--	<property name="vaYAlign" value="BOTTOM"/>-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--</object>-->
+
+	<!-- Content -->
+
+		<propertyDef name="objCityPanel" storesChildren="true">
+			switch{
+				case spdata.objCityData.eExpand == CitySection.NONE:
+					<object type="UI2DCityPanel">
+						<property name="objData" from="def.objData"/>
+						<property name="nX" value="3"/>
+						<property name="nY" value="58"/>
+						<property name="nWidth" value="345"/>
+						<property name="nHeight" value="124"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				case spdata.objCityData.eExpand == CitySection.PORT:
+					<object type="UI2DCityPanelPort">
+						<property name="objData" from="def.objData"/>
+            <!--<property name="strText">
+                  gs_tbg.getUnitsAtLocation(mh2data.objAvatar, def.objData.objCity).size
+            </property>-->
+						<property name="objUnitGroupsInPort" from="def.objUnitGroupsInPort"/>
+						<property name="nX" value="3"/>
+						<property name="nY" value="58"/>
+						<property name="nWidth" value="345"/>
+						<property name="nHeight" value="124"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				default:
+					<object type="mlui.UI2DElement">
+					</object>
+			}
+		</propertyDef>
+
+		<propertyDef name="objPort" storesChildren="true">
+			switch{
+				case spdata.objCityData.eExpand == CitySection.PORT:
+					<object type="UI2DCityPopupTabPort">
+						<property name="nY" value="28"/>
+						<property name="haXAlign" value="LEFT"/>
+						<property name="vaYAlign" value="BOTTOM"/>
+						<property name="nDepth" value="100"/>
+					</object>
+				default:
+					<object type="mlui.UI2DElement">
+					</object>
+			}
+		</propertyDef>
+
+		
+
+	<!-- Shared City ID -->
+		<object type="UI2DNationIcon" name="objCityControllerIcon">
+			<property name="objNation" from="def.objData.objController"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+
+		<object type="mlui.UI2DImage" name="objIDIconOccupation" existsWhile="self.objData.objController != self.objData.objOwner">
+			<property name="tmplImage" value="skin.ImgIDIconOccupation"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="UI2DCityName" name="objCityName">
+		    <property name="objCity" from="def.objData.objCity"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="tmplTextStyleEdit" value="locale.TxtStyleArialWhite14Left"/>
+		    <property name="tmplButtonStyleAccept" value="skin.BtnStyleRegionRename"/>
+		    <property name="tmplButtonStyleCancel" value="skin.BtnStyleRegionRenameCancel"/>		
+			<property name="nX" value="35"/>
+			<property name="nY" value="61"/>
+			<property name="nWidth" value="210"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objController">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" from="def.objData.objController.strDisplayName"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="75"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="common_ui.UI2DListHorz" name="objInfoBubbles">
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nSpacing" value="3"/>
+			
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgIDIconCapital"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="bVisible" from="def.objData.objCity == def.objData.objCapitalCity"/>
+				<property name="strToolTip" from="locale.SID.UI.Capital"/>
+			</object>
+			
+			<object type="UI2DCitySelectionPortAccess" name="objElements">
+                <property name="nUnits" from="def.objUnitGroupsInPort.size" />
+				<property name="bVisible" from="def.objData.objCity.refSeaRegion != null"/>
+                <property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+                <property name="strToolTip" >
+                    if(def.objData.objController == mh2data.objNation,
+                        if(self.nUnits GT 0,
+                            locale.SID.UI.UnitsInPort,
+                            locale.SID.UI.PortAccess
+                        ),
+                        locale.SID.UI.NoPortAccess
+                    )
+                </property>
+                
+                <object type="mlui.UI2DButton" name="objOpenPortButton" existsWhile="def.objData.objController == mh2data.objNation">
+                    <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+                    <property name="nX" value="0"/>
+                    <property name="nY" value="0"/>
+                    <property name="nDepth" value="2"/>
+                    <property name="nDefaultWidth" value="28"/>
+                    <property name="nDefaultHeight" value="28"/>
+                    <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                        <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                            <property name="otEventType" value="mlui.EventButtonClicked"/>
+                            <script type="application/javascript"><![CDATA[
+                                function handle(event, owner)
+                                {
+                                    if(spdata.objCityData.eExpand.equals(CitySection.NONE)){
+                                        spdata.objCityData.showCityPort(spdata.objCityData.objCity);
+                                    }
+                                    else{
+                                        spdata.objCityData.showMinInfo(spdata.objCityData.objCity);
+                                    };
+                                }
+                            ]]></script>
+                        </object>
+                    </object>
+                </object>                
+			</object>
+			
+			<object type="UI2DSOMaximizeButton" name="objElements">
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								spdata.objCityData.showMaxInfo(def.objData.objCity);
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+		</object>
+
+<!--		<object type="common_ui.UI2DListHorz" name="objCityIcons">-->
+<!--			<property name="nX" value="6"/>-->
+<!--			<property name="nY" value="59"/>-->
+<!--			<property name="haXAlign" value="RIGHT"/>-->
+<!--			<property name="nSpacing" value="2"/>-->
+<!--		-->
+<!--			<object type="mlui.UI2DImage" name="objElements" existsWhile="def.objData.objCity == def.objData.objCapitalCity">-->
+<!--				<property name="tmplImage" value="skin.ImgIDIconCapital"/>-->
+<!--				<property name="nX" value="0"/>-->
+<!--				<property name="nY" value="0"/>-->
+<!--				<property name="nWidth" value="28"/>-->
+<!--				<property name="nHeight" value="28"/>-->
+<!--				<property name="strToolTip" from="locale.SID.UI.Capital"/>-->
+<!--			</object>-->
+<!---->
+<!--			<object type="mlui.UI2DImage" name="objElements" existsWhile="def.objData.objCity.refSeaRegion != null">-->
+<!--				<property name="tmplImage">-->
+<!--					if(def.objUnitGroupsInPort.size GT 0, skin.getTemplateRef(mlmedia.ImageTemplate,'ImgIDIconPortAccessLit'), skin.getTemplateRef(mlmedia.ImageTemplate,'ImgIDIconPortAccess'))-->
+<!--				</property>-->
+<!--				<property name="nX" value="0"/>-->
+<!--				<property name="nY" value="0"/>-->
+<!--				<property name="nWidth" value="28"/>-->
+<!--				<property name="nHeight" value="28"/>-->
+<!--				<property name="strToolTip" from="locale.SID.UI.PortAccess"/>-->
+<!--			</object>-->
+<!--			-->
+<!--			<object type="mlui.UI2DImage" name="objElements">-->
+<!--				<property name="tmplImage" value="skin.ImgIDIconResearchPoints"/>-->
+<!--				<property name="nX" from="0"/>-->
+<!--				<property name="nY" value="0"/>-->
+<!--				<property name="nWidth" value="28"/>-->
+<!--				<property name="nHeight" value="28"/>-->
+<!--				<property name="strToolTip" from="locale.SID.UI.ResearchPoints"/>-->
+<!--			</object>-->
+<!--			-->
+<!--			<object type="mlui.UI2DImage" name="objElements">-->
+<!--				<property name="tmplImage" value="skin.ImgIDIconIPUs"/>-->
+<!--				<property name="nX" from="0"/>-->
+<!--				<property name="nY" value="0"/>-->
+<!--				<property name="nWidth" value="28"/>-->
+<!--				<property name="nHeight" value="28"/>-->
+<!--				<property name="strToolTip" from="locale.SID.UI.IPUs"/>-->
+<!--			</object>-->
+<!--		</object>-->
+<!--		-->
+<!--		<object type="mlui.UI2DText" name="objShipsInPortNumber" existsWhile="self.objUnitGroupsInPort.size > 0">-->
+<!--			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Center"/>-->
+<!--            <property name="strText">-->
+<!--				gs_tbg.getUnitsAtLocation(mh2data.objAvatar, def.objData.objCity).size-->
+<!--			</property>-->
+<!--			<property name="haXAlign" value="RIGHT"/>-->
+<!--			<property name="nDepth" value="50"/>-->
+<!--			<property name="nX" value="6"/>-->
+<!--			<property name="nY" value="73"/>-->
+<!--			<property name="nWidth" value="28"/>-->
+<!--			<property name="nHeight" value="14"/>-->
+<!--		</object>-->
+<!--		-->
+<!--		<object type="mlui.UI2DText" name="objResearchPointsNumber">-->
+<!--			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Center"/>-->
+<!--            <property name="strText" from="def.objData.objCity.nRPUs"/>-->
+<!--			<property name="haXAlign" value="RIGHT"/>-->
+<!--			<property name="nDepth" value="50"/>-->
+<!--			<property name="nX" from="-->
+<!--				if(def.objData.objCity == def.objData.objCapitalCity,-->
+<!--					if(def.objData.objCity.refSeaRegion != null, 96, 66),-->
+<!--					if(def.objData.objCity.refSeaRegion != null, 66, 36))-->
+<!--			"/>-->
+<!--			<property name="nY" value="73"/>-->
+<!--			<property name="nWidth" value="28"/>-->
+<!--			<property name="nHeight" value="14"/>-->
+<!--		</object>-->
+<!--		-->
+<!--		<object type="mlui.UI2DText" name="objIPUsNumber">-->
+<!--			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Center"/>-->
+<!--			<property name="strText" from="def.objData.objCity.nIPUs"/>-->
+<!--			<property name="haXAlign" value="RIGHT"/>-->
+<!--			<property name="nDepth" value="50"/>-->
+<!--			<property name="nX" from="-->
+<!--				if(def.objData.objCity == def.objData.objCapitalCity,-->
+<!--					if(def.objData.objCity.refSeaRegion != null, 66, 36),-->
+<!--					if(def.objData.objCity.refSeaRegion != null, 36, 6))-->
+<!--			"/>-->
+<!--			<property name="nY" value="73"/>-->
+<!--			<property name="nWidth" value="28"/>-->
+<!--			<property name="nHeight" value="14"/>-->
+<!--		</object>-->
+	
+	<!-- Bottom Bar Buttons -->
+		<object type="mlui.UI2DButton" name="objNavalBaseButton" existsWhile="self.objData.objCity.refSeaRegion != null AND self.objData.objController == mh2data.objNation">
+			<property name="tmplButtonStyle" value="skin.BtnStyleCityNavalBase"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="38"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="strToolTip" from="locale.SID.UI.OpenClosePort"/>
+
+		<!-- Opens the port panel -->
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(spdata.objCityData.eExpand.equals(CitySection.NONE)){
+								spdata.objCityData.showCityPort(spdata.objCityData.objCity);
+							}
+							else{
+								spdata.objCityData.showMinInfo(spdata.objCityData.objCity);
+							};
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<script type="application/x-locust-query">
+			
+			haveAccess = ?{gameroot, reciever, granter:
+				gs_tbg.getAccessAgreement(gameroot, reciever, granter) != null
+			}
+			
+		</script>
+		
+		<object type="mlui.UI2DButton" name="objNavalBaseButton" existsWhile="def.haveAccess(mh2data.objAvatar, mh2data.objNation, self.objData.objCity.getController(mh2data.objAvatar))">
+			<property name="tmplButtonStyle" value="skin.BtnStyleCityNavalBase"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="38"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="strToolTip" from="locale.SID.UI.UnitsInPort"/>
+
+		<!-- Opens the port panel -->
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(spdata.objCityData.eExpand.equals(CitySection.NONE)){
+								spdata.objCityData.showCityPort(spdata.objCityData.objCity);
+							}
+							else{
+								spdata.objCityData.showMinInfo(spdata.objCityData.objCity);
+							};
+							//mh2data.toggleCityPopupTab(UI2DCityPopupTabPort);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<!--<object type="mlui.UI2DImage" name="objNavalButtonFlat" existsWhile="self.objData.objCity.refSeaRegion == null">-->
+		<!--	<property name="tmplImage" value="skin.ImgRegionNavalBaseButtonC"/>-->
+		<!--	<property name="nX" value="5"/>-->
+		<!--	<property name="nY" value="4"/>-->
+		<!--	<property name="nWidth" value="38"/>-->
+		<!--	<property name="nHeight" value="25"/>-->
+		<!--	<property name="vaYAlign" value="BOTTOM"/>-->
+		<!--</object>-->
+		
+		<!--<object type="mlui.UI2DButton" name="objCityPanelButton" existsWhile="def.objData.objCity.canView(mh2data.objAvatar, mh2data.objLookupVisibleRegions)">-->
+		<!--	<property name="tmplButtonStyle" value="skin.BtnStyleCityCityPanel"/>-->
+		<!--	<property name="nX" value="315"/>-->
+		<!--	<property name="nY" value="0"/>-->
+		<!--	<property name="nDefaultWidth" value="38"/>-->
+		<!--	<property name="nDefaultHeight" value="25"/>-->
+		<!--	<property name="strToolTip" from="locale.SID.UI.Maximize"/>-->
+		<!--	<property name="vaYAlign" value="BOTTOM"/>-->
+		<!--	-->
+		<!--	<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--		<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--			<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--			<script type="application/javascript"><![CDATA[-->
+		<!--				function handle(event, owner)-->
+		<!--				{-->
+		<!--					spdata.objCityData.showCityInfrastructure(spdata.objCityData.objCity);-->
+		<!--				}-->
+		<!--			]]></script>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--</object>-->
+		
+		<object type="mlui.UI2DImage" name="objCityButtonFlat" existsWhile="!def.objData.objCity.canView(mh2data.objAvatar, mh2data.objNationVisibilityList)">
+			<property name="tmplImage" value="skin.ImgCityButtonCityPanelDown"/>
+			<property name="nX" value="315"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="25"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objPanelBorder">
+			<property name="tmplImage" value="skin.ImgPanelBorderSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="55"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" from="def.nHeight - self.nY"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+	</objectDef>
+
+	<objectDef type="UI2DCityPanel" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="CitySelectionData"/>
+		<property name="haXAlign" value="LEFT"/>
+		<property name="vaYAlign" value="TOP"/>
+		
+		<propertyDef name="bSuppliesNeeded" type="bool" >
+			self.objData.objCurrentWorkOrder.nNumPaidFor == 0
+				AND self.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory != sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'Industrial')
+		</propertyDef>
+		
+	<!-- Details Background -->	
+		<object type="mlui.UI2DImage" name="objDetailsBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleBrownTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="341"/>
+			<property name="nHeight" value="89"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objDetailsBG2">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="38"/>
+			<property name="nWidth" value="335"/>
+			<property name="nHeight" value="83"/>
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objDetailsBGGradient">
+			<property name="tmplImage" value="skin.ImgGradientGraySm"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="39"/>
+			<property name="nWidth" value="333"/>
+			<property name="nHeight" value="37"/>
+		</object>
+	
+	<!-- Industries -->
+		
+		<object type="mlui.UI2DImage" name="objIPUIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconIndustry"/>
+			<property name="strToolTip" from="locale.SID.UI.IPUs"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nX" value="12"/>
+			<property name="nY" value="45" />
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="48"/>
+		</object>			
+		<object type="mlui.UI2DText" name="objIPUsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.objData.objCity.nIPUs"/>
+			<property name="nX" from="40"/>
+			<property name="nY" value="56"/>
+			<property name="nWidth" value="37"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		
+		<object type="UI2DCitySelectionBubbleProgressBar" name="objCurrentProject">
+			<property name="bRepeating" from="def.objData.objCurrentWorkOrder.bRepeating"/>
+            <property name="strToolTip">
+                if (def.objData.objCurrentWorkOrder != null,
+                if (def.bSuppliesNeeded,
+                locale.SID.UI.SuppliesNeeded,
+                null), null
+                )
+            </property>
+            <property name="nX" value="70" />
+			<property name="nY" value="45" />
+			<property name="nHeight" value="30" />
+			<property name="nWidth" value="220" />
+			<property name="objData" from="def.objData" />		
+			
+			<object type="mlui.UI2DImage" name="objProgressBar" >
+				<property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate,'ImgFillLightGreen')" />
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+				<property name="nDepth" value="4" />`
+				<property name="nX" value="1" />
+				<property name="nDepth" from="4"/>
+				<property name="nY" value="1" />
+				<property name="nHeight" from="28" /> 
+				<property name="nWidth" >						
+					(def.objData.objCurrentWorkOrder.nIPUs * 218) / def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().nIPUs
+				</property>
+			</object>	
+      
+			<object type="mlui.UI2DImage" name="objIcon" >
+				<property name="tmplImage">
+					if(def.objData.objCurrentWorkOrder == null OR def.objData.objCurrentWorkOrder.tmplFactoryOutput == null
+						, 'skin.ImgIndustryGoodsSM',
+						
+						switch{
+							case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'CityBuildings'):
+								switch{
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().instanceOf(gs_tbg.FactoryOutputResearchCenterBuildingTemplate):
+										mh2data.objResearchCenterBuildingDisplayTable.getEntry(def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplResearchCenterBuilding).tmplIcon
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().instanceOf(gs_tbg.FactoryOutputCityBuildingTemplate):
+										mh2data.objCityBuildingDisplayTable.getEntry(def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCityBuilding).tmplIcon
+									
+									default:
+										'skin.ImgDefaultProjectSM'
+							}
+				  
+							case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'Industrial'):
+								switch{
+								
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Goods'):
+										'skin.ImgIndustryGoodsSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Appliances'):
+										'skin.ImgIndustryAppliancesSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Textiles'):
+										'skin.ImgIndustryTextilesSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Bread'):
+										'skin.ImgIndustryBreadSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'MetalRecycling'):
+										'skin.ImgIndustryMetalRecyclingSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'WroughtIron':
+										'skin.ImgIndustryWroughtIronSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'Petroleum':
+										'skin.ImgIndustryPetroleumSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Automobiles'):
+										'skin.ImgIndustryAutosSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Coal'):
+										'skin.ImgIndustryMPUtoCoalSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Oil'):
+										'skin.ImgIndustryOilSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Arms'):
+										'skin.ImgIndustryArmsSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'AtomicBombs'):
+										'skin.ImgBombFissionSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'FishProducts'):
+										'skin.ImgIndustryFishProductsSM'
+									
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'CannedGoods'):
+										'skin.ImgIndustryCannedGoodsSM'
+								}
+				  
+							case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'LandForces'):
+								mh2data.objUnitDisplayTable.getEntry(def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplUnit).tmplIcon
+				  
+							case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'NavalForces'):
+								mh2data.objUnitDisplayTable.getEntry(def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplUnit).tmplIcon
+				  
+							case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'AirForces'):
+								mh2data.objUnitDisplayTable.getEntry(def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplUnit).tmplIcon
+			  
+						default:
+							'skin.ImgDefaultProjectSM'
+						}
+					)
+        </property>					
+				<property name="nX" value="2"/>
+				<property name="nY" value="2"/>
+				<property name="nDepth" from="5"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			</object>				
+			
+			<object type="mlui.UI2DText" name="objText" >
+				<property name="tmplTextStyle">
+                    if (def.objData.objCurrentWorkOrder != null,
+						if (def.bSuppliesNeeded,
+							'locale.TxtStyleArialRed13Left',
+							'locale.TxtStyleArialBlue13Left'),
+						'locale.TxtStyleArialBlue13Left'
+					)
+                </property>
+                <property name="nDepth" from="5"/>
+				<property name="strText">
+					if(def.objData.objCurrentWorkOrder == null,
+						gs_tbg.getGameSysCity(mh2data.objAvatar).tmplDefaultBuild.resolve().strDisplayName +
+							' ($' + (gs_tbg.getGameSysCity(mh2data.objAvatar).tmplDefaultBuild.resolve().nAmount * def.objData.objCity.nIPUs).formatNumber(0, true) + ')',
+						
+						def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().strDisplayName +
+							if(def.objData.nMoney GT 0,
+								' ($' + def.objData.nMoney.formatNumber(0, true) + ')',''
+							)
+					)
+				</property>
+				
+				<property name="nX" from="def.objCurrentProject.objIcon.nWidth + def.objCurrentProject.objIcon.nX + 1"/>
+				<property name="nY" value="10"/>
+				<!--<property name="nWidth" from="if(def.objCurrentProject.objRepeatingIcon != null, def.objCurrentProject.objRepeatingIcon.nX - self.nX,  def.objCurrentProject.nWidth -  def.objCurrentProject.objText.nX- 10)"/>-->                
+        <!--<property name="vaYAlign" value="MIDDLE"/>-->
+        <property name="nWidth" value="185"/>
+				<property name="nHeight" value="52"/>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+            </object>			
+			<script type="application/javascript"><![CDATA[
+				function handle(event, owner)
+				{
+					if(mh2data.objNation == def.objData.objController)
+					{
+						spdata.objCityData.showCityProduction(def.objData.objCity)
+					}
+				}
+			]]></script>
+      
+		</object>
+		
+		<object type="UI2DCitySelectionBubbleTurns" name="objCurrentProjectTurns">
+			<property name="nY" value="45" />
+			<property name="nX" value="292" />			
+			<property name="nHeight" value="30" />
+			<property name="nWidth" value="40" />
+			<property name="nTurns" from="def.objData.nOrderTurns" />
+			<property name="objData" from="def.objData" />
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objRPUIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconTechLrg"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nX" value="12"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="48"/>
+		</object>	
+		<object type="mlui.UI2DText" name="objRPUsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.objData.objCity.nRPUs"/>
+			<property name="nX" from="40"/>
+			<property name="nY" value="90"/>
+			<property name="nWidth" value="37"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		
+		<object type="UI2DCitySelectionBubbleProgressBar" name="objCurrentResearchProject">
+			<property name="nX" value="70" />
+			<property name="nY" value="80" />
+			<property name="nHeight" value="30" />
+			<property name="nWidth" value="220" />
+			<property name="objData" from="def.objData" />
+			<property name="strToolTip" from="def.objData.objResearchProject.tmplResearchTopic.resolve().strDisplayName"/>
+			<object type="mlui.UI2DImage" name="objProgressBar" existsWhile="self.objData.objResearchProject != null">
+				<property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate,'ImgFillLightGreen')" />
+				<property name="nDepth" value="4" />
+				<property name="nX" value="1" />
+				<property name="nDepth" from="4"/>
+				<property name="nY" value="1" />
+				<property name="nHeight" from="28" />
+				<property name="nWidth" >						
+					if(def.objData.objResearchProject.tmplResearchTopic.resolve().nPointsRequired != 0,
+						def.objData.objResearchProject.nPoints * 218 / def.objData.objResearchProject.tmplResearchTopic.resolve().nPointsRequired,
+						0
+					)
+				</property>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			</object>	
+      
+			<object type="UI2DResearchIcon" name="objResearchIcon" existsWhile="self.objData.objResearchProject != null">
+				<property name="objResearchProject" from="def.objData.objResearchProject"/>
+				<property name="nX" value="2"/>
+				<property name="nY" value="0"/>
+				<property name="nDepth" value="5"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			</object>			
+			<object type="mlui.UI2DText" name="objText" existsWhile="self.objData.objResearchProject != null">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13LeftFIT"/>
+				<property name="strText" from="def.objData.objResearchProject.tmplResearchTopic.resolve().strDisplayName"/>
+				<property name="nX" from="def.objCurrentResearchProject.objResearchIcon.nWidth + def.objCurrentResearchProject.objResearchIcon.nX + 3"/>		
+				<property name="nY" value="11"/>
+				<property name="nWidth" value="200"/>
+				<property name="nHeight" value="30"/>
+				<property name="nDepth" value="5"/>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			</object>
+			<object type="mlui.UI2DText" name="objTextMissing" existsWhile="self.objData.objResearchProject == null">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialMedGray14Center"/>
+				<property name="strText" from="if(def.objData.objCity.nRPUs GT 0, locale.SID.UI.NoOrders, locale.SID.UI.NoResearchCenter)"/>
+				<property name="nX" value="10"/>
+				<property name="nY" value="9"/>
+				<property name="nDepth" value="5"/>
+				<property name="nWidth" from="def.objCurrentResearchProject.nWidth - (def.objCurrentResearchProject.nX/2)"/>
+				<property name="nHeight" value="14"/>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			</object>	
+			<script type="application/javascript"><![CDATA[
+				function handle(event, owner)
+				{
+					if(mh2data.objNation.equals(def.objData.objController))
+					{							
+						spdata.objCityData.showCityResearch(def.objData.objCity)
+					}
+				}
+			]]></script>
+		</object>
+		
+		<object type="UI2DCitySelectionBubbleTurns" name="objCurrentResearchProjectTurns" >
+			<property name="nY" value="80" />
+			<property name="nX" value="292" />			
+			<property name="nHeight" value="30" />
+			<property name="nWidth" value="40" />
+			<property name="nTurns" from="def.objData.nResearchTurns" />
+			<property name="objData" from="def.objData" />
+		</object>
+    </objectDef>
+  
+    <objectDef type="UI2DCityPanelPort" superType="mlui.UI2DElement">
+		  <propertyDef name="objData" type="CitySelectionData"/>
+		  <propertyDef name="objUnitGroupsInPort" type="gs_tbg.UnitGroup" variable="true" />
+      <propertyDef name="nXOffSet" type="int" value="13"/>
+      <propertyDef name="nYOffSet" type="int" value="92"/>
+      <propertyDef name="nSpacing" type="int" value="38"/>
+
+		  <property name="haXAlign" value="LEFT"/>
+		  <property name="vaYAlign" value="TOP"/>
+		
+		<object type="mlui.UI2DImage" name="objDetailsBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleBrownTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="341"/>
+			<property name="nHeight" value="89"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objDetailsBG2">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="38"/>
+			<property name="nWidth" value="335"/>
+			<property name="nHeight" value="83"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIDIconNavalBaseNoBG">
+			<property name="tmplImage" value="skin.ImgIDIconNavalBaseNoBG"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="42"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objUnitsInPortLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ShipsInPort"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="77"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="10"/>
+		</object>
+      
+		<object type="mlui.UI2DImage" name="objShipsInPortBubble">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="8"/>
+			<property name="nY" value="88"/>
+			<property name="nWidth" value="278"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objPatrolBoatIcon">
+			<property name="tmplImage" value="skin.ImgMilitaryTabPatrol"/>
+			<property name="strToolTip" from="locale.SID.UI.PatrolBoats"/>
+			<property name="nX" from="def.nXOffSet"/>
+			<property name="nY" from="def.nYOffSet"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objPatrolBoatsInPort">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Center"/>
+			<property name="strToolTip" from="locale.SID.UI.PatrolBoats"/>
+			<property name="strText">
+				filter(?{unit: unit.refUnitGroup.resolve(mh2data.objAvatar).refLocation.resolve(mh2data.objAvatar) == def.objData.objCity}, gs_tbg.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Patrols)).size
+			</property>
+      <property name="nX" from="def.nXOffSet"/>
+      <property name="nY" from="def.nYOffSet + 12"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objDestroyerIcon">
+			<property name="tmplImage" value="skin.ImgMilitaryTabDestroyer"/>
+			<property name="strToolTip" from="locale.SID.UI.Destroyers"/>
+			<property name="nX" from="def.objPatrolBoatIcon.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objDestroyersInPort">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Center"/>
+			<property name="strToolTip" from="locale.SID.UI.Destroyers"/>
+			<property name="strText">
+				filter(?{unit: unit.refUnitGroup.resolve(mh2data.objAvatar).refLocation.resolve(mh2data.objAvatar) == def.objData.objCity}, gs_tbg.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Destroyers)).size
+			</property>
+      <property name="nX" from="def.objPatrolBoatIcon.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet + 12"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCruiserIcon">
+			<property name="tmplImage" value="skin.ImgMilitaryTabCruiser"/>
+			<property name="strToolTip" from="locale.SID.UI.Cruisers"/>
+      <property name="nX" from="def.objDestroyersInPort.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCruisersInPort">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Center"/>
+			<property name="strToolTip" from="locale.SID.UI.Cruisers"/>
+			<property name="strText">
+				filter(?{unit: unit.refUnitGroup.resolve(mh2data.objAvatar).refLocation.resolve(mh2data.objAvatar) == def.objData.objCity}, gs_tbg.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Cruisers)).size
+			</property>
+      <property name="nX" from="def.objDestroyersInPort.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet + 12"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBattleshipIcon">
+			<property name="tmplImage" value="skin.ImgMilitaryTabBattleship"/>
+			<property name="strToolTip" from="locale.SID.UI.Battleships"/>
+      <property name="nX" from="def.objCruisersInPort.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objBattleshipsInPort">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Center"/>
+			<property name="strToolTip" from="locale.SID.UI.Battleships"/>
+			<property name="strText">
+				filter(?{unit: unit.refUnitGroup.resolve(mh2data.objAvatar).refLocation.resolve(mh2data.objAvatar) == def.objData.objCity}, gs_tbg.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Battleships)).size
+			</property>
+      <property name="nX" from="def.objCruisersInPort.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet + 12"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCarrierIcon">
+			<property name="tmplImage" value="skin.ImgMilitaryTabCarrier"/>
+			<property name="strToolTip" from="locale.SID.UI.Carriers"/>
+      <property name="nX" from="def.objBattleshipsInPort.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCarriersInPort">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Center"/>
+			<property name="strToolTip" from="locale.SID.UI.Carriers"/>
+			<property name="strText">
+				filter(?{unit: unit.refUnitGroup.resolve(mh2data.objAvatar).refLocation.resolve(mh2data.objAvatar) == def.objData.objCity}, gs_tbg.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Carriers)).size
+			</property>
+      <property name="nX" from="def.objBattleshipsInPort.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet + 12"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSubIcon">
+			<property name="tmplImage" value="skin.ImgMilitaryTabSub"/>
+			<property name="strToolTip" from="locale.SID.UI.Submarines"/>
+      <property name="nX" from="def.objCarriersInPort.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objSubLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Center"/>
+			<property name="strToolTip" from="locale.SID.UI.Submarines"/>
+			<property name="strText">
+				filter(?{unit: unit.refUnitGroup.resolve(mh2data.objAvatar).refLocation.resolve(mh2data.objAvatar) == def.objData.objCity}, gs_tbg.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Submarines)).size
+			</property>
+      <property name="nX" from="def.objCarriersInPort.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet + 12"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objTransportsIcon">
+			<property name="tmplImage" value="skin.ImgMilitaryTabNavalTrans"/>
+			<property name="strToolTip" from="locale.SID.UI.Transports"/>
+      <property name="nX" from="def.objSubIcon.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objTransportsInPort">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Center"/>
+			<property name="strToolTip" from="locale.SID.UI.Transports"/>
+			<property name="strText">
+				filter(?{unit: unit.refUnitGroup.resolve(mh2data.objAvatar).refLocation.resolve(mh2data.objAvatar) == def.objData.objCity}, gs_tbg.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Transport)).size
+			</property>
+      <property name="nX" from="def.objSubIcon.nX + def.nSpacing"/>
+      <property name="nY" from="def.nYOffSet + 12"/>
+      <property name="nWidth" value="38"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+    </objectDef>		
+	
+	<objectDef type="UI2DCitySelectionBubbleProgressBar" superType="UI2DCityBubble">
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+		<propertyDef name="objOwner" type="gs_tbg.Nation"/>
+		<propertyDef name="objData" type="CitySelectionData"/>
+		<propertyDef name="objProgressBar" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="objRepeatingIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="objResearchIcon" type="UI2DResearchIcon" storesChildren="true"/>
+		<propertyDef name="objText" type="mlui.UI2DText" storesChildren="true"/>
+		<propertyDef name="objTextMissing" type="mlui.UI2DText" storesChildren="true"/>
+		<propertyDef name="objProjectButton" type="mlui.UI2DButton" storesChildren="true"/>		
+		<property name="nRow" from="if(mh2data.objNation == self.objData.objController, 1, 2)" />
+		<propertyDef name="bRepeating" type="bool" default="false" />
+		
+		<object type="mlui.UI2DImage" name="objRepeatingIcon" existsWhile="self.bRepeating">
+			<property name="tmplImage" value="skin.ImgInfoIconRepeating"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="2"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nDepth" from="5"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objProjectButton" existsWhile="mh2data.objNation == def.objData.objController" >			
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleReportBubbleTanWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDepth" value="3"/>
+			<property name="nDefaultWidth" from="def.nWidth"/>
+			<property name="nDefaultHeight" value="30"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.handle(event, owner);
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+    </objectDef>
+	
+	<objectDef type="UI2DCitySelectionBubbleTurns" superType="UI2DCityBubble">
+		<propertyDef name="nTurns" type="int" default="0" />
+		<propertyDef name="bRepeating" type="bool" default="false"/>
+		<propertyDef name="objData" type="CitySelectionData"/>
+		<property name="nRow" from="if(mh2data.objNation == self.objData.objController, 1, 2)" />
+		<object type="mlui.UI2DText" name="objResearchProjectTurnsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10CenterWrap"/>
+			<property name="strText" from="locale.SID.UI.Turns"/>
+			<property name="nX" from="0"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		<object type="mlui.UI2DText" name="objResearchProjectTurnsLabel" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Center"/>
+			<property name="strText" from="def.nTurns"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="12"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="16"/>
+		</object>
+    </objectDef>
+    
+	<objectDef type="UI2DCitySelectionPortAccess" superType="mlui.UI2DElement">
+        <propertyDef name="nUnits" type="int" default="0" />
+                
+		<object type="mlui.UI2DText" name="objUnitsInPortText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite12Center"/>
+			<property name="strText" from="if(def.nUnits GT 0, def.nUnits.formatNumber(0, true) ,'0')"/>
+			<property name="nX" from="1"/>
+			<property name="nY" value="0"/>
+			<property name="nDepth" value="1"/>
+			<property name="vaYAlign" value="BOTTOM"/>		
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+        
+        <object type="mlui.UI2DImage" name="objPortImg">
+            <property name="tmplImage">
+                if(def.nUnits GT 0, skin.getTemplateRef(mlmedia.ImageTemplate,'ImgIDIconPortAccessLit'), skin.getTemplateRef(mlmedia.ImageTemplate,'ImgIDIconPortAccess'))
+            </property>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nWidth" value="28"/>
+            <property name="nHeight" value="28"/>
+        </object>
+		
+		<propertyDef name="objOpenPortButton" type="mlui.UI2DButton" storesChildren="true"/>		
+		
+    </objectDef>
+	
+	
+</locust>

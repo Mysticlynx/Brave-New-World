@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<template type="mlmedia.SoundTemplate" name="ClickSound">
+		<property name="fileSource" value="misc/buttonClick.ogg"/>
+	</template>
+
+	<template type="mlmedia.SoundTemplate" name="EventSeaBattle">
+		<property name="fileSource" value="misc/event_sea_battle_2.ogg"/>
+	</template>
+</locust>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysNation" class="CMLOGameSysNation" superType="mlgame.GameSystem">
+		<propertyDef name="objNations" type="Nation" variable="true" storesChildren="true"/>
+        <propertyDef name="objNationIdentities" type="NationIdentity" variable="true" storesChildren="true"/>
+		<propertyDef name="objNationResources" type="NationResource" variable="true" storesChildren="true"/>
+		<propertyDef name="objNationResourceStatistics" type="NationResourceStatistics" variable="true" storesChildren="true"/>
+		<propertyDef name="objNationHistories" type="NationHistory" variable="true" storesChildren="true"/>
+		<propertyDef name="objNationTakeovers" type="NationTakeover" variable="true" storesChildren="true"/>
+		<propertyDef name="objNationRanks" type="NationRank" variable="true" storesChildren="true"/>
+        <propertyDef name="tmplNonNationalLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+        <propertyDef name="tmplNonReligionLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+        <propertyDef name="tmplNonCultureLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+        <propertyDef name="tmplIdeologyStrengthLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+		<propertyDef name="tmplUnemploymentLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+        <propertyDef name="tmplStabilityLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+        <propertyDef name="tmplNationTemplateList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="tmplCultureTemplateList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="tmplReligionTemplateList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="tmplEthnicityTemplateList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="tmplIdeologyTemplateList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="nDebtStabilityDivisor" type="int" default="3"/>
+        <propertyDef name="nMinDebtStabilityModifier" type="int" default="-60"/>
+        <propertyDef name="nMaxDebtStabilityModifier" type="int" default="15"/>
+        <propertyDef name="nCriticalDebtStabilityModifier" type="int" default="-20"/>
+        
+        <!--<propertyDef name="colSuggestedColors" type="Color" variable="true" desc=returned by getSuggestedNationColors"/> -->
+
+        <!-- builtin method signatures:
+        	objTemplate getNationStabilityTemplate(gameroot,nation)
+        -->
+        
+		<script type="application/javascript"><![CDATA[
+		
+		    // expected method
+            function getSuggestedNationColors(game, nation)
+            {
+                return nation.tmplNation.resolve().colAltColors;
+                
+//                var c = nation.tmplNation.resolve().colColor;
+//                self.colSuggestedColors.clear();
+//                self.colSuggestedColors.add(c);
+//                
+//                factors = [ 1.5, 0.75 ];
+//                
+//                for (var f in factors)
+//                {
+//                    var r = c.r * factors[f];
+//                    var g = c.g * factors[f];
+//                    var b = c.b * factors[f];
+//                    
+//                    if ( (r > 1.0/256.0) && (r <= 1.0) &&
+//                         (g > 1.0/256.0) && (g <= 1.0) &&
+//                         (b > 1.0/256.0) && (b <= 1.0) )
+//                     {
+//                        var c2 = Color(r,g,b);
+//                        self.colSuggestedColors.add(c2);
+//                     }
+//                }
+//                
+//                return self.colSuggestedColors;
+            }
+            
+		]]></script>
+
+        <script type="application/x-locust-query">
+		    getNationResources = ?{nation:
+		        filter(?{nationResource: nationResource.refNation == nation},self.objNationResources)
+		    }
+        
+			getNationResource = ?{nation,resource:
+				find(?{nationResource: nationResource.refNation == nation AND nationResource.objResourceTemplate == resource},self.objNationResources)
+			}
+			
+			getNationsStability = ?{stability:
+				find(
+					?{level:
+						stability GTE level.nLowerBound AND stability LTE level.nUpperBound
+					}, self.tmplStabilityLevels.resolve().rangedTemplates
+				).tmplRef.resolve()
+			}
+
+		    getNationsFromResearchProgram = ?{researchProgram:
+			    filter(?{nation: nation.refResearchProgram == researchProgram}, self.objNations)
+		    }
+			
+		</script>
+
+	</objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysNation = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysNation)
+		}
+
+		getAllNations = ?{gameroot:
+			getGameSysNation(gameroot).objNations
+		}
+
+		getNationRanks = ?{gameroot:
+			getGameSysNation(gameroot).objNationRanks
+		}
+		
+		getTeamRanks = ?{gameroot:
+			getGameSysVictoryCondition(gameroot).objTeamRanks
+		}
+
+        getNationTeamID = ?{gameroot,nation:
+            if(nation!=null, getGameSysVictoryCondition(gameroot).getNationTeamID(gameroot,nation), null)
+        }
+        
+		getAllNationResources = ?{gameroot:
+			getGameSysNation(gameroot).objNationResources
+		}
+
+		getAllNationHistories = ?{gameroot:
+			getGameSysNation(gameroot).objNationHistories
+		}
+
+		getNationResources = ?{gameroot,nation:
+		    getGameSysNation(gameroot).getNationResources(nation)
+		}
+
+		getNationResource = ?{gameroot,nation,resource:
+		    getGameSysNation(gameroot).getNationResource(nation,resource)
+		}
+
+		getPuppets = ?{gameroot,controller:
+			filter(
+				?{nation:
+					(nation.objStatus.instanceOf(NationStatusPuppet) AND
+					nation.objStatus.refController == controller)
+				}, getAllNations(gameroot)
+			)
+		}
+
+		getNationsFromResearchProgram = ?{gameroot, researchProgram:
+		    getGameSysNation(gameroot).getNationsFromResearchProgram(researchProgram)
+		}
+		
+	</script>
+
+</locust>

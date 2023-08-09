@@ -1,0 +1,920 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="WorldMarketNationRowData" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<propertyDef name="objNationHistory" type="gs_tbg.NationHistory">
+			find(?{history: history.refNation == self.objNation},
+			gs_tbg.getAllNationHistories(mh2data.objAvatar))
+		</propertyDef>
+
+		<object type="LookupTradeResourceData" name="objLookupArms">
+			<property name="objNationHistory" from="def.objNationHistory"/>
+			<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Arms')"/>
+		</object>
+
+		<object type="LookupTradeResourceData" name="objLookupMetals">
+			<property name="objNationHistory" from="def.objNationHistory"/>
+			<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Metals')"/>
+		</object>
+
+		<object type="LookupTradeResourceData" name="objLookupCoal">
+			<property name="objNationHistory" from="def.objNationHistory"/>
+			<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Coal')"/>
+		</object>
+
+		<object type="LookupTradeResourceData" name="objLookupOil">
+			<property name="objNationHistory" from="def.objNationHistory"/>
+			<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Oil')"/>
+		</object>
+
+		<object type="LookupTradeResourceData" name="objLookupFood">
+			<property name="objNationHistory" from="def.objNationHistory"/>
+			<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate,'Food')"/>
+		</object>
+	</objectDef>
+	
+	<enumDef name="WorldMarket">
+        <value name="TNAME"/>
+        <value name="TARMS"/>
+		<value name="TMETALS"/>
+		<value name="TCOAL"/>
+		<value name="TOIL"/>
+		<value name="TFOOD"/>
+		<value name="SDNAME"/>
+        <value name="SDARMS"/>
+		<value name="SDMETALS"/>
+		<value name="SDCOAL"/>
+		<value name="SDOIL"/>
+		<value name="SDFOOD"/>
+    </enumDef>
+	
+	<objectDef type="UI2DTradeTabWorldMarket" superType="mlui.UI2DElement">
+		<object type="WorldMarketNationRowData" name="objRowDatas" tiedTo="gs_tbg.getAllNations(mh2data.objAvatar)">
+			<property name="objNation" from="tiedTo"/>
+		</object>
+		
+		<!-- <object type="TableData" name="objTableDataT">
+			<property name="eColm" from="WorldMarket.TNAME"/>
+		</object>
+		
+		<object type="TableData" name="objTableDataSD">
+			<property name="eColm" from="WorldMarket.SDNAME"/>
+		</object> -->
+		
+	<!-- World Market Transactions Section -->
+		<object type="mlui.UI2DText" name="objWorldMarketTransactionsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.WorldMarketTransactions"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objWorldMarketTransactionsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.MarketSupplyAndDemand"/>
+			<property name="nX" value="451"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objTransactionsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="435"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Name"/>
+				<property name="objData" from="mh2data.objWorldMarketTableDataT"/>
+				<property name="eSortBy" from="WorldMarket.TNAME"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="175"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objWorldMarketTableDataT"/>
+				<property name="eSortBy" from="WorldMarket.TARMS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconArmsTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objWorldMarketTableDataT"/>
+				<property name="eSortBy" from="WorldMarket.TMETALS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconMetalsTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objWorldMarketTableDataT"/>
+				<property name="eSortBy" from="WorldMarket.TCOAL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconCoalTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objWorldMarketTableDataT"/>
+				<property name="eSortBy" from="WorldMarket.TOIL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconOilTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objWorldMarketTableDataT"/>
+				<property name="eSortBy" from="WorldMarket.TFOOD"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconFoodTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+		</object>
+		
+		<!--<object type="WorldMarketInfoBar" name="objInfoBarLeft">-->
+		<!--	<property name="nX" value="10"/>-->
+		<!--	<property name="nY" value="161"/>-->
+		<!--	<property name="nWidth" value="436"/>-->
+		<!--	<property name="nHeight" value="26"/>-->
+		<!--</object>-->
+		
+		<object type="mlui.UI2DImage" name="objTransactionsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="448"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="435"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="449"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Name"/>
+				<property name="objData" from="mh2data.objWorldMarketTableDataSD"/>
+				<property name="eSortBy" from="WorldMarket.SDNAME"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="175"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objWorldMarketTableDataSD"/>
+				<property name="eSortBy" from="WorldMarket.SDARMS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconArmsTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objWorldMarketTableDataSD"/>
+				<property name="eSortBy" from="WorldMarket.SDMETALS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconMetalsTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objWorldMarketTableDataSD"/>
+				<property name="eSortBy" from="WorldMarket.SDCOAL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconCoalTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objWorldMarketTableDataSD"/>
+				<property name="eSortBy" from="WorldMarket.SDOIL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconOilTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objWorldMarketTableDataSD"/>
+				<property name="eSortBy" from="WorldMarket.SDFOOD"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconFoodTny"/>
+					<property name="nWidth" value="19"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+		</object>
+		
+	<!-- World Market Transactions -->
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="436"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objWorldMarketTableDataT.eColm == WorldMarket.TNAME:
+						if(mh2data.objWorldMarketTableDataT.bAsc,
+							sortAscending(?{data: data.objNation.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objNation.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objWorldMarketTableDataT.eColm == WorldMarket.TARMS:
+						if(mh2data.objWorldMarketTableDataT.bAsc,
+							sortAscending(?{data: data.objLookupArms.nMarketTotal}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupArms.nMarketTotal}, def.objRowDatas)
+						)
+					case mh2data.objWorldMarketTableDataT.eColm == WorldMarket.TMETALS:
+						if(mh2data.objWorldMarketTableDataT.bAsc,
+							sortAscending(?{data: data.objLookupMetals.nMarketTotal}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupMetals.nMarketTotal}, def.objRowDatas)
+						)
+					case mh2data.objWorldMarketTableDataT.eColm == WorldMarket.TCOAL:
+						if(mh2data.objWorldMarketTableDataT.bAsc,
+							sortAscending(?{data: data.objLookupCoal.nMarketTotal}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupCoal.nMarketTotal}, def.objRowDatas)
+						)
+					case mh2data.objWorldMarketTableDataT.eColm == WorldMarket.TOIL:
+						if(mh2data.objWorldMarketTableDataT.bAsc,
+							sortAscending(?{data: data.objLookupOil.nMarketTotal}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupOil.nMarketTotal}, def.objRowDatas)
+						)
+					case mh2data.objWorldMarketTableDataT.eColm == WorldMarket.TFOOD:
+						if(mh2data.objWorldMarketTableDataT.bAsc,
+							sortAscending(?{data: data.objLookupFood.nMarketTotal}, def.objRowDatas),
+							sortDescending(?{data: data.objLookupFood.nMarketTotal}, def.objRowDatas)
+						)
+				}
+			</property>
+			<property name="nRowWidth" value="422"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="otRowType" value="UI2DWMTransactionsBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="448"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="436"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objWorldMarketTableDataSD.eColm == WorldMarket.SDNAME:
+						if(mh2data.objWorldMarketTableDataSD.bAsc,
+							sortAscending(?{data: data.objNation.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objNation.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objWorldMarketTableDataSD.eColm == WorldMarket.SDARMS:
+						if(mh2data.objWorldMarketTableDataSD.bAsc,
+							sortAscending(
+								?{data:
+									if(data.objLookupArms.objNationHistoryTrade != null,
+										data.objLookupArms.objNationHistoryTrade.nMarketDemand,
+										0
+									)
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									if(data.objLookupArms.objNationHistoryTrade != null,
+										data.objLookupArms.objNationHistoryTrade.nMarketDemand,
+										0
+									)
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldMarketTableDataSD.eColm == WorldMarket.SDMETALS:
+						if(mh2data.objWorldMarketTableDataSD.bAsc,
+							sortAscending(
+								?{data:
+									if(data.objLookupMetals.objNationHistoryTrade != null,
+										data.objLookupMetals.objNationHistoryTrade.nMarketDemand,
+										0
+									)
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									if(data.objLookupMetals.objNationHistoryTrade != null,
+										data.objLookupMetals.objNationHistoryTrade.nMarketDemand,
+										0
+									)
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldMarketTableDataSD.eColm == WorldMarket.SDCOAL:
+						if(mh2data.objWorldMarketTableDataSD.bAsc,
+							sortAscending(
+								?{data:
+									if(data.objLookupCoal.objNationHistoryTrade != null,
+										data.objLookupCoal.objNationHistoryTrade.nMarketDemand,
+										0
+									)
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									if(data.objLookupCoal.objNationHistoryTrade != null,
+										data.objLookupCoal.objNationHistoryTrade.nMarketDemand,
+										0
+									)
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldMarketTableDataSD.eColm == WorldMarket.SDOIL:
+						if(mh2data.objWorldMarketTableDataSD.bAsc,
+							sortAscending(
+								?{data:
+									if(data.objLookupOil.objNationHistoryTrade != null,
+										data.objLookupOil.objNationHistoryTrade.nMarketDemand,
+										0
+									)
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									if(data.objLookupOil.objNationHistoryTrade != null,
+										data.objLookupOil.objNationHistoryTrade.nMarketDemand,
+										0
+									)
+								},
+								def.objRowDatas
+							)
+						)
+					case mh2data.objWorldMarketTableDataSD.eColm == WorldMarket.SDFOOD:
+						if(mh2data.objWorldMarketTableDataSD.bAsc,
+							sortAscending(
+								?{data:
+									if(data.objLookupFood.objNationHistoryTrade != null,
+										data.objLookupFood.objNationHistoryTrade.nMarketDemand,
+										0
+									)
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									if(data.objLookupFood.objNationHistoryTrade != null,
+										data.objLookupFood.objNationHistoryTrade.nMarketDemand,
+										0
+									)
+								},
+								def.objRowDatas
+							)
+						)
+				}
+			</property>
+			<property name="nRowWidth" value="422"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="otRowType" value="UI2DWMSupplyDemandBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="WorldMarketInfoBar" superType="mlui.UI2DElement">
+		<object type="mlui.UI2DImage" name="objTransactionsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="435"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNameLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Name"/>
+			<property name="nX" value="70"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWMArmsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconArmsTny"/>
+			<property name="nX" value="192"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="19"/>
+			<property name="nHeight" value="21"/>
+			<property name="strToolTip" from="locale.SID.UI.Arms"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWMMetalsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMetalsTny"/>
+			<property name="nX" value="241"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="20"/>
+			<property name="nHeight" value="19"/>
+			<property name="strToolTip" from="locale.SID.UI.Metals"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWMCoalIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconCoalTny"/>
+			<property name="nX" value="290"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="18"/>
+			<property name="nHeight" value="18"/>
+			<property name="strToolTip" from="locale.SID.UI.Coal"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWMOilIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconOilTny"/>
+			<property name="nX" value="342"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="16"/>
+			<property name="strToolTip" from="locale.SID.UI.Oil"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWMFoodIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconFoodTny"/>
+			<property name="nX" value="388"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="15"/>
+			<property name="nHeight" value="22"/>
+			<property name="strToolTip" from="locale.SID.UI.Food"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DWMTransactions" superType="mlui.UI2DElement">
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="436"/>
+		<property name="nHeight" value="495"/>
+
+		<object type="UI2DWMTransactionsList" name="objTransactionsList">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="436"/>
+			<property name="nHeight" from="495"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DWMTransactionsList" superType="mlui.UI2DElement">
+		<property name="nWidth" from="self.objList.nWidth"/>
+		<property name="nHeight" from="self.objList.nHeight"/>
+
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="436"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				sortAscending(?{nation: nation.strDisplayName}, gs_tbg.getAllNations(mh2data.objAvatar))
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="otRowType" value="UI2DWMTransactionsBubble"/>
+			<property name="strPropForItem" value="objNation"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DWMSupplyDemand" superType="mlui.UI2DElement">
+		<property name="nWidth" from="self.objList.nWidth"/>
+		<property name="nHeight" from="self.objList.nHeight"/>
+
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="436"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				sortAscending(?{nation: nation.strDisplayName}, gs_tbg.getAllNations(mh2data.objAvatar))
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="otRowType" value="UI2DWMSupplyDemandBubble"/>
+			<property name="strPropForItem" value="objNation"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DWMTransactionsRowBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int" default="0"/>
+		<property name="nHeight" value="30"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DWMTransactionsRowBubbleNation" superType="UI2DWMTransactionsRowBubble">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<property name="nWidth" value="420"/>
+		<property name="nHeight" value="30"/>
+
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationName">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objNation.strDisplayName"/>
+			<property name="nX" value="53"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="122"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DWMTransactionsRowBubbleTextCenter" superType="UI2DWMTransactionsRowBubble">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DWMTransactionsBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="WorldMarketNationRowData"/>
+		
+		<propertyDef name="nRow" type="int"/>
+
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+
+			<!-- Nation -->
+			<object type="UI2DWMTransactionsRowBubbleNation" name="objElements">
+				<property name="objNation" from="def.objData.objNation"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+				<property name="nWidth" value="177"/>
+			</object>
+
+			<!-- Arms -->
+			<object type="UI2DWMTransactionsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+          if(def.objData.objLookupArms.nMarketTotal GTE 0, 'locale.TxtStyleArialBlue12Center', 'locale.TxtStyleArialGreen12Center')
+        </property>
+				<property name="strText" from="if(def.objData.objLookupArms.nMarketTotal GTE 0, if(def.objData.objLookupArms.nMarketTotal == 0,
+					def.objData.objLookupArms.nMarketTotal, def.objData.objLookupArms.nMarketTotal.formatNumber(0, true)),
+						abs(def.objData.objLookupArms.nMarketTotal).formatNumber(0, true))"/>
+
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="50"/>
+				<property name="strToolTip">
+					if(def.objData.objLookupArms.nMarketTotal GT 0,
+					    locale.FSID.UI.PurchasedFromTheWorldMarketLastTurn.format('amount',def.objData.objLookupArms.nMarketTotal.formatNumber(0, true)),
+					    locale.FSID.UI.SoldOnTheWorldMarketLastTurn.format('amount',abs(def.objData.objLookupArms.nMarketTotal).formatNumber(0, true))					    
+						)
+				</property>
+			</object>
+
+			<!-- Metals -->
+			<object type="UI2DWMTransactionsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(def.objData.objLookupMetals.nMarketTotal GTE 0, 'locale.TxtStyleArialBlue12Center', 'locale.TxtStyleArialGreen12Center')
+				</property>
+				<property name="strText" from="if(def.objData.objLookupMetals.nMarketTotal GTE 0, if(def.objData.objLookupMetals.nMarketTotal == 0,
+					def.objData.objLookupMetals.nMarketTotal, def.objData.objLookupMetals.nMarketTotal.formatNumber(0, true)),
+						abs(def.objData.objLookupMetals.nMarketTotal).formatNumber(0, true))"/>
+
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="50"/>
+				<property name="strToolTip">
+					if(def.objData.objLookupMetals.nMarketTotal GT 0,
+					    locale.FSID.UI.PurchasedFromTheWorldMarketLastTurn.format('amount',def.objData.objLookupMetals.nMarketTotal.formatNumber(0, true)),
+					    locale.FSID.UI.SoldOnTheWorldMarketLastTurn.format('amount',abs(def.objData.objLookupMetals.nMarketTotal).formatNumber(0, true))					    
+						)
+				</property>
+			</object>
+
+			<!-- Coal -->
+			<object type="UI2DWMTransactionsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(def.objData.objLookupCoal.nMarketTotal GTE 0, 'locale.TxtStyleArialBlue12Center', 'locale.TxtStyleArialGreen12Center')
+				</property>
+				<property name="strText" from="if(def.objData.objLookupCoal.nMarketTotal GTE 0, if(def.objData.objLookupCoal.nMarketTotal == 0,
+					def.objData.objLookupCoal.nMarketTotal, def.objData.objLookupCoal.nMarketTotal.formatNumber(0, true)),
+						abs(def.objData.objLookupCoal.nMarketTotal).formatNumber(0, true))"/>
+
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="50"/>
+				<property name="strToolTip">
+					if(def.objData.objLookupCoal.nMarketTotal GT 0,
+					    locale.FSID.UI.PurchasedFromTheWorldMarketLastTurn.format('amount',def.objData.objLookupCoal.nMarketTotal.formatNumber(0, true)),
+					    locale.FSID.UI.SoldOnTheWorldMarketLastTurn.format('amount',abs(def.objData.objLookupCoal.nMarketTotal).formatNumber(0, true))					    						
+						)
+				</property>
+			</object>
+
+			<!-- Oil -->
+			<object type="UI2DWMTransactionsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(def.objData.objLookupOil.nMarketTotal GTE 0, 'locale.TxtStyleArialBlue12Center', 'locale.TxtStyleArialGreen12Center')
+				</property>
+				<property name="strText" from="if(def.objData.objLookupOil.nMarketTotal GTE 0, if(def.objData.objLookupOil.nMarketTotal == 0,
+					def.objData.objLookupOil.nMarketTotal, def.objData.objLookupOil.nMarketTotal.formatNumber(0, true)),
+						abs(def.objData.objLookupOil.nMarketTotal).formatNumber(0, true))"/>
+
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="50"/>
+				<property name="strToolTip">
+					if(def.objData.objLookupOil.nMarketTotal GT 0,
+					    locale.FSID.UI.PurchasedFromTheWorldMarketLastTurn.format('amount',def.objData.objLookupOil.nMarketTotal.formatNumber(0, true)),					    
+					    locale.FSID.UI.SoldOnTheWorldMarketLastTurn.format('amount',abs(def.objData.objLookupOil.nMarketTotal).formatNumber(0, true))
+					    )					    											
+				</property>
+			</object>
+
+			<!-- Food -->
+			<object type="UI2DWMTransactionsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(def.objData.objLookupFood.nMarketTotal GTE 0, 'locale.TxtStyleArialBlue12Center', 'locale.TxtStyleArialGreen12Center')
+				</property>
+				<property name="strText" from="if(def.objData.objLookupFood.nMarketTotal GTE 0, if(def.objData.objLookupFood.nMarketTotal == 0,
+					def.objData.objLookupFood.nMarketTotal, def.objData.objLookupFood.nMarketTotal.formatNumber(0, true)),
+						abs(def.objData.objLookupFood.nMarketTotal).formatNumber(0, true))"/>
+
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="50"/>
+				<property name="strToolTip">
+					if(def.objData.objLookupFood.nMarketTotal GT 0,
+					    locale.FSID.UI.PurchasedFromTheWorldMarketLastTurn.format('amount',def.objData.objLookupFood.nMarketTotal.formatNumber(0, true)),					    					    
+					    locale.FSID.UI.SoldOnTheWorldMarketLastTurn.format('amount',abs(def.objData.objLookupFood.nMarketTotal).formatNumber(0, true))					
+						)
+				</property>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DWMSupplyDemandBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="WorldMarketNationRowData"/>
+		<propertyDef name="nRow" type="int"/>
+
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+
+			<!-- Nation -->
+			<object type="UI2DWMTransactionsRowBubbleNation" name="objElements">
+				<property name="objNation" from="def.objData.objNation"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+				<property name="nWidth" value="177"/>
+			</object>
+
+			<!-- Arms -->
+			<object type="UI2DWMTransactionsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(def.objData.objLookupArms.objNationHistoryTrade != null,	
+						if(def.objData.objLookupArms.objNationHistoryTrade.nMarketDemand GTE 0, 'locale.TxtStyleArialBlue12Center', 'locale.TxtStyleArialGreen12Center'),
+							'locale.TxtStyleArialBlue12Center')
+				</property>
+				
+				<property name="strText" from="if(def.objData.objLookupArms.objNationHistoryTrade != null,
+					if(def.objData.objLookupArms.objNationHistoryTrade.nMarketDemand GTE 0, def.objData.objLookupArms.objNationHistoryTrade.nMarketDemand.formatNumber(0, true),
+						abs(def.objData.objLookupArms.objNationHistoryTrade.nMarketDemand).formatNumber(0, true)), '0')"/>
+				
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="50"/>
+				<property name="strToolTip">
+					if(def.objData.objLookupArms.objNationHistoryTrade.nMarketDemand GTE 0, 
+					    locale.FSID.UI.DemandedForSuppliesToolTip.format('amount',def.objData.objLookupArms.objNationHistoryTrade.nMarketDemand.formatNumber(0, true)),
+					    locale.FSID.UI.SuppliedToTheMarketToolTip.format('amount',abs(def.objData.objLookupArms.objNationHistoryTrade.nMarketDemand).formatNumber(0, true))
+						)
+				</property>
+			</object>
+
+			<!-- Metals -->
+			<object type="UI2DWMTransactionsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(def.objData.objLookupMetals.objNationHistoryTrade != null,	
+						if(def.objData.objLookupMetals.objNationHistoryTrade.nMarketDemand GTE 0, 'locale.TxtStyleArialBlue12Center', 'locale.TxtStyleArialGreen12Center'),
+							'locale.TxtStyleArialBlue12Center')
+				</property>
+				
+				<property name="strText" from="if(def.objData.objLookupMetals.objNationHistoryTrade != null,
+					if(def.objData.objLookupMetals.objNationHistoryTrade.nMarketDemand GTE 0, def.objData.objLookupMetals.objNationHistoryTrade.nMarketDemand.formatNumber(0, true),
+						abs(def.objData.objLookupMetals.objNationHistoryTrade.nMarketDemand).formatNumber(0, true)), '0')"/>
+				
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="50"/>
+				<property name="strToolTip">
+					if(def.objData.objLookupMetals.objNationHistoryTrade.nMarketDemand GTE 0, 
+					    locale.FSID.UI.DemandedForSuppliesToolTip.format('amount',def.objData.objLookupMetals.objNationHistoryTrade.nMarketDemand.formatNumber(0, true)),
+					    locale.FSID.UI.SuppliedToTheMarketToolTip.format('amount',abs(def.objData.objLookupMetals.objNationHistoryTrade.nMarketDemand).formatNumber(0, true))
+						)
+				</property>
+			</object>
+
+			<!-- Coal -->
+			<object type="UI2DWMTransactionsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(def.objData.objLookupCoal.objNationHistoryTrade != null,	
+						if(def.objData.objLookupCoal.objNationHistoryTrade.nMarketDemand GTE 0, 'locale.TxtStyleArialBlue12Center', 'locale.TxtStyleArialGreen12Center'),
+							'locale.TxtStyleArialBlue12Center')
+				</property>
+				
+				<property name="strText" from="if(def.objData.objLookupCoal.objNationHistoryTrade != null,
+					if(def.objData.objLookupCoal.objNationHistoryTrade.nMarketDemand GTE 0, def.objData.objLookupCoal.objNationHistoryTrade.nMarketDemand.formatNumber(0, true),
+						abs(def.objData.objLookupCoal.objNationHistoryTrade.nMarketDemand).formatNumber(0, true)), '0')"/>
+				
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="50"/>
+				<property name="strToolTip">
+					if(def.objData.objLookupCoal.objNationHistoryTrade.nMarketDemand GTE 0,
+					    locale.FSID.UI.DemandedForSuppliesToolTip.format('amount',def.objData.objLookupCoal.objNationHistoryTrade.nMarketDemand.formatNumber(0, true)),
+					    locale.FSID.UI.SuppliedToTheMarketToolTip.format('amount',abs(def.objData.objLookupCoal.objNationHistoryTrade.nMarketDemand).formatNumber(0, true))
+						)
+				</property>
+			</object>
+
+			<!-- Oil -->
+			<object type="UI2DWMTransactionsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(def.objData.objLookupOil.objNationHistoryTrade != null,	
+						if(def.objData.objLookupOil.objNationHistoryTrade.nMarketDemand GTE 0, 'locale.TxtStyleArialBlue12Center', 'locale.TxtStyleArialGreen12Center'),
+							'locale.TxtStyleArialBlue12Center')
+				</property>
+				
+				<property name="strText" from="if(def.objData.objLookupOil.objNationHistoryTrade != null,
+					if(def.objData.objLookupOil.objNationHistoryTrade.nMarketDemand GTE 0, def.objData.objLookupOil.objNationHistoryTrade.nMarketDemand.formatNumber(0, true),
+						abs(def.objData.objLookupOil.objNationHistoryTrade.nMarketDemand).formatNumber(0, true)), '0')"/>
+				
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="50"/>
+				<property name="strToolTip">
+					if(def.objData.objLookupOil.objNationHistoryTrade.nMarketDemand GTE 0,
+					    locale.FSID.UI.DemandedForSuppliesToolTip.format('amount',def.objData.objLookupOil.objNationHistoryTrade.nMarketDemand.formatNumber(0, true)),
+					    locale.FSID.UI.SuppliedToTheMarketToolTip.format('amount',abs(def.objData.objLookupOil.objNationHistoryTrade.nMarketDemand).formatNumber(0, true))					    
+						)
+				</property>
+			</object>
+
+			<!-- Food -->
+			<object type="UI2DWMTransactionsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(def.objData.objLookupFood.objNationHistoryTrade != null,	
+						if(def.objData.objLookupFood.objNationHistoryTrade.nMarketDemand GTE 0, 'locale.TxtStyleArialBlue12Center', 'locale.TxtStyleArialGreen12Center'),
+							'locale.TxtStyleArialBlue12Center')
+				</property>
+				
+				<property name="strText" from="if(def.objData.objLookupFood.objNationHistoryTrade != null,
+					if(def.objData.objLookupFood.objNationHistoryTrade.nMarketDemand GTE 0, def.objData.objLookupFood.objNationHistoryTrade.nMarketDemand.formatNumber(0, true),
+						abs(def.objData.objLookupFood.objNationHistoryTrade.nMarketDemand).formatNumber(0, true)), '0')"/>
+				
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="50"/>
+				<property name="strToolTip">
+					if(def.objData.objLookupFood.objNationHistoryTrade.nMarketDemand GTE 0,
+					    locale.FSID.UI.DemandedForSuppliesToolTip.format('amount',def.objData.objLookupFood.objNationHistoryTrade.nMarketDemand.formatNumber(0, true)),
+					    locale.FSID.UI.SuppliedToTheMarketToolTip.format('amount',abs(def.objData.objLookupFood.objNationHistoryTrade.nMarketDemand).formatNumber(0, true))					    
+						)
+				</property>
+			</object>
+		</object>
+	</objectDef>
+
+
+</locust>

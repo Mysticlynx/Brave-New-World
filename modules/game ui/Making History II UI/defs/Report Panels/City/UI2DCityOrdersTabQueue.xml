@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DCityOrdersTabQueue" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupCityData" type="LookupCityData"/>
+
+		<object type="UI2DWorkOrderQueue" name="objWorkOrderQueue">
+			<property name="objLookupCityData" from="def.objLookupCityData"/>>
+
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="385"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DWorkOrderQueue" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupCityData" type="LookupCityData"/>
+
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="415"/>
+		<property name="nHeight" value="385"/>
+
+		<object type="mlui.UI2DScrollPane" name="objScrollPane">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="385"/>
+
+			<object type="mlui.SliderInfo" name="objHorizInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="411"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="16"/>
+				<property name="nMaxKnobLength" value="16"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="mlui.SliderInfo" name="objVertInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="12"/>
+				<property name="nLength" value="385"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="37"/>
+				<property name="nMaxKnobLength" value="37"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="UI2DWorkOrderQueueElements" name="objScrollable">
+				<property name="objLookupCityData" from="def.objLookupCityData"/>
+
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="400"/>
+				<property name="nHeight" from="((def.objLookupCityData.objCity.objWorkOrders.size) * 2) +
+					((def.objLookupCityData.objCity.objWorkOrders.size) * 83)
+				"/>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DWorkOrderQueueElements" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupCityData" type="LookupCityData"/>
+
+		<object type="common_ui.UI2DSortedList" name="objBubbles">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="2"/>
+
+			<object type="UI2DWorkOrderQueueBubble" name="objElements" tiedTo="
+				filter(?{order: order != def.objLookupCityData.objCurrentWorkOrder}, 
+				def.objLookupCityData.objCity.objWorkOrders)
+			">
+				<property name="objLookupCityData" from="def.objLookupCityData"/>
+				<property name="objWorkOrder" from="tiedTo"/>
+
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="400"/>
+				<property name="nHeight" value="83"/>
+			</object>
+
+			<!-- TODO: Replace sorter -->
+			<!--<object type="mlutility.Sorter" name="objSorter">-->
+			<!--	<property name="pathToStorage" value="def.objBubbles.objElements"/>-->
+			<!--	<property name="otSortedType" value="UI2DWorkOrderQueueBubble"/>-->
+			<!--	<property name="strSortBy" value="nPriority"/>-->
+			<!--	<property name="strSortMethod" value="Numeric"/>-->
+			<!--</object>-->
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DWorkOrderQueueBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupCityData" type="LookupCityData"/>
+		<propertyDef name="objWorkOrder" type="gs_tbg.WorkOrder"/>
+
+		<propertyDef name="objFactoryOutputTemplate" type="gs_tbg.FactoryOutputTemplate"/>
+		<property name="objFactoryOutputTemplate" from="self.objWorkOrder.tmplFactoryOutput.resolve()"/>
+
+		<propertyDef name="nPriority" type="int"/>
+		<property name="nPriority" from="self.objWorkOrder.nPriority"/>
+
+		<propertyDef name="nOrderPercent" type="int"/>
+		<property name="nOrderPercent" from="(self.objWorkOrder.nIPUs * 100) / self.objFactoryOutputTemplate.nIPUs"/>
+
+		<propertyDef name="nOrderTurnsBase" type="int"/>
+		<property name="nOrderTurnsBase" from="(self.objFactoryOutputTemplate.nIPUs - self.objWorkOrder.nIPUs) / self.objLookupCityData.objCity.nIPUs"/>
+
+		<propertyDef name="nOrderTurnsModifier" type="int"/>
+		<property name="nOrderTurnsModifier" from="if((self.objFactoryOutputTemplate.nIPUs - self.objWorkOrder.nIPUs) % self.objLookupCityData.objCity.nIPUs != 0, 1, 0)"/>
+
+		<propertyDef name="nOrderTurns" type="int"/>
+		<property name="nOrderTurns" from="self.nOrderTurnsBase + self.nOrderTurnsModifier"/>
+
+		<object type="mlui.UI2DImage" name="objWorkOrderBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="83"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objOrderIconBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+
+		<!-- placeholder --> <object type="mlui.UI2DImage" name="objOrderIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconBuildingSm"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="71"/>
+			<property name="nHeight" value="73"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown13Left"/>
+			<property name="strText" from="def.objFactoryOutputTemplate.strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="13"/>
+		</object>
+
+		<!-- placeholder --><object type="mlui.UI2DText" name="objType">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.OrderType"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="16"/>
+			<property name="nWidth" value="55"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objCompletedPercent">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18Left"/>
+			<property name="strText" from="def.nOrderPercent + '%'"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="29"/>
+			<property name="nWidth" value="55"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgMeterBG"/>
+			<property name="nX" value="132"/>
+			<property name="nY" value="28"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" value="15"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMeterFill">
+			<property name="tmplImage" from="if(def.nOrderPercent GT 66, skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterGreen'),
+				if(def.nOrderPercent GT 33, skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterPurple'),
+					skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterRed')))
+			"/>
+			<property name="nX" value="133"/>
+			<property name="nY" value="29"/>
+			<property name="nWidth" from="def.nOrderPercent"/>
+			<property name="nHeight" value="13"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRepeatingIcon" existsWhile="self.objWorkOrder.bRepeating">
+			<property name="tmplImage" value="skin.ImgInfoIconRepeating"/>
+			<property name="nX" value="240"/>
+			<property name="nY" value="27"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objProductionRate">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ProductionRate"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="49"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objClockIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconClockSm"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="59"/>
+			<property name="nWidth" value="19"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objBuildTimeValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="def.nOrderTurns"/>
+			<property name="nX" value="106"/>
+			<property name="nY" value="64"/>
+			<property name="nWidth" value="50"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objBuildTimeTurns">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Right"/>
+			<property name="strText" from="if(def.nOrderTurns == 1, locale.SID.UI.Turn, locale.SID.UI.Turns)"/>
+			<property name="nX" value="106"/>
+			<property name="nY" value="66"/>
+			<property name="nWidth" value="50"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="common_ui.UI2DListHorz" name="objFactoryRequirementsList">
+			<property name="nX" value="173"/>
+			<property name="nY" value="61"/>
+			<property name="nSpacing" value="2"/>
+
+			<object type="UI2DResourceRequirements" name="objElements" tiedTo="def.objFactoryOutputTemplate.objResourceRequirements">
+				<property name="objMH2Data" from="def.objLookupCityData.objMH2Data"/>
+				<property name="objResourceRequirement" from="tiedTo"/>
+
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="30"/>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objButtonRemove">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+				if(def.objLookupCityData.bCanCommand, 'BtnStyleQueueButtonRemove', 'BtnStyleQueueButtonRemoveDisabled'))
+			"/>
+			<property name="nX" value="279"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.Remove"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupCityData.bCanCommand)
+							{
+								var action = gs_tbg.GActRemoveWorkOrder.create({
+									"refCity": def.objLookupCityData.objCity,
+									"objWorkOrder": def.objWorkOrder
+								});
+								def.objLookupCityData.objMH2Data.objAvatar.sendAction(action);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objButtonDecrease">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+				if(def.objLookupCityData.bCanCommand, 'BtnStyleQueueButtonDecrease', 'BtnStyleQueueButtonDecreaseDisabled'))
+			"/>
+			<property name="nX" value="309"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.Decrease"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupCityData.bCanCommand)
+							{
+								var action = gs_tbg.GActSetWorkOrderPriority.create({
+									"refCity": def.objLookupCityData.objCity,
+									"objWorkOrder": def.objWorkOrder,
+									"nPriority": def.objWorkOrder.nPriority + 1
+								});
+								def.objLookupCityData.objMH2Data.objAvatar.sendAction(action);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objButtonIncrease">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+				if(def.objLookupCityData.bCanCommand, 'BtnStyleQueueButtonIncrease', 'BtnStyleQueueButtonIncreaseDisabled'))
+			"/>
+			<property name="nX" value="339"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.Increase"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupCityData.bCanCommand)
+							{
+								var action = gs_tbg.GActSetWorkOrderPriority.create({
+									"refCity": def.objLookupCityData.objCity,
+									"objWorkOrder": def.objWorkOrder,
+									"nPriority": def.objWorkOrder.nPriority - 1
+								});
+								def.objLookupCityData.objMH2Data.objAvatar.sendAction(action);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objButtonStart">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+				if(def.objLookupCityData.bCanCommand, 'BtnStyleQueueButtonStart', 'BtnStyleQueueButtonStartDisabled'))
+			"/>
+			<property name="nX" value="369"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.Start"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupCityData.bCanCommand)
+							{
+								var action = gs_tbg.GActSetWorkOrderPriority.create({
+									"refCity": def.objLookupCityData.objCity,
+									"objWorkOrder": def.objWorkOrder,
+									"nPriority": 1
+								});
+								def.objLookupCityData.objMH2Data.objAvatar.sendAction(action);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+</locust>

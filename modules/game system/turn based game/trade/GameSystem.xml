@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysTrade" class="CMLOGameSysTrade" superType="mlgame.GameSystem">
+        <propertyDef name="objTradeAgreements" type="TradeAgreement" variable="true" storesChildren="true"/>
+        <propertyDef name="objMoneyTransfers" type="MoneyTransfer" variable="true" storesChildren="true"/>
+        <propertyDef name="objSupplyAndDemand" type="SupplyAndDemand" variable="true" storesChildren="true"/>
+        <propertyDef name="tmplPriceAdjustmentList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="objTradeRecords" type="TradeRecord" variable="true" storesChildren="true"/>
+        <propertyDef name="fTradeAgreementRelationsFactor" type="float" default="10.0"/>
+        <propertyDef name="fAidTransactionRelationsFactor" type="float" default="5.0"/>
+        <propertyDef name="fMinResourceValueScale" type="float" default="0.01"/>
+        <propertyDef name="fMoneyTransferRelationsFactor" type="float" default="5.0"/>
+        <propertyDef name="fMinMoneyValueScale" type="float" default="0.01"/>
+        <propertyDef name="n64MoneyScale" type="int64" default="1000000000"/>
+        
+        <propertyDef name="bWantLog" type="bool" default="false"/><!-- outputs messages for development purposes-->
+        
+		<!-- builtin method signatures:
+			PriceAdjustTemplate getPriceAdjustTemplate(ResourceTemplate)
+
+		    // Note: The below 4 methods are redundant with GActAcceptTradeAgreement,GActRejectTradeAgreement,GActWithdrawTradeAgreement,GActCancelTradeAgreement
+			bool acceptTradeAgreement(gameroot, tradeAgreement, acceptMessage)
+			bool rejectTradeAgreement(gameroot, tradeAgreement, rejectMessage)
+			bool withdrawTradeAgreement(gameroot, tradeAgreement)
+			bool cancelTradeAgreement(gameroot, tradeAgreement, cancelMessage, cancelingNation)
+			
+            int getCachedSupplyForNation(avatar,nation,resourceTemplate)
+	        int getCachedDemandForNation(avatar,nation,resourceTemplate)
+			-->
+			
+    	<script type="application/x-locust-query">
+            getTradeAgreementsByResource = ?{resource:
+                filter(?{agreement:agreement.tmplResource == resource}, self.objTradeAgreements)
+            }
+    	</script>
+			
+	</objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysTrade = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysTrade)
+		}
+
+		getAllSupplyAndDemand = ?{gameroot:
+			getGameSysTrade(gameroot).objSupplyAndDemand
+		}
+
+        getAllTradeAgreements = ?{gameroot:
+            getGameSysTrade(gameroot).objTradeAgreements
+        }
+		
+		getAllMoneyTransfers = ?{gameroot:
+            getGameSysTrade(gameroot).objMoneyTransfers
+        }
+
+        getTradeAgreementsByResource = ?{gameroot, resource:
+            getGameSysTrade(gameroot).getTradeAgreementsByResource(resource)
+        }
+	</script>
+
+
+
+</locust>

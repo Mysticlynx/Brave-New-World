@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	type="mh2 data"
+	name="shared"
+	locustVersion="2.11"
+>
+	<import module="mlcore" default="true"/>
+	<import module="lib:mlgame" as="mlgame"/>
+	<import module="lib:mlevent" as="mlevent"/>
+	<import module="lib:media" as="mlmedia"/>
+	<import module="script:javascript" as="mljs"/>
+	<import module="lib:mh2 common" as="mh2_common"/>
+	<import module="game system:turn based game" as="gs_tbg"/>
+	<import module="game system:notification" as="gs_notify"/>
+	<import module="ui lib:Media Tables" as="media_tables"/>
+
+	<include>
+		defs/NationTemplates.xml
+		defs/RegionTemplates.xml
+		defs/CityTemplates.xml
+		defs/UnitTemplates.xml
+		defs/ResearchTemplates.xml
+		defs/ResourceTemplates.xml
+		defs/NationRelationTemplates.xml
+		defs/TradeTemplates.xml
+		defs/AITemplates.xml
+		defs/AIPersonalityTemplates.xml
+		defs/AIComparisons.xml
+		defs/AICityDevelopmentTemplates.xml
+		defs/AIResearchTrackTemplates.xml
+        defs/UnitUpgradeTrackTemplates.xml
+        defs/NotificationsTemplates.xml
+        defs/DiplomaticEffectsTemplates.xml
+        defs/FlagModelTextureTable.xml
+	</include>
+</locustModule>

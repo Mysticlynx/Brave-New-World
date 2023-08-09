@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <enumDef name="ArchitectureType">
+		<value name="American"/>
+		<value name="CentralEuropean"/>
+		<value name="French"/>
+        <value name="Germanic"/>
+        <value name="Latin"/>
+        <value name="MiddleEast"/>
+        <value name="Anglo"/>
+    </enumDef>
+
+    <objectDef type="RegionProject" class="CMLORegionProject" desc="A region project">
+        <replicationRule>
+            ?{avatar, game:
+            game.isRegionVisible(avatar, self.objRegion)
+            }
+        </replicationRule>
+        <propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="tmplRegionOutput" type="TemplateRef" restriction="RegionOutputTemplate"/>
+        <propertyDef name="objParam" type="Object"/>
+        <propertyDef name="nNumPaidFor" type="int" default="0"/>
+        <propertyDef name="nPriority" type="int"/>
+        <propertyDef name="nTurns" type="int"/>
+        <propertyDef name="bCompleted" type="bool" default="false"/>
+    </objectDef>
+
+    <objectDef type="ResourceCapacity" class="CMLOResourceCapacity">
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nImprovementSlots" type="int" default="0" desc="Number of slots for improvements on this resource"/>
+        <propertyDef name="objImprovements" type="ResourceImprovement" variable="true" storesChildren="true"/>
+        <propertyDef name="nMPUs" type="int" default="0" desc="MPUs working in improvements"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0" desc="Per turn maintenance cost of improvements"/>
+        <propertyDef name="nBaseProduction" type="int" default="0" desc="Base Production of improvements"/>
+        <propertyDef name="nProduced" type="int" default="0" desc="Amount produced last turn"/>
+    </objectDef>
+
+    <objectDef type="ResourceImprovement" class="CMLOResourceImprovement">
+        <propertyDef name="tmplResourceImprovement" type="TemplateRef" restriction="ResourceImprovementTemplate"/>
+        <propertyDef name="nHitPoints" type="int" default="0"/>
+		<propertyDef name="nLevel" type="int" from="self.tmplResourceImprovement.resolve().nLevel"/>
+    </objectDef>
+
+    <objectDef type="RegionOutputCategoryTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+    </objectDef>
+
+    <!-- Region Output Templates -->
+    <objectDef type="RegionOutputTemplate" superType="Template" class="CMLORegionOutputTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="strEncyclopediaDescription" type="String"/>
+		<propertyDef name="strShortDescription" type="String"/>
+        <propertyDef name="tmplCategory" type="TemplateRef" restriction="RegionOutputCategoryTemplate"/>
+        <propertyDef name="bMultiple" type="bool" default="false"/>
+        <propertyDef name="objResourceRequirements" type="ResourceRequirement" variable="true" storesChildren="true"/>
+        <propertyDef name="objRegionRequirements" type="RegionRequirement" variable="true" storesChildren="true"/>
+        <propertyDef name="nTurns" type="int"/>
+        <propertyDef name="nMPURequirement" type="int" default="0"/>
+    </objectDef>
+
+    <objectDef type="ResourceProducerOutputTemplate" superType="RegionOutputTemplate" class="CMLOResourceProducerOutputTemplate">
+        <propertyDef name="tmplResourceImprovement" type="TemplateRef" restriction="ResourceImprovementTemplate"/>
+        <propertyDef name="tmplResourceImprovementToUpgrade" type="TemplateRef" restriction="ResourceImprovementTemplate"/>
+        <propertyDef name="nAmount" type="int" default="0"/>
+    </objectDef>
+
+    <objectDef type="ResourceProspectingOutputTemplate" superType="RegionOutputTemplate" class="CMLOResourceProspectingOutputTemplate">
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nAmount" type="int" default="0"/>
+    </objectDef>
+
+    <objectDef type="RegionRequirement" class="CMLORegionRequirement" desc="A region requirement">
+        <!-- builtin method signatures:
+			bool isMetBy(tmplRegionOutput)
+		-->
+    </objectDef>
+
+    <objectDef type="RegionRequirementResearchProject" superType="RegionRequirement" class="CMLORegionRequirementResearchProject" desc="A research project region requirement">
+        <propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="ResearchTopicTemplate"/>
+    </objectDef>
+
+    <objectDef type="RegionRequirementResourceImprovement" superType="RegionRequirement" class="CMLORegionRequirementResourceImprovement" desc="A resource improvement region requirement">
+        <propertyDef name="tmplResourceImprovement" type="TemplateRef" restriction="ResourceImprovementTemplate"/>
+    </objectDef>
+
+    <!-- Resource Improvement Templates -->
+    <objectDef type="ResourceImprovementTemplate" superType="Template" class="CMLOResourceImprovementTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nAmount" type="int" default="0"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0"/>
+        <propertyDef name="nMPUs" type="int" default="0"/>
+        <propertyDef name="nHitPoints" type="int" default="0"/>
+		<propertyDef name="nLevel" type="int" default="1"/>
+    </objectDef>
+
+    <!-- Terrain Templates -->
+    <objectDef type="TerrainTemplate" superType="Template" class="CMLOTerrainTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="bWater" type="bool" default="false"/>
+        <propertyDef name="bImpassable" type="bool" default="false"/>
+        <propertyDef name="nFoodCapacityModifier" type="int" default="0"/>
+        <propertyDef name="nFoodProductionModifier" type="int" default="0"/>
+        <propertyDef name="colColor" type="Color" default="#FFFFFFFF"/>
+    </objectDef>
+
+    <objectDef type="RegionImprovement" class="CMLORegionImprovement">
+        <propertyDef name="nHitPoints" type="int" default="0"/>
+        <propertyDef name="nMPUs" type="int" default="0"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0"/>
+    </objectDef>
+
+    <!-- arbitrary list of regions -->
+    <objectDef type="RegionListTemplate" superType="Template" templateBase="true">
+        <propertyDef name="refRegions" type="GORef" restriction="Region" variable="true"/>
+    </objectDef>
+
+    <objectDef type="DPADismantleResourceImprovement" class="CMLODPAResourceImprovement" superType="DecisionPointAnswer" desc="A decision point answer for when a resource improvement being dismantled requires a prompt or confirmation">
+		<propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objResourceImprovement" type="ResourceImprovement"/>
+    </objectDef>
+
+    <objectDef type="DPADismantleRegionImprovement" class="CMLODPARegionImprovement" superType="DecisionPointAnswer" desc="A decision point answer for when a region improvement being dismantled requires a prompt or confirmation">
+    </objectDef>
+
+</locust>

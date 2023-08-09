@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="EventFactoryOutputProduced" class="CMLOEventFactoryOutputProduced" superType="mlevent.Event" desc="Event for when a factory output is produced">
+      <propertyDef name="objCity" type="City"/>
+      <propertyDef name="tmplFactoryOutput" type="TemplateRef" restriction="FactoryOutputTemplate"/>
+    </objectDef>
+
+    <objectDef type="EventCityBuildingDestroyed" class="CMLOEventCityBuildingDestroyed" superType="mlevent.Event" desc="Event for when a city building is destroyed">
+        <propertyDef name="objCityBuilding" type="CityBuilding"/>
+		<propertyDef name="objCity" type="City"/>
+    </objectDef>
+	
+	<objectDef type="EventResearchCenterBuildingDestroyed" class="CMLOEventResearchCenterBuildingDestroyed" superType="mlevent.Event" desc="Event for when a research center building is destroyed">
+        <propertyDef name="objResearchCenterBuilding" type="ResearchCenterBuilding"/>
+		<propertyDef name="objCity" type="City"/>
+    </objectDef>
+	
+	<objectDef type="EventCityNuked" class="CMLOEventCityNuked" superType="mlevent.Event" desc="Event for when a city is destroyed in a nuclear explosion">
+        <propertyDef name="objCity" type="City"/>
+		<propertyDef name="objBomber" type="Nation"/>
+    </objectDef>
+
+    <objectDef type="EventHighMoraleIPUBonus" superType="mlevent.Event">
+		<propertyDef name="objNation" type="Nation"/>
+	</objectDef>
+
+	<objectDef type="EventLowMoraleIPUPenalty" superType="mlevent.Event">
+		<propertyDef name="objNation" type="Nation"/>
+	</objectDef>
+
+	<objectDef type="EventLowStabilityIPUPenalty" superType="mlevent.Event">
+		<propertyDef name="objCity" type="City"/>
+	</objectDef>
+	
+	<objectDef type="EventResearchBreakthrough" superType="mlevent.Event">
+		<propertyDef name="objCity" type="City"/>
+		<propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="ResearchTopicTemplate"/>
+	</objectDef>
+
+	<objectDef type="EventResearchSetback" superType="mlevent.Event">
+		<propertyDef name="objCity" type="City"/>
+		<propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="ResearchTopicTemplate"/>
+	</objectDef>
+
+    <objectDef type="EventVCCities" class="CMLOEventVCCities" superType="mlevent.Event" desc="Event for when the cities victory condition is met">
+        <propertyDef name="objNation" type="Nation"/>
+    </objectDef>
+
+</locust>

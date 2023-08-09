@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="EventEngagementBegan" class="CMLOEventEngagementBegan" superType="mlevent.Event" desc="Event for when an engagement begins">
+        <propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objAttacker" type="Nation"/>
+        <propertyDef name="objDefender" type="Nation"/>
+		<propertyDef name="objEngagement" type="Engagement"/>
+	</objectDef>
+
+	<objectDef type="EventEngagementEnded" class="CMLOEventEngagementEnded" superType="mlevent.Event" desc="Event for when an engagement ends">
+        <propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objWinner" type="Nation"/>
+		<propertyDef name="objEngagement" type="Engagement"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDamagedInEngagement" class="CMLOEventUnitDamagedInEngagement" superType="mlevent.Event" desc="Event for when a unit is damaged in an engagement">
+		<propertyDef name="objUnit" type="Unit"/>
+        <propertyDef name="nDamage" type="int"/>
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="objEngagement" type="Engagement"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDestroyedInEngagement" class="CMLOEventUnitDestroyedInEngagement" superType="mlevent.Event" desc="Event for when a unit is destroyed in an engagement">
+		<propertyDef name="objUnit" type="Unit"/>
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="objEngagement" type="Engagement"/>
+	</objectDef>
+
+    <objectDef type="EventCollateralDamage" class="CMLOEventCollateralDamage" superType="mlevent.Event" desc="Event for when an engagement causes collateral damage">
+        <propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="nDamage" type="int"/>
+        <propertyDef name="eDamageType" type="Enum" restriction="CollateralDamageType"/>
+        <propertyDef name="objTarget" type="Object"/>
+    </objectDef>
+
+</locust>

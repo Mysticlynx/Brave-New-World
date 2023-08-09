@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <!-- Region Season -->
+    <objectDef type="RegionSeason" class="CMLORegionSeason">
+        <goDef gameSystem="GameSysWeather" storageProperty="objRegionSeasons">
+            <keyProperty name="refRegion"/>
+        </goDef>
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="refSeason" type="GORef" restriction="Season"/>
+    </objectDef>
+
+</locust>

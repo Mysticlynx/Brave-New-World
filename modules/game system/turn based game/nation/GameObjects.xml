@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="Nation" class="CMLONation" desc="A nation">
+        <goDef gameSystem="GameSysNation" storageProperty="objNations">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="tmplNation" type="TemplateRef" restriction="NationTemplate"/>
+        <propertyDef name="tmplNationality" type="TemplateRef" restriction="NationalityTemplate"/>
+        <propertyDef name="refAvatar" type="GORef" restriction="mlgame.Avatar"/>
+        <propertyDef name="refAIAvatar" type="GORef" restriction="mlgame.Avatar"/>
+        <propertyDef name="nIPUs" type="int" default="0" desc="Rollup of IPUs in this nation"/>
+        <propertyDef name="nWorkingMPUs" type="int" default="0" desc="Rollup of employed MPUs in this nation"/>
+        <propertyDef name="nMPUs" type="int" default="0" desc="Rollup of available (unemployed) MPUs in this nation"/>
+        <propertyDef name="nMPUGrowth" type="int" default="0" desc="deprecated"/>
+        <propertyDef name="fMPUGrowth" type="float" default="0.0" desc="Rollup of MPU growth in this nation"/>
+        <propertyDef name="n64Population" type="int64" default="0"/>
+        <propertyDef name="n64CorePopulation" type="int64" default="0" desc="Total population excluding colonies and occupied regions"/>
+        <propertyDef name="n64NonNationalPopulation" type="int64" default="0"/>
+        <propertyDef name="n64NonReligionPopulation" type="int64" default="0"/>
+        <propertyDef name="n64NonCulturePopulation" type="int64" default="0"/>
+        <propertyDef name="fFoodDemandPerMilitaryMPU" type="float" default="0.0"/>
+        <propertyDef name="fFoodDemandPerCityMPU" type="float" default=".0825"/>
+        <propertyDef name="fFoodDemandPerResourceMPU" type="float" default=".0413"/>
+        <propertyDef name="fFoodDemandPerFoodMPU" type="float" default=".0413"/>
+        <propertyDef name="fFoodDemandPerUnemployedMPU" type="float" default=".0206"/>
+		<propertyDef name="nMilitaryMaintenanceLevel" type="int" default="100"/>
+        <propertyDef name="tmplNonNational" type="TemplateRef" restriction="StabilityModifierTemplate"/>
+        <propertyDef name="tmplNonReligion" type="TemplateRef" restriction="StabilityModifierTemplate"/>
+        <propertyDef name="tmplNonCulture" type="TemplateRef" restriction="StabilityModifierTemplate"/>
+        <propertyDef name="tmplIdeologyStrength" type="TemplateRef" restriction="StabilityModifierTemplate"/>
+		<propertyDef name="tmplUnemploymentLevel" type="TemplateRef" restriction="StabilityModifierTemplate"/>
+        <propertyDef name="nNationalDebtPercent" type="int" default="0" desc="National Debt as a percent of projected annual expenses"/>
+        <propertyDef name="nDebtStabilityModifier" type="int" default="0"/>
+        <propertyDef name="nNationMoraleModifier" type="int" default="0"/>
+        <propertyDef name="bRepairAll" type="bool" default="true"/>
+        <propertyDef name="nStability" type="int" default="100"/>
+        <propertyDef name="objIdeologies" type="Ideology" variable="true" storesChildren="true"/>
+        <propertyDef name="tmplIdeology" type="TemplateRef" restriction="IdeologyTemplate"/>
+        <propertyDef name="refResearchProgram" type="GORef" restriction="ResearchProgram"/>
+        <propertyDef name="colColor" type="Color"/>
+        <propertyDef name="objPowerPoints" type="PowerPoints" storesChildren="true"/>
+        <propertyDef name="objFinance" type="NationFinance" storesChildren="true"/>
+        <propertyDef name="objStatus" type="NationStatus" storesChildren="true"/>
+        <propertyDef name="objMilitaryTotals" type="NationMilitaryTotals" storesChildren="true"/>
+        <propertyDef name="bDisabled" type="bool" default="false"/>
+        
+        <!-- builtin methods 
+	        getMoney(gameRoot)
+	        setMoney(gameRoot,n64Money)
+	        getMaxUsefulMoney(gameRoot)
+	        getAIAvatar(gameRoot)
+	        adjustResearchProjectPoints(game,researchProjects,nDeltaPoints)
+	        canDeclareWar()
+	        canFormAlliances()
+	        canDoTreaties()
+        -->
+
+		<script type="application/x-locust-query">
+            //determine if nation can view self's panels
+            //canView = ?{nation:
+            //}
+
+            //determine if nation can issue commands on self's objects
+            canCommand = ?{nation:
+            self == nation
+            }
+
+            getMasterNation = ?{gameroot:
+            switch {
+            case self.objStatus.instanceOf(NationStatusPuppet):
+            self.objStatus.refController.resolve(gameroot)
+            default:
+            self
+            }
+            }
+
+            getNationTemplate = ?{: self.tmplNation.resolve()}
+            getNationalityTemplate = ?{: self.tmplNationality.resolve()}
+            getCultureTemplate = ?{: self.getNationTemplate().tmplCulture.resolve()}
+            getReligionTemplate = ?{: self.getNationTemplate().tmplReligion.resolve()}
+            getIdeologyTemplate = ?{: self.tmplIdeology.resolve()}
+			
+            getRulingIdeologyStrength = ?{:
+                ?{ideo: if (ideo != null,ideo.nLevel,0) }(find(?{ideo: ideo.tmplIdeology == self.tmplIdeology}, self.objIdeologies))
+            }
+			
+            getIdeoOppositionPct = ?{:
+				sum(map(?{ideo: ideo.nLevel},
+					filter(?{ideo: ideo.tmplIdeology != self.tmplIdeology},
+						self.objIdeologies)))
+            }
+                        
+            getUnemploymentPercent = ?{: if (self.nMPUs GT 0, self.nMPUs * 100 / ( self.nWorkingMPUs + self.nMPUs ), 0) }
+            getNonNationPercent = ?{: if (self.n64Population GT 0, self.n64NonNationalPopulation * 100 / self.n64Population, 0) }
+            getNonReligionPercent = ?{: if (self.n64Population GT 0, self.n64NonReligionPopulation * 100 / self.n64Population, 0) }
+            getNonCulturePercent = ?{: if (self.n64Population GT 0, self.n64NonCulturePopulation * 100 / self.n64Population, 0) }
+            
+        </script>
+    </objectDef>
+
+	<objectDef type="NationIdentity" class="CMLONationIdentity" desc="A nation identity">
+        <replicationRule>false</replicationRule>
+        <goDef gameSystem="GameSysNation" storageProperty="objNationIdentities">
+            <keyProperty name="tmplNation"/>
+        </goDef>
+        <propertyDef name="tmplNation" type="TemplateRef" restriction="NationTemplate"/>
+        <propertyDef name="refResearchProgram" type="GORef" restriction="ResearchProgram"/>
+    </objectDef>
+
+    <objectDef type="NationResource" class="CMLONationResource" desc="A nation resource">
+        <replicationRule>
+            ?{avatar, game:
+            avatar.getAttribValue("Nation") == self.refNation
+            }
+        </replicationRule>
+        <goDef gameSystem="GameSysNation" storageProperty="objNationResources">
+            <keyProperty name="refNation"/>
+            <keyProperty name="objResourceTemplate"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objResourceTemplate" type="ResourceTemplate"/>
+        <propertyDef name="nAmount" type="int" default="0"/>
+        <propertyDef name="eAutotradeState" type="Enum" restriction="AutotradeState" default="AUTOTRADE_STATE_DISABLED"/>
+        <propertyDef name="nDesiredStockpile" type="int" default="2000"/>
+        <!-- Stats -->
+        <propertyDef name="nProduced" type="int" default="0"/>
+        <propertyDef name="nConsumed" type="int" default="0"/>
+        <propertyDef name="nCurrentConsumption" type="int" default="0"/>
+        <propertyDef name="nDemand" type="int" default="0"/>
+        <propertyDef name="nPreviousAmount" type="int" default="0"/>
+        <propertyDef name="fRunningAvgChange" type="float" default="0.0"/>
+        
+    </objectDef>
+
+    <objectDef type="NationResourceStatistics" class="CMLONationResourceStatistics" desc="Statistics for a nation resource">
+        <replicationRule>
+            ?{avatar, game:
+            avatar.getAttribValue("Nation") == self.refNation
+            }
+        </replicationRule>
+        <goDef gameSystem="GameSysNation" storageProperty="objNationResourceStatistics">
+            <keyProperty name="refNation"/>
+            <keyProperty name="tmplResource"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nDirectTradeImportTotal" type="int" default="0"/>
+        <propertyDef name="nDirectTradeExportTotal" type="int" default="0"/>
+        <propertyDef name="nRegionPerTurnProductionTotal" type="int" default="0"/>
+        <propertyDef name="nRegionPerTurnDemandTotal" type="int" default="0"/>
+        <propertyDef name="nCityPerTurnProductionTotal" type="int" default="0"/>
+        <propertyDef name="nCityPerTurnDemandTotal" type="int" default="0"/>
+        <propertyDef name="nFactoryPerTurnProductionTotal" type="int" default="0"/>
+        <propertyDef name="nFactoryDemandTotal" type="int" default="0"/>
+        <propertyDef name="nRegionProjectDemandTotal" type="int" default="0"/>
+        <propertyDef name="nResearchDemandTotal" type="int" default="0"/>
+        <propertyDef name="nMilitaryDemandTotal" type="int" default="0"/>
+    </objectDef>
+
+
+    <objectDef type="NationHistory" class="CMLONationHistory" desc="One turn of a nation's history">
+        <goDef gameSystem="GameSysNation" storageProperty="objNationHistories">
+            <keyProperty name="refNation"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objTrades" type="NationHistoryTrade" variable="true" storesChildren="true"/>
+
+    </objectDef>
+
+	<objectDef type="NationTakeover" class="CMLONationTakeover" desc="A nation">
+        <replicationRule>false</replicationRule>
+        <goDef gameSystem="GameSysNation" storageProperty="objNationTakeovers">
+            <keyProperty name="refNation"/>
+            <keyProperty name="refDefeatedNation"/>
+            <keyProperty name="nTurn"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refDefeatedNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refFormerController" type="GORef" restriction="Nation"/>
+        <propertyDef name="nTurn" type="int"/>
+    </objectDef>
+
+</locust>

@@ -1,0 +1,934 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<object type="mlui.UserInterface" name="objRunnable">
+        <property name="eDesiredShaderSystem" value="GLSL" platform="linux"/>
+		<property name="bOutlineText" value="false"/>
+		<property name="nToolTipDelayMS" value="800"/>
+		<property name="fMaxFPS" value="30.0"/>
+        <property name="fMaxIdleTime" value="-1.0"/><!-- don't go idle -->		
+        <property name="fScrollPaneSensitivity" value="10.0"/>
+		<property name="strWindowCaption" value="Making History II: The War of the World"/>
+        
+        <object type="mlui.UI2DNetInfoLayer" name="objNetInfoLayer">
+            <object type="UI2DLostConnectionScreen" name="objLostConnectionScreen" existsWhile="!self.bConnectionClosed AND !self.bConnected AND !self.bIdle">
+                <property name="nHeight" from="self.parent.parent.nHeight"/>
+                <property name="nWidth" from="self.parent.parent.nWidth"/>
+            </object>
+            <object type="UI2DClosedConnectionScreen" name="objClosedConnectionScreen" existsWhile="self.bConnectionClosed">
+                   <property name="nHeight" from="self.parent.parent.nHeight"/>
+                <property name="nWidth" from="self.parent.parent.nWidth"/>
+            </object>
+            <object type="UI2DIdleConnectionScreen" name="objIdleScreen" existsWhile="self.bIdle">
+                <property name="nHeight" from="self.parent.parent.nHeight"/>
+                <property name="nWidth" from="self.parent.parent.nWidth"/>
+            </object>
+        </object>        
+
+		<object type="UI2DRoot" name="objRoot">
+			<!-- Alarm -->
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Alarm Advisor Message"/>
+				<property name="tmplSound" value="sound.Alarm Advisor Message"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Alarm Agreement Arrives"/>
+				<property name="tmplSound" value="sound.Alarm Agreement Arrives"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Alarm Chat Received"/>
+				<property name="tmplSound" value="sound.Alarm Chat Received"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Alarm Timer Long"/>
+				<property name="tmplSound" value="sound.Alarm Timer Long"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Alarm Timer Short"/>
+				<property name="tmplSound" value="sound.Alarm Timer Short"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Alarm Timer Zero"/>
+				<property name="tmplSound" value="sound.Alarm Timer Zero"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<!-- Anthem -->
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem China"/>
+				<property name="tmplSound" value="sound.Anthem China"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem Communist China"/>
+				<property name="tmplSound" value="sound.Anthem Communist China"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem Czechoslovakia"/>
+				<property name="tmplSound" value="sound.Anthem Czechoslovakia"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem France"/>
+				<property name="tmplSound" value="sound.Anthem France"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem Germany"/>
+				<property name="tmplSound" value="sound.Anthem Germany"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem Italy"/>
+				<property name="tmplSound" value="sound.Anthem Italy"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem Japan"/>
+				<property name="tmplSound" value="sound.Anthem Japan"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem Nationalist China"/>
+				<property name="tmplSound" value="sound.Anthem Nationalist China"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem Nationalist Spain"/>
+				<property name="tmplSound" value="sound.Anthem Nationalist Spain"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem Republican Spain"/>
+				<property name="tmplSound" value="sound.Anthem Republican Spain"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem United Kingdom"/>
+				<property name="tmplSound" value="sound.Anthem United Kingdom"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem United States"/>
+				<property name="tmplSound" value="sound.Anthem United States"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Anthem USSR"/>
+				<property name="tmplSound" value="sound.Anthem USSR"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<!-- City -->
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="City Advanced"/>
+				<property name="tmplSound" value="sound.City Advanced"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="City Industrial"/>
+				<property name="tmplSound" value="sound.City Industrial"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="City Pre-Industrial"/>
+				<property name="tmplSound" value="sound.City Pre-Industrial"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="City Universal"/>
+				<property name="tmplSound" value="sound.City Universal"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<!-- Icon -->
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Book"/>
+				<property name="tmplSound" value="sound.Icon Book"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Book Tab"/>
+				<property name="tmplSound" value="sound.Icon Book Tab"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Confirm/Cancel"/>
+				<property name="tmplSound" value="sound.Icon Confirm/Cancel"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Diplomatic"/>
+				<property name="tmplSound" value="sound.Icon Diplomatic"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Diplomatic View"/>
+				<property name="tmplSound" value="sound.Icon Diplomatic View"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Domestic"/>
+				<property name="tmplSound" value="sound.Icon Domestic"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Domestic View"/>
+				<property name="tmplSound" value="sound.Icon Domestic View"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Economic"/>
+				<property name="tmplSound" value="sound.Icon Economic"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Economic View"/>
+				<property name="tmplSound" value="sound.Icon Economic View"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon End Turn"/>
+				<property name="tmplSound" value="sound.Icon End Turn"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Military"/>
+				<property name="tmplSound" value="sound.Icon Military"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Military Alt"/>
+				<property name="tmplSound" value="sound.Icon Military Alt"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Military View"/>
+				<property name="tmplSound" value="sound.Icon Military View"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Next/Prev"/>
+				<property name="tmplSound" value="sound.Icon Next/Prev"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Panel Close"/>
+				<property name="tmplSound" value="sound.Icon Panel Close"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Pending Orders"/>
+				<property name="tmplSound" value="sound.Icon Pending Orders"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Personal Log"/>
+				<property name="tmplSound" value="sound.Icon Personal Log"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon Save/Exit"/>
+				<property name="tmplSound" value="sound.Icon Save/Exit"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Icon World Summary View"/>
+				<property name="tmplSound" value="sound.Icon World Summary View"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<!-- Misc -->
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Click"/>
+				<property name="tmplSound" value="sound.ClickSound"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Event Sea Battle"/>
+				<property name="tmplSound" value="sound.EventSeaBattle"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<!-- Move -->
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Bomber Engaged"/>
+				<property name="tmplSound" value="sound.Move Bomber Engaged"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Bomber Safe"/>
+				<property name="tmplSound" value="sound.Move Bomber Safe"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Plane Engaged"/>
+				<property name="tmplSound" value="sound.Move Plane Engaged"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Plane Safe"/>
+				<property name="tmplSound" value="sound.Move Plane Safe"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Ship Engaged"/>
+				<property name="tmplSound" value="sound.Move Ship Engaged"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Ship Safe"/>
+				<property name="tmplSound" value="sound.Move Ship Safe"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Submarine Engaged"/>
+				<property name="tmplSound" value="sound.Move Submarine Engaged"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Submarine Safe"/>
+				<property name="tmplSound" value="sound.Move Submarine Safe"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Tank Engaged"/>
+				<property name="tmplSound" value="sound.Move Tank Engaged"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Tank Safe"/>
+				<property name="tmplSound" value="sound.Move Tank Safe"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Troop Engaged"/>
+				<property name="tmplSound" value="sound.Move Troop Engaged"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Move Troop Safe"/>
+				<property name="tmplSound" value="sound.Move Troop Safe"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<!-- Music -->
+			<object type="mlui.UIJukebox" name="objJukebox">
+				<property name="strName" value="Background Music"/>
+			
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track1"/>
+					<property name="tmplSound" value="sound.BG Music 1"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track2"/>
+					<property name="tmplSound" value="sound.BG Music 2"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track3"/>
+					<property name="tmplSound" value="sound.BG Music 3"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track4"/>
+					<property name="tmplSound" value="sound.BG Music 4"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track5"/>
+					<property name="tmplSound" value="sound.BG Music 5"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track6"/>
+					<property name="tmplSound" value="sound.BG Music 6"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track7"/>
+					<property name="tmplSound" value="sound.BG Music 7"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track8"/>
+					<property name="tmplSound" value="sound.BG Music 8"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track9"/>
+					<property name="tmplSound" value="sound.BG Music 9"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track10"/>
+					<property name="tmplSound" value="sound.BG Music 10"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track11"/>
+					<property name="tmplSound" value="sound.BG Music 11"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track12"/>
+					<property name="tmplSound" value="sound.BG Music 12"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track13"/>
+					<property name="tmplSound" value="sound.BG Music 13"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track15"/>
+					<property name="tmplSound" value="sound.BG Music 15"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track16"/>
+					<property name="tmplSound" value="sound.BG Music 16"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track17"/>
+					<property name="tmplSound" value="sound.BG Music 17"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track18"/>
+					<property name="tmplSound" value="sound.BG Music 18"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track19"/>
+					<property name="tmplSound" value="sound.BG Music 19"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track20"/>
+					<property name="tmplSound" value="sound.BG Music 20"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track21"/>
+					<property name="tmplSound" value="sound.BG Music 21"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track22"/>
+					<property name="tmplSound" value="sound.BG Music 22"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track23"/>
+					<property name="tmplSound" value="sound.BG Music 23"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track24"/>
+					<property name="tmplSound" value="sound.BG Music 24"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track25"/>
+					<property name="tmplSound" value="sound.BG Music 25"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track26"/>
+					<property name="tmplSound" value="sound.BG Music 26"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track27"/>
+					<property name="tmplSound" value="sound.BG Music 27"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track28"/>
+					<property name="tmplSound" value="sound.BG Music 28"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track29"/>
+					<property name="tmplSound" value="sound.BG Music 29"/>
+				</object>
+				<object type="mlui.MusicTrack" name="objTracks">
+					<property name="strName" value="Track30"/>
+					<property name="tmplSound" value="sound.BG Music 30"/>
+				</object>
+			
+				<object type="mlui.MusicPlayList" name="objPlayLists">
+					<property name="strName" value="Playlist1"/>
+					<property name="fVolume" from="objRunnable.objRoot.fMusicVolume"/>
+					<property name="strTrackNames" value="Track1"/>
+					<property name="strTrackNames" value="Track2"/>
+					<property name="strTrackNames" value="Track3"/>
+					<property name="strTrackNames" value="Track4"/>
+					<property name="strTrackNames" value="Track5"/>
+					<property name="strTrackNames" value="Track6"/>
+					<property name="strTrackNames" value="Track7"/>
+					<property name="strTrackNames" value="Track8"/>
+					<property name="strTrackNames" value="Track9"/>
+					<property name="strTrackNames" value="Track10"/>
+					<property name="strTrackNames" value="Track11"/>
+					<property name="strTrackNames" value="Track12"/>
+					<property name="strTrackNames" value="Track13"/>
+					<property name="strTrackNames" value="Track15"/>
+					<property name="strTrackNames" value="Track16"/>
+					<property name="strTrackNames" value="Track17"/>
+					<property name="strTrackNames" value="Track18"/>
+					<property name="strTrackNames" value="Track19"/>
+					<property name="strTrackNames" value="Track20"/>
+					<property name="strTrackNames" value="Track21"/>
+					<property name="strTrackNames" value="Track22"/>
+					<property name="strTrackNames" value="Track23"/>
+					<property name="strTrackNames" value="Track24"/>
+					<property name="strTrackNames" value="Track25"/>
+					<property name="strTrackNames" value="Track26"/>
+					<property name="strTrackNames" value="Track27"/>
+					<property name="strTrackNames" value="Track28"/>
+					<property name="strTrackNames" value="Track29"/>
+					<property name="strTrackNames" value="Track30"/>
+				</object>
+	
+				<script type="application/javascript"><![CDATA[
+					function notifyAddedToUI()
+					{
+						objRunnable.objRoot.playPlaylist("Playlist1")
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Making History Intro"/>
+				<property name="tmplSound" value="sound.Making History Intro"/>
+				<property name="fVolume" from="objRunnable.objRoot.fMusicVolume"/>
+			</object>
+
+			<!-- Panel -->
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Panel Advisor In"/>
+				<property name="tmplSound" value="sound.Panel Advisor In"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Panel Advisor Out"/>
+				<property name="tmplSound" value="sound.Panel Advisor Out"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Panel Popup Close"/>
+				<property name="tmplSound" value="sound.Panel Popup Close"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Panel Popup Open"/>
+				<property name="tmplSound" value="sound.Panel Popup Open"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<!-- Producer -->
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Producer Coal"/>
+				<property name="tmplSound" value="sound.Producer Coal"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Producer Metals"/>
+				<property name="tmplSound" value="sound.Producer Metals"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Producer Oil"/>
+				<property name="tmplSound" value="sound.Producer Oil"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<!-- Select -->
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Bomber"/>
+				<property name="tmplSound" value="sound.Select Bomber"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Economic Agriculture"/>
+				<property name="tmplSound" value="sound.Select Economic Agriculture"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Economic Factory"/>
+				<property name="tmplSound" value="sound.Select Economic Factory"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Economic Resource"/>
+				<property name="tmplSound" value="sound.Select Economic Resource"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select General Object"/>
+				<property name="tmplSound" value="sound.Select General Object"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Land"/>
+				<property name="tmplSound" value="sound.Select Land"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Water"/>
+				<property name="tmplSound" value="sound.Select Water"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Plane"/>
+				<property name="tmplSound" value="sound.Select Plane"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Ship"/>
+				<property name="tmplSound" value="sound.Select Ship"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Submarine"/>
+				<property name="tmplSound" value="sound.Select Submarine"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Tank"/>
+				<property name="tmplSound" value="sound.Select Tank"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Select Troop"/>
+				<property name="tmplSound" value="sound.Select Troop"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<!-- Units -->
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Units Engaged"/>
+				<property name="tmplSound" value="sound.Units Engaged"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+			<object type="mlui.UISound" name="objSounds">
+				<property name="strName" value="Units Engaged Alt"/>
+				<property name="tmplSound" value="sound.Units Engaged Alt"/>
+				<property name="fVolume" from="objRunnable.objRoot.fSoundVolume"/>
+			</object>
+
+		</object>
+
+        <object type="mlui.UI2DLoadingLayer" name="objLoadingLayer">
+            <object type="UI2DGameStart" name="objLoadingScreen" existsWhile="self.bIsLoading AND !mh2data.bUserIsPlaying">
+                <property name="nWidth" from="objRunnable.nWidth"/>
+                <property name="nHeight" from="objRunnable.nHeight"/>
+            </object>
+        </object>
+        		
+        
+        <!-- UI Event Handlers -->
+		<object type="mlevent.EventHandlerMap" name="objUIEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventFirstUpdateFreeFrame"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner) {
+                        mlui.objUI.objRoot.bIsFinishedLoading = true;
+					}
+				]]></script>
+			</object>
+        </object>
+        
+		<!-- Game Event Handlers -->
+		<object type="mlevent.EventHandlerMap" name="objUIEventHandlerMap">
+
+			<!-- Unit Group -->
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventUnitGroupRemoved"/>
+				<property name="bBroadcast" value="true"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+                        if(event.objUnitGroup != null)
+                        {
+						    if(event.objUnitGroup.equals(owner.objRoot.objMH2Data.objMapData.objSelectedObject))
+						    {
+							    owner.objRoot.objMH2Data.clearSelectedObject();
+						    }
+                        }
+					}
+				]]></script>
+			</object>
+
+			<!-- War -->
+			<!--<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventWarDeclared"/>
+				<property name="bBroadcast" value="true"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var declaringNation = event.objDeclaringNation;
+						var targetNation = event.objTargetNation;
+						var playerNation = owner.objRoot.objMH2Data.objNation;
+						var formatString = locale.FSID.UI.DeclareWarMessage;
+
+						if(targetNation.equals(playerNation))
+						{
+							//owner.objRoot.objMH2Data.objDeclaringNation = declaringNation;
+							//owner.objRoot.objMH2Data.objTargetNation = targetNation;
+							owner.objRoot.objMH2Data.strDiplomaticMessage = formatString.format({
+								"NationA": declaringNation.strDisplayName,
+								"NationB": targetNation.strDisplayName,
+								"Justification": event.strMessage
+								});
+							owner.objRoot.objMH2Data.objMapData.refSelectedObject = declaringNation;
+
+							owner.objRoot.objMH2Data.openDiplomaticActionAll(UI2DWarDeclaration);
+						}
+					}
+				]]></script>
+			</object>-->
+
+			<!-- Trade Agreements -->
+			<!--<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventTradeAgreementProposed"/>
+				<property name="bBroadcast" value="true"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var proposingNation = event.objTradeAgreement.refProposingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var sourceNation = event.objTradeAgreement.refSourceNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var destNation = event.objTradeAgreement.refDestNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var playerNation = owner.objRoot.objMH2Data.objNation;
+
+						if(proposingNation.equals(playerNation))
+							{
+								log("Trade agreement proposed by player")
+								owner.objRoot.objMH2Data.objSelectedTradeAgreement.setTradeAgreement(event.objTradeAgreement);
+								owner.objRoot.objMH2Data.openDiplomaticActionAll(UI2DTradeAgreementRcvd);
+							}
+						else
+							{
+								log("Agreement proposed by non-player nation")
+								if(destNation.equals(playerNation))
+									{
+										owner.objRoot.objMH2Data.objSelectedTradeAgreement.setTradeAgreement(event.objTradeAgreement);
+										owner.objRoot.objMH2Data.strDiplomaticMessage = event.strProposeMessage;
+										owner.objRoot.objMH2Data.setSelectedObject(sourceNation);
+										owner.objRoot.objMH2Data.openDiplomaticActionAll(UI2DTradeAgreementRcvd);
+									}
+							}
+					}
+				]]></script>
+			</object>-->
+
+				<!--owner.objRoot.objMH2Data.objTheirTradeProposal = event.objTradeAgreement;-->
+				<!--owner.objRoot.objMH2Data.strDiplomaticMessage = event.strProposeMessage;-->
+				<!--owner.objRoot.objMH2Data.objMapData.refSelectedObject = proposingNation;-->
+				<!---->
+				<!--owner.objRoot.objMH2Data.openDiplomaticActionAll(UI2DTradeAgreementRcvd);-->
+
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventTradeAgreementAccepted"/>
+				<property name="bBroadcast" value="true"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var proposingNation = event.objTradeAgreement.refProposingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var sourceNation = event.objTradeAgreement.refSourceNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var destNation = event.objTradeAgreement.refDestNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var playerNation = owner.objRoot.objMH2Data.objNation;
+
+						if(proposingNation.equals(playerNation))
+						{
+							log("Player offered trade deal that was accepted")
+							owner.objRoot.objMH2Data.strDiplomaticMessage = event.strAcceptMessage;
+							owner.objRoot.objMH2Data.objSelectedTradeAgreement.setTradeAgreement(event.objTradeAgreement);
+							owner.objRoot.objMH2Data.openDiplomaticActionAll(UI2DTradeAgreementRcvd);
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventTradeAgreementRejected"/>
+				<property name="bBroadcast" value="true"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var proposingNation = event.objTradeAgreement.refProposingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var sourceNation = event.objTradeAgreement.refSourceNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var destNation = event.objTradeAgreement.refDestNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var playerNation = owner.objRoot.objMH2Data.objNation;
+
+						if(proposingNation.equals(playerNation))
+						{
+							log("Player offered trade deal that was rejected")
+							owner.objRoot.objMH2Data.strDiplomaticMessage = event.strRejectMessage;
+							owner.objRoot.objMH2Data.objSelectedTradeAgreement.setTradeAgreement(event.objTradeAgreement);
+							owner.objRoot.objMH2Data.openDiplomaticActionAll(UI2DTradeAgreementRcvd);
+						}
+					}
+				]]></script>
+			</object>
+
+			<!-- Treaties
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventTreatyProposed"/>
+				<property name="bBroadcast" value="true"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var proposingNation = event.objTreaty.refProposingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var receivingNation = event.objTreaty.refReceivingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var playerNation = owner.objRoot.objMH2Data.objNation;
+
+						if(receivingNation.equals(playerNation))
+						{
+							owner.objRoot.objMH2Data.objTheirTreatyProposal = event.objTreaty;
+							owner.objRoot.objMH2Data.strDiplomaticMessage = event.strMessage;
+							owner.objRoot.objMH2Data.objMapData.refSelectedObject = proposingNation;
+
+							owner.objRoot.objMH2Data.openDiplomaticActionAll(UI2DTreaty);
+						}
+					}
+				]]></script>
+			</object>-->
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventTreatyRatified"/>
+				<property name="bBroadcast" value="true"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var proposingNation = event.objTreaty.refProposingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var receivingNation = event.objTreaty.refReceivingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var playerNation = owner.objRoot.objMH2Data.objNation;
+
+						if(proposingNation.equals(playerNation))
+						{
+							owner.objRoot.objMH2Data.strDiplomaticMessage = event.strMessage;
+							owner.objRoot.objMH2Data.objMapData.refSelectedObject = GORef(gs_tbg.Nation, receivingNation);
+
+							owner.objRoot.objMH2Data.openDiplomaticActionAll(UI2DTreaty);
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventMoneyTransferRejected"/>
+				<property name="bBroadcast" value="true"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var proposingNation = event.objMoneyTransfer.refProposingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var receivingNation = event.objMoneyTransfer.refReceivingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var playerNation = owner.objRoot.objMH2Data.objNation;
+
+						if(proposingNation.equals(playerNation))
+						{
+							log("Player proposed money transfer deal that was rejected")
+							owner.objRoot.objMH2Data.strDiplomaticMessage = event.strRejectMessage;
+							owner.objRoot.objMH2Data.objSelectedMoneyTransfer = event.objMoneyTransfer;
+							owner.objRoot.objMH2Data.openDiplomaticActionAll(UI2DMoneyTransferRcvd);
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventTreatyRejected"/>
+				<property name="bBroadcast" value="true"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var proposingNation = event.objTreaty.refProposingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var receivingNation = event.objTreaty.refReceivingNation.resolve(owner.objRoot.objMH2Data.objAvatar);
+						var playerNation = owner.objRoot.objMH2Data.objNation;
+
+						if(proposingNation.equals(playerNation))
+						{
+							owner.objRoot.objMH2Data.strDiplomaticMessage = event.strMessage;
+							owner.objRoot.objMH2Data.objMapData.refSelectedObject = GORef(gs_tbg.Nation, receivingNation);
+
+							owner.objRoot.objMH2Data.openDiplomaticActionAll(UI2DTreaty);
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="gs_tbg.EventDecisionPointCreated"/>
+				<property name="bBroadcast" value="true"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+					    var dp = event.objDecisionPoint;
+						if(dp != null) // if not already answered
+						{
+							if (dp.objAvatar.equals(owner.objRoot.objMH2Data.objAvatar))
+							{
+			                    if (!owner.objRoot.objMH2Data.objDecisionPoints.contains(dp))
+			                    {
+			                        log("adding " + dp);
+    								owner.objRoot.objMH2Data.objDecisionPoints.add(dp);
+                                }
+                                else
+                                {
+			                        log("already know about " + dp);
+                                }
+							}
+						}
+					}
+				]]></script>
+			</object>
+
+		</object>
+	</object>
+</locust>

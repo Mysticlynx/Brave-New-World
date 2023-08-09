@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="GameSysMap" class="CMLOGameSysMap" superType="mlgame.GameSystem">
+        <!-- these bounds assume a rectangular map -->
+        <propertyDef name="vecMin" type="Vec3D" />
+        <propertyDef name="vecMax" type="Vec3D" />
+        <propertyDef name="bWrapX" type="bool" />
+        <propertyDef name="bFlat" type="bool" default="true"/>
+        <propertyDef name="fWeightScale" type="float" default="100.0"/>
+        <propertyDef name="nNumTileRows" type="int"/>
+        <propertyDef name="nNumTileCols" type="int"/>
+        <propertyDef name="nMaxTileDimension" type="int"/>
+        <propertyDef name="nNumTileLevels" type="int"/>
+        <propertyDef name="tmplTileDirs" type="TemplateRef" restriction="TileDirsTemplate"/>
+        <propertyDef name="tmplBorderDirs" type="TemplateRef" restriction="BorderDirsTemplate"/>
+        <propertyDef name="objMapRegions" type="MapRegion" variable="true" storesChildren="true"/>
+        <propertyDef name="objMapRivers" type="MapRiver" variable="true" storesChildren="true"/>
+        <propertyDef name="objMapEdges" type="MapEdge" variable="true" storesChildren="true"/>
+        <propertyDef name="objMapRoads" type="MapRoad" variable="true" storesChildren="true"/>
+    	<propertyDef name="objMapLakes" type="MapLake" variable="true" storesChildren="true"/>
+        
+        <!-- data for 3d terrain -->
+        <propertyDef name="fSeaLevel" type="float"/>
+        <propertyDef name="fLandLevel" type="float"/>
+        <propertyDef name="tmplBlendTexture1" type="TemplateRef" restriction="mlmedia.TextureTemplate"/>
+        <propertyDef name="tmplBlendTexture2" type="TemplateRef" restriction="mlmedia.TextureTemplate"/>
+        <propertyDef name="fTerrainDetailMultiplierX" type="float" default="10.0"/>        
+        <propertyDef name="fTerrainDetailMultiplierY" type="float" default="10.0"/>
+        
+        <!-- data for minimap -->
+        <propertyDef name="tmplImgMiniMap" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+
+		<!--  builtin methods
+				getAdjacentRegions(region,adjacentRegionsContainer)
+				bool regionsAreAdjacent(gameroot,region1,region2)
+				vecPos getUnwrappedPosition(vecPos)
+		-->
+	</objectDef>
+    
+    <enumDef name="TileTextureFormat">
+        <value name="L"/><!-- luminance only (needs more complex shader) -->
+        <value name="DXT1"/><!-- 4 bits per pixel -->
+        <value name="DXT3"/><!-- 8 bits per pixel -->
+        <value name="RGB"/><!-- 24 bits per pixel -->
+    </enumDef>
+    
+    <objectDef type="TileDirsTemplate" class="CMLOTileDirsTemplate" superType="Template" templateBase="true">
+        <propertyDef name="fileModelsDir" type="File"/>
+        <propertyDef name="fileTextures" type="File"/>
+        <propertyDef name="eTileTextureFormat" type="Enum" restriction="TileTextureFormat"/>
+        <propertyDef name="fileCompressedTextures" type="File"/>
+        <propertyDef name="eCompressedTileTextureFormat" type="Enum" restriction="TileTextureFormat"/>        
+    </objectDef>
+    
+    <objectDef type="BorderDirsTemplate" class="CMLOBorderDirsTemplate" superType="Template" templateBase="true">
+        <propertyDef name="fileOwnerModelsDir" type="File"/>
+        <propertyDef name="fileControlModelsDir" type="File"/>
+        <propertyDef name="fileRegionBordersModel" type="File"/>
+        <propertyDef name="fileRegionJunctionsModel" type="File"/>
+        <propertyDef name="fileJunctionData" type="File"/>        
+    </objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysMap = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysMap)
+		}
+		
+		getAllMapRegions = ?{gameroot:
+			getGameSysMap(gameroot).objMapRegions
+		}		
+		
+		getAllMapRivers = ?{gameroot:
+			getGameSysMap(gameroot).objMapRivers
+		}		
+	</script>
+
+</locust>

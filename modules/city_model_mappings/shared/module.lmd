@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	type="city_model_mappings"
+	name="shared"
+	locustVersion="2.11"
+>
+	<import module="ui lib:Map UI" as="mapui"/>
+	<import module="city_models:shared" as="city_models"/>
+	<import module="game system:turn based game" as="gs_tbg"/>
+	
+	<include>
+		CityModelTable.xml
+	</include>
+</locustModule>

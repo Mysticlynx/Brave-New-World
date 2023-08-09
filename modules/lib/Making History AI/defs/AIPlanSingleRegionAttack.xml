@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="AIPlanSingleRegionAttack" superType="gs_tbg.AIMilitaryPlan">
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        <propertyDef name="refRegionToConquer" type="GORef" restriction="gs_tbg.Region"/>
+        <propertyDef name="refBuildupRegion" type="GORef" restriction="gs_tbg.Region"/>
+        <propertyDef name="fAdvanceRatio" type="float" default="1.0" desc="Ratio of our strength to enemy when we start our advance toward the region to conquer"/>
+        <propertyDef name="fMaxRatio" type="float" default="2.0" desc="How much do we keep adding once we're in the battle"/>
+        <propertyDef name="nPhase" type="int" default="0"/>
+
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <propertyDef name="objGameSysCity" type="gs_tbg.GameSysCity"/>
+        <propertyDef name="objGameSysUnit" type="gs_tbg.GameSysUnit"/>
+        <propertyDef name="objGameSysRegion" type="gs_tbg.GameSysRegion"/>
+        
+        <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+        <property name="objGameSysTurnBasedGame" from="self.objParentAI.objGameSysTurnBasedGame"/>
+        <property name="objGameSysCity" from="self.objParentAI.objGameSysCity"/>
+        <property name="objGameSysUnit" from="self.objParentAI.objGameSysUnit"/>
+        <property name="objGameSysRegion" from="self.objParentAI.objGameSysRegion"/>
+                
+        <script type="application/javascript"><![CDATA[
+              
+        // enum for phases
+        var AttackPhase = 
+        {
+            Start:0,
+            PlanRoutes:1,
+            Buildup:2,
+            Advance:3,
+            Battle:4,
+            Success:5,
+            Failure:6,
+            Wait:7,
+        }
+              
+        // javascript object which contains commonly used 
+        // cached variables and local functions
+        function TempContext(avatar)
+        {
+            this.avatar = avatar;
+            this.turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;		 
+            this.nation = self.refNation.resolve(avatar);
+			this.pad = getPAD(avatar,PADMakingHistoryAI);
+
+            this.setStatus = function(status,reason)
+            {
+                this.avatar.sendAction(
+                    gs_tbg.GActSetAIMilitaryPlanStatus.create({
+                        "objPlan": self,
+                        "eStatus": status,
+                        "strReason": reason,
+                        "nTurn": this.turn
+                        }) );
+            }
+            
+            // get the nation which controls self.refRegionToConquer
+            this.getTargetController = function()
+            {
+                var region = self.refRegionToConquer.resolve(this.avatar);
+                var controller = region.refController.resolve(this.avatar);
+				return controller;
+            }
+
+            this.setPhase = function(phase,reason)
+            {
+                if (self.nPhase != phase)
+                {
+                    if (reason == undefined)
+                        reason = "";
+					if (this.pad.bWantMilitaryAILog)
+					{
+						log("DEBUG: " + self + " setting phase from " + self.nPhase + " to " + phase + ", reason: " + reason);
+					}
+					self.nPhase = phase;
+                        
+                    if (phase == AttackPhase.Advance)
+                    {
+                        var enemyNation = this.getTargetController();
+                        if (enemyNation != null)
+						{
+                            if (!self.objParentAI.notifyAdvanceStarted(this.avatar,self,enemyNation))
+							{
+								reason = reason + ", then notifyAdvanceStarted failed.";
+								log("DEBUG: " + self + " failed. " + reason)
+	                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_FAILED, reason );
+								return;
+							}
+						}
+                    }
+                    
+                    // set plan status if applicable
+                    switch(self.nPhase)
+                    {
+                        case AttackPhase.Success:
+                            //log("Plan " + self + " succeeded!");
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_SUCCEEDED,reason);
+                            break;
+
+                        case AttackPhase.Failure:
+                            //log("Plan " + self + " failed!");
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_FAILED, reason);
+                            break;
+                    }
+                }        
+            }
+            
+            // plan routes from refBuildupRegion to refRegionToConquer
+            this.enterPlanRoutesPhase = function()
+            {
+                this.setPhase(AttackPhase.PlanRoutes,"start");
+                this.advancePlanRoutesPhase();
+            }
+
+            
+            // returns total nLandDefensePower for nation in region
+            this.getDefenseInRegion = function(nation,region)
+            {
+                var defense = 0;
+                var unitGroups = self.objGameSysUnit.objUnitGroups.filter({"refLocation": GORef(gs_tbg.Region,region),"refController":nation});
+                for (var u in unitGroups)
+                {
+                    var unitGroup = unitGroups[u];
+                    defense += unitGroup.getEffectiveCombatStrength(this.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_DEFENSE);
+                }
+                return defense;
+            }
+            
+            this.advancePlanRoutesPhase = function()
+            {
+                if (self.refRegionToConquer == null)
+                {
+                    this.setPhase(AttackPhase.Failure,"no region to conquer");
+                    return;
+                }
+                
+                if ( this.nation.equals(this.getTargetController()) )
+                {
+                    this.setPhase(AttackPhase.Success,"we already control the destination");
+                    return;
+                }
+                
+                // get a starting region if one was not supplied
+                if (self.refBuildupRegion == null)
+                {
+                    var region = self.objParentAI.getNationHomeRegion(this.avatar,this.nation);
+                    if (region == null)
+                    {
+                        // we're done for.
+                        this.setPhase(AttackPhase.Failure,"no regions");
+                        return;
+                    }
+                    self.refBuildupRegion = region;
+                }
+                
+                this.setPhase(AttackPhase.Buildup);
+            }
+            
+            this.getTargetStrength = function()
+            {
+                var targetRegion = self.refRegionToConquer.resolve(this.avatar);
+                if (targetRegion.refController != null)
+                {
+                    var otherNation = targetRegion.refController.resolve(this.avatar);
+                    if ( this.nation.equals(otherNation) )
+                        return -1;
+                    if (otherNation != null)
+                        return this.getDefenseInRegion(otherNation,targetRegion);
+                }
+                return 0; // uncontrolled?
+            }
+            
+            this.updateBuildupRequirements = function()
+            {
+                var region = self.refBuildupRegion.resolve(this.avatar);                                        
+                var reqs = self.getOrCreateUnitRegionRequirements(region,self.strComposition);
+                
+                var targetStrength = this.getTargetStrength();
+                if (targetStrength < 0) 
+                {
+                    // we control the target
+                    return;
+                }
+                
+                var combatStrengthNeeded = Math.max(1,Math.round(self.fAdvanceRatio * targetStrength));
+                                
+				reqs.strPreferredComposition = self.strPreferredComposition;
+                reqs.setCombatStrengthNeeded(this.avatar,self,combatStrengthNeeded);
+                reqs.fKeepPriority = 1.0;
+                reqs.fAddPriority = reqs.fKeepPriority;
+                reqs.nLastUpdateTurn = this.turn;
+				reqs.nTurnsUntilNeeded = 1;
+            }
+            
+            this.updateAdvanceRequirements = function()
+            {
+                var region = self.refRegionToConquer.resolve(this.avatar);
+                var reqs = self.getOrCreateUnitRegionRequirements(region,self.strComposition);
+                
+                var targetStrength = this.getTargetStrength();
+                if (targetStrength < 0) 
+                {
+                    // we control the target
+                    return;
+                }
+                
+                var combatStrengthNeeded = Math.max(1,Math.round(self.fMaxRatio * targetStrength));
+                
+				reqs.strPreferredComposition = self.strPreferredComposition;
+                reqs.setCombatStrengthNeeded(this.avatar,self,combatStrengthNeeded);
+                reqs.fKeepPriority = 1.0;
+                reqs.fAddPriority = reqs.fKeepPriority;
+				reqs.nTurnsUntilNeeded = 1;
+                reqs.nLastUpdateTurn = this.turn;
+            }
+            
+            // get the fraction of forces allocated attack strength / desired strength
+            this.getAllocatedAttackFraction = function()
+            {
+                var nForcesDesired = 0;
+                var nTotalPercentAllocated = 0;
+
+                for (var nReq in self.objUnitRegionRequirements)
+                {
+                    nForcesDesired++;
+                    
+                    var reqs = self.objUnitRegionRequirements[nReq];
+                    
+                    nPercentStrengthAllocated = reqs.getPercentStrengthAllocated();
+                    nTotalPercentAllocated += nPercentStrengthAllocated;
+                }
+
+                var fraction = 0;
+                if (nForcesDesired > 0)
+                {
+                    fraction = nTotalPercentAllocated / ( nForcesDesired * 100);
+                }
+
+                return fraction;
+            } // getAllocatedAttackFraction
+            
+            // return the number of groups allocated to this plan
+            // that are enroute toward their designated regions.
+            this.getNumGroupsEnRoute = function()
+            {
+                var numEnRoute = 0;
+                var assignments = self.objGameSysAIUtility.objAIUnitGroupAssignments.filter({ "objPlan" : self });
+                for (var i in assignments)
+                {
+                    var assignment = assignments[i]; 
+                    var unitGroup = assignment.objUnitGroup;
+                    var destRegion = assignment.objRegion;
+                    var currentRegion = unitGroup.getRegion(this.avatar);
+                    if ( notEqual(currentRegion,destRegion) )
+                    {
+                        //log(unitGroup + " enroute to region " + destRegion.strName + " from " + currentRegion.strName);
+                        numEnRoute++;
+                    }
+                }
+                //log("numEnRoute=" + numEnRoute);
+                return numEnRoute;
+            } // getNumGroupsEnRoute
+
+            // check progress during AttackPhase.Buildup           
+            this.advanceBuildupPhase = function()
+            {
+                var fraction = this.getAllocatedAttackFraction();
+                //log("allocated attack fraction:" + fraction);
+                if (fraction > 0.95)
+                {
+                    // check if the allocated forces have actually arrived at the desired regions
+                    var numEnRoute = this.getNumGroupsEnRoute();
+                    if (numEnRoute == 0)
+                    {
+                        this.setPhase(AttackPhase.Advance,"buildup sufficient");
+                    }
+                    else
+                    {
+                        //log("some unit groups still enroute");
+                    }
+                }
+                else
+                {
+                    //log("insufficient fraction");
+                }
+            } // advanceBuildupPhase
+                        
+            // check progress during AttackPhase.Advance
+            this.advanceAttackPhase = function()
+            {
+                var region = self.refRegionToConquer.resolve(this.avatar);
+                var controller = region.refController.resolve(this.avatar);
+                if ( this.nation.equals(controller) )
+                {
+                    this.setPhase(AttackPhase.Success,"we control the destination");
+                    return;
+                }
+            } // advanceAttackPhase
+            
+        } // TempContext
+                             
+        // expected method
+        function advance(avatar)
+        {
+            var data = new TempContext(avatar);
+                     
+            switch(self.nPhase)
+            {
+                case AttackPhase.Start:
+                    data.enterPlanRoutesPhase();
+                    break;
+                          
+                case AttackPhase.PlanRoutes:
+                    data.advancePlanRoutesPhase();
+                    break;
+                          
+                case AttackPhase.Buildup:
+                    data.advanceBuildupPhase();
+                    break;
+                    
+                case AttackPhase.Advance:
+                    data.advanceAttackPhase();
+                    break;
+            }
+        }
+        
+        // expected method 
+        function updateUnitRequirements(avatar)
+        {
+            if (self.fPriority > 0.95)
+            {
+                // old priority was too high.
+                self.fPriority = 0.25;
+            }
+            
+            var data = new TempContext(avatar);
+            switch(self.nPhase)
+            {
+                case AttackPhase.Buildup:
+                    data.updateBuildupRequirements();
+                    break;
+                          
+                case AttackPhase.Advance:
+                    data.updateAdvanceRequirements();
+                    break;                          
+            }
+        }
+        
+        ]]></script>
+    </objectDef>
+</locust>

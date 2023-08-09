@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<enumDef name="UnitOrderType">
+		<value name="Neutral"/>
+		<value name="Strategic"/>
+		<value name="Aggressive"/>
+	</enumDef>
+
+	<!-- Unit Order -->
+	<objectDef type="UnitOrder" class="CMLOUnitOrder">
+        <propertyDef name="eType" type="Enum" restriction="UnitOrderType" default="Neutral"/>
+    </objectDef>
+
+    <objectDef type="PathFinderOptions" class="CMLOPathFinderOptions">
+        <propertyDef name="bAvoidEngagements" type="bool" default="false"/>
+        <propertyDef name="bAvoidEnemyRegions" type="bool" default="true"/>
+		<propertyDef name="fWeightPerEnemyDefense" type="float" default="-1"/>
+        <propertyDef name="eViolateBorders" type="Enum" restriction="ViolateBordersParam"/>
+        <!--
+            builtin queries:
+                getNextRegion(gameRoot unitGroup)
+	            usesArms()
+                usesOil()
+        -->
+    </objectDef>
+
+    <objectDef type="AirbaseGraph" class="CMLOAirbaseGraph">
+    </objectDef>
+
+	<objectDef type="UnitOrderMove" class="CMLOUnitOrderMove" superType="UnitOrder">
+		<property name="eType" value="Neutral"/>
+        <propertyDef name="objWaypoints" type="MoveWaypoint" variable="true" storesChildren="true"/>
+        <propertyDef name="nRemainingMovePoints" type="int" default="0"/>
+        <propertyDef name="objPathfinderOptions" type="PathFinderOptions" storesChildren="true"/>
+        <propertyDef name="objPath" type="MoveWaypoint" variable="true" storesChildren="true"/>
+
+		<propertyDef name="objEndWaypoint" type="MoveWaypoint"/>
+		<property name="objEndWaypoint">
+			find(?{point: point.nPosition == (self.objWaypoints.size - 1)},
+				self.objWaypoints)
+		</property>
+
+	</objectDef>
+
+    <objectDef type="UnitOrderAirMission" class="CMLOUnitOrderAirMission" superType="UnitOrder">
+        <property name="eType" value="Aggressive"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderRebase" class="CMLOUnitOrderRebase" superType="UnitOrderAirMission">
+        <property name="eType" value="Neutral"/>
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="objPathfinderOptions" type="PathFinderOptions" storesChildren="true"/>
+    </objectDef>
+
+	<objectDef type="UnitOrderAirPatrol" class="CMLOUnitOrderAirPatrol" superType="UnitOrderAirMission">
+		<property name="eType" value="Strategic"/>
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+	</objectDef>
+
+	<objectDef type="UnitOrderSeaPatrol" class="CMLOUnitOrderSeaPatrol" superType="UnitOrder">
+		<property name="eType" value="Strategic"/>
+        <propertyDef name="refRegions" type="GORef" restriction="Region" variable="true"/>
+		<propertyDef name="objPathfinderOptions" type="PathFinderOptions" storesChildren="true"/>
+	</objectDef>
+
+    <objectDef type="UnitOrderBomb" class="CMLOUnitOrderBomb" superType="UnitOrderAirMission">
+		<property name="eType" value="Aggressive"/>
+        <propertyDef name="objPathfinderOptions" type="PathFinderOptions" storesChildren="true"/>
+	</objectDef>
+
+	<objectDef type="UnitOrderBombRegion" class="CMLOUnitOrderBombRegion" superType="UnitOrderBomb">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="eBombRegionParam" type="Enum" restriction="BombRegionParam"/>
+	</objectDef>
+
+    <objectDef type="UnitOrderBombCity" class="CMLOUnitOrderBombCity" superType="UnitOrderBomb">
+        <propertyDef name="refCity" type="GORef" restriction="City"/>
+        <propertyDef name="eBombCityParam" type="Enum" restriction="BombCityParam"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderBombNavalBase" class="CMLOUnitOrderBombNavalBase" superType="UnitOrderBomb">
+        <propertyDef name="refNavalBase" type="GORef" restriction="NavalBase"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderBombResource" class="CMLOUnitOrderBombResource" superType="UnitOrderBomb">
+        <propertyDef name="objResourceCapacity" type="Object" restriction="ResourceCapacity"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderLoadOnTransports" class="CMLOUnitOrderLoadOnTransports" superType="UnitOrder">
+		<property name="eType" value="Neutral"/>
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderUnloadFromTransports" class="CMLOUnitOrderUnloadFromTransports" superType="UnitOrder">
+		<property name="eType" value="Neutral"/>
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderEnterPort" class="CMLOUnitOrderEnterPort" superType="UnitOrder">
+		<property name="eType" value="Neutral"/>
+        <propertyDef name="refTarget" type="GORef"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderExitPort" class="CMLOUnitOrderExitPort" superType="UnitOrder">
+		<property name="eType" value="Neutral"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderLoadOnCarrier" class="CMLOUnitOrderLoadOnCarrier" superType="UnitOrder">
+		<property name="eType" value="Neutral"/>
+        <propertyDef name="refUnit" type="GORef" restriction="Unit"/>
+        <propertyDef name="objUnits" type="Unit" variable="true"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderUnloadFromCarrier" class="CMLOUnitOrderUnloadFromCarrier" superType="UnitOrder">
+		<property name="eType" value="Neutral"/>
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderDropParatrooper" class="CMLOUnitOrderDropParatrooper" superType="UnitOrderAirMission">
+		<property name="eType" value="Aggressive"/>
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+		<propertyDef name="objPathfinderOptions" type="PathFinderOptions" storesChildren="true"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderMoveIntoPort" class="CMLOUnitOrderMoveIntoPort" superType="UnitOrderMove">
+        <propertyDef name="refTarget" type="GORef"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderMoveFromPort" class="CMLOUnitOrderMoveFromPort" superType="UnitOrderMove">
+        <propertyDef name="refTarget" type="GORef"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderRetreat" class="CMLOUnitOrderRetreat" superType="UnitOrderMove">
+      <propertyDef name="refTarget" type="GORef"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderShoreBombardment" class="CMLOUnitOrderShoreBombardment" superType="UnitOrder">
+        <property name="eType" value="Aggressive"/>
+        <propertyDef name="refTarget" type="GORef"/>
+        <propertyDef name="eShoreBombardmentParam" type="Enum" restriction="ShoreBombardmentParam"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderDropAtomicBomb" class="CMLOUnitOrderDropAtomicBomb" superType="UnitOrderAirMission">
+		<property name="eType" value="Aggressive"/>
+        <propertyDef name="refCity" type="GORef" restriction="City"/>
+		<propertyDef name="objPathfinderOptions" type="PathFinderOptions" storesChildren="true"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderSubAttack" class="CMLOUnitOrderSubAttack" superType="UnitOrder">
+        <property name="eType" value="Aggressive"/>
+    </objectDef>
+
+    <objectDef type="UnitOrderRangedAttack" class="CMLOUnitOrderRangedAttack" superType="UnitOrder">
+        <property name="eType" value="Aggressive"/>
+        <propertyDef name="refTarget" type="GORef"/>
+        <propertyDef name="eRangedAttackParam" type="Enum" restriction="RangedAttackParam"/>
+    </objectDef>
+
+    <objectDef type="MoveWaypoint" class="CMLOMoveWaypoint">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="nPosition" type="int"/>
+    </objectDef>
+
+    <!-- Unit Upgrade -->
+    <objectDef type="UnitUpgrade" class="CMLOUnitUpgrade">
+        <propertyDef name="tmplUnitUpgrade" type="TemplateRef" restriction="UnitUpgradeTemplate"/>
+    </objectDef>
+
+    <!-- Combat Modifier -->
+    <objectDef type="CombatModifier" class="CMLOCombatModifier">
+        <propertyDef name="eCombatProperty" type="Enum" restriction="CombatProperty"/>
+        <propertyDef name="nModifierValue" type="int"/>
+    </objectDef>
+
+	<enumDef name="UnitCategory">
+		<value name="None"/>
+
+	    <!-- army categories -->
+	    <value name="Infantry"/>
+	    <value name="Armored"/>
+	    <value name="Artillery"/>
+	    <value name="MobileInfantry"/>
+	    <value name="MissileLaunchers"/>
+
+	    <!-- air force categories-->
+	    <value name="Fighters"/>
+	    <value name="Bombers"/>
+        <value name="AirRecon"/>
+        <value name="AirTransport"/>
+
+        <!-- naval categories -->
+	    <value name="Carriers"/>
+	    <value name="Battleships"/>
+	    <value name="Destroyers"/>
+	    <value name="Cruisers"/>
+	    <value name="Transport"/>
+		<value name="Patrols"/>
+
+		<!-- submarine categories -->
+	    <value name="Submarines"/>
+
+	    <!-- added for AI use -->
+	    <value name="Militia"/>
+	    <value name="Engineer"/>
+
+    </enumDef>
+
+	<enumDef name="AnimationCategory">
+		<value name="None"/>
+
+        <value name="Infantry"/>
+        <value name="Armored"/>
+        <value name="Artillery"/>
+        <value name="MobileInfantry"/>
+        <value name="AirTransport"/>
+        <value name="AirPatrol"/>
+        <value name="Fighter"/>
+        <value name="Bomber"/>
+        <value name="AuxiliaryFlotilla"/>
+        <value name="Carrier"/>
+        <value name="Battleship"/>
+        <value name="Cruiser"/>
+        <value name="EscortPatrolFlotilla"/>
+        <value name="SubmarineFlotilla"/>
+        <value name="TransportFlotilla"/>
+    </enumDef>
+
+	<enumDef name="GenericAnimation">
+		<value name="Idle"/>
+		<value name="Move"/>
+		<value name="Shoot"/>
+		<value name="Bomb"/>
+		<value name="Hover"/>
+		<value name="Orders"/>
+	</enumDef>
+
+    <!-- Unit Templates -->
+	<objectDef type="UnitTemplate" superType="Template" class="CMLOUnitTemplate" templateBase="true">
+		<propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="tmplUnitSubBranch" type="TemplateRef" restriction="UnitSubBranchTemplate"/>
+        <propertyDef name="eUnitCategory" type="Enum" restriction="UnitCategory"/>
+		<propertyDef name="eAIUnitCategory" type="Enum" restriction="UnitCategory" desc="Used by the AI"/>
+        <propertyDef name="nMPUs" type="int" default="0"/>
+        <propertyDef name="nHitPoints" type="int" default="0"/>
+        <propertyDef name="nLandAttackHitPercent" type="int" default="0"/>
+		<propertyDef name="nLandDefenseHitPercent" type="int" default="0"/>
+		<propertyDef name="nAirHitPercent" type="int" default="0"/>
+		<propertyDef name="nSeaSurfaceHitPercent" type="int" default="0"/>
+		<propertyDef name="nSeaSubmergedHitPercent" type="int" default="0"/>
+		<propertyDef name="nInfrastructureHitPercent" type="int" default="0"/>
+		<propertyDef name="nResistPercent" type="int"/>
+        <propertyDef name="nAttackDamage" type="int"/>
+        <propertyDef name="nSpeed" type="int" default="0"/>
+        <propertyDef name="nMissionRange" type="int" default="0"/>
+        <propertyDef name="nRebaseRange" type="int" default="0"/>
+        <propertyDef name="nOilCarry" type="int" default="0" desc="Maximum oil that can be carried by this unit"/>
+        <propertyDef name="nRestOilCost" type="int" default="0" desc="Oil cost per turn of idle"/>
+        <propertyDef name="nOilCost" type="int" default="0" desc="Oil cost per turn of moving,patrolling,etc"/>
+        <propertyDef name="nArmsCarry" type="int" default="0" desc="Maximum arms that can be carried by this unit"/>
+        <propertyDef name="nRestArmsCost" type="int" default="0" desc="Arms cost per turn of idle"/>
+        <propertyDef name="nArmsCost" type="int" default="0" desc="Arms cost per turn of fighting,bombing,etc"/>
+        <propertyDef name="nRepairArms" type="int" default="0" desc="Arms required to repair 1 hit point of damage"/>
+		<propertyDef name="nRepairMPUs" type="int" default="0" desc="MPUs required to repair 1 hit point of damage"/>
+		<propertyDef name="nMaintenanceCost" type="int" default="0" desc="per turn maintenance cost in $"/>
+		<propertyDef name="objUnitCapabilities" type="UnitCapability" variable="true" storesChildren="true"/>
+		<propertyDef name="strBaseUnitClass" type="String"/>
+		<propertyDef name="strEncyclopediaDescription" type="String"/>
+		<propertyDef name="strShortDescription" type="String"/>
+		<propertyDef name="nClassRank" type="int"/>
+		<propertyDef name="eAnimationCategory" type="Enum" restriction="AnimationCategory"/>
+		<propertyDef name="strNamingClass" type="String" desc="key for UnitNamer"/>
+
+		<script type="application/x-locust-query">
+			hasCapability = ?{checkCap:
+				find(?{unitCap: unitCap.instanceOf(checkCap)}, self.objUnitCapabilities) != null
+			}
+			getCapability = ?{capability_type:
+				find(?{capability: capability.instanceOf(capability_type)}, self.objUnitCapabilities)
+			}
+		</script>
+	</objectDef>
+
+    <!-- list of unit templates that one unit template makes obsolete (but not necessarily unbuildable).  For AI use. -->
+	<objectDef type="UnitTemplateObsolescence" class="CMLOUnitTemplateObsolescence">
+		<propertyDef name="objUnitTemplate" type="UnitTemplate"/>
+		<propertyDef name="objObsoleteUnitTemplates" type="UnitTemplate" variable="true"/>
+	</objectDef>
+
+    <!-- template containing all the UnitTemplateObsolescence instances -->
+	<objectDef type="UnitTemplateObsolescenceTemplate" superType="Template" class="CMLOUnitTemplateObsolescenceTemplate" templateBase="true">
+		<propertyDef name="objUnitTemplateObsolescences" type="UnitTemplateObsolescence" variable="true" storesChildren="true"/>
+	</objectDef>
+
+	<objectDef type="UnitSubBranchTemplate" superType="Template" class="CMLOUnitSubBranchTemplate" templateBase="true">
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="objTerrainCombatModifiers" type="TerrainCombatModifiers" variable="true" storesChildren="true"/>
+		<propertyDef name="objTerrainMovementModifier" type="TerrainMovementModifier" variable="true" storesChildren="true"/>
+		<propertyDef name="tmplUnitBranch" type="TemplateRef" restriction="UnitBranchTemplate"/>
+	</objectDef>
+
+	<objectDef type="TerrainCombatModifiers" class="CMLOTerrainCombatModifiers" templateBase="true">
+		<propertyDef name="tmplTerrain" type="TemplateRef" restriction="TerrainTemplate"/>
+		<propertyDef name="objCombatModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+	</objectDef>
+
+	<objectDef type="TerrainMovementModifier" class="CMLOTerrainMovementModifier" templateBase="true">
+		<propertyDef name="tmplTerrain" type="TemplateRef" restriction="TerrainTemplate"/>
+		<propertyDef name="nModifierValue" type="int"/>
+	</objectDef>
+
+    <objectDef type="FactoryOutputUnitTemplate" class="CMLOFactoryOutputUnitTemplate" superType="FactoryOutputTemplate">
+        <propertyDef name="tmplUnit" type="TemplateRef" restriction="UnitTemplate"/>
+    </objectDef>
+
+    <objectDef type="UnitBranchTemplate" class="CMLOUnitBranchTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="eBranchType" type="Enum" restriction="BranchType"/>
+        <propertyDef name="eMovementType" type="Enum" restriction="MovementType"/>
+        <propertyDef name="ePrimaryAttackPowerCombatProperty" type="Enum" restriction="CombatProperty"/>
+        <propertyDef name="ePrimaryDefensePowerCombatProperty" type="Enum" restriction="CombatProperty"/>
+    </objectDef>
+
+    <objectDef type="UnitExperienceTemplate" class="CMLOUnitExperienceTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="objCombatModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+    </objectDef>
+
+	<objectDef type="UnitMoraleTemplate" class="CMLOUnitMoraleTemplate" superType="Template" templateBase="true">
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="objCombatModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+		<propertyDef name="nSurrenderChance" type="int"/>
+	</objectDef>
+
+    <objectDef type="UnitGroupCommandTemplate" class="CMLOUnitGroupCommandTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="objCombatModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+        <propertyDef name="nEffectiveCommandableUnits" type="int" default="100"/>
+    </objectDef>
+
+    <objectDef type="UnitUpgradeTemplate" class="CMLOUnitUpgradeTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="objResourceRequirements" type="ResourceRequirement" variable="true" storesChildren="true"/>
+        <!-- Prereqs -->
+        <propertyDef name="objCombatModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+    </objectDef>
+
+    <!-- Region Output Templates -->
+	<objectDef type="TransportationOutputTemplate" superType="RegionOutputTemplate" class="CMLOTransportationOutputTemplate">
+		<propertyDef name="tmplTransportationImprovement" type="TemplateRef" restriction="TransportationImprovementTemplate"/>
+	</objectDef>
+	<objectDef type="FortificationOutputTemplate" superType="RegionOutputTemplate" class="CMLOFortificationOutputTemplate">
+		<propertyDef name="tmplFortificationImprovement" type="TemplateRef" restriction="FortificationImprovementTemplate"/>
+	</objectDef>
+	<objectDef type="AADefenseOutputTemplate" superType="RegionOutputTemplate" class="CMLOAADefenseOutputTemplate">
+		<propertyDef name="tmplAADefenseImprovement" type="TemplateRef" restriction="AADefenseImprovementTemplate"/>
+	</objectDef>
+	<objectDef type="CoastalDefenseOutputTemplate" superType="RegionOutputTemplate" class="CMLOCoastalDefenseOutputTemplate">
+		<propertyDef name="tmplCoastalDefenseImprovement" type="TemplateRef" restriction="CoastalDefenseImprovementTemplate"/>
+	</objectDef>
+    <objectDef type="AirbaseOutputTemplate" superType="RegionOutputTemplate" class="CMLOAirbaseOutputTemplate">
+        <propertyDef name="tmplUnitBase" type="TemplateRef" restriction="UnitBaseTemplate"/>
+    </objectDef>
+    <objectDef type="NavalBaseOutputTemplate" superType="RegionOutputTemplate" class="CMLONavalBaseOutputTemplate">
+        <propertyDef name="tmplNavalBase" type="TemplateRef" restriction="NavalBaseTemplate"/>
+    </objectDef>
+
+    <!-- Unit Bases -->
+    <objectDef type="UnitBaseTemplate" class="CMLOUnitBaseTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="nMaintenanceCost" type="int"/>
+        <propertyDef name="nMPUs" type="int"/>
+        <propertyDef name="nHitPoints" type="int"/>
+    </objectDef>
+
+    <objectDef type="NavalBaseTemplate" class="CMLONavalBaseTemplate" superType="Template" templateBase="true">
+    </objectDef>
+
+    <objectDef type="UnitGroupActions" class="CMLOUnitGroupActions">
+        <propertyDef name="objUnitGroupActions" type="UnitGroupAction" variable="true" storesChildren="true"/>
+    </objectDef>
+
+    <objectDef type="UnitGroupAction" class="CMLOUnitGroupAction">
+        <propertyDef name="otAction" type="ObjectType"/>
+        <propertyDef name="refUnitGroup" type="GORef" restriction="UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+        <propertyDef name="vecPosition" type="Vec3D"/>       
+    </objectDef>
+
+    <!-- Unit Capabilities -->
+    <objectDef type="UnitCapability" class="CMLOUnitCapability">
+    </objectDef>
+
+    <objectDef type="UnitCapDisband" class="CMLOUnitCapDisband" superType="UnitCapability">
+    </objectDef>
+
+    <objectDef type="UnitCapMove" class="CMLOUnitCapMove" superType="UnitCapability">
+        <propertyDef name="nMovePoints" type="int" desc="deprecated"/>
+    </objectDef>
+
+    <objectDef type="UnitCapRebase" class="CMLOUnitCapRebase" superType="UnitCapability">
+        <propertyDef name="nRange" type="int" desc="deprecated"/>
+    </objectDef>
+
+    <objectDef type="UnitCapAirPatrol" class="CMLOUnitCapAirPatrol" superType="UnitCapability">
+        <propertyDef name="nRange" type="int" desc="deprecated"/>
+    </objectDef>
+
+    <objectDef type="UnitCapSeaPatrol" class="CMLOUnitCapSeaPatrol" superType="UnitCapability">
+        <propertyDef name="nRange" type="int" desc="deprecated"/>
+    </objectDef>
+
+    <objectDef type="UnitCapBombRegion" class="CMLOUnitCapBombRegion" superType="UnitCapability">
+        <propertyDef name="nRange" type="int" desc="deprecated"/>
+    </objectDef>
+
+    <objectDef type="UnitCapTransportable" class="CMLOUnitCapTransportable" superType="UnitCapability">
+        <propertyDef name="nCapacityNeeded" type="int"/>
+        <propertyDef name="eTransportType" type="Enum" restriction="TransportType"/>
+    </objectDef>
+
+    <objectDef type="UnitCapCanTransport" class="CMLOUnitCapCanTransport" superType="UnitCapability">
+        <propertyDef name="nCapacity" type="int"/>
+        <propertyDef name="eTransportType" type="Enum" restriction="TransportType"/>
+    </objectDef>
+
+    <objectDef type="UnitCapAirTransport" superType="UnitCapCanTransport">
+        <property name="eTransportType" value="TRANSPORT_TYPE_AIR"/>
+    </objectDef>
+
+    <objectDef type="UnitCapSeaTransport" superType="UnitCapCanTransport">
+        <property name="eTransportType" value="TRANSPORT_TYPE_SEA"/>
+    </objectDef>
+
+    <objectDef type="UnitCapPort" class="CMLOUnitCapPort" superType="UnitCapability">
+    </objectDef>
+
+    <objectDef type="UnitCapCarrier" class="CMLOUnitCapCarrier" superType="UnitCapability">
+        <propertyDef name="nCapacity" type="int"/>
+    </objectDef>
+
+    <objectDef type="UnitCapCarrierPlane" class="CMLOUnitCapCarrierPlane" superType="UnitCapability">
+        <propertyDef name="nCapacityNeeded" type="int"/>
+    </objectDef>
+
+    <objectDef type="UnitCapParatrooper" class="CMLOUnitCapParatrooper" superType="UnitCapability">
+    </objectDef>
+
+    <objectDef type="UnitCapDropParatrooper" class="CMLOUnitCapDropParatrooper" superType="UnitCapability">
+        <propertyDef name="nRange" type="int" desc="deprecated"/>
+    </objectDef>
+
+	<objectDef type="UnitCapEngineer" class="CMLOUnitCapEngineer" superType="UnitCapability">
+    </objectDef>
+
+	<objectDef type="UnitCapMarine" class="CMLOUnitCapMarine" superType="UnitCapability">
+    </objectDef>
+
+	<objectDef type="UnitCapTerrainTrooper" class="CMLOUnitCapTerrainTrooper" superType="UnitCapability">
+		<propertyDef name="tmplTerrain" type="TemplateRef" restriction="TerrainTemplate"/>
+    </objectDef>
+
+    <objectDef type="UnitCapDropAtomicBomb" class="CMLOUnitCapDropAtomicBomb" superType="UnitCapBombRegion">
+    </objectDef>
+
+	<objectDef type="UnitCapCriticalHit" class="CMLOUnitCapCriticalHit" superType="UnitCapability">
+        <propertyDef name="nCriticalHitPercent" type="int"/>
+    </objectDef>
+
+	<objectDef type="UnitCapSubmersible" class="CMLOUnitCapSubmersible" superType="UnitCapability">
+    </objectDef>
+
+	<objectDef type="UnitCapDetectSubmersible" class="CMLOUnitCapDetectSubmersible" superType="UnitCapability">
+    </objectDef>
+
+	<objectDef type="UnitCapEscort" class="CMLOUnitCapEscort" superType="UnitCapability">
+        <propertyDef name="nRange" type="int" desc="deprecated"/>
+	</objectDef>
+
+    <objectDef type="UnitCapShoreBombardment" class="CMLOUnitCapShoreBombardment" superType="UnitCapability">
+    </objectDef>
+
+    <objectDef type="UnitCapRangedAttack" class="CMLOUnitCapRangedAttack" superType="UnitCapability">
+        <propertyDef name="bSingleUse" type="bool"/>
+        <propertyDef name="nRange" type="int"/>
+		<propertyDef name="nInfrastructureHitPercent" type="int" default="0"/>
+		<propertyDef name="nAttackDamage" type="int" default="0"/>
+        <propertyDef name="bAtomic" type="bool" default="false"/>
+    </objectDef>
+
+    <!-- Unit Group Item -->
+	<objectDef type="UnitGroupItem" class="CMLOUnitGroupItem">
+		<propertyDef name="eGroupItemType" type="Enum" restriction="UnitGroupItemType"/>
+	</objectDef>
+
+	<!-- Unit Items -->
+	<objectDef type="UnitItem" class="CMLOUnitItem">
+		<propertyDef name="eItemType" type="Enum" restriction="UnitItemType"/>
+	</objectDef>
+	<objectDef type="UnitItemAtomicBombContainer" class="CMLOUnitItemAtomicBombContainer" superType="UnitItem">
+		<property name="eItemType" value="ITEM_TYPE_ATOMIC_BOMB_CONTAINER"/>
+		<propertyDef name="nAtomicBombs" type="int" default="0"/>
+	</objectDef>
+
+	<objectDef type="TransportationImprovement" class="CMLOTransportationImprovement" superType="RegionImprovement">
+		<propertyDef name="tmplTransportationImprovement" type="TemplateRef" restriction="TransportationImprovementTemplate"/>
+    </objectDef>
+	<objectDef type="FortificationImprovement" class="CMLOFortificationImprovement" superType="RegionImprovement">
+		<propertyDef name="tmplFortificationImprovement" type="TemplateRef" restriction="FortificationImprovementTemplate"/>
+    </objectDef>
+    <objectDef type="AADefenseImprovement" class="CMLOAADefenseImprovement" superType="RegionImprovement">
+        <propertyDef name="tmplAADefenseImprovement" type="TemplateRef" restriction="AADefenseImprovementTemplate"/>
+    </objectDef>
+	<objectDef type="CoastalDefenseImprovement" class="CMLOCoastalDefenseImprovement" superType="RegionImprovement">
+		<propertyDef name="tmplCoastalDefenseImprovement" type="TemplateRef" restriction="CoastalDefenseImprovementTemplate"/>
+    </objectDef>
+	<objectDef type="AirbaseImprovement" class="CMLOAirbaseImprovement" superType="RegionImprovement">
+        <propertyDef name="tmplUnitBase" type="TemplateRef" restriction="UnitBaseTemplate"/>
+    </objectDef>
+
+	<objectDef type="TransportationImprovementTemplate" superType="Template" class="CMLOTransportationImprovementTemplate" templateBase="true">
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="colColor" type="Color"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0" desc="Per turn maintenance cost of improvements"/>
+        <propertyDef name="nMPUs" type="int" default="0"/>
+        <propertyDef name="nHitPoints" type="int"/>
+        <propertyDef name="nModifierValue" type="int" default ="0"/>
+        <propertyDef name="nMPUGrowthModifier" type="int" default="0"/>
+        <propertyDef name="nLevel" type="int" default="0"/>
+    </objectDef>
+	<objectDef type="FortificationImprovementTemplate" superType="Template" class="CMLOFortificationImprovementTemplate" templateBase="true">
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="colColor" type="Color"/>
+		<propertyDef name="nMaintenanceCost" type="int" default="0" desc="Per turn maintenance cost of improvements"/>
+        <propertyDef name="nMPUs" type="int" default="0"/>
+        <propertyDef name="nHitPoints" type="int"/>
+        <propertyDef name="objCombatModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+        <propertyDef name="nLevel" type="int" default="0"/>
+    </objectDef>
+    <objectDef type="AADefenseImprovementTemplate" superType="Template" class="CMLOAADefenseImprovementTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="colColor" type="Color"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0" desc="Per turn maintenance cost of improvements"/>
+        <propertyDef name="nMPUs" type="int" default="0"/>
+        <propertyDef name="nHitPoints" type="int"/>
+        <propertyDef name="nShots" type="int"/>
+        <propertyDef name="nPercentHit" type="int"/>
+        <propertyDef name="nLevel" type="int" default="0"/>
+    </objectDef>
+    <objectDef type="CoastalDefenseImprovementTemplate" superType="Template" class="CMLOCoastalDefenseImprovementTemplate" templateBase="true">
+        <propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="colColor" type="Color"/>
+        <propertyDef name="nMaintenanceCost" type="int" default="0" desc="Per turn maintenance cost of improvements"/>
+        <propertyDef name="nMPUs" type="int" default="0"/>
+        <propertyDef name="nHitPoints" type="int"/>
+        <propertyDef name="nShots" type="int"/>
+        <propertyDef name="nPercentHit" type="int"/>
+        <propertyDef name="objCombatModifiers" type="CombatModifier" variable="true" storesChildren="true"/>
+        <propertyDef name="nLevel" type="int" default="0"/>
+    </objectDef>
+
+    <objectDef type="DPAUnitOrder" class="CMLODPAUnitOrder" superType="DecisionPointAnswer" desc="A decision point answer for when a unit order requires a prompt or confirmation">
+        <propertyDef name="objUnitOrder" type="UnitOrder" storesChildren="true"/>
+    </objectDef>
+
+    <objectDef type="DPADeclareWar" class="CMLODPADeclareWar" superType="DPAUnitOrder" desc="A decision point answer for when a unit order requires a declaration of war">
+        <propertyDef name="refDeclaringNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+    </objectDef>
+
+    <objectDef type="DPAMoveOrder" class="CMLODPAMoveOrder" superType="DecisionPointAnswer" desc="A decision point answer for when a unit move requires a war declaration">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+    </objectDef>
+
+    <objectDef type="DPADisbandGroup" class="CMLODPADisbandGroup" superType="DecisionPointAnswer" desc="A decision point answer for a unit group being disbanded">
+    </objectDef>
+
+	<objectDef type="AccessTicket" class="CMLOAccessTicket">
+        <propertyDef name="objGrantingNation" type="Nation"/>
+		<propertyDef name="dateGranted" type="Date"/>
+    </objectDef>
+
+    <!-- Unit Upgrade Tracks -->
+    <objectDef type="UnitUpgradeTrackTemplate" superType="Template" class="CMLOUnitUpgradeTrackTemplate" templateBase="true">
+        <propertyDef name="tmplUnit" type="TemplateRef" restriction="UnitTemplate"/>
+        <propertyDef name="objUnitUpgradeTracks" type="UnitUpgradeTrack" variable="true" storesChildren="true"/>
+    </objectDef>
+
+    <objectDef type="UnitUpgradeTrack" class="CMLOUnitUpgradeTrack">
+        <propertyDef name="tmplUpgradeUnit" type="TemplateRef" restriction="UnitTemplate"/>
+        <propertyDef name="nTrackOrder" type="int"/>
+        <propertyDef name="objUpgradeRequirements" type="UnitUpgradeTrackRequirement" variable="true" storesChildren="true"/>
+        <propertyDef name="objVetoes" type="UnitUpgradeTrackRequirement" variable="true" storesChildren="true"/>
+        <propertyDef name="objResourceRequirements" type="ResourceRequirement" variable="true" storesChildren="true"/>
+        <propertyDef name="nMPUs" type="int" default="0"/>
+    </objectDef>
+
+    <objectDef type="UnitUpgradeTrackRequirement" class="CMLOUnitUpgradeTrackRequirement" desc="A requirement for a unit upgrade track">
+    </objectDef>
+
+    <objectDef type="UnitUpgradeTrackResearchRequirement" class="CMLOUnitUpgradeTrackResearchRequirement" superType="UnitUpgradeTrackRequirement" desc="A research requirement for a unit upgrade track">
+        <propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="ResearchTopicTemplate"/>
+    </objectDef>
+</locust>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="DiplomacyData" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="otTab" type="ObjectType" default="UI2DDiplomacyTabWorldNations"/>
+		<propertyDef name="tmplIdeology" type="TemplateRef" restriction="gs_tbg.IdeologyTemplate">
+			mh2data.objNation.tmplIdeology
+		</propertyDef>
+	</objectDef>
+	
+	<objectDef type="UI2DReportSheetDiplomacy" superType="UI2DReportPanel">
+        <propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" from="636"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="62"/>
+			<property name="nHeight" value="56"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="635"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objDiplomaticPolicyIcon">
+      <property name="tmplImage" value="skin.ImgUIInfoIconDiplomacy"/>
+      <property name="nX" value="1"/>
+      <property name="nY" value="58"/>
+      <property name="nWidth" value="23"/>
+      <property name="nHeight" value="26"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objMilitaryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite18Left"/>
+			<property name="strText" from="locale.SID.UI.Diplomacy"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="66"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="UI2DLargeCloseButton" name="objClose">
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							reportdata.closeReportPanel();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+        
+        <!-- Capital City -->
+        <propertyDef name="objCapitalCityNation" type="gs_tbg.CapitalCityNation"/>
+        <property name="objCapitalCityNation" from="self.objNation.getGOExtension(gs_tbg.CapitalCityNation, mh2data.objAvatar)"/>
+        
+        <propertyDef name="objCapitalCity" type="gs_tbg.City"/>        
+        <property name="objCapitalCity" from="self.objCapitalCityNation.refCapitalCity.resolve(mh2data.objAvatar)"/>
+        
+        <object type="mlui.UI2DText" name="objCapitalCityName">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+            <property name="strText" from="def.objCapitalCity.strDisplayName"/>
+            <property name="nX" value="35"/>
+            <property name="nY" value="75"/>
+            <property name="nWidth" value="283"/>
+            <property name="nHeight" value="12"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+        </object>       
+                
+        <object type="mlui.UI2DImage" name="objBG">
+            <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+            <property name="nX" value="8"/>
+            <property name="nY" value="136"/>
+            <property name="nWidth" value="878"/>
+            <property name="nHeight" value="548"/>
+        </object>       
+    
+    <!-- Content -->    
+        <object type="UI2DDiplomacyTabs" name="objTabs">
+            <property name="objNation" from="def.objNation"/>
+            
+            <property name="nWidth" from="def.nWidth"/>
+            <property name="nHeight" from="def.nHeight"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+        </object>
+        
+        <!--<object type="UI2DDiplomacyRecentHistory" name="objRecentHistory">-->
+        <!--    <property name="nX" value="594"/>-->
+        <!--    <property name="nY" value="102"/>-->
+        <!--    <property name="nWidth" value="130"/>-->
+        <!--    <property name="nHeight" value="40"/>-->
+        <!--</object>-->
+        
+        <object type="UI2DDiplomacyButtons" name="objDiplomacyButtons">
+            <property name="nX" value="14"/>
+            <property name="nY" value="102"/>
+			<property name="haXAlign" value="RIGHT"/>
+            <property name="nHeight" value="40"/>
+        </object>       
+    </objectDef>        
+</locust>

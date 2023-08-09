@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DCityTabResearch" superType="mlui.UI2DElement">
+		
+	<!-- Research Facilities -->
+		<object type="mlui.UI2DText" name="objResearchFacilitiesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchCenters"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objLeftPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="447"/>
+			<property name="nHeight" value="520"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objLeftPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="443"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<!--<object type="UI2DCompletedResearchList" name="objCompletedResearch">-->
+		<!--	<property name="nX" value="15"/>-->
+		<!--	<property name="nY" value="171"/>-->
+		<!--	<property name="nWidth" value="435"/>-->
+		<!--	<property name="nHeight" value="503"/>-->
+		<!--</object>-->
+		
+		<object type="UI2DCityResearchCities" name="objCities">
+			<property name="nX" value="15"/>
+			<property name="nY" value="162"/>
+		</object>
+		
+	<!-- Research Projects -->	
+		<object type="mlui.UI2DText" name="objResearchProjectsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchProjectOrders"/>
+			<property name="nX" value="461"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRightPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBLSq"/>
+			<property name="nX" value="457"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="426"/>
+			<property name="nHeight" value="520"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="459"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="422"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<!-- Current Order -->
+		<object type="mlui.UI2DText" name="objCurrentProjectLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.CurrentProject"/>
+			<property name="nX" value="463"/>
+			<property name="nY" value="165"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCurrentProjectBG">
+			<property name="tmplImage">
+				switch{
+					case spdata.objCityData.objResearchProject != null:
+						'skin.ImgBubbleTanLime'
+					default:
+						'skin.ImgReportBubbleTanWhite'
+				}
+			</property>	
+			<property name="nX" value="463"/>
+			<property name="nY" value="177"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="83"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objDirections" existsWhile="spdata.objCityData.objResearchProject == null">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLighterBrown20Center"/>
+			<property name="strText">
+				switch{
+					case spdata.objCityData.objCity.nRPUs == 0:
+					    locale.SID.UI.NoResearchCenters
+					default:
+					    locale.SID.UI.NoActiveResearch
+				}
+			</property>	
+			<property name="nX" value="463"/>
+			<property name="nY" value="205"/>
+			<property name="nWidth" value="400"/>
+		</object>
+		
+		<object type="UI2DCityProjectsCurrent" name="objCurrentProject" existsWhile="spdata.objCityData.objResearchProject != null">
+			<property name="nX" value="463"/>
+			<property name="nY" value="177"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="83"/>
+		</object>
+		
+		<!-- Project List -->
+		<object type="mlui.UI2DImage" name="objProjectListBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="460"/>
+			<property name="nY" value="289"/>
+			<property name="nWidth" value="420"/>
+			<property name="nHeight" value="389"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objProjectListSliderBG">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="865"/>
+			<property name="nY" value="291"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="385"/>
+		</object>
+		
+		<object type="UI2DCityProjectsTabs" name="objResearchProjectTabs">
+			<property name="nX" value="463"/>
+			<property name="nY" value="292"/>			
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="385"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DCityProjectsButtons" name="objOrderButtons">
+			<property name="objMH2Data" from="mh2data"/>
+			
+			<property name="nX" value="470"/>
+			<property name="nY" value="265"/>
+			<property name="nWidth" value="405"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="100"/>
+		</object>		
+	</objectDef>
+	
+	<objectDef type="UI2DCityProjectsCurrent" superType="mlui.UI2DElement">
+		<object type="mlui.UI2DImage" name="objCurrentOrderBG2">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCurrentProjectIcon">
+			<property name="tmplImage">
+				mh2data.objResearchCategoryIconTable.getEntry(spdata.objCityData.objResearchProject.tmplResearchTopic.resolve().tmplCategory).tmplImage
+			</property>
+			<property name="nX" value="5"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="71"/>
+			<property name="nHeight" value="73"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCurrentProjectName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown13Left"/>
+			<property name="strText" from="spdata.objCityData.objResearchProject.tmplResearchTopic.resolve().strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCurrentProjectType">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+			<property name="strText" from="spdata.objCityData.objResearchProject.tmplResearchTopic.resolve().tmplCategory.resolve().strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="16"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCompletedPercent">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18Left"/>
+			<property name="strText" from="spdata.objCityData.nProjectPercent + '%'"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="29"/>
+			<property name="nWidth" value="55"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgMeterBG"/>
+			<property name="nX" value="132"/>
+			<property name="nY" value="28"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" value="15"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objMeterFill">
+      <property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterGreen')"/>
+      <property name="nX" value="133"/>
+      <property name="nY" value="29"/>
+      <property name="nWidth" from="spdata.objCityData.nProjectPercent"/>
+      <property name="nHeight" value="13"/>
+    </object>
+    
+		<object type="mlui.UI2DText" name="objResearchPointsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchPoints"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="57"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objResearchPoints">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="spdata.objCityData.objResearchProject.nPoints + ' ' + locale.SID.UI.of +  ' '
+				+ spdata.objCityData.objResearchProject.tmplResearchTopic.resolve().nPointsRequired
+			"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="68"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objProjectLengthLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ProjectLength"/>
+			<property name="nX" value="175"/>
+			<property name="nY" value="57"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objTurns">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" >
+                (spdata.objCityData.objResearchProject.tmplResearchTopic.resolve().nPointsRequired - spdata.objCityData.objResearchProject.nPoints + (def.calcResearchDenom() - 1))
+                /
+                (
+                def.calcResearchDenom()
+                )
+                + ' ' + locale.SID.UI.Turns
+            </property>
+			<property name="nX" value="175"/>
+			<property name="nY" value="68"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<!--<object type="mlui.UI2DText" name="objPerTurnCostLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.PerTurnCost"/>
+			<property name="nX" value="265"/>
+			<property name="nY" value="57"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objPerTurnCost">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGreen12Left"/>
+			<property name="strText" from="'$' + String(spdata.objCityData.objResearchProject.tmplResearchTopic.resolve().nPerTurnCost.formatNumber(0, true))"/>
+			<property name="nX" value="265"/>
+			<property name="nY" value="68"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="12"/>
+		</object>-->		
+		
+		<object type="UI2DInfoButton" name="objElements">
+			<property name="nX" value="353"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" value="20"/>
+			<property name="nDefaultHeight" value="20"/>
+			<property name="objTmpl" from="spdata.objCityData.objResearchProject.tmplResearchTopic"/>
+		</object>
+			
+		<!-- placeholder --><object type="mlui.UI2DButton" name="objButtonPause" existsWhile="spdata.objCityData.objCity.canCommand(mh2data.objAvatar, spdata.objCityData.objController) == true">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleCityQueueButtonPause')"/>
+			<property name="nX" value="375"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" value="20"/>
+			<property name="nDefaultHeight" value="20"/>
+			<property name="strToolTip" from="locale.SID.UI.Pause"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActClearResearchProject.create({
+								"refCity": spdata.objCityData.objCity
+							});
+							mh2data.objAvatar.sendAction(action);
+						}
+					]]></script>
+				</object>
+			</object>			
+		</object>
+			
+		<script type="application/x-locust-query">			
+			calcResearchDenom = ?{:
+                sum(map(?{denom:
+                if( (denom == 0) , 1, denom)
+                }
+                ,
+                [
+                sum(						
+                    map(
+                        ?{city:
+                            if(spdata.objCityData.objResearchProject == city.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject.resolve(mh2data.objAvatar),
+                                city.nRPUs ,
+                                0
+                            )
+                        },
+                        filter(?{city: city.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject != null }, 
+                            gs_tbg.getNationCities(mh2data.objAvatar, spdata.objCityData.objCity.objController )
+                        )
+                    )
+                )
+                ]
+                )
+                )
+           }
+		</script>
+        
+	</objectDef>
+	
+	<objectDef type="UI2DResearchProjectBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objResearchProject" type="gs_tbg.ResearchProject"/>
+
+		<propertyDef name="objResearchTopicTemplate" type="gs_tbg.ResearchTopicTemplate"/>
+		<property name="objResearchTopicTemplate" from="self.objResearchProject.tmplResearchTopic.resolve()"/>
+
+		<object type="mlui.UI2DText" name="objBuildingName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterWrap"/>
+			<property name="strText" from="def.objResearchTopicTemplate.strDisplayName"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="84"/>
+			<property name="nHeight" value="22"/>
+			<property name="nDepth" value="100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBuildingBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="25"/>
+			<property name="nWidth" value="84"/>
+			<property name="nHeight" value="84"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBuildingBG2">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="28"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBuildingIcon">
+			<property name="tmplImage">
+				mh2data.objResearchCategoryIconTable.getEntry(def.objResearchTopicTemplate.tmplCategory).tmplImage
+			</property>	
+			<property name="nX" value="3"/>
+			<property name="nY" value="28"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+		
+		<!--<object type="UI2DInfoButton" name="objElements">-->
+		<!--	<property name="nX" value="391"/>-->
+		<!--	<property name="nY" value="4"/>-->
+		<!--	<property name="nDefaultWidth" value="20"/>-->
+		<!--	<property name="nDefaultHeight" value="20"/>-->
+		<!--	<property name="objTmpl" from="def.objResearchTopicTemplate"/>-->
+		<!--</object>-->
+        
+	</objectDef>
+	
+	<objectDef type="UI2DCityResearchCities" superType="mlui.UI2DElement">
+		<property name="nWidth" value="443"/>
+		<property name="nHeight" value="518"/>
+		
+		<object type="UI2DNationIcon" name="objCityControllerIcon">
+			<property name="objNation" from="spdata.objCityData.objCity.objController"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown16Left"/>
+			<property name="strText" from="spdata.objCityData.objCity.strDisplayName"/>
+			<property name="nX" value="38"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="18"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objController">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkPeach12Left"/>
+			<property name="strText" from="spdata.objCityData.objCity.objController.strDisplayName"/>
+			<property name="nX" value="38"/>
+			<property name="nY" value="33"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchBuildings"/>
+			<property name="nX" value="147"/>
+			<property name="nY" value="18"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="14"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="common_ui.UI2DListHorz" name="objBuildings">
+            <property name="nSpacing" value="3"/>
+            <property name="nX" value="147"/>
+            <property name="nY" value="30"/>
+            
+            <object type="UI2DResearchCenterBuildingIcon" name="objElements"
+                    tiedTo="uniqueSet(map(?{researchBuilding: researchBuilding.tmplBuilding},
+                        spdata.objCityData.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings))">
+                <property name="objResearchCenterBuilding" from="tiedTo"/>
+                <property name="objCity" from="spdata.objCityData.objCity"/>
+                <property name="nWidth" value="27"/>
+                <property name="nHeight" value="27"/>
+            </object>
+                    
+        </object>
+
+		<object type="mlui.UI2DImage" name="objElement">
+			<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+			<property name="nX" value="38"/>
+			<property name="nY" value="60"/>
+			<property name="nWidth" value="35"/>
+			<property name="nHeight" value="21"/>
+			<property name="nDepth" value="50"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objRPUsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="String(spdata.objCityData.objCity.nRPUs) + ' ' + locale.SID.UI.RPUsPerTurn"/>
+			<property name="nX" from="60"/>
+			<property name="nY" value="63"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objHeaderBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="95"/>
+			<property name="nWidth" value="420"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objBuildings">
+            <property name="nSpacing" value="0"/>
+            <property name="nX" value="11"/>
+            <property name="nY" value="96"/>
+			
+			<object type="mlui.UI2DText" name="objElements" >
+				<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterMiddle"/>
+				<property name="strText" from="locale.SID.UI.CityName"/>
+				<property name="nWidth" value="175"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			<object type="mlui.UI2DText" name="objElements" >
+				<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10CenterMiddle"/>
+				<property name="strText" from="locale.SID.UI.ResearchProjects"/>
+				<property name="nWidth" value="181"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="nWidth" value="40"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+					<property name="nY" value="1"/>
+					<property name="nWidth" value="35"/>
+					<property name="nHeight" value="21"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="TOP"/>
+					<property name="strToolTip" from="locale.SID.UI.ResearchPointsRPU"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objProjectListBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="123"/>
+			<property name="nWidth" value="420"/>
+			<property name="nHeight" value="393"/>
+		</object>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="12"/>
+			<property name="nY" value="125"/>
+			<property name="nWidth" value="412"/>
+			<property name="nHeight" value="390"/>
+			<property name="listItems">
+				sortAscending(
+					?{data:
+						data.strDisplayName
+					},
+					filter(
+						?{city:
+							city.nRPUs > 0
+						},
+						gs_tbg.getNationCities(mh2data.objAvatar, mh2data.objNation)
+					)
+				)
+			</property>
+			<property name="nRowWidth" value="394"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DCityResearchCityRow"/>
+			<property name="strPropForItem" value="objCity"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DCityResearchCityRow" superType="mlui.UI2DElement">
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+		<propertyDef name="nRow" type="int"/>
+		
+		<object type="LookupResearchData" name="objLookupResearchData">
+			<property name="objCity" from="def.objCity"/>
+		</object>
+		
+		<propertyDef name="bResearchCenter" type="bool" >
+			self.objCity.nRPUs GT 0
+		</propertyDef>        
+		<propertyDef name="objResearchProject" type="gs_tbg.ResearchProject">
+			if(self.bResearchCenter, self.objCity.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject.resolve(mh2data.objAvatar), null)
+		</propertyDef>	
+
+		<propertyDef name="fResearchTurnsDenominator" type="float" >			
+		if(self.bResearchCenter,
+			if(self.objResearchProject != null,
+				sum(						
+					map(?{city: if(self.objResearchProject == city.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject.resolve(mh2data.objAvatar), city.nRPUs , 0)},
+						filter(?{city: city.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject != null }, gs_tbg.getNationCities(mh2data.objAvatar, mh2data.objNation) )
+					)
+				),
+				1
+			), 
+			1
+		)
+		</propertyDef>
+		
+		<propertyDef name="objOwner" type="gs_tbg.Nation">
+			self.objCity.refRegion.resolve(mh2data.objAvatar).refOwner.resolve(mh2data.objAvatar)
+		</propertyDef>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+		
+            <!-- City name -->
+            <object type="UI2DCityProdNameBubble" name="objElements">
+                <property name="nRow" from="def.nRow"/>
+                <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+                <property name="strText" from="def.objCity.strDisplayName"/>
+				<property name="objOwner" from="def.objOwner"/>
+                <property name="nWidth" value="175"/>
+                    <object type="mlui.UI2DButton" name="objCitySelect">
+                        <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="0"/>
+                        <property name="nDefaultWidth" from="def.nWidth"/>
+                        <property name="nDefaultHeight" value="30"/>
+                        <property name="nDepth" value="5"/>
+                            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                                    <script type="application/javascript"><![CDATA[
+                                            function handle(event, owner)
+                                            {
+                                                mh2data.objMapData.lookAt(def.objCity.vecPosition);
+                                                mh2data.setSelectedObject(def.objCity);
+                                                spdata.objCityData.showCityResearch(def.objCity);
+                                                <!--mh2data.objMapData.zoomToClosest();-->
+                                            }
+                                    ]]></script>
+                                </object>					
+                            </object>
+                     </object>
+            </object>
+			
+			<object type="UI2DCityResearchProjectBubble" name="objElements">
+				<property name="objCity" from="def.objCity"/>
+				<property name="objLookupResearchData" from="def.objLookupResearchData" />
+				<property name="objResearchProject" from="def.objResearchProject" />
+                <property name="nRow" from="def.nRow"/>
+                
+				<property name="nWidth" value="181" />
+				
+				<object type="mlui.UI2DText" name="objText">
+					<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					<property name="tmplTextStyle">
+						if(!def.bResearchCenter,
+							'locale.TxtStyleArialBrown12Center',
+							if(def.objResearchProject == null,
+								'locale.TxtStyleArialBlue12Center',
+								'locale.TxtStyleArialBlue12Left'
+							)
+						)
+					</property>
+					<property name="strText">
+							if(def.bResearchCenter,
+								if(def.objResearchProject != null,
+									def.objResearchProject.tmplResearchTopic.resolve().strDisplayName,
+									locale.SID.UI.NoProject
+								),
+								locale.SID.UI.NoResearchCenter
+							)
+					</property>
+					<property name="nX" value="35"/>
+					<property name="nY" value="10"/>
+					<property name="nWidth">
+						if(!def.bResearchCenter OR def.objResearchProject == null,
+							130,
+							165
+						)
+					</property>
+					<property name="nHeight" value="14"/>
+					<property name="nDepth" value="5" />
+				</object>
+				
+				<object type="mlui.UI2DImage" name="objProgressBar" existsWhile="def.objResearchProject != null" >
+					<property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate,'ImgFillLightGreen')" />
+					<property name="nX" value="1" />
+					<property name="nDepth" value="4" />
+					<property name="nY" value="1" />
+					<property name="nHeight" from="def.nHeight-2" />
+					<property name="nWidth" >						
+						if(def.objResearchProject.tmplResearchTopic.resolve().nPointsRequired != 0,
+							def.objResearchProject.nPoints * 181 / def.objResearchProject.tmplResearchTopic.resolve().nPointsRequired,
+							0
+						)
+					</property>
+				</object>
+            </object>
+			
+			<object type="UI2DCityTextBubble" name="objElements">
+                <property name="nRow" from="def.nRow"/>
+                <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+                <property name="strText" from="def.objCity.nRPUs"/>
+                <property name="nWidth" value="40"/>
+            </object>
+			
+		</object>
+		
+	</objectDef>
+	
+</locust>

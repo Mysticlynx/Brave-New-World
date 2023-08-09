@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <enumDef name="ReportPanelSelection">
+		<value name="NONE"/>
+		<value name="MILITARY"/>
+		<value name="DIPLOMATIC"/>
+		<value name="DOMESTIC"/>
+        <value name="CITY"/>
+		<value name="RESEARCH"/>
+		<value name="TRADE"/>
+    </enumDef>
+    
+    <objectDef type="ReportData" class="CMLObject">
+        <propertyDef name="ePanel" type="Enum" restriction="ReportPanelSelection"/>		
+        
+        <script type="application/javascript"><![CDATA[
+			function setReportPanel(ePanel)
+			{
+				self.ePanel = ePanel
+			}
+            function closeReportPanel()
+			{
+				self.ePanel = ReportPanelSelection.NONE
+			}
+			function closeHigherLayer() {
+				encydata.closeEncy();
+			}
+			function togglePanel(ePanel){
+				if(encydata.ePanel.equals(EncySelection.NONE)){
+					if(self.ePanel.equals(ePanel)){
+						self.ePanel = ReportPanelSelection.NONE
+					}
+					else{
+						self.ePanel = ePanel
+					}
+				}
+				else{
+					self.ePanel = ePanel
+					self.closeHigherLayer()
+				}
+				
+			}
+		]]></script>
+		
+		<script type="application/x-locust-query">
+			showLowerLayers = ?{:
+				self.ePanel == ReportPanelSelection.NONE AND encydata.showLowerLayers()
+			}			
+		</script>
+		
+		<object type="MilitaryData" name="objMilitaryData">
+            <script type="application/javascript"><![CDATA[
+                function showStatus(nation) {
+                    reportdata.objMilitaryData.objNation = nation;
+                    reportdata.ePanel = ReportPanelSelection.MILITARY;
+                    self.eTab = MilitarySection.STATUS
+					def.closeHigherLayer()
+                }
+                function showArmyGroup(nation) {
+                    reportdata.objMilitaryData.objNation = nation;
+                    reportdata.ePanel = ReportPanelSelection.MILITARY;
+                    self.eTab = MilitarySection.ARMY_GROUP;
+					def.closeHigherLayer()
+                }
+                function showAirGroup(nation) {
+                    reportdata.objMilitaryData.objNation = nation;
+                    reportdata.ePanel = ReportPanelSelection.MILITARY;
+                    self.eTab = MilitarySection.AIR_GROUP;
+					def.closeHigherLayer()
+                }
+                function showSubGroup(nation) {
+                    reportdata.objMilitaryData.objNation = nation;
+                    reportdata.ePanel = ReportPanelSelection.MILITARY;
+                    self.eTab = MilitarySection.SUB_GROUP;
+					def.closeHigherLayer()
+                }
+				function showNavalGroup(nation) {
+                    reportdata.objMilitaryData.objNation = nation;
+                    reportdata.ePanel = ReportPanelSelection.MILITARY;
+                    self.eTab = MilitarySection.NAVAL_GROUP;
+					def.closeHigherLayer()
+                }
+                function showArmyUnits(nation) {
+                    reportdata.ePanel = ReportPanelSelection.MILITARY;
+                    self.eTab = MilitarySection.ARMY_UNITS;
+					def.closeHigherLayer()
+                }
+                function showAirUnits(nation) {
+                    reportdata.objMilitaryData.objNation = nation;
+                    reportdata.ePanel = ReportPanelSelection.MILITARY;
+                    self.eTab = MilitarySection.AIR_UNITS;
+					def.closeHigherLayer()
+                }
+                function showNavalUnits(nation) {
+                    reportdata.objMilitaryData.objNation = nation;
+                    reportdata.ePanel = ReportPanelSelection.MILITARY;
+                    self.eTab = MilitarySection.NAVAL_UNITS;
+					def.closeHigherLayer()
+                }
+				function showSubUnits(nation) {
+                    reportdata.objMilitaryData.objNation = nation;
+                    reportdata.ePanel = ReportPanelSelection.MILITARY;
+                    self.eTab = MilitarySection.SUB_UNITS;
+					def.closeHigherLayer()
+                }
+                function showNations(nation) {
+                    reportdata.objMilitaryData.objNation = nation;
+                    reportdata.objMilitaryData.eTab = MilitarySection.NATIONS;
+                    reportdata.ePanel = ReportPanelSelection.MILITARY;
+					def.closeHigherLayer()
+                    
+                }
+            ]]></script>
+        </object>
+        
+		<object type="DiplomacyData" name="objDiplomacyData">
+            <script type="application/javascript"><![CDATA[
+                function showAllianceInfo() {
+					reportdata.ePanel = ReportPanelSelection.DIPLOMATIC;
+                    self.otTab = UI2DDiplomacyTabAlliances;
+					def.closeHigherLayer()
+                }
+                function showWorldNationInfo() {
+					reportdata.ePanel = ReportPanelSelection.DIPLOMATIC;
+                    self.otTab = UI2DDiplomacyTabWorldNations;
+					def.closeHigherLayer()
+                }
+				function showWorldIdeologies() {
+					reportdata.ePanel = ReportPanelSelection.DIPLOMATIC;
+                    self.otTab = UI2DDiplomacyTabIdeologies;
+					def.closeHigherLayer()
+                }
+                function showWarsInfo() {
+					reportdata.ePanel = ReportPanelSelection.DIPLOMATIC;
+                    self.otTab = UI2DDiplomacyTabWars;
+					def.closeHigherLayer()
+                }
+            ]]></script>
+        </object>
+		
+		<object type="CitySelectionData" name="objCityData">
+            <property name="eTab" value="PRODUCTION_LIST"/>
+            
+            <script type="application/javascript"><![CDATA[
+                function showCityProductionList() {
+					reportdata.ePanel = ReportPanelSelection.CITY;
+                    self.eTab = CitySection.PRODUCTION_LIST;
+					def.closeHigherLayer()
+                }
+                function showCityResearchList() {
+					reportdata.ePanel = ReportPanelSelection.CITY;
+                    self.eTab = CitySection.RESEARCH_LIST;
+					def.closeHigherLayer()
+                }
+                function showRegionAssets() {
+					reportdata.ePanel = ReportPanelSelection.CITY;
+                    self.eTab = CitySection.REGIONASSETS;
+					def.closeHigherLayer()
+                }
+                function showRegionStatistics() {
+					reportdata.ePanel = ReportPanelSelection.CITY;
+                    self.eTab = CitySection.REGIONSTATS;
+					def.closeHigherLayer()
+                }
+            ]]></script>
+        </object>
+		
+		<object type="ResearchData" name="objResearchData">
+            <script type="application/javascript"><![CDATA[
+                function showResearchTree() {
+					          reportdata.ePanel = ReportPanelSelection.RESEARCH;
+                    self.eTab = ResearchSection.TREE;
+					          def.closeHigherLayer()
+                }
+            ]]></script>
+        </object>
+		
+		<object type="TradeData" name="objTradeData">
+            <script type="application/javascript"><![CDATA[
+                function showStockpile(nation) {
+                    reportdata.ePanel = ReportPanelSelection.TRADE;
+                    reportdata.objTradeData.eTab = TradeSection.STOCKPILE
+					def.closeHigherLayer()
+                }
+                function showWorldMarket(nation) {
+                    reportdata.ePanel = ReportPanelSelection.TRADE;
+                    reportdata.objTradeData.eTab = TradeSection.WORLD_MARKET
+					def.closeHigherLayer()
+                }
+                function showDeals(nation) {
+                    reportdata.ePanel = ReportPanelSelection.TRADE;
+                    reportdata.objTradeData.eTab = TradeSection.DEALS
+					def.closeHigherLayer()
+                }
+                function showReports(nation) {
+                    reportdata.ePanel = ReportPanelSelection.TRADE;
+                    reportdata.objTradeData.eTab = TradeSection.REPORTS
+					def.closeHigherLayer()
+                }
+            ]]></script>
+        </object>
+		
+    </objectDef>
+    
+    <objectDef type="UI2DReportLayer" superType="mlui.UI2DElement">
+		<property name="bVisible" from="encydata.showLowerLayers()"/>
+        <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+        
+        <propertyDef name="objPanel" storesChildren="true">
+            switch{
+                case reportdata.ePanel == ReportPanelSelection.MILITARY:
+                    <object type="UI2DReportSheetMilitary">
+                        <property name="nDepth" value="100"/>
+                    </object>
+                case reportdata.ePanel == ReportPanelSelection.DIPLOMATIC:
+                    <object type="UI2DReportSheetDiplomacy">
+                        <property name="nDepth" value="100"/>
+                    </object>
+                case reportdata.ePanel == ReportPanelSelection.DOMESTIC:
+                    <object type="UI2DReportSheetGovernment">
+                        <property name="nDepth" value="100"/>
+						<property name="objNation" from="mh2data.objNation"/>
+                    </object>
+                case reportdata.ePanel == ReportPanelSelection.CITY:
+                    <object type="UI2DReportSheetCity">
+                        <property name="nDepth" value="100"/>
+                    </object>
+                case reportdata.ePanel == ReportPanelSelection.RESEARCH:
+                    <object type="UI2DReportSheetRegion">
+                        <property name="nDepth" value="100"/>
+                    </object>
+                case reportdata.ePanel == ReportPanelSelection.TRADE:
+                    <object type="UI2DReportSheetTrade">
+                        <property name="nDepth" value="100"/>
+                    </object>
+            }
+        </propertyDef>
+    </objectDef>
+    
+</locust>

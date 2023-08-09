@@ -1,0 +1,1054 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<enumDef name="ResearchTree">
+		<value name="NONE"/>
+		<value name="SMALL"/>
+		<value name="LARGE"/>
+    </enumDef>
+
+	<objectDef type="MH2Data" class="CMLObject">
+        <propertyDef name="objBaseAvatar" type="mlgame.Avatar" from="mlgame.client.objUserSession"/>
+		<propertyDef name="objAvatar" type="mlgame.Avatar">
+			switch { case self.objBaseAvatar.objGameSystemSet != null: self.objBaseAvatar }
+		</propertyDef>
+        <propertyDef name="objMapData" type="mapui.MapData" storesChildren="true"/>
+        <propertyDef name="refSelectedObject" type="GORef"/>
+        <propertyDef name="objSelectedObject" type="Object">
+            self.refSelectedObject.resolve(self.objAvatar)
+        </propertyDef>
+		<propertyDef name="eResearchTree" type="Enum" restriction="ResearchTree" default="NONE"/>
+        <propertyDef name="bUserIsPlaying" type="bool" default="false" />
+        <propertyDef name="bShowNationInfo" type="bool" default="true" />
+        
+        <!-- user options -->
+        <propertyDef name="bShadows" type="bool" default="false" />
+        <propertyDef name="bCompressedTerrainTextures" type="bool" default="true" />
+        <propertyDef name="bHasCompressedTexturesOption" type="bool" default="true" />        
+		
+		<!-- Popup Panels -->
+		<propertyDef name="otSummaryPanelPopup" type="ObjectType" default="UI2DSummaryPanelLayout"/>
+		<propertyDef name="otReportPanelPopup" type="ObjectType"/>
+		<propertyDef name="otDiplomaticActionsPopup" type="ObjectType"/>
+		<propertyDef name="otInternalActionsPopup" type="ObjectType"/>
+
+		<propertyDef name="otGroupTab" type="ObjectType"/>
+		<propertyDef name="otCityPopupTab" type="ObjectType"/>
+		<propertyDef name="otSeaRegionTab" type="ObjectType"/>
+		
+		<propertyDef name="otMainMenu" type="ObjectType"/>
+		<propertyDef name="otMapToggle" type="ObjectType"/>
+
+		<!-- Report Sheets -->
+		<propertyDef name="otReportSheet" type="ObjectType"/>
+
+		<!-- Report Tabs -->
+		<propertyDef name="otMilitaryTab" type="ObjectType" default="UI2DMilitaryTabArmyGroups"/>
+		<propertyDef name="otDiplomacyTab" type="ObjectType" default="UI2DDiplomacyTabWorldNations"/>
+		<propertyDef name="otGovernmentTab" type="ObjectType" default="UI2DGovernmentTabInfo"/>
+		<propertyDef name="otCityTab" type="ObjectType" default="UI2DCityTabProductionList"/>
+		<propertyDef name="otCityOrdersTab" type="ObjectType" default="UI2DCityOrdersTabCityBuildings"/>
+		<propertyDef name="otRegionTab" type="ObjectType" default="UI2DRegionTabAssets"/>
+		<!--<propertyDef name="otRegionProjectsTab" type="ObjectType" default="UI2DRegionProjectsTabResources"/>-->
+		<propertyDef name="otTradeTab" type="ObjectType" default="UI2DTradeTabStockpiles"/>
+		<propertyDef name="strCityProjectsTab" type="String" default="Advanced"/>				
+		
+		<!-- Diplomacy Subtabs -->
+		<propertyDef name="otOfferPeaceTab" type="ObjectType" default="UI2DOfferPeaceTabConcessions"/>
+		<propertyDef name="strTradeAgreementTab" type="String" default="Money"/>
+		<propertyDef name="otTerritorialTab" type="ObjectType" default="UI2DTerritorialTabDeal"/>
+		
+		<propertyDef name="otTradeProposal" type="ObjectType"/>
+		<propertyDef name="otConfirmDialogue" type="ObjectType"/>
+
+		<!-- Panel min/max states -->
+        <propertyDef name="bSummaryPanelMin" type="bool" default="false"/>
+		<propertyDef name="bEngagementPanelMin" type="bool" default="true"/>
+
+        <!-- Avatar's nation -->
+        <propertyDef name="objNation" type="gs_tbg.Nation"/>
+        <property name="objNation" from="self.objAvatar.getAttribValue('Nation').resolve(self.objAvatar)"/>
+
+		<!-- Avatar's Capital City -->
+		<propertyDef name="objCapitalCityNation" type="gs_tbg.CapitalCityNation"/>
+		<property name="objCapitalCityNation" from="self.objNation.getGOExtension(gs_tbg.CapitalCityNation, self.objAvatar)"/>
+
+		<propertyDef name="objCapitalCity" type="gs_tbg.City"/>
+		<property name="objCapitalCity" from="self.objCapitalCityNation.refCapitalCity.resolve(self.objAvatar)"/>
+
+		<!-- Notifications -->
+        <propertyDef name="nNotificationTurns" type="int" default="1"/>
+        <!--<property name="nNotificationTurns" value="3"/>--> <!-- if more than one need to sort notifications by turn -->
+
+		<!-- Sea Region bool -->
+		<propertyDef name="bSeaRegion" type="bool" default="false"/>
+
+		<!-- Diplomacy -->
+		<propertyDef name="objTheirTradeProposal" type="gs_tbg.TradeAgreement"/>
+		<propertyDef name="bRegnegotiateTrade" type="bool" default="false" />
+		<propertyDef name="objTheirTreatyProposal" type="gs_tbg.Treaty"/>
+		<propertyDef name="strDiplomaticMessage" type="String"/>
+
+		<!-- ToolTip Popups -->
+		<propertyDef name="fMouseGainedTime" type="float"/>
+		<propertyDef name="fPopupTime" type="float"/>
+		<property name="fPopupTime" value="0.6"/>
+
+		<!-- Decision Point -->
+		<propertyDef name="objDecisionPoints" type="gs_tbg.DecisionPoint" variable="true"/>
+
+		<!-- Visibile Regions -->
+		<object type="mapui.LookupVisibleRegions" name="objLookupVisibleRegions">
+			<property name="objMapData" from="def.objMapData"/>
+		</object>
+
+		<propertyDef name="objNationVisibilityList" type="gs_tbg.VisibilityList"/>
+		<property name="objNationVisibilityList" from="gs_tbg.getVisibilityList(self.objAvatar,self.objNation)"/>
+
+
+
+		<object type="TableData" name="objIndustrialCentersTableData">
+			<property name="eColm"  from="CityProductionSort.CITY"/>
+		</object>
+		<object type="TableData" name="objRegionProductionTableData">
+			<property name="eColm" from="RegionProductionSort.NAME"/>
+		</object>
+		<object type="TableData" name="objCityResearchTableData">
+			<property name="eColm" from="CityResearchSort.CITY"/>
+		</object>
+		<object type="TableData" name="objRegionalStatisticTableData">
+			<property name="eColm" from="RegionalStatisticSort.NAME"/>
+		</object>
+
+		<object type="TableData" name="objAirGroupSortTableData">
+			<property name="eColm" from="AirGroupSort.NAME"/>
+		</object>
+		<object type="TableData" name="objMilitaryAirUnitsSortTableData">
+			<property name="eColm" from="MilitaryUnitsSort.NAME"/>
+		</object>
+		<object type="TableData" name="objArmyGroupSortTableData">
+			<property name="eColm" from="ArmyGroupSort.NAME"/>
+		</object>
+		<object type="TableData" name="objArmyUnitsSortTableData">
+			<property name="eColm" from="ArmyUnitsSort.NAME"/>
+		</object>
+		<object type="TableData" name="objNationalMilitarySortTableData">
+			<property name="eColm" from="NationalMilitarySort.NAME"/>
+		</object>
+		<object type="TableData" name="objNavalGroupSortTableData">
+			<property name="eColm" from="NavalGroupSort.NAME"/>
+		</object>
+		<object type="TableData" name="objNavalMilitaryUnitsSortTableData">
+			<property name="eColm" from="MilitaryUnitsSort.NAME"/>
+		</object>
+		<object type="TableData" name="objSubGroupSortTableData">
+			<property name="eColm" from="SubGroupSort.NAME"/>
+		</object>
+		<object type="TableData" name="objSubMilitaryUnitsSortTableData">
+			<property name="eColm" from="MilitaryUnitsSort.NAME"/>
+		</object>
+		<object type="TableData" name="objAllianceSortTableData">
+			<property name="eColm" from="AllianceSort.LEADER"/>
+		</object>
+		<object type="TableData" name="objIdeologySortTableData">
+			<property name="eColm" from="IdeologySort.LEADER"/>
+		</object>
+		<object type="TableData" name="objWorldNationSortTableData">
+			<property name="eColm" from="WorldNationSort.NAME"/>
+		</object>
+		<object type="TableData" name="objNationalitySortTableData">
+			<property name="eColm" from="NationalitySort.NAME"/>
+		</object>
+		<object type="TableData" name="objGovSubordinateSortTableData">
+			<property name="eColm" from="GovSubordinateSort.NAME"/>
+		</object>
+		<object type="TableData" name="objTradeDealsSortTableData">
+			<property name="eColm" from="TradeDealsSort.NATION"/>
+		</object>
+
+		<object type="TableData" name="objWorldMarketTableDataT">
+			<property name="eColm" from="WorldMarket.TNAME"/>
+		</object>
+		
+		<object type="TableData" name="objWorldMarketTableDataSD">
+			<property name="eColm" from="WorldMarket.SDNAME"/>
+		</object>
+
+		<!-- Icon Display Tables -->
+		<object type="MapIconTable" name="objMapIconTable">
+		</object>
+		
+		<object type="ReligionDisplayTable" name="objReligionDisplayTable">
+		</object>
+
+		<object type="CoastalDefenseDisplayTable" name="objCoastalDefenseDisplayTable">
+		</object>
+
+		<object type="FortificationDisplayTable" name="objFortificationDisplayTable">
+		</object>
+
+		<object type="AADefenseDisplayTable" name="objAADefenseDisplayTable">
+		</object>
+
+		<object type="TransportationProdDisplayTable" name="objTransportationProdDisplayTable">
+		</object>
+
+		<object type="ResourceProducerDisplayTable" name="objResourceProducerDisplayTable">
+		</object>
+		
+		<object type="TradeResourceDisplayTable" name="objTradeResourceDisplayTable">
+		</object>
+		
+		<object type="MoneyDisplayTable" name="objMoneyDisplayTable">
+		</object>
+		
+		<object type="ResourceProducerOutputDisplayTable" name="objResourceProducerOutputDisplayTable">
+		</object>
+
+		<object type="UnitTypeDisplayTable" name="objUnitTypeDisplayTable">
+		</object>
+		
+		<object type="UnitDisplayTable" name="objUnitDisplayTable">
+		</object>
+		
+		<object type="NotificationDisplayTable" name="objNotificationDisplayTable">
+		</object>
+		
+		<object type="CityBuildingDisplayTable" name="objCityBuildingDisplayTable">
+		</object>
+		
+		<object type="ResearchCenterBuildingDisplayTable" name="objResearchCenterBuildingDisplayTable">
+		</object>
+		
+		<object type="ResearchCategoryIconTable" name="objResearchCategoryIconTable">
+		</object>
+
+		<object type="media_tables.FlagModelTextureTable" name="objFlagModelTextureTable">
+			<proto name="uidata.FlagModelTextureTable"/>
+			<proto name="sd.FlagModelTextureTable"/>
+			<property name="objModuleSD" from="sd"/>
+            <property name="bUseOverride" from="!locale.allowNaziSymbol()"/>
+		</object>
+		
+		<object type="media_tables.ResourceDisplayTable" name="objResourceDisplayTable">
+			<proto name="uidata.ResourceDisplayTable"/>
+			<property name="objModuleSD" from="sd"/>
+		</object>
+		
+		<object type="media_tables.TerrainDisplayTable" name="objTerrainDisplayTable">
+			<proto name="uidata.TerrainDisplayTable"/>
+			<property name="objModuleSD" from="sd"/>
+		</object>
+		
+		<object type="media_tables.SeasonDisplayTable" name="objSeasonDisplayTable">
+			<proto name="uidata.SeasonDisplayTable"/>
+		</object>
+
+        <propertyDef name="objOrderInfo" type="OrderInfoData" variable="true" storesChildren="true"/>
+
+        <object type="OrderInfoData" name="objOrderInfo">
+          <property name="otOrder" value="gs_tbg.UnitOrderRetreat"/>
+          <property name="tmplIcon" value="skin.ImgInfoIconRetreat"/>
+
+          <script type="application/x-locust-query">
+            getOrderText = ?{order:
+            locale.FSID.UI.Target.format('Target', order.objEndWaypoint.refRegion.resolve(def.objAvatar).strDisplayName)
+            }
+          </script>
+        </object>
+    
+    
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderMove"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconMove"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Region.format('Region', order.objEndWaypoint.refRegion.resolve(def.objAvatar).strDisplayName)
+        }
+
+        getOrderText2 = ?{order:
+        locale.FSID.UI.UnitOrderTurns.format('Number', order.getTurnsRemaining(def.objAvatar))
+        }
+      </script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderRebase"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconAirbase"/>
+
+      <script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Region.format('Region', order.refRegion.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderAirMission"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconQuestionMark"/>
+
+			<script type="application/x-locust-query">
+				getOrderText = ?{order:
+					locale.SID.UI.UnitOrderAirMission
+				}
+			</script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderAirPatrol"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconPatrol"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Region.format('Region', order.refRegion.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderSeaPatrol"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconPatrol"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Region.format('Region', order.refRegion.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderBombRegion"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconBombing"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Region.format('Region', order.refRegion.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderBombCity"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconBombing"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.City.format('City', order.refCity.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+		
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderRangedAttack"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconWarState"/>
+
+			<script type="application/x-locust-query">
+				getOrderText = ?{order:
+					locale.FSID.UI.Target.format('Target', order.refTarget.resolve(def.objAvatar).strDisplayName)
+				}
+			</script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderBombNavalBase"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconBombing"/>
+
+			<script type="application/x-locust-query">
+				getOrderText = ?{order:
+					locale.FSID.UI.UnitOrderBombNavalBase.format('Base', order.refNavalBase.resolve(def.objAvatar).strDisplayName)
+				}
+			</script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderBombResource"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconBombing"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.ResourceProducer.format('ResourceProducer', order.objResourceCapacity.tmplResource.resolve().strDisplayName)
+        }
+      </script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderLoadOnTransports"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconLoading"/>
+
+			<script type="application/x-locust-query">
+				getOrderText = ?{order:
+					locale.FSID.UI.Group.format('Group', order.refUnitGroup.resolve(def.objAvatar).strDisplayName)
+				}
+			</script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderUnloadFromTransports"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconUnloading"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Region.format('Region', order.refRegion.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderLoadOnCarrier"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconLoadCarrier"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Group.format('Group', order.refUnit.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderUnloadFromCarrier"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconUnloadCarrier"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Region.format('Region', order.refRegion.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderDropParatrooper"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconAirborneDrop"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Region.format('Region', order.refRegion.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+		
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderDropAtomicBomb"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconNuclearSm"/>
+
+			<script type="application/x-locust-query">
+				getOrderText = ?{order:
+					locale.FSID.UI.City.format('City', order.refCity.resolve(def.objAvatar).strDisplayName)
+				}
+			</script>
+		</object>
+
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderSubAttack"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconPatrol"/>
+			<script type="application/x-locust-query">
+				getOrderText = ?{order:
+                    locale.SID.UI.SubAttack
+				}
+			</script>
+		</object>
+		
+    <object type="OrderInfoData" name="objOrderInfo">
+      <property name="otOrder" value="gs_tbg.UnitOrderEnterPort"/>
+      <property name="tmplIcon" value="skin.ImgInfoIconToPort"/>
+
+      <script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Target.format('Target', order.refTarget.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+    </object>
+
+    <object type="OrderInfoData" name="objOrderInfo">
+      <property name="otOrder" value="gs_tbg.UnitOrderExitPort"/>
+      <property name="tmplIcon" value="skin.ImgInfoIconMove"/>
+
+      <script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Target.format('Target', order.objEndWaypoint.refRegion.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+    </object>
+    
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderMoveIntoPort"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconToPort"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Target.format('Target', order.refTarget.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderMoveFromPort"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconMove"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+        locale.FSID.UI.Target.format('Target', order.objEndWaypoint.refRegion.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+		
+		<object type="OrderInfoData" name="objOrderInfo">
+			<property name="otOrder" value="gs_tbg.UnitOrderShoreBombardment"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconBombing"/>
+
+			<script type="application/x-locust-query">
+        getOrderText = ?{order:
+          locale.FSID.UI.Target.format('Target', order.refTarget.resolve(def.objAvatar).strDisplayName)
+        }
+      </script>
+		</object>
+		
+		<propertyDef name="bSaving" type="bool" default="false"/>
+		
+		<object type="NationSelectionHistory" name="objNationSelectionHistory">
+		</object>
+		
+		<object type="SelectedTradeAgreement" name="objSelectedTradeAgreement">
+		</object>
+		<object type="gs_tbg.MoneyTransfer" name="objSelectedMoneyTransfer">
+		</object>
+		
+		<script type="application/x-locust-query">
+			
+			getLayersPanelCount = ?{:
+				if(spdata.bIsMoreInfo == true, 1, 0) +
+				if(reportdata.ePanel == ReportPanelSelection.NONE, 0, 1) +
+				if(encydata.ePanel == EncySelection.NONE, 0, 1)
+			}
+			
+			<!-- //placeholder/testing getAllVisibilityLists = ?{: gs_tbg.getAllVisibilityLists(self.objAvatar) } -->
+
+      getAllResources = ?{: gs_tbg.getAllResources(self.objAvatar) }
+
+      getAllResearchProjects = ?{: gs_tbg.getAllResearchProjects(self.objAvatar) }
+
+      getAllResearchPrograms = ?{: gs_tbg.getAllResearchPrograms(self.objAvatar) }
+
+      getAllResearchTopics = ?{: gs_tbg.getAllResearchTopics(self.objAvatar) }
+
+      getAllNations = ?{: gs_tbg.getAllNations(self.objAvatar) }
+
+      getAllNationResources = ?{: gs_tbg.getAllNationResources(self.objAvatar) }
+
+      getAllNationHistories = ?{: gs_tbg.getAllNationHistories(self.objAvatar) }
+
+      getAllRegions = ?{: gs_tbg.getAllRegions(self.objAvatar) }
+
+      getAllRegionOutputs = ?{: gs_tbg.getAllRegionOutputs(self.objAvatar) }
+
+      getTerrainTypes = ?{: gs_tbg.getTerrainTypes(self.objAvatar) }
+      getTerrainIcon = ?{terrain:
+      find(
+      ?{entry:
+      entry.tmplTerrain == terrain
+      }, mh2data.objTerrainDisplayTable.objEntries
+      ).tmplIcon22x22
+      }
+
+			
+			getTransportationImprovementTypes = ?{: gs_tbg.getTransportationImprovementTypes(self.objAvatar)}
+
+      getAllCities = ?{: gs_tbg.getAllCities(self.objAvatar) }
+
+      getAllFactoryOutputs = ?{: gs_tbg.getAllFactoryOutputs(self.objAvatar) }
+
+      getAllWars = ?{: gs_tbg.getAllWars(self.objAvatar) }
+
+      getAllAlliances = ?{: gs_tbg.getAllAlliances(self.objAvatar) }
+
+      getAllAllianceMemberships = ?{: gs_tbg.getAllAllianceMemberships(self.objAvatar) }
+
+      getAllUnits = ?{: gs_tbg.getAllUnits(self.objAvatar) }
+
+      getAllUnitGroups = ?{: gs_tbg.getAllUnitGroups(self.objAvatar) }
+
+      getAllEngagements = ?{: gs_tbg.getAllEngagements(self.objAvatar) }
+
+      getAllSupplyAndDemand = ?{: gs_tbg.getAllSupplyAndDemand(self.objAvatar) }
+
+      getOrderInfo = ?{order:
+      	find(?{oi: oi.otOrder == order.type}, self.objOrderInfo)
+      }
+
+      getOrderText = ?{order:
+      	self.getOrderInfo(order).getOrderText(order)
+      }
+
+      getOrderText2 = ?{order:
+      	self.getOrderInfo(order).getOrderText2(order)
+      }
+
+      canViewNationInfo = ?{nation:
+	      nation == self.objNation OR
+	      (
+		      !nation.objStatus.instanceOf(gs_tbg.NationStatusIndependent) AND
+		      nation.objStatus.refController == self.objNation
+	      )
+      }
+
+      canViewObjectInfo = ?{object:
+	      switch{
+		      case object.instanceOf(gs_tbg.Region):
+		      self.canViewNationInfo(object.refController.resolve(self.objAvatar))
+
+		      case object.instanceOf(gs_tbg.UnitGroup):
+		      self.canViewNationInfo(object.refController.resolve(self.objAvatar))
+
+		      case object.instanceOf(gs_tbg.City):
+		      self.canViewNationInfo(object.refRegion.resolve(self.objAvatar).refController.resolve(self.objAvatar))
+
+		      case object.instanceOf(gs_tbg.Nation):
+		      self.canViewNationInfo(object)
+
+		      default:
+		      false
+	      }
+      }
+    </script>
+
+		<!-- Methods -->
+		<script type="application/javascript">
+          <![CDATA[
+            function notifyUserIsNowPlaying() {
+                self.bUserIsPlaying = true;
+            }
+            function showNationInfo() {
+                self.bShowNationInfo = true;
+            }
+            function closeNationInfo() {
+                self.bShowNationInfo = false;
+                self.notifyUserIsNowPlaying();
+            }
+        
+			function setSelectedObject(selectedObject)
+			{
+				self.objMapData.makeGOSelectedOnMap(selectedObject);
+			}
+			function clearSelectedObject()
+			{
+				self.objMapData.refSelectedObject = GORef(gs_tbg.Nation, self.objNation);
+			}
+            function clearUnitGroupIfSelected(unitGroup) {
+                if(self.objMapData.objSelectedObject.equals(unitGroup)) {
+                    self.objMapData.refSelectedObject = unitGroup.refController;
+                }
+            }
+			function closeDiplomaticActionsPopup()
+			{
+				objRunnable.objRoot.playSoundOnce("Icon Panel Close")
+
+				self.otDiplomaticActionsPopup = null;
+			}
+			function closeInternalActionsPopup()
+			{
+				objRunnable.objRoot.playSoundOnce("Icon Panel Close")
+
+				self.otInternalActionsPopup = null;
+			}
+			function closeReportPanelPopup()
+			{
+				objRunnable.objRoot.playSoundOnce("Icon Panel Close")
+
+				self.otReportPanelPopup = null;
+			}
+			function closeCityOrderPopup()
+			{
+				objRunnable.objRoot.playSoundOnce("Icon Panel Close")
+
+				self.otCityOrderPopup = null;
+			}
+			function closeSummaryPanelPopup()
+			{
+				objRunnable.objRoot.playSoundOnce("Icon Panel Close")
+
+				self.otSummaryPanelPopup = null;
+			}
+			function toggleSummaryPanel()
+			{
+				self.bSummaryPanelMin = !self.bSummaryPanelMin;
+
+				if(!self.bSummaryPanelMin) {
+					objRunnable.objRoot.playSoundOnce("Icon Panel Close")
+				}
+			}
+			function toggleEngagementPanel()
+			{
+				self.bEngagementPanelMin = !self.bEngagementPanelMin;
+
+				if(!self.bEngagementPanelMin) {
+					objRunnable.objRoot.playSoundOnce("Icon Panel Close")
+				}
+			}
+
+			function setMapView(view)
+			{
+				if (view != null && !(view.equals(self.objMapData.tmplMapView)))
+				{
+					self.objMapData.tmplMapView = view;
+				}
+			}
+
+			// Open Panels
+			function openReportPanel(panel)
+			{
+				self.otReportPanelPopup = panel;
+			}
+			function openSummaryPanel(panel)
+			{
+				self.otSummaryPanelPopup = panel;
+			}
+			function openReportSheet(sheet)
+			{
+				self.otReportSheet = sheet;
+			}
+			function openMilitaryTab(tab)
+			{
+				self.otMilitaryTab = tab;
+			}
+			function openMilitaryTabAll(tab)
+			{
+				self.objMapData.refSelectedObject = GORef(gs_tbg.Nation, self.objNation);
+				openMilitaryTab(tab);
+				openReportSheet(UI2DReportSheetMilitary);
+				openReportPanel(UI2DReportPanel);
+			}
+			function openDiplomacyTab(tab)
+			{
+				self.otDiplomacyTab = tab;
+			}
+			function openDiplomacyTabAll(tab)
+			{
+				openDiplomacyTab(tab);
+				openReportSheet(UI2DReportSheetDiplomacy);
+				openReportPanel(UI2DReportPanel);
+			}
+			function openDiplomaticAction(action)
+			{
+				self.otDiplomaticActionsPopup = action;
+			}
+			function openDiplomaticActionAll(action)
+			{
+				openDiplomaticAction(action);
+				openDiplomacyTabAll(UI2DDiplomacyTabInfo);
+			}
+			function openInternalAction(action)
+			{
+				self.otInternalActionsPopup = action;
+			}
+			function openConfirmAnnex()
+			{
+				self.otConfirmDialogue = UI2DConfirmAnnex;
+			}
+			function closeConfirmAnnex()
+			{
+				self.otConfirmDialogue = null;
+			}
+			function openMainMenu()
+			{
+				self.otMainMenu = UI2DMainMenuElement;
+			}
+			function openOptionsMenu()
+			{
+				self.otMainMenu = UI2DOptionsMenuElement;
+			}
+			function openSaveMenu()
+			{
+				self.otMainMenu = UI2DSaveMenuElement;
+			}
+			function openQuitToMainMenuMenu()
+			{
+				self.otMainMenu = UI2DQuitToMainMenuMenuElement;
+			}            
+			function openQuitToDesktopMenu()
+			{
+				self.otMainMenu = UI2DQuitToDesktopMenuElement;
+			}
+			function mainMenuQuit(nExitCode)
+			{
+                // nExitCode values:
+                // 3 = exit to main menu
+                // anything else = exit to desktop
+            
+				self.otMainMenu = UI2DQuitElement;
+                if (nExitCode == 3) {
+                    quit(3);
+                }
+                else {
+                    quick_exit(nExitCode);
+                }
+			}
+			function closeMainMenu()
+			{
+				self.otMainMenu = null;
+			}
+			function openTradeProposal()
+			{
+				self.otTradeProposal = UI2DTradeProposal;
+			}
+			function closeTradeProposal()
+			{
+				self.otTradeProposal = null;
+			}
+			function openMapToggle(toggle)
+			{
+				self.otMapToggle = toggle;
+			}
+			function closeMapToggle()
+			{
+				self.otMapToggle = null;
+			}
+			function openTradeAgreementTab(tabName)
+			{
+				self.strTradeAgreementTab = tabName;
+			}
+			function openTerritorialTab(tab)
+			{
+				self.otTerritorialTab = tab;
+			}
+			function openGovernmentTab(tab)
+			{
+				self.otGovernmentTab = tab;
+			}
+			function openGovernmentTabAll(tab)
+			{
+				openGovernmentTab(tab);
+				openReportSheet(UI2DReportSheetGovernment);
+				openReportPanel(UI2DReportPanel);
+			}
+			function openCityTab(tab)
+			{
+				self.otCityTab = tab;
+			}
+			function toggleCityPopupTab(tab)
+			{
+			    if(self.otCityPopupTab != tab)
+				{
+					openCityPopupTab(tab);
+				}
+				else if(self.otCityPopupTab.equals(tab))
+				{
+					closeCityPopupTab();
+				}
+			}
+			function openCityPopupTab(tab)
+			{
+				self.otCityPopupTab = tab;
+			}
+			function closeCityPopupTab()
+			{
+				objRunnable.objRoot.playSoundOnce("Icon Panel Close")
+
+				self.otCityPopupTab = null;
+			}
+			function openCityTabAll(tab)
+			{
+				openCityTab(tab);
+				openReportSheet(UI2DReportSheetCity);
+				openReportPanel(UI2DReportPanel);
+				
+				if(self.objMapData.objSelectedObject.instanceOf(gs_tbg.City))
+				{
+				
+				}
+				else
+				{
+					self.objMapData.refSelectedObject = GORef(gs_tbg.City, gs_tbg.getCapitalCity(self.objAvatar, self.objNation))
+				}
+			}
+			function openCityOrdersTab(tab)
+			{
+				self.otCityOrdersTab = tab;
+			}
+			function openCityOrdersTabAll(tab)
+			{
+				openCityOrdersTab(tab);
+				openCityTabAll(UI2DCityTabProduction);
+			}
+			function openCityProjectsTab(tabName)
+			{
+				self.strCityProjectsTab = tabName;
+			}
+			function openCityProjectsTabAll(tabName)
+			{
+				openCityProjectsTab(tabName);
+				openCityTabAll(UI2DCityTabResearch);
+			}
+			function openRegionTab(tab)
+			{
+				self.otRegionTab = tab;
+			}
+			function openRegionTabAllSetSelectedObject(tab)
+			{
+				openRegionTab(tab);
+				openReportSheet(UI2DReportSheetRegion);
+				openReportPanel(UI2DReportPanel);
+			}
+			function openRegionTabAll(tab)
+			{
+				openRegionTab(tab);
+				openReportSheet(UI2DReportSheetRegion);
+				openReportPanel(UI2DReportPanel);
+			}
+			<!--function openRegionProjectsTab(tab)-->
+			<!--{-->
+			<!--	self.otRegionProjectsTab = tab;-->
+			<!--}-->
+			function openTradeTab(tab)
+			{
+				self.otTradeTab = tab;
+			}
+			function openTradeTabAll(tab)
+			{
+				self.objMapData.refSelectedObject = GORef(gs_tbg.Nation, self.objNation);
+				openReportSheet(UI2DReportSheetTrade);
+				openReportPanel(UI2DReportPanel);
+			}
+			
+			function openEncyclopedia(){
+				mh2data.objEncyclopediaData.eTab = EncyclopediaCategories.UNIT
+				openReportSheet(UI2DEncyclopedia);
+				openReportPanel(UI2DReportPanel);
+			}
+			
+			function openOfferPeaceTab(tab)
+			{
+				self.otOfferPeaceTab = tab;
+			}
+			function toggleGroupTab(orderData)
+			{
+				if(self.otGroupTab == null)
+				{
+					openGroupTab(UI2DGroupTabUnits);
+				}
+				else if(self.otGroupTab.equals(UI2DGroupTabUnits))
+				{
+					closeGroupTab();
+				}
+				else if(self.otGroupTab.equals(UI2DGroupTabMerge))
+				{
+					orderData.clearMergeData();
+					closeGroupTab();
+				}
+				else if(self.otGroupTab.equals(UI2DGroupTabSplit))
+				{
+					orderData.clearSplitData();
+					closeGroupTab();
+				}
+				else if(self.otGroupTab.equals(UI2DGroupTabCarriers))
+				{
+					orderData.clearGroupsOnCarriersData();
+					closeGroupTab();
+				}
+				else if(self.otGroupTab.equals(UI2DGroupTabGroupsOnTransports))
+				{
+					orderData.clearGroupsOnTransportsData();
+					closeGroupTab();
+				}
+				else if(self.otGroupTab.equals(UI2DGroupTabParatroopers))
+				{
+					orderData.clearParatroopersData();
+					closeGroupTab();
+				}
+			}
+			function openGroupTab(tab)
+			{
+				self.otGroupTab = tab;
+			}
+			function closeGroupTab()
+			{
+				objRunnable.objRoot.playSoundOnce("Icon Panel Close")
+
+				self.otGroupTab = null;
+			}
+			function toggleSeaRegionTab()
+			{
+				if(self.otSeaRegionTab == null)
+				{
+					openSeaRegionTab(UI2DSeaRegionTabGroups);
+				}
+				else if(self.otSeaRegionTab.equals(UI2DSeaRegionTabGroups))
+				{
+					closeSeaRegionTab();
+				}
+			}
+			function openSeaRegionTab(tab)
+			{
+				self.otSeaRegionTab = tab;
+			}
+			function closeSeaRegionTab()
+			{
+				objRunnable.objRoot.playSoundOnce("Icon Panel Close")
+
+				self.otSeaRegionTab = null;
+			}
+		]]></script>
+    </objectDef>
+	
+	<objectDef type="SelectedTradeAgreement" class="CMLObject">
+		<propertyDef name="objTradeAgreement" type="gs_tbg.TradeAgreement"/>
+	
+		<script type="application/javascript"><![CDATA[
+			function setTradeAgreement(objTradeAgreement)
+			{
+				self.objTradeAgreement = objTradeAgreement
+				if(objTradeAgreement.eStatus.equals(gs_tbg.TradeAgreementStatus.PROPOSED))
+				{
+					if(objTradeAgreement.refProposingNation.resolve(mh2data.objAvatar) != mh2data.objNation)
+					{
+						mh2data.openTradeProposal();
+					}
+				}
+			}
+		]]></script>
+			
+	</objectDef>
+
+	<objectDef type="NationSelectionHistory" class="CMLObject">
+		<!-- Nation Selection history -->
+		<propertyDef name="objNationHistory1" type="gs_tbg.Nation"/>
+		<propertyDef name="objNationHistory2" type="gs_tbg.Nation"/>
+		<propertyDef name="objNationHistory3" type="gs_tbg.Nation"/>
+		<propertyDef name="objNationHistory4" type="gs_tbg.Nation"/>
+
+		<script type="application/javascript"><![CDATA[
+			function setNationHistory(objNation)
+			{
+				if(objNation == mh2data.objNation)
+				{
+				}
+				else if(self.objNationHistory1 == null)
+				{
+					self.objNationHistory1 = objNation
+				}
+				else if(self.objNationHistory1 == objNation)
+				{
+				}
+				else if(self.objNationHistory2 == objNation)
+				{
+					self.objNationHistory2 = self.objNationHistory1
+					self.objNationHistory1 = objNation
+				}
+				else if(self.objNationHistory3 == objNation)
+				{
+					self.objNationHistory3 = self.objNationHistory2
+					self.objNationHistory2 = self.objNationHistory1
+					self.objNationHistory1 = objNation
+				}
+				else
+				{
+					self.objNationHistory4 = self.objNationHistory3
+					self.objNationHistory3 = self.objNationHistory2
+					self.objNationHistory2 = self.objNationHistory1
+					self.objNationHistory1 = objNation
+				}
+			}
+		]]></script>
+	</objectDef>
+</locust>

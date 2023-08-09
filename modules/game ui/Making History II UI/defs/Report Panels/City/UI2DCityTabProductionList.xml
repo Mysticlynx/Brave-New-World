@@ -1,0 +1,1454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="CityProductionRowData" class="CMLObject">
+		<propertyDef name="objCity" type="gs_tbg.City"/>		
+		
+        <propertyDef name="bUnitsInPort" type="bool">
+            switch
+            {
+                case self.objCity.refSeaRegion==null:
+                    false
+                default:
+                    gs_tbg.getGroupsAtLocation(mh2data.objAvatar, self.objCity).size GT 0
+            }
+        </propertyDef> 
+        
+        <propertyDef name="strPort" type="String">
+			if(self.bUnitsInPort,'a',if(self.objCity.refSeaRegion != null,'b','c')) + self.objCity.strDisplayName
+		</propertyDef>		
+                
+		<propertyDef name="objCurrentWorkOrder" type="gs_tbg.WorkOrder">
+			find(?{project: project.nPriority == 1}, self.objCity.objWorkOrders)
+		</propertyDef>
+		<propertyDef name="nOrderTurns" type="int">
+            if(
+            self.objCity.nIPUs != 0,
+            (self.objCurrentWorkOrder.tmplFactoryOutput.resolve().nIPUs - self.objCurrentWorkOrder.nIPUs + self.objCity.nIPUs - 1) / self.objCity.nIPUs,
+            0
+            )
+        </propertyDef>		
+        <propertyDef name="nMoney" type="int">
+			if(self.objCurrentWorkOrder.tmplFactoryOutput.resolve().instanceOf(gs_tbg.FactoryOutputMoneyTemplate),
+				self.objCurrentWorkOrder.tmplFactoryOutput.resolve().nAmount * self.objCity.nIPUs,
+				0
+			)
+		</propertyDef>
+
+    <propertyDef name="objOwner" type="gs_tbg.Nation">
+      self.objCity.refRegion.resolve(mh2data.objAvatar).refOwner.resolve(mh2data.objAvatar)
+    </propertyDef>
+
+    <propertyDef name="objRegionNationality" type="String">
+      if(self.objCity.refRegion.resolve(mh2data.objAvatar).refColony == null,
+        <!--self.objOwner.tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName,-->
+        <!--this sorts the owners nationality to the top/bottom-->
+        'Zzzz',
+        self.objCity.refRegion.resolve(mh2data.objAvatar).tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName
+      )
+    </propertyDef>
+		
+		<propertyDef name="strCurrentOrder" type="String">
+			if(self.objCurrentWorkOrder == null,
+				'a',
+				self.objCurrentWorkOrder.tmplFactoryOutput.resolve().strDisplayName
+			)
+		</propertyDef>
+		
+        
+		<propertyDef name="objNextWorkOrder" type="gs_tbg.WorkOrder">
+			if(self.objCurrentWorkOrder.bRepeating
+                ,
+                self.objCurrentWorkOrder
+                ,
+                find(?{project: project.nPriority == 2}, self.objCity.objWorkOrders)
+            )
+		</propertyDef>
+		<propertyDef name="strNextWorkOrder" type="String">
+			if(self.objNextWorkOrder == null,
+				' ',
+				self.objNextWorkOrder.tmplFactoryOutput.resolve().strDisplayName
+			)
+		</propertyDef>
+        
+        <propertyDef name="objCityBuildings" type="gs_tbg.CityBuildingTemplate" variable="true" >
+            uniqueSet(map(?{cityBuilding: cityBuilding.tmplCityBuilding}, self.objCity.objCityBuildings))
+        </propertyDef>  
+                
+        <propertyDef name="tmplShipyard" type="gs_tbg.CityBuildingTemplate" >
+			switch
+            {
+                 case find(?{building: building ==  sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialShipyard') }, self.objCityBuildings) != null:
+                    sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialShipyard')
+                 case find(?{building: building ==  sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'Shipyard') }, self.objCityBuildings) != null:
+                    sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'Shipyard')
+            }
+        </propertyDef>  
+        <propertyDef name="tmplMunitionsPlant" type="gs_tbg.CityBuildingTemplate" >
+            find(?{tmpl: tmpl == sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'MunitionsPlant')}, self.objCityBuildings)
+        </propertyDef>  
+        <propertyDef name="tmplVehiclePlant" type="gs_tbg.CityBuildingTemplate" >
+            find(?{tmpl: tmpl == sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'VehiclePlant')}, self.objCityBuildings)
+        </propertyDef>  
+        <propertyDef name="tmplAircraftPlant" type="gs_tbg.CityBuildingTemplate" >
+            find(?{tmpl: tmpl == sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'AircraftPlant')}, self.objCityBuildings)
+        </propertyDef>  
+        <propertyDef name="tmplSyntheticFuelPlant" type="gs_tbg.CityBuildingTemplate" >
+            find(?{tmpl: tmpl == sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'SyntheticFuelPlant')}, self.objCityBuildings)
+        </propertyDef>  
+        <propertyDef name="tmplFoodProcessingPlants" type="gs_tbg.CityBuildingTemplate" >
+            find(?{tmpl: tmpl == sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'FoodProcessingPlants') }, self.objCityBuildings)
+        </propertyDef>  
+        <propertyDef name="tmplHighestLevelPlant" type="gs_tbg.CityBuildingTemplate" >
+			switch
+            {
+                 case find(?{building: building ==  sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'UndergroundFactory') }, self.objCityBuildings) != null:
+                    sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'UndergroundFactory')
+                 case find(?{building: building ==  sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialEnterprise') }, self.objCityBuildings) != null:
+                  sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialEnterprise')
+                 case find(?{building: building ==  sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialPlant') }, self.objCityBuildings) != null:
+                   sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialPlant')
+                 case find(?{building: building ==  sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'LargeFactory') }, self.objCityBuildings) != null:
+                    sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'LargeFactory')
+                 case find(?{building: building ==  sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'MechanizedFactory') }, self.objCityBuildings) != null:
+                    sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'MechanizedFactory')
+                 case find(?{building: building ==  sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'CottageFactory') }, self.objCityBuildings) != null:
+                   sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'CottageFactory')
+                 case find(?{building: building ==  sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'Mill') }, self.objCityBuildings) != null:
+                   sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'Mill')
+            }
+        </propertyDef>        
+        <propertyDef name="objResearchCenter" type="gs_tbg.ResearchCenter" >     
+            self.objCity.refResearchCenter.resolve(mh2data.objAvatar)
+        </propertyDef>        
+        <propertyDef name="tmplHighestLevelResearch" type="gs_tbg.ResearchCenterBuildingTemplate" >            
+			switch
+            {
+                 case find(?{building: building.tmplBuilding ==  sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'TechnologyCenter') }, self.objResearchCenter.objBuildings) != null: 
+                    sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'TechnologyCenter')
+                 case find(?{building: building.tmplBuilding ==  sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'ResearchFacility') }, self.objResearchCenter.objBuildings) != null:
+                    sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'ResearchFacility')
+                 case find(?{building: building.tmplBuilding ==  sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'University') }, self.objResearchCenter.objBuildings) != null:
+                    sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'University')
+                 case find(?{building: building.tmplBuilding ==  sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'PublicSchool') }, self.objResearchCenter.objBuildings) != null:
+                    sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'PublicSchool')
+            }
+        </propertyDef>          
+        
+	</objectDef>
+	
+	<enumDef name="CityProductionSort">
+		<value name="NATIONALITY"/>
+		<value name="PORT"/>
+        <value name="CITY"/>
+        <value name="IPUS"/>
+		<value name="ORDER"/>
+		<value name="TURNS"/>
+		<value name="NEXT"/>
+		<value name="SHIPYARD"/>
+		<value name="MUNITIONS"/>
+		<value name="VEHICLE"/>
+		<value name="AIRCRAFT"/>
+		<value name="FUEL"/>
+		<value name="FOOD"/>
+		<value name="HIGHESTPROD"/>
+		<value name="HIGHESTRES"/>
+    </enumDef>
+	
+    <enumDef name="CityTabSort">
+        <value name="ALL"/>
+        <value name="BASE"/>
+        <value name="COLONIES"/>
+    </enumDef>
+	
+    <objectDef type="EventCityProductionSortChosen" superType="mlevent.Event" >
+		<propertyDef name="eColm" type="Enum" restriction="CityTabSort" />
+		<propertyDef name="objColony" type="gs_tbg.Colony" />
+		<script type="application/javascript"><![CDATA[
+			function execute(event, owner)
+			{
+				log("EventCityProductionSortChosen with no owner -- cannot complete task ")
+			}
+		]]></script>
+    </objectDef>
+	
+	<objectDef type="UI2DCityTabProductionList" superType="mlui.UI2DElement">
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="CityProductionSort.CITY"/>
+		</object> -->
+		
+		<propertyDef name="eColm" type="Enum" restriction="CityTabSort" />
+		<propertyDef name="objColony" type="gs_tbg.Colony" />
+		<propertyDef name="objColonies" type="gs_tbg.Colony" variable="true" >
+			gs_tbg.getColonies(mh2data.objAvatar, self.objNation)
+		</propertyDef>
+
+		
+		<propertyDef name="objCities" type="gs_tbg.City" variable="true" >
+			switch
+			{
+				case self.eColm == CityTabSort.ALL:
+					gs_tbg.getNationCities(mh2data.objAvatar, self.objNation)				
+                case self.eColm == CityTabSort.BASE:
+					filter(?{city: city.refRegion.resolve(mh2data.objAvatar).refColony == null}, gs_tbg.getNationCities(mh2data.objAvatar, self.objNation))
+                case self.eColm == CityTabSort.COLONIES:
+					filter(?{city: city.refRegion.resolve(mh2data.objAvatar).refColony == self.objColony}, gs_tbg.getNationCities(mh2data.objAvatar, self.objNation))
+			}
+		</propertyDef>
+		
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+				
+	<!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objCityTitleSorter">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12LeftWrap"/>
+			<property name="strText" >
+			switch
+			{
+				case def.eColm == CityTabSort.ALL:
+						locale.SID.UI.AllCities
+				case def.eColm == CityTabSort.BASE:
+						locale.SID.UI.NationalCities
+				case def.eColm == CityTabSort.COLONIES:
+						def.objColony.strDisplayName
+			}
+			</property>
+			<property name="nX" value="18"/>
+			<property name="nY" value="105"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>			
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCitySortArrow">
+			<property name="tmplImage" value="skin.ImgDownArrowOrange"/>
+			<property name="nX" value="200"/>
+			<property name="nY" value="107"/>
+			<property name="nWidth" value="10"/>
+			<property name="nHeight" value="9"/>
+		</object>
+		
+		<object type="EventCityProductionSortChosen" name="eSortALL" >
+			<property name="eColm" value="ALL" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;						
+				}
+			]]></script>
+		</object>
+		<object type="EventCityProductionSortChosen" name="eSortBASE" >
+			<property name="eColm" value="BASE" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;					
+				}
+			]]></script>
+		</object>	
+		<object type="EventCityProductionSortChosen" name="eSortCOLONIES" tiedTo="def.objColonies">
+			<property name="objColony" from="tiedTo"/>
+			<property name="eColm" value="COLONIES" />
+			<script type="application/javascript"><![CDATA[
+				function execute(event, owner)
+				{
+					def.eColm = self.eColm;						
+					def.objColony = self.objColony;						
+				}
+			]]></script>
+		</object>
+		
+		
+		<object type="mlui.UI2DButton" name="objProjectButton">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="18"/>
+			<property name="nY" value="105"/>
+			<property name="nDefaultWidth" from="def.objCityTitleSorter.nWidth"/>
+			<property name="nDefaultHeight" from="def.objCityTitleSorter.nHeight"/>
+			<property name="nDepth" value="5" />
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							menuX = def.nScreenX + 13;
+							menuY = def.nScreenY + 120;
+							
+							var menudata = common_elements.MenuData.create({
+								"vecPosition": Vec3D(menuX, menuY, 0.0),
+								"nDefaultItemWidth": def.objProjectButton.nDefaultWidth,
+								"nDefaultItemHeight": def.objProjectButton.nDefaultHeight + 6
+							});
+							
+							var menuitem;
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.AllCities,
+								"objExecuteObject": def.eSortALL
+							});
+							menudata.objItems.add(menuitem);
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.NationalCities,
+								"objExecuteObject": def.eSortBASE
+							});
+							menudata.objItems.add(menuitem);
+							
+							for(var i = 0; i < def.eSortCOLONIES.length; i++)
+							{
+								menuitem = common_elements.MenuItem.create({
+									"strDisplayName": def.eSortCOLONIES[i].objColony.strDisplayName,
+									"objExecuteObject": def.eSortCOLONIES[i]
+								});
+								menudata.objItems.add(menuitem);							
+							}
+							
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.ExitMenu
+							});
+							menudata.objItems.add(menuitem);
+							
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventDismissPopUpMenu.create({})
+							});
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": mlui.objUI.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					]]></script>
+				</object>					
+		    </object>
+		</object>
+                
+        <object type="mlui.UI2DImage" name="objBubble">
+			<property name="tmplImage" value="skin.ImgBubbleHighlight"/>
+			<property name="nX" value="12"/>
+			<property name="nY" value="99"/>
+			<property name="nWidth" from="def.objCityTitleSorter.nWidth + 10"/>
+			<property name="nHeight" from="def.objCityTitleSorter.nHeight + 12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objProductionAndResearchLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.ProductionCenters"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objProductionOrdersAndResearchProjectsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+                <property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.NATIONALITY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="40"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.MilitaryManpower"/>
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconMilitaryMPUs"/>
+                    <property name="nWidth" value="16"/>
+					<property name="nHeight" value="20"/>
+                    <property name="nY" value="1"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="nDepth" value="50"/>
+				</object>		
+			</object>
+            
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.CityName"/>
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.CITY"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="188"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Port"/>
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.PORT"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="40"/>
+				<property name="nHeight" value="24"/>
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.IPUS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="40"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.IPUs"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconIndustrySm"/>
+					<property name="nWidth" value="16"/>
+					<property name="nHeight" value="20"/>
+                    <property name="nY" value="2"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.ProductionOrder"/>
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.ORDER"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="200"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Turns"/>
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.TURNS"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="40"/>
+				<property name="nHeight" value="23"/>
+			</object>
+            
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Next"/>
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.NEXT"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="36"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.SHIPYARD"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="36"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.Shipyard"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgSEA"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="20"/>
+					<property name="nY" value="1"/>
+					<property name="nX" value="7"/>
+					<property name="vaYAlign" value="TOP"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.MUNITIONS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="36"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.MunitionsPlant"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgTabArms"/>
+					<property name="nWidth" value="17"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.VEHICLE"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="36"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.VehiclePlant"/>	
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgTabVehiclePlant"/>
+					<property name="nWidth" value="17"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.AIRCRAFT"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="36"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.AircraftPlant"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgTabAircraft"/>
+					<property name="nWidth" value="17"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.FUEL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="36"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.UI.SynfuelPlant"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgTabFuelPlant"/>
+					<property name="nWidth" value="17"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.FOOD"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="36"/>
+				<property name="nHeight" value="23"/>
+                <property name="strToolTip" from="locale.SID.CityBuilding.DisplayName.FoodProcessingPlants"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgTabFood"/>
+					<property name="nWidth" value="17"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>				
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.IPUs"/>
+                <property name="strToolTip" from="locale.SID.UI.HighestIPUBuilding"/>		
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.HIGHESTPROD"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="36"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.RPUs"/>
+                <property name="strToolTip" from="locale.SID.UI.HighestRPUBuilding"/>		
+				<property name="objData" from="mh2data.objIndustrialCentersTableData"/>
+				<property name="eSortBy" from="CityProductionSort.HIGHESTRES"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="36"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+		</object>
+
+		<object type="CityProductionRowData" name="objRowDatas" tiedTo="def.objCities">
+			<property name="objCity" from="tiedTo"/>
+		</object>
+    <!--def.objData.objCity.refRegion.resolve(mh2data.objAvatar).tmplNation-->
+    <object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.NATIONALITY:
+                        if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: data.objRegionNationality}, def.objRowDatas),
+							sortDescending(?{data: data.objRegionNationality}, def.objRowDatas)
+						)
+						<!--if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: data.objOwner.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objOwner.strDisplayName}, def.objRowDatas)
+						)-->
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.CITY:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: data.objCity.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objCity.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.IPUS:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: data.objCity.nIPUs}, def.objRowDatas),
+							sortDescending(?{data: data.objCity.nIPUs}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.ORDER:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: data.strCurrentOrder}, def.objRowDatas),
+							sortDescending(?{data: data.strCurrentOrder}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.TURNS:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: data.nOrderTurns}, def.objRowDatas),
+							sortDescending(?{data: data.nOrderTurns}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.NEXT:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortDescending(?{data: data.strNextWorkOrder}, def.objRowDatas),
+							sortAscending(?{data: data.strNextWorkOrder}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.PORT:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortDescending(?{data: data.strPort}, def.objRowDatas),
+							sortAscending(?{data: data.strPort}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.SHIPYARD:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: def.getTemplateSort(data.tmplShipyard)}, def.objRowDatas),
+							sortDescending(?{data: def.getTemplateSort(data.tmplShipyard)}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.MUNITIONS:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: def.getTemplateSort(data.tmplMunitionsPlant)}, def.objRowDatas),
+							sortDescending(?{data: def.getTemplateSort(data.tmplMunitionsPlant)}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.VEHICLE:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: def.getTemplateSort(data.tmplVehiclePlant)}, def.objRowDatas),
+							sortDescending(?{data: def.getTemplateSort(data.tmplVehiclePlant)}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.AIRCRAFT:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: def.getTemplateSort(data.tmplAircraftPlant)}, def.objRowDatas),
+							sortDescending(?{data: def.getTemplateSort(data.tmplAircraftPlant)}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.FUEL:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: def.getTemplateSort(data.tmplSyntheticFuelPlant)}, def.objRowDatas),
+							sortDescending(?{data: def.getTemplateSort(data.tmplSyntheticFuelPlant)}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.FOOD:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: def.getTemplateSort(data.tmplFoodProcessingPlants)}, def.objRowDatas),
+							sortDescending(?{data: def.getTemplateSort(data.tmplFoodProcessingPlants)}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.HIGHESTPROD:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: def.getTemplateSort(data.tmplHighestLevelPlant)}, def.objRowDatas),
+							sortDescending(?{data: def.getTemplateSort(data.tmplHighestLevelPlant)}, def.objRowDatas)
+						)
+					case mh2data.objIndustrialCentersTableData.eColm == CityProductionSort.HIGHESTRES:
+						if(mh2data.objIndustrialCentersTableData.bAsc,
+							sortAscending(?{data: def.getTemplateSort(data.tmplHighestLevelResearch)}, def.objRowDatas),
+							sortDescending(?{data: def.getTemplateSort(data.tmplHighestLevelResearch)}, def.objRowDatas)
+						)
+				}
+				
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DProductionListBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+        
+        
+        <script type="application/x-locust-query"> <![CDATA[
+            getTemplateSort = ?{tmpl:
+                if(tmpl == null, '', tmpl.strName)
+            }
+        ]]></script>
+		
+	</objectDef>
+    
+    <objectDef type="UI2DCityProdNameBubble" superType="UI2DCityBubble">
+        <propertyDef name="objCity" type="gs_tbg.City"/>
+        <propertyDef name="strText" type="String"/>
+        <propertyDef name="objOwner" type="gs_tbg.Nation"/>
+        <propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+        <propertyDef name="objCitySelect" type="mlui.UI2DButton" storesChildren="true"/>
+        
+            <object type="UI2DNationIcon" name="objElements">
+                <property name="objNation" from="def.objOwner"/>
+                <property name="nX" value="3"/>
+                <property name="vaYAlign" value="MIDDLE"/>
+                <property name="nWidth" value="28"/>
+                <property name="nHeight" value="28"/>
+            </object>
+            
+        <object type="mlui.UI2DText" name="objText">
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+            <property name="tmplTextStyle" from="def.tmplTextStyle"/>
+            <property name="strText" from="def.strText"/>
+            <property name="nX" value="32"/>
+            <property name="nY" value="10"/>
+            <property name="nWidth" from="def.nWidth"/>
+            <property name="nHeight" value="14"/>
+        </object>
+    </objectDef>
+	
+    <objectDef type="UI2DCityNameBubble" superType="UI2DCityBubble">
+        <propertyDef name="objCity" type="gs_tbg.City"/>
+        <propertyDef name="strText" type="String"/>
+        <propertyDef name="objOwner" type="gs_tbg.Nation"/>
+        <propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+        <propertyDef name="objCitySelect" type="mlui.UI2DButton" storesChildren="true"/>
+        
+        <object type="mlui.UI2DText" name="objText">
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+            <property name="tmplTextStyle" from="def.tmplTextStyle"/>
+            <property name="strText" from="def.strText"/>
+            <property name="nX" value="5"/>
+            <property name="nY" value="10"/>
+            <property name="nWidth" from="def.nWidth"/>
+            <property name="nHeight" value="14"/>
+        </object>
+    </objectDef>
+
+  <objectDef type="UI2DCityNationalIconBubble" superType="UI2DCityBubble">
+    		<propertyDef name="objData" type="CityProductionRowData"/>
+        <propertyDef name="objCity" type="gs_tbg.City"/>
+        <propertyDef name="objOwner" type="gs_tbg.Nation"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+
+      <object type="mlui.UI2DImage" name="objIcon">
+        <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+        <property name="tmplImage" from="def.tmplImage"/>
+        <property name="nWidth" from="def.nWidth"/>
+        <property name="nX" value="5"/>
+        <property name="vaYAlign" value="MIDDLE"/>
+        <property name="nHeight" value="28"/>
+      </object>  
+    </objectDef>
+
+    <objectDef type="UI2DProductionListBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="CityProductionRowData"/>
+        <propertyDef name="nRow" type="int"/>
+
+		<object type="LookupNationIcons" name="objLookupNationIcons">
+			<property name="tmplNation" from="def.objData.objOwner.tmplNation"/>
+			<property name="tmplIdeology" from="def.objData.objOwner.tmplIdeology"/>
+		</object>
+
+		<object type="LookupNationIcons" name="objLookupColonyIcons">
+		  <property name="tmplNation" from="def.objData.objCity.refRegion.resolve(mh2data.objAvatar).tmplNation"/>
+		  <property name="tmplIdeology" from="def.objData.objOwner.tmplIdeology"/>
+		</object>
+		<propertyDef name="bSuppliesNeeded" type="bool" >
+			self.objData.objCurrentWorkOrder.nNumPaidFor == 0
+				AND self.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory != sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'Industrial')
+		</propertyDef>
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+		    <property name="nSpacing" value="-1"/>
+      
+            <object type="UI2DCityNationalIconBubble" name="objElements" >  
+                <property name="nRow" from="def.nRow"/>
+                <property name="nWidth" value="40"/>
+                <!--<property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28"/>-->
+                <property name="tmplImage" >
+                  if(def.objData.objCity.refRegion.resolve(mh2data.objAvatar).refColony == null,
+                    def.objLookupNationIcons.tmplIcon28x28,
+                    def.objLookupColonyIcons.tmplIcon28x28
+                  )
+                </property>
+                <property name="strToolTip" >
+                  if(def.objData.objCity.refRegion.resolve(mh2data.objAvatar).refColony == null,
+                    def.objData.objOwner.tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName
+                    + ' ' + locale.SID.UI.MilitaryManpower,
+                    def.objData.objCity.refRegion.resolve(mh2data.objAvatar).tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName
+                    + ' ' + locale.SID.UI.MilitaryManpower
+                  )
+                </property>
+             </object>
+            
+            <!-- City name -->
+            <object type="UI2DCityNameBubble" name="objElements">
+                <property name="nRow" from="def.nRow"/>
+                <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+                <property name="strText" from="def.objData.objCity.strDisplayName"/>
+				<property name="objOwner" from="def.objData.objOwner"/>
+                <property name="nWidth" value="188"/>
+                    <object type="mlui.UI2DButton" name="objCitySelect">
+                        <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+                        <property name="nX" value="0"/>
+                        <property name="nY" value="0"/>
+                        <property name="nDefaultWidth" from="def.nWidth"/>
+                        <property name="nDefaultHeight" value="30"/>
+                        <property name="nDepth" value="5"/>
+                            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                                    <script type="application/javascript"><![CDATA[
+                                        function handle(event, owner)
+                                        {
+                                            mh2data.objMapData.lookAt(def.objData.objCity.vecPosition);
+                                            mh2data.setSelectedObject(def.objData.objCity);
+                                            spdata.objCityData.showCityProduction(def.objData.objCity);
+                                            <!--mh2data.objMapData.zoomToClosest();-->
+                                        }
+                                    ]]></script>
+                                </object>					
+                            </object>
+                     </object>
+            </object>
+            
+        
+            <!-- Port -->
+            <object type="UI2DCityIconPortBubble" name="objElements">
+                <property name="nRow" from="def.nRow"/>
+				<property name="strToolTip" >
+                    if(def.objData.objCity.refSeaRegion != null,
+                        if(def.objData.bUnitsInPort,
+                            locale.SID.UI.UnitsInPort,
+                            locale.SID.UI.PortAccess
+                        )
+                        ,
+                        locale.SID.UI.NoUnitsInPort
+                    )
+                </property>
+                <property name="nWidth" value="40"/>               
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.objCity.refSeaRegion != null">
+                    <property name="tmplImage">
+                        if(def.objData.bUnitsInPort,                                 
+                            skin.getTemplateRef(mlmedia.ImageTemplate,'ImgRegionProductionLighthouseLit'), 
+                            skin.getTemplateRef(mlmedia.ImageTemplate,'ImgRegionProductionLighthous'))
+                    </property>
+                    <property name="nX" value="0"/>
+                    <property name="nY" value="0"/>
+                    <property name="nWidth" value="23"/>
+                    <property name="nHeight" value="23"/>
+                    <property name="haXAlign" value="CENTER"/>
+                    <property name="vaYAlign" value="MIDDLE"/>
+                </object>
+                <object type="mlui.UI2DButton" name="objPortSelect" existsWhile="def.objData.bUnitsInPort" >
+                    <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+                    <property name="nX" value="0"/>
+                    <property name="nY" value="0"/>
+                    <property name="nWidth" value="40"/>      
+                    <property name="nDefaultHeight" value="30"/>
+                    <property name="nDepth" value="5"/>
+                        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                            <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                                <property name="otEventType" value="mlui.EventButtonClicked"/>
+                                <script type="application/javascript"><![CDATA[
+                                    function handle(event, owner)
+                                    {
+                                        var city = def.objData.objCity;
+                                        mh2data.setSelectedObject(city);
+                                        mh2data.objMapData.lookAt(city.vecPosition);
+                                        <!--mh2data.objMapData.zoomToClosest();-->
+                                        spdata.objCityData.showCityPort(city);
+                                    }
+                                ]]></script>
+                            </object>					
+                        </object>
+                 </object>        
+            </object>
+        			
+			<!-- IPU Points -->
+            <object type="UI2DCityTextBubbleWithToolTip" name="objElements">
+                <property name="nRow" from="def.nRow"/>
+                <property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+                <property name="strText" from="def.objData.objCity.nIPUs"/>
+                <property name="nWidth" value="40"/>
+				<property name="objBuildings" >
+							filter(?{buildings: buildings.tmplCityBuilding.resolve().nIPUs GT 0}, def.objData.objCity.objCityBuildings	)					
+				</property>				
+				<property name="strToolTip" from="UI2DToolTipBuildingList" />
+				<property name="eFilter" value="IPU" />
+            </object>
+            
+            <!-- Production Order -->
+            <object type="UI2DCityProjectBubble" name="objElements">
+                <property name="objCity" from="def.objData.objCity"/>
+                <property name="objOwner" from="def.objData.objOwner"/>
+                <property name="objCurrentWorkOrder" from="def.objData.objCurrentWorkOrder"/>
+                <property name="nRow" from="def.nRow"/>				
+                    <object type="mlui.UI2DText" name="objText">
+                            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+                            <property name="nDepth" value="5" />
+                            <property name="tmplTextStyle">
+                                if (def.bSuppliesNeeded,
+                                'locale.TxtStyleArialRed12Left',
+                                'locale.TxtStyleArialBlue12Left'
+                                )
+                            </property>	
+                            <property name="strText">
+                                if(def.objData.objCurrentWorkOrder != null,
+                                    def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().strDisplayName +
+                                        if(def.objData.nMoney GT 0,
+                                            ' ($' + def.objData.nMoney.formatNumber(0, true) + ')',
+                                            ''
+                                        )
+                                    ,
+                                   gs_tbg.getGameSysCity(mh2data.objAvatar).tmplDefaultBuild.resolve().strDisplayName  +
+									' ($' + (gs_tbg.getGameSysCity(mh2data.objAvatar).tmplDefaultBuild.resolve().nAmount * def.objData.objCity.nIPUs).formatNumber(0, true) + ')'
+                                )
+                            </property>
+                            <property name="nX" >
+                                37
+                            </property>
+                            <property name="nY" value="10"/>
+                            <property name="nWidth">
+                                163
+                            </property>	
+                            <property name="nHeight" value="14"/>
+                    </object>
+                    <object type="mlui.UI2DImage" name="objProgressBar" existsWhile="def.objData.objCurrentWorkOrder != null" >
+                            <property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate,'ImgFillLightGreen')" />
+                            <property name="nX" value="1" />
+                            <property name="nDepth" value="4" />
+                            <property name="nY" value="1" />
+                            <property name="nHeight" from="def.nHeight-2" />
+                            <property name="nWidth" >
+                                if(def.objData.objCurrentWorkOrder != null,
+                                    (def.objData.objCurrentWorkOrder.nIPUs * 200) / def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().nIPUs,
+                                    0
+                                )
+                            </property>
+                    </object>
+                    <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.objCurrentWorkOrder != null">
+                        <property name="nDepth" value="5" />
+                        <property name="tmplImage">
+                        switch{
+                            case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'CityBuildings'):
+                                  switch{
+                                    case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().instanceOf(gs_tbg.FactoryOutputResearchCenterBuildingTemplate):
+                                        mh2data.objResearchCenterBuildingDisplayTable.getEntry(def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplResearchCenterBuilding).tmplIcon
+		
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Mill'):
+        							    'skin.ImgBldgMillSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'CottageFactory'):
+        							    'skin.ImgBldgCottageFactorySM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'FactoryMillUpgrade'):
+        							    'skin.ImgBldgFactoryMillUpgradeSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'MechanizedFactory'):
+        							    'skin.ImgBldgMechanizedFactorySM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'MechanizedFactoryUpgrade'):
+        							    'skin.ImgBldgMechanizedFactoryUpgradeSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'LargeFactory'):
+        							    'skin.ImgBldgLargeFactorySM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'LargeFactoryUpgrade'):
+        							    'skin.ImgBldgLargeFactoryUpgradeSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'IndustrialPlant'):
+        							    'skin.ImgBldgIndustrialPlantSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'IndustrialPlantUpgrade'):
+        							    'skin.ImgBldgIndustrialPlantUpgradeSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'IndustrialEnterprise'):
+        							    'skin.ImgBldgIndustrialEnterpriseSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'IndustrialEnterpriseUpgrade'):
+        							    'skin.ImgBldgIndustrialEnterpriseUpgradeSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'UndergroundFactory'):
+        							    'skin.ImgBldgUndergroundFactorySM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'MunitionsPlant'):
+        							    'skin.ImgBldgMunitionsFactorySM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'NuclearPowerPlant'):
+        							    'skin.ImgBldgNuclearPowerPlantSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'CoalPlant'):
+        							    'skin.ImgBldgCoalPlantSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'RecyclingCenter'):
+        							    'skin.ImgBldgRecyclingCenterSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Shipyard'):
+        							    'skin.ImgBldgShipyardSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'VehiclePlant'):
+        							    'skin.ImgBldgVehiclePlantSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'AircraftPlant'):
+        							    'skin.ImgBldgAircraftPlantSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'SyntheticFuelPlant'):
+        							    'skin.ImgBldgSyntheticFuelPlantSM'
+        							case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'IndustrialShipyard'):
+        							    'skin.ImgBldgIndustrialShipyardSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'FoodProcessingPlants'):
+									    'skin.ImgBldgFoodProcessingPlantSM'
+		
+                                      default:
+                                        'skin.ImgDefaultProjectSM'
+                                  }
+
+                            case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'Industrial'):
+                                switch{
+                                    case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Oil'):
+                                        'skin.ImgIndustryOilSM'
+                                    case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Goods'):
+										'skin.ImgIndustryGoodsSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Appliances'):
+										'skin.ImgIndustryAppliancesSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Textiles'):
+										'skin.ImgIndustryTextilesSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Coal'):
+										'skin.ImgIndustryMPUtoCoalSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Bread'):
+										'skin.ImgIndustryBreadSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'MetalRecycling'):
+										'skin.ImgIndustryMetalRecyclingSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'WroughtIron':
+										'skin.ImgIndustryWroughtIronSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().strName == 'Petroleum':
+										'skin.ImgIndustryPetroleumSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Automobiles'):
+										'skin.ImgIndustryAutosSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Arms'):
+										'skin.ImgIndustryArmsSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'AtomicBombs'):
+										'skin.ImgBombFissionSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'FishProducts'):
+										'skin.ImgIndustryFishProductsSM'
+									case def.objData.objCurrentWorkOrder.tmplFactoryOutput == sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'CannedGoods'):
+										'skin.ImgIndustryCannedGoodsSM'
+                                }
+
+                            case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'LandForces'):
+                                mh2data.objUnitDisplayTable.getEntry(def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplUnit).tmplIcon
+
+                            case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'NavalForces'):
+                                mh2data.objUnitDisplayTable.getEntry(def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplUnit).tmplIcon
+
+                            case def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'AirForces'):
+                                mh2data.objUnitDisplayTable.getEntry(def.objData.objCurrentWorkOrder.tmplFactoryOutput.resolve().tmplUnit).tmplIcon
+
+                            default:
+                              'skin.ImgDefaultProjectSM'
+                          }
+                        </property>	
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="0"/>
+                        <property name="vaYAlign" value="MIDDLE"/>
+                    </object>
+					<object type="mlui.UI2DImage" name="objDefaultIcon" existsWhile="def.objData.objCurrentWorkOrder == null">
+                        <property name="nDepth" value="5"/>
+                        <property name="tmplImage">
+							'skin.ImgIndustryGoodsSM'
+                        </property>	
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="0"/>
+                        <property name="vaYAlign" value="MIDDLE"/>
+                    </object>
+                <property name="nWidth" value="200"/>
+                <property name="strToolTip" from="if(def.bSuppliesNeeded, locale.SID.UI.SuppliesNeeded, null)" />
+            </object>
+                    
+            <!-- Progress -->
+            <object type="UI2DCityTextOrIconBubble" name="objElements" >
+                <property name="nRow" from="def.nRow"/>
+                <property name="tmplTextStyle">
+                    if (def.bSuppliesNeeded == 0,
+                    'locale.TxtStyleArialRed12Center',
+                    'locale.TxtStyleArialBlue12Center'
+                    )
+                </property>
+                <property name="strText" from="def.objData.nOrderTurns"/>
+                <property name="nWidth" value="40"/>
+            </object>
+            	
+             <!-- Next -->    
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="36"/>   
+                 <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.objNextWorkOrder != null">
+                    <property name="tmplImage">
+                      switch{
+                        case def.objData.objNextWorkOrder == def.objData.objCurrentWorkOrder:
+                            'skin.ImgInfoIconRepeating'
+                        
+                        case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'CityBuildings'):
+                            switch{
+                        case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().instanceOf(gs_tbg.FactoryOutputResearchCenterBuildingTemplate):
+                      mh2data.objResearchCenterBuildingDisplayTable.getEntry(def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().tmplResearchCenterBuilding).tmplIcon
+                      case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().instanceOf(gs_tbg.FactoryOutputCityBuildingTemplate):
+                      mh2data.objCityBuildingDisplayTable.getEntry(def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().tmplCityBuilding).tmplIcon
+                      default:
+                      'skin.ImgDefaultProjectSM'
+                      }
+
+						case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'Industrial'):
+							switch{
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'Oil':
+									'skin.ImgIndustryOilSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'Arms':
+									'skin.ImgIndustryArmsSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'AtomicBombs':
+									'skin.ImgBombFissionSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'Goods':
+									'skin.ImgIndustryGoodsSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'Appliances':
+									'skin.ImgIndustryAppliancesSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'Bread':
+									'skin.ImgIndustryBreadSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'MetalRecycling':
+									'skin.ImgIndustryMetalRecyclingSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'Coal':
+									'skin.ImgIndustryMPUtoCoalSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'Textiles':
+									'skin.ImgIndustryTextilesSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'WroughtIron':
+									'skin.ImgIndustryWroughtIronSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'Petroleum':
+									'skin.ImgIndustryPetroleumSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'Automobiles':
+									'skin.ImgIndustryAutosSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'FishProducts':
+									'skin.ImgIndustryFishProductsSM'
+								case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().strName == 'CannedGoods':
+									'skin.ImgIndustryCannedGoodsSM'
+								default:
+									mh2data.objMoneyDisplayTable.getEntry(def.objData.objNextWorkOrder.tmplFactoryOutput)
+							}
+
+                      case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'LandForces'):
+                      mh2data.objUnitDisplayTable.getEntry(def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().tmplUnit).tmplIcon
+
+                      case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'NavalForces'):
+                      mh2data.objUnitDisplayTable.getEntry(def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().tmplUnit).tmplIcon
+
+                      case def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().tmplCategory == sd.getTemplateRef(gs_tbg.FactoryOutputCategoryTemplate, 'AirForces'):
+                      mh2data.objUnitDisplayTable.getEntry(def.objData.objNextWorkOrder.tmplFactoryOutput.resolve().tmplUnit).tmplIcon
+
+                      default:
+                      'skin.ImgIndustryGoodsSM'
+                      }
+                    </property>	
+                    <property name="nX" value="0"/>
+                    <property name="nY" value="0"/>
+                    <property name="vaYAlign" value="MIDDLE"/>
+                    <property name="haXAlign" value="CENTER"/>   
+                </object>
+                
+                <property name="strToolTip">
+                    if(def.objData.objNextWorkOrder == def.objData.objCurrentWorkOrder
+                        ,
+                        locale.SID.UI.ProductionOrderRepeating
+                        ,
+                        def.objData.strNextWorkOrder
+                    )
+                </property>
+            </object> 	 
+			
+             <!-- Shipyard -->    
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>  
+                <property name="nWidth" value="36"/>   
+                <property name="strToolTip" from="if(def.objData.tmplShipyard != null, def.objData.tmplShipyard.strDisplayName, null)" />
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.tmplShipyard != null">    
+                    <property name="tmplImage" from="mh2data.objCityBuildingDisplayTable.getEntry(def.objData.tmplShipyard).tmplIcon"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>   
+                </object>   
+            </object>   
+            
+             <!-- Munitions -->                
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="36"/>   
+                <property name="strToolTip" from="if(def.objData.tmplMunitionsPlant != null, def.objData.tmplMunitionsPlant.strDisplayName, null)" />
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.tmplMunitionsPlant != null">    
+                    <property name="tmplImage" from="mh2data.objCityBuildingDisplayTable.getEntry(def.objData.tmplMunitionsPlant).tmplIcon"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>   
+                </object>   
+            </object>        
+            
+             <!-- Vechicles -->      
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>  
+                <property name="nWidth" value="36"/>   
+                <property name="strToolTip" from="if(def.objData.tmplVehiclePlant != null, def.objData.tmplVehiclePlant.strDisplayName, null)" />
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.tmplVehiclePlant != null">    
+                    <property name="tmplImage" from="mh2data.objCityBuildingDisplayTable.getEntry(def.objData.tmplVehiclePlant).tmplIcon"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>   
+                </object>   
+            </object>       
+            
+             <!-- Aircraft Plant -->        
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>  
+                <property name="nWidth" value="36"/>   
+                <property name="strToolTip" from="if(def.objData.tmplAircraftPlant != null, def.objData.tmplAircraftPlant.strDisplayName, null)" />
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.tmplAircraftPlant != null">    
+                    <property name="tmplImage" from="mh2data.objCityBuildingDisplayTable.getEntry(def.objData.tmplAircraftPlant).tmplIcon"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>   
+                </object>   
+            </object>          
+            
+             <!-- Synthetic Fuel Plant -->    
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>  
+                <property name="nWidth" value="36"/>   
+                <property name="strToolTip" from="if(def.objData.tmplSyntheticFuelPlant != null, def.objData.tmplSyntheticFuelPlant.strDisplayName, null)" />
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.tmplSyntheticFuelPlant != null">    
+                    <property name="tmplImage" from="mh2data.objCityBuildingDisplayTable.getEntry(def.objData.tmplSyntheticFuelPlant).tmplIcon"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>   
+                </object>   
+            </object>        
+            
+             <!-- Food Processing Plants -->    
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>
+                <property name="nWidth" value="36"/>   
+                <property name="strToolTip" from="if(def.objData.tmplFoodProcessingPlants != null, def.objData.tmplFoodProcessingPlants.strDisplayName, null)" />
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.tmplFoodProcessingPlants != null">    
+                    <property name="tmplImage" from="mh2data.objCityBuildingDisplayTable.getEntry(def.objData.tmplFoodProcessingPlants).tmplIcon"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>   
+                </object>   
+            </object>        
+            
+             <!-- Highest Level Plant -->    
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="36"/>   
+                <property name="strToolTip" from="if(def.objData.tmplHighestLevelPlant != null, def.objData.tmplHighestLevelPlant.strDisplayName, null)" />
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.tmplHighestLevelPlant != null">    
+                    <property name="tmplImage" from="mh2data.objCityBuildingDisplayTable.getEntry(def.objData.tmplHighestLevelPlant).tmplIcon"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>   
+                </object>   
+            </object>        
+                         
+             <!-- Highest Level Research Center -->    
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="36"/>   
+                <property name="strToolTip" from="if(def.objData.tmplHighestLevelResearch != null, def.objData.tmplHighestLevelResearch.strDisplayName, null)" />
+                <object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objData.tmplHighestLevelResearch != null">    
+                    <property name="tmplImage" from="mh2data.objResearchCenterBuildingDisplayTable.getEntry(def.objData.tmplHighestLevelResearch).tmplIcon"/>   
+                    <property name="nX" value="0"/>   
+                    <property name="nY" value="0"/>   
+                    <property name="nWidth" value="27"/>   
+                    <property name="nHeight" value="27"/>   
+                    <property name="haXAlign" value="CENTER"/>   
+                    <property name="vaYAlign" value="MIDDLE"/>   
+                </object>   
+            </object>           
+            
+            <!-- TODO: Power Plant  
+            <object type="UI2DCityIconBubble" name="objElements">   
+                <property name="nRow" from="def.nRow"/>   
+                <property name="nWidth" value="41"/>   
+            </object>       
+            -->
+        </object>
+	</objectDef>
+	
+	<enumDef name="CityResearchBuildingFilters">
+        <value name="IPU"/>
+        <value name="RPU"/>
+		<value name="MPU"/>
+    </enumDef>
+	
+	<objectDef type="UI2DCityTextBubbleWithToolTip" superType="UI2DCityTextBubble" >
+		<propertyDef name="objBuildings" type="Object" variable="true" />
+		<propertyDef name="eFilter" type="Enum" restriction="CityResearchBuildingFilters" />
+	</objectDef>	
+	
+	 <objectDef type="UI2DToolTipBuildingList" superType="mlui.UI2DToolTip" >
+		<propertyDef name="nHorizPadding" type="int" default="14"/>
+		<propertyDef name="nVertPadding" type="int" default="4"/>
+		
+		<property name="nWidth">
+			sortDescending(?{text: text.nWidth}, self.objText).first.nWidth + self.nHorizPadding
+		</property>
+		<property name="nHeight">
+			self.objCityBuildings.size * 16
+		</property>
+		<property name="nOffsetX" value="32"/>
+		<property name="nOffsetY" value="32"/>
+		
+		<object type="mlui.UI2DImage" name="objBorder">
+			<property name="tmplImage" value="default_media.ImgToolTipBorder"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="0"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="default_media.ImgToolTipBackground"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth"  from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nDepth" value="1"/>
+		</object>
+		<propertyDef name="objCityBuildings" type="Object" variable="true">
+			self.objElement.objBuildings
+		</propertyDef>
+		<propertyDef name="eFilter" type="Enum" restriction="CityResearchBuildingFilters" >
+			self.objElement.eFilter
+		</propertyDef>
+		<object type="mlui.UI2DText" name="objText" tiedTo="self.objCityBuildings">
+			<property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+			<property name="strText">			
+					switch
+					{
+						case def.eFilter == CityResearchBuildingFilters.MPU :
+							if(tiedTo.instanceOf(gs_tbg.ResearchCenterBuilding), 
+								tiedTo.tmplBuilding.resolve().strDisplayName + ' - ' + tiedTo.tmplBuilding.resolve().nMPUs.formatNumber(0, true),
+								tiedTo.tmplCityBuilding.resolve().strDisplayName + ' - ' + tiedTo.tmplCityBuilding.resolve().nMPUs.formatNumber(0, true)
+							)
+						case def.eFilter == CityResearchBuildingFilters.RPU :	
+							if(tiedTo.instanceOf(gs_tbg.ResearchCenterBuilding), 
+								tiedTo.tmplBuilding.resolve().strDisplayName + ' - ' + tiedTo.tmplBuilding.resolve().nRPUs.formatNumber(0, true),
+								tiedTo.tmplCityBuilding.resolve().strDisplayName + ' - ' + tiedTo.tmplCityBuilding.resolve().nRPUs.formatNumber(0, true)
+							)							
+						case def.eFilter == CityResearchBuildingFilters.IPU :							
+							if(tiedTo.instanceOf(gs_tbg.ResearchCenterBuilding), 
+								tiedTo.tmplBuilding.resolve().strDisplayName + ' - ' + tiedTo.tmplBuilding.resolve().nIPUs.formatNumber(0, true),
+								tiedTo.tmplCityBuilding.resolve().strDisplayName + ' - ' + tiedTo.tmplCityBuilding.resolve().nIPUs.formatNumber(0, true)
+							)						
+					}
+			</property>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="nX" value= "3" />
+			<property name="nY">
+				def.objCityBuildings.indexOf(tiedTo) * 16
+			</property>
+			<property name="nWidth" value="256"/>
+			<property name="nHeight" value="16"/>
+			<property name="nDepth" value="2"/>
+		</object>
+    </objectDef>
+	
+	<objectDef type="UI2DCityProjectBubble" superType="UI2DCityBubble">
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+		<propertyDef name="objOwner" type="gs_tbg.Nation"/>
+		<propertyDef name="objCurrentWorkOrder"  type="gs_tbg.WorkOrder" />
+		<propertyDef name="objOutputs" type="gs_tbg.FactoryOutputTemplate" variable="true"/>
+		<propertyDef name="objProgressBar" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="objDefaultIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="objText" type="mlui.UI2DText" storesChildren="true"/>	
+		<propertyDef name="objProjectButton" type="mlui.UI2DButton" storesChildren="true"/>
+		<object type="mlui.UI2DButton" name="objProjectButton" existsWhile="def.objCity.objController == mh2data.objNation">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+            <property name="nDepth" value="10" />
+			<property name="nDefaultWidth" from="def.nWidth"/>
+			<property name="nDefaultHeight" value="30"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript">
+                    <![CDATA[
+							function handle(event, owner)
+							{
+								var menuX = def.nScreenX;
+								var menuY = def.nScreenY;
+								//create a basis for a pop up menu
+								var menudata = common_elements.MenuData.create({
+									"vecPosition": Vec3D(menuX, menuY, 0.0),
+									"nDefaultItemWidth": def.objProjectButton.nDefaultWidth,
+								  "nDefaultItemHeight": def.objProjectButton.nDefaultHeight - 10
+								});
+								
+								def.objCity.getAvailableFactoryOutputs(mh2data.objAvatar, def.objOutputs)
+								
+								if(def.objOutputs.size > 0)
+								{
+									var menuitem
+									for(i in def.objOutputs)
+									{
+										menuitem = common_elements.MenuItem.create({
+											"strDisplayName": def.objOutputs[i].strDisplayName,
+											"objExecuteObject": eo.EOMapDataSetCityProduction.create({
+												"objMapData": mh2data.objMapData,
+												"objCity": def.objCity,
+												"objOutput": def.objOutputs[i]
+											})
+										});
+										menudata.objItems.add(menuitem);
+									}
+								}
+								
+								if(def.objCurrentWorkOrder != null)
+								{
+									menuitem = common_elements.MenuItem.create({
+										"strDisplayName": locale.SID.UI.CancelWorkOrders,
+										"objExecuteObject": eo.EOMapDataCancelCityProduction.create({
+											"objMapData": mh2data.objMapData,
+											"objCity": def.objCity
+										})
+									});
+									menudata.objItems.add(menuitem);
+								}
+								
+								menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.SID.UI.ExitMenu
+								});
+								menudata.objItems.add(menuitem);
+								mlui.ActSendEventToUIElement.execute({
+									"objElement": mlui.objUI.objRoot,
+									"objEvent": common_elements.EventDismissPopUpMenu.create({})
+								});
+								mlui.ActSendEventToUIElement.execute({
+									"objElement": mlui.objUI.objRoot,
+									"objEvent": common_elements.EventRequestPopUpMenu.create({
+											 "objMenuData": menudata
+									})
+								});
+							}
+						]]></script>
+				</object>					
+			</object>
+		</object>        
+        
+    </objectDef>
+		
+    <objectDef type="UI2DCityTextOrIconBubble" superType="UI2DCityBubble">
+        <propertyDef name="strText" type="String"/>
+            <propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+            
+            <object type="mlui.UI2DText" name="objText">
+                <property name="tmplTextStyle" from="def.tmplTextStyle"/>
+                <property name="strText" from="def.strText"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="10"/>
+                <property name="nWidth" from="def.nWidth"/>
+                <property name="nHeight" value="14"/>
+            </object>    
+			
+    </objectDef>
+    
+    
+    <objectDef type="UI2DCityIconPortBubble" superType="UI2DCityBubble">
+        <propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>   
+        <propertyDef name="objPortSelect" type="mlui.UI2DButton" storesChildren="true"/>
+    </objectDef>
+
+</locust>

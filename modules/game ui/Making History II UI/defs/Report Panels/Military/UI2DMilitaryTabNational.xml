@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+    
+	<enumDef name="NationalMilitarySort">
+        <value name="NAME"/>		
+		<value name="LANDATTACK"/>
+		<value name="SEAATTACK"/>
+		<value name="AIRATTACK"/>
+		<value name="DEFENSE"/>
+		<value name="ARMY"/>
+		<value name="ARMOR"/>
+		<value name="ARTILLERY"/>
+		<value name="FIGHTERS"/>
+		<value name="BOMBERS"/>
+		<value name="AIRTRANSPORT"/>
+		<value name="PATROL"/>
+		<value name="DESTROYER"/>
+		<value name="CRUISERS"/>
+		<value name="BATTLESHIP"/>
+		<value name="CARRIERS"/>
+		<value name="SUBS"/>
+		<value name="TRANSPORTS"/>
+		<value name="AIRBASE"/>
+		<value name="NAVALBASE"/>
+    </enumDef>
+    
+    <objectDef type="UI2DMilitaryTabNational" superType="mlui.UI2DElement">
+
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="NationalMilitarySort.NAME"/>
+		</object> -->
+    
+	<!-- Combat Reports -->
+		<object type="mlui.UI2DText" name="objNationalMilitariesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.WorldMilitaryForces"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+        <object type="mlui.UI2DImage" name="objBattlesBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+         
+        <object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Nations"/>
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.NAME"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="186"/>
+        <property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.LANDATTACK"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>		
+        
+				<object type="mlui.UI2DImage" name="objElement">
+          			<property name="tmplImage" value="skin.ImgInfoIconLandOffenseTny"/>
+			    	<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+        		<property name="strToolTip" from="locale.SID.UI.LandAttackPower"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.SEAATTACK"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>		
+        
+				<object type="mlui.UI2DImage" name="objElement">
+          			<property name="tmplImage" value="skin.ImgInfoIconSeaOffenseTny"/>
+			    	<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+        		<property name="strToolTip" from="locale.SID.UI.SeaAttackPower"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.AIRATTACK"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>		
+        
+				<object type="mlui.UI2DImage" name="objElement">
+          			<property name="tmplImage" value="skin.ImgInfoIconAirOffenseTny"/>
+			    	<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+        		<property name="strToolTip" from="locale.SID.UI.AirAttackPower"/>			
+			</object>
+
+			
+          
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.DEFENSE"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+          <property name="tmplImage" value="skin.ImgInfoIconDefenseTny"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.DefensePower"/>			
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.ARMY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabGround"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Infantry"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.ARMOR"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabArmor"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Armor"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.ARTILLERY"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabArtillery"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Artillery"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.FIGHTERS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabFighter"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Fighters"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.BOMBERS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabBomber"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Bombers"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.AIRTRANSPORT"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabAirTrans"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.AirTransports"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.PATROL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabPatrol"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.PatrolBoats"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.DESTROYER"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabDestroyer"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Destroyers"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.CRUISERS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabCruiser"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Cruisers"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.BATTLESHIP"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabBattleship"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Battleships"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.CARRIERS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabCarrier"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Carriers"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.SUBS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabSub"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Submarines"/>			
+			</object>
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.TRANSPORTS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgMilitaryTabNavalTrans"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+                <property name="strToolTip" from="locale.SID.UI.Transports"/>			
+			</object>
+          
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.AIRBASE"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+          <property name="tmplImage" value="skin.ImgInfoIconAirbaseSm"/>
+          <property name="nX" value="-2"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+        <property name="strToolTip" from="locale.SID.UI.Airbases"/>			
+			</object>
+          
+			<!--<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objNationalMilitarySortTableData"/>
+				<property name="eSortBy" from="NationalMilitarySort.NAVALBASE"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="38"/>
+				<property name="nHeight" value="23"/>				
+				<object type="mlui.UI2DImage" name="objElement">
+                    <property name="tmplImage" value="skin.ImgRegionNavalBaseSM"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>	
+        <property name="strToolTip" from="locale.SID.UI.NavalBases"/>			
+			</object>-->
+			
+		</object>
+        
+        
+		<object name="objRowDatas" type="RankData" tiedTo="gs_tbg.getNationRanks(mh2data.objAvatar)">
+			<property name="objNation" from="tiedTo.refNation.resolve(mh2data.objAvatar)"/>
+			<property name="nRank" from="tiedTo.nMilitaryRank"/>
+			<property name="nPower">
+			    (self.objNation.objMilitaryTotals.nLandAttackPower +
+			     self.objNation.objMilitaryTotals.nSeaSurfacePower +
+			     self.objNation.objMilitaryTotals.nAirPower ) / 10
+			</property>
+		</object>
+
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" from="495"/>
+			<property name="listItems">
+				switch{
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.NAME:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data: data.objNation.strDisplayName}, def.objRowDatas),
+							sortDescending(?{data: data.objNation.strDisplayName}, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.LANDATTACK:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data: data.objNation.objMilitaryTotals.nLandAttackPower}, def.objRowDatas),
+							sortDescending(?{data: data.objNation.objMilitaryTotals.nLandAttackPower}, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.SEAATTACK:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data: data.objNation.objMilitaryTotals.nSeaSurfacePower}, def.objRowDatas),
+							sortDescending(?{data: data.objNation.objMilitaryTotals.nSeaSurfacePower}, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.AIRATTACK:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data: data.objNation.objMilitaryTotals.nAirPower}, def.objRowDatas),
+							sortDescending(?{data: data.objNation.objMilitaryTotals.nAirPower}, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.DEFENSE:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data: data.objNation.objMilitaryTotals.nLandDefensePower}, def.objRowDatas),
+							sortDescending(?{data: data.objNation.objMilitaryTotals.nLandDefensePower}, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.ARMY:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data: def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Infantry) + def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.MobileInfantry) }, def.objRowDatas),
+							sortDescending(?{data: def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Infantry) + def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.MobileInfantry)}, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.ARMOR:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Armored) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Armored) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.ARTILLERY:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Artillery) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Artillery) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.FIGHTERS:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Fighters) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Fighters) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.BOMBERS:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Bombers) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Bombers) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.AIRTRANSPORT:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.AirTransport) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.AirTransport) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.PATROL:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Patrols) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Patrols) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.DESTROYER:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Destroyers) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Destroyers) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.CRUISERS:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Cruisers) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Cruisers) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.BATTLESHIP:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Battleships) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Battleships) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.CARRIERS:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Carriers) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Carriers) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.SUBS:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Submarines) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Submarines) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.TRANSPORTS:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Transport) }, def.objRowDatas),
+							sortDescending(?{data:  def.findCategoryTotal(data.objNation, gs_tbg.UnitCategory.Transport) }, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.AIRBASE:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data: data.objNation.objMilitaryTotals.nAirBases}, def.objRowDatas),
+							sortDescending(?{data: data.objNation.objMilitaryTotals.nAirBases}, def.objRowDatas)
+						)
+					case mh2data.objNationalMilitarySortTableData.eColm == NationalMilitarySort.NAVALBASE:
+						if(mh2data.objNationalMilitarySortTableData.bAsc,
+							sortAscending(?{data: data.objNation.objMilitaryTotals.nNavalBases}, def.objRowDatas),
+							sortDescending(?{data: data.objNation.objMilitaryTotals.nNavalBases}, def.objRowDatas)
+						)
+                }
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DNationMilitaryListBubble"/>
+			<property name="strPropForItem" value="objRankData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+        
+        
+        <script type="application/x-locust-query"> <![CDATA[
+            findCategoryTotal = ?{nation, category:
+                find(?{categoryTotal: categoryTotal.nCategory == category.index}, nation.objMilitaryTotals.objCategoryTotals).nValue
+            }
+        ]]></script>
+        
+
+	</objectDef>
+	
+	<objectDef type="RankData" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="nRank" type="int"/>
+		<propertyDef name="nPower" type="int"/>
+	</objectDef>
+		
+	<objectDef type="UI2DNationMilitaryListBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation" from="self.objRankData.objNation"/>
+		<propertyDef name="nRow" type="int"/>
+		<propertyDef name="objRankData" type="RankData"/>
+
+	<!-- Name -->
+		<object type="mlui.UI2DImage" name="objNameBG">
+			<property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="196"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+			<property name="strToolTip" from="locale.SID.UI.Nation"/>
+		</object>
+
+	    <object type="UI2DNationIcon" name="objStateNationalityIcon">
+	      <property name="objNation" from="def.objNation"/>
+	      <property name="nX" value="1"/>
+	      <property name="nY" value="1"/>
+	      <property name="nWidth" value="28"/>
+	      <property name="nHeight" value="28"/>
+	    </object>
+
+	    <object type="mlui.UI2DTextButton" name="objName">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue12LeftHighlight"/>
+			<property name="strText" from="def.objNation.strDisplayName"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="10"/>
+			<property name="nDefaultWidth" value="181"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setSelectedObject(def.objNation);
+							mh2data.objNationSelectionHistory.setNationHistory(def.objNation);
+							mh2data.objMapData.lookAt(
+								gs_tbg.getCapitalCity(mh2data.objAvatar, def.objNation).vecPosition);
+							<!--mh2data.objMapData.zoomToClosest();-->
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+	<!-- Offense -->
+		<object type="common_ui.UI2DListHorz" name="objData">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="184"/>
+			<property name="listElements">
+				sortAscending(?{ele: ele.nIndex},self.objElements)
+			</property>
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="(def.objNation.objMilitaryTotals.nLandAttackPower / 10).formatNumber(0, true)"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="194"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.LandAttackPower"/>
+				<property name="nIndex" value="1"/>
+			</object>
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="(def.objNation.objMilitaryTotals.nSeaSurfacePower / 10).formatNumber(0, true)"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="194"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.SeaAttackPower"/>
+				<property name="nIndex" value="2"/>
+			</object>
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText" from="(def.objNation.objMilitaryTotals.nAirPower / 10).formatNumber(0, true)"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="194"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.AirAttackPower"/>
+				<property name="nIndex" value="3"/>
+			</object>
+
+		<!-- Defense -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+					(def.objNation.objMilitaryTotals.nLandDefensePower / 10).formatNumber(0, true)
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="248"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.DefensePower"/>
+				<property name="nIndex" value="4"/>
+			</object>
+
+		<!-- Infantry -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Infantry.index      }, def.objNation.objMilitaryTotals.objCategoryTotals).nValue +
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.MobileInfantry.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="302"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Army"/>
+				<property name="nIndex" value="5"/>
+			</object>
+
+		<!-- Tanks -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Armored.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="339"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Armor"/>
+				<property name="nIndex" value="6"/>
+			</object>
+
+		<!-- Artillery -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Artillery.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="376"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Artillery"/>
+				<property name="nIndex" value="7"/>
+			</object>
+
+		<!-- Fighters -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Fighters.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="413"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Fighters"/>
+				<property name="nIndex" value="8"/>
+			</object>
+
+		<!-- Bombers -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Bombers.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="450"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Bombers"/>
+				<property name="nIndex" value="9"/>
+			</object>
+
+		<!-- Air Transports -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.AirTransport.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="487"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.AirTransports"/>
+				<property name="nIndex" value="10"/>
+			</object>
+
+		<!-- Patrol Boats -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Patrols.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="524"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.PatrolBoats"/>
+				<property name="nIndex" value="11"/>
+			</object>
+
+		<!-- Destroyers -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Destroyers.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="561"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Destroyers"/>
+				<property name="nIndex" value="12"/>
+			</object>
+
+		<!-- Cruisers -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Cruisers.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="598"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Cruisers"/>
+				<property name="nIndex" value="13"/>
+			</object>
+
+		<!-- Battleships -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Battleships.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="635"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Battleships"/>
+				<property name="nIndex" value="14"/>
+			</object>
+
+		<!-- Carriers -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Carriers.index}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="672"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Carriers"/>
+				<property name="nIndex" value="15"/>
+			</object>
+
+		<!-- Subs -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Submarines}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="709"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Submarines"/>
+				<property name="nIndex" value="16"/>
+			</object>
+
+		<!-- Transports -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    find(?{categoryTotal: categoryTotal.nCategory == gs_tbg.UnitCategory.Transport}, def.objNation.objMilitaryTotals.objCategoryTotals).nValue
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="746"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Transports"/>
+				<property name="nIndex" value="17"/>
+			</object>
+
+		<!-- Air Bases -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<property name="strText">
+				    def.objNation.objMilitaryTotals.nAirBases
+	            </property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="783"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="37"/>
+				<property name="nHeight" value="30"/>
+				<property name="strToolTip" from="locale.SID.UI.Airbases"/>
+				<property name="nIndex" value="18"/>
+			</object>
+
+		<!--  Naval Bases  -->
+			<object type="UI2DListBubbleGrayBlueCenter" name="objElements">
+				<!--<property name="strText">
+				    def.objNation.objMilitaryTotals.nNavalBases
+				</property>-->
+				<property name="nRow" from="def.nRow"/>
+				<property name="nX" value="820"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="38"/>
+				<property name="nHeight" value="30"/>
+				<property name="nIndex" value="19"/>
+				<!--<property name="strToolTip" from="locale.SID.UI.NavalBases"/>-->
+			</object>
+		</object>
+	</objectDef>
+</locust>

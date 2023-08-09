@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<enumDef name="SummaryPanelFilters">
+        <value name="TURN"/>
+        <value name="CITY"/>
+		<value name="REGION"/>
+		<value name="RESOURCES"/>
+    </enumDef>
+
+	<objectDef type="UI2DSummaryPanelButton" superType="mlui.UI2DButton">
+		<property name="tmplButtonStyle" >
+				switch{
+					case spdata.objSummaryPanelData.objPanel == null:
+						'skin.BtnStyleSummaryPanel'
+					case self.otPanel == null:
+						'skin.BtnStyleSummaryPanel'
+					case spdata.objSummaryPanelData.objPanel.instanceOf(self.otPanel):
+						switch{
+							case spdata.objSummaryPanelData.objPanel.instanceOf(UI2DSummaryPanelNotifications):
+								if( find(?{tmpl: !self.tmplNotification.contains(tmpl)}, spdata.objSummaryPanelData.objPanel.tmplNotification) == null AND self.tmplNotification.size == spdata.objSummaryPanelData.objPanel.tmplNotification.size,
+									'skin.BtnStyleSummaryPanelSelected',
+									'skin.BtnStyleSummaryPanel'
+								)
+							default:
+								'skin.BtnStyleSummaryPanelSelected'
+						}
+					default:
+						'skin.BtnStyleSummaryPanel'
+				}
+		</property>
+        <propertyDef name="objButtonList" type="UI2DSummaryPanelButtons"/>
+		<propertyDef name="objData" type="SummaryPanelData"/>
+		<propertyDef name="nOrder" type="int"/>
+		<propertyDef name="otPanel" type="ObjectType"/>
+		<propertyDef name="tmplNotification" type="Object" variable="true"/>
+		<propertyDef name="eNotificationType" type="Enum" restriction="gs_notify.NotificationType"/>
+        <propertyDef name="bSelected" type="bool" default="false"/>
+		<propertyDef name="bNotify" type="bool"/>
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+
+		<object type="mlui.UI2DImage" name="objSelected" existsWhile="def.bNotify">
+			<property name="colColor">
+				Color(1, 1, 1,  (cos((1.5 * float.pi) * mlui.objUI.fTime) * .5) + .5)
+			</property>	
+			<property name="tmplImage" value="skin.ImgButtonGlow"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSelected" existsWhile="def.bSelected">
+			<property name="tmplImage" value="skin.ImgSummaryPanelBtnDown"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+        
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventButtonClicked"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+                        owner.objButtonList.clearButtons();
+                        owner.bNotify = false;
+                        
+						if(spdata.objSummaryPanelData.objPanel != null){
+							if(spdata.objSummaryPanelData.objPanel.instanceOf(def.otPanel)){
+								if(owner.otPanel != UI2DSummaryPanelNotifications){
+                                    spdata.objSummaryPanelData.clearPanel();
+								}
+								else if(spdata.objSummaryPanelData.objPanel.tmplNotification.size == owner.tmplNotification.size && 
+                                    sameTemplates(spdata.objSummaryPanelData.objPanel.tmplNotification , owner.tmplNotification))
+                                {
+									spdata.objSummaryPanelData.clearPanel();
+								}
+								else{
+									spdata.objSummaryPanelData.setPanel(owner.otPanel, owner.tmplNotification);
+								}
+							}
+							else{
+								spdata.objSummaryPanelData.setPanel(owner.otPanel, owner.tmplNotification);
+							}
+						}
+						else{
+							spdata.objSummaryPanelData.setPanel(owner.otPanel, owner.tmplNotification);
+						}
+					}
+                    function sameTemplates(tmplNew, tmplOld)
+                    {
+                        for(var i = 0; i < tmplNew.length; i++)
+                        {
+                            if(tmplNew[i] != null)
+                            {
+                                if(!tmplOld.contains(tmplNew[i]))
+                                    return false;
+                            }   
+                        }
+                        return true;
+                    }
+				]]></script>
+			</object>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DSummaryPanelButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="SummaryPanelData"/>
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objButtons" type="mlui.UI2DElement" variable="true" storesChildren="true"/>
+
+        <object type="mlui.UILMFlow" name="objFlow">
+			<property name="listElements">
+					sortAscending(?{button: button.nOrder}, def.objButtons)
+			</property>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="2"/>
+		</object>
+
+		<object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="1"/>
+			<property name="otPanel" value="UI2DSummaryPanelNotifications"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.TurnSummary"/>
+			
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryPanelWorld"/>
+			</object>
+
+		</object>
+		
+		<object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="3"/>
+			<property name="otPanel" value="UI2DSummaryPanelRequests"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="tmplNotification" >
+                [
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticWarDeclared'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticAllianceCreated'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticAllianceJoined'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticAllianceLeft'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticNationDefeated'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticMilitaryAccessChanged'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticEmbargoPlaced'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticEmbargoLifted'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenRegionSeceded'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenCivilWarStarted'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenNationLiberated'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenIndependentNationFounded'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenResearchStolen'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenOppositionSupportConcluded'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenPoliticalSupportConcluded'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenRegionSurveillanceConcluded')
+                ]
+            </property>
+			<property name="strToolTip" from="locale.SID.UI.DiplomaticSummary"/>
+			<property name="bNotify" from="spdata.objSummaryPanelData.objExtraData.objRequestData.objNewTreatyRequests.size GT 0"/>
+			
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryPanelDiplomacy"/>
+			</object>
+
+		</object>
+        
+        
+		<object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="4"/>
+			<property name="otPanel" value="UI2DSummaryPanelNotifications"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.CityTurnSummary"/>      
+			<property name="tmplNotification" >
+                [
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateCityUnitProduced'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateCityFactoryOutputProduced'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateCityGenCity')
+                ]
+            </property>
+            <property name="bNotify" >
+                find(?{notifications: self.tmplNotification.contains(notifications.tmplNotification)},
+                    mh2data.objAvatar.getPerAvatarData(gs_notify.PADNotification).objNotifications) != null
+            </property>			
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryPanelCity"/>
+			</object>
+		</object>
+        
+        <object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="5"/>
+			<property name="otPanel" value="UI2DSummaryPanelNotifications"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.RegionTurnSummary"/>    
+			<property name="tmplNotification" >
+                [
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionOutputProduced')
+                ]
+            </property>
+            <property name="bNotify" >
+                find(?{notifications: self.tmplNotification.contains(notifications.tmplNotification)},
+                    mh2data.objAvatar.getPerAvatarData(gs_notify.PADNotification).objNotifications) != null
+            </property>
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryIconRegion"/>
+			</object>
+		</object>
+        
+        
+		<object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="6"/>
+			<property name="otPanel" value="UI2DSummaryPanelNotifications"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.ResearchTurnSummary"/>    
+			<property name="tmplNotification" >
+                [
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateResearchGenFactoryOutputProduced'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateResearchProjectCompleted'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateResearchGenNationResearchTopic')
+                ]
+            </property>  
+            <property name="bNotify" >
+                find(?{notifications: self.tmplNotification.contains(notifications.tmplNotification)},
+                    mh2data.objAvatar.getPerAvatarData(gs_notify.PADNotification).objNotifications) != null
+            </property>
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryIconResearch"/>
+			</object>
+		</object>
+
+
+		<object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="7"/>
+			<property name="otPanel" value="UI2DSummaryPanelEngagements"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="tmplNotification" >
+                [
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementBegan'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementEnded'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementUnitDamaged'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementUnitDestroyed'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementUnitRepaired'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementUnitGroupCommandChanged'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementUnitExperienceChanged'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateEngagementGenCityNuked')
+                ]
+            </property>
+			<property name="strToolTip" from="locale.SID.UI.ActiveEngagements"/>
+			<property name="bNotify">
+				find(?{fight: fight.dateStart GTE (gs_tbg.getGameSysTurnBasedGame(
+					mh2data.objAvatar).objTurnBasedGame.dateCurrentDate -
+						gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.durTurnDuration)},
+							filter(?
+								{engagement: engagement.refAttacker == mh2data.objNation OR engagement.refDefender == mh2data.objNation},
+									gs_tbg.getAllEngagements(mh2data.objAvatar))) != null
+			</property>
+			
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryPanelCombat"/>
+			</object>
+
+		</object>
+
+		<object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="8"/>
+			<property name="otPanel" value="UI2DSummaryPanelEspionage"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="tmplNotification" >
+                [
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateRegionGenRegionSabotaged'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenResearchStolen'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenOppositionSupportConcluded'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenPoliticalSupportConcluded'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateDiplomaticGenRegionSurveillanceConcluded')
+                ]
+            </property>
+			<property name="strToolTip" from="locale.SID.UI.EspionageSummary"/>
+
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryPanelEspionage"/>
+			</object>
+
+		</object>
+
+		<object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="9"/>
+			<property name="otPanel" value="UI2DSummaryPanelTrade"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="tmplNotification" >
+                [
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeAgreementAccepted'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeAgreementCancelled'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeMoneyTransferAccepted'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeMoneyTransferCancelled'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeMoneyTransferOccurred'),
+                    gs_notify.getTemplateRef(gs_notify.NotificationTemplate, 'NotificationTemplateTradeOccurred')
+                ]
+            </property>
+			<property name="strToolTip" from="locale.SID.UI.TradeSummary"/>
+			<property name="bNotify">
+                spdata.objSummaryPanelData.objExtraData.objRequestData.objNewTradeRequests.size GT 0 OR spdata.objSummaryPanelData.objExtraData.objRequestData.objNewMoneyRequests.size GT 0
+            </property>
+
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryPanelTrade"/>
+			</object>
+
+		</object>
+		
+		<object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="10"/>
+			<property name="otPanel">
+				if(gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).bUseNationSpecificVCs != true, 'UI2DSummaryPanelWorldPowers', 'UI2DSummaryPanelVictoryConditions')
+			</property>	
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.WorldPowerSummary"/>
+
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryPanelWreath"/>
+			</object>
+
+		</object>
+		
+		<object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="11"/>
+			<property name="otPanel" value="UI2DSummaryPanelTurns"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.TurnStatus"/>
+
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryPanelTurns"/>
+			</object>
+
+		</object>
+        
+        <object type="UI2DSummaryPanelButton" name="objButtons">
+            <property name="objButtonList" from="def"/>
+			<property name="objData" from="spdata.objSummaryPanelData"/>
+			<property name="nOrder" value="12"/>
+			<property name="otPanel" value="UI2DSummaryPanelChat"/>
+			<property name="bNotify" from="spdata.objSummaryPanelData.objExtraData.bUnseenChatMessages"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="27"/>
+			<property name="strToolTip" from="locale.SID.UI.Chat"/>
+
+			<object type="mlui.UI2DImage" name="objIcon">
+				<property name="tmplImage" value="skin.ImgSummaryPanelChat"/>
+			</object>
+
+		</object>
+        
+        
+		<script type="application/javascript"><![CDATA[
+			function clearButtons()
+			{
+				for(i in self.objButtons)
+				{
+					self.objButtons[i].bSelected = false;
+				}
+			}
+		]]></script>
+        
+	</objectDef>
+</locust>

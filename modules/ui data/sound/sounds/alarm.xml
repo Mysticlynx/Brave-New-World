@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<template type="mlmedia.SoundTemplate" name="Alarm Advisor Message">
+		<property name="fileSource" value="alarm/alarm_advisor_message.ogg"/>
+	</template>
+
+	<template type="mlmedia.SoundTemplate" name="Alarm Agreement Arrives">
+		<property name="fileSource" value="alarm/alarm_agreement_arrives.ogg"/>
+	</template>
+	
+	<template type="mlmedia.SoundTemplate" name="Alarm Chat Received">
+		<property name="fileSource" value="alarm/alarm_chat_received.ogg"/>
+	</template>
+
+	<template type="mlmedia.SoundTemplate" name="Alarm Timer Long">
+		<property name="fileSource" value="alarm/alarm_timer_long.ogg"/>
+	</template>
+	
+	<template type="mlmedia.SoundTemplate" name="Alarm Timer Short">
+		<property name="fileSource" value="alarm/alarm_timer_short.ogg"/>
+	</template>
+
+	<template type="mlmedia.SoundTemplate" name="Alarm Timer Zero">
+		<property name="fileSource" value="alarm/alarm_timer_zero.ogg"/>
+	</template>
+</locust>

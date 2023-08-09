@@ -1,0 +1,2512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="DiplomacyAIScript" class="CMLObject">
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <propertyDef name="objGameSysNation" type="gs_tbg.GameSysNation"/>
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <propertyDef name="objGameSysNationRelations" type="gs_tbg.GameSysNationRelations"/>
+        <propertyDef name="objGameSysCity" type="gs_tbg.GameSysCity"/>
+        <propertyDef name="objGameSysRegion" type="gs_tbg.GameSysRegion"/>
+        <propertyDef name="objGameSysNationalPrograms" type="gs_tbg.GameSysNationalPrograms"/>
+        
+        <propertyDef name="objAIDiplomaticLevelsTemplate" type="mh2_common.RangedTemplateList"/>
+        <propertyDef name="objPowerDifferentialRangedTemplateList" type="mh2_common.RangedTemplateList"/>
+        <propertyDef name="objTerritorialIntegrityRangedTemplateList" type="mh2_common.RangedTemplateList"/>
+        
+        <propertyDef name="nNationalProgramTurnCheckFrequency" type="int" default="12"/>
+        <propertyDef name="nNationalProgramNationMod" type="int" default="10"/>
+		<propertyDef name="durEmbargo" type="DateDuration" value="182 days"/>
+
+        <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+        <property name="objGameSysNation" from="self.objParentAI.objGameSysNation"/>
+        <property name="objGameSysTurnBasedGame" from="self.objParentAI.objGameSysTurnBasedGame"/>
+        <property name="objGameSysNationRelations" from="self.objParentAI.objGameSysNationRelations"/>
+        <property name="objGameSysCity" from="self.objParentAI.objGameSysCity"/>
+        <property name="objGameSysRegion" from="self.objParentAI.objGameSysRegion"/>
+        <property name="objGameSysNationalPrograms" from="self.objParentAI.objGameSysNationalPrograms"/>
+        
+        <property name="objAIDiplomaticLevelsTemplate" from="self.objParentAI.objAIDiplomaticLevelsTemplate"/>
+        <property name="objPowerDifferentialRangedTemplateList" from="self.objParentAI.objPowerDifferentialRangedTemplateList"/>
+        <property name="objTerritorialIntegrityRangedTemplateList" from="self.objParentAI.objTerritorialIntegrityRangedTemplateList"/>
+        
+        <script type="application/javascript">
+        <![CDATA[
+
+                
+// temporary object for research AI
+function DiplomacyAITempData(avatar)
+{
+    this.avatar = avatar;
+    this.pad = getPAD(avatar,PADMakingHistoryAI);
+    this.nation = this.pad.objNation;
+    this.turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+    this.diplomacyAI = self.objGameSysAIUtility.getDiplomacyAI(this.avatar,this.nation);
+    
+    this.numAllianceMembers = -1; // 1 = no alliance
+    this.bIsAllianceLeader = false;
+    
+    // calculates total alliance military strength
+    this.getBasicAllianceData = function()
+    {
+        if (this.numAllianceMembers < 0)
+        {
+            // add some other ally stats
+            var allianceMembership = self.objGameSysNationRelations.objAllianceMemberships.find({"refNation": this.nation});
+            var alliance = null;
+            if (allianceMembership != null)
+            {
+                alliance = allianceMembership.refAlliance.resolve(this.avatar);
+            }
+            
+            if (alliance != null)
+            {
+                this.numAllianceMembers = 0;
+                
+                var leader = alliance.refLeadNation.resolve(this.avatar);
+                this.bIsAllianceLeader = this.nation.equals(leader);
+                
+                var allies = new Array();
+                self.objGameSysNationRelations.getAllianceMembers(this.avatar,alliance,allies);
+                for (var i in allies)
+                {
+                    var allyNation = allies[i];
+                    this.numAllianceMembers++;
+                }
+            }
+            else
+            {
+                // not in an alliance
+                this.numAllianceMembers = 1;               
+            }
+        }
+    } // this.getBasicAllianceData
+
+    // returns significance of threat from otherNaion
+    // 0 = insignificant
+    // 50 = we're evenly matched
+    // 100 = they can and will destroy us
+    this.getThreatSignificance = function(otherNation)
+    {
+        var significance = 0;
+
+        // do a strength check vs the proposing nation
+        var info = self.objGameSysAIUtility.getAINationInformation(this.avatar,this.nation);
+        var otherInfo = self.objGameSysAIUtility.getAINationInformation(this.avatar,otherNation);
+        if (otherInfo.nEstimatedMilitaryPower < info.nEstimatedMilitaryPower)
+        {
+            // they are weaker
+            significance = Math.floor( otherInfo.nEstimatedMilitaryPower * 100 / info.nEstimatedMilitaryPower );
+            return significance;
+        }
+        // after this point, otherNation is as strong or stronger militarily
+
+        var regionsRecentlyTaken = 0;
+        var lastTurnData = this.pad.getLastTurnChangeData(false);
+        if (lastTurnData != null)
+        {
+            for (var i in lastTurnData.objRegionLosses)
+            {
+                var regionLoss = lastTurnData.objRegionLosses[i];
+                var nation = regionLoss.objTakingNation;
+                if (nation.equals(otherNation))
+                    regionsRecentlyTaken++;
+            }
+        }
+
+        var numControlledCities = self.objGameSysCity.getNumControlledCities(this.avatar, this.nation);
+
+        // how many cities does otherNation have?
+        var numOtherControlledCities = self.objGameSysCity.getNumControlledCities(this.avatar, otherNation);
+
+        if (numControlledCities = 0)
+        {
+            if (numOtherControlledCities == 0)
+            {
+                return 50;
+            }
+        }
+
+        var maxSignificance = 70;
+        if (regionsRecentlyTaken > 0)
+        {
+            maxSignificance += 10;
+        }
+
+        significance = 100 - Math.floor( info.nEstimatedMilitaryPower * 100 / otherInfo.nEstimatedMilitaryPower );
+        if (significance > maxSignificance)
+            significance = maxSignificance;
+
+        if (numControlledCities = 0)
+            significance += 20;
+
+        return significance;
+    } // this.getThreatSignificance
+    
+    // treaty types: 
+    // gs_tbg.TreatyType.PEACE
+    // gs_tbg.TreatyType.ALLIANCE
+    // gs_tbg.TreatyType.MILITARY_ACCESS
+    // gs_tbg.TreatyType.PORT_ACCESS
+    this.considerTreaty = function(treaty)
+    {    
+        var otherNation = treaty.refProposingNation.resolve(this.avatar);
+        var eTreatyType = treaty.eType;
+
+        if (this.nation == null) // nation must have been defeated
+        {
+            log("WARN(4): null nation received " + eTreatyType.name + " proposal from " + otherNation.strName);
+            // AI or UI should check for this and not allow proposal in the first place.
+            //log("WARN(4): null nation rejecting " + eTreatyType.name + " proposal from " + otherNation.strName);
+            //var message="";
+            //this.avatar.sendAction(gs_tbg.GActRejectTreaty.create({"refTreaty": treaty,"strMessage": message}) );
+            return;
+        }
+        
+        if (this.nation.bDisabled)
+        {
+            log("DEBUG: " + this.nation.strName + " is awaiting its fate and cannot accept treaties.");
+            var message = "...";
+            this.avatar.sendAction(gs_tbg.GActRejectTreaty.create({"refTreaty": treaty,"strMessage": message}) );
+            return;
+        }
+        
+        
+        var bWantLog = self.objGameSysAIUtility.bAITestMode; // this.pad.bWantDiplomacyAILog        
+        if (bWantLog)
+        {
+            log("DEBUG: " + this.nation.strName + " considering " + eTreatyType.name + " from " + otherNation.strName);
+        }
+
+        var eTone = this.getDefaultTone(otherNation);
+        var eReason = gs_tbg.Reason.NoReason;
+        var bAccept = false;
+        var bDecided = false;
+        var enemyNation = null;
+        var friendNation = null;
+        var parentNation = null;
+        var commonEnemy = treaty.getCommonEnemy(this.avatar);
+        var objForIdeology = null;
+        var objAgainstIdeology = null;
+        
+        this.diplomacyAI.updateStrengthEstimates(this.avatar);       
+        this.getBasicAllianceData();
+        
+        if (commonEnemy == null)
+        {
+            // determine common enemy if this is a human player
+            var otherAvatar = self.objParentAI.getControllingAvatar(this.avatar,otherNation);
+            if (otherAvatar == null)
+            {
+                commonEnemy = getStrongestEnemy(this.avatar,otherNation);
+                if (this.nation.equals(commonEnemy))
+                    commonEnemy = null;
+            }
+        }
+        
+        var considerObject = gs_tbg.AINationComparison.create({"objGameRoot":this.avatar, "objMyNation":this.nation, "objTheirNation":otherNation});
+        
+        var eDecisionType = null;
+        switch(treaty.eType.index)
+        {
+            case gs_tbg.TreatyType.PEACE.index:
+                eDecisionType = gs_tbg.AIDiplomaticDecisionType.AcceptPeaceTreaty;
+                break;
+                
+            case gs_tbg.TreatyType.ALLIANCE.index:
+                eDecisionType = gs_tbg.AIDiplomaticDecisionType.AllyWith;
+                break;
+            
+            case gs_tbg.TreatyType.MILITARY_ACCESS.index:
+                eDecisionType = gs_tbg.AIDiplomaticDecisionType.AllowMilitaryAccess;
+                break;
+                
+            case gs_tbg.TreatyType.PORT_ACCESS.index:
+                eDecisionType = gs_tbg.AIDiplomaticDecisionType.AllowPortAccess;
+                break;
+                
+            case gs_tbg.TreatyType.TERRITORIAL_TRANSFER.index:
+                eDecisionType = gs_tbg.AIDiplomaticDecisionType.GiveUpTerritories;
+                if (treaty.isAskingForAllRegions(this.avatar))
+                {
+                    bDecided = true;
+                    bAccept = false;
+                    eReason = gs_tbg.Reason.AskingTooMuch;
+                    if (bWantLog)
+                    {
+                        log("DEBUG: reject transfer asking for all regions")
+                    }
+                }
+                break;               
+        }
+        
+        var considerObjectChance = considerObject.getChooseMinusVetoChance(eDecisionType,this.pad.bWantDiplomacyAILog);       
+        var bUsedConsiderChance = false;
+
+        if ( (!bDecided) && (this.nation.objStatus.instanceOf(gs_tbg.NationStatusPuppet)) )
+        {
+            parentNation = this.nation.objStatus.refController.resolve(this.avatar);
+            if (otherNation.equals(parentNation))
+            {
+                bDecided = true;
+                bAccept = true;
+                eReason = gs_tbg.Reason.WeAreAPuppet;
+                
+                if (bWantLog)
+                {
+                    log("DEBUG: puppet decided to obey master")
+                }
+            }
+            else
+            {
+                if (! (treaty.eType.equals(gs_tbg.TreatyType.MILITARY_ACCESS) || treaty.eType.equals(gs_tbg.TreatyType.PORT_ACCESS) ) )
+                {
+                    bDecided = true;
+                    bAccept = false;
+                    eReason = gs_tbg.Reason.WeAreAPuppet;
+                    if (bWantLog)
+                    {
+                        log("DEBUG: puppet decided to decline treaty from non-master")
+                    }
+                }
+                // else allow puppet to consider military or port access
+            }
+        }
+
+        if (!bDecided)
+        {
+            // see if we already rejected treaties of this type from otherNation
+            var recentRejects = self.objGameSysNationRelations.objTreaties.filter({
+                "eType": eTreatyType,
+                "refProposingNation": otherNation,
+                "refReceivingNation": this.nation,
+                "eStatus": gs_tbg.TreatyStatus.REJECTED
+                });
+
+            if (recentRejects.size > 0)
+            {
+                bDecided = true;
+                bAccept = false;
+                eReason = gs_tbg.Reason.AlreadyAsked;
+                
+                if (bWantLog)
+                {
+                    log("DEBUG: rejecting treaty because they already asked recently.")
+                }
+            }
+        }
+        
+        if (!bDecided)
+        {
+            if (eTreatyType.equals(gs_tbg.TreatyType.ALLIANCE))
+            {                
+                // consider alliance
+                if (!bDecided)
+                {
+                    var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation,false) != null);
+                    if (bAtWar)
+                    {
+                        bDecided = true;
+                        bAccept = false;
+                        eReason = gs_tbg.Reason.AtWar;
+                        
+                        if (bWantLog)
+                        {
+                            log("DEBUG: decided not to ally with enemy");
+                        }
+                        
+                    }
+                }
+                
+                if (!bDecided)
+                {
+                    if ( self.objGameSysNationRelations.areAlliedWithEnemy(this.avatar,this.nation,otherNation,true) )
+                    {
+                        bDecided = true;
+                        bAccept = false;
+                        eReason = gs_tbg.Reason.AlliedWithOurEnemy;
+                        
+                        if (bWantLog)
+                        {
+                            log("DEBUG: decided not to ally with enemy of our ally");
+                        }
+                        
+                    }
+                }
+
+                if (!bDecided)
+                {
+                    if (treaty.bDemand)
+                    {
+                        bDecided = true;
+                        var threatSignificance = this.getThreatSignificance(otherNation);
+                        var stubbornness = 75; // tweak point
+                        if (threatSignificance > stubbornness)
+                        {
+                            var requiredAcceptRoll = 100 - (threatSignificance - stubbornness) * 100 / (100 - stubbornness); // 0 to 100
+                            var roll = self.objParentAI.getRandomIntInRange(0,99);
+                            bAccept =  (roll > requiredAcceptRoll)
+                        }
+
+                        if (bAccept)
+                        {
+                            eTone = gs_tbg.Tone.Afraid;
+                            
+                            if (bWantLog)
+                            {
+                                log("DEBUG: decided to ally out of fear");
+                            }
+                            
+                        }
+                        else
+                        {
+                            eTone = gs_tbg.Tone.Angry;
+                            
+                            if (bWantLog)
+                            {
+                                log("DEBUG: decided NOT to ally despite threat");
+                            }
+                            
+                        }
+                    } // if this is a demand
+                } // if not yet decided
+                
+                if (!bDecided)
+                {
+                    var tmplAIDiplo = this.getAIDiplomaticRelations(otherNation);
+                    if (tmplAIDiplo.bAllowAlliance == false)
+                    {
+                        bDecided = true;
+                        bAccept = false;
+                        eReason = gs_tbg.Reason.PoorRelations;
+                        
+                        if (bWantLog)
+                        {
+                            log("DEBUG: tmplAIDiplo.bAllowAlliance is false (poor relations)");
+                        }
+                    }
+                }
+
+                if (!bDecided)
+                {
+                    // check common enemy
+                    if (commonEnemy != null)
+                    {
+                        if (bWantLog)
+                        {
+                            log("DEBUG: evaluating proposed common enemy " + commonEnemy.strName);
+                        }
+                        
+                        if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,commonEnemy,false))
+                        {
+                            bDecided = true;
+                            bAccept = false;
+                            eReason = gs_tbg.Reason.ProposingWarWithOurAlly;
+                            enemyNation = commonEnemy;
+                            
+                            if (bWantLog)
+                            {
+                                log("DEBUG: decided not to ally because proposed enemy is our ally");
+                            }
+                            
+                        }
+
+                        if (!bDecided)
+                        {
+                            var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,commonEnemy,true) != null);
+                            if (bAtWar)
+                            {
+                                // bingo
+                                bDecided = true;
+                                bAccept = true;
+                                eReason = gs_tbg.Reason.AtWar;
+                                enemyNation = commonEnemy;
+                                
+                                if (bWantLog)
+                                {
+                                    log("DEBUG: commonEnemy found");
+                                }
+                            }
+                        }
+
+                        if (!bDecided)
+                        {
+                            var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+                            var enemyDesignation = militaryAI.getEnemyDesignation(this.avatar,commonEnemy);
+                            if (enemyDesignation != null) // we plan on attacking commonEnemy anyway.
+                            {
+                                bDecided = true;
+                                bAccept = true;
+                                
+                                if (bWantLog)
+                                {
+                                    log("DEBUG: decided to ally because we were planning on attacking common enemy anyway");
+                                }
+                                
+                            }
+                        }
+
+                        if (!bDecided)
+                        {
+                            // see if diplomatic state vs commonEnemy is bad enough to declare war
+                            var tmplAIDiploCommonEnemy = this.getAIDiplomaticRelations(commonEnemy);
+                            if (tmplAIDiploCommonEnemy.bAllowUnprovokedAttack)
+                            {
+                                // let's see who we have better diplomatic relations with.
+                                var commonDiploLevel = this.getDiploLevel(this.nation,commonEnemy);
+                                var otherDiploLevel = this.getDiploLevel(this.nation,otherNation);
+                                if (commonDiploLevel > otherDiploLevel)
+                                {
+                                    bDecided = true;
+                                    bAccept = false;
+                                    eReason = gs_tbg.Reason.NotOurEnemy;
+                                    enemyNation = commonEnemy;
+                                    
+                                    if (bWantLog)
+                                    {
+                                        log("DEBUG: alliance refused because we are on better terms with the proposed common enemy");
+                                    }
+                                    
+                                }
+                                else
+                                {
+                                    var diff = otherDiploLevel - commonDiploLevel; // 0 to 1000
+                                    var diploDiffPercent = Math.floor(diff / 10.0); // 0 to 100
+
+                                    var internationalism = this.pad.objAIInternationalismTemplate;
+                                    var sideWithWeightNeeded = internationalism.fAlly * 100;
+                                    var sideAgainstWeightNeeded = internationalism.fWar * 100;
+
+                                    // see how likely we are to side with proposing nation in a war
+                                    var proposingNationDifferences = gs_tbg.AINationComparison.create({"objGameRoot":this.avatar, "objMyNation":this.nation, "objTheirNation":otherNation});
+                                    var commonEnemyNationDifferences = gs_tbg.AINationComparison.create({"objGameRoot":this.avatar, "objMyNation":this.nation, "objTheirNation":commonEnemy});
+
+                                    var sideWithWeight = proposingNationDifferences.getAllyWithChanceIncludingVeto() - commonEnemyNationDifferences.getAllyWithChanceIncludingVeto();
+                                    var sideAgainstWeight = commonEnemyNationDifferences.getAllyAgainstChanceIncludingVeto() - proposingNationDifferences.getAllyAgainstChanceIncludingVeto();
+
+                                    if (sideWithWeight < sideWithWeightNeeded)
+                                    {
+                                        bDecided = true;
+                                        bAccept = false;
+                                        if (sideWithWeightNeeded < 50)
+                                        {
+                                            eReason = gs_tbg.Reason.NationCharacteristics;
+                                            enemyNation = commonEnemy;
+                                            
+                                            if (bWantLog)
+                                            {
+                                                log("DEBUG: alliance refused due to nation characteristics vs alliance tendency");
+                                            }
+                                            
+                                        }
+                                        else
+                                        {
+                                            eReason = gs_tbg.Reason.Internationalism;
+                                            enemyNation = commonEnemy;
+                                            
+                                            if (bWantLog)
+                                            {
+                                                log("DEBUG: alliance refused because of low alliance tendency (internationalism)");
+                                                log("DEBUG: sideWithWeight=" + sideWithWeight);
+                                                log("DEBUG: sideAgainstWeight=" + sideAgainstWeight);
+                                                log("DEBUG: sideWithWeightNeeded=" + sideWithWeightNeeded);
+                                            }
+                                        }
+                                                                                
+                                    }
+                                    else if (sideAgainstWeight < sideAgainstWeightNeeded)
+                                    {
+                                        bDecided = true;
+                                        bAccept = false;
+                                        if (sideAgainstWeightNeeded < 50)
+                                        {
+                                            eReason = gs_tbg.Reason.NotOurEnemy;
+                                            enemyNation = commonEnemy;
+                                            
+                                            if (bWantLog)
+                                            {
+                                                log("DEBUG: alliance refused due to desire not to ally against proposed common enemy");
+                                            }
+                                            
+                                        }
+                                        else
+                                        {
+                                            eReason = gs_tbg.Reason.Internationalism;
+                                            enemyNation = commonEnemy;
+                                            
+                                            if (bWantLog)
+                                            {
+                                                log("DEBUG: alliance refused due to desire not to ally against anyone");
+                                            }
+                                            
+                                        }
+                                    }
+
+                                    if (!bDecided)
+                                    {
+                                        bDecided = true;
+                                        bAccept = true;
+                                        eReason = gs_tbg.Reason.NationCharacteristics; // default
+
+                                        if ((sideWithWeightNeeded < 50) && (sideAgainstWeightNeeded < 50))
+                                        {
+                                            eReason = gs_tbg.Reason.Internationalism;
+
+                                            // see if we have an ideological reason for allying
+                                            var bForIdeologyValid = true;
+                                            var bAgainstIdeologyValid = true;
+
+                                            var objUsVsThem = self.objParentAI.objAIUsVersusThemTemplate;
+                                            var otherComparisonList = objUsVsThem.getIdeologyComparison(this.nation.tmplIdeology, otherNation.tmplIdeology);
+                                            var commonEnemyComparisonList = objUsVsThem.getIdeologyComparison(this.nation.tmplIdeology, commonEnemy.tmplIdeology);
+
+                                            if ( (otherComparisonList == null) || (proposingNationDifferences.getIsSameIdeology() ==false) )
+                                            {
+                                                bForIdeologyValid = false;
+                                            }
+                                            else if (getChanceIncludingVetoFromList(otherComparisonList, gs_tbg.AIDiplomaticDecisionType.AllyWith ) <= 0)
+                                            {
+                                                bForIdeologyValid = false;
+                                            }
+
+                                            if ( (commonEnemyComparisonList == null) || (commonEnemyNationDifferences.getIsSameIdeology()==true) )
+                                            {
+                                                bAgainstIdeologyValid = false;
+                                            }
+                                            else
+                                            {
+                                                if (getChanceIncludingVetoFromList(commonEnemyComparisonList, gs_tbg.AIDiplomaticDecisionType.AllyAgainst) <= 0)
+                                                {
+                                                    bAgainstIdeologyValid = false;
+                                                }
+                                                else
+                                                {
+                                                    // Make sure we are less opposed to the proposing nation's ideology.
+                                                    // This also makes sure the proposing and common enemy are different ideologies.
+                                                    if (otherComparisonList != null)
+                                                    {
+                                                        if (getChanceIncludingVetoFromList(otherComparisonList, gs_tbg.AIDiplomaticDecisionType.AllyAgainst) >= getChanceIncludingVetoFromList(commonEnemyComparisonList, gs_tbg.AIDiplomaticDecisionType.AllyAgainst))
+                                                            bAgainstIdeologyValid = false;
+                                                    }
+                                                }
+                                            }
+
+                                            if (bAgainstIdeologyValid)
+                                            {
+                                                eReason = gs_tbg.Reason.AgainstIdeology;
+                                                objAgainstIdeology = commonEnemy.tmplIdeology.resolve();
+                                                
+                                                if (bWantLog)
+                                                {
+                                                    log("DEBUG: allying against ideology of common enemy");
+                                                }
+                                                
+                                            }
+                                            else if (bForIdeologyValid)
+                                            {
+                                                eReason = gs_tbg.Reason.ForIdeology;
+                                                objForIdeology = otherNation.tmplIdeology.resolve();
+                                                
+                                                if (bWantLog)
+                                                {
+                                                    log("DEBUG: allying for ideology ");
+                                                }
+                                                
+                                            }
+                                            else
+                                            {
+                                                if (bWantLog)
+                                                {
+                                                    log("DEBUG: allying for nation characteristics");
+                                                }
+                                            
+                                            }
+                                        }
+                                        enemyNation = commonEnemy;
+                                    } // if not decided yet
+                                } // else diplo not better with common enemy
+                            } // if diplomatic relations vs proposed common enemy allows unprovoked attack
+                            else
+                            {
+                                bDecided = true;
+                                bAccept = false;
+                                eReason = gs_tbg.Reason.NotOurEnemy;
+                                enemyNation = commonEnemy;
+                                
+                                if (bWantLog)
+                                {
+                                    log("DEBUG: refusing alliance because relations do not allow unprovoked attack on proposed common enemy");
+                                }
+                                
+                            }
+                        } // if not decided
+
+                    } // if commonEnemy specified
+                } // if not decided
+                
+                if (!bDecided)
+                {
+                    // see if we need an alliance
+                    var ourVsEnemyRating = self.getOurStrengthVsEnemyStrengthRating(this.avatar,this.nation); // 0=bad, 100=good, 50=average
+                    
+                    if (bWantLog)
+                    {
+                        log("DEBUG: ourVsEnemyRating=" + ourVsEnemyRating );
+                    }
+                    
+                    if ((this.diplomacyAI.objStrongestEnemy != null) && (ourVsEnemyRating < 50))
+                    {
+                        bDecided = true;
+                        bAccept = true;
+                        eReason = gs_tbg.Reason.AtWar;
+                        enemyNation = this.diplomacyAI.objStrongestEnemy;
+                        
+                        if (bWantLog)
+                        {
+                            log("DEBUG: allying because we need allies");
+                        }
+                    }
+                    else
+                    {
+                        if (bWantLog)
+                        {
+                            log("DEBUG: we don't need allies");
+                        }
+                        // let it fall thru to default nation characteristics comparison
+                    }
+                }
+                
+            } // ----------------if ALLIANCE treaty --------------------------
+            else if (eTreatyType.equals(gs_tbg.TreatyType.MILITARY_ACCESS))
+            {
+                // check common enemy, if specified
+                if (commonEnemy != null)
+                {
+                    if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,commonEnemy,true))
+                    {
+                        bDecided = true;
+                        bAccept = false;
+                        eReason = gs_tbg.Reason.ProposingWarWithOurAlly;
+                        enemyNation = commonEnemy;
+                    }
+
+                    var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,commonEnemy,true) != null);
+                    if (bAtWar)
+                    {
+                        // bingo
+                        bDecided = true;
+                        bAccept = true;
+                        eReason = gs_tbg.Reason.AtWar;
+                        enemyNation = commonEnemy;
+                    }
+                }
+
+                if (!bDecided)
+                {
+                    if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,otherNation,false))
+                    {
+                        bDecided = true;
+                        bAccept = true;
+                    }
+                }
+            }
+            else if (eTreatyType.equals(gs_tbg.TreatyType.PORT_ACCESS))
+            {
+                if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,otherNation,false))
+                {
+                    bDecided = true;
+                    bAccept = true;
+                }
+                else
+                {
+                    var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation,true) != null);
+                    if (bAtWar)
+                    {
+                        bDecided = true;
+                        bAccept = false;
+                        eReason = gs_tbg.Reason.AtWar;
+                    }
+                }
+            }
+            else if (eTreatyType.equals(gs_tbg.TreatyType.PEACE))
+            {
+                var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+                var enemyDesignation = militaryAI.getEnemyDesignation(this.avatar,otherNation);
+                if (enemyDesignation != null)
+                {
+                    if (enemyDesignation.objReasonSources.length > 0)
+                    {
+                        // we are enemies because of a WarPlan or ForceAllegiancePlan
+                        bDecided = true;
+                        bAccept = false;
+                        
+                        if (bWantLog)
+                        {
+                            log("DEBUG: reject due to enemyDesignation.objReasonSources: ");
+                            for (var i in enemyDesignation.objReasonSources)
+                            {
+                                log("DEBUG: [" + i + "]: " + enemyDesignation.objReasonSources[i] );
+                            }
+                        }
+                    }
+                }
+
+                if (!bDecided)
+                {
+                    bDecided = true;
+                    
+                    var favorability = this.diplomacyAI.getTreatyTermFavorability(this.avatar, treaty); // 0=bad, 50 = neutral, 100 = good, 
+                    if (bWantLog)
+                    {
+                        log("favorability = " + favorability);
+                    }
+
+                    if (treaty.bDemand)
+                    {
+                        var threatSignificance = this.getThreatSignificance(otherNation);
+                        var stubbornness = 75; // tweak point
+                        if (threatSignificance > stubbornness)
+                        {
+                            var requiredAcceptRoll = 100 - (threatSignificance - stubbornness) * 100 / (100 - stubbornness); // 0 to 100
+                            var roll = self.objParentAI.getRandomIntInRange(0,99);
+                            bAccept =  (roll > requiredAcceptRoll);
+                            if (bWantLog)
+                            {
+                                log("DEBUG: demand roll=" + roll + ", requiredAcceptRoll=" + requiredAcceptRoll + ", bAccept=" + bAccept);
+                            }
+                        }
+
+                        if (bAccept)
+                        {
+                            eTone = gs_tbg.Tone.Afraid;
+                        }
+                        else
+                        {
+                            eTone = gs_tbg.Tone.Angry;
+                        }
+                        
+                        if (bWantLog)
+                        {
+                            log("DEBUG: responding to demand with tone: " + eTone);
+                        }
+
+                            
+                    } // if peace treaty is a demand
+                    else
+                    {
+                        var numControlledCities = self.objGameSysCity.getNumControlledCities(this.avatar, this.nation);
+                                                
+                        // are we outmatched?
+                        if ((this.diplomacyAI.objStrongestEnemy != null) && (this.diplomacyAI.nEstimatedTotalAllianceStrength < this.diplomacyAI.nEstimatedTotalEnemyStrength))
+                        {
+                            if (numControlledCities == 0)
+                            {
+                                bAccept = true;
+                                eTone = gs_tbg.Tone.Desperate;
+                                
+                                if (bWantLog)
+                                {
+                                    log("DEBUG: accepting peace out of desparation");
+                                }
+                                
+                            }
+                            else if (!this.diplomacyAI.objStrongestEnemy.equals(otherNation))
+                            {
+                                // they're not our main enemy and we are on the losing side.
+                                if (favorability > 50)
+                                {
+                                    bAccept = true; 
+                                    eReason = gs_tbg.Reason.AtWar;
+                                    enemyNation = this.diplomacyAI.objStrongestEnemy;
+                                }
+                                else
+                                {
+                                    bAccept = false;
+                                    eReason = gs_tbg.Reason.AskingTooMuch;
+                                }
+                                
+                                if (bWantLog)
+                                {
+                                    log("DEBUG: terms considered from lesser enemy, favorability=" + favorability + ", bAccept=" + bAccept);
+                                }
+                            }
+                            else
+                            {
+                                considerObjectChance += (favorability - 25);
+                                var r = self.objParentAI.getRandomIntInRange(0,99);
+                                bAccept = (r < considerObjectChance);
+                                if (bWantLog)
+                                {
+                                    log("DEBUG: they're winning and offer peace. r=" + r + ", considerObjectChance=" + considerObjectChance + ", bAccept=" + bAccept);
+                                }
+                            }
+                        } // if our enemies are stronger than we are
+                        else
+                        {
+                            bDecided = false;    // look at characteristics also
+                            considerObjectChance += (favorability - 75);
+                            // var r = self.objParentAI.getRandomIntInRange(0,99);
+                            // bAccept = (r < considerObjectChance);
+                            if (bWantLog)
+                            {
+                                log("DEBUG: we are winning and they offer peace. Decide based on nation characteristics. considerObjectChance=" + considerObjectChance);
+                            }
+                        }
+                    } // else peace treaty is not a demand
+                } // if we haven't yet decided
+            } // else peace treaty
+            else if (eTreatyType.equals(gs_tbg.TreatyType.TERRITORIAL_TRANSFER))
+            {
+                var favorability = this.diplomacyAI.getTreatyTermFavorability(this.avatar, treaty); // 0=bad, 50 = neutral, 100 = good, 
+                if (self.objGameSysAIUtility.bAITestMode)
+                {
+                    log("Territorial transfer: favorability = " + favorability);
+                }
+                bDecided = true;
+                if (favorability > 50)
+                {
+                    bAccept = true; // this is a good deal for us.
+                }
+                else
+                {
+                    if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,otherNation,false))
+                    {
+                        var otherAvatar = self.objParentAI.getControllingAvatar(this.avatar,otherNation);
+                        if (otherAvatar != null)
+                        {
+                            bAccept = true; // AI to AI, only asks for owned regions
+                        }
+                        else
+                        {
+                            // HUMAN.  Let's see if they're trying to trick us..
+                            if (favorability < 35)
+                            {
+                                bAccept = false;
+                                eReason = gs_tbg.Reason.AskingTooMuch;
+                            }
+                            else
+                            {
+                                var badTerm = false;
+                                var nNumOursGained = 0;
+                                var nNumOursFullyGained = 0;
+                                var nNumTheirsGiven = 0;
+                                var nNumTheirsFullyGiven = 0;
+                                var nNumDisputedRegions = 0;
+                                
+                                for (var i in treaty.objTerms)
+                                {
+                                    var term = treaty.objTerms[i];
+                                    if (!term.instanceOf(gs_tbg.TerritorialTransferTerm))
+                                    {
+                                        log("DEBUG: unexpected term " + term + " in territory transfer");
+                                        badTerm = true;
+                                        break;
+                                    }
+                                                                                                            
+                                    for (var j in term.objRegions)
+                                    {
+                                        var region = term.objRegions[j];
+                                        
+                                        var weOwn = this.nation.equals(region.refOwner);
+                                        var theyOwn = otherNation.equals(region.refOwner);
+                                        
+                                        var weControl = this.nation.equals(region.refController);
+                                        var theyControl = otherNation.equals(region.refController);
+                                        
+                                        var weClaim = this.nation.tmplNation.equals(region.tmplNation);
+                                        var theyClaim = otherNation.tmplNation.equals(region.tmplNation);
+                                        
+                                        if (weOwn) // asking for something from us
+                                        {
+                                            if (theyClaim)
+                                            {
+                                                if (weClaim)
+                                                {
+                                                    nNumDisputedRegions++;
+                                                }
+                                                else
+                                                {
+                                                    nNumTheirsGiven++;
+                                                    if (weControl)
+                                                        nNumTheirsFullyGiven++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                log("DEBUG:" + region.strName + " is not theirs.");
+                                                eReason = gs_tbg.Reason.NotYours;
+                                                badTerm = true;
+                                                break;
+                                            }
+                                        }
+                                        else if (theyOwn)
+                                        {
+                                            if (weClaim)
+                                            {
+                                                nNumOursGained++;
+                                                if (theyControl)
+                                                    nNumOursFullyGained;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            logWarn("How can " + region.strName + " be transferred between " + this.nation.strName + " and " + otherNation.strName + "?");
+                                            eReason = gs_tbg.Reason.NotYours;
+                                            badTerm = true;
+                                            break;
+                                        }
+                                    }
+                                    if (badTerm)
+                                        break;
+                                } // for terms
+                                
+                                if (badTerm)
+                                {
+                                    bAccept = false;
+                                    eReason = gs_tbg.Reason.NotYours;
+                                }
+                                else if (nNumDisputedRegions > 0)
+                                {
+                                    // disputed territory
+                                    bAccept = false;
+                                    eReason = gs_tbg.Reason.AskingTooMuch;
+                                }
+                                else
+                                {                                    
+                                    if (nNumTheirsGiven > 0) // they are asking for their region(s)
+                                    {
+                                        // let's see if THEY have any of OUR regions that they should be offering in exchange
+                                        
+                                        var ourClaimedRegions = self.objGameSysRegion.objRegions.filter({"refOwner": otherNation, "tmplNation": this.nation.tmplNation });
+                                        var nNumTheyCouldOffer = ourClaimedRegions.size;
+                                        
+                                        if (nNumOursGained < nNumTheyCouldOffer)
+                                        {
+                                            bAccept = false;
+                                            eReason = gs_tbg.Reason.WhatAboutMine;
+                                        }
+                                        else
+                                        {
+                                            // they are offering some but not enough
+                                            bAccept = false;
+                                            eReason = gs_tbg.Reason.AskingTooMuch;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        bAccept = false;
+                                        eReason = gs_tbg.Reason.NotYours;
+                                    }
+                                }
+                                
+                            } // if term favorability was too low
+                        } // else human
+                    } // if allies
+                    else
+                    {
+                        bAccept = false;
+                        eReason = gs_tbg.Reason.NotOurAlly;
+                    }
+                }
+            }
+        } // if not decided
+        
+        if (!bDecided)
+        {
+            bDecided = true;
+            bUsedConsiderChance = true;
+        
+            // roll an initial value vs nation comparisons
+            // then possibly change that based on threat.
+            var r = self.objParentAI.getRandomIntInRange(0,99);
+            bAccept = (r < considerObjectChance);
+            
+            var bDecisive = false;
+            if ( (considerObjectChance < 0) || (considerObjectChance > 50) )
+            {
+                bDecisive = true;
+            }
+        
+            if (treaty.bDemand && (!bDecisive) )
+            {
+                bUsedConsiderChance = false;
+                var threatSignificance = this.getThreatSignificance(otherNation);
+                var stubbornness = 75; // tweak point
+                if (threatSignificance > stubbornness)
+                {
+                    var requiredAcceptRoll = 100 - (threatSignificance - stubbornness) * 100 / (100 - stubbornness); // 0 to 100
+                    var roll = self.objParentAI.getRandomIntInRange(0,99);
+                    bAccept =  (roll > requiredAcceptRoll)
+                }
+
+                if (bAccept)
+                {
+                    eTone = gs_tbg.Tone.Afraid;
+                }
+                else
+                {
+                    eTone = gs_tbg.Tone.Angry;
+                }
+            }
+            else
+            {
+                eReason = gs_tbg.Reason.NationCharacteristics;
+            }
+        }
+
+        var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+            "objSendingNation": this.nation,
+            "objReceivingNation": otherNation,
+            "objFriendNation": friendNation,
+            "objEnemyNation": enemyNation,
+            "objParentNation": parentNation,
+            "objForIdeologyTemplate": objForIdeology,
+            "objAgainstIdeologyTemplate": objAgainstIdeology
+            });
+
+        messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+        var messageType;
+        if (eTreatyType.equals(gs_tbg.TreatyType.PEACE))
+        {
+            if (bAccept)
+                messageType = "AcceptPeaceTreaty";
+            else
+                messageType = "RejectPeaceTreaty";
+        }
+        else if (eTreatyType.equals(gs_tbg.TreatyType.ALLIANCE))
+        {
+            if (bAccept)
+                messageType = "AcceptAlliance";
+            else
+                messageType = "RejectAlliance";
+        }
+        else if (eTreatyType.equals(gs_tbg.TreatyType.MILITARY_ACCESS))
+        {
+            if (bAccept)
+                messageType = "GrantMilitaryAccess";
+            else
+                messageType = "RefuseMilitaryAccess";
+        }
+        else if (eTreatyType.equals(gs_tbg.TreatyType.PORT_ACCESS))
+        {
+            if (bAccept)
+                messageType = "GrantPortAccess";
+            else
+                messageType = "RefusePortAccess";
+        }
+        else if (eTreatyType.equals(gs_tbg.TreatyType.TERRITORIAL_TRANSFER))
+        {
+            if (bAccept)
+                messageType = "GrantTerritoryTransfer";
+            else
+                messageType = "RefuseTerritoryTransfer";
+        }
+        
+
+        var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,messageType,messageCriteria);
+        
+        if (bAccept)
+        {
+            if (self.objGameSysAIUtility.bAITestMode)
+            {
+                log("DEBUG: " + this.nation.strName + " accepts " + eTreatyType.name + " from " + otherNation.strName + ": " + message);
+            }
+
+            this.avatar.sendAction(gs_tbg.GActRatifyTreaty.create({"refTreaty": treaty,"strMessage": message}) );
+        }
+        else
+        {
+            if (self.objGameSysAIUtility.bAITestMode)
+            {
+                log("DEBUG: " + this.nation.strName + " rejects " + eTreatyType.name + " from " + otherNation.strName + ": " + message);
+            }
+
+            this.avatar.sendAction(gs_tbg.GActRejectTreaty.create({"refTreaty": treaty,"strMessage": message}) );
+        }
+        
+        if (self.objGameSysAIUtility.bAITestMode)
+        {
+            if (bUsedConsiderChance)
+            {
+                log("DEBUG: decision based on NationComparison value " + considerObjectChance );
+            }
+            else
+            {
+                log("DEBUG: decision not necessarily based on NationComparison value " + considerObjectChance );
+            }
+        }
+    } // considerTreaty
+    
+    
+    this.triggerActionImposeEmbargo = function(enemyNation)
+    {
+        if (this.nation.equals(enemyNation))
+        {
+            log("WARN(4): " + this.nation.strName + " ignoring trigger to impose embargo on itself.");
+            return;
+        }
+        
+        // suppress declaring embargo on allies & puppets
+        if (self.objGameSysNationRelations.areAllies(this.avatar, this.nation, enemyNation, true) )
+        {
+            log("WARN(4): " + this.nation.strName + " ignoring trigger to impose embargo on ally.");
+            return;
+        }
+        
+        var dateEmbargoExpire = self.objGameSysTurnBasedGame.objTurnBasedGame.dateCurrentDate.plus(self.durEmbargo);
+            
+        log("DEBUG: " + this.nation.strName + " imposing embargo on " + enemyNation.strName);
+        this.avatar.sendAction(gs_tbg.GActPlaceEmbargo.create({"refDeclaringNation": this.nation,"refEmbargoedNation": enemyNation, "dateExpiration": dateEmbargoExpire }) );
+    } // triggerActionImposeEmbargo
+    
+    this.buildNationalProgramTypes = function()
+    {
+        if (this.allNationalProgramTypes == undefined)
+        {
+            this.allNationalProgramTypes = new Array();
+            this.allNationalProgramTypes[gs_tbg.AIDiplomaticDecisionType.DeploymentSurveillance.index] = gs_tbg.DeploymentSurveillance;
+            this.allNationalProgramTypes[gs_tbg.AIDiplomaticDecisionType.StealResearch.index] = gs_tbg.StealResearch;
+            this.allNationalProgramTypes[gs_tbg.AIDiplomaticDecisionType.SabotageRegion.index] = gs_tbg.SabotageRegion;
+            this.allNationalProgramTypes[gs_tbg.AIDiplomaticDecisionType.PoliticalSupport.index] = gs_tbg.PoliticalSupport;
+            this.allNationalProgramTypes[gs_tbg.AIDiplomaticDecisionType.OppositionSupport.index] = gs_tbg.OppositionSupport;
+            
+            this.allNationalProgramDecisions = new Array();
+            this.allNationalProgramDecisions[gs_tbg.AIDiplomaticDecisionType.DeploymentSurveillance.index]  = gs_tbg.AIDiplomaticDecisionType.DeploymentSurveillance;
+            this.allNationalProgramDecisions[gs_tbg.AIDiplomaticDecisionType.StealResearch.index]           = gs_tbg.AIDiplomaticDecisionType.StealResearch;       
+            this.allNationalProgramDecisions[gs_tbg.AIDiplomaticDecisionType.SabotageRegion.index]          = gs_tbg.AIDiplomaticDecisionType.SabotageRegion;
+            this.allNationalProgramDecisions[gs_tbg.AIDiplomaticDecisionType.PoliticalSupport.index]        = gs_tbg.AIDiplomaticDecisionType.PoliticalSupport; 
+            this.allNationalProgramDecisions[gs_tbg.AIDiplomaticDecisionType.OppositionSupport.index]       = gs_tbg.AIDiplomaticDecisionType.OppositionSupport;
+        }
+    }
+
+    this.getDecisionFromNationalProgramType = function(otType)
+    {
+        this.buildNationalProgramTypes();
+        
+        for (var i in this.allNationalProgramTypes)
+        {
+            var type = this.allNationalProgramTypes[i];
+            if (otType.equals(type))
+            {
+                return this.allNationalProgramDecisions[i];
+            }
+        }
+        
+        log("ERROR(1) - unknown NationalProgram type " + otType);
+        return null;
+    }
+
+    this.considerNationalPrograms = function()
+    {    
+        var nationalProgramSet = self.objGameSysNationalPrograms.objNationalProgramSets.find({"refNation": this.nation});
+        var nationalPrograms = nationalProgramSet.objNationalPrograms;
+    
+        // see if we need internal support
+        var lookup = {"tmplIdeology": this.nation.tmplIdeology};
+        var rulingIdeology = this.nation.objIdeologies.find(lookup);
+        var rulingIdeologyStart = this.nation.tmplNation.resolve().objIdeologies.find(lookup);
+        if ((rulingIdeology != null) && (rulingIdeologyStart != null))
+        {
+            if (rulingIdeology.nLevel < rulingIdeologyStart.nLevel)
+            {
+                // see if we're already running one
+                var found = false;
+                for (var i in nationalPrograms)
+                {
+                    var nationalProgram = nationalPrograms[i];
+                    if (nationalProgram.instanceOf(gs_tbg.InternalSupport))
+                    {
+                        found = true;                        
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    //log("DEBUG: " + this.nation.strDisplayName + " starting internal support.");
+					this.avatar.sendAction(gs_tbg.GActStartInternalSupport.create({"refNation": this.nation}));
+                }
+            }
+        }
+        
+        this.buildNationalProgramTypes();
+        
+        var spent = this.diplomacyAI.getNationalProgramsTotalCost(this.avatar);
+        var money = this.nation.getMoney(this.avatar);
+        var budget = (money * this.diplomacyAI.nNationalProgramsBudgetPercent / 100);
+        if ((spent > 0) && (spent > budget))
+        {
+            if (this.pad.bWantDiplomacyAILog)
+            {
+                log("spent=" + spent + ", budget=" + budget);
+            }
+            
+            // cancel less valued programs
+            var budgetTarget = (budget * 90) / 100;
+            
+            var arrValue = new Array();
+            // sort our current programs by value and remove least valuable ones until we reach our budget target
+            
+            for (var i in nationalPrograms)
+            {
+                var nationalProgram = nationalPrograms[i];
+                var eDecision = null;
+                var otherNation = null;
+                var otherRegion = null;
+                if (nationalProgram.refTargetNation != undefined)
+                {
+                    otherNation = nationalProgram.refTargetNation.resolve(this.avatar);
+                }
+                else
+                {
+                    otherRegion = nationalProgram.refTargetRegion.resolve(this.avatar);
+                    if (otherRegion != null)
+                    {
+                        otherNation = otherRegion.refController.resolve(this.avatar);
+                    }
+                }
+                
+                var value = -1000;
+                if (otherNation == null)
+                {
+                    log("ERROR - no target nation for " + nationalProgram);
+                }
+                else
+                {
+                    eDecision = null;
+                    
+                    // we'll loop through these in case there are derived versions of the base types
+                    for (var t in this.allNationalProgramTypes)
+                    {
+                        var type = this.allNationalProgramTypes[t];
+                        if (nationalProgram.instanceOf(type)) 
+                        {
+                            eDecision = this.getDecisionFromNationalProgramType(type);
+                            break;
+                        }
+                    }
+                    if (eDecision != null)
+                    {
+                        // calculate value
+                        var considerObject = gs_tbg.AINationComparison.create({"objGameRoot":this.avatar, "objMyNation":this.nation, "objTheirNation":otherNation});
+                        value = considerObject.getChooseMinusVetoChance(eDecision);
+                    }
+                }
+                arrValue[i] = value;
+            } // for national programs
+            
+            this.diplomacyAI.cutNationalPrograms(this.avatar, arrValue, budgetTarget);
+            return;  // we just cut programs so we're not gonna start any new ones
+            
+        } // if we're over our budget
+    
+        var bestChance = 0;
+        var otBestType = null;
+        var bestTargetNation = null;
+                    
+        var nations = self.objGameSysNation.objNations;
+        var count = ( this.turn * self.nNationalProgramTurnCheckFrequency + this.pad.nSeed ) % self.nNationalProgramNationMod;
+        for (var i in nations)
+        {
+            var otherNation = nations[i];
+            if (otherNation == null)
+                continue;
+                
+            count++;
+            if ( (count % self.nNationalProgramNationMod) != 0)
+                continue;
+                
+            if (this.nation.equals(otherNation))
+                continue;
+                
+            var nationalProgramTypes = new Array();
+            this.diplomacyAI.getPotentialNationalPrograms(this.avatar, otherNation, nationalProgramTypes);
+            if (nationalProgramTypes.length == 0)
+                continue;
+                
+            if (this.pad.bWantDiplomacyAILog)             
+                log("DEBUG: " + this.nation.strName + " considering possible NationalPrograms vs " + otherNation.strName)
+                
+            var considerObject = gs_tbg.AINationComparison.create({"objGameRoot":this.avatar, "objMyNation":this.nation, "objTheirNation":otherNation});
+            var highestChance = 0;
+            var otHighest = null;
+            for (var j in nationalProgramTypes)
+            {
+                otType = nationalProgramTypes[j];
+                
+                var eDecision = this.getDecisionFromNationalProgramType(otType);
+                if (eDecision == null)
+                    continue;
+                    
+                var chance = considerObject.getChooseMinusVetoChance(eDecision);
+                
+                if (this.pad.bWantDiplomacyAILog)             
+                    log("DEBUG: chance for " + eDecision.name + " is " + chance);
+                
+                if (chance < highestChance)
+                    continue;
+                    
+                if (chance == highestChance)
+                {
+                    // roll to break tie
+                    var randomPercent = self.objParentAI.getRandomIntInRange(0,100);
+                    if (randomPercent > 50)
+                        continue;
+                }
+    
+                highestChance = chance;
+                otHighest = otType;
+            }
+
+            if (highestChance < bestChance)
+                continue;
+            
+            if (highestChance == bestChance)
+            {
+                // roll to break tie
+                var randomPercent = self.objParentAI.getRandomIntInRange(0,100);
+                if (randomPercent > 50)
+                    continue;
+            }            
+            
+            bestChance = highestChance;
+            otBestType = otHighest;
+            bestTargetNation = otherNation;
+        } // for nations
+        
+        if (bestTargetNation != null)
+        {
+            // roll to actually do it
+            var randomPercent = self.objParentAI.getRandomIntInRange(0,100);
+            if (randomPercent < bestChance)
+            {
+                if (this.pad.bWantDiplomacyAILog)
+                {
+                    log("DEBUG: " + this.nation.strName + " starting " + otBestType + " vs " + bestTargetNation.strName);
+                }
+                // start the program!
+                if (otBestType == gs_tbg.DeploymentSurveillance)
+                {
+                    this.avatar.sendAction(gs_tbg.GActStartDeploymentSurveillance.create({"refNation": this.nation, "refTargetNation": bestTargetNation }));
+                }
+                else if (otBestType == gs_tbg.StealResearch)
+                {
+                    this.avatar.sendAction(gs_tbg.GActStartStealResearch.create({"refNation": this.nation, "refTargetNation": bestTargetNation }));
+                }
+                else if (otBestType == gs_tbg.SabotageRegion)
+                {
+                    this.diplomacyAI.sabotageOneRegion(this.avatar,bestTargetNation); // picks a region and type of sabotage pertaining to same
+                }
+                else if (otBestType == gs_tbg.PoliticalSupport)
+                {
+                    this.avatar.sendAction(gs_tbg.GActStartPoliticalSupport.create({"refNation": this.nation, "refTargetNation": bestTargetNation }));
+                }
+                else if (otBestType == gs_tbg.OppositionSupport)
+                {
+                    var ideology = this.nation.tmplIdeology;
+                    this.avatar.sendAction(gs_tbg.GActStartOppositionSupport.create({"refNation": this.nation, "refTargetNation": bestTargetNation, "tmplIdeology":ideology }));
+                }
+                
+            } // if we passed the dice roll
+        } // if we found anything with a chance to act on
+    } // considerNationalPrograms
+    
+    this.update = function()
+    {
+        this.diplomacyAI.bWantLog = this.pad.bWantDiplomacyAILog;
+    
+        this.diplomacyAI.updateStrengthEstimates(this.avatar);       
+        this.getBasicAllianceData();
+
+        //log("DEBUG: " + this.nation.strName + " nEstimatedTotalOurStrength = " + this.diplomacyAI.nEstimatedTotalOurStrength );
+        //log("DEBUG: " + this.nation.strName + " nEstimatedTotalAllianceStrength = " + this.diplomacyAI.nEstimatedTotalAllianceStrength );
+        //log("DEBUG: " + this.nation.strName + " nEstimatedTotalEnemyStrength = " + this.diplomacyAI.nEstimatedTotalEnemyStrength );
+
+        var bCanMakeAlliances = this.nation.canFormAlliances();
+        var bCanDeclareWar = this.nation.canDeclareWar();
+        
+        if (bCanMakeAlliances)
+        {
+            if (this.numAllianceMembers > 1)
+            {
+                if (!this.bIsAllianceLeader)
+                {
+                    bCanMakeAlliances = false;
+                }
+            }
+        }
+        
+        var bWantAnyAlliance = ( (this.diplomacyAI.objStrongestEnemy != null) && (this.diplomacyAI.nEstimatedTotalAllianceStrength < this.diplomacyAI.nEstimatedTotalEnemyStrength) );
+        var bTryForIdeologicalAlliance = false;
+        if (!bWantAnyAlliance)
+        {
+            if (self.objGameSysNationRelations.atWar(this.nation))
+            {
+                var roll = self.objParentAI.getRandomFloat();
+                if (roll < 0.1) // try once every 10 weeks more or less
+                {
+                    bTryForIdeologicalAlliance = true;
+                    if (this.pad.bWantDiplomacyAILog)
+                        log("DEBUG: " + this.nation.strDisplayName + " looking for ideological alliance.");
+                }
+            }
+        }
+        else
+        {
+            if (this.pad.bWantDiplomacyAILog)
+                log("DEBUG: We are outmatched!");
+        }        
+        
+        // are we outmatched?       
+        if (bTryForIdeologicalAlliance || bWantAnyAlliance)
+        {
+
+            var bRequestedAlliance = false;
+            var enemies = new Array();
+
+            var allianceMembership = self.objGameSysNationRelations.objAllianceMemberships.find({"refNation": this.nation});
+            var currentAlliance = null;
+            if (allianceMembership != null)
+            {
+                currentAlliance = allianceMembership.refAlliance.resolve(this.avatar);
+                if (!this.nation.equals(currentAlliance.refLeadNation.resolve(this.avatar)))
+                    bCanMakeAlliances = false;
+            }
+            if ( bCanMakeAlliances )
+            {
+                if (this.pad.bWantDiplomacyAILog)
+                {
+                    if (currentAlliance == null)
+                        log("DEBUG: " + this.nation.strDisplayName + " not currently in any alliances.");
+                    else
+                        log("DEBUG: " + this.nation.strDisplayName + " currently leading an alliance.");
+                }
+                    
+                var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+                
+                // See if there's a nation we can ally with.
+                var bestPotentialAlly = null;
+                var bestPotentialAllyStrength = 0;
+                var nations = self.objGameSysNation.objNations;
+                for (var i in nations)
+                {
+                    var otherNation = nations[i];
+                    if ( this.nation.equals(otherNation) )
+                        continue;
+
+                    if (!otherNation.canFormAlliances())
+                        continue;
+                        
+                    if (bTryForIdeologicalAlliance)
+                    {
+                        // We want to ally with others of the same ideology because we're at war
+                        if (!this.nation.tmplIdeology.equals(otherNation.tmplIdeology))
+                        {
+                            if (this.pad.bWantDiplomacyAILog)
+                                log("DEBUG: " + otherNation.strDisplayName + " has a different ideology.");
+                            continue;
+                        }
+                            
+                        if (!self.objGameSysNationRelations.atWar(otherNation))
+                        {
+                            if (this.pad.bWantDiplomacyAILog)
+                                log("DEBUG: " + otherNation.strDisplayName + " is not at war.");
+                        
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        // We need an alliance because we're losing. Only ask adjacent nations.
+                        if (!militaryAI.isAdjacentNation(this.avatar,otherNation))
+                            continue;
+                    }
+
+                    // see if they're already in an alliance
+                    var alliance = null;
+                    var allianceMembership = self.objGameSysNationRelations.objAllianceMemberships.find({"refNation":otherNation});
+                    if (allianceMembership != null)
+                    {
+                        alliance = allianceMembership.refAlliance.resolve(this.avatar);
+                        if (!otherNation.equals(alliance.refLeadNation))
+                            continue;
+                    }
+                        
+                    var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation,false) != null);
+                    if (bAtWar)
+                    {
+                        if (this.pad.bWantDiplomacyAILog)
+                            log("DEBUG: At war with " + otherNation.strName);
+                        enemies.push(otherNation);
+                        continue;
+                    }
+                                            
+                    var tmplAIDiplo = this.getAIDiplomaticRelations(otherNation);
+                    if (tmplAIDiplo.bAllowAlliance == false)
+                    {
+                        if (this.pad.bWantDiplomacyAILog)
+                            log("DEBUG: not good enough relations to ally with " + otherNation.strName);
+                        continue;
+                    }
+
+                    if (self.objGameSysNationRelations.areAlliedWithEnemy(this.avatar,this.nation,otherNation,true) )
+                    {
+                        if (this.pad.bWantDiplomacyAILog)
+                            log("DEBUG: " + otherNation.strName + " is allied with our enemy.");
+
+                        continue;
+                    }
+                        
+                    var nLastAllianceAttemptTurn = this.diplomacyAI.getLastAllianceAttemptTurn(this.avatar,otherNation);
+                    if ( (nLastAllianceAttemptTurn >= 0) && (nLastAllianceAttemptTurn > this.turn - 12) )
+                    {
+                        if (this.pad.bWantDiplomacyAILog)
+                            log("DEBUG: already recently asked to ally with " + otherNation.strName);
+                        continue;
+                    }
+                    
+                    // see if there's any chance of alliance
+                    var theirConsiderObject = gs_tbg.AINationComparison.create({"objGameRoot":this.avatar, "objMyNation":otherNation, "objTheirNation":this.nation});
+                    var chance = theirConsiderObject.getAllyWithChanceIncludingVeto();
+                    if (chance < 1)
+                        continue;
+
+                    var otherInfo = self.objGameSysAIUtility.getAINationInformation(this.avatar,otherNation);
+                    var otherStrength = otherInfo.nEstimatedMilitaryPower;
+                                        
+                    if (alliance != null)
+                    {
+                        // add the strength of the other members of the alliance
+                        var members = new Array();
+                        self.objGameSysNationRelations.getAllianceMembers(this.avatar,alliance,members);
+                        for (var j in members)
+                        {
+                            var memberNation = members[j];
+                            if (memberNation.equals(otherNation))
+                                continue;
+                            var memberInfo = self.objGameSysAIUtility.getAINationInformation(this.avatar,memberNation);
+                            var memberStrength = memberInfo.nEstimatedMilitaryPower;
+                            otherStrength += memberStrength;
+                        }
+                    }
+                    
+                    var myInfo = self.objGameSysAIUtility.getAINationInformation(this.avatar,this.nation);
+                    if ( bWantAnyAlliance && (otherStrength < myInfo.nEstimatedMilitaryPower * 0.5) )
+                        continue; // Don't have a big nation ask a small nation or alliance for help
+                    
+                    if ((bestPotentialAlly == null) || (bestPotentialAllyStrength < otherStrength))
+                    {
+                        bestPotentialAlly = otherNation;
+                        bestPotentialAllyStrength = otherStrength;
+                    }
+                } // for nations
+                
+                if (bestPotentialAlly != null)
+                {
+                    var commonEnemy = this.diplomacyAI.objStrongestEnemy;
+                    if ( (commonEnemy != null) && bTryForIdeologicalAlliance )
+                    {
+                        if (self.objGameSysNationRelations.getWarEx(this.avatar,bestPotentialAlly,commonEnemy,true) == null)
+                        {
+                            commonEnemy = null;  // don't bring up our enemy unless it is also their enemy
+                        }
+                    }
+                    
+                    var eReason = gs_tbg.Reason.AtWar;                   
+                    var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+                        "objSendingNation": this.nation,
+                        "objReceivingNation": bestPotentialAlly,
+                        "objEnemyNation": commonEnemy
+                        });
+
+                    messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+                    var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"ProposeAlliance",messageCriteria);
+                
+                    if (this.pad.bWantDiplomacyAILog)
+                        log("DEBUG: " + this.nation.strName + " proposing alliance with " + bestPotentialAlly.strName + ": " + message);
+                    
+                    // record attempted alliance
+                    this.diplomacyAI.recordAttemptedAlliance(this.avatar,bestPotentialAlly);
+                    
+                    this.avatar.sendAction(gs_tbg.GActProposeAlliance.create({
+                        "refProposingNation" : this.nation,
+                        "refReceivingNation" : bestPotentialAlly,
+                        "bDemand": false,
+                        "refProposedCommonEnemyNation": commonEnemy,
+                        "strMessage" : message
+                        }) );
+
+                    bRequestedAlliance = true;
+                }
+            } // if we're not in an alliance               
+
+            if ( (!bRequestedAlliance) && bCanMakeAlliances )
+            {
+                // are we losing regions?
+                var regionsRecentlyTaken = 0;
+                var lastTurnData = this.pad.getLastTurnChangeData(false);
+                if (lastTurnData != null)
+                {
+                    for (var i in lastTurnData.objRegionLosses)
+                    {
+                        var regionLoss = lastTurnData.objRegionLosses[i];
+                        regionsRecentlyTaken++;
+                    }
+                }
+
+                if (regionsRecentlyTaken > 2)
+                {
+                    // try a peace treaty where we give up the regions we lost
+                    if (enemies.length > 0)
+                    {
+                        var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+                        var enemyToMakePeaceWith = null;
+                        var enemyRoll = self.objParentAI.getRandomFloat();
+                        var numPeaceNations = 0;
+            
+                        for (var i in enemies)
+                        {
+                            var enemyNation = enemies[i];
+                            var enemyAllianceMembership = self.objGameSysNationRelations.objAllianceMemberships.find({refNation: enemyNation});
+                            if (enemyAllianceMembership)
+                            {
+                                var enemyAlliance = enemyAllianceMembership.refAlliance.resolve(this.avatar);
+                                if (enemyAlliance) {
+                                    var enemyLeader = enemyAlliance.refLeadNation.resolve(this.avatar);
+                                    if (!enemyNation.equals(enemyLeader)) {
+                                        continue; // don't propose peace with non-leader
+                                    }
+                                }
+                            }
+                            
+                            var enemyDesignation = militaryAI.getEnemyDesignation(this.avatar,enemyNation);
+                            if ( (enemyDesignation != null) && (enemyDesignation.objReasonSources.size > 0) )
+                                continue;
+
+                            var nLastPeaceAttemptTurn = this.diplomacyAI.getLastPeaceAttemptTurn(this.avatar,enemyNation);
+                            if ( (nLastPeaceAttemptTurn >= 0) && (nLastPeaceAttemptTurn > this.turn - 12) )
+                                continue;
+
+                            if (enemyToMakePeaceWith != null)
+                            {
+                                numPeaceNations++;
+                                if (enemyRoll > 1/numPeaceNations) // random voodoo so we don't have to go thru the nations twice
+                                    continue;
+                            }
+
+                            enemyToMakePeaceWith = enemyNation;
+                        }
+
+                        if (enemyToMakePeaceWith != null)
+                        {
+                            var eReason = gs_tbg.Reason.NoReason;
+                            var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+                                "objSendingNation": this.nation,
+                                "objReceivingNation": enemyToMakePeaceWith
+                                });
+
+                            messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+                            var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"ProposePeace",messageCriteria);
+
+                            log("DEBUG: " + this.nation.strName + " proposing peace with " + enemyToMakePeaceWith.strName + ": " + message);
+                            
+                            // record attempt
+                            this.diplomacyAI.recordAttemptedPeace(this.avatar,enemyToMakePeaceWith);
+                            var action = gs_tbg.GActProposePeaceTreaty.create({
+                                "refProposingNation" : this.nation,
+                                "refReceivingNation" : enemyToMakePeaceWith,
+                                "bDemand": false,
+                                "strMessage" : message
+                                });
+
+                            // possible terms:
+                            // SURRENDER_OCCUPIED
+                            // JOIN_ALLIANCE,	
+                            // MILITARY_ACCESS,	
+                            // RETREAT_TO_CORE,	
+                            // ACCEPT_PUPPET,	
+                            // PORT_ACCESS,		
+                            // CHANGE_GOVERNMENT,
+                            // DROP_CLAIM,		
+                            
+                            // see if this nation is winning or losing
+                            var percentStrength = (1 + this.diplomacyAI.nEstimatedTotalAllianceStrength * 100 ) / (1 + this.diplomacyAI.nEstimatedTotalEnemyStrength);
+                            if (percentStrength < 50)
+                            {
+                                var term1 = gs_tbg.TreatyTerm.create({ "eType": gs_tbg.TreatyTermType.SURRENDER_OCCUPIED, "refNationAffected": this.nation });
+                                action.objTerms.add(term1);
+                                log("DEBUG: " + this.nation.strDisplayName + " is begging for peace with " + enemyToMakePeaceWith.strDisplayName );
+                            }
+                            else if (percentStrength > 150)
+                            {
+                                // this nation will keep what it currently has
+                                var term1 = gs_tbg.TreatyTerm.create({ "eType": gs_tbg.TreatyTermType.SURRENDER_OCCUPIED, "refNationAffected": enemyToMakePeaceWith });
+                                action.objTerms.add(term1);
+                                log("DEBUG: " + this.nation.strDisplayName + " is generously offering peace with " + enemyToMakePeaceWith.strDisplayName );
+                            }
+                            else
+                            {
+                                // both nations will keep what they currently have
+                                var term1 = gs_tbg.TreatyTerm.create({ "eType": gs_tbg.TreatyTermType.SURRENDER_OCCUPIED, "refNationAffected": this.nation });
+                                var term2 = gs_tbg.TreatyTerm.create({ "eType": gs_tbg.TreatyTermType.SURRENDER_OCCUPIED, "refNationAffected": enemyToMakePeaceWith });
+                                action.objTerms.add(term1);
+                                action.objTerms.add(term2);
+                            
+                                log("DEBUG: " + this.nation.strDisplayName + " is offering peace with " + enemyToMakePeaceWith.strDisplayName );
+                            }
+                            
+                            // self.objParentAI.considerErrorSave(this.avatar);
+
+                            this.avatar.sendAction(action);
+                        } // if we found someone to try and make peace with
+                    } // if we have enemies
+                } // if we've recently lost regions
+            } // if we didn't just request an alliance
+        } // if we're outmatched
+        
+        if (bCanMakeAlliances && bCanDeclareWar)
+        {
+            this.diplomacyAI.updateForceAllegiancePlans(this.avatar,self);
+        }
+        
+        if (self.nNationalProgramTurnCheckFrequency > 0)
+        {
+            if ( ( ( this.turn + this.pad.nSeed ) % self.nNationalProgramTurnCheckFrequency ) == 0 )
+            {
+                this.considerNationalPrograms();
+            }
+        }
+
+    } // update
+    
+    // terminology from winston: 'desiredNation' is a nation we want to conquer or force into an alliance
+    this.setDesiredNation = function(desiredNation,forceAllegiancePlan) 
+    {
+        if (this.pad.bWantDiplomacyAILog)
+            log("DEBUG: " + this.nation.strName + " setDesiredNation(" + desiredNation.strName + "," + forceAllegiancePlan.strName + ")" );
+        
+        var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+        var enemyDesignation = militaryAI.getEnemyDesignation(this.avatar,desiredNation);
+        if (enemyDesignation == null)
+        {
+            enemyDesignation = militaryAI.createEnemyDesignation(this.avatar,desiredNation);
+            enemyDesignation.eReasonForDesignation = gs_tbg.ReasonForDesignation.RFD_FORCE_ALLEGIANCE_PLAN;
+        }
+        enemyDesignation.objReasonSources.add(forceAllegiancePlan);
+
+        // increase priority if needed
+        // if (enemyDesignation.fPriority < forceAllegiancePlan.fPriority)
+        //		enemyDesignation.fPriority = forceAllegiancePlan.fPriority;
+        enemyDesignation.fPriority = 1.0;
+
+        // make sure our scope is broad enough
+        enemyDesignation.bLandMassScopeAll = true;
+        enemyDesignation.bRegionScopeAll = true;
+
+        var friendNation = null;
+        var otherEnemyNation = null;
+        if (forceAllegiancePlan.refReasonNation != null)
+            otherEnemyNation = forceAllegiancePlan.refReasonNation.resolve(this.avatar);
+            
+        log("DEBUG: " + this.nation.strName + " declaring war against " + desiredNation.strName + " because of " + forceAllegiancePlan + " " + forceAllegiancePlan.strName);
+
+        this.declareWarAgainst(desiredNation,gs_tbg.WarJustification.None,forceAllegiancePlan.eReason,friendNation,otherEnemyNation)
+    } // this.setDesiredNation
+
+
+    this.declareWarAgainst = function(targetNation,eJustification,eReason,friendNation,otherEnemyNation)
+    {
+        //var eTone = this.getDefaultTone(targetNation);
+        if (eJustification == null)
+        {
+            eJustification = gs_tbg.WarJustification.None;
+        }
+
+        if (eReason == null)
+        {
+            eReason = gs_tbg.Reason.NoReason;
+            // TODO - provide reason & justification from designation
+            // var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+            // var designation = militaryAI.getEnemyDesignation(this.avatar,targetNation);
+        }
+
+        var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+            "objSendingNation": this.nation,
+            "objReceivingNation": targetNation,
+            "objFriendNation": friendNation,
+            "objEnemyNation": otherEnemyNation,
+            });
+
+        messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+        
+        if (this.pad.bWantDiplomacyAILog)
+        {
+            log("DEBUG: eReason=" + eReason);
+            log("DEBUG: " + this.nation.strName + " criteria for declaring war against " + targetNation.strName);
+            if (friendNation != null)
+                log("DEBUG: friendNation = " + friendNation.strName);
+            
+            if (otherEnemyNation != null)
+                log("DEBUG: otherEnemyNation = " + otherEnemyNation.strName);
+                
+            log("DEBUG: eReason=" + eReason.name);
+            log("DEBUG: eJustification=" + eJustification.name);
+        
+            var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);       
+            var enemyDesignation = militaryAI.getEnemyDesignation(this.avatar,targetNation);
+            if (enemyDesignation != null)
+            {
+        	    log("DEBUG: eReasonForDesignation = " + enemyDesignation.eReasonForDesignation.name);
+                for (var i in enemyDesignation.objReasonSources)
+                {
+                    var source = enemyDesignation.objReasonSources[i];
+                    log("DEBUG: objReasonSources[" + i + "] = " + source);
+                }
+            }
+        }
+        
+        var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"DeclareWar",messageCriteria);
+
+        var action = gs_tbg.GActDeclareWar.create({
+            "refDeclaringNation": this.nation, 
+            "refTargetNation": targetNation,
+            "eJustification": eJustification,
+            "strMessage": message
+            });
+        this.avatar.sendAction(action);
+    }
+    
+    this.sendForceAllegianceTreaty = function(otherNation,forceAllegiancePlan)
+    {
+        var enemyNation = null;
+        if (forceAllegiancePlan.refReasonNation != null)
+            enemyNation = forceAllegiancePlan.refReasonNation.resolve(this.avatar);
+        
+        var eReason = forceAllegiancePlan.eReason;
+        var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+            "objSendingNation": this.nation,
+            "objReceivingNation": otherNation,
+            "objEnemyNation": enemyNation,
+            });
+
+        messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+        var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"ProposeAlliance",messageCriteria);
+    
+        if (this.pad.bWantDiplomacyAILog)
+        {
+            log("Sending alliance treaty to " + otherNation.strName);
+            log(message);
+        }
+        
+        this.avatar.sendAction(gs_tbg.GActProposeAlliance.create({
+            "refProposingNation" : this.nation,
+            "refReceivingNation" : otherNation,
+            "bDemand": true,
+            "strMessage" : message
+            }) );
+    } // this.sendForceAllegianceTreaty
+
+    this.requestMilitaryAccessToLiberateRegion = function(region)
+    {
+        var enemyNation =region.refController.resolve(this.avatar);
+        var otherNation = region.refOwner.resolve(this.avatar);
+        if (enemyNation.equals(otherNation))
+        {
+            logWarn("region " + region.strName + " for requestMilitaryAccessToLiberateRegion is not considered occupied.");
+            return;
+        }
+        
+        // puppets can do access treaties but canDoTreaties() returns false 
+        // if (!otherNation.canDoTreaties())
+        // {
+        //     // otherNation is a puppet. We need to speak to its controller nation instead.
+        //     otherNation = otherNation.getMasterNation(this.avatar);
+        // }
+
+        var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+            "objSendingNation": this.nation,
+            "objReceivingNation": otherNation,
+            "objEnemyNation": enemyNation,
+            "objRegion": region
+            });
+
+        var eReason = gs_tbg.Reason.LiberateRegion;      
+        messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+        var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"ProposeMilitaryAccess",messageCriteria);
+        
+        messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+        var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"ProposeMilitaryAccess",messageCriteria);
+        
+        if (this.pad.bWantDiplomacyAILog)
+        {
+            log("DEBUG: " + this.nation.strName + " sending access treaty to " + otherNation.strName);
+            log(message);
+        }
+        
+        this.avatar.sendAction(gs_tbg.GActProposeMilitaryAccessTreaty.create({
+            "refProposingNation" : this.nation,
+            "refReceivingNation" : otherNation,
+            "bDemand": false,
+            "refProposedCommonEnemyNation" : enemyNation,
+            "strMessage" : message
+            }) );
+    }
+
+    this.requestMilitaryAccess = function(desiredAccess)
+    {
+        var eReason = gs_tbg.Reason.NoReason;
+        var otherNation = desiredAccess.objNation;
+
+        var enemyNation = null;
+        if (desiredAccess.objTargetNations.length > 0)
+        {
+            var bestEnemyNation = null;
+            var bestRating = 1001;
+
+            // pick a nation the other nation is least friendly with 
+            for (var i in desiredAccess.objTargetNations)
+            {
+                var testNation = desiredAccess.objTargetNations[i];
+                if (otherNation.equals(testNation))
+                    continue;
+                    
+                var rating = this.getDiploLevel(otherNation,testNation);
+                if (bestEnemyNation != null)
+                {
+                    if (rating >= bestRating)
+                        continue;
+                }
+                
+                bestEnemyNation = testNation;
+                bestRating = rating;
+            }
+            enemyNation = bestEnemyNation;
+            if (enemyNation == null)
+            {
+                // can't ask
+                return;
+            }
+        }
+
+        // puppets can do access treaties but canDoTreaties() returns false         
+        // if (!otherNation.canDoTreaties())
+        // {
+        //     // otherNation is a puppet. We need to speak to its controller nation instead.
+        //     otherNation = otherNation.getMasterNation(this.avatar);
+        //}
+
+        var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+            "objSendingNation": this.nation,
+            "objReceivingNation": otherNation,
+            "objEnemyNation": enemyNation,
+            });
+
+        messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+        var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"ProposeMilitaryAccess",messageCriteria);
+
+        if (this.pad.bWantDiplomacyAILog)
+        {
+            log("DEBUG: " + this.nation.strName + " sending access treaty to " + otherNation.strName);
+            log(message);
+        }
+        
+        this.avatar.sendAction(gs_tbg.GActProposeMilitaryAccessTreaty.create({
+            "refProposingNation" : this.nation,
+            "refReceivingNation" : otherNation,
+            "bDemand": false,
+            "refProposedCommonEnemyNation" : enemyNation,
+            "strMessage" : message
+            }) );
+        
+    } // requestMilitaryAccess
+
+    // get diplomatic relations level , or a default value 
+    // if there are no offical relations between the specified nations.
+    this.getDiploLevel = function(nationA,nationB)
+    {
+        if (nationA.equals(nationB))
+            throw "nationA == nationB";
+
+        var diplo = self.objGameSysNationRelations.getDiplomaticRelations(nationA,nationB);
+        if (diplo != null)
+            return diplo.nDiplomaticRelations;
+
+        // use parent nation relations
+        var parentA = nationA.refController.resolve(this.avatar);
+        var parentB = nationB.refController.resolve(this.avatar);
+        if (parentA.equals(parentB))
+        {
+            log("DEBUG: returning max diplomatic relations for common controller nations" + nationA.strName + " and " + nationB.strName);
+            return 1000;
+        }
+
+        if ( !parentA.equals(nationA) || !parentB.equals(nationB) )
+        {
+            diplo = self.objGameSysNationRelations.getDiplomaticRelations(nationA,nationB);
+            if (diplo != null)
+                return diplo.nDiplomaticRelations;
+        }
+
+        log("DEBUG: no diplomatic relations found between " + nationA.strName + " and " + nationB.strName);
+        return 250; // use this if there are no official relations
+    }
+
+    this.getAIDiplomaticRelations = function(otherNation)
+    {
+        var nLevel = this.getDiploLevel(this.nation,otherNation);
+        var levels = self.objAIDiplomaticLevelsTemplate;
+        return levels.getTemplate(nLevel);
+    }
+    
+    // get the default tone to use when two nations converse
+    this.getDefaultTone = function(otherNation)
+    {
+        var tmplAIDiplo = this.getAIDiplomaticRelations(otherNation);
+        return tmplAIDiplo.eDefaultTone;
+    }
+
+    // see if we allow an unprovoked attack on another nation
+    this.getUnprovokedAttackWeight = function(otherNation)
+    {
+        bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation,true) != null);
+
+        var tmplAIDiplo = this.getAIDiplomaticRelations(otherNation);
+        if ( (tmplAIDiplo.bAllowUnprovokedAttack==false) && (bAtWar==false) )
+        {
+            return -1;
+        }
+
+        if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,otherNation,true))
+        {
+            // Could do loyalty check here
+            return -1;
+        }
+
+        var parentWeight;
+        if ( otherNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet) )
+        {
+            // check parent weight
+            var parentNation = otherNation.objStatus.refController.resolve(this.avatar);
+            parentWeight = this.getUnprovokedAttackWeight(parentNation);
+            if (parentWeight < 0)
+                return parentWeight;
+        }
+
+        var considerObject = gs_tbg.AINationComparison.create({"objGameRoot":this.avatar, "objMyNation":this.nation, "objTheirNation":otherNation});
+        var weightDifference = considerObject.getChanceOfUnprovokedAttack() - tmplAIDiplo.nUnprovokedAttackWeightNeeded;
+        if (bAtWar)
+        {
+            weightDifference += 50; // tweak point
+            if (weightDifference < 1)
+                weightDifference = 1;
+        }
+
+        var resultWeight = Math.floor(weightDifference);
+        if (parentWeight != undefined)
+        {
+            resultWeight = Math.min(parentWeight,resultWeight);
+        }
+        return resultWeight;
+    }
+
+    this.handle_DPNationDefeat = function(dpNationDefeat)
+    {
+        var otherNation = dpNationDefeat.objNation;
+        
+        log("DEBUG: " + this.nation.strName + " determining the fate of " + otherNation.strName);             
+        
+        var considerObject = gs_tbg.AINationComparison.create({"objGameRoot":this.avatar, "objMyNation":this.nation, "objTheirNation":otherNation});
+        var imperio = this.pad.objAIImperialismTemplate;
+        
+        var annexChance  = imperio.fAnnex    * 100 + considerObject.getChooseMinusVetoChance(gs_tbg.AIDiplomaticDecisionType.Annex);
+        var puppetChance = imperio.fPuppet   * 100 + considerObject.getChooseMinusVetoChance(gs_tbg.AIDiplomaticDecisionType.MakePuppet);
+        var colonyChance = imperio.fColonize * 100 + considerObject.getChooseMinusVetoChance(gs_tbg.AIDiplomaticDecisionType.MakeColony);
+        // Note: imperio.fLiberate not used for this DP
+        
+        var regionsToGain = new Array();
+        self.objGameSysNationRelations.getOccupiedRegions(this.avatar, this.nation, otherNation, regionsToGain);
+                
+        if (this.nation.tmplNation.equals(otherNation.tmplNation) )
+        {
+            if (self.objGameSysAIUtility.bAITestMode)
+            {
+                log("DEBUG: same nation template");
+            }
+            annexChance += 101; // always annex of nation with same nation template
+        }
+        else if (regionsToGain.length > 0)
+        {
+            var historicRegions = new Array();
+            var nonHistoricRegions = new Array();        
+            self.objGameSysNationRelations.separateRegionsOfHistoricInterest(this.avatar, this.nation, regionsToGain, historicRegions, nonHistoricRegions);
+            
+            var percentHistoric = Math.ceil( historicRegions.length * 100 / regionsToGain.length );
+        
+            // consider stability ramifications of non-historic regions
+            var annexRisk = self.objGameSysAIUtility.getAnnexRisk(this.avatar, this.nation, nonHistoricRegions);
+            
+            if (self.objGameSysAIUtility.bAITestMode)
+            {
+                log("DEBUG: historic regions=" + historicRegions.length + ", regionsToGain=" + regionsToGain.length );
+                log("DEBUG: percentHistoric=" + percentHistoric + ", annexRisk=" + annexRisk);
+            }
+            
+            annexChance += (percentHistoric - annexRisk);
+            puppetChance += annexRisk;
+            colonyChance += annexRisk;
+        }
+        
+        if (self.objGameSysAIUtility.bAITestMode)
+        {
+            log("DEBUG: annexChance=" + annexChance);
+            log("DEBUG: puppetChance=" + puppetChance);
+            log("DEBUG: colonyChance=" + colonyChance);
+        }
+
+        var dict = new Object();
+        dict[gs_tbg.NationDefeatChoice.CHOICE_ANNEX.index] = annexChance;
+        dict[gs_tbg.NationDefeatChoice.CHOICE_PUPPET.index] = puppetChance;
+        dict[gs_tbg.NationDefeatChoice.CHOICE_COLONY.index] = colonyChance;
+        
+        var chosenAnswer = null;
+        bestChance = 0;
+        for (var a in dpNationDefeat.objAnswers)
+        {
+            var answer = dpNationDefeat.objAnswers[a];
+            if (answer.instanceOf(gs_tbg.DPANationDefeat))
+            {
+                log("DEBUG: considering " + answer.strText);
+                var chance = dict[answer.eChoice.index];
+                log("chance for " + answer.eChoice.name + " is " + chance);
+                if (chance < bestChance)
+                    continue;
+                
+                if (chance == bestChance)
+                {
+                    // roll to break tie
+                    var randomPercent = self.objParentAI.getRandomIntInRange(0,100);
+                    if (randomPercent > 50)
+                        continue;
+                }
+                
+                chosenAnswer = answer;
+                bestChance = chance;
+            }
+            else
+            {
+                log("WARN(4): answer " + answer + " does not compute.");
+            }
+        }
+        
+        if (chosenAnswer == null)
+        {
+            log("WARN(4) - poor decision for " + dpNationDefeat);
+            chosenAnswer = dpNationDefeat.objAnswers.getArbitraryValue();
+        }
+
+        log("DEBUG: chosenAnswer=" + chosenAnswer.strText);
+        var action = gs_tbg.GActAnswerDecisionPoint.create({
+            "objDecisionPoint": dpNationDefeat,
+            "objAnswer": chosenAnswer });
+        this.avatar.sendAction(action);
+    } // handle_DPNationDefeat
+
+    this.handle_DPUnitOrder = function(dpUnitOrder)
+    {
+        var unitGroup = dpUnitOrder.refUnitGroup.resolve(this.avatar);
+
+        var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+
+        var chosenAnswer = null;
+        var bCancelOrder = false;
+        var bCanDeclareWar = this.nation.canDeclareWar();
+        if ( this.nation.objStatus.instanceOf(gs_tbg.NationStatusPuppet) )
+        {
+            // AI puppets don't declare war or make alliances
+            // despite what the gameplay rules are
+            bCanDeclareWar = false; 
+        }       
+
+        var otherNation = dpUnitOrder.refTargetNation.resolve(this.avatar);
+        if (this.nation.equals(otherNation))
+        {
+            bCancelOrder = false; // could be a disband order or similar
+        }
+        else if (otherNation != null)
+        {
+            var enemyDesignation = militaryAI.getEnemyDesignation(this.avatar,otherNation);
+            var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation,true) != null);
+            if (!bAtWar)
+            {
+                if ( (!bCanDeclareWar) || (enemyDesignation == null) )
+                {
+                    bCancelOrder = true;
+                    
+                    if (self.objParentAI.nTestAutoTurnStep > 0)
+                    {
+                        log("DEBUG: " + this.nation.strName + " cancelling DPUnitOrder because not at war with " + otherNation.strName);                
+                        log("DEBUG: unitGroup=" + unitGroup + ", strName=" + unitGroup.strName + ", refLocation=" + unitGroup.refLocation);
+                        for (var a in dpUnitOrder.objAnswers)
+                        {
+                            var answer = dpUnitOrder.objAnswers[a];
+                            log("DEBUG: answer[" + a + "]= " + answer);
+                            if ( answer.instanceOf(gs_tbg.DPAMoveOrder)  )
+                            {
+                                log("DEBUG: refRegion=" + answer.refRegion);
+                            }
+                        }
+                        var assignment = self.objGameSysAIUtility.objAIUnitGroupAssignments.find({"objUnitGroup":unitGroup});
+                        if (assignment != null)
+                        {
+                            log("DEBUG: assignment=" + assignment + ", objPlan=" + assignment.objPlan );
+                        }
+                        militaryAI.test(123,"DEBUG: order being cancelled by DP logic");
+                    }
+                }
+            }
+        }
+
+        for (var a in dpUnitOrder.objAnswers)
+        {
+            var answer = dpUnitOrder.objAnswers[a];
+            if ( answer.instanceOf(gs_tbg.DPADeclareWar) ||
+                 answer.instanceOf(gs_tbg.DPAMoveOrder)  )
+            {
+                if (!bCancelOrder)
+                    chosenAnswer = answer;
+            }
+            else if (answer.instanceOf(gs_tbg.DPADisbandGroup))
+            {
+                // The AI doesn't accidentally disband a unit group.
+                chosenAnswer = answer;
+            }
+            else
+            {
+                // we assume this is the 'cancel' option
+                if (bCancelOrder)
+                    chosenAnswer = answer;
+            }
+        }
+
+        if (chosenAnswer == null)
+        {
+            log("WARN(4) - poor decision for " + dpUnitOrder);
+            chosenAnswer = cancel;
+            dpUnitOrder.objAnswers.getArbitraryValue();
+        }
+
+        log("DEBUG: chosenAnswer=" + chosenAnswer.strText);
+        var action = gs_tbg.GActAnswerDecisionPoint.create({
+            "objDecisionPoint": dpUnitOrder,
+            "objAnswer": chosenAnswer });
+        this.avatar.sendAction(action);
+    } // handle_DPUnitOrder
+    
+    this.handle_DPRegionRevolt = function(dpRegionRevolt)    
+    {
+        var otherNation = dpRegionRevolt.refRegion.resolve(this.avatar).refController.resolve(this.avatar);
+        var region = dpRegionRevolt.refRegion.resolve(this.avatar);
+                
+        var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation,false) != null);
+        var eChoice = gs_tbg.RegionRevoltChoice.DECLINE;
+        if (bAtWar)
+        {
+            log("DEBUG: " + this.nation.strDisplayName + " willing to  accept region " + region.strName )
+            eChoice = gs_tbg.RegionRevoltChoice.ACCEPT;
+        }
+        
+        log("DEBUG: " + this.nation.strDisplayName + " looking to " + eChoice.name + " revolt of " + region.strName + " controlled by  " + otherNation.strDisplayName );      
+        
+        var chosenAnswer = dpRegionRevolt.objAnswers.getArbitraryValue(); // default, just in case
+        for (var a in dpRegionRevolt.objAnswers)
+        {
+            var answer = dpRegionRevolt.objAnswers[a];
+            if (answer.eChoice.equals(eChoice))
+            {
+                chosenAnswer = answer;
+                break;
+            }
+        }
+        
+        var action = gs_tbg.GActAnswerDecisionPoint.create({
+            "objDecisionPoint": dpRegionRevolt,
+            "objAnswer": chosenAnswer });
+        this.avatar.sendAction(action);
+    } // handle_DPRegionRevolt
+} // DiplomacyAITempData
+
+function update(avatar)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.update();
+}
+
+function considerTreaty(avatar,treaty)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.considerTreaty(treaty);
+}
+
+function triggerActionImposeEmbargo(avatar,enemyNation)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.triggerActionImposeEmbargo(enemyNation);
+}
+
+
+function setDesiredNation(avatar,forceAllegiancePlan,otherNation)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.setDesiredNation(otherNation,forceAllegiancePlan);
+}
+
+function sendForceAllegianceTreaty(avatar,forceAllegiancePlan,otherNation)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.sendForceAllegianceTreaty(otherNation,forceAllegiancePlan);
+}
+
+function declareWarAgainst(avatar,targetNation,eJustification,eReason,friendNation,otherEnemyNation)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.declareWarAgainst(targetNation,eJustification,eReason,friendNation,otherEnemyNation);
+}
+
+function requestMilitaryAccessToLiberateRegion(avatar,region)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.requestMilitaryAccessToLiberateRegion(region);
+}
+
+function requestMilitaryAccess(avatar,desiredAccess)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.requestMilitaryAccess(desiredAccess);
+}
+
+function preEndTurnUpdate(avatar)
+{
+    self.objParentAI.objTradeAI.update(avatar); // adjust our stockpile levels here instead of before productions are set
+}
+
+function getAIDiplomaticRelations(avatar,otherNation)
+{
+    var context = new DiplomacyAITempData(avatar);
+    return context.getAIDiplomaticRelations(otherNation);
+}
+
+function getDefaultTone(avatar,otherNation)
+{
+    var context = new DiplomacyAITempData(avatar);
+    return context.getDefaultTone(otherNation);
+}
+
+// return value indicating ratio of our strength vs strength of all declared enemies
+// 0 indicates we would surely lose 
+// 50 indicates equally matched
+// 100 indicates we would surely win
+function getOurStrengthVsEnemyStrengthRating(avatar,nation)
+{
+    var diplomacyAI = self.objGameSysAIUtility.getDiplomacyAI(avatar,nation);
+    
+    diplomacyAI.updateStrengthEstimates(avatar);
+
+    // handle special cases
+    if ( diplomacyAI.nEstimatedTotalEnemyStrength < 1)
+    {
+        if (diplomacyAI.nEstimatedTotalAllianceStrength < 1)
+        {
+            return 50;
+        }
+        else
+        {
+            return 100;
+        }
+    }
+    return (diplomacyAI.nEstimatedTotalAllianceStrength * 100) / ( diplomacyAI.nEstimatedTotalEnemyStrength + diplomacyAI.nEstimatedTotalAllianceStrength);
+}
+
+function getUnprovokedAttackWeight(avatar,otherNation)
+{
+   var context = new DiplomacyAITempData(avatar);
+   return context.getUnprovokedAttackWeight(otherNation);
+}
+
+function getStrongestEnemy(avatar,nation)
+{
+    strongestEnemy = null;
+    strongestEnemyStrength = 0;
+    var enemyNations = new Array();
+    self.objGameSysNationRelations.getEnemies(avatar,nation,enemyNations, true);
+    for (var enemyIndex in enemyNations)
+    {
+        var enemyNation = enemyNations[enemyIndex];
+        var enemyInfo = self.objGameSysAIUtility.getAINationInformation(avatar,enemyNation);
+        var enemyStrength = enemyInfo.nEstimatedMilitaryPower;
+        if ((strongestEnemy == null) || (strongestEnemyStrength < enemyStrength))
+        {
+            strongestEnemy = enemyNation;
+            strongestEnemyStrength = enemyStrength;
+        }
+    }
+    return strongestEnemy;
+}
+
+function handle_DPNationDefeat(avatar,dpNationDefeat)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.handle_DPNationDefeat(dpNationDefeat);
+}
+
+function handle_DPUnitOrder(avatar,dpUnitOrder)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.handle_DPUnitOrder(dpUnitOrder);
+}
+
+function handle_DPRegionRevolt(avatar,dpRegionRevolt)
+{
+    var context = new DiplomacyAITempData(avatar);
+    context.handle_DPRegionRevolt(dpRegionRevolt);
+}
+
+function getChanceIncludingVetoFromList(decisionWeights, eDecisionType)
+{   
+    var allyItem = decisionWeights.find({"eDecisionType": eDecisionType} );
+    if (allyItem != null)
+    {
+        var fTotalChance = 0;
+        var fTotalWeight = 0;
+        if (allyItem.nChooseChance >= 0)
+        {       
+            fTotalChance += allyItem.nChooseChance;
+            fTotalWeight += allyItem.nChooseWeight;
+        }
+        if (allyItem.nVetoChance >= 0)
+        {       
+            fTotalChance -= allyItem.nVetoChance;
+            fTotalWeight += allyItem.nVetoWeight;
+        }
+        var nChooseMinusVeto = 0;
+        if (fTotalWeight > 0)
+        {
+            nChooseMinusVeto = Math.floor(0.5 + fTotalChance / fTotalWeight);
+        }
+        return nChooseMinusVeto;			
+    }
+    return 0;
+}
+
+            
+        ]]></script>
+        
+    </objectDef>
+
+</locust>

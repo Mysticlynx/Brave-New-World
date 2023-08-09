@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <string id="SID.TGQ.Army.DisplayName.AfghanistanArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.AlbaniaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ArgentinaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.AustraliaArmy1" value="1st Military District"/>
+    <string id="SID.TGQ.Army.DisplayName.AustriaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.BelgiumArmy1" value="Army Area Brussels"/>
+    <string id="SID.TGQ.Army.DisplayName.BelgiumArmy2" value="Army Area Liege"/>
+    <string id="SID.TGQ.Army.DisplayName.BelgiumArmy3" value="1st Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.BoliviaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.BrazilArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.BrazilArmy2" value="2nd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.BulgariaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.CanadaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChileArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.TibetArmy2" value="16th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy3" value="3rd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy4" value="4th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy5" value="5th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy6" value="6th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy7" value="7th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy8" value="8th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy9" value="9th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy10" value="10th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy11" value="11th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy12" value="12th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy13" value="13th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy14" value="14th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ChinaArmy15" value="15th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ColombiaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.CubaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.CzechoslovakiaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.CzechoslovakiaArmy2" value="2nd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.CzechoslovakiaArmy3" value="3rd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.DenmarkArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.EcuadorArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.EgyptArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.EstoniaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.EthiopiaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FinlandArmy1" value="Helsinki Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FinlandArmy2" value="Isthmus Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FinlandArmy3" value="North Finland Grp"/>
+    <string id="SID.TGQ.Army.DisplayName.FinlandArmy4" value="Lapland Grp"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy2" value="2nd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy3" value="3rd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy4" value="4th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy5" value="French Foreign Legion"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy6" value="6th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy7" value="7th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy8" value="1st Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy9" value="2nd Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy10" value="3rd Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy11" value="4th Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy12" value="5th Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy13" value="6th Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.FranceArmy14" value="7th Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.GermanyArmy1" value="1st Corps"/>
+    <string id="SID.TGQ.Army.DisplayName.GermanyArmy2" value="2nd Corps"/>
+    <string id="SID.TGQ.Army.DisplayName.GermanyArmy3" value="3rd Corps"/>
+    <string id="SID.TGQ.Army.DisplayName.GermanyArmy4" value="4th Corps"/>
+    <string id="SID.TGQ.Army.DisplayName.GermanyArmy5" value="5th Corps"/>
+    <string id="SID.TGQ.Army.DisplayName.GermanyArmy6" value="6th Corps"/>
+    <string id="SID.TGQ.Army.DisplayName.GermanyArmy7" value="7th Corps"/>
+    <string id="SID.TGQ.Army.DisplayName.GreeceArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.GuatemalaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.HungaryArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.IraqArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.IrelandArmy1" value="Eastern Command"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy2" value="2nd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy3" value="3rd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy4" value="4th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy5" value="5th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy6" value="6th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy7" value="7th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy8" value="1st Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy9" value="2nd Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy10" value="3rd Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ItalyArmy11" value="3rd Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.JapanArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.JapanArmy2" value="4th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.JapanArmy3" value="6th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.JapanArmy4" value="5th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.JapanArmy5" value="3rd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.JapanArmy6" value="2nd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.JapanArmy7" value="7th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.JapanArmy8" value="7th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.LatviaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.LithuaniaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.MexicoArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.NepalArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.NetherlandsArmy1" value="Arnhem Army"/>
+    <string id="SID.TGQ.Army.DisplayName.NetherlandsArmy2" value="Amersfoort Army"/>
+    <string id="SID.TGQ.Army.DisplayName.NetherlandsArmy3" value="1st Colonial Army"/>
+    <string id="SID.TGQ.Army.DisplayName.NewZealandArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.NorwayArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ParaguayArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.ParaguayArmy2" value="2nd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.PersiaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.PeruArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.PolandArmy1" value="Brzesc Army"/>
+    <string id="SID.TGQ.Army.DisplayName.PolandArmy2" value="Krakow Army"/>
+    <string id="SID.TGQ.Army.DisplayName.PolandArmy3" value="Poznan Army"/>
+    <string id="SID.TGQ.Army.DisplayName.PolandArmy4" value="Warsaw Army"/>
+    <string id="SID.TGQ.Army.DisplayName.PortugalArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.QatarArmy1" value="Qatari 1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.RomaniaArmy1" value="1st Army "/>
+    <string id="SID.TGQ.Army.DisplayName.RomaniaArmy2" value="2nd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.RomaniaArmy3" value="3rd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.RomaniaArmy4" value="4th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.SaudiArabiaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.SaudiArabiaArmy2" value="2nd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.SiamArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.SpainArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.SpainArmy2" value="2nd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.SpainArmy3" value="3rd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.SpainArmy4" value="4th Army"/>
+    <string id="SID.TGQ.Army.DisplayName.SwedenArmy1" value="1st Army "/>
+    <string id="SID.TGQ.Army.DisplayName.SwitzerlandArmy1" value="1st Army "/>
+    <string id="SID.TGQ.Army.DisplayName.TurkeyArmy1" value="Istanbul Army"/>
+    <string id="SID.TGQ.Army.DisplayName.TurkeyArmy2" value="Balikesir Army"/>
+    <string id="SID.TGQ.Army.DisplayName.TurkeyArmy3" value="Erzurum Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy1" value="1st Indian Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy2" value="2nd Indian Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy3" value="3rd Indian Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy4" value="4th Indian Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy5" value="5th Indian Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy6" value="6th Indian Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy7" value="7th Indian Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy8" value="8th Indian Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy9" value="China Command"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy10" value="Eastern Command"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy11" value="Egypt Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy12" value="London District"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy13" value="Malta Garrison"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy14" value="Northern Command"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy15" value="Scottish Command"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy16" value="Southern Command"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy17" value="Western Command"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy18" value="Gibraltar Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy19" value="Cyprus Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy20" value="Palestine Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy21" value="Gambia Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy22" value="Sierra Leone Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy23" value="Gold Coast Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy24" value="Nigeria Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy25" value="1st African Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy26" value="2nd African Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy27" value="3rd African Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy28" value="4th African Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy29" value="5th African Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy30" value="6th African Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy31" value="Sudan Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy32" value="Somaliland Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy33" value="Saudi Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy34" value="Iraq Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy35" value="Mauritius Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy36" value="Burma Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy37" value="Malaya Command"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy38" value="Sarawak Command"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy39" value="Papua Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedKingdomArmy40" value="Solomons Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedStatesArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedStatesArmy2" value="2nd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedStatesArmy3" value="3rd Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedStatesArmy4" value="Canal Zone Force"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedStatesArmy5" value="1st Philippine Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UnitedStatesArmy6" value="2nd Philippine Army"/>
+    <string id="SID.TGQ.Army.DisplayName.UruguayArmy1" value="1st Uruguayan Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy1" value="Kazakhstan Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy2" value="Siberian Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy3" value="Irkutsk Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy4" value="Leningrad Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy5" value="North Caucasus Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy6" value="Amur Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy7" value="Chukota Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy8" value="Caucasus Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy9" value="Chukota Militia"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy10" value="Fareastern Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy11" value="Middle Asia Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy12" value="Samara Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy13" value="Middle Asia Militia"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy14" value="Podelia Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy15" value="Polatsk Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy16" value="Rostov Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy17" value="Moscow Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy18" value="Ukraine Army"/>
+    <string id="SID.TGQ.Army.DisplayName.USSRArmy19" value="Volga Army"/>
+    <string id="SID.TGQ.Army.DisplayName.YemenArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.VenezuelaArmy1" value="1st Army"/>
+    <string id="SID.TGQ.Army.DisplayName.YugoslaviaArmy1" value="1st Territorial Area"/>
+    <string id="SID.TGQ.Army.DisplayName.YugoslaviaArmy2" value="2nd Territorial Area"/>
+
+    <string id="SID.TGQ.Air.DisplayName.BelgiumAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.BoliviaAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.ParaguayAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.ChileAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.ChinaAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.CzechoslovakiaAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.CzechoslovakiaAir2" value="2nd Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.CzechoslovakiaAir3" value="3rd Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.DenmarkAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.EstoniaAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.FranceAir1" value="1st African Group"/>
+    <string id="SID.TGQ.Air.DisplayName.FranceAir2" value="21st Fighter Group"/>
+    <string id="SID.TGQ.Air.DisplayName.FranceAir3" value="22nd Fighter Group"/>
+    <string id="SID.TGQ.Air.DisplayName.FranceAir4" value="24th Fighter Group"/>
+    <string id="SID.TGQ.Air.DisplayName.FranceAir5" value="25th Fighter Group"/>
+    <string id="SID.TGQ.Air.DisplayName.FranceAir6" value="Bearn Carrier Wing"/>
+    <string id="SID.TGQ.Air.DisplayName.GreeceAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.ItalyAir1" value="1st Air Command"/>
+    <string id="SID.TGQ.Air.DisplayName.ItalyAir2" value="Eagle Wing"/>
+    <string id="SID.TGQ.Air.DisplayName.JapanAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.JapanAir2" value="2nd Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.JapanAir3" value="3rd Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.JapanAir4" value="Hosho Air Group"/>
+    <string id="SID.TGQ.Air.DisplayName.JapanAir5" value="Kaga Air Group"/>
+    <string id="SID.TGQ.Air.DisplayName.JapanAir6" value="4th Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.JapanAir7" value="5th Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.LatviaAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.LithuaniaAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.NetherlandsAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.NetherlandsAir2" value="2nd Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.NorwayAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.PersiaAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.PolandAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.PortugalAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.RomaniaAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.RomaniaAir2" value="2nd Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.RomaniaAir3" value="3rd Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.RomaniaAir4" value="4th Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.SiamAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.SpainAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.SpainAir2" value="2nd Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.SwedenAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.SwitzerlandAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.TurkeyAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.TurkeyAir2" value="2nd Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedKingdomAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedKingdomAir2" value="1st Indian Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedKingdomAir3" value="11th Fighter Group"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedKingdomAir4" value="13th Fighter Group"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedKingdomAir5" value="1st Carrier Air"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedKingdomAir6" value="2nd Carrier Air"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedKingdomAir7" value="3rd Carrier Air"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedKingdomAir8" value="4th Carrier Air"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedKingdomAir9" value="Iraqi Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedStatesAir1" value="1st Army Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedStatesAir2" value="2nd Army Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedStatesAir3" value="3rd Army Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedStatesAir4" value="4th Army Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedStatesAir5" value="Philippine Air Wing"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedStatesAir6" value="Lexington Air Wing"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedStatesAir7" value="Langley Air Wing"/>
+    <string id="SID.TGQ.Air.DisplayName.UnitedStatesAir8" value="Saratoga Air Wing"/>
+    <string id="SID.TGQ.Air.DisplayName.USSRAir1" value="1st Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.USSRAir2" value="Far East Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.USSRAir3" value="Leningrad Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.USSRAir4" value="Moscow Air Force"/>
+    <string id="SID.TGQ.Air.DisplayName.YugoslaviaAir1" value="1st Air Group"/>
+    <string id="SID.TGQ.Air.DisplayName.YugoslaviaAir2" value="2nd Air Group"/>
+
+    <string id="SID.TGQ.Fleet.DisplayName.ArgentinaFleet1" value="Argentine Navy"/>
+    <string id="SID.TGQ.Fleet.DisplayName.ArgentinaFleet2" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.AustraliaFleet1" value="Royal Australian Navy"/>
+    <string id="SID.TGQ.Fleet.DisplayName.BrazilFleet1" value="Brazilian Navy"/>
+    <string id="SID.TGQ.Fleet.DisplayName.BrazilFleet2" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.CanadaFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.ChileFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.ChileFleet2" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.ChinaFleet1" value="ROC Central Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.ColombiaFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.CubaFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.DenmarkFleet1" value="Danish Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.DenmarkFleet2" value="Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.EcuadorFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.EstoniaFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.FinlandFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.FinlandFleet2" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.FranceFleet1" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.FranceFleet2" value="North Atlantic Group"/>
+    <string id="SID.TGQ.Fleet.DisplayName.FranceFleet3" value="Morocco Group"/>
+    <string id="SID.TGQ.Fleet.DisplayName.FranceFleet4" value="Mediterranean Group"/>
+    <string id="SID.TGQ.Fleet.DisplayName.FranceFleet5" value="Far East Group"/>
+    <string id="SID.TGQ.Fleet.DisplayName.GermanyFleet1" value="High Seas Group"/>
+    <string id="SID.TGQ.Fleet.DisplayName.GermanyFleet2" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.GreeceFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.GreeceFleet2" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.ItalyFleet1" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.ItalyFleet2" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet2" value="1st Submarine Squadron"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet3" value="2nd Carrier Group"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet4" value="2nd Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet5" value="2nd Submarine Squadron"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet6" value="3rd Fleet 'China'"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet8" value="1st Reserve Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet9" value="2nd Reserve Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet10" value="Yokosuka Security Squadron"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet11" value="Yokosuka Submarine Squadron"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet12" value="Kure Security Squadron"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet13" value="Kure Submarine Squadron"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet14" value="Sasebo Security Squadron"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet15" value="Sasebo Submarine Squadron"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet16" value="1st Transport Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.JapanFleet17" value="2nd Transport Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.NetherlandsFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.NetherlandsFleet2" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.NewZealandFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.NorwayFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.NorwayFleet2" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.PeruFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.PolandFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.PortugalFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.RomaniaFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.SiamFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.SpainFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.SpainFleet2" value="2nd Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.SpainFleet3" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.SpainFleet4" value="2ndSubmarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.SwedenFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.SwedenFleet2" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.TurkeyFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.TurkeyFleet2" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedKingdomFleet1" value="North Sea Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedKingdomFleet2" value="African Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedKingdomFleet3" value="China Station"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedKingdomFleet4" value="Mediterranean Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedKingdomFleet5" value="Home Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedKingdomFleet6" value="West Indies Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedKingdomFleet7" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedKingdomFleet8" value="5th Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedStatesFleet1" value="1st Atlantic"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedStatesFleet3" value="Battle Division 3"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedStatesFleet9" value="2nd Pacific"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedStatesFleet10" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedStatesFleet12" value="3rd Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.UnitedStatesFleet15" value="6th Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.USSRFleet1" value="Baltic Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.USSRFleet2" value="Black Sea Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.USSRFleet4" value="Pacific Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.USSRFleet5" value="1st Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.USSRFleet6" value="2ndSubmarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.USSRFleet7" value="3rd Submarine Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.VenezuelaFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.YugoslaviaFleet1" value="1st Fleet"/>
+    <string id="SID.TGQ.Fleet.DisplayName.YugoslaviaFleet2" value="1st Submarine Fleet"/>
+
+
+
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip5" value="ARA La Argentina"/>
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip6" value="ARA Bernardino Rivadavia"/>
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip7" value="ARA Mariano Moreno"/>
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip8" value="ARA Pueyrredon"/>
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip9" value="ARA Belgrano"/>
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip10" value="ARA Veinticinco de Mayo"/>
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip11" value="ARA Almirante Brown"/>
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip12" value="ARA Libertad"/>
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip13" value="ARA Independencia"/>
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip14" value="ARA Moreno"/>
+    <string id="SID.TGQ.Ship.DisplayName.ArgentinaShip15" value="ARA Rivadavia"/>
+    <string id="SID.TGQ.Ship.DisplayName.AustraliaShip2" value="HMAS Sydney"/>
+    <string id="SID.TGQ.Ship.DisplayName.AustraliaShip3" value="HMAS Perth"/>
+    <string id="SID.TGQ.Ship.DisplayName.AustraliaShip4" value="HMAS Hobart"/>
+    <string id="SID.TGQ.Ship.DisplayName.AustraliaShip5" value="HMAS Adelaide"/>
+    <string id="SID.TGQ.Ship.DisplayName.AustraliaShip6" value="HMAS Australia"/>
+    <string id="SID.TGQ.Ship.DisplayName.AustraliaShip7" value="HMAS Canberra"/>
+    <string id="SID.TGQ.Ship.DisplayName.BrazilShip2" value="Rio Grande do Sul"/>
+    <string id="SID.TGQ.Ship.DisplayName.BrazilShip3" value="Bahia"/>
+    <string id="SID.TGQ.Ship.DisplayName.BrazilShip4" value="Minas Gerais"/>
+    <string id="SID.TGQ.Ship.DisplayName.BrazilShip5" value="Sao Paulo"/>
+    <string id="SID.TGQ.Ship.DisplayName.ChileShip2" value="Chacabuco"/>
+    <string id="SID.TGQ.Ship.DisplayName.ChileShip3" value="Almirante Latorre"/>
+    <string id="SID.TGQ.Ship.DisplayName.ChinaShip4" value="Ying Swei"/>
+    <string id="SID.TGQ.Ship.DisplayName.ChinaShip5" value="Chao Ho"/>
+    <string id="SID.TGQ.Ship.DisplayName.ChinaShip6" value="Yat Sen"/>
+    <string id="SID.TGQ.Ship.DisplayName.ChinaShip7" value="Ning Hai"/>
+    <string id="SID.TGQ.Ship.DisplayName.ChinaShip8" value="Ping Hai"/>
+    <string id="SID.TGQ.Ship.DisplayName.DenmarkShip1" value="Peder Skram"/>
+    <string id="SID.TGQ.Ship.DisplayName.DenmarkShip2" value="Niels Iuel"/>
+    <string id="SID.TGQ.Ship.DisplayName.FinlandShip1" value="Ilmarinen"/>
+    <string id="SID.TGQ.Ship.DisplayName.FinlandShip2" value="Vainamoinen"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip7" value="Thionville"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip8" value="Metz"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip9" value="Strasbourg"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip10" value="Mulhouse"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip11" value="Duguay Trouin"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip12" value="Jeanne d'Arc"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip13" value="Jean Bart"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip15" value="La Galissonniere"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip16" value="Tourville"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip17" value="Suffren"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip18" value="Duquesne"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip20" value="Pluton"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip21" value="Colbert"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip22" value="Foch"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip23" value="Paris"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip24" value="Voltaire"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip25" value="Courbet"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip26" value="Bretagne"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip27" value="Lorraine"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip28" value="Provence"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip29" value="Bearn"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip31" value="Lamotte-Piquet"/>
+    <string id="SID.TGQ.Ship.DisplayName.FranceShip32" value="Primauguet"/>
+    <string id="SID.TGQ.Ship.DisplayName.GermanyShip3" value="Leipzig"/>
+    <string id="SID.TGQ.Ship.DisplayName.GermanyShip4" value="Konigsberg"/>
+    <string id="SID.TGQ.Ship.DisplayName.GermanyShip5" value="Koln"/>
+    <string id="SID.TGQ.Ship.DisplayName.GermanyShip6" value="Karlsruhe"/>
+    <string id="SID.TGQ.Ship.DisplayName.GermanyShip7" value="Emden"/>
+    <string id="SID.TGQ.Ship.DisplayName.GermanyShip8" value="Arcona"/>
+    <string id="SID.TGQ.Ship.DisplayName.GermanyShip9" value="Deutschland"/>
+    <string id="SID.TGQ.Ship.DisplayName.GermanyShip10" value="Schleswig-Holstein"/>
+    <string id="SID.TGQ.Ship.DisplayName.GermanyShip11" value="Schlesien"/>
+    <string id="SID.TGQ.Ship.DisplayName.GreeceShip3" value="Georgios Averof"/>
+    <string id="SID.TGQ.Ship.DisplayName.GreeceShip4" value="Elli"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip7" value="Taranto"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip8" value="Bande Nere"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip9" value="Bartolomeo Colleoni"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip10" value="Bari"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip11" value="Brindisi"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip12" value="Venezia"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip13" value="Ancona"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip14" value="Albeto di Giussano"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip15" value="Alberico da Barbiano"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip16" value="Zara"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip17" value="Trieste"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip18" value="Trento"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip19" value="San Giorgio"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip20" value="Pola"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip21" value="Gorizia"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip22" value="Fiume"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip23" value="Giulio Cesare"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip24" value="Duilio"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip25" value="Conte di Cavour"/>
+    <string id="SID.TGQ.Ship.DisplayName.ItalyShip26" value="Andrea Doria"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip3" value="Tatsuta"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip4" value="Oi"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip5" value="Tama"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip6" value="Kuma"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip7" value="Hyuga"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip8" value="Mutsu"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip9" value="Nagato"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip12" value="Hosho"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip15" value="Yura"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip16" value="Aoba"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip17" value="Toriumi"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip18" value="Takao"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip19" value="Atago"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip20" value="Maya"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip21" value="Kinugasa"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip22" value="Furutaka"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip27" value="Tokiwa"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip28" value="Tsushima"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip29" value="Tenryu"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip30" value="Hirado"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip31" value="Kuma"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip32" value="Yakumo"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip33" value="Naka"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip34" value="Ise"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip36" value="Furutaka"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip38" value="Kitakami"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip39" value="Hiei"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip40" value="Yamashiro"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip44" value="Abukuma"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip45" value="Natori"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip46" value="Kiso"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip47" value="Nachi"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip48" value="Myoko"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip49" value="Kako"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip52" value="Nagara"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip53" value="Yubari"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip54" value="Tatsuta"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip55" value="Haguro"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip56" value="Ashigara"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip57" value="Kaga"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip60" value="Oi"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip61" value="Tama"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip62" value="Yura"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip63" value="Jintsu"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip66" value="Kitakami"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip67" value="Isuzu"/>
+    <string id="SID.TGQ.Ship.DisplayName.JapanShip68" value="Kinu"/>
+    <string id="SID.TGQ.Ship.DisplayName.NetherlandsShip3" value="Java"/>
+    <string id="SID.TGQ.Ship.DisplayName.NetherlandsShip4" value="Gelderland"/>
+    <string id="SID.TGQ.Ship.DisplayName.NetherlandsShip5" value="De Ruyter"/>
+    <string id="SID.TGQ.Ship.DisplayName.NewZealandShip2" value="Achilles"/>
+    <string id="SID.TGQ.Ship.DisplayName.PortugalShip2" value="Carvalho Araujo"/>
+    <string id="SID.TGQ.Ship.DisplayName.PortugalShip3" value="Republica II"/>
+    <string id="SID.TGQ.Ship.DisplayName.SwedenShip4" value="HMS Clas Fleming"/>
+    <string id="SID.TGQ.Ship.DisplayName.SwedenShip5" value="HMS Fylgia"/>
+    <string id="SID.TGQ.Ship.DisplayName.SwedenShip6" value="HMS Gotland"/>
+    <string id="SID.TGQ.Ship.DisplayName.TurkeyShip3" value="Peyk"/>
+    <string id="SID.TGQ.Ship.DisplayName.TurkeyShip4" value="Berk"/>
+    <string id="SID.TGQ.Ship.DisplayName.TurkeyShip5" value="Mecidiye"/>
+    <string id="SID.TGQ.Ship.DisplayName.TurkeyShip6" value="Hamidiye"/>
+    <string id="SID.TGQ.Ship.DisplayName.TurkeyShip7" value="Yavuz"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip1" value="HMS Furious"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip2" value="HMS Valiant"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip3" value="HMS Nelson"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip4" value="HMS Calypso"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip5" value="HMS Delhi"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip6" value="HMS Dunedin"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip8" value="HMS Dorsetshire"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip9" value="HMS Danae"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip10" value="HMS Emerald"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip11" value="HMS Enterprise"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip14" value="HMS Norfolk"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip15" value="HMS Berwick"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip16" value="HMS Cumberland"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip17" value="HMS Effingham"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip18" value="HMS Kent"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip19" value="HMS Suffolk"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip20" value="HMS Hawkins"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip21" value="HMS Capetown"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip22" value="HMS Cardiff"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip23" value="HMS Diomede"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip26" value="HMS Glorious"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip27" value="HMS Eagle"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip28" value="HMS Queen Elizabeth"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip29" value="HMS Malaya"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip30" value="HMS Revenge"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip31" value="HMS Warspite"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip32" value="HMS Repulse"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip33" value="HMS Hood"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip34" value="HMS Shropshire"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip35" value="HMS Sussex"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip36" value="HMS York"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip37" value="HMS Afridi"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip38" value="HMS Calcutta"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip39" value="HMS Ceres"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip40" value="HMS Devonshire"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip41" value="HMS Durban"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip42" value="HMS Exeter"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip47" value="HMS Vindictive"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip48" value="HMS Ramillies"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip49" value="HMS Resolution"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip50" value="HMS Rodney"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip51" value="HMS Royal Oak"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip52" value="HMS Royal Sovereign"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip53" value="HMS Renown"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip54" value="HMS London"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip55" value="HMS Frobisher"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip56" value="HMS Cairo"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip57" value="HMS Caledon"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip58" value="HMS Carlisle"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip59" value="HMS Colombo"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip60" value="HMS Coventry"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip61" value="HMS Curacoa"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip62" value="HMS Curlew"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip67" value="HMS Caradoc"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip68" value="HMS Dauntless"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedKingdomShip69" value="HMS Despatch"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip3" value="USS Lexington"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip4" value="USS Langley"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip5" value="USS Arizona"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip6" value="USS Maryland"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip7" value="USS New York"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip8" value="USS West Virginia"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip9" value="USS Tuscaloosa"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip10" value="USS Pensacola"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip11" value="USS Chester"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip12" value="USS Louisville"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip13" value="USS Chicago"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip14" value="USS Houston"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip16" value="USS New Orleans"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip17" value="USS Astoria"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip18" value="USS Minneapolis"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip22" value="USS Saratoga"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip23" value="USS California"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip24" value="USS Misssissippi"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip25" value="USS Nevada"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip26" value="USS New Mexico"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip27" value="USS Oklahoma"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip28" value="USS Pennsylvania"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip29" value="USS Tennessee"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip30" value="USS Texas"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip31" value="USS Utah"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip32" value="USS Northampton"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip33" value="USS Omaha"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip34" value="USS Milwaukee"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip35" value="USS Cincinnati"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip36" value="USS Raleigh"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip37" value="USS Detroit"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip38" value="USS Richmond"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip39" value="USS Concord"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip40" value="USS Trenton"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip41" value="USS Marblehead"/>
+    <string id="SID.TGQ.Ship.DisplayName.UnitedStatesShip42" value="USS Memphis"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip2" value="Kirov"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip3" value="Voroshilov"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip4" value="Aurora"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip5" value="Krasnyi Krym"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip6" value="Oktyabrskaya Revolutsiya"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip7" value="Marat"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip9" value="Adm. Greig"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip10" value="Adm. Spiridov"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip11" value="Profintern"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip12" value="Chervona Ukraina"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip13" value="Krasnyi Kavkaz"/>
+    <string id="SID.TGQ.Ship.DisplayName.USSRShip14" value="Parizhskaya Komuna"/>
+    <string id="SID.TGQ.Ship.DisplayName.YugoslaviaShip2" value="Dubrovnik"/>
+
+    <string id="SID.TGQ.Season.DisplayName.Blizzards" value="Blizzards"/>
+
+</locust>

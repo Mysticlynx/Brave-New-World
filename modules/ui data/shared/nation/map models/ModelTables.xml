@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<object type="mapui.ResourceCapacityModelTable" name="MapModelResourceCapacityTableDefault">
+		<object type="mapui.ResourceCapacityModelTableEntry" name="objEntries" >
+            <property name="tmplResource" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResourceTemplate,'Coal')"/>
+            <property name="tmplRawMapModel" value="MapModelRaw_Coal" />
+            <property name="tmplL1MapModel" value="MapModelCoal_Pit" />
+            <property name="tmplL2MapModel" value="MapModelCoal_Mine" />
+            <property name="tmplL3MapModel" value="MapModelDeep_Coal_Mine" />
+		</object>
+		<object type="mapui.ResourceCapacityModelTableEntry" name="objEntries" >
+			<property name="tmplResource" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResourceTemplate,'Oil')"/>
+            <property name="tmplRawMapModel" value="MapModelRaw_Oil" />
+            <property name="tmplL1MapModel" value="MapModelOil_Well" />
+            <property name="tmplL2MapModel" value="MapModelDeep_Oil_Well" />
+            <property name="tmplL3MapModel" value="MapModelOil_Refinery" />
+		</object>
+		<object type="mapui.ResourceCapacityModelTableEntry" name="objEntries" >
+			<property name="tmplResource" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.ResourceTemplate,'Metals')"/>
+            <property name="tmplRawMapModel" value="MapModelRaw_Metals" />
+            <property name="tmplL1MapModel" value="MapModelMetals_Pit" />
+            <property name="tmplL2MapModel" value="MapModelMetals_Mine" />
+            <property name="tmplL3MapModel" value="MapModelDeep_Metals_Mine" />
+		</object>
+    </object>
+    
+	<object type="mapui.RegionImprovementModelTable" name="MapModelRegionImprovementTableDefault">
+		<object type="mapui.RegionImprovementModelTableEntry" name="objDefaultEntry" >
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'AntiAirBatteries')"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplGroundMapModel" value="MapModelAntiAirBatteriesGround"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'EarlyWarningRadar')"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplRadarMapModel" value="MapModelEarlyWarningRadar"/>
+			<property name="tmplGroundMapModel" value="MapModelRegionDefenseGround"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'GroundControlledInterception')"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplRadarMapModel" value="MapModelGroundControlledInterception"/>
+			<property name="tmplGroundMapModel" value="MapModelRegionDefenseGround"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'FlakTowers')"/>
+			<property name="tmplAAMapModel" value="MapModelFlakTowers"/>
+			<property name="tmplRadarMapModel" value="MapModelGroundControlledInterception"/>
+			<property name="tmplGroundMapModel" value="MapModelRegionDefenseGround"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'Earthworks')"/>
+			<property name="tmplFortMapModel" value="MapModelEarthworks"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'ConcreteFortifications')"/>
+			<property name="tmplFortMapModel" value="MapModelConcreteFortifications"/>
+			<property name="tmplGroundMapModel" value="MapModelEarthworks"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'FortifiedDefenseLine')"/>
+			<property name="tmplFortMapModel" value="MapModelFortifiedDefenseLine"/>
+			<property name="tmplGroundMapModel" value="MapModelEarthworks"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'Earthworks')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'AntiAirBatteries')"/>
+			<property name="tmplFortMapModel" value="MapModelEarthworks"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'ConcreteFortifications')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'AntiAirBatteries')"/>
+			<property name="tmplFortMapModel" value="MapModelConcreteFortifications"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplGroundMapModel" value="MapModelEarthworks"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'FortifiedDefenseLine')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'AntiAirBatteries')"/>
+			<property name="tmplFortMapModel" value="MapModelFortifiedDefenseLine"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplGroundMapModel" value="MapModelEarthworks"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'Earthworks')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'EarlyWarningRadar')"/>
+			<property name="tmplFortMapModel" value="MapModelEarthworks"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplRadarMapModel" value="MapModelEarlyWarningRadar"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'ConcreteFortifications')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'EarlyWarningRadar')"/>
+			<property name="tmplFortMapModel" value="MapModelConcreteFortifications"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplRadarMapModel" value="MapModelEarlyWarningRadar"/>
+			<property name="tmplGroundMapModel" value="MapModelEarthworks"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'FortifiedDefenseLine')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'EarlyWarningRadar')"/>
+			<property name="tmplFortMapModel" value="MapModelFortifiedDefenseLine"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplRadarMapModel" value="MapModelEarlyWarningRadar"/>
+			<property name="tmplGroundMapModel" value="MapModelEarthworks"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'Earthworks')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'GroundControlledInterception')"/>
+			<property name="tmplFortMapModel" value="MapModelEarthworks"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplRadarMapModel" value="MapModelGroundControlledInterception"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'ConcreteFortifications')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'GroundControlledInterception')"/>
+			<property name="tmplFortMapModel" value="MapModelConcreteFortifications"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplRadarMapModel" value="MapModelGroundControlledInterception"/>
+			<property name="tmplGroundMapModel" value="MapModelEarthworks"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'FortifiedDefenseLine')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'GroundControlledInterception')"/>
+			<property name="tmplFortMapModel" value="MapModelFortifiedDefenseLine"/>
+			<property name="tmplAAMapModel" value="MapModelAntiAirBatteries"/>
+			<property name="tmplRadarMapModel" value="MapModelGroundControlledInterception"/>
+			<property name="tmplGroundMapModel" value="MapModelEarthworks"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'Earthworks')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'FlakTowers')"/>
+			<property name="tmplFortMapModel" value="MapModelEarthworks"/>
+			<property name="tmplAAMapModel" value="MapModelFlakTowers"/>
+			<property name="tmplRadarMapModel" value="MapModelGroundControlledInterception"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'ConcreteFortifications')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'FlakTowers')"/>
+			<property name="tmplFortMapModel" value="MapModelConcreteFortifications"/>
+			<property name="tmplAAMapModel" value="MapModelFlakTowers"/>
+			<property name="tmplRadarMapModel" value="MapModelGroundControlledInterception"/>
+			<property name="tmplGroundMapModel" value="MapModelEarthworks"/>
+		</object>
+		<object type="mapui.RegionImprovementModelTableEntry" name="objEntries" >
+			<property name="tmplFortification" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.FortificationImprovementTemplate,'FortifiedDefenseLine')"/>
+			<property name="tmplAADefense" from="self.parent.objMapData.objModuleSD.getTemplate(gs_tbg.AADefenseImprovementTemplate,'FlakTowers')"/>
+			<property name="tmplFortMapModel" value="MapModelFortifiedDefenseLine"/>
+			<property name="tmplAAMapModel" value="MapModelFlakTowers"/>
+			<property name="tmplRadarMapModel" value="MapModelGroundControlledInterception"/>
+			<property name="tmplGroundMapModel" value="MapModelEarthworks"/>
+		</object>
+    </object>
+</locust>

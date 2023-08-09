@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<!-- Ocean -->
+	<objectDef type="UI3DLayerOcean" superType="mlui.UI3DLayer">
+		<propertyDef name="objMap" type="gs_tbg.GameSysMap"/>
+		<propertyDef name="objFlatMapSampler" type="mlmedia.Sampler"/>
+		<propertyDef name="bShowFlatMapLayer" type="bool" default="false"/>
+		<property name="bShowFlatMapLayer" from="self.objMap.tmplBlendTexture1.resolve() != null AND self.objMap.tmplBlendTexture2.resolve() != null"/>
+		
+        <property name="tmplAvailableEffects" value="OceanEffect"/>        
+		
+        <propertyDef name="fMapWidth" type="float">
+            if(self.objMap.bWrapX, (self.objMap.vecMax.x - self.objMap.vecMin.x )*2, self.objMap.vecMax.x - self.objMap.vecMin.x)
+        </propertyDef>
+       <propertyDef name="fMapHeight" type="float">
+            self.objMap.vecMax.y - self.objMap.vecMin.y
+        </propertyDef>
+		<propertyDef name="vecPlanePos" type="Vec3D">
+            ?{min:
+                Vec3D(-min.x - self.fMapWidth * 0.5, min.y + self.fMapHeight * 0.5, -self.objMap.fSeaLevel)
+            }(self.objMap.vecMin)
+		</propertyDef>
+
+		<object type="ml3dworld.TransformList" name="objTransform">
+			<object type="ml3dworld.TransformRotate" name="objTransforms">
+				<property name="fAngle" value="180.0"/>
+				<property name="vecAxis" value="[0, 1, 0]"/>
+			</object>
+			<object type="ml3dworld.TransformTranslate" name="objTransforms">
+				<property name="vecTranslation" from="def.vecPlanePos"/>
+			</object>
+		</object>
+		
+		<!--<object type="mlui.UIDataRenderState" name="objOceanZBias">
+		    <property name="fDepthBias" value="0.005"/>
+		</object> -->
+		
+		<object type="mlui.UIDataFXParamSet" name="objParamSet">
+			<object type="ml3dworld.FXParamSampler" name="objParams">
+				<property name="strName" value="regionAndBorderOverlay"/>
+				<property name="objSampler" from="def.objFlatMapSampler"/>
+			</object>
+			<object type="ml3dworld.FXParamFloat" name="objParams">
+				<property name="strName" value="fOffScreenCamLeft"/>
+				<property name="fValue" from="def.objFlatMapSampler.objRoot.fCamLeft"/>
+			</object>
+			<object type="ml3dworld.FXParamFloat" name="objParams">
+				<property name="strName" value="fOffScreenCamRight"/>
+				<property name="fValue" from="def.objFlatMapSampler.objRoot.fCamRight"/>
+			</object>
+			<object type="ml3dworld.FXParamFloat" name="objParams">
+				<property name="strName" value="fOffScreenCamTop"/>
+				<property name="fValue" from="def.objFlatMapSampler.objRoot.fCamTop"/>
+			</object>
+			<object type="ml3dworld.FXParamFloat" name="objParams">
+				<property name="strName" value="fOffScreenCamBottom"/>
+				<property name="fValue" from="def.objFlatMapSampler.objRoot.fCamBottom"/>
+			</object>
+			<!--<object type="ml3dworld.FXParamFloat" name="objParams">
+				<property name="strName" value="fSeaLevel"/>
+				<property name="fValue" from="def.objMap.fSeaLevel"/>
+			</object>-->
+		</object>
+		
+		<object type="mlui.UIDataEffect" name="objEffect" existsWhile="self.bShowFlatMapLayer">
+			<property name="tmplEffect" value="OceanEffect"/>
+		</object>
+
+        <!-- material to use if no shader -->
+		<object type="mlui.UIDataMaterial" name="objMaterial">
+			<object type="mlmedia.Material" name="objMaterial">
+				<property name="colEmission" value="#2a4c7eFF"/>
+				<property name="fTransparency" value="0.918"/>
+			</object>
+		</object>
+		
+		<object type="mlui.UIDataGeometry" name="objGeometry">
+			<object type="ml3dworld.GeomTessellatedPlane" name="objGeometry">
+				<property name="fExtentX" from="def.fMapWidth"/>
+				<property name="fExtentY" from="def.fMapHeight"/>
+				<property name="nNumRows" value="1"/>
+				<property name="nNumCols" value="1"/>
+			</object>
+		</object>
+	</objectDef>
+    
+</locust>

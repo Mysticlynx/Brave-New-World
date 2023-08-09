@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DSelectionPanelEngagement" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<propertyDef name="objMH2Data" type="MH2Data"/>		
+		
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="351"/>
+		<property name="nHeight" from="if(mh2data.bEngagementPanelMin, 208, 518)"/>
+		<property name="haXAlign" value="LEFT"/>
+		<property name="vaYAlign" value="BOTTOM"/>
+
+	<!-- Header and Background -->
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" from="if(mh2data.bEngagementPanelMin, 157, 467)"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconGroupArmy"/>
+			<property name="nX" value="0"/>
+			<property name="nY" from="if(mh2data.bEngagementPanelMin, 157, 467)"/>
+			<property name="nWidth" value="92"/>
+			<property name="nHeight" value="51"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-99"/>
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="22"/>
+			<property name="nY" from="if(mh2data.bEngagementPanelMin, 156, 466)"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-98"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" from="if(mh2data.bEngagementPanelMin, 157, 467)"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelMinBackground">
+			<property name="tmplImage" value="skin.ImgDetailPanel"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" from="if(mh2data.bEngagementPanelMin, 119, 429)"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelMinBackgroundTop">
+			<property name="tmplImage" value="skin.ImgPanelTopBG"/>
+			<property name="nX" value="3"/>
+			<property name="nY" from="if(mh2data.bEngagementPanelMin, 124, 433)"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="32"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBottomBG">
+			<property name="tmplImage" value="skin.ImgOlive"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+	<!-- Content -->
+		<object type="UI2DEngagementPanel" name="objEngagementPanel">
+			<property name="objMH2Data" from="mh2data"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="53"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" from="if(mh2data.bEngagementPanelMin, 126, 462)"/>
+			<property name="haXAlign" value="LEFT"/>
+		</object>
+
+	<!-- Foreground -->
+		<object type="mlui.UI2DImage" name="objPanelBorder">
+			<property name="tmplImage" value="skin.ImgPanelBorderSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" from="if(mh2data.bEngagementPanelMin, 158, 468)"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="177"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="81"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DGroupButton" name="objButtons">
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="strToolTip" from="locale.SID.UI.Units"/>
+			<property name="nDepth" value="1000"/>
+			<property name="tmplButtonStyle">
+					if(
+						mh2data.bEngagementPanelMin == true,
+						'skin.BtnStyleGroupButtonOpen',
+						'skin.BtnStyleGroupButtonClose'
+					)
+			</property>
+			<property name="nOrder" value="0" />
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.toggleEngagementPanel();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DEngagementPanel" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+
+		<object type="LookupEngagementData" name="objLookupEngagementData">
+			<property name="objMH2Data" from="mh2data"/>
+			<property name="objEngagement" from="mh2data.objMapData.objSelectedObject"/>
+		</object>
+
+		<propertyDef name="bSeaBattle" type="bool" >
+			self.objLookupEngagementData.objRegion.tmplTerrain.resolve().bWater
+		</propertyDef>
+		<object type="mlui.UI2DImage" name="objCombatIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconCombat"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="27"/>
+			<property name="nDepth" value="100"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="strText" from="def.objLookupEngagementData.objRegion.strDisplayName"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objLocation">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" from="def.objLookupEngagementData.objRegion.tmplTerrain.resolve().strDisplayName"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<!--<object type="UI2DSeasonIcon" name="objSeasonIcon" >-->
+		<!--	<property name="nX" value="285"/>-->
+		<!--	<property name="nY" value="1"/>-->
+		<!--	<property name="nWidth" value="28"/>-->
+		<!--	<property name="nHeight" value="28"/>-->
+		<!--	<property name="objRegion" from="def.objLookupEngagementData.objRegion" />-->
+		<!--</object>-->
+		
+		<object type="mlui.UI2DImage" name="objIDIconTerrainBG">
+			<property name="tmplImage" value="skin.ImgIDIconBlank"/>
+			<property name="nX" value="315"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="UI2DTerrainIcon" name="objIDIconTerrain">
+			<property name="objRegion" from="def.objLookupEngagementData.objRegion"/>
+			<property name="nX" value="318"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="22"/>
+		</object>		
+		
+	<!-- Details Background Section -->
+    <object type="mlui.UI2DImage" name="objDetailsBG1">
+      <property name="tmplImage" value="skin.ImgReportBubbleBrownTan"/>
+      <property name="nX" value="2"/>
+      <property name="nY" value="35"/>
+      <property name="nWidth" value="341"/>
+      <property name="nHeight" value="89"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objDetailsBG2">
+      <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+      <property name="nX" value="5"/>
+      <property name="nY" value="38"/>
+      <property name="nWidth" value="335"/>
+      <property name="nHeight" value="83"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objDetailsBGGradient">
+      <property name="tmplImage" value="skin.ImgGradientGraySm"/>
+      <property name="nX" value="6"/>
+      <property name="nY" value="39"/>
+      <property name="nWidth" value="333"/>
+      <property name="nHeight" value="37"/>
+    </object>
+
+    <propertyDef name="nPlaceHolder" type="int" default="9999"/>
+		
+	<!-- Attacker -->
+		<object type="mlui.UI2DText" name="objAttackerLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Attacker"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="70"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="14"/>
+		</object>	
+	
+		<object type="UI2DNationFlag46x24" name="objNationalFlagAttacker">
+			<property name="objNation" from="def.objLookupEngagementData.objAttacker"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="42"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objCombatPointsIcon">
+			<property name="tmplImage">
+				if(def.bSeaBattle, 
+					'skin.ImgUnitIconNavalAttack',
+					'skin.ImgInfoIconOffenseSm'					
+				)
+			</property>	
+			<property name="nX" value="58"/>
+			<property name="nY" value="42"/>
+			<property name="nWidth" value="29"/>
+			<property name="nHeight" value="19"/>
+			<property name="strToolTip" from="locale.SID.UI.AttackPower"/>
+		</object>
+		<object type="mlui.UI2DText" name="objAttackerCombatPointsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" >			
+				(if(def.bSeaBattle, 
+					sum(map(?{group: group.nSeaSurfacePower}, def.objLookupEngagementData.objAttackerGroups)),
+					sum(map(?{group: group.nLandAttackPower}, def.objLookupEngagementData.objAttackerGroups))					
+				)/10)			
+			</property>
+			<property name="nX" value="56"/>
+			<property name="nY" value="67"/>
+			<property name="nWidth" value="29"/>
+			<property name="nHeight" value="19"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objAttackerHitPointsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconHealthSm"/>
+			<property name="nX" value="89"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.HitPoints"/>
+		</object>
+		<object type="mlui.UI2DText" name="objAttackerHitPointsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" >
+				sum(map(?{group: group.nHitPoints}, def.objLookupEngagementData.objAttackerGroups))
+			</property>
+			<property name="nX" value="86"/>
+			<property name="nY" value="67"/>
+			<property name="nWidth" value="29"/>
+			<property name="nHeight" value="19"/>
+		</object>
+		
+		<!-- Battle -->
+		
+		<object type="UI2DEngagementBar" name="ovjUI2DEngagementBar" >
+			<property name="objEngagement" from="mh2data.objMapData.objSelectedObject"/>
+			<property name="nX" value="123"/>
+			<property name="nY" value="48"/>
+			<property name="nWidth" value="110"/>
+			<property name="nHeight" from="20"/>
+		</object>
+		
+	<!-- Defender -->
+		<object type="mlui.UI2DText" name="objDefenderLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Defender"/>
+			<property name="nX" value="290"/>
+			<property name="nY" value="70"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="14"/>
+		</object>	
+	
+		<object type="UI2DNationFlag46x24" name="objNationalFlagDefender">
+			<property name="objNation" from="def.objLookupEngagementData.objDefender"/>
+			<property name="nX" value="291"/>
+			<property name="nY" value="42"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>		
+		</object>	
+		
+		<object type="mlui.UI2DImage" name="objDefenseIcon">
+			<property name="tmplImage">
+				if(def.bSeaBattle, 
+					'skin.ImgUnitIconNavalAttack',
+					'skin.ImgInfoIconOffenseSm'					
+				)
+			</property>
+			<property name="nX" value="228"/>
+			<property name="nY" value="42"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.DefensePower"/>
+		</object>
+		<object type="mlui.UI2DText" name="objDefenderCombatPointsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" >
+				(if(def.bSeaBattle, 
+					sum(map(?{group: group.nSeaSurfacePower}, def.objLookupEngagementData.objDefenderGroups)),
+					sum(map(?{group: group.nLandDefensePower}, def.objLookupEngagementData.objDefenderGroups))					
+				)/10)				
+			</property>
+			<property name="nX" value="226"/>
+			<property name="nY" value="67"/>
+			<property name="nWidth" value="29"/>
+			<property name="nHeight" value="19"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objDefenderHitPoints">
+			<property name="tmplImage" value="skin.ImgInfoIconHealthSm"/>
+			<property name="nX" value="258"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.HitPoints"/>
+		</object>
+		<object type="mlui.UI2DText" name="objDefenderHitPointsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" >
+				sum(map(?{group: group.nHitPoints}, def.objLookupEngagementData.objDefenderGroups))
+			</property>
+			<property name="nX" value="255"/>
+			<property name="nY" value="67"/>
+			<property name="nWidth" value="29"/>
+			<property name="nHeight" value="19"/>
+		</object>
+		
+		<object type="UI2DEngagementSumPanelLand" name="objAttackerInfoLand" existsWhile="!def.bSeaBattle">
+			<property name="nX" value="8"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="163"/>
+			<property name="nHeight" value="38"/>
+			<property name="nInfantryUnits" >
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Infantry).length + 
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.MobileInfantry).length
+			</property>
+			<property name="nGroundUnits" >
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Armored).length
+			</property>
+			<property name="nArtilleryUnits" >
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Artillery).length + 
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.MissileLaunchers).length
+			</property>
+			<property name="nAirUnits" >
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Fighters).length+
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Bombers).length+
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.AirRecon).length+
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.AirTransport).length
+			</property>
+		</object>
+
+		<object type="UI2DEngagementSumPanelLand" name="objDefenderInfoLand" existsWhile="!def.bSeaBattle"> 
+			<property name="nX" value="173"/>
+			<property name="nY" from="def.objAttackerInfoLand.nY"/>
+			<property name="nWidth" from="def.objAttackerInfoLand.nWidth"/>
+			<property name="nHeight" from="def.objAttackerInfoLand.nHeight"/>
+			<property name="nInfantryUnits" >
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Infantry).length +
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.MobileInfantry).length
+			</property>
+			<property name="nGroundUnits" >
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Armored).length
+			</property>
+			<property name="nArtilleryUnits" >
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Artillery).length +
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.MissileLaunchers).length
+			</property>
+			<property name="nAirUnits" >
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Fighters).length +
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Bombers).length +
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.AirRecon).length +
+				def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.AirTransport).length
+			</property>
+		</object>		
+				
+		<object type="UI2DEngagementSumPanelSea" name="objAttackerInfoSea" existsWhile="def.bSeaBattle">
+			<property name="nX" value="8"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="163"/>
+			<property name="nHeight" value="38"/>
+			<property name="nCarrierUnits" >
+				sum( map(?{carrier: carrier.getTransportCapacityUsed(mh2data.objAvatar)  }, def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Carriers)))
+			</property>
+			<property name="nCarrierUnitsMax" >
+				sum (map(?{carrier: carrier.getTransportCapacity(mh2data.objAvatar) }, def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Carriers)))
+			</property>
+			<property name="nTransportUnits" >
+				sum( map(?{transport: transport.getTransportCapacityUsed(mh2data.objAvatar)}, def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Transport)))
+			</property>
+			<property name="nTransportUnitsMax" >
+				sum( map(?{transport: transport.getTransportCapacity(mh2data.objAvatar) }, def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Transport)))
+			</property>
+			<property name="nBattleshipUnits" >
+				(def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Battleships)).length
+			</property>
+			<property name="nPatrolEscortUnits" >
+				(def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Patrols)).length 
+			</property>
+			<property name="nSubmarineUnits" >
+				(def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objAttackerGroups, gs_tbg.UnitCategory.Submarines)).length
+			</property>
+		</object>
+		<object type="UI2DEngagementSumPanelSea" name="objDefenderInfoSea" existsWhile="def.bSeaBattle">
+			<property name="nX" value="173"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="164"/>
+			<property name="nHeight" value="38"/>
+			<property name="nCarrierUnits" >
+				sum( map(?{carrier: carrier.getTransportCapacityUsed(mh2data.objAvatar)  }, def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Carriers)))
+			</property>
+			<property name="nCarrierUnitsMax" >
+				sum (map(?{carrier: carrier.getTransportCapacity(mh2data.objAvatar) }, def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Carriers)))
+			</property>
+			<property name="nTransportUnits" >
+				sum( map(?{transport: transport.getTransportCapacityUsed(mh2data.objAvatar)}, def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Transport)))
+			</property>
+			<property name="nTransportUnitsMax" >
+				sum( map(?{transport: transport.getTransportCapacity(mh2data.objAvatar) }, def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Transport)))
+			</property>
+			<property name="nBattleshipUnits" >
+				(def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Battleships)).length
+			</property>
+			<property name="nPatrolEscortUnits" >
+				(def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Patrols)).length 
+			</property>
+			<property name="nSubmarineUnits" >
+				(def.getUnitsByUnitCategory(def.objMH2Data.objAvatar, def.objLookupEngagementData.objDefenderGroups, gs_tbg.UnitCategory.Submarines)).length
+			</property>
+		</object>
+
+		
+	<script type="application/x-locust-query">		
+		getUnitsByUnitCategory = ?{gameroot, unitsList, unitsCategory:
+			filter(?{unit: unitsList.contains(unit.refUnitGroup) }, gs_tbg.getUnitsByUnitCategory(gameroot, unitsCategory))			
+		}
+			
+	</script>
+		
+	<!-- Group List -->
+		<object type="mlui.UI2DImage" name="objPanelSliderBG" existsWhile="!self.objMH2Data.bEngagementPanelMin">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="333"/>
+			<property name="nY" value="131"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="302"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+	
+		<object type="mlui.UI2DScrollPane" name="objScrollpane" existsWhile="!self.objMH2Data.bEngagementPanelMin">
+			<property name="nX" value="3"/>
+			<property name="nY" value="132"/>
+			<property name="nWidth" value="341"/>
+			<property name="nHeight" value="301"/>
+			<property name="nDepth" value="100"/>
+
+			<object type="mlui.SliderInfo" name="objHorizInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="337"/>
+
+				<property name="nButtonLength" value="11"/>
+				<property name="nMinKnobLength" value="16"/>
+				<property name="nMaxKnobLength" value="16"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="mlui.SliderInfo" name="objVertInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="301"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="39"/>
+				<property name="nMaxKnobLength" value="39"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="UI2DEngagementGroups" name="objScrollable">
+				<property name="objMH2Data" from="mh2data"/>
+				<property name="objLookupEngagementData" from="def.objLookupEngagementData"/>
+			</object>
+		</object>		
+	</objectDef>
+	
+	<!-- Units In Group -->
+	<objectDef type="UI2DEngagementGroups" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objLookupEngagementData" type="LookupEngagementData"/>
+
+        <property name="nWidth" value="328"/>
+        <property name="nHeight" from="self.objUnitBubbles.nHeight"/>
+        
+		<object type="common_ui.UI2DList" name="objUnitBubbles">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="3"/>
+
+			<object type="UI2DGroupBubble" name="objElements" tiedTo="def.objLookupEngagementData.objGroups">
+				<property name="objGroup" from="tiedTo"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="328"/>
+        <property name="nHeight" value="88"/>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DEngagementSumPanelLand" superType="mlui.UI2DElement" >
+	
+	<!-- Inputs -->
+		<propertyDef name="nInfantryUnits" type="int" default="0" />
+		<propertyDef name="nGroundUnits" type="int" default="0" />
+		<propertyDef name="nArtilleryUnits" type="int" default="0" />
+		<propertyDef name="nAirUnits" type="int" default="0" />
+		<!--<propertyDef name="nNavalUnits" type="int" default="0" />		-->	
+		
+		<!-- Background -->
+		<object type="mlui.UI2DImage" name="objDetailsAttacker">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>	
+		
+		<!-- Items -->
+		<object type="mlui.UI2DImage" name="objInfantryUnits" >
+			<property name="tmplImage" value="skin.ImgIDIconDivisions"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="strToolTip" from="locale.SID.UI.Infantry"/>
+		</object>		
+		<object type="mlui.UI2DText" name="objInfantryUnitsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+			<property name="strText" from="def.nInfantryUnits"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objGroundUnits">
+			<property name="tmplImage" value="skin.ImgIDIconArmored"/>
+			<property name="nX" value="38"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="strToolTip" from="locale.SID.UI.Armored"/>
+		</object>
+		<object type="mlui.UI2DText" name="objGroundUnitsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+			<property name="strText" from="def.nGroundUnits"/>
+			<property name="nX" value="39"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objArmoredUnits">
+			<property name="tmplImage" value="skin.ImgIDIconArtillery"/>
+			<property name="nX" value="68"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="strToolTip" from="locale.SID.UI.Artillery"/>
+		</object>
+		<object type="mlui.UI2DText" name="objArmoredUnitsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+			<property name="strText" from="def.nArtilleryUnits"/>
+			<property name="nX" value="68"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objAirUnits">
+			<property name="tmplImage" value="skin.ImgIDIconAirUnits"/>
+			<property name="nX" value="99"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="strToolTip" from="locale.SID.UI.AirforceSquadrons"/>
+		</object>
+		<object type="mlui.UI2DText" name="objAirUnitsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+			<property name="strText" from="def.nAirUnits"/>
+			<property name="nX" value="100"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>		
+	
+	</objectDef>
+	
+	<objectDef type="UI2DEngagementSumPanelSea" superType="mlui.UI2DElement" >
+	
+	<!-- Inputs -->
+		<propertyDef name="nCarrierUnits" type="int" default="0" />
+		<propertyDef name="nCarrierUnitsMax" type="int" default="0"/>
+		<propertyDef name="nTransportUnits" type="int" default="0" />
+		<propertyDef name="nTransportUnitsMax" type="int" default="0"/>
+		<propertyDef name="nBattleshipUnits" type="int" default="0" />
+		<propertyDef name="nPatrolEscortUnits" type="int" default="0" />
+		<propertyDef name="nSubmarineUnits" type="int" default="0" />
+		
+		<!-- Background -->
+		<object type="mlui.UI2DImage" name="objDetailsAttacker">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>	
+		
+		<!-- Carrier -->
+		<object type="mlui.UI2DImage" name="objInfantryUnits" >
+			<property name="tmplImage" value="skin.ImgIDIconCarrierCapacity"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="28"/>
+            <property name="strToolTip" from="locale.SID.UI.CarrierCapacity"/>
+        </object>		
+		<object type="mlui.UI2DText" name="objInfantryUnitsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+			<property name="strText" from="def.nCarrierUnits + '/' + def.nCarrierUnitsMax"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="25"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<!-- Capital Ships -->
+		<object type="mlui.UI2DImage" name="objCapitalUnits" >
+			<property name="tmplImage" value="skin.ImgIDIconCapitalship"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="28"/>
+			<property name="strToolTip" from="locale.SID.UI.CapitalShips"/>
+		</object>		
+		<object type="mlui.UI2DText" name="objCapitalUnitsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+			<property name="strText" from="def.nBattleshipUnits"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="25"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<!-- Patrol/Escorts -->
+		<object type="mlui.UI2DImage" name="objPatrolUnits">
+			<property name="tmplImage" value="skin.ImgIDIconEscort"/>
+			<property name="nX" value="68"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="28"/>
+			<property name="strToolTip" from="locale.SID.UI.Escorts"/>
+		</object>
+		<object type="mlui.UI2DText" name="objPatrolUnitsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+			<property name="strText" from="def.nPatrolEscortUnits"/>
+			<property name="nX" value="68"/>
+			<property name="nY" value="25"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<!-- Transport -->
+		<object type="mlui.UI2DImage" name="objTransportUnits">
+			<property name="tmplImage" value="skin.ImgIDIconTransportCapacity"/>
+			<property name="nX" value="100"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="28"/>
+			<property name="strToolTip" from="locale.SID.UI.TransportCapacity"/>
+		</object>
+		<object type="mlui.UI2DText" name="objTransportUnitsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+			<property name="strText" from="def.nTransportUnits + '/' + def.nTransportUnitsMax"/>
+			<property name="nX" value="100"/>
+			<property name="nY" value="25"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<!-- Submarines -->
+		<object type="mlui.UI2DImage" name="objSubmarinesUnits">
+			<property name="tmplImage" value="skin.ImgIDIconSub"/>
+			<property name="nX" value="130"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="28"/>
+			<property name="strToolTip" from="locale.SID.UI.Submarine + ' ' + locale.SID.UI.Flotillas"/>
+		</object>
+		<object type="mlui.UI2DText" name="objSubmarinesUnitsText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+			<property name="strText" from="def.nSubmarineUnits"/>
+			<property name="nX" value="130"/>
+			<property name="nY" value="25"/>
+			<property name="nWidth" value="33"/>
+			<property name="nHeight" value="28"/>
+		</object>		
+	
+	</objectDef>
+	
+</locust>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="unit_model_mappings"
+	name="shared"
+	version="1.0"
+	locustVersion="2.11"
+>
+	<import module="ml:ui lib:Map UI:1.0" as="mapui"/>
+	<import module="ml:ui data:shared:1.0" as="uidata"/>
+	<import module="game system:turn based game" as="gs_tbg"/>	
+	<import module="ml:unit_models:shared:1.0" as="unit_models"/>
+	
+	<include>
+		mappings/UnitModelTable.xml
+	</include>
+</locustModule>

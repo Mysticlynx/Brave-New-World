@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<object type="gs_tbg.GameWithRegionFogging" name="objRunnable">
+		<property name="nMaxAvatars" value="0"/>
+        <property name="eLoadState" value="NEVER_RUN"/>
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+		</object>
+		<object type="mlgame.GameSystemSet" name="objGameSystemSet">
+            <property name="objGameSystems" from="objGameSysAI"/>
+			<property name="objGameSystems" from="objGameSysAIUtility"/>
+			<property name="objGameSystems" from="objGameSysTurnBasedGame"/>
+			<property name="objGameSystems" from="objGameSysResource"/>
+			<property name="objGameSystems" from="objGameSysResearch"/>
+			<property name="objGameSystems" from="objGameSysNation"/>
+			<property name="objGameSystems" from="objGameSysNationRelations"/>
+			<property name="objGameSystems" from="objGameSysTrade"/>
+			<property name="objGameSystems" from="objGameSysMap"/>
+			<property name="objGameSystems" from="objGameSysRegion"/>
+			<property name="objGameSystems" from="objGameSysCity"/>
+			<property name="objGameSystems" from="objGameSysUnit"/>
+			<property name="objGameSystems" from="objGameSysVictoryCondition"/>
+			<property name="objGameSystems" from="objGameSysRegionControl"/>
+			<property name="objGameSystems" from="objGameSysCombat"/>
+            <property name="objGameSystems" from="objGameSysNotification"/>
+			<property name="objGameSystems" from="objGameSysFogging"/>
+            <property name="objGameSystems" from="objGameSysDecisionPoint"/>
+            <property name="objGameSystems" from="objGameSysNationalPrograms"/>
+            <property name="objGameSystems" from="objGameSysTrigger"/>
+			<property name="objGameSystems" from="objGameSysWeather"/>
+		</object>
+	</object>
+</locust>

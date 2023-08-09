@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- Region -->
+	<objectDef type="UI3DLayerRegion" superType="mlui.UI3DLayer">    
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>    
+		<propertyDef name="objMapView" type="MapViewTemplate" from="self.objMapData.tmplMapView.resolve()"/>
+        
+		<object type="ml3dworld.TransformTranslate" name="objTransform">
+			<property name="vecTranslation">
+				Vec3D(0, 0, 0.27)
+			</property>
+		</object>        
+		
+        <property name="bVisible">
+			self.objMapView.bColorRegions OR self.objMapView.bColorSeaRegions
+		</property>
+		
+		<propertyDef name="bLandRegionsVisible" type="bool" from="self.objMapView.bColorRegions"/>
+		<propertyDef name="bSeaRegionsVisible" type="bool" from="self.objMapView.bColorSeaRegions"/>
+
+		<object type="UI3DRegion" name="objMapRegionModels" tiedTo="
+            gs_tbg.getAllMapRegions(self.objGameRoot)
+        ">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objMapView" from="def.objMapView"/>
+			<property name="objMapRegion" from="tiedTo"/>
+			<property name="objRegion" from="tiedTo.refRegion.resolve(self.objGameRoot)"/>
+			<property name="bVisible">
+				if(self.objRegion.tmplTerrain.resolve().bWater, def.bSeaRegionsVisible, def.bLandRegionsVisible)
+			</property>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI3DRegion" superType="mlui.UI3DElement">
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objMapView" type="MapViewTemplate"/>
+		<propertyDef name="objMapRegion" type="gs_tbg.MapRegion"/>
+
+        <!-- Internal -->
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		
+		<!-- Tooltip Region -->
+		<propertyDef name="objStartRegion" type="gs_tbg.Region">
+			switch{
+				case self.objMapData.objSelectedObject.instanceOf(gs_tbg.Region):
+					self.objMapData.objSelectedObject
+				
+				case self.objMapData.objSelectedObject.instanceOf(gs_tbg.City):
+					self.objMapData.objSelectedObject.refRegion.resolve(self.objGameRoot)
+				
+				case self.objMapData.objSelectedObject.instanceOf(gs_tbg.UnitGroup):
+					self.objMapData.objSelectedObject.getRegion(self.objGameRoot)
+					
+				case self.objMapData.objSelectedObject.instanceOf(gs_tbg.Nation):
+					gs_tbg.getCapitalCity(self.objGameRoot, self.objMapData.objSelectedObject).refRegion.resolve(self.objGameRoot)
+					
+				case self.objMapData.objSelectedObject.instanceOf(gs_tbg.Engagement):
+					self.objMapData.objSelectedObject.refRegion.resolve(self.objGameRoot)
+			}
+		</propertyDef>
+		
+        <!-- UI3Model properties -->
+		<object type="common_elements.UI3DModelGO" name="objModel" >
+			<property name="bVisible" value="false" />
+			<property name="tmplModel" from="def.objMapRegion.tmplDisplayModel"/>
+			<property name="objGO" from="def.objRegion"/>		
+		</object>
+		
+        <!-- UI3Model + Map Transform properties -->
+		<object type="common_elements.UI3DModelGO" name="objModelOther" existsWhile="def.objMapData.objMap.bWrapX" >
+			<property name="bVisible" value="false" />		
+			<property name="objGO" from="def.objRegion"/>		
+			<property name="tmplModel" from="def.objMapRegion.tmplDisplayModel"/>
+			<object type="ml3dworld.TransformList" name="objTransform">
+				<object type="ml3dworld.TransformTranslate" name="objTransforms">
+					<property name="vecTranslation" from="Vec3D(def.objMapData.objMap.vecMax.x - def.objMapData.objMap.vecMin.x, 0, 0)"/>
+				</object>
+			</object>
+		</object>
+		
+        <!-- UI3DMapModel properties -->
+		<object type="UI3DMapModelGO" name="objMapModel" >
+			<property name="bVisible" from="def.bVisible" />		
+			<property name="tmplModel" from="def.objMapRegion.tmplDisplayModel"/>		
+			<property name="objMap" from="def.objMapData.objMap" />
+			<property name="vecPointOfInterest" from="def.objMapData.objCameraTransform.vecLookAt"/>
+			<property name="bModelAlwaysChild" value="true"/>
+			<property name="objGO" from="def.objRegion"/>		
+		</object>
+        
+		<!-- 3D Element Properties -->
+		<propertyDef name="strRegionToolTip" type="String">
+			self.objMapView.getRegionToolTip(self.objMapData, self.objRegion)
+		</propertyDef>
+		
+        <propertyDef name="strToolTip" from="UI2DToolTipRegion"/>
+		
+		<object type="mlui.UIDataMaterial" name="objMaterial">
+            <object type="mlmedia.Material" name="objMaterial">
+                <property name="colEmission" from="def.objMapView.getRegionColor(def.objMapData, def.objRegion)"/>
+				<property name="fTransparency" from="def.objMapView.getRegionTransparency(def.objMapData, def.objRegion)" />
+            </object>
+        </object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DToolTipRegion" superType="mlui.UI2DToolTip">
+		<propertyDef name="nHorizPadding" type="int" default="15"/>
+		<propertyDef name="nVertPadding" type="int" default="10"/>
+		
+		<property name="nWidth">
+			self.objText.nWidth + self.nHorizPadding
+		</property>
+		<property name="nHeight">
+			self.objText.nHeight + self.nVertPadding
+		</property>
+		
+		<property name="nOffsetX" value="32"/>
+		<property name="nOffsetY" value="32"/>
+		
+		<!-- ' (' + def.objElement.objRegion.refController.resolve(def.objElement.objGameRoot).strDisplayName + ')' + -->
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+			<property name="strText" from="def.objElement.strRegionToolTip"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="4"/>
+			<property name="nDepth" value="3"/>
+		</object>
+		
+		<!--  + '&#010;  ' + locale.SID.UI.DistanceFromSelected + ': ' + gs_tbg.getGameSysMap(def.objElement.objGameRoot).getDistanceBetweenRegions(
+			def.objElement.objGameRoot, def.objElement.objRegion, def.objElement.objStartRegion).formatNumber(0, true) -->
+		
+		<object type="mlui.UI2DImage" name="objBorder">
+			<property name="tmplImage" value="default_media.ImgToolTipBorder"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="0"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="default_media.ImgToolTipBackground"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth"  from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nDepth" value="1"/>
+		</object>
+	</objectDef>
+
+</locust>

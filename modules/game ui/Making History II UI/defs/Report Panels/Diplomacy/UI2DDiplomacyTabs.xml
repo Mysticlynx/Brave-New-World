@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DDiplomacyTab" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>		
+	</objectDef>
+    
+	<objectDef type="UI2DDiplomacyTabs" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<object type="UI2DDiplomacyTab" name="objInfo" subTypeFrom="reportdata.objDiplomacyData.otTab">
+			<property name="objNation" from="def.objNation"/>
+			
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	</objectDef>
+</locust>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- AI Personality Templates -->
+	<template type="gs_tbg.AIPersonalityTemplate" name="DefaultPersonality">
+		<property name="strStyleOfSpeach" value="Generic"/>
+    </template>
+    
+	<template type="gs_tbg.AIPersonalityTemplate" name="FascistExpansionist">
+		<property name="strStyleOfSpeach" value="Militaristic"/>
+    </template>
+    
+	<template type="gs_tbg.AIPersonalityTemplate" name="StatusQuo">
+		<property name="strStyleOfSpeach" value="Generic"/>
+    </template>
+    
+    <!-- Represents human players for comparison - not to be assigned to an AI -->
+	<template type="gs_tbg.AIPersonalityTemplate" name="Human">
+		<property name="strStyleOfSpeach" value="Generic"/>
+    </template>
+    
+    
+</locust>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DReportSheetCity" superType="UI2DReportPanel">
+		
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" from="636"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="62"/>
+			<property name="nHeight" value="56"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="635"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objProductionPolicyIcon">
+      <property name="tmplImage" value="skin.ImgUIInfoIconProduction"/>
+      <property name="nX" value="1"/>
+      <property name="nY" value="58"/>
+      <property name="nWidth" value="23"/>
+      <property name="nHeight" value="26"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objMilitaryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite18Left"/>
+			<property name="strText" from="locale.SID.UI.CityRegionManagement"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="66"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objCityIcons">
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nSpacing" value="2"/>
+			
+			<object type="UI2DLargeCloseButton" name="objElements">
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.closeReportPanel();
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+		</object>
+				
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="8"/>
+			<property name="nY" value="136"/>
+			<property name="nWidth" value="878"/>
+			<property name="nHeight" value="548"/>
+		</object>		
+	
+		<propertyDef name="objTab" storesChildren="true">
+			switch{
+				case reportdata.objCityData.eTab == CitySection.RESEARCH_LIST:
+					<object type="UI2DCityTabResearchList">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				case reportdata.objCityData.eTab == CitySection.PRODUCTION_LIST:
+					<object type="UI2DCityTabProductionList">
+						<property name="objNation" from="mh2data.objNation"/>
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				case reportdata.objCityData.eTab == CitySection.REGIONSTATS:
+					<object type="UI2DRegionTabData">
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+				case reportdata.objCityData.eTab == CitySection.REGIONASSETS:
+					<object type="UI2DRegionTabAssets">
+						<property name="objNation" from="mh2data.objNation"/>
+						<property name="nWidth" from="def.nWidth"/>			
+						<property name="nHeight" from="def.nHeight"/>
+						<property name="nDepth" value="100"/>
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+					</object>
+			}
+		</propertyDef>
+		
+		<object type="mlui.UI2DImage" name="objButtonsShadow">
+			<property name="tmplImage" value="skin.ImgReportPanelShadow16x16"/>
+			<property name="nX" value="678"/>
+			<property name="nY" value="101"/>
+			<property name="nWidth" value="211"/>
+			<property name="nHeight" value="48"/>
+			<property name="nDepth" value="-100"/>
+		</object>		
+		
+		<object type="UI2DCityButtons" name="objCityButtons">			
+			<property name="nX" value="14"/>
+			<property name="nY" value="102"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>		
+	</objectDef>
+</locust>

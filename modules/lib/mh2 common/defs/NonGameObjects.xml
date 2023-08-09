@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- base class for callback objects -->
+	<objectDef type="Callback" class="CMLOCallback" >
+        <!--<script type="application/javascript"><![CDATA[ 
+
+				function callback()
+				{
+					// override me
+				}
+             
+        ]]></script>-->
+	</objectDef>
+	<objectDef type="EditorUtility" class="CMLOEditorUtility" >
+	</objectDef>
+
+</locust>

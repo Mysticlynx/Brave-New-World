@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+        
+    <objectDef type="UI2DGameStart" superType="mlui.UI2DElement">
+        
+        <object type="mlui.UI2DImage" name="objBlack">
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nWidth" from="def.nWidth"/>
+            <property name="nHeight" from="def.nHeight"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+            <property name="tmplImage" value="skin.ImgBlack"/>
+        </object>
+        
+        <object type="mlui.UI2DImage" name="objNationBG">
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+            <property name="tmplImage" value="skin.ImgStartBG"/>
+        </object>
+        
+        <object type="mlui.UI2DImage" name="objNationBGDemo" existsWhile="gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.InDemoMode()">
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nDepth" value="1" />
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+            <property name="tmplImage" value="skin.ImgDemoStartBG" />
+        </object>
+        
+    </objectDef>
+    
+</locust>

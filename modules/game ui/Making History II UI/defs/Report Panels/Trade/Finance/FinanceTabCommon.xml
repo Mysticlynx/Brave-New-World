@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	
+	<objectDef type="UI2DFinanceTabBubble" superType="mlui.UI2DElement">
+        <property name="nHeight" value="30" />
+        <property name="nWidth" value="370" />
+    
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="strText" type="String"  /> 
+        
+        <propertyDef name="nMoney" type="int64"  />  
+        
+        <propertyDef name="bPercent" type="bool" default="false"  />  
+        <propertyDef name="fPercent" type="float" default="0" />  
+        
+        <propertyDef name="colColor" type="Color" />
+        
+        <propertyDef name="nAdjustImgX" type="int" default="0" />
+        
+		
+		<object type="mlui.UI2DImage" name="objBGSource">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+		</object>		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.tmplImage"/>
+			<property name="nX" value="5"/>
+			<property name="nY" from="def.nAdjustImgX"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nWidth" from="32"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>		
+		<object type="mlui.UI2DText" name="objSourceName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="147"/>
+			<property name="nHeight" value="14"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objBGMoney">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="179"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		<object type="mlui.UI2DText" name="objMoneyAmount">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Right"/>
+			<property name="strText" from="'$' + String(def.nMoney.formatNumber(0, true))"/>
+			<property name="nX" value="178"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="118"/>
+			<property name="nHeight" value="14"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objBGPercent" existsWhile="def.bPercent">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="299"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		<object type="mlui.UI2DText" name="objPercentAmount" existsWhile="def.bPercent">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="String(def.fPercent.formatNumber(0, true)) + '%'"/>
+			<property name="nX" value="299"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="14"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objBGcolor" existsWhile="def.bPercent">
+			<property name="tmplImage" value="skin.ImgRowBubbleWhite"/>
+            <property name="colColor" from="def.colColor" />
+			<property name="nX" value="344"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="18"/>
+			<property name="nHeight" value="30"/>
+		</object>
+    </objectDef>    
+</locust>

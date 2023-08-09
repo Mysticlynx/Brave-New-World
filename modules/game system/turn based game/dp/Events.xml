@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="EventDecisionPointCreated" class="CMLOEventDecisionPointCreated" superType="mlevent.Event" desc="Event for when a decision point is created">
+        <propertyDef name="objDecisionPoint" type="DecisionPoint"/>
+    </objectDef>
+
+</locust>

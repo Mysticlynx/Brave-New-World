@@ -1,0 +1,250 @@
+struct SGMaterial {
+	sampler2D diffuseSampler;
+};
+
+struct SGLight {
+	float4 color;
+	float4 position;
+};
+
+#define MAX_LIGHTS 2
+#define ground_level 0.27
+
+uniform float4x4 sgModel;
+uniform float4x4 sgModelView;
+uniform float4x4 sgModelViewProj;
+uniform float4x4 sgViewProj;
+
+uniform SGMaterial sgMaterial;
+uniform SGLight[MAX_LIGHTS] sgLights;
+uniform float4x4[30] sgJoints;
+
+// Vertex formats:
+// UnitGroupStack:		P3F_N3F_T2F_NW1F_W4F_J4F 
+// ResourceExtractor:	P3F_N3F_T2F_NW1F_W4F_J4F_W4F_J4F
+
+// T = TEXCOORD
+// C = COLOR
+// N = NORMAL
+// P = POS
+// NW = NUM_WEIGHTS
+// W = WEIGHT
+// J = JOINT_INDEX
+
+// one pair of weights and indices
+float4x4 generateSkinningTransform(
+	float numWeights,
+	float4 weights0,
+	float4 indices0
+)
+{
+	float4x4 transform = float4x4(0.0);
+	transform += ((sgJoints[int(indices0.x)] * weights0.x) * (numWeights >= 1));
+	transform += ((sgJoints[int(indices0.y)] * weights0.y) * (numWeights >= 2));
+	transform += ((sgJoints[int(indices0.z)] * weights0.z) * (numWeights >= 3));
+	transform += ((sgJoints[int(indices0.w)] * weights0.w) * (numWeights >= 4));
+	return transform;
+}
+
+// two pairs of weights and indices 
+float4x4 generateSkinningTransform2(
+	float numWeights,
+	float4 weights0,
+	float4 weights1,
+	float4 indices0,
+	float4 indices1
+)
+{
+	float4x4 transform = float4x4(0.0);
+	transform += ((sgJoints[int(indices0.x)] * weights0.x) * (numWeights >= 1));
+	transform += ((sgJoints[int(indices0.y)] * weights0.y) * (numWeights >= 2));
+	transform += ((sgJoints[int(indices0.z)] * weights0.z) * (numWeights >= 3));
+	transform += ((sgJoints[int(indices0.w)] * weights0.w) * (numWeights >= 4));
+	transform += ((sgJoints[int(indices1.x)] * weights1.x) * (numWeights >= 5));
+	transform += ((sgJoints[int(indices1.y)] * weights1.y) * (numWeights >= 6));
+	transform += ((sgJoints[int(indices1.z)] * weights1.z) * (numWeights >= 7));
+	transform += ((sgJoints[int(indices1.w)] * weights1.w) * (numWeights >= 8));
+	return transform;
+}
+
+float4 calculateShadowVertex(float4 worldPos)
+{    
+    float shadow_length = (worldPos.z - ground_level);
+    float4 flatPos = float4(
+        worldPos.x - 0.707 * shadow_length, 
+        worldPos.y - 0.707 * shadow_length,
+        ground_level,
+        worldPos.w);
+    return mul(sgViewProj, flatPos);
+}
+
+struct VertexOutput {
+	float4 position : POSITION;
+	float4 color : COLOR;
+	float2 texCoord : TEXCOORD0;
+};
+
+VertexOutput vertexProgram(
+	float3 position  : POSITION,
+	float3 normal    : NORMAL,
+	float2 texCoord  : TEXCOORD0,
+	float sgNumWeights,
+	float4 sgWeights0,
+	float4 sgIndices0
+) {
+	float4x4 skinToModel = generateSkinningTransform(sgNumWeights, sgWeights0, sgIndices0);
+	
+	float4 modelSpacePos = mul(skinToModel, float4(position, 1));
+	float3 modelSpaceNormal = normalize(mul(skinToModel, float4(normal, 0)).xyz);
+
+	float4 viewSpacePos = mul(sgModelView, modelSpacePos);
+	float3 viewSpaceNormal = normalize(mul(sgModelView, float4(modelSpaceNormal, 0)).xyz);
+
+	 // ambient light
+	float3 diffuseColor = sgLights[1].color.rgb;
+	
+	// directional light
+	float3 dirToLight = normalize(-sgLights[0].position.xyz);
+	float diffuseCoeff = max(dot(viewSpaceNormal, dirToLight), 0.0);
+	diffuseColor += diffuseCoeff * sgLights[0].color.rgb;
+
+	VertexOutput output;
+	output.position = mul(sgModelViewProj, modelSpacePos);
+	output.color = float4(diffuseColor, 1);
+	output.texCoord = texCoord;
+
+	return output;
+}
+
+VertexOutput vertexProgramShadow(
+	float3 position  : POSITION,
+	float3 normal    : NORMAL,
+	float2 texCoord  : TEXCOORD0,
+	float sgNumWeights,
+	float4 sgWeights0,
+	float4 sgIndices0
+) {
+	float4x4 skinToModel = generateSkinningTransform(sgNumWeights, sgWeights0, sgIndices0);
+	float4 modelSpacePos = mul(skinToModel, float4(position, 1));
+    float4 worldPos = mul(sgModel, modelSpacePos);
+    
+	VertexOutput output;
+	output.position = calculateShadowVertex(worldPos);
+	output.color = float4(0,0,0,1);
+	output.texCoord = texCoord;
+
+	return output;
+}
+
+struct VertexOutputUnskinned {
+	float4 position : POSITION;
+	float4 color : COLOR;
+	float2 texCoord : TEXCOORD0;
+    float modelY : TEXCOORD1;
+};
+
+VertexOutputUnskinned vertexProgramShadowUnskinned(
+	float3 position  : POSITION,
+	float3 normal    : NORMAL,
+	float2 texCoord  : TEXCOORD0
+) {
+	float4 modelSpacePos = float4(position,1);
+    float4 worldPos = mul(sgModel, modelSpacePos);
+
+	VertexOutputUnskinned output;
+	output.position = calculateShadowVertex(worldPos);    
+	output.color = float4(0,0,0,1);
+	output.texCoord = texCoord;
+    output.modelY = worldPos.z - ground_level;
+
+	return output;
+}
+
+VertexOutput vertexProgram2(
+	float3 position  : POSITION,
+	float3 normal    : NORMAL,
+	float2 texCoord  : TEXCOORD0,
+	float sgNumWeights,
+	float4 sgWeights0,
+	float4 sgWeights1,
+	float4 sgIndices0,
+	float4 sgIndices1
+) {
+	float4x4 skinToModel = generateSkinningTransform2(sgNumWeights, sgWeights0, sgIndices0, sgWeights1, sgIndices1);
+	
+	float4 modelSpacePos = mul(skinToModel, float4(position, 1));
+	float3 modelSpaceNormal = normalize(mul(skinToModel, float4(normal, 0)).xyz);
+
+	float4 viewSpacePos = mul(sgModelView, modelSpacePos);
+	float3 viewSpaceNormal = normalize(mul(sgModelView, float4(modelSpaceNormal, 0)).xyz);
+
+	 // ambient light
+	float3 diffuseColor = sgLights[1].color.rgb;
+	
+	// directional light
+	float3 dirToLight = normalize(-sgLights[0].position.xyz);
+	float diffuseCoeff = max(dot(viewSpaceNormal, dirToLight), 0.0);
+	diffuseColor += diffuseCoeff * sgLights[0].color.rgb;
+
+	VertexOutput output;
+	output.position = mul(sgModelViewProj, modelSpacePos);
+	output.color = float4(diffuseColor, 1);
+	output.texCoord = texCoord;
+
+	return output;
+}
+
+VertexOutput vertexProgramShadow2(
+	float3 position  : POSITION,
+	float3 normal    : NORMAL,
+	float2 texCoord  : TEXCOORD0,
+	float sgNumWeights,
+	float4 sgWeights0,
+	float4 sgWeights1,
+	float4 sgIndices0,
+	float4 sgIndices1
+) {
+	float4x4 skinToModel = generateSkinningTransform2(sgNumWeights, sgWeights0, sgIndices0, sgWeights1, sgIndices1);
+	float4 modelSpacePos = mul(skinToModel, float4(position, 1));
+    float4 worldPos = mul(sgModel, modelSpacePos);
+        
+	VertexOutput output;
+	output.position = calculateShadowVertex(worldPos);
+	output.color = float4(0,0,0,1);
+	output.texCoord = texCoord;
+
+	return output;
+}
+
+
+
+float4 fragmentProgram(
+	float4 color : COLOR,
+	float2 texCoord : TEXCOORD0
+) : COLOR {
+	return tex2D(sgMaterial.diffuseSampler, texCoord) * color;
+}
+
+float4 fragmentProgramShadow(float4 color : COLOR) : COLOR {
+    return color;
+}
+
+float4 fragmentProgramShadowUnskinned(
+float4 color : COLOR,
+float2 texCoord : TEXCOORD0,
+float modelY : TEXCOORD1
+) : COLOR {
+	float4 texColor = tex2D(sgMaterial.diffuseSampler, texCoord);
+    if (texColor.a < 0.5)
+        discard;
+
+    if (modelY < 0) // underground model parts don't cast a shadow
+        discard;
+        
+    return color;
+}
+
+float4 fragmentProgramShadow2(float4 color : COLOR) : COLOR {
+    return color;
+}
+

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="AIRegionLoss" class="CMLObject">
+        <propertyDef name="objRegion" type="gs_tbg.Region"/>
+        <propertyDef name="objTakingNation" type="gs_tbg.Nation"/>
+    </objectDef>
+
+    <objectDef type="AIRegionGain" class="CMLObject">
+        <propertyDef name="objRegion" type="gs_tbg.Region"/>
+        <propertyDef name="objLosingNation" type="gs_tbg.Nation"/>
+    </objectDef>
+
+    <objectDef type="AILastTurnChangeData" class="CMLObject">
+        <propertyDef name="objRegionLosses" type="AIRegionLoss" variable="true" storesChildren="true"/>
+        <propertyDef name="objRegionGains" type="AIRegionGain" variable="true" storesChildren="true"/>
+        <propertyDef name="objTopicsLearned" type="gs_tbg.ResearchTopicTemplate" variable="true" />
+		<propertyDef name="bMilitaryAccessLost" type="bool" default="false"/>
+    </objectDef>
+
+    <!-- AI data for each avatar -->
+    <objectDef type="PADMakingHistoryAI" superType="mlgame.PerSessionData" desc="Per-avatar data for Making History AI">
+        <propertyDef name="objAvatar" type="mlgame.Avatar" desc="Our avatar"/>
+        <propertyDef name="objNation" type="gs_tbg.Nation" desc="What nation this data is for"/>
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <property name="objGameSysAIUtility" from="gs_tbg.getGameSysAIUtility(self.objAvatar)"/>
+
+        <propertyDef name="objGameSysNation" type="gs_tbg.GameSysNation"/>
+        <property name="objGameSysNation" from="gs_tbg.getGameSysNation(self.objAvatar)"/>
+
+        <propertyDef name="objGameSysNationRelations" type="gs_tbg.GameSysNationRelations"/>
+        <property name="objGameSysNationRelations" from="gs_tbg.getGameSysNationRelations(self.objAvatar)"/>
+
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <property name="objGameSysTurnBasedGame" from="gs_tbg.getGameSysTurnBasedGame(self.objAvatar)"/>
+
+        <propertyDef name="objGameSysRegion" type="gs_tbg.GameSysRegion"/>
+        <property name="objGameSysRegion" from="gs_tbg.getGameSysRegion(self.objAvatar)"/>
+
+        <propertyDef name="objGameSysCity" type="gs_tbg.GameSysCity"/>
+        <property name="objGameSysCity" from="gs_tbg.getGameSysCity(self.objAvatar)"/>
+
+        <propertyDef name="objDesiredResourceAmounts" type="gs_tbg.ResourceAmount" variable="true" storesChildren="true"/>
+        <propertyDef name="objAbsoluteMinimumResourceAmounts" type="gs_tbg.ResourceAmount" variable="true" storesChildren="true"/>
+        <propertyDef name="nLastDesiredResourceAmountUpdate" type="int" default="-1"/>
+        <propertyDef name="n64DesiredMoney" type="int64" default="500000"/><!-- deprecated -->
+
+        <propertyDef name="nNextExpansionCheckTurn" type="int" default="0"/>
+        <propertyDef name="nNextInterdictionCheckTurn" type="int" default="0"/>
+        <propertyDef name="nSeed" type="int" default="0" desc="nation pseudorandom seed"/>
+
+        <!-- policy settings -->
+        <propertyDef name="objAIPersonalityTemplate" type="gs_tbg.AIPersonalityTemplate"/>
+        <propertyDef name="objAITradePolicyTemplate" type="gs_tbg.AITradePolicyTemplate"/>
+        <propertyDef name="objAIRulingPhilosophyTemplate" type="gs_tbg.AIRulingPhilosophyTemplate"/>
+        <propertyDef name="objAITrustTemplate" type="gs_tbg.AITrustTemplate"/>
+        <propertyDef name="objAIInternationalismTemplate" type="gs_tbg.AIInternationalismTemplate"/>
+        <propertyDef name="objAIImperialismTemplate" type="gs_tbg.AIImperialismTemplate"/>
+        
+        <!-- state variables -->
+        <propertyDef name="bNeedToUpdateState" type="bool" default="true" desc="Set true if our state variables need to be updated."/>
+        <propertyDef name="bAtWar" type="bool" desc="Are we at war with any other nations?"/>
+        <propertyDef name="bWasAtWar" type="bool" default="false" desc="Were we at war last turn?"/>
+        <propertyDef name="bEnemyChange" type="bool" default="false" desc="Set true if the set of nations we are at war with has changed since the previous turn."/>
+        <propertyDef name="objLastTurnChangeData" type="AILastTurnChangeData" storesChildren="true"/>
+        <propertyDef name="nResearchTurns" type="int" default="0" desc="turns x active research projects"/>
+		<propertyDef name="objVitalRegions" type="gs_tbg.Region" variable="true" desc="deprecated"/>
+		<propertyDef name="objPlanDefense" type="gs_tbg.AIMilitaryPlan"/>
+		<propertyDef name="objPlanAirPatrolAndBombing" type="gs_tbg.AIMilitaryPlan"/>
+		<propertyDef name="objPlanNavyPatrolAndIntercept" type="gs_tbg.AIMilitaryPlan"/>
+		<propertyDef name="objPlanTradeInterdiction" type="gs_tbg.AIMilitaryPlan"/>
+        <propertyDef name="bUpdateRegionExclusions" type="bool" default="false"/>
+        <propertyDef name="bUpdateFactoryExclusions" type="bool" default="false"/>
+
+        <!-- other variables -->
+        <propertyDef name="fArmsSupplyTargetFraction" type="float" default="0.95"/>
+
+        <!-- logs and test properties (for development use) -->
+        <propertyDef name="bWantProductionAILog" type="bool" default="false"/>
+        <propertyDef name="bWantResearchAILog" type="bool" default="false"/>
+        <propertyDef name="bWantMilitaryAILog" type="bool" default="false"/>
+        <propertyDef name="bWantTradeAILog" type="bool" default="false"/>
+        <propertyDef name="bWantDiplomacyAILog" type="bool" default="false"/>
+        <propertyDef name="bWantUnitCounts" type="bool" default="false"/>
+        <propertyDef name="bTestBoostResources" type="bool" default="false"/>
+
+        <script type="application/javascript"><![CDATA[
+
+            // resource arg can be a resource or a resourceRef
+		    function getNationResource(resource)
+		    {
+		        return self.objGameSysNation.objNationResources.find({"refNation":self.objNation, "objResourceTemplate":resource});
+		    }
+
+            function getLastTurnChangeData(bCreateIfNeeded)
+            {
+                var lastTurnData = self.objLastTurnChangeData;
+                if ((lastTurnData == null) && (bCreateIfNeeded == true))
+                {
+                    lastTurnData = local.AILastTurnChangeData.create({});
+                    self.objLastTurnChangeData = lastTurnData;
+                }
+                return lastTurnData;
+            }
+
+            // note: arg can be either a resource or a resourceRef
+            function getDesiredResourceAmount(resource)
+            {
+                updateDesiredResourceAmounts();
+                var resAmt = self.objDesiredResourceAmounts.find({"tmplResource": resource});
+                return resAmt.nAmount;
+            }
+
+            function getAbsoluteMinimumStockpile(resource)
+            {
+                updateDesiredResourceAmounts();
+                var resAmt = self.objAbsoluteMinimumResourceAmounts.find({"tmplResource": resource});
+                return resAmt.nAmount;
+            }
+
+            function getDesiredStockpileTurns(resource)
+            {
+				var bIsRawMaterial = resource.equals(self.objParentAI.objMetalsTemplate) || resource.equals(self.objParentAI.objOilTemplate) || resource.equals(self.objParentAI.objCoalTemplate);
+				if (bIsRawMaterial)
+					return 1;
+
+                return 10;
+            }
+
+            function updateDesiredResourceAmounts()
+            {
+     			var turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+     			if (turn == self.nLastDesiredResourceAmountUpdate)
+     			    return;
+
+     			// mark as updated
+                self.nLastDesiredResourceAmountUpdate = turn;
+                
+                var prodSim = self.objGameSysAIUtility.getAINationProductionSimulator(self.objAvatar,self.objNation);
+
+                var resources = self.objParentAI.objResourceList;
+                for (var index in resources)
+                {
+                    var resource = resources[index];
+                    var desiredMinStockpile = prodSim.getDesiredMininumStockpile(self.objAvatar,resource);
+                    var absoluteMinStockpile = prodSim.getAbsoluteMinimumStockpile(self.objAvatar,resource);
+                    var desired = 0;
+                    var demand = 0;
+                    var exports = 0;
+                    var desiredStockpileTurns = 0;
+                    if (resource.bTradable)
+                    {
+                        var nationResourceStatistics = self.objGameSysNation.objNationResourceStatistics.find({"refNation": self.objNation, "tmplResource": resource});
+                        var nationResource = self.getNationResource(resource);
+
+                        exports = nationResourceStatistics.nDirectTradeExportTotal;
+                        desiredStockpileTurns = getDesiredStockpileTurns(resource);
+						demand = nationResource.nDemand;
+						if (resource.equals(self.objParentAI.objArmsTemplate))
+						{
+							demand *= self.fArmsSupplyTargetFraction;
+						}
+
+                        desired = (demand + exports) * desiredStockpileTurns;
+                        if (desired < desiredMinStockpile)
+                            desired = desiredMinStockpile;
+                    }
+
+                    var resourceAmount = self.objDesiredResourceAmounts.find({"tmplResource": resource});
+                    if (resourceAmount == null)
+                    {
+                        resourceAmount = gs_tbg.ResourceAmount.create({"tmplResource":resource, "nAmount":desired});
+                        self.objDesiredResourceAmounts.add(resourceAmount);
+                    }
+                    else
+                    {
+                        resourceAmount.nAmount = desired;
+                    }
+                    
+                    //if (self.objGameSysAIUtility.bAITestMode && resource.equals(self.objParentAI.objArmsTemplate))
+                    //{
+    				//    log("DEBUG: AI " + self.objNation.strName + " desired=" + resource.strName + ": " + resourceAmount.nAmount + ", desiredMinStockpile=" + desiredMinStockpile + ", absoluteMinStockpile=" + absoluteMinStockpile);
+    				//}
+
+                    var minimumResourceAmount = self.objAbsoluteMinimumResourceAmounts.find({"tmplResource": resource});
+                    if (minimumResourceAmount == null)
+                    {
+                        minimumResourceAmount = gs_tbg.ResourceAmount.create({"tmplResource":resource, "nAmount":absoluteMinStockpile});
+                        self.objAbsoluteMinimumResourceAmounts.add(minimumResourceAmount);
+                    }
+                    else
+                    {
+                        minimumResourceAmount.nAmount = absoluteMinStockpile;
+                    }
+                    
+                } // for resources
+            } // updateDesiredResourceAmounts
+
+
+        ]]></script>
+    </objectDef><!-- PADMakingHistoryAI -->
+
+    <!--<script type="application/x-locust-query"></script>-->
+
+    <script type="application/javascript"><![CDATA[
+        // common methods here...
+
+    ]]></script>
+
+
+</locust>

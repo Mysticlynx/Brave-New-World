@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI2DSeaRegionTabGroups" superType="mlui.UI2DElement">
+		<property name="nWidth" value="351"/>
+		<property name="nHeight" value="310"/>
+		
+		<object type="mlui.UI2DImage" name="objPanelBG">
+			<property name="tmplImage" value="skin.ImgDetailPanel"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="310"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelSliderBG">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="334"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="306"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="5"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="341"/>
+			<property name="nHeight" value="306"/>
+			<property name="nDepth" value="100"/>
+
+			<object type="mlui.SliderInfo" name="objHorizInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="306"/>
+
+				<property name="nButtonLength" value="11"/>
+				<property name="nMinKnobLength" value="16"/>
+				<property name="nMaxKnobLength" value="16"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="mlui.SliderInfo" name="objVertInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="351"/>
+
+				<property name="nButtonLength" value="11"/>
+				<property name="nMinKnobLength" value="39"/>
+				<property name="nMaxKnobLength" value="39"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="UI2DSeaRegionGroups" name="objScrollable">
+				<property name="nWidth" value="328"/>
+				<property name="nHeight" value="310"/>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelBorder">
+			<property name="tmplImage" value="skin.ImgPanelBorderSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="314"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+	</objectDef>
+
+  <objectDef type="UI2DSeaRegionGroups" superType="common_ui.UI2DList">
+    <property name="nX" value="0"/>
+    <property name="nY" value="0"/>
+    <property name="nTopSpacing" value="0"/>
+    <property name="nBottomSpacing" value="0"/>
+    <property name="nSpacing" value="3"/>
+
+    <object type="UI2DGroupBubble" name="objElements" tiedTo="spdata.objSeaRegionData.objNavalGroups">
+      <property name="objGroup" from="tiedTo"/>
+      <property name="nX" value="0"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="328"/>
+      <property name="nHeight" value="88"/>
+    </object>
+  </objectDef>
+  
+	<!--<objectDef type="UI2DSeaRegionGroups" superType="common_ui.UI2DList">
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nTopSpacing" value="0"/>
+		<property name="nBottomSpacing" value="0"/>
+		<property name="nSpacing" value="3"/>
+
+		<object type="UI2DSeaRegionGroup" name="objElements" tiedTo="spdata.objSeaRegionData.objNavalGroups">
+			<property name="objGroup" from="tiedTo"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="328"/>
+			<property name="nHeight" value="53"/>
+		</object>
+	</objectDef>-->
+</locust>

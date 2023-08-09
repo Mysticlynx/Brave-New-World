@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="ResourceDisplayTable" class="CMLObject">
+        <propertyDef name="objModuleSD" type="Module"/>
+		<propertyDef name="objDefaultEntry" type="ResourceDisplayTableEntry" storesChildren="true"/>
+		<propertyDef name="objEntries" type="ResourceDisplayTableEntry" variable="true" storesChildren="true"/>
+	</objectDef>
+	<objectDef type="ResourceDisplayTableEntry" class="CMLObject">
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+		<propertyDef name="tmplIcon21x21" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon32x32" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+	</objectDef>
+	
+	<objectDef type="NationDisplayTable" class="CMLObject">
+		<propertyDef name="objDefaultEntry" type="NationDisplayTableEntry" storesChildren="true"/>
+		<propertyDef name="objEntries" type="NationDisplayTableEntry" variable="true" storesChildren="true"/>
+		<script type="application/x-locust-query">
+			getEntry = ?{nationTemplate:
+				?{foundEntry:
+					if(foundEntry != null, foundEntry, self.objDefaultEntry)
+				}(find(?{entry: entry.tmplNation == nationTemplate}, self.objEntries))
+			}
+			getEntryForUnitGroup = ?{gameroot, unitGroup:
+				self.getEntry(unitGroup.refController.resolve(gameroot).tmplNation)
+			}
+		</script>
+	</objectDef>
+	<objectDef type="NationDisplayTableEntry" class="CMLObject">
+		<propertyDef name="tmplNation" type="TemplateRef" restriction="gs_tbg.NationTemplate"/>
+		<propertyDef name="tmplFlag256x128" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="tmplFlag46x24" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="tmplIcon28x28" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="tmplDecal128x128" type="TemplateRef" restriction="mlmedia.TextureTemplate"/>
+	</objectDef>
+	
+	<objectDef type="TerrainDisplayTable" class="CMLObject">
+        <propertyDef name="objModuleSD" type="Module"/>
+		<propertyDef name="objDefaultEntry" type="TerrainDisplayTableEntry" storesChildren="true"/>
+		<propertyDef name="objEntries" type="TerrainDisplayTableEntry" variable="true" storesChildren="true"/>
+	</objectDef>
+	<objectDef type="TerrainDisplayTableEntry" class="CMLObject">
+		<propertyDef name="tmplTerrain" type="TemplateRef" restriction="gs_tbg.TerrainTemplate"/>
+		<propertyDef name="tmplIcon22x22" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+	</objectDef>
+	
+	<objectDef type="FlagModelTextureTable" class="CMLObject">
+        <propertyDef name="objModuleSD" type="Module"/>
+		<propertyDef name="objDefaultEntry" type="FlagModelTextureTableEntry" storesChildren="true"/>
+		<propertyDef name="objEntries" type="FlagModelTextureTableEntry" variable="true" storesChildren="true"/>
+		<propertyDef name="objOverrideEntries" type="FlagModelTextureTableEntry" variable="true" storesChildren="true"/>
+		<propertyDef name="bUseOverride" type="bool" default="false"/>
+		<script type="application/x-locust-query">
+		
+			getOverrideEntry = ?{nationality, ideology:
+			    if (self.bUseOverride, find(?{entry: entry.strNationality == nationality.resolve().strName AND entry.tmplIdeology == ideology}, self.objOverrideEntries), null )
+			}
+			
+			getNormalEntry = ?{nationality, ideology:
+				find(?{entry: entry.strNationality == nationality.resolve().strName AND entry.tmplIdeology == ideology}, self.objEntries)
+			}
+			
+			getEntry = ?{nationality, ideology:
+				?{entry:
+				    if(entry != null, entry, self.getNormalEntry(nationality,ideology) )
+				}(self.getOverrideEntry(nationality,ideology))
+			}
+			
+			getEntryForNation = ?{gameroot, nation:
+				?{entry:
+					if(entry != null, entry, self.getEntry(null, nation.tmplIdeology))
+				}(self.getEntry(nation.tmplNationality, nation.tmplIdeology))
+			}
+			getTextureForCityFlag = ?{gameroot, city:
+				?{entry:
+					if(entry != null, entry.tmplFlagTexture, null)
+				}(self.getEntryForNation(gameroot, city.objController))
+			}
+			getTextureForRegionFlag = ?{gameroot, region:
+				?{entry:
+					if(entry != null, entry.tmplFlagTexture, null)
+				}(self.getEntryForNation(gameroot, region.refController.resolve(gameroot)))
+			}
+			getTextureForNationFlag = ?{gameroot, nation:
+				?{entry:
+					if(entry != null, entry.tmplFlagTexture, null)
+				}(self.getEntryForNation(gameroot, nation))
+			}
+			getTextureForNationDecal = ?{gameroot, nation:
+				?{entry:
+					if(entry != null, entry.tmplDecal128x128, null)
+				}(self.getEntryForNation(gameroot, nation))
+			}
+		</script>
+	</objectDef>
+	
+	<objectDef type="FlagModelTextureTableEntry" class="CMLObject">
+		<propertyDef name="strNationality" type="String"/>
+		<propertyDef name="tmplIdeology" type="TemplateRef" restriction="gs_tbg.IdeologyTemplate"/>
+		<propertyDef name="tmplFlagTexture" type="TemplateRef" restriction="mlmedia.TextureTemplate"/>
+		<propertyDef name="tmplFlag256x128" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="tmplFlag46x24" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="tmplIcon28x28" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="tmplDecal128x128" type="TemplateRef" restriction="mlmedia.TextureTemplate"/>
+	</objectDef>
+		
+	<!-- Season/Weather Table -->
+	<!-- TODO this needs to be modified when Seasons have templates -->
+	<objectDef type="SeasonDisplayTable" class="CMLObject">
+		<propertyDef name="objDefaultEntry" type="SeasonDisplayTableEntry" storesChildren="true"/>
+		<propertyDef name="objEntries" type="SeasonDisplayTableEntry" variable="true" storesChildren="true"/>
+		<script type="application/x-locust-query">
+			getEntry = ?{gameroot, season:
+				find(?{entry: entry.objSeason.resolve(gameroot) == season}, self.objEntries)
+			}
+			getEntryForRegion = ?{gameroot, season:
+				?{entry:
+					if(entry != null, entry, self.objDefaultEntry)
+				}(self.getEntry(gameroot, season))
+			}
+		</script>
+	</objectDef>
+	
+	<objectDef type="SeasonDisplayTableEntry" class="CMLObject">
+		<propertyDef name="objSeason" type="GORef" restriction="gs_tbg.Season" />
+		<propertyDef name="tmplSeasonIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+	</objectDef>
+    
+	<objectDef type="NationDescriptionTable" class="CMLObject">
+		<propertyDef name="objEntries" type="NationDescriptionTableEntry" variable="true" storesChildren="true"/>
+		<script type="application/x-locust-query">
+			getDefaultEntry = ?{gameroot, scenario:
+				find(?{entry: entry.objNation == null AND entry.strScenarioAbbr == scenario}, self.objEntries)
+			}
+			getEntry = ?{gameroot, nation, scenario:
+				find(?{entry: entry.objNation.resolve(gameroot) == nation AND entry.strScenarioAbbr == scenario}, self.objEntries)
+			}
+			getEntryForNation = ?{gameroot, nation, scenario:
+				?{entry:
+					if(entry != null, entry, self.getDefaultEntry(gameroot, scenario) )
+				}(self.getEntry(gameroot, nation, scenario))
+			}
+		</script>
+	</objectDef>
+	
+	<objectDef type="NationDescriptionTableEntry" class="CMLObject">
+		<propertyDef name="objNation" type="GORef" restriction="gs_tbg.Nation" />
+		<propertyDef name="strScenarioAbbr" type="String"/>
+		<propertyDef name="strDescription" type="String"/>
+	</objectDef>
+	
+</locust>

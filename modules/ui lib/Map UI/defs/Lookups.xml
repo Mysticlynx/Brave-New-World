@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="LookupVisibleRegions" class="CMLObject">
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objRegions" type="gs_tbg.Region" variable="true"/>
+		<property name="objRegions" from="gs_tbg.getVisibleRegions(self.objMapData.objAvatar, self.objMapData.objNation)"/>	
+	</objectDef>
+
+</locust>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DTradeButtons" superType="mlui.UI2DElement">
+		<property name="nWidth">
+			self.objBubbles.nWidth
+		</property>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+			<property name="nSpacing" value="1"/>
+            
+            <object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.FinancialReports"/>
+				<property name="tmplIcon" value="skin.ImgMoneyIcon"/>
+				<property name="bSelected">
+                    reportdata.objTradeData.eTab == TradeSection.REPORTS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objTradeData.showReports();
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.TradeDeals"/>
+				<property name="tmplIcon" value="skin.ImgDiplomacyIcon"/>
+				<property name="bSelected">
+                    reportdata.objTradeData.eTab == TradeSection.DEALS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objTradeData.showDeals();
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.WorldMarket"/>
+				<property name="tmplIcon" value="skin.ImgTradeIcon"/>
+				<property name="bSelected">
+                    reportdata.objTradeData.eTab == TradeSection.WORLD_MARKET
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objTradeData.showWorldMarket();
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.Stockpiles"/>
+				<property name="tmplIcon" value="skin.ImgBoxIcon"/>
+				<property name="bSelected">
+                    reportdata.objTradeData.eTab == TradeSection.STOCKPILE
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objTradeData.showStockpile();
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+		</object>
+		
+	</objectDef>
+</locust>

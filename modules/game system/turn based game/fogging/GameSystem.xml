@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysFogging" class="CMLOGameSysFogging" superType="mlgame.GameSystem">
+        <propertyDef name="objVisibilityLists" type="VisibilityList" variable="true" storesChildren="true"/>
+		<propertyDef name="bFogging" type="bool" default="false"/>
+
+		<script type="application/javascript"><![CDATA[
+
+			function notifyFoggingSet(game, oldVal, newVal)
+			{
+				self.bFogging = newVal;
+			}
+
+		]]></script>
+		
+		<script type="application/x-locust-query">
+            areNationGroupsVisible = ?{avatar, nation: 
+                if (self.bFogging, let visList = find(?{visList: visList.refNation==nation}, self.objVisibilityLists) { if (visList==null,false,visList.objNations.contains(nation)) },true)
+            }
+		</script>
+
+	</objectDef>
+	
+    <objectDef type="GameWithRegionFogging" superType="mlgame.Game">
+		<property name="tdSleep" value="00:00:00:100"/>
+		<script type="application/x-locust-query">
+			isRegionVisible = ?{avatar, region: mlgame.getGameSysOfType(self, GameSysFogging).isRegionVisible(avatar,region) }
+            areNationGroupsVisible = ?{avatar, nation: mlgame.getGameSysOfType(self, GameSysFogging).areNationGroupsVisible(avatar,nation) }
+		</script>
+	</objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysFogging = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysFogging)
+		}
+
+		getAllVisibilityLists = ?{gameroot:
+			getGameSysFogging(gameroot).objVisibilityLists
+		}
+
+		getVisibilityList = ?{gameroot, nation:
+			find(?{list:
+				list.refNation.resolve(gameroot)== nation			
+			}, getAllVisibilityLists(gameroot))
+		}
+
+        getVisibleRegions = ?{gameroot, nation:
+            let visList=getVisibilityList(gameroot, nation) {
+			    filter(?{region: visList.getRegionIsUnfogged(region)}, getAllRegions(gameroot))
+			}
+        }
+
+        getNationDetectionForRegion = ?{gameroot, nation, region:
+			getVisibilityList(gameroot, nation).getRegionHasDetector(region)
+        }
+	</script>
+
+</locust>

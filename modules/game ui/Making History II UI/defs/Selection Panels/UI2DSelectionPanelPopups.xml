@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="UI2DSelectionPanelPopups" superType="mlui.UI2DElement">
+        <propertyDef name="objMH2Data" type="MH2Data"/>
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+		<object type="UI2DSelectionPanelEngagement" name="objEngagement" existsWhile="self.objMH2Data.objMapData.objSelectedObject.instanceOf(gs_tbg.Engagement)">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>		
+    </objectDef>    
+</locust>

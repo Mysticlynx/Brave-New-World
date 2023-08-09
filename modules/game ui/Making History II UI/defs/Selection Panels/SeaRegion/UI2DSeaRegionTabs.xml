@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="UI2DSeaRegionTabs" superType="mlui.UI2DElement">
+        <propertyDef name="objMH2Data" type="MH2Data"/>
+        <propertyDef name="objLookupSeaRegionData" type="LookupSeaRegionData"/>
+
+		<!--<object type="UI2DSeaRegionTabGroups" name="objGroups" existsWhile="self.objMH2Data.otSeaRegionTab == UI2DSeaRegionTabGroups">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objLookupSeaRegionData" from="def.objLookupSeaRegionData"/>
+			<property name="nWidth" from="def.objLookupSeaRegionData.nWidth"/>
+			<property name="nHeight" from="def.objLookupSeaRegionData.nHeight + 4"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+		</object>-->		
+    </objectDef>
+</locust>

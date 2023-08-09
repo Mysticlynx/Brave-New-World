@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <template type="gs_tbg.AIUsVersusThemTemplate" name="DefaultUsVersusThemTemplate">
+        <property name="objHumanPlaceholderTemplate" value="Human"/>
+        <object name="objSameIdeologyDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="UnprovokedAttack"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objSameIdeologyDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyWith"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        <object name="objSameIdeologyDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyAgainst"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objDifferentIdeologyDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="UnprovokedAttack"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        <object name="objDifferentIdeologyDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyWith"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objDifferentIdeologyDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyAgainst"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objIdeologyComparisons">
+            <property name="objMyTemplate" value="gs_tbg.IdeologyTemplate::Fascist"/>
+            <property name="objTheirTemplate" value="gs_tbg.IdeologyTemplate::Fascist"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyWith"/>
+                <property name="nChooseChance" value="75"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objIdeologyComparisons">
+            <property name="objMyTemplate" value="gs_tbg.IdeologyTemplate::Democratic"/>
+            <property name="objTheirTemplate" value="gs_tbg.IdeologyTemplate::Democratic"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyWith"/>
+                <property name="nChooseChance" value="75"/>
+            </object>
+        </object>
+        <object name="objSameCultureDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="UnprovokedAttack"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objSameCultureDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyWith"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        <object name="objSameCultureDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyAgainst"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objDifferentCultureDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="UnprovokedAttack"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        <object name="objDifferentCultureDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyWith"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objDifferentCultureDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyAgainst"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objCultureComparisons">
+            <property name="objMyTemplate" value="gs_tbg.CultureTemplate::AngloCeltic"/>
+            <property name="objTheirTemplate" value="gs_tbg.CultureTemplate::AngloCeltic"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nVetoChance" value="25"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyWith"/>
+                <property name="nChooseChance" value="25"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyAgainst"/>
+                <property name="nVetoChance" value="25"/>
+            </object>
+        </object>
+        <object name="objSameReligionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="UnprovokedAttack"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objSameReligionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyWith"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        <object name="objSameReligionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyAgainst"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objDifferentReligionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="UnprovokedAttack"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        <object name="objDifferentReligionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyWith"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objDifferentReligionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyAgainst"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objReligionComparisons">
+            <property name="objMyTemplate" value="gs_tbg.ReligionTemplate::Catholic"/>
+            <property name="objTheirTemplate" value="gs_tbg.ReligionTemplate::Protestant"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyWith"/>
+                <property name="nChooseChance" value="25"/>
+            </object>
+        </object>
+        <object name="objSameEthnicityDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="UnprovokedAttack"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objSameEthnicityDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyWith"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        <object name="objSameEthnicityDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyAgainst"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objDifferentEthnicityDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="UnprovokedAttack"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        <object name="objDifferentEthnicityDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyWith"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objDifferentEthnicityDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyAgainst"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objEthnicityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.EthnicityTemplate::Inuit"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nVetoChance" value="100"/>
+            </object>
+        </object>
+        <object name="objSameInternationalPositionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="UnprovokedAttack"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objSameInternationalPositionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyWith"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        <object name="objSameInternationalPositionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyAgainst"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objDifferentInternationalPositionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="UnprovokedAttack"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        <object name="objDifferentInternationalPositionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyWith"/>
+            <property name="nVetoChance" value="10"/>
+        </object>        
+        <object name="objDifferentInternationalPositionDefaultWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+            <property name="eDecisionType" value="AllyAgainst"/>
+            <property name="nChooseChance" value="10"/>
+        </object>        
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objInternationalPositionComparisons">
+            <property name="objMyTemplate" value="gs_tbg.AIInternationalPositionTemplate::StatusQuo"/>
+            <property name="objTheirTemplate" value="gs_tbg.AIInternationalPositionTemplate::Expansionist"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nVetoChance" value="50"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyWith"/>
+                <property name="nVetoChance" value="25"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyAgainst"/>
+                <property name="nVetoChance" value="25"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objInternationalPositionComparisons">
+            <property name="objMyTemplate" value="gs_tbg.AIInternationalPositionTemplate::StatusQuo"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nVetoChance" value="25"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyWith"/>
+                <property name="nVetoChance" value="50"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyAgainst"/>
+                <property name="nVetoChance" value="50"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objInternationalPositionComparisons">
+            <property name="objMyTemplate" value="gs_tbg.AIInternationalPositionTemplate::Expansionist"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nChooseChance" value="50"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objInternationalPositionComparisons">
+            <property name="objMyTemplate" value="gs_tbg.AIInternationalPositionTemplate::Expansionist"/>
+            <property name="objTheirTemplate" value="gs_tbg.AIInternationalPositionTemplate::Expansionist"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyWith"/>
+                <property name="nChooseChance" value="50"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objInternationalPositionComparisons">
+            <property name="objMyTemplate" value="gs_tbg.AIInternationalPositionTemplate::Neutral"/>
+            <property name="objTheirTemplate" value="gs_tbg.AIInternationalPositionTemplate::Expansionist"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nVetoChance" value="50"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyWith"/>
+                <property name="nVetoChance" value="25"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyAgainst"/>
+                <property name="nVetoChance" value="25"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objInternationalPositionComparisons">
+            <property name="objMyTemplate" value="gs_tbg.AIInternationalPositionTemplate::Neutral"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nVetoChance" value="100"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyWith"/>
+                <property name="nChooseChance" value="0"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyAgainst"/>
+                <property name="nChooseChance" value="0"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objStabilityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.StabilityTemplate::ExtremelyStable"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nChooseChance" value="5"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objStabilityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.StabilityTemplate::VeryStable"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nChooseChance" value="0"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objStabilityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.StabilityTemplate::Stable"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nVetoChance" value="10"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objStabilityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.StabilityTemplate::Unstable"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nVetoChance" value="20"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objStabilityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.StabilityTemplate::HighlyUnstable"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nVetoChance" value="30"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objPersonalityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.AIPersonalityTemplate::FascistExpansionist"/>
+            <property name="objTheirTemplate" value="gs_tbg.AIPersonalityTemplate::Human"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nChooseChance" value="20"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objTerritorialIntegrityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.TerritorialIntegrityTemplate::Destroyed"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nChooseChance" value="50"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objTerritorialIntegrityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.TerritorialIntegrityTemplate::BadlyDamaged"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nChooseChance" value="40"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objTerritorialIntegrityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.TerritorialIntegrityTemplate::Damaged"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nChooseChance" value="30"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objTerritorialIntegrityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.TerritorialIntegrityTemplate::NearlyIntact"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nChooseChance" value="10"/>
+            </object>
+        </object>
+        
+        <object type="gs_tbg.TemplateVsTemplateWeights" name="objTerritorialIntegrityComparisons">
+            <property name="objMyTemplate" value="gs_tbg.TerritorialIntegrityTemplate::Intact"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nChooseChance" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.DiplomaticLevelWeights" name="objDiplomaticLevelWeights">
+            <property name="objDiplomaticLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyAgainst"/>
+                <property name="nChooseChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nChooseChance" value="20"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyWith"/>
+                <property name="nVetoChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="DeploymentSurveillance"/>
+                <property name="nChooseChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="StealResearch"/>
+                <property name="nChooseChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="SabotageRegion"/>
+                <property name="nChooseChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="PoliticalSupport"/>
+                <property name="nVetoChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="OppositionSupport"/>
+                <property name="nChooseChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllowMilitaryAccess"/>
+                <property name="nVetoChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nVetoChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptTradeAgreement"/>
+                <property name="nVetoChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="MakePuppet"/>
+                <property name="nChooseChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="MakeColony"/>
+                <property name="nVetoChance" value="10"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="Annex"/>
+                <property name="nChooseChance" value="10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.DiplomaticLevelWeights" name="objDiplomaticLevelWeights">
+            <property name="objDiplomaticLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyAgainst"/>
+                <property name="nChooseChance" value="0"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nChooseChance" value="10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.DiplomaticLevelWeights" name="objDiplomaticLevelWeights">
+            <property name="objDiplomaticLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyAgainst"/>
+                <property name="nChooseChance" value="0"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nChooseChance" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.DiplomaticLevelWeights" name="objDiplomaticLevelWeights">
+            <property name="objDiplomaticLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyAgainst"/>
+                <property name="nChooseChance" value="0"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nVetoChance" value="25"/>
+            </object>
+        </object>
+        <object type="gs_tbg.DiplomaticLevelWeights" name="objDiplomaticLevelWeights">
+            <property name="objDiplomaticLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AllyAgainst"/>
+                <property name="nChooseChance" value="0"/>
+            </object>
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="UnprovokedAttack"/>
+                <property name="nVetoChance" value="30"/>
+            </object>
+        </object>
+        <object type="gs_tbg.PowerDifferentialWeights" name="objPowerDifferentialWeights">
+            <property name="objPowerDifferentialTemplate" value="MuchWeaker"/><!-- (They are MuchStronger) -->
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nChooseChance" value="30"/>
+            </object>
+        </object>
+        <object type="gs_tbg.PowerDifferentialWeights" name="objPowerDifferentialWeights">
+            <property name="objPowerDifferentialTemplate" value="Weaker"/><!-- (They are Stronger) -->
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nChooseChance" value="15"/>
+            </object>
+        </object>
+        <object type="gs_tbg.PowerDifferentialWeights" name="objPowerDifferentialWeights">
+            <property name="objPowerDifferentialTemplate" value="Even"/><!-- (Evenly matched) -->
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nChooseChance" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.PowerDifferentialWeights" name="objPowerDifferentialWeights">
+            <property name="objPowerDifferentialTemplate" value="Stronger"/><!-- (They are weaker) -->
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nVetoChance" value="5"/>
+            </object>
+        </object>
+        <object type="gs_tbg.PowerDifferentialWeights" name="objPowerDifferentialWeights">
+            <property name="objPowerDifferentialTemplate" value="MuchStronger"/><!-- (They are much weaker) -->
+            <object name="objDecisionWeights" type="gs_tbg.AIDiplomaticDecisionWeight">
+                <property name="eDecisionType" value="AcceptPeaceTreaty"/>
+                <property name="nVetoChance" value="10"/>
+            </object>
+        </object>
+    </template><!-- DefaultUsVersusThemTemplate -->
+    
+</locust>

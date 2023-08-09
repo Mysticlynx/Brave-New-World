@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="MenuData" class="CMLObject">
+        <propertyDef name="vecPosition" type="Vec3D"/>
+		<propertyDef name="objTitle" type="MenuTitle" storesChildren="true"/>
+        <propertyDef name="objItems" type="MenuItem" variable="true" storesChildren="true"/>
+		<propertyDef name="tmplItemButtonStyle" type="TemplateRef" restriction="mlmedia.TextButtonStyleTemplate" default="skin.TxtBtnStyleBubbleHighlightWhiteCenterMiddleFIT"/>
+		<propertyDef name="tmplTitleStyle" type="TemplateRef" restriction="mlmedia.ImageTemplate" default="skin.ImgPanelTopBG"/>
+        <propertyDef name="nDefaultItemWidth" type="int" default="300"/>
+        <propertyDef name="nDefaultItemHeight" type="int" default="16"/>
+		<propertyDef name="nMaxHeight" type="int" default="500"/>
+		<propertyDef name="nHorizPadding" type="int" default="12"/>
+		<propertyDef name="nVertPadding" type="int" default="14"/>
+		<propertyDef name="tmplBGStyle" type="TemplateRef" restriction="mlmedia.ImageTemplate" default="skin.ImgBubbleGoldGray"/>
+    </objectDef>
+	
+	<objectDef type="MenuTitle" class="CMLObject" >
+		<propertyDef name="strTableTitle" type="String" />
+		<propertyDef name="strOwnerTag" type="String" />
+	</objectDef>
+    
+    <objectDef type="MenuItem" class="CMLObject" >
+        <propertyDef name="strDisplayName" type="String" />
+		<propertyDef name="tmplIconImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="objExecuteObject" type="Object" storesChildren="true"/>
+        <propertyDef name="objHoverExecuteObject" type="Object" storesChildren="true"/>
+        <propertyDef name="otToolTip" type="ObjectType" /> 
+        <propertyDef name="bVisible" type="bool" default="true" />
+    </objectDef>
+    
+</locust>

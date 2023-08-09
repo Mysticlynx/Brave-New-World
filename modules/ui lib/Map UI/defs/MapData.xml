@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="MapData" class="CMLObject">
+	    <propertyDef name="objModuleSD" type="Module"/> <!-- sd. -->
+	    <propertyDef name="bEditMode" type="bool" default="false"/>
+		<propertyDef name="objAvatar" type="mlgame.Avatar"/>
+		<propertyDef name="objGameRoot" type="Object"/>
+        <propertyDef name="bShadows" type="bool" default="false"/>       
+		<propertyDef name="objPrevSelectedObject" type="Object"/>
+		<propertyDef name="refSelectedObject" type="GORef"/>
+		<propertyDef name="objSelectedObject" type="Object">
+            self.refSelectedObject.resolve(self.objGameRoot)
+		</propertyDef>
+		<propertyDef name="objSelectedWrapper" type="Object"/>
+		<propertyDef name="tmplMapView" type="TemplateRef" restriction="MapViewTemplate"/>
+		<propertyDef name="objCityModelTable" type="CityModelTable" storesChildren="true"/>
+		<propertyDef name="objCityGroundModelTable" type="CityModelTable" storesChildren="true"/>
+		<propertyDef name="objCityReligiousBuildingModelTable" type="CityModelTable" storesChildren="true"/>
+        <propertyDef name="objResourceCapacityModelTable" type="ResourceCapacityModelTable" storesChildren="true"/>
+        <propertyDef name="objRegionImprovementModelTable" type="RegionImprovementModelTable" storesChildren="true"/>
+        <propertyDef name="tmplAirbaseMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+        <propertyDef name="tmplEngagementMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+        <propertyDef name="tmplInterdictionMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplFlagMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplFlagPoleMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplPortMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplDockMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplFarmWorkerMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplMilitaryWorkerMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplResourcesWorkerMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplRoadWorkerMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplCityConstructionProjectMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplCoastalDefense1MapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplCoastalDefense2MapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplWorldEdgeNorthMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="objUnitModelTable" type="UnitModelTable" storesChildren="true"/>
+		<propertyDef name="objFlagModelTextureTable" type="media_tables.FlagModelTextureTable" storesChildren="true"/>
+
+		<propertyDef name="objTransportationImprovementTable" type="TransImprovementEntry" variable="true" storesChildren="true"/>
+
+        <!-- ideology templates -->		
+		<propertyDef name="objIdeologyTemplateDemocratic" type="gs_tbg.IdeologyTemplate"/>
+		<propertyDef name="objIdeologyTemplateCommunist" type="gs_tbg.IdeologyTemplate"/>
+		<propertyDef name="objIdeologyTemplateAuthoritarian" type="gs_tbg.IdeologyTemplate"/>
+		<propertyDef name="objIdeologyTemplateFascist" type="gs_tbg.IdeologyTemplate"/>
+		
+		<!-- unit branch templates -->
+        <propertyDef name="objUnitBranchTemplateArmy" type="gs_tbg.UnitBranchTemplate"/>
+        <propertyDef name="objUnitBranchTemplateNavy" type="gs_tbg.UnitBranchTemplate"/>
+        <propertyDef name="objUnitBranchTemplateAirForce" type="gs_tbg.UnitBranchTemplate"/>
+        <propertyDef name="objUnitBranchTemplateSubmarine" type="gs_tbg.UnitBranchTemplate"/>
+        
+        <propertyDef name="objFactoryOutputCategoryTemplateCityBuildings" type="gs_tbg.FactoryOutputCategoryTemplate"/>
+        
+        <propertyDef name="objCityBuildingTemplateIndustrialEnterprise" type="gs_tbg.CityBuildingTemplate"/>
+        <propertyDef name="objCityBuildingTemplateIndustrialPlant" type="gs_tbg.CityBuildingTemplate"/>
+        <propertyDef name="objCityBuildingTemplateLargeFactory" type="gs_tbg.CityBuildingTemplate"/>
+        <propertyDef name="objCityBuildingTemplateMechanizedFactory" type="gs_tbg.CityBuildingTemplate"/>
+        <propertyDef name="objCityBuildingTemplateCottageFactory" type="gs_tbg.CityBuildingTemplate"/>
+		<propertyDef name="objCityBuildingTemplateMunitionsPlant" type="gs_tbg.CityBuildingTemplate"/>
+		<propertyDef name="objCityBuildingTemplateNuclearPowerPlant" type="gs_tbg.CityBuildingTemplate"/>
+		<propertyDef name="objCityBuildingTemplateCoalPlant" type="gs_tbg.CityBuildingTemplate"/>
+		<propertyDef name="objCityBuildingTemplateRecyclingCenter" type="gs_tbg.CityBuildingTemplate"/>
+		<propertyDef name="objCityBuildingTemplateVehiclePlant" type="gs_tbg.CityBuildingTemplate"/>	
+        <propertyDef name="objCityBuildingTemplateAircraftPlant" type="gs_tbg.CityBuildingTemplate"/>
+        <propertyDef name="objCityBuildingTemplateSyntheticFuelPlant" type="gs_tbg.CityBuildingTemplate"/>
+        <propertyDef name="objCityBuildingTemplateFoodProcessingPlants" type="gs_tbg.CityBuildingTemplate"/>
+        <propertyDef name="objCityBuildingTemplateIndustrialShipyard" type="gs_tbg.CityBuildingTemplate"/>
+        <propertyDef name="objCityBuildingTemplateShipyard" type="gs_tbg.CityBuildingTemplate"/>
+        
+        <propertyDef name="objResearchCenterBuildingTemplateUniversity" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateMilitaryAcademy" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateNavalAcademy" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateAirForceAcademy" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateMedicalCenter" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplatePublicSchool" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateTechnologyCenter" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateResearchFacility" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateChemicalLab" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateRocketLab" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateJetPropulsionLab" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateNuclearLab" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="objResearchCenterBuildingTemplateOrbitalScienceLab" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+
+        <propertyDef name="objCoastalDefenseImprovementTemplateShoreBatteries" type="gs_tbg.CoastalDefenseImprovementTemplate"/>
+        <propertyDef name="objCoastalDefenseImprovementTemplateIntegratedCoastalDefense" type="gs_tbg.CoastalDefenseImprovementTemplate"/>
+
+        <propertyDef name="objRegionOutputCategoryTemplateMilitary" type="gs_tbg.RegionOutputCategoryTemplate"/>
+        <propertyDef name="objRegionOutputCategoryTemplateTransportation" type="gs_tbg.RegionOutputCategoryTemplate"/>
+        <propertyDef name="objRegionOutputCategoryTemplateFood" type="gs_tbg.RegionOutputCategoryTemplate"/>
+        <propertyDef name="objRegionOutputCategoryTemplateResources" type="gs_tbg.RegionOutputCategoryTemplate"/>
+        
+        <propertyDef name="objRegionOutputTemplateAirbase" type="gs_tbg.RegionOutputTemplate"/>
+
+    <!-- expected script methods:
+		    getInfantryTemplateFromClassRank(nClassRank)
+		    getUnitTemplate(strUnitTemplate)
+		-->
+
+		<!--- God mode! -->
+		<propertyDef name="bMoveObjectsMode" type="bool" default="false"/>
+		
+        <propertyDef name="objMapBehaviorTableGOSelected" type="MapBehaviorTableGOSelected" storesChildren="true"/>
+        <propertyDef name="objMapBehaviorTableGOQueried" type="MapBehaviorTableGOQueried" storesChildren="true"/>
+        <propertyDef name="objMapBehaviorTableGOTargetting" type="MapBehaviorTableGOTargetting" storesChildren="true"/>
+
+		<propertyDef name="objMap" type="gs_tbg.GameSysMap" from="gs_tbg.getGameSysMap(self.objGameRoot)"/>
+        <propertyDef name="vecDefaultLookAt" type="Vec3D"/>
+        <propertyDef name="vecCurLookAt" type="Vec3D"/>
+		
+		<propertyDef name="vecCurLookAtOffsetted" type="Vec3D">
+			Vec3D(
+				?{xpos:
+					switch{
+						case self.objMap.bWrapX AND xpos LT 0:
+							(int(xpos) % int((self.objMap.vecMax.x - self.objMap.vecMin.x))) + (self.objMap.vecMax.x - self.objMap.vecMin.x)
+						case self.objMap.bWrapX AND xpos GT self.objMap.vecMax.x - self.objMap.vecMin.x:
+							xpos - ((self.objMap.vecMax.x - self.objMap.vecMin.x) * int(xpos / (self.objMap.vecMax.x - self.objMap.vecMin.x)))
+						case !self.objMap.bWrapX AND xpos LT self.objMap.vecMin.x:
+							self.objMap.vecMin.x
+						case !self.objMap.bWrapX AND xpos GT self.objMap.vecMax.x:
+							self.objMap.vecMax.x
+						default:
+							xpos
+					}
+				}(self.vecCurLookAt.x + self.vecCurLookAtOffset.x),
+				?{yvalue:
+						switch
+						{
+							case yvalue LTE self.objMap.vecMin.y:
+								self.objMap.vecMin.y
+							case yvalue GTE self.objMap.vecMax.y:
+								self.objMap.vecMax.y
+							default:
+								yvalue
+						}
+					}(self.vecCurLookAt.y + self.vecCurLookAtOffset.y),
+				self.vecCurLookAt.z + self.vecCurLookAtOffset.z
+			)
+		</propertyDef>
+        <propertyDef name="vecCurLookAtOffset" type="Vec3D">
+			if(self.bIsEdgeScrolling,
+				Vec3D(
+					(self.vecEdgeScrollingDir.x * self.fEdgeScrollingSpeed * (mlui.objUI.fTime - self.fEdgeScrollingStartTime)),
+					(self.vecEdgeScrollingDir.y * self.fEdgeScrollingSpeed * (mlui.objUI.fTime - self.fEdgeScrollingStartTime)),
+					0),
+				Vec3D(0, 0, 0))
+		</propertyDef>
+		<propertyDef name="bIsEdgeScrolling" type="bool" default="false"/>
+		<propertyDef name="vecEdgeScrollingDir" type="Vec3D" default="[0, 0, 0]"/>
+		<propertyDef name="fEdgeScrollingSpeed" type="float">
+			switch{
+				case self.objCameraTransform.fDistance GTE self.fDropAllDistance:
+					60.0
+				case self.objCameraTransform.fDistance GTE self.fDropUnitsDistance:
+					18.0
+				default:
+					5.0
+			}
+		</propertyDef>
+		<propertyDef name="fEdgeScrollingStartTime" type="float" default="0.0"/>
+		
+        <propertyDef name="fDefaultDistance" type="float" value="50.0"/>
+        <propertyDef name="fDefaultTilt" type="float" value="45.0"/>
+        <propertyDef name="fMinDistance" type="float" value="4.5"/>
+        <propertyDef name="fMaxDistance" type="float" value="200"/>
+			<!--(self.objMap.vecMax.y - self.objMap.vecMin.y) / 2 / (locust.tan((self.fCameraYFOV / 2) * (float.pi / 180)))-->
+        <propertyDef name="fDropUnitsDistance" type="float" value="40.0"/>
+        <propertyDef name="fDropAllDistance" type="float" value="70.0"/>
+        <propertyDef name="fMinTilt" type="float" value="0.0"/>
+        <propertyDef name="fMaxTilt" type="float" value="60.0"/>
+        <propertyDef name="fPanStep" type="float" value="0.1"/> <!-- Amount of the Y-viewable area to pan in one step. -->
+
+		<propertyDef name="objFoggingGameSys" type="gs_tbg.GameSysFogging" from="gs_tbg.getGameSysFogging(self.objAvatar)"/>
+
+		<propertyDef name="objCameraTransform" type="ml3dworld.TransformLookAtFromDir" storesChildren="true"/>
+		<propertyDef name="fCameraYFOV" type="float" value="30.0"/>
+ 
+        <propertyDef name="objRoot" type="mlui.UI2DElement" from="mlui.objUI.objRoot"/>
+
+        <propertyDef name="objNation" type="gs_tbg.Nation">
+            self.objAvatar.getAttribValue('Nation').resolve(self.objAvatar)
+        </propertyDef>
+        
+        <propertyDef name="objStacks" type="UIGroupStackLayer">
+            if(self.objRoot.objMap.obj3DViewPort != null,self.objRoot.objMap.obj3DViewPort,self.objRoot.objMap.objFlatViewPort).objModelLayer.objStackLayer
+        </propertyDef>
+        
+		<object type="ml3dworld.TransformLookAtFromDir" name="objCameraTransform">
+			<property name="vecLookAt" from="def.vecCurLookAtOffsetted"/>
+			<property name="fPhi" value="0.0"/>
+			<property name="fTheta" value="60.0"/>
+			<property name="fGamma" value="0.0"/>
+			<property name="fDistance" value="20.0"/>
+		</object>
+		
+		<propertyDef name="nMaxRegionPoints" type="int">
+			sortDescending(?{region: region.objPowerPoints.nTotalPoints}, self.getControlledRegions()).first.objPowerPoints.nTotalPoints
+		</propertyDef>
+		<propertyDef name="nMinRegionPoints" type="int">
+			sortDescending(?{region: region.objPowerPoints.nTotalPoints}, self.getControlledRegions()).last.objPowerPoints.nTotalPoints
+		</propertyDef>
+		
+		<script type="application/x-locust-query">
+
+			getAllRegions = ?{: gs_tbg.getAllRegions(self.objAvatar) }
+
+			getAllMapRegions = ?{: gs_tbg.getAllMapRegions(self.objAvatar) }
+
+			getAllUnitBases = ?{: gs_tbg.getAllUnitBases(self.objAvatar) }
+
+			getControlledRegions = ?{: gs_tbg.getControlledRegions(self.objAvatar, self.objNation) }
+
+			getOwnedRegions = ?{: gs_tbg.getOwnedRegions(self.objAvatar, self.objNation) }
+			
+			getTerrainTypes = ?{: gs_tbg.getTerrainTypes(self.objAvatar) }
+									
+			getTransportationImprovementTypes = ?{: gs_tbg.getTransportationImprovementTypes(self.objAvatar)}
+			
+			getFortificationImprovementTypes = ?{: gs_tbg.getFortificationImprovementTypes(self.objAvatar)}
+			
+			getAADefenseImprovementTypes = ?{: gs_tbg.getAADefenseImprovementTypes(self.objAvatar)}
+			
+			getCoastalDefenseImprovementTypes = ?{: gs_tbg.getCoastalDefenseImprovementTypes(self.objAvatar)}
+			
+            getPositionOfUnitGroup = ?{ unitGroup: self.objStacks.getPositionOfUnitGroup(unitGroup) }
+
+            getUnitDisplayedForUnitGroup = ?{ unitGroup:
+                                                ?{stack: if(stack!=null, stack.objDisplayUnit, null)}(self.objStacks.getStackForUnitGroup(unitGroup)) 
+                                            }
+            
+		</script>
+
+		<!-- Methods -->
+		<script type="application/javascript"><![CDATA[
+			function setViewToDefault() {
+                log("Setting view to default");
+                self.lookAt(self.vecDefaultLookAt);
+                self.zoomTo(self.fDefaultDistance);
+                self.tiltTo(self.fDefaultTilt);
+            }
+            
+            function lookAt(vecLookAt) {
+                var x = vecLookAt.x;
+                var y = vecLookAt.y;
+                var minx = self.objMap.vecMin.x;
+                var maxx = self.objMap.vecMax.x;
+                var miny = self.objMap.vecMin.y;
+                var maxy = self.objMap.vecMax.y;
+                if(self.objMap.bWrapX) {
+                    var width = maxx - minx;
+                    while(x < 0) {
+                        x += width;
+                    }
+                    while(x > width) {
+                        x -= width;
+                    }
+                }
+                else {
+                    if(x < minx) {
+                        x = minx;
+                    }
+                    if(x > maxx) {
+                        x = maxx;
+                    }
+                }
+                
+                if(y < miny) {
+                    y = miny;
+                }
+                if(y > maxy) {
+                    y = maxy;
+                }
+                
+                self.vecCurLookAt = Vec3D(x, y, self.objMap.fLandLevel);
+                //self.objCameraTransform.vecLookAt = Vec3D(x, y, self.objMap.fLandLevel);
+			}
+            
+			function zoomToClosest() {
+                self.zoomTo(self.fMinDistance);
+			}
+			
+            function zoomTo(distance) {
+                if(distance < self.fMinDistance) {
+                    distance = self.fMinDistance;
+                }
+                if(distance > self.fMaxDistance) {
+                    distance = self.fMaxDistance;
+                }
+                self.objCameraTransform.fDistance = distance;
+            }
+            
+            function tiltTo(angle) {
+                if(angle < self.fMinTilt) {
+                    angle = self.fMinTilt;
+                }
+                if(angle > self.fMaxTilt) {
+                    angle = self.fMaxTilt;
+                }
+				self.objCameraTransform.fTheta = angle;
+            }
+            
+            function zoomCameraIn() {
+                self.zoomTo(self.objCameraTransform.fDistance / 1.1);
+			}
+			
+            function zoomCameraOut() {
+                self.zoomTo(self.objCameraTransform.fDistance * 1.1);
+			}
+            
+			function tiltCameraDown() {
+                self.tiltTo(self.objCameraTransform.fTheta + 1);
+			}
+            
+			function tiltCameraUp() {
+                self.tiltTo(self.objCameraTransform.fTheta - 1);
+			}
+            
+            function computePanAmount() {
+                var alpha = self.fCameraYFOV / 2 * float.pi / 180;
+                var viewHeight = 2 * self.objCameraTransform.fDistance * locust.tan(alpha);
+                return self.fPanStep * viewHeight;
+            }
+            
+			function panCameraDown() {
+                self.lookAt(self.objCameraTransform.vecLookAt.plus(Vec3D(0, -computePanAmount(), 0)))
+			}
+            
+			function panCameraUp() {
+                self.lookAt(self.objCameraTransform.vecLookAt.plus(Vec3D(0, computePanAmount(), 0)))
+			}
+            
+			function panCameraLeft() {
+                self.lookAt(self.objCameraTransform.vecLookAt.plus(Vec3D(-computePanAmount(), 0, 0)))
+			}
+            
+			function panCameraRight() {
+                self.lookAt(self.objCameraTransform.vecLookAt.plus(Vec3D(computePanAmount(), 0, 0)))
+			}
+
+            function dispatchOnGOSelected(GO, mouseparams) {
+				var behavior = self.objMapBehaviorTableGOSelected.lookupBehavior(GO);
+				if (behavior == null) {
+					log("missing selection behavior for map GO " + GO);
+				}
+				else {
+					behavior.trigger(self.objAvatar, self, mouseparams, GO);
+				}
+            }
+
+            function dispatchOnGOQueried(GO, mouseparams) {
+                var behavior = self.objMapBehaviorTableGOQueried.lookupBehavior(GO)
+                if (behavior == null) {
+                    //this may be a valid case
+                    //unless we are debugging then we should report somehow
+                }
+                else {
+                    behavior.trigger(self.objAvatar, self, mouseparams, GO)
+                }
+            }
+
+            function dispatchOnGOTargetting(actor, target, mouseparams) {
+                var behavior = self.objMapBehaviorTableGOTargetting.lookupBehavior(actor, target)
+                if (behavior == null) {
+					// If there isn't an entry for actor & target, check for just target
+					var queriedbehavior = self.objMapBehaviorTableGOQueried.lookupBehavior(target)
+					if(queriedbehavior == null){
+						//this may be a valid case
+						//unless we are debugging then we should report somehow
+					}
+					else {
+						queriedbehavior.trigger(self.objAvatar, self, mouseparams, target)
+					}
+                }
+                else {
+                    behavior.trigger(self.objAvatar, self, mouseparams, actor, target)
+                }
+            }
+
+            function createGOSelectedEvents() {
+                self.objRoot.sendEvent(EventCheckSeaRegion.create());
+                self.objRoot.sendEvent(EventChangeSelectedObject.create());
+			}
+
+			function makeGOSelectedOnMap(objGO) {
+                self.objPrevSelectedObject = self.objSelectedObject;
+                var t = objGO.type;
+                if (t == gs_tbg.SeaEngagement) {
+                    t = gs_tbg.Engagement;
+                }
+                
+				self.refSelectedObject = GORef(t, objGO);
+				self.objSelectedWrapper = null;
+
+				if(self.objPrevSelectedObject != self.objSelectedObject) {
+					createGOSelectedEvents();
+				}
+            }
+
+			function makeWrapperGOSelectedOnMap(wrapper) {
+				self.objPrevSelectedObject = self.objSelectedObject;
+				var objGO = wrapper.objGO;
+				if(objGO != null) {
+					self.refSelectedObject = GORef(objGO.type, objGO);
+					self.objSelectedWrapper = wrapper;
+
+					if(self.objPrevSelectedObject != self.objSelectedObject) {
+						createGOSelectedEvents();
+					}
+				}
+            }
+			
+			function selectNation(nation) {
+				log("Yo dude, this shouldn't happen");
+				self.makeGOSelectedOnMap(nation);
+			}
+		]]></script>		
+	</objectDef>
+
+	<objectDef type="TransImprovementEntry" class="CMLObject">
+		<propertyDef name="tmplTransportationImprovement" type="TemplateRef" restriction="gs_tbg.TransportationImprovementTemplate"/>
+		<propertyDef name="colColor" type="Color"/>
+	</objectDef>
+</locust>

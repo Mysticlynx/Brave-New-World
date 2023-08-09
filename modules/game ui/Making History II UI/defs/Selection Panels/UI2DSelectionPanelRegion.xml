@@ -1,0 +1,727 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DSelectionPanelRegion" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="351"/>
+		<property name="nHeight" value="213"/>
+		<property name="haXAlign" value="LEFT"/>
+		<property name="vaYAlign" value="BOTTOM"/>
+		
+	<!-- Header and Background -->
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="157"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconRegion"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="157"/>
+			<property name="nWidth" value="65"/>
+			<property name="nHeight" value="55"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="spdata.objRegionData.objRegion.refOwner.resolve(mh2data.objAvatar)"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="156"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="157"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelBG">
+			<property name="tmplImage" value="skin.ImgDetailPanel"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="119"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelBGTop">
+			<property name="tmplImage" value="skin.ImgPanelTopBG"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="124"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="32"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBottomBG">
+			<property name="tmplImage" value="skin.ImgOlive"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+<!-- Foreground -->
+		<object type="mlui.UI2DImage" name="objPanelBorder">
+			<property name="tmplImage" value="skin.ImgPanelBorderSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="158"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="119"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="304"/>
+			<property name="nWidth" value="351"/>
+			<property name="nHeight" value="8"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<!-- Content -->
+		<object type="UI2DRegionPanel" name="objRegionPanel">
+
+			<property name="nX" value="3"/>
+			<property name="nY" value="58"/>
+			<property name="nWidth" value="345"/>
+			<property name="nHeight" value="125"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<!--<object type="mlui.UI2DButton" name="objRegionPanelButton">-->
+		<!--	<property name="tmplButtonStyle" value="skin.BtnStyleRegionExpand"/>-->
+		<!--	<property name="nX" value="315"/>-->
+		<!--	<property name="nY" value="188"/>-->
+		<!--	<property name="nDefaultWidth" value="30"/>-->
+		<!--	<property name="nDefaultHeight" value="25"/>-->
+		<!--	<property name="strToolTip" from="locale.SID.UI.Maximize"/>-->
+		<!--	-->
+		<!--	<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--		<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--			<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--			<script type="application/javascript"><![CDATA[-->
+		<!--				function handle(event, owner)-->
+		<!--				{-->
+		<!--					spdata.objRegionData.showRegionInfo(spdata.objRegionData.objRegion);-->
+		<!--				}-->
+		<!--			]]></script>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--</object>-->
+		
+		<!--<object type="mlui.UI2DImage" name="objRegionButtonFlat" existsWhile="mh2data.canViewObjectInfo(spdata.objRegionData.objRegion) == false">-->
+		<!--	<property name="tmplImage" value="skin.ImgRegionExpandButtonC"/>-->
+		<!--	<property name="nX" value="315"/>-->
+		<!--	<property name="nY" value="188"/>-->
+		<!--	<property name="nWidth" value="30"/>-->
+		<!--	<property name="nHeight" value="20"/>-->
+		<!--</object>-->
+		
+	</objectDef>
+
+	<objectDef type="UI2DRegionPanel" superType="mlui.UI2DElement">
+		<property name="haXAlign" value="LEFT"/>
+		<property name="vaYAlign" value="TOP"/>
+				
+	<!-- Region ID 
+		<object type="UI2DNationIcon" name="objRegionControllerIcon">
+			<property name="objNation" from="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar)"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objIDIconOccupation" existsWhile="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar) != spdata.objRegionData.objRegion.refOwner.resolve(mh2data.objAvatar)">
+			<property name="tmplImage" value="skin.ImgIDIconOccupation"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+			<property name="strText" from="spdata.objRegionData.objRegion.strDisplayName"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="14"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objController">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12Left"/>
+			<property name="strText" from="spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar).strDisplayName"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="17"/>
+			<property name="nWidth" value="283"/>
+			<property name="nHeight" value="12"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>-->
+
+	<!-- Details Background -->	
+		<object type="mlui.UI2DImage" name="objDetailsBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleBrownTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="341"/>
+			<property name="nHeight" value="89"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objDetailsBG2">
+      <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+      <property name="nX" value="5"/>
+      <property name="nY" value="38"/>
+      <property name="nWidth" value="335"/>
+      <property name="nHeight" value="83"/>
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objDetailsBGGradient">
+			<property name="tmplImage" value="skin.ImgGradientGraySm"/>
+      <property name="nX" value="6"/>
+      <property name="nY" value="39"/>
+      <property name="nWidth" value="333"/>
+      <property name="nHeight" value="37"/>
+		</object>
+		
+		<object type="UI2DPanelTop" name="objTop">
+			<property name="nWidth" from="def.nWidth - 2"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="objNation" from="spdata.objRegionData.objController"/>
+			<property name="strDesc" from="spdata.objRegionData.objController.strDisplayName"/>
+			
+			<object type="common_ui.UI2DListHorz" name="objInfoBubbles">
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="haXAlign" value="RIGHT"/>
+				<property name="nSpacing" value="3"/>
+				
+				<object type="mlui.UI2DImage" name="objElements">
+					<property name="tmplImage" value="skin.ImgIDIconAirBase"/>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="28"/>
+					<property name="nHeight" value="28"/>
+					<property name="nDepth" value="50"/>
+					<property name="bVisible" from="spdata.objRegionData.objRegion.objAirbaseImprovement != null"/>
+					<property name="strToolTip" from="locale.SID.UI.Airbase"/>
+				</object>
+				
+				<object type="mlui.UI2DImage" name="objElements">
+					<property name="tmplImage" value="skin.ImgIDIconNavalBase"/>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="27"/>
+					<property name="nHeight" value="27"/>
+					<property name="strToolTip" from="locale.SID.UI.NavalBase"/>
+					<property name="bVisible" from="filter(?{base: base.refRegion.resolve(mh2data.objAvatar) == spdata.objRegionData.objRegion}, gs_tbg.getAllNavalBases(mh2data.objAvatar)).size != 0"/>
+				</object>
+				
+				<!--<object type="UI2DSeasonIcon" name="objElements" existsWhile="gs_tbg.getRegionSeason(mh2data.objAvatar, spdata.objRegionData.objRegion) != null">-->
+				<!--	<property name="nWidth" value="28"/>-->
+				<!--	<property name="nHeight" value="28"/>-->
+				<!--	<property name="objRegion" from="spdata.objRegionData.objRegion" />-->
+				<!--</object>-->
+				
+				<object type="UI2DTerrainIconWithBackground" name="objElements">
+					<property name="objRegion" from="spdata.objRegionData.objRegion"/>
+					<property name="nWidth" value="28"/>
+					<property name="nHeight" value="28"/>
+				</object>
+				
+				<object type="UI2DSOMaximizeButton" name="objElements">
+					<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+						<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+							<property name="otEventType" value="mlui.EventButtonClicked"/>
+							<script type="application/javascript"><![CDATA[
+								function handle(event, owner)
+								{
+									spdata.objRegionData.showRegionMax(spdata.objRegionData.objRegion);
+								}
+							]]></script>
+						</object>
+					</object>
+				</object>
+				
+			</object>
+		</object>
+		
+		<object type="UI2DRegionImprovementSlot" name="objTransportationImprovement" >
+			<property name="objRegionProject" from="spdata.objRegionData.objRegion.objTransportationImprovement" />
+			<property name="nX" value="211"/>
+			<property name="nY" value="53"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="30"/>
+			<property name="strNoRegionProject" from="locale.SID.UI.MapViewTransportation" />
+		</object>
+		
+		<object type="UI2DRegionImprovementSlot" name="objFortificationImprovement" >
+			<property name="objRegionProject" from="spdata.objRegionData.objRegion.objFortificationImprovement" />
+			<property name="nX" value="243"/>
+			<property name="nY" value="53"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="30"/>
+			<property name="strNoRegionProject" from="locale.SID.UI.MapViewFortifications" />
+		</object>
+		
+		<object type="UI2DRegionImprovementSlot" name="objAADefenseImprovement" >
+			<property name="objRegionProject" from="spdata.objRegionData.objRegion.objAADefenseImprovement" />
+			<property name="nX" value="275"/>
+			<property name="nY" value="53"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="30"/>
+			<property name="strNoRegionProject" from="locale.SID.UI.MapViewAADefense" />
+		</object>
+		
+		<object type="UI2DRegionImprovementSlot" name="objCoastalDefenseImprovement" >
+			<property name="objRegionProject" from="spdata.objRegionData.objRegion.objCoastalDefenseImprovement" />
+			<property name="nX" value="307"/>
+			<property name="nY" value="53"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="30"/>
+			<property name="strNoRegionProject" from="locale.SID.UI.MapViewCoastalDefense" />	
+		</object>
+				
+		
+	<!-- Region Project Section -->
+		<object type="mlui.UI2DText" name="objRegionProjectLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.CurrentProject"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="43"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="UI2DRegionProject" name="objRegionProject" >
+			<property name="nX" value="8"/>
+			<property name="nY" value="53"/>
+			<property name="nWidth" value="194"/>
+			<property name="nHeight" value="30"/>		
+		</object>
+
+		
+		<object type="mlui.UI2DText" name="objRegionResourceProducingLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Infrastructure"/>
+			<property name="nX" value="213"/>
+			<property name="nY" value="43"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objRegionResourceProducingBG">
+			<property name="tmplImage">
+				if(spdata.objRegionData.objRegion.canCommand(mh2data.objAvatar, mh2data.objNation), 'skin.ImgReportBubbleTanWhite', 'skin.ImgReportBubbleTanSand')
+			</property>
+			<property name="nX" value="8"/>
+			<property name="nY" value="88"/>
+			<property name="nWidth" value="216"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<!-- Metals -->
+		<object type="UI2DResourceIcon" name="objMetalsIcon">
+			<property name="tmplResource" value="sd.Metals"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="87"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="32"/>
+			<property name="strToolTip" from="locale.SID.UI.Metals"/>
+		</object>
+
+		<object type="UI2DRegionResourceAmount" name="objMetals">
+			<property name="tmplResource" value="sd.Metals"/>
+			<property name="nX" value="37"/>
+			<property name="nY" value="97"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<!-- Coal -->
+		<object type="UI2DResourceIcon" name="objCoalIcon">
+			<property name="tmplResource" value="sd.Coal"/>
+			<property name="nX" value="61"/>
+			<property name="nY" value="87"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="32"/>
+			<property name="strToolTip" from="locale.SID.UI.Coal"/>
+		</object>		
+		
+		<object type="UI2DRegionResourceAmount" name="objCoal">
+			<property name="tmplResource" value="sd.Coal"/>
+			<property name="nX" value="90"/>
+			<property name="nY" value="97"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<!-- Oil -->
+		<object type="UI2DResourceIcon" name="objOilIcon">
+			<property name="tmplResource" value="sd.Oil"/>
+			<property name="nX" value="115"/>
+			<property name="nY" value="87"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="32"/>
+			<property name="strToolTip" from="locale.SID.UI.Oil"/>
+		</object>
+
+		<object type="UI2DRegionResourceAmount" name="objOil">
+			<property name="tmplResource" value="sd.Oil"/>
+			<property name="nX" value="143"/>
+			<property name="nY" value="97"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<!-- Food -->
+		<object type="UI2DResourceIcon" name="objFoodIcon">
+			<property name="tmplResource" value="sd.Food"/>
+			<property name="nX" value="169"/>
+			<property name="nY" value="87"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="32"/>
+			<property name="strToolTip" from="locale.SID.UI.Food"/>
+		</object>
+
+		<object type="UI2DRegionResourceAmount" name="objFood">
+			<property name="tmplResource" value="sd.Food"/>
+			<property name="nX" value="196"/>
+			<property name="nY" value="97"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+	<!-- Amount Section -->
+		<object type="mlui.UI2DImage" name="objMPUandSupplyBG">
+			<property name="tmplImage">
+				if(spdata.objRegionData.objRegion.canCommand(mh2data.objAvatar, mh2data.objNation), 'skin.ImgReportBubbleTanWhite', 'skin.ImgReportBubbleTanSand')
+			</property>
+			<property name="nX" value="233"/>
+			<property name="nY" value="88"/>
+			<property name="nWidth" value="104"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMPUIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMPU21x21"/>
+			<property name="nX" value="237"/>
+			<property name="nY" value="92" />
+			<property name="nWidth" value="21"/>
+			<property name="nHeight" value="21"/>
+			<property name="strToolTip" from="locale.SID.UI.IdleMPUs"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objMPUs">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="spdata.objRegionData.objRegion.nUnemployedMPUs.formatNumber(0, true)"/>
+			<property name="nX" value="259"/>
+			<property name="nY" value="98"/>
+			<property name="nWidth" value="50"/>
+			<property name="nHeight" value="18"/>
+			<property name="strToolTip" from="locale.SID.UI.IdleMPUs"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSupplyIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconSupplySm"/>
+			<property name="nX" value="286"/>
+			<property name="nY" value="92"/>
+			<property name="nWidth" value="18"/>
+			<property name="nHeight" value="24"/>
+			<property name="strToolTip" from="locale.SID.UI.SupplyRate"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objArmsLimit">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="spdata.objRegionData.objRegion.nArmsLimit + '%'"/>
+			<property name="nX" value="303"/>
+			<property name="nY" value="98"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="18"/>
+			<property name="strToolTip" from="locale.SID.UI.SupplyRate"/>
+		</object>	
+
+	</objectDef>
+	
+	<objectDef type="UI2DRegionProjectIcon" superType="mlui.UI2DElement">
+		<propertyDef name="objRegionProject" type="gs_tbg.RegionOutputTemplate"/>
+		
+		<object type="mlui.UI2DImage" name="objRegionProjectIcon">
+			<property name="tmplImage">
+				switch {
+						case def.objRegionProject.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Transportation'):
+							mh2data.objTransportationProdDisplayTable.getEntry(def.objRegionProject.tmplTransportationImprovement).tmplIcon
+						
+						case def.objRegionProject.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Military'):
+							switch {
+								case def.objRegionProject.instanceOf(gs_tbg.CoastalDefenseOutputTemplate):
+									mh2data.objCoastalDefenseDisplayTable.getEntry(def.objRegionProject.tmplCoastalDefenseImprovement).tmplIcon
+								
+								case def.objRegionProject.instanceOf(gs_tbg.FortificationOutputTemplate):
+									mh2data.objFortificationDisplayTable.getEntry(def.objRegionProject.tmplFortificationImprovement).tmplIcon
+									
+								case def.objRegionProject.instanceOf(gs_tbg.AADefenseOutputTemplate):
+									mh2data.objAADefenseDisplayTable.getEntry(def.objRegionProject.tmplAADefenseImprovement).tmplIcon
+									
+								case def.objRegionProject.instanceOf(gs_tbg.AirbaseOutputTemplate):
+									"skin.ImgRegionAirBaseSM"
+									
+								case def.objRegionProject.instanceOf(gs_tbg.NavalBaseOutputTemplate):
+									"skin.ImgRegionNavalBaseSM"
+									
+								default:
+									"skin.ImgInfoIconPickaxeSm"
+							}
+						
+						case def.objRegionProject.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(def.objRegionProject).tmplIcon
+						
+						case def.objRegionProject.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(def.objRegionProject).tmplIcon
+						
+						default:
+							"skin.ImgInfoIconPickaxeSm"
+					}
+			</property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" value="27"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DRegionProject" superType="mlui.UI2DElement">
+		<object type="LookupCurrentRegionProject" name="objLookupCurrentRegionProject">
+			<property name="objRegion" from="spdata.objRegionData.objRegion"/>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objProgressBar" existsWhile="def.objLookupCurrentRegionProject.objOutputTemplate != null">
+			<property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate,'ImgFillLightGreen')" />
+      <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+      <property name="nDepth" value="4" />`
+      <property name="nX" value="1" />
+      <property name="nDepth" from="4"/>
+			<property name="nY" value="1" />
+			<property name="nHeight" from="def.nHeight-2" />
+			<property name="nWidth" >
+				float(float(float(def.objLookupCurrentRegionProject.nProjectPercent) / 100) *  float(def.nWidth - 2)) 
+			</property>
+		</object>
+		
+		<object type="UI2DRegionProjectIcon" name="objRegionProjectIcon" existsWhile="def.objLookupCurrentRegionProject.objOutputTemplate != null">
+			<property name="objRegionProject" from="def.objLookupCurrentRegionProject.objOutputTemplate"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" value="27"/>
+			<property name="nDepth" value="50"/>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objUncontrollableBG" existsWhile="mh2data.objNation != spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar)" >
+			<property name="tmplImage">
+				'skin.ImgReportBubbleTanSand'
+			</property>
+			<property name="nX" value="0" />
+			<property name="nY"  value="0" />
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="30"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>	
+		
+		<object type="mlui.UI2DButton" name="objRegionProjectsButton" existsWhile="mh2data.objNation == spdata.objRegionData.objRegion.refController.resolve(mh2data.objAvatar)">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleReportBubbleTanWhite')" />
+            <property name="strToolTip">
+                if (def.objLookupCurrentRegionProject.objProject != null,
+                if (def.objLookupCurrentRegionProject.objProject.nNumPaidFor == 0,
+                locale.SID.UI.SuppliesNeeded,
+                null), null
+                )
+            </property>
+            <property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="def.nWidth"/>
+			<property name="nDefaultHeight" value="30"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(mh2data.canViewObjectInfo(spdata.objRegionData.objRegion))
+							{							
+								spdata.objRegionData.showRegionInfrastructure(spdata.objRegionData.objRegion);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+				
+
+		<object type="mlui.UI2DText" name="objCurrentRegionProject" existsWhile="def.objLookupCurrentRegionProject.objOutputTemplate == null">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialMedGray13Center"/>
+			<property name="strText" from="locale.SID.UI.NoOrders"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nDepth" value="500"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objProjectTurns" existsWhile="self.objLookupCurrentRegionProject.objOutputTemplate != null">
+			<property name="tmplTextStyle">
+            if (def.objLookupCurrentRegionProject.objProject.nNumPaidFor == 0,
+            'locale.TxtStyleArialRed13LeftFIT',
+            'locale.TxtStyleArialBlue13LeftFIT'
+            )
+            </property>
+            <property name="strText" from="def.objLookupCurrentRegionProject.objOutputTemplate.strDisplayName"/>
+            <property name="nX" value="31"/>
+			<property name="nY" value="10"/>
+			<property name="nHeight" value="18"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nDepth" value="500"/>
+        </object>
+		
+		<object type="mlui.UI2DText" name="objOrderTurnsLabel" existsWhile="self.objLookupCurrentRegionProject.objOutputTemplate != null">
+			<property name="tmplTextStyle">
+                if (def.objLookupCurrentRegionProject.objProject.nNumPaidFor == 0,
+                'locale.TxtStyleArialRed13Left',
+                'locale.TxtStyleArialBlue13Left'
+                )
+            </property>
+            <property name="strText" from="'(' + def.objLookupCurrentRegionProject.nProjectTurns + ')'"/>
+			<property name="nX" from="def.objProjectTurns.nWidth + def.objProjectTurns.nX + 6"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" from="def.nWidth - self.nX"/>
+			<property name="nHeight" value="18"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nDepth" value="500"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DRegionImprovementSlot" superType="mlui.UI2DElement" >
+	
+		<propertyDef name="objRegionProject"  type="Object" restriction="gs_tbg.RegionImprovement" />
+		<propertyDef name="strNoRegionProject" type="String" default="" />
+	
+		<object type="mlui.UI2DImage" name="objImprovementBG">
+			<property name="tmplImage">
+				if(spdata.objRegionData.objRegion.canCommand(mh2data.objAvatar, mh2data.objNation), 'skin.ImgReportBubbleTanWhite', 'skin.ImgReportBubbleTanSand')
+			</property>
+			<property name="nX" value="0" />
+			<property name="nY"  value="0" />
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objImprovementIcon" existsWhile="def.objRegionProject != null">
+			<property name="tmplImage" >
+				switch {
+					case def.objRegionProject.instanceOf(gs_tbg.TransportationImprovement):
+						mh2data.objTransportationProdDisplayTable.getEntry(def.objRegionProject.tmplTransportationImprovement).tmplIcon
+						
+					case def.objRegionProject.instanceOf(gs_tbg.FortificationImprovement):
+						mh2data.objFortificationDisplayTable.getEntry(def.objRegionProject.tmplFortificationImprovement).tmplIcon
+						
+					case def.objRegionProject.instanceOf(gs_tbg.AADefenseImprovement):
+						mh2data.objAADefenseDisplayTable.getEntry(def.objRegionProject.tmplAADefenseImprovement).tmplIcon
+						
+					case def.objRegionProject.instanceOf(gs_tbg.CoastalDefenseImprovement):
+						mh2data.objCoastalDefenseDisplayTable.getEntry(def.objRegionProject.tmplCoastalDefenseImprovement).tmplIcon
+					
+					default:
+						"skin.ImgInfoIconPickaxeSm"
+				}
+			</property>
+			<property name="nX" value="0" />
+			<property name="nY" value="0" />
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>	
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>		
+		</object>	
+		
+		<property name="strToolTip" >
+            switch {
+            case self.objRegionProject == null:
+            self.strNoRegionProject
+            case self.objRegionProject.instanceOf(gs_tbg.TransportationImprovement):
+            self.objRegionProject.tmplTransportationImprovement.resolve().strDisplayName + ' (' + locale.SID.UI.MovementModifier + ': ' + self.objRegionProject.tmplTransportationImprovement.resolve().nModifierValue + '%)'
+            case self.objRegionProject.instanceOf(gs_tbg.CoastalDefenseImprovement):
+            self.objRegionProject.tmplCoastalDefenseImprovement.resolve().strDisplayName
+            case self.objRegionProject.instanceOf(gs_tbg.FortificationImprovement):
+            self.objRegionProject.tmplFortificationImprovement.resolve().strDisplayName
+            case self.objRegionProject.instanceOf(gs_tbg.AADefenseImprovement):
+            self.objRegionProject.tmplAADefenseImprovement.resolve().strDisplayName
+            default:
+            "test"
+            }
+        </property>
+		
+		
+		
+	</objectDef>
+
+</locust>

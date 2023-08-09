@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	type="game"
+	name="Brave New World"
+	locustVersion="2.11"
+	runnable="objRunnable"
+>
+	<import module="mlcore" default="true"/>
+	<import module="lib:mlgame" as="mlgame"/>
+	<import module="lib:mlevent" as="mlevent"/>
+	<import module="script:javascript" as="mljs"/>
+	<import module="lib:mh2 common" as="mh2_common"/>
+	<import module="lib:Making History AI" as="makinghistory_ai"/>
+	<import module="mh2 data:shared" as="sd"/>
+	<import module="mh2 map:world map" as="map"/>
+	<import module="game system:turn based game" as="gs_tbg"/>
+	<import module="game system:notification" as="gs_notify"/>
+	<import module="game system:ai" as="gs_ai"/>
+	<import module="mh2 data:ai shared" as="ai_sd"/>
+	<import module="game system:trigger" as="gs_trigger"/>
+
+	<include>
+		GameSysMap.xml
+		runnable.xml
+		GameSysTurnBasedGame.xml
+		GameSysResource.xml
+		GameSysResearch.xml
+		GameSysNation.xml
+		GameSysNationRelations.xml
+		GameSysTrade.xml
+		GameSysRegion.xml
+		GameSysCity.xml
+		GameSysUnit.xml
+		GameSysVictoryCondition.xml
+		GameSysRegionControl.xml
+		GameSysCombat.xml
+		GameSysNotification.xml
+		GameSysAI.xml
+		GameSysAIUtility.xml
+		GameSysFogging.xml
+        GameSysDecisionPoint.xml
+        GameSysNationalPrograms.xml
+		GameSysWeather.xml
+		RegionListTemplates.xml
+        GameSysTrigger.xml
+	</include>
+</locustModule>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysWeather" class="CMLOGameSysWeather" superType="mlgame.GameSystem">
+		<propertyDef name="objSeasonDatas" type="SeasonData" variable="true" storesChildren="true"/>
+		<propertyDef name="objSeasons" type="Season" variable="true" storesChildren="true"/>
+		<propertyDef name="objRegionSeasons" type="RegionSeason" variable="true" storesChildren="true"/>
+	</objectDef>
+	
+	<script type="application/x-locust-query">
+		getGameSysWeather = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysWeather)
+		}
+		
+		getRegionSeason = ?{gameroot, region:
+			find(?{season: season.refSeasonData.resolve(gameroot).refRegions.contains(region)}, getGameSysWeather(gameroot).objSeasons)
+		}
+		
+	</script>
+
+</locust>

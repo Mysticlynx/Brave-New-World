@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysRegionControl" class="CMLOGameSysRegionControl" superType="mlgame.GameSystem">
+	</objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysRegionControl = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysRegionControl)
+		}
+	</script>
+
+</locust>

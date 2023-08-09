@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="lib"
+	name="Making History AI"
+	version="1.0"
+	locustVersion="2.11"
+>
+	<import module="mlcore" default="true"/>
+	<import module="lib:mlevent" as="mlevent"/>
+	<import module="lib:mlgame" as="mlgame"/>
+	<import module="script:javascript" as="mljs"/>
+	<import module="game system:turn based game" as="gs_tbg"/>
+	<import module="lib:mh2 common" as="mh2_common"/>
+	<import module="mh2 data:shared" as="sd"/>
+
+	<include>
+		defs/MHAISysScript.xml
+		defs/MilitaryAIScript.xml
+		defs/ResearchAIScript.xml
+		defs/ProductionAIScript.xml
+		defs/TradeAIScript.xml
+		defs/DiplomacyAIScript.xml
+		defs/UtilityFunctions.xml
+		defs/GameObjects.xml
+		defs/NonGameObjects.xml
+		defs/PerAvatarData.xml
+		defs/AIPlanDefendNation.xml
+		defs/AIPlanInvasionBase.xml
+		defs/AIPlanLandInvasion.xml
+		defs/AIPlanSeaInvasion.xml
+		defs/AIPlanOpportunityAttack.xml
+		defs/AIPlanSingleRegionAttack.xml
+		defs/AISubPlanParatroopers.xml
+		defs/AISubPlanCaptureCities.xml
+		defs/AISubPlanSoftenUpShoreDefenses.xml
+	</include>
+</locustModule>

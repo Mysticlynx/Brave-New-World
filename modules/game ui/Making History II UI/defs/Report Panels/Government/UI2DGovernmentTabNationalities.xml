@@ -1,0 +1,1825 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<enumDef name="NationalStatusAction">
+		<value name="NONE"/>
+        <value name="PUPPET"/>
+        <value name="COLONY"/>
+        <value name="INDEPENDENCE"/>
+    </enumDef>
+	
+	<objectDef type="GovernmentNationalities" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="tmplNations" type="TemplateRef" restriction="gs_tbg.NationTemplate" variable="true">
+			uniqueSet(
+				flattenSet(
+					map(
+						?{region2:
+							region2.tmplHistoricNations
+						},
+						gs_tbg.getControlledRegions(mh2data.objAvatar, self.objNation)
+					)
+				)
+			)
+			
+		</propertyDef>
+		
+		<propertyDef name="objNationTemplate" type="gs_tbg.NationTemplate">
+			self.tmplNations.getArbitraryValue()
+		</propertyDef>
+		
+		<propertyDef name="objRegions" type="gs_tbg.Region" variable="true">
+			filter(
+				?{region:
+					region.tmplHistoricNations.contains(self.objNationTemplate)
+				},
+				gs_tbg.getAllControlledRegions(mh2data.objAvatar, self.objNation)
+			)
+		</propertyDef>
+		
+		<propertyDef name="nNatPopulation" type="int">
+			sum(map(?{
+				region: region.nPopulation
+				}, self.objRegions
+			))
+		</propertyDef>
+		
+		<propertyDef name="objEthnicities" type="gs_tbg.EthnicityTemplate" variable="true">
+			uniqueSet(
+				map(
+					?{region:
+						region.tmplEthnicity
+					},
+					self.objRegions
+				)
+			)
+		</propertyDef>
+		
+		<propertyDef name="objHomeNation" type="gs_tbg.NationTemplate">
+			mh2data.objNation.tmplNation
+		</propertyDef>
+		
+		<propertyDef name="objChosenRegions" type="gs_tbg.Region" variable="true">
+			filter(
+				?{region:
+					!region.tmplHistoricNations.contains(self.objHomeNation)
+				},
+					self.objRegions)
+		</propertyDef>
+
+        <propertyDef name="bCantColonize" type="bool">
+            (filter(
+            ?{region:
+            (region.refColony != null) OR (region.refOwner != mh2data.objNation)
+            },
+            self.objChosenRegions)).size > 0
+        </propertyDef>
+
+        <propertyDef name="eAction" type="Enum" restriction="NationalStatusAction"/>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DGovernmentTabNationalities" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<object type="GovernmentNationalities" name="objData">
+			<property name="objNation" from="def.objNation"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objNationalitiesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.Nationalities"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objLeftPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="521"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objLeftPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="286"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="UI2DNationalitiesList" name="objNationalities">
+			<property name="objData" from="def.objData"/>
+			<property name="nX" value="12"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="521"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMidPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" value="298"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="292"/>
+			<property name="nHeight" value="521"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMidPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="300"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objGoverningStatusLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.GoverningStatus"/>
+			<property name="nX" value="300"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object type="UI2DNationalitiesGoverningStatus" name="objStatus">
+			<!--<property name="objNation" from="def.objNation"/>-->
+			<property name="objData" from="def.objData"/>
+			<property name="nX" value="298"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="292"/>
+			<property name="nHeight" value="521"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objRightPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" value="589"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="292"/>
+			<property name="nHeight" value="521"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="591"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="UI2DNationalitiesNationStatus" name="objNationStatus">
+			<property name="objData" from="def.objData"/>
+			<property name="nX" value="589"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="292"/>
+			<property name="nHeight" value="521"/>
+		</object>
+		
+		<propertyDef name="objAction" storesChildren="true">
+			switch{
+				case self.objData.eAction == NationalStatusAction.PUPPET:
+					<object type="UI2DNationStatusPuppet">
+						<property name="objData" from="def.objData"/>
+						<property name="nX" value="591"/>
+						<property name="nY" value="163"/>
+						<property name="nDepth" value="1000"/>
+						<property name="objData" from="def.objData"/>
+					</object>
+				case self.objData.eAction == NationalStatusAction.COLONY:
+					<object type="UI2DNationStatusColony">
+						<property name="objData" from="def.objData"/>
+						<property name="nX" value="591"/>
+						<property name="nY" value="163"/>
+						<property name="nDepth" value="1000"/>
+						<property name="objData" from="def.objData"/>
+					</object>
+				case self.objData.eAction == NationalStatusAction.INDEPENDENCE:
+					<object type="UI2DNationStatusIndependence">
+						<property name="objData" from="def.objData"/>
+						<property name="nX" value="591"/>
+						<property name="nY" value="163"/>
+						<property name="nDepth" value="1000"/>
+						<property name="objData" from="def.objData"/>
+					</object>
+			}
+		</propertyDef>
+			
+	</objectDef>
+	
+    
+	<enumDef name="NationalitySort">
+        <value name="NAME"/>
+		<value name="POP"/>
+    </enumDef>
+	
+    
+	<objectDef type="UI2DNationalitiesList" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="GovernmentNationalities"/>
+		
+		
+		<object type="mlui.UI2DImage" name="objBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="268"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+        
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="NationalitySort.NAME"/>
+		</object> -->
+        
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Name"/>
+				<property name="objData" from="mh2data.objNationalitySortTableData"/>
+				<property name="eSortBy" from="NationalitySort.NAME"/>
+				<property name="bAsc" value="true"/>
+                <property name="nWidth" value="154"/>
+                <property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.TotalPopulation"/>
+				<property name="objData" from="mh2data.objNationalitySortTableData"/>
+				<property name="eSortBy" from="NationalitySort.POP"/>
+				<property name="bAsc" value="true"/>
+        <property name="nWidth" value="113"/>
+        <property name="nHeight" value="23"/>
+			</object>
+		</object>
+        
+       
+		<propertyDef name="objRowDatas" type="NationalityNameBubbleData" storesChildren="true" variable="true">
+			flattenSet(
+				map(?{nationTemplate:
+					<object type="NationalityNameBubbleData">
+						<property name="objNationTemplate" from="nationTemplate"/>
+					</object>
+				},
+                    self.objData.tmplNations
+				)
+			)
+		</propertyDef>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nX" value="0"/>
+			<property name="nY" value="26"/>
+			<property name="nWidth" value="284"/>
+			<property name="nHeight" value="489"/>
+			<property name="listItems">
+                switch
+                {
+                    case mh2data.objNationalitySortTableData.eColm == NationalitySort.NAME:
+						if(mh2data.objNationalitySortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.strNationality
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.strNationality
+								},
+								def.objRowDatas
+							)
+						)
+                    case mh2data.objNationalitySortTableData.eColm == NationalitySort.POP:
+						if(mh2data.objNationalitySortTableData.bAsc,
+							sortAscending(
+								?{data:
+									data.nNatPopulation
+								},
+								def.objRowDatas
+							),
+							sortDescending(
+								?{data:
+									data.nNatPopulation
+								},
+								def.objRowDatas
+							)
+						)
+                        default:
+                            LinkedList(def.objRowDatas)
+                }
+			</property>
+			<property name="nRowWidth" value="268"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DNationalityRow"/>
+			<property name="strPropForItem" value="objNationalityNameBubbleData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+			<property name="strPropForData" value="objData"/>
+			<property name="data"  from="def.objData"/>
+		</object>
+	</objectDef>
+    
+    <objectDef type="NationalityNameBubbleData" class="CMLObject" >
+		<propertyDef name="objNationTemplate" type="gs_tbg.NationTemplate"/>    
+		<propertyDef name="nNatPopulation" type="int">
+			sum(map(?{
+				region1: region1.nPopulation
+				},
+					filter(
+						?{region2:
+							region2.tmplHistoricNations.contains(self.objNationTemplate)
+						},
+						gs_tbg.getAllControlledRegions(mh2data.objAvatar, mh2data.objNation)
+					)
+				))
+		</propertyDef>
+        <propertyDef name="strNationality" type="String" >
+            self.objNationTemplate.tmplDefaultNationality.resolve().strDisplayName
+        </propertyDef>
+		
+    </objectDef>
+	
+	<objectDef type="UI2DNationalityNameBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int"/>
+		<propertyDef name="bSelected" type="bool"/>
+		<propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="strValue" type="String"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage">
+				if(def.bSelected == true, 'skin.ImgRowBrown',
+					if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')
+				)
+			</property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objRightBG">
+			<property name="tmplImage">
+				if(def.bSelected == true, 'skin.ImgRowBrown',
+					if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')
+				)
+			</property>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="114"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.tmplIcon"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objNationName">
+			<property name="tmplTextStyle">
+				if(def.bSelected == true,
+					'locale.TxtStyleArialWhite12Left', 'locale.TxtStyleArialBlue12Left')
+			</property>	
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="34"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="130"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objValue">
+			<property name="tmplTextStyle">
+				if(def.bSelected == true,
+					'locale.TxtStyleArialWhite12Center', 'locale.TxtStyleArialBlue12Center')
+			</property>	
+			<property name="strText" from="def.strValue"/>
+			<property name="nX" value="135"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="154"/>
+			<property name="nHeight" value="14"/>
+			<!--<property name="haXAlign" value="RIGHT"/>-->
+		</object>
+        
+    </objectDef>
+	
+	<objectDef type="UI2DNationalityRow" superType="mlui.UI2DButton">
+		<propertyDef name="objNationalityNameBubbleData" type="NationalityNameBubbleData"/>
+		<propertyDef name="nRow" type="int" default="0"/>
+		<propertyDef name="objData" type="GovernmentNationalities"/>
+		
+		<object type="LookupNationIcons" name="objLookupNationIcons">
+			<property name="tmplNation" from="def.objNationalityNameBubbleData.objNationTemplate"/>
+      <property name="tmplIdeology" from="mh2data.objNation.tmplIdeology"/>
+		</object>
+		
+		<property name="tmplButtonStyle" value="skin.BtnStyleInvisible"/>
+		<property name="nWidth" value="0"/>
+		<property name="nHeight" value="0"/>
+				
+		<!--Value--> 
+		<object type="UI2DNationalityNameBubble" name="objElements">
+			<property name="nRow" from="def.nRow"/>
+			<property name="bSelected" from="def.objData.objNationTemplate == def.objNationalityNameBubbleData.objNationTemplate"/>
+			<property name="strText" from="def.objNationalityNameBubbleData.strNationality"/>
+			<property name="tmplIcon" from="def.objLookupNationIcons.tmplIcon28x28"/>
+            <property name="strValue" from="def.objNationalityNameBubbleData.nNatPopulation.formatNumber(0, true)"/>
+			<property name="nWidth" value="268"/>
+			<property name="nHeight" value="30"/>
+		</object>
+			
+				 
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventButtonClicked"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.objData.objNationTemplate = def.objNationalityNameBubbleData.objNationTemplate;
+					}
+				]]></script>
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DNationalitiesGoverningStatus" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="GovernmentNationalities"/>
+		
+		<object type="LookupNationIcons" name="objLookupNationIcons">
+			<property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" from="mh2data.objNation.tmplIdeology"/>
+			<!--<property name="tmplIdeology" from="self.tmplNation.resolve().tmplIdeology"/>-->
+		</object>
+		
+<!-- State Nationality Section -->
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objStateNationalityLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.StateNationality"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objStateNationality">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+      <property name="strText" from="def.objData.objNationTemplate.tmplDefaultNationality.resolve().strDisplayName"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<!-- National Culture -->
+		<!-- placeholder --><object type="mlui.UI2DImage" name="objNationalCultureIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconCultureLatin"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="44"/>
+			<property name="nWidth" value="24"/>
+			<property name="nHeight" value="30"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationalCultureLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.NationalCulture"/>
+			<property name="nX" value="62"/>
+			<property name="nY" value="46"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationalCulture">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="def.objData.objNationTemplate.tmplCulture.resolve().strDisplayName"/>
+			<property name="nX" value="62"/>
+			<property name="nY" value="58"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<!-- Population -->
+		<object type="mlui.UI2DImage" name="objPopulationIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconPopulationSm"/>
+			<property name="nX" value="173"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="23"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objPopulationLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Population"/>
+			<property name="nX" value="204"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objPopulation">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="def.objData.nNatPopulation.formatNumber(0, true)"/>
+			<property name="nX" value="204"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="165"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<!-- Religion -->
+		<object type="mlui.UI2DImage" name="objReligionIcon">
+			<property name="tmplImage" from="mh2data.objReligionDisplayTable.getEntry(def.objData.objNationTemplate.tmplReligion).tmplImage"/>
+			<property name="nX" value="176"/>
+			<property name="nY" value="44"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="23"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objReligionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Religion"/>
+			<property name="nX" value="204"/>
+			<property name="nY" value="46"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objReligion">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="def.objData.objNationTemplate.tmplReligion.resolve().strDisplayName"/>
+			<property name="nX" value="204"/>
+			<property name="nY" value="58"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<!-- Ethnic Groups -->
+		<!-- placeholder --><object type="mlui.UI2DImage" name="objEthnicGroupsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconEthnicityMestizo"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="79"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="29"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objEthnicGroupsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.EthnicGroups"/>
+			<property name="nX" value="62"/>
+			<property name="nY" value="83"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="common_ui.UI2DList" name="objEthnicGorups">
+			<property name="nX" value="62"/>
+			<property name="nY" value="95"/>
+			<property name="nSpacing" value="2"/>
+			
+			<object type="mlui.UI2DText" name="objElements" tiedTo="def.objData.objEthnicities">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+				<property name="strText" from="tiedTo.strDisplayName"/>	
+				<property name="nWidth" value="200"/>
+				<property name="nHeight" value="12"/>
+			</object>	
+			
+		</object>
+		
+		<propertyDef name="nRegionStability" type="int">
+			if(self.objData.objRegions.size GT 0, (sum(map(?{region: region.nRegionStability},
+				self.objData.objRegions)) / self.objData.objRegions.size), 100)
+		</propertyDef>
+		 
+		<object type="mlui.UI2DImage" name="objRevoltRiskIcon">
+			<property name="tmplImage">
+				if(def.nRegionStability GTE 80, 'skin.ImgInfoIconRevoltRiskNone', 				
+					if(def.nRegionStability LTE 30, 'skin.ImgInfoIconRevoltRiskHigh',
+					'skin.ImgInfoIconRevoltRiskLow'
+					)
+				)
+			</property>	
+			<property name="nX" value="5"/>
+			<property name="nY" from="120 + def.objEthnicGorups.nHeight"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="30"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objRevoltRiskLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.RevoltRisk"/>
+			<property name="nX" value="33"/>
+			<property name="nY" from="121 + def.objEthnicGorups.nHeight"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objRevoltRisk">
+			<property name="tmplTextStyle">
+                if(def.nRegionStability LTE 30, 'locale.TxtStyleArialRed16Left', 'locale.TxtStyleArialBlue16Left')
+            </property>	
+			<property name="strText">
+				if(def.nRegionStability GTE 80, locale.SID.UI.None, 				
+					if(def.nRegionStability LTE 30, locale.SID.UI.High,
+					locale.SID.UI.Low
+					)
+				)
+			</property>	
+				from="def.nRegionStability.formatNumber(0, true) + '%'"/>
+			<property name="nX" value="33"/>
+			<property name="nY" from="133 + def.objEthnicGorups.nHeight"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object type="UI2DNationalitiesPowerPoints" name="objPowerPoints">
+			<property name="objData" from="def.objData"/>
+			<property name="nX" value="3"/>
+			<property name="nY" from="172 + def.objEthnicGorups.nHeight"/>
+			<property name="nWidth" from="288"/>
+			<property name="nHeight" from="117"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DNationalitiesPowerPoints" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="GovernmentNationalities"/>
+		
+		<!-- World Power Points -->
+		<object type="mlui.UI2DImage" name="objWorldPowerPointsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconPoints"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="31"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objWorldPowerPointsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.WorldPowerPoints"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objWorldPowerPoints">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue20Left"/>
+			<property name="strText">
+				sum(map(?{region: region.objPowerPoints.nTotalPoints}, def.objData.objRegions)).formatNumber(0, true)
+			</property>	
+			<property name="nX" value="35"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="20"/>
+		</object>		
+		
+		<object type="mlui.UI2DText" name="objPointSourcesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.PointSources"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="39"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPointSourcesBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="51"/>		
+			<property name="nWidth" value="240"/>
+			<property name="nHeight" value="45"/>
+			<property name="nDepth" value="-50"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objResearchIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+			<property name="nX" value="37"/>
+			<property name="nY" value="56"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objResearchPoints">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText">
+				sum(map(?{region: region.objPowerPoints.nResearchPoints}, def.objData.objRegions)).formatNumber(0, true)
+			</property>
+			<property name="nX" value="31"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIPUIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconIPUSm"/>
+			<property name="nX" value="76"/>
+			<property name="nY" value="53"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objIndustryPoints">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText">
+				sum(map(?{region: region.objPowerPoints.nIPUPoints}, def.objData.objRegions)).formatNumber(0, true)
+			</property>
+			<property name="nX" value="70"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCoalIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconCoal21x21"/>
+			<property name="nX" value="115"/>
+			<property name="nY" value="56"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCoalPoints">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText">
+				sum(map(?{region: region.objPowerPoints.nCoalPoints}, def.objData.objRegions)).formatNumber(0, true)
+			</property>
+			<property name="nX" value="109"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMetalsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMetals21x21"/>
+			<property name="nX" value="154"/>
+			<property name="nY" value="56"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objMetalsPoints">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText">
+				sum(map(?{region: region.objPowerPoints.nMetalsPoints}, def.objData.objRegions)).formatNumber(0, true)
+			</property>
+			<property name="nX" value="148"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objOilIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconOil21x21"/>
+			<property name="nX" value="191"/>
+			<property name="nY" value="56"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objOilPoints">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText">
+				sum(map(?{region: region.objPowerPoints.nOilPoints}, def.objData.objRegions)).formatNumber(0, true)
+			</property>
+			<property name="nX" value="187"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objFoodIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconFood21x21"/>
+			<property name="nX" value="230"/>
+			<property name="nY" value="56"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objFoodPoints">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText">
+				sum(map(?{region: region.objPowerPoints.nFoodPoints}, def.objData.objRegions)).formatNumber(0, true)
+			</property>
+			<property name="nX" value="226"/>
+			<property name="nY" value="80"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="12"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DNationalitiesNationStatus" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="GovernmentNationalities"/>
+		
+		<!-- Covert Operations Section -->
+		<object type="mlui.UI2DImage" name="objCovertOperationsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconGovernmentSm"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="31"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objPoliticalActionsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.NationalStatusActions"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objEspionageAndInternalInterferenceLabel"> 
+		 	<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/> 
+		 	<property name="strText" from="locale.SID.UI.ChangeGoverningPolicies"/> 
+		 	<property name="nX" value="35"/> 
+		 	<property name="nY" value="20"/> 
+		 	<property name="nWidth" value="175"/> 
+		 	<property name="nHeight" value="12"/> 
+		</object>
+
+		<!-- Annex Territory -->
+		<!-- placeholder --><!--<object type="mlui.UI2DText" name="objAnnexTerritoryLabel">
+			<property name="tmplTextStyle">
+				if(def.objNation != mh2data.objNation, "locale.TxtStyleArialBlue14Left", "locale.TxtStyleArialGray14Left")
+			</property>
+			<property name="strText" from="locale.SID.UI.AnnexTerritory"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="14"/>
+		</object>-->
+		
+		<object type="common_ui.UI2DList" name="objOptions" existsWhile="(def.objData.objNationTemplate != mh2data.objNation.tmplNation) AND (def.objData.objNationTemplate != null) AND (def.objData.objChosenRegions.size > 0)">
+			<property name="nX" value="35"/>
+			<property name="nY" value="37"/>
+			<property name="nSpacing" value="4"/>
+			
+			<object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue14LeftHighlight"/>
+				<property name="nX" value="35"/>
+				<property name="nY" value="57"/>
+				<property name="nDefaultWidth" value="250"/>
+				<property name="nDefaultHeight" value="14"/>
+				<property name="strText">
+					locale.SID.UI.EstablishPuppetState
+				</property>
+	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.objData.eAction = NationalStatusAction.PUPPET
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+
+            <object type="mlui.UI2DTextButton" name="objElements" existsWhile="!def.objData.bCantColonize">
+                <property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue14LeftHighlight"/>
+                <property name="nX" value="35"/>
+                <property name="nY" value="77"/>
+                <property name="nDefaultWidth" value="250"/>
+                <property name="nDefaultHeight" value="14"/>
+                <property name="strText">
+                    locale.SID.UI.EstablishSeparateColony
+                </property>
+
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript">
+                            <![CDATA[
+							function handle(event, owner)
+							{
+								def.objData.eAction = NationalStatusAction.COLONY
+							}
+						]]>
+                        </script>
+                    </object>
+                </object>
+            </object>
+
+            <object type="mlui.UI2DTextButton" name="objElements">
+				<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue14LeftHighlight"/>
+				<property name="nX" value="35"/>
+				<property name="nY" value="97"/>
+				<property name="nDefaultWidth" value="250"/>
+				<property name="nDefaultHeight" value="14"/>
+				<property name="strText" from="locale.SID.UI.GrantFullIndependence"/>
+	
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.objData.eAction = NationalStatusAction.INDEPENDENCE
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+		</object>
+		
+		<object type="mlui.UI2DText" name="objEstablishPuppetStateLabel" existsWhile="(def.objData.objNationTemplate == mh2data.objNation.tmplNation)">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGray14Left"/>
+			<property name="strText">
+				locale.SID.UI.EstablishPuppetState
+			</property>
+			<property name="nX" value="35"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+        <object type="mlui.UI2DText" name="objEstablishColonyLabel" existsWhile="(def.objData.objNationTemplate == mh2data.objNation.tmplNation)">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialGray14Left"/>
+            <property name="strText">
+                locale.SID.UI.EstablishSeparateColony
+            </property>
+            <property name="nX" value="35"/>
+            <property name="nY" value="57"/>
+            <property name="nWidth" value="250"/>
+            <property name="nHeight" value="14"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objGrantFullIndependanceLabel" existsWhile="def.objData.objNationTemplate == mh2data.objNation.tmplNation">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGray14Left"/>
+			<property name="strText">
+				locale.SID.UI.GrantFullIndependence
+			</property>
+			<property name="nX" value="35"/>
+			<property name="nY" value="77"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+    <object type="mlui.UI2DText" name="objTerritorialClaimsLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.TerritorialClaimsof"/>
+      <property name="nX" value="7"/>
+      <property name="nY" value="140"/>
+      <property name="nWidth" value="150"/>
+      <property name="nHeight" value="10"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objNationNameLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+      <property name="strText" from="def.objData.objNationTemplate.strDisplayName"/>
+      <property name="nX" value="7"/>
+      <property name="nY" value="150"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="18"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objBGTop">
+      <property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+      <property name="nX" value="2"/>
+      <property name="nY" value="167"/>
+      <property name="nWidth" value="288"/>
+      <property name="nHeight" value="25"/>
+      <property name="nDepth" value="-100"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objRegionsLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10CenterWrap"/>
+      <property name="strText" from="locale.SID.UI.Regions"/>
+      <property name="nX" value="1"/>
+      <property name="nY" value="168"/>
+      <property name="nWidth" value="153"/>
+      <property name="nHeight" value="25"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objPointsIcon">
+      <property name="tmplImage" value="skin.ImgMapIconPointsGrey"/>
+      <property name="nX" value="177"/>
+      <property name="nY" value="168"/>
+      <property name="nWidth" value="16"/>
+      <property name="nHeight" value="20"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objNationalityIcon">
+      <property name="tmplImage" value="skin.ImgMapIconDemographics"/>
+      <property name="nX" value="209"/>
+      <property name="nY" value="166"/>
+      <property name="nWidth" value="16"/>
+      <property name="nHeight" value="20"/>
+    </object>
+
+    <object type="UI2DTerritorialClaimsList" name="objTerritory">
+      <property name="objData" from="def.objData"/>
+      <property name="nX" value="2"/>
+      <property name="nY" value="194"/>
+      <property name="nWidth" value="288"/>
+      <property name="nHeight" value="325"/>
+    </object>
+  </objectDef>
+	
+	<objectDef type="UI2DTerritorialClaimsList" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="GovernmentNationalities"/>
+		
+		<property name="nWidth" from="self.objList.nWidth"/>
+		<property name="nHeight" from="self.objList.nHeight"/>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="325"/>
+			<property name="listItems">
+				sortAscending(?{region: region.strDisplayName}, def.objData.objRegions)
+			</property>
+			<property name="nRowWidth" value="273"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DTerritorialClaimsListBubble"/>
+			<property name="strPropForItem" value="objRegion"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+			<property name="strPropForData" value="objData"/>
+			<property name="data" from="def.objData"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DTerritorialClaimsListRow" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int" default="0"/>
+		
+		<property name="nHeight" value="30"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DTerritorialClaimsListText" superType="UI2DTerritorialClaimsListRow">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DTerritorialClaimsListName" superType="UI2DTerritorialClaimsListRow">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DTerritorialClaimsListBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int"/>
+		<propertyDef name="objData" type="GovernmentNationalities"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		
+		<propertyDef name="bChosen" type="bool"/>
+		<property name="bChosen" from="self.objData.objChosenRegions.contains(self.objRegion)"/>
+		
+		<object type="mlui.UI2DButton" name="objRegionSelect">
+			<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+			<property name="nX" value="239"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="35"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="nDepth" value="5"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						if(def.bChosen)
+							{
+								var indx;
+								indx = def.objData.objChosenRegions.indexOf(def.objRegion);
+								delete def.objData.objChosenRegions[indx];
+							}
+							else
+							{
+								def.objData.objChosenRegions.add(def.objRegion);
+							}
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+
+    <object type="mlui.UI2DButton" name="objRegionFocus">
+      <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+      <property name="nX" value="0"/>
+      <property name="nY" value="0"/>
+      <property name="nDefaultWidth" value="135"/>
+      <property name="nDefaultHeight" value="30"/>
+      <property name="nDepth" value="5"/>
+
+      <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+          <property name="otEventType" value="mlui.EventButtonClicked"/>
+          <script type="application/javascript">
+            <![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.objMapData.lookAt(def.objRegion.vecPositions[0]);
+              mh2data.objMapData.selectRegion(def.objRegion);
+							<!--mh2data.objMapData.zoomToClosest();-->
+							<!--spdata.objRegionData.showRegion(def.objRegion);-->
+						}
+					]]>
+          </script>
+        </object>
+      </object>
+    </object>
+
+    <object type="LookupNationIcons" name="objLookupNationIcons">
+      <property name="tmplNation" from="def.objRegion.tmplNation"/>
+      <property name="tmplIdeology" from="def.objRegion.refController.resolve(mh2data.objAvatar).tmplIdeology"/>
+    </object>
+
+    <object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			
+			<!-- Name -->
+			<object type="UI2DTerritorialClaimsListName" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+				<property name="strText" from="def.objRegion.strDisplayName"/>
+				<property name="nWidth" value="171"/>
+			</object>
+			
+			<!-- Value -->
+			<object type="UI2DRegionAssetTextBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="def.objRegion.objPowerPoints.nTotalPoints"/>
+				<property name="nWidth" value="35"/>
+			</object>
+
+      <!-- Nationality Bubbles -->
+      <object type="UI2DRegionAssetIconBubble" name="objElements">
+        <property name="nRow" from="def.nRow"/>
+        <property name="nWidth" value="35"/>
+
+        <object type="mlui.UI2DImage" name="objIcon">
+          <property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28"/>
+          <property name="nX" value="0"/>
+          <property name="nY" value="0"/>
+          <property name="nWidth" value="23"/>
+          <property name="nHeight" value="23"/>
+          <property name="haXAlign" value="CENTER"/>
+          <property name="vaYAlign" value="MIDDLE"/>
+          <property name="strToolTip">
+            def.objRegion.tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName  + ' ' + locale.SID.UI.Nationality
+          </property>
+        </object>
+      </object>
+			
+			<object type="UI2DRegionAssetIconBubble" name="objElements">
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="35"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage" value="skin.ImgInfoIconTargetGreen"/>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="bVisible" from="def.bChosen"/>
+					<property name="nWidth" value="24"/>
+					<property name="nHeight" value="24"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+				</object>
+			</object>
+			
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DNationStatusColm" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="GovernmentNationalities"/>
+		
+		<property name="nWidth" value="289"/>
+		<property name="nHeight" value="518"/>
+			
+		<object type="mlui.UI2DImage" name="objRightPaneBG">
+			<property name="tmplImage" value="skin.ImgWhite"/>
+			<property name="nWidth" value="289"/>
+			<property name="nHeight" value="521"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" value="19"/>
+			<property name="nDefaultHeight" value="19"/>
+			<property name="haXAlign" value="RIGHT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objData.eAction = NationalStatusAction.NONE;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		
+	</objectDef>
+	
+	<objectDef type="UI2DNationStatusPuppet" superType="UI2DNationStatusColm">
+		<propertyDef name="objData" type="GovernmentNationalities"/>
+        <propertyDef name="objNewNation" type="gs_tbg.NationTemplate"/>
+		
+		<object type="mlui.UI2DImage" name="objNationalStatusIcon">
+			<property name="tmplImage" value="skin.ImgGovPuppet"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.EstablishPuppet"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objActionDescriptionLabel"> 
+		 	<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10LeftWrap"/> 
+		 	<property name="strText" from="locale.SID.UI.EstablishPuppetDesc"/> 
+		 	<property name="nX" value="33"/> 
+		 	<property name="nY" value="18"/> 
+		 	<property name="nWidth" value="230"/> 
+		 	<property name="nHeight" value="12"/> 
+		</object>
+    
+    <object type="mlui.UI2DText" name="objNationsTitle">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftSizeToFit"/>
+      <property name="strText" from="def.objData.objNationTemplate.strDisplayName"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="50"/>
+      <property name="nHeight" value="15"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objFlagShadow">
+      <property name="tmplImage" value="skin.ImgReportPanelShadow4x4"/>
+      <property name="nX" value="31"/>
+      <property name="nY" value="64"/>
+      <property name="nWidth" value="208"/>
+      <property name="nHeight" value="107"/>
+    </object>
+
+    <object type="UI2DNationFlag256x128" name="objNationFlagLg">
+      <property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" from="def.objOptions.objGovSystem"/>
+      <property name="strToolTip" from="def.objData.objNationTemplate.strDisplayName"/>
+      <property name="nX" value="34"/>
+      <property name="nY" value="67"/>
+      <property name="nWidth" value="202"/>
+      <property name="nHeight" value="101"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objGovernmentSystemLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.GovernmentSystem"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="181"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSelectIdeologyLabel"> 
+		 	<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/> 
+		 	<property name="strText" from="locale.SID.UI.SelectIdeology"/> 
+		 	<property name="nX" value="33"/> 
+		 	<property name="nY" value="195"/>
+		 	<property name="nWidth" value="230"/> 
+		 	<property name="nHeight" value="12"/> 
+		</object>
+
+
+    <object type="mlui.UI2DText" name="objPoliticalBalanceLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.PoliticalBalance"/>
+      <property name="nX" value="198"/>
+      <property name="nY" value="195"/>
+      <property name="nWidth" value="230"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="UI2DGovernmentSystemSelection" name="objOptions">
+			<property name="nX" value="33"/>
+			<property name="nY" value="215"/>
+			<property name="objGovSystem" from="def.objData.objNation.tmplIdeology"/>
+      <property name="objNewNation" from="def.objData.objNationTemplate"/>
+    </object>
+
+    <object type="LookupNationIcons" name="objLookupNationIconsDemocratic">
+      <property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" value="sd.Democratic"/>
+    </object>
+
+    <object type="LookupNationIcons" name="objLookupNationIconsCommunist">
+      <property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" value="sd.Communist"/>
+    </object>
+
+    <object type="LookupNationIcons" name="objLookupNationIconsFascist">
+      <property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" value="sd.Fascist"/>
+    </object>
+
+    <object type="LookupNationIcons" name="objLookupNationIconsAuthoritarian">
+      <property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" value="sd.Authoritarian"/>
+    </object>
+
+
+    <object type="mlui.UI2DImage" name="objDemocraticIcon">
+      <property name="tmplImage" from="def.objLookupNationIconsDemocratic.tmplIcon28x28"/>
+      <property name="nX" value="66"/>
+      <property name="nY" from="216"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+      <property name="strToolTip" from="def.objOptions.objGovSystem.strDisplayName  + ' ' +  def.objData.objNationTemplate.strDisplayName"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objCommunistIcon">
+      <property name="tmplImage" from="def.objLookupNationIconsCommunist.tmplIcon28x28"/>
+      <property name="nX" value="66"/>
+      <property name="nY" from="247"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+      <property name="strToolTip" from="def.objOptions.objGovSystem.strDisplayName  + ' ' +  def.objData.objNationTemplate.strDisplayName"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objFascistIcon">
+      <property name="tmplImage" from="def.objLookupNationIconsFascist.tmplIcon28x28"/>
+      <property name="nX" value="66"/>
+      <property name="nY" from="278"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+      <property name="strToolTip" from="def.objOptions.objGovSystem.strDisplayName  + ' ' +  def.objData.objNationTemplate.strDisplayName"/>
+    </object>
+
+
+    <object type="mlui.UI2DImage" name="objAuthoritarianIcon">
+      <property name="tmplImage" from="def.objLookupNationIconsAuthoritarian.tmplIcon28x28"/>
+      <property name="nX" value="66"/>
+      <property name="nY" from="309"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+      <property name="strToolTip" from="def.objOptions.objGovSystem.strDisplayName  + ' ' +  def.objData.objNationTemplate.strDisplayName"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objActionTitle">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+      <property name="strText" from="def.objOptions.objGovSystem.strDisplayName  + ' ' +  def.objData.objNationTemplate.strDisplayName"/>
+      <property name="nX" value="33"/>
+      <property name="nY" from="357"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DTextButton" name="objActionButton">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.EstablishPuppet"/>
+			<property name="nX" value="33"/>
+			<property name="nY" from="def.objActionTitle.nY + def.objActionTitle.nHeight + 3"/>
+			<property name="nDefaultWidth" value="220"/>
+			<property name="nDefaultHeight" value="24"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActLiberateNation.create({
+										"refLiberator": mh2data.objNation,
+										"tmplNation":  def.objData.objNationTemplate,
+										"tmplIdeology": def.objOptions.objGovSystem,
+										"objRegions": def.objData.objChosenRegions,
+										"eStatus": gs_tbg.NationStatusType.NATION_STATUS_PUPPET
+									});
+							mh2data.objAvatar.sendAction(action);
+							def.objData.objNationTemplate = def.objData.tmplNations.getArbitraryValue();
+							def.objData.eAction = NationalStatusAction.NONE;
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+	</objectDef>
+
+    <objectDef type="UI2DNationStatusColony" superType="UI2DNationStatusColm">
+        <propertyDef name="objData" type="GovernmentNationalities"/>
+        <propertyDef name="objNewNation" type="gs_tbg.NationTemplate"/>
+
+        <object type="mlui.UI2DImage" name="objNationalStatusIcon">
+            <property name="tmplImage" value="skin.ImgGovColony"/>
+            <property name="nX" value="1"/>
+            <property name="nY" value="3"/>
+            <property name="nWidth" value="32"/>
+            <property name="nHeight" value="30"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objActionLabel">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+            <property name="strText" from="locale.SID.UI.EstablishSeparateColony"/>
+            <property name="nX" value="33"/>
+            <property name="nY" value="6"/>
+            <property name="nWidth" value="230"/>
+            <property name="nHeight" value="14"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objActionDescriptionLabel">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialBrown12LeftWrap"/>
+            <property name="strText" from="locale.SID.UI.EstablishColonyDesc"/>
+            <property name="nX" value="33"/>
+            <property name="nY" value="22"/>
+            <property name="nWidth" value="230"/>
+            <property name="nHeight" value="12"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objNationsTitle">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftSizeToFit"/>
+            <property name="strText" from="def.objData.objNationTemplate.strDisplayName"/>
+            <property name="nX" value="33"/>
+            <property name="nY" value="50"/>
+            <property name="nHeight" value="15"/>
+        </object>
+
+        <object type="mlui.UI2DImage" name="objFlagShadow">
+            <property name="tmplImage" value="skin.ImgReportPanelShadow4x4"/>
+            <property name="nX" value="31"/>
+            <property name="nY" value="64"/>
+            <property name="nWidth" value="208"/>
+            <property name="nHeight" value="107"/>
+        </object>
+
+        <object type="UI2DNationFlag256x128" name="objNationFlagLg">
+            <property name="tmplNation" from="def.objData.objNationTemplate"/>
+            <property name="tmplIdeology" from="mh2data.objNation.tmplIdeology"/>
+            <property name="strToolTip" from="def.objData.objNationTemplate.strDisplayName"/>
+            <property name="nX" value="34"/>
+            <property name="nY" value="67"/>
+            <property name="nWidth" value="202"/>
+            <property name="nHeight" value="101"/>
+        </object>
+
+        <object type="mlui.UI2DTextButton" name="objActionButton">
+            <property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+            <property name="strText" from="locale.SID.UI.EstablishSeparateColony"/>
+            <property name="nX" value="33"/>
+            <property name="nY" from="181"/>
+            <property name="nDefaultWidth" value="220"/>
+            <property name="nDefaultHeight" value="24"/>
+            <property name="nDepth" value="50"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript">
+                        <![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActLiberateNation.create({
+										"refLiberator": mh2data.objNation,
+										"tmplNation":  def.objData.objNationTemplate,
+										"tmplIdeology": mh2data.objNation.tmplIdeology,
+										"objRegions": def.objData.objChosenRegions,
+										"eStatus": gs_tbg.NationStatusType.NATION_STATUS_COLONY
+									});
+							mh2data.objAvatar.sendAction(action);
+							def.objData.objNationTemplate = def.objData.tmplNations.getArbitraryValue();
+							def.objData.eAction = NationalStatusAction.NONE;
+						}
+					]]>
+                    </script>
+                </object>
+            </object>
+        </object>
+
+    </objectDef>
+
+    <objectDef type="UI2DNationStatusIndependence" superType="UI2DNationStatusColm">
+		<propertyDef name="objData" type="GovernmentNationalities"/>
+    <propertyDef name="objNewNation" type="gs_tbg.NationTemplate"/>
+    
+		<object type="mlui.UI2DImage" name="objNationalStatusIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconGovernmentSm"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.EstablishIndependent"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objActionDescriptionLabel"> 
+		 	<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10LeftWrap"/> 
+		 	<property name="strText" from="locale.SID.UI.EstablishIndependentDesc"/> 
+		 	<property name="nX" value="33"/> 
+		 	<property name="nY" value="18"/> 
+		 	<property name="nWidth" value="230"/> 
+		 	<property name="nHeight" value="12"/> 
+		</object>
+
+    <object type="mlui.UI2DText" name="objNationsTitle">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftSizeToFit"/>
+      <property name="strText" from="def.objData.objNationTemplate.strDisplayName"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="50"/>
+      <property name="nHeight" value="15"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objFlagShadow">
+      <property name="tmplImage" value="skin.ImgReportPanelShadow4x4"/>
+      <property name="nX" value="31"/>
+      <property name="nY" value="64"/>
+      <property name="nWidth" value="208"/>
+      <property name="nHeight" value="107"/>
+    </object>
+
+    <object type="UI2DNationFlag256x128" name="objNationFlagLg">
+      <property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" from="def.objOptions.objGovSystem"/>
+      <property name="strToolTip" from="def.objData.objNationTemplate.strDisplayName"/>
+      <property name="nX" value="34"/>
+      <property name="nY" value="67"/>
+      <property name="nWidth" value="202"/>
+      <property name="nHeight" value="101"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objGovernmentSystemLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.GovernmentSystem"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="181"/>
+      <property name="nWidth" value="230"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objSelectIdeologyLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.SelectIdeology"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="195"/>
+      <property name="nWidth" value="230"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objPoliticalBalanceLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.PoliticalBalance"/>
+      <property name="nX" value="198"/>
+      <property name="nY" value="195"/>
+      <property name="nWidth" value="230"/>
+      <property name="nHeight" value="12"/>
+    </object>
+    
+    <object type="UI2DGovernmentSystemSelection" name="objOptions">
+      <property name="nX" value="33"/>
+      <property name="nY" value="215"/>
+      <property name="objGovSystem" from="def.objData.objNation.tmplIdeology"/>
+      <property name="objNewNation" from="def.objData.objNationTemplate"/>
+    </object>
+
+    <object type="LookupNationIcons" name="objLookupNationIconsDemocratic">
+      <property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" value="sd.Democratic"/>
+    </object>
+
+    <object type="LookupNationIcons" name="objLookupNationIconsCommunist">
+      <property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" value="sd.Communist"/>
+    </object>
+
+    <object type="LookupNationIcons" name="objLookupNationIconsFascist">
+      <property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" value="sd.Fascist"/>
+    </object>
+
+    <object type="LookupNationIcons" name="objLookupNationIconsAuthoritarian">
+      <property name="tmplNation" from="def.objData.objNationTemplate"/>
+      <property name="tmplIdeology" value="sd.Authoritarian"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objDemocraticIcon">
+      <property name="tmplImage" from="def.objLookupNationIconsDemocratic.tmplIcon28x28"/>
+      <property name="nX" value="66"/>
+      <property name="nY" from="216"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objCommunistIcon">
+      <property name="tmplImage" from="def.objLookupNationIconsCommunist.tmplIcon28x28"/>
+      <property name="nX" value="66"/>
+      <property name="nY" from="247"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objFascistIcon">
+      <property name="tmplImage" from="def.objLookupNationIconsFascist.tmplIcon28x28"/>
+      <property name="nX" value="66"/>
+      <property name="nY" from="278"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+    </object>
+
+
+    <object type="mlui.UI2DImage" name="objAuthoritarianIcon">
+      <property name="tmplImage" from="def.objLookupNationIconsAuthoritarian.tmplIcon28x28"/>
+      <property name="nX" value="66"/>
+      <property name="nY" from="309"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objActionTitle">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+      <property name="strText" from="def.objOptions.objGovSystem.strDisplayName  + ' ' +  def.objData.objNationTemplate.strDisplayName"/>
+      <property name="nX" value="33"/>
+      <property name="nY" from="357"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="12"/>
+    </object>
+		
+		<object type="mlui.UI2DTextButton" name="objActionButton">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.EstablishIndependent"/>
+			<property name="nX" value="33"/>
+			<property name="nY" from="def.objActionTitle.nY + def.objActionTitle.nHeight + 3"/>
+			<property name="nDefaultWidth" value="220"/>
+			<property name="nDefaultHeight" value="24"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{	
+							var action = gs_tbg.GActLiberateNation.create({
+										"refLiberator": mh2data.objNation,
+										"tmplNation": def.objData.objNationTemplate,
+										"tmplIdeology": def.objOptions.objGovSystem,
+										"objRegions": def.objData.objChosenRegions,
+										"eStatus": gs_tbg.NationStatusType.NATION_STATUS_INDEPENDENT
+									});
+							mh2data.objAvatar.sendAction(action);
+							def.objData.objNationTemplate = def.objData.tmplNations.getArbitraryValue()
+							def.objData.eAction = NationalStatusAction.NONE;
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+	</objectDef>
+
+  <objectDef type="UI2DGovernmentSystemSelection" superType="mlui.UI2DElement">
+		<propertyDef name="objGovSystem" type="gs_tbg.IdeologyTemplate"/>
+    <propertyDef name="objNewNation" type="gs_tbg.NationTemplate"/>
+		
+		<property name="nWidth" from="self.objOptions.nWidth"/>
+		<property name="nHeight" from="self.objOptions.nHeight"/>
+		
+		<object type="common_ui.UI2DList" name="objOptions">
+			<property name="nSpacing" value="1"/>
+			
+			<object type="UI2DGovernmentSystemOption" name="objElements" tiedTo="sd.getTemplate(TemplateList, 'IdeologyTemplateTemplateList').tmplRefs">
+				<property name="objGovSystem" from="tiedTo"/>
+        <property name="objNewNation" from="def.objNewNation"/>
+				<property name="bSelected" from="tiedTo == def.objGovSystem"/>
+				
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								def.objGovSystem = tiedTo;
+							}
+						]]></script>
+					</object>
+				</object>
+				
+			</object>
+			
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DGovernmentSystemOption" superType="mlui.UI2DButton">
+		<propertyDef name="objGovSystem" type="gs_tbg.IdeologyTemplate"/>
+    <propertyDef name="objNewNation" type="gs_tbg.NationTemplate"/>
+		<propertyDef name="bSelected" type="bool"/>
+		
+		<property name="nWidth" value="247"/>
+		<property name="nHeight" value="30"/>
+		<property name="tmplButtonStyle" value="skin.BtnStyleInvisible"/>
+		
+		<object type="mlui.UI2DImage" name="objNationalStatusIcon">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="31"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objNationalStatusIcon">
+			<property name="tmplImage" value="skin.ImgTarget"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="31"/>
+			<property name="nHeight" value="30"/>
+			<property name="bVisible" from="def.bSelected"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objIdeology">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftFIT"/>
+			<property name="strText" from="def.objGovSystem.strDisplayName"/>
+			<property name="nX" value="64"/>
+			<property name="nY" value="10"/>
+			<property name="nHeight" value="15"/>
+		</object>
+
+    <object type="mlui.UI2DText" name="objIdeologyPercent" tiedTo="def.objNewNation.objIdeologies">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14RightFIT"/>
+      <property name="strText" from="if(tiedTo.tmplIdeology == def.objGovSystem, String(tiedTo.nLevel) + '%', '')"/>
+      <property name="nX" value="165"/>
+      <property name="nY" value="10"/>
+      <property name="nHeight" value="15"/>
+    </object>
+
+  </objectDef>
+	
+</locust>

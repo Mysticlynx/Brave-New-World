@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="EventRegionSabotaged" class="CMLOEventRegionSabotaged" superType="mlevent.Event" desc="Event for when a region gets sabotaged">
+        <propertyDef name="objSaboteur" type="Nation"/>
+        <propertyDef name="objTargetRegion" type="Region"/>
+        <propertyDef name="eParam" type="Enum" restriction="SabotageRegionParam"/>
+        <propertyDef name="bSuccess" type="bool"/>
+        <propertyDef name="bDiscovered" type="bool"/>
+        <propertyDef name="nDamage" type="int"/>
+    </objectDef>
+
+    <objectDef type="EventResearchStolen" class="CMLOEventResearchStolen" superType="mlevent.Event" desc="Event for when research is stolen">
+        <propertyDef name="objSaboteur" type="Nation"/>
+        <propertyDef name="objTargetNation" type="Nation"/>
+        <propertyDef name="bSuccess" type="bool"/>
+        <propertyDef name="bDiscovered" type="bool"/>
+        <propertyDef name="nRPUs" type="int" default="40"/>
+    </objectDef>
+
+    <objectDef type="EventOppositionSupportConcluded" class="CMLOEventOppositionSupportConcluded" superType="mlevent.Event" desc="Event for when opposition support program is concluded">
+        <propertyDef name="objSaboteur" type="Nation"/>
+        <propertyDef name="objTargetNation" type="Nation"/>
+        <propertyDef name="tmplIdeology" type="TemplateRef" restriction="IdeologyTemplate"/>
+        <propertyDef name="bSuccess" type="bool"/>
+        <propertyDef name="bDiscovered" type="bool"/>
+        <propertyDef name="nPoints" type="int"/>
+    </objectDef>
+
+    <objectDef type="EventPoliticalSupportConcluded" class="CMLOEventPoliticalSupportConcluded" superType="mlevent.Event" desc="Event for when political support program is concluded">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="objTargetNation" type="Nation"/>
+        <propertyDef name="bSuccess" type="bool"/>
+        <propertyDef name="nPoints" type="int"/>
+    </objectDef>
+
+    <objectDef type="EventInternalSupportConcluded" class="CMLOEventInternalSupportConcluded" superType="mlevent.Event" desc="Event for when internal support program is concluded">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="bSuccess" type="bool"/>
+        <propertyDef name="nPoints" type="int"/>
+    </objectDef>
+
+    <objectDef type="EventRegionSurveillanceConcluded" class="CMLOEventRegionSurveillanceConcluded" superType="mlevent.Event" desc="Event for when region surveillance program is concluded">
+        <propertyDef name="objSaboteur" type="Nation"/>
+        <propertyDef name="objTargetRegion" type="Region"/>
+        <propertyDef name="bDiscovered" type="bool"/>
+    </objectDef>
+
+</locust>

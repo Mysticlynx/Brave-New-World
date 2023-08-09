@@ -1,0 +1,1273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	
+	
+	<objectDef type="UI2DMoneyTransferRcvd" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objMoneyTransfer" type="gs_tbg.MoneyTransfer">
+			mh2data.objSelectedMoneyTransfer
+		</propertyDef>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objTradeIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconTrade"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTradeAgreementsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.TradeAgreement"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTradeAgreementBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12LeftWrap"/>
+			<property name="strText" from="mh2data.strDiplomaticMessage"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="60"/>
+		</object>
+
+
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<!--<object type="LookupResourceIcons" name="objLookupResourceIcons">-->
+		<!--	<property name="tmplResource" from="def.objOurTradeAgreement.tmplResource"/>-->
+		<!--</object>-->
+
+
+		<!--<object type="mlui.UI2DImage" name="objIcon">-->
+		<!--	<property name="tmplImage" from="def.objLookupResourceIcons.tmplIcon32x32"/>-->
+		<!--	<property name="nX" from="def.objAgreementAmt.nWidth + 36 "/>-->
+		<!--	<property name="nY" value="49"/>-->
+		<!--	<property name="nWidth" value="32"/>-->
+		<!--	<property name="nHeight" value="32"/>-->
+		<!--</object>-->
+
+		<object type="mlui.UI2DText" name="objAgreementAmt">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText" from="'$' + def.objMoneyTransfer.n64Amount.formatNumber(0, true)"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="57"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objToFrom">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText">
+				switch{
+					case def.objMoneyTransfer.refSourceNation == mh2data.objNation:
+						locale.SID.UI.To
+					case def.objMoneyTransfer.refDestNation == mh2data.objNation:
+						locale.SID.UI.From
+				}
+			</property>
+			<property name="nX" from="def.objAgreementAmt.nWidth + 68"/>
+			<property name="nY" value="57"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation">
+				switch{
+					case def.objMoneyTransfer.refSourceNation == mh2data.objNation:
+						def.objMoneyTransfer.refDestNation.resolve(mh2data.objAvatar)
+					case def.objMoneyTransfer.refDestNation == mh2data.objNation:
+						def.objMoneyTransfer.refSourceNation.resolve(mh2data.objAvatar)
+				}
+			</property>
+			<property name="nX" from="def.objToFrom.nWidth + def.objAgreementAmt.nWidth + 75"/>
+			<property name="nY" value="52"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRepeatingIcon" existsWhile="self.objMoneyTransfer.bOneTime">
+			<property name="tmplImage" value="skin.ImgInfoIconRepeating"/>
+			<property name="nX" from="def.objNationFlag.nX + 50"/>
+			<property name="nY" value="54"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objStatusLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.AgreementStatus"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="83"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objAgStatus">
+			<property name="tmplTextStyle">
+				if(def.objMoneyTransfer.eStatus == gs_tbg.MoneyTransferStatus.ACCEPTED,
+						'locale.TxtStyleArialGreen18Left',
+					if(def.objMoneyTransfer.eStatus == gs_tbg.MoneyTransferStatus.REJECTED,
+						'locale.TxtStyleArialRed18Left',
+						'locale.TxtStyleArialBlue18Left'))
+			</property>
+
+			<property name="strText">
+				switch{
+					case def.objMoneyTransfer.eStatus == gs_tbg.MoneyTransferStatus.ACCEPTED:
+						locale.SID.UI.Accepted
+					case def.objMoneyTransfer.eStatus == gs_tbg.MoneyTransferStatus.REJECTED:
+						locale.SID.UI.Rejected
+					default:
+						locale.SID.UI.PendingApproval
+				}
+			</property>
+			<property name="nWidth" value="250"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="95"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<propertyDef name="nNewTradeAmount" type="int" from="self.objMoneyTransfer.n64Amount"/>
+
+		<!-- Receive Actions -->
+		<object type="mlui.UI2DText" name="objReceiveLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Receive"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="306"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objCancel" existsWhile="def.objMoneyTransfer.eStatus.equals(gs_tbg.MoneyTransferStatus.ACCEPTED)">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.CancelMoneyTransfer"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="317"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objMoneyTransfer.eStatus.equals(gs_tbg.MoneyTransferStatus.ACCEPTED))
+							{
+								var action = gs_tbg.GActCancelMoneyTransfer.create({
+									"refMoneyTransfer": def.objMoneyTransfer,
+									"strCancelMessage": locale.SID.UI.CancelMoneyTransfer,
+									"objCancelingNation": def.objNation
+								});
+								mh2data.objAvatar.sendAction(action);
+	
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objAccept" existsWhile="def.objMoneyTransfer.eStatus.equals(gs_tbg.MoneyTransferStatus.PROPOSED) AND def.objMoneyTransfer.refProposingNation.resolve(mh2data.objAvatar) != mh2data.objNation">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.AcceptMoneyTransfer"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="317"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objMoneyTransfer.eStatus.equals(gs_tbg.MoneyTransferStatus.PROPOSED) && def.objMoneyTransfer.refProposingNation.resolve(mh2data.objAvatar) != mh2data.objNation)
+							{
+								var action = gs_tbg.GActAcceptMoneyTransfer.create({
+									"refMoneyTransfer": def.objMoneyTransfer
+								});
+								mh2data.objAvatar.sendAction(action);
+	
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objReject" existsWhile="def.objMoneyTransfer.eStatus.equals(gs_tbg.MoneyTransferStatus.PROPOSED) AND def.objMoneyTransfer.refProposingNation != mh2data.objNation">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.RejectMoneyTransfer"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="347"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objMoneyTransfer.eStatus.equals(gs_tbg.MoneyTransferStatus.PROPOSED) && def.objMoneyTransfer.refProposingNation.resolve(mh2data.objAvatar) != mh2data.objNation)
+							{
+								var action = gs_tbg.GActRejectMoneyTransfer.create({
+									"refMoneyTransfer": def.objMoneyTransfer
+								});
+								mh2data.objAvatar.sendAction(action);
+	
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+	
+	
+	
+	
+	<!-- TODO: This is placeholder, remove when ready -->
+	<objectDef type="UI2DTradeAgreementRcvd" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objOurTradeAgreement" type="gs_tbg.TradeAgreement"/>
+		<property name="objOurTradeAgreement" from="mh2data.objSelectedTradeAgreement.objTradeAgreement"/>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objTradeIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconTrade"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTradeAgreementsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.TradeAgreement"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTradeAgreementBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12LeftWrap"/>
+			<property name="strText" from="mh2data.strDiplomaticMessage"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="60"/>
+		</object>
+
+
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="LookupResourceIcons" name="objLookupResourceIcons">
+			<property name="tmplResource" from="def.objOurTradeAgreement.tmplResource"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objLookupResourceIcons.tmplIcon32x32"/>
+			<property name="nX" from="def.objAgreementAmt.nWidth + 36 "/>
+			<property name="nY" value="49"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="32"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objAgreementAmt">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText" from="def.objOurTradeAgreement.nAmount.formatNumber(0, true)"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="57"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objToFrom">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText">
+				switch{
+					case def.objOurTradeAgreement.refSourceNation == mh2data.objNation:
+						locale.SID.UI.To
+					case def.objOurTradeAgreement.refDestNation == mh2data.objNation:
+						locale.SID.UI.From
+				}
+			</property>
+			<property name="nX" from="def.objAgreementAmt.nWidth + 68"/>
+			<property name="nY" value="57"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation">
+				switch{
+					case def.objOurTradeAgreement.refSourceNation == mh2data.objNation:
+						def.objOurTradeAgreement.refDestNation.resolve(mh2data.objAvatar)
+					case def.objOurTradeAgreement.refDestNation == mh2data.objNation:
+						def.objOurTradeAgreement.refSourceNation.resolve(mh2data.objAvatar)
+				}
+			</property>
+			<property name="nX" from="def.objToFrom.nWidth + def.objAgreementAmt.nWidth + 75"/>
+			<property name="nY" value="52"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRepeatingIcon" existsWhile="self.objOurTradeAgreement.nDuration LT 0">
+			<property name="tmplImage" value="skin.ImgInfoIconRepeating"/>
+			<property name="nX" from="def.objNationFlag.nX + 50"/>
+			<property name="nY" value="54"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="22"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objStatusLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.AgreementStatus"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="83"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objAgStatus">
+			<property name="tmplTextStyle">
+				if(def.objOurTradeAgreement.eStatus == gs_tbg.TradeAgreementStatus.ACCEPTED,
+						'locale.TxtStyleArialGreen18Left',
+					if(def.objOurTradeAgreement.eStatus == gs_tbg.TradeAgreementStatus.REJECTED,
+						'locale.TxtStyleArialRed18Left',
+						'locale.TxtStyleArialBlue18Left'))
+			</property>
+
+			<!--switch{-->
+			<!--		case def.objOurTradeAgreement.eStatus == gs_tbg.TradeAgreementStatus.ACCEPTED:-->
+			<!--			locale.TxtStyleArialGreen18Left-->
+			<!--		case def.objOurTradeAgreement.eStatus == gs_tbg.TradeAgreementStatus.REJECTED:-->
+			<!--			locale.TxtStyleArialRed18Left-->
+			<!--		default:-->
+			<!--			locale.TxtStyleArialBlue18Left-->
+			<!--	}-->
+
+			<property name="strText">
+				switch{
+					case def.objOurTradeAgreement.eStatus == gs_tbg.TradeAgreementStatus.ACCEPTED:
+						locale.SID.UI.Accepted
+					case def.objOurTradeAgreement.eStatus == gs_tbg.TradeAgreementStatus.REJECTED:
+						locale.SID.UI.Rejected
+					default:
+						locale.SID.UI.PendingApproval
+				}
+			</property>
+			<property name="nWidth" value="250"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="95"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<!-- Send Actions -->
+		<object type="mlui.UI2DText" name="objSendLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Send"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="126"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<propertyDef name="nNewTradeAmount" type="int"
+			from="self.objOurTradeAgreement.nAmount - self.nReduceBy"/>
+
+		<propertyDef name="nReduceBy" type="int"/>
+
+		<object type="mlui.UI2DTextButton" name="objPropose">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.ProposeNewTradeAgreement"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="137"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							resource = def.objOurTradeAgreement.tmplResource.resolve().strDisplayName;
+							
+							mh2data.openDiplomaticAction(UI2DTradeAgreement);
+							
+							mh2data.openTradeAgreementTab(resource);
+							mh2data.bRegnegotiateTrade = true;
+							
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+							<!--var action = gs_tbg.GActProposeTradeAgreement.create({-->
+							<!--	"refProposingNation": mh2data.objNation,-->
+							<!--	"refSourceNation": mh2data.objNation,-->
+							<!--	"refDestNation": def.objNation,-->
+							<!--	"tmplResource": def.objOurTradeAgreement.tmplResource,-->
+							<!--	"nAmount": 10,-->
+							<!--	"bOneTime": false-->
+							<!--});-->
+							<!--mh2data.objAvatar.sendAction(action);-->
+							<!---->
+							<!--mh2data.closeDiplomaticActionsPopup();-->
+
+		<object type="mlui.UI2DTextButton" name="objWithdraw">
+			<property name="tmplTextButtonStyle" from="if(def.objOurTradeAgreement.eStatus == gs_tbg.TradeAgreementStatus.PROPOSED
+				AND def.objOurTradeAgreement.refProposingNation.resolve(mh2data.objAvatar) == mh2data.objNation,
+					skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlue'),
+					skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlueGS'))
+			"/>
+			<property name="strText" from="locale.SID.UI.WithdrawTradeAgreement"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="167"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objOurTradeAgreement.eStatus.equals(gs_tbg.TradeAgreementStatus.PROPOSED))
+								{
+									var action = gs_tbg.GActWithdrawTradeAgreement.create({
+										"refTradeAgreement": def.objOurTradeAgreement
+									});
+									mh2data.objAvatar.sendAction(action);
+
+									mh2data.closeDiplomaticActionsPopup();
+								}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objReduce">
+			<property name="tmplTextButtonStyle" from="if(def.objOurTradeAgreement.eStatus == gs_tbg.TradeAgreementStatus.ACCEPTED
+					AND def.objOurTradeAgreement.refDestNation.resolve(mh2data.objAvatar) == mh2data.objNation,
+						skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlue'),
+						skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlueGS'))
+			"/>
+			<property name="strText" from="locale.SID.UI.ReduceTradeAgreement"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="227"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objOurTradeAgreement.eStatus.equals(gs_tbg.TradeAgreementStatus.ACCEPTED))
+							{
+								var action = gs_tbg.GActReduceTradeAgreement.create({
+									"refTradeAgreement": def.objOurTradeAgreement,
+									"nNewAmount": def.nNewTradeAmount
+								});
+								mh2data.objAvatar.sendAction(action);
+
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<!-- Offer -->
+		<object type="mlui.UI2DText" name="objOurOfferLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown11Left"/>
+			<property name="strText" from="locale.SID.UI.NewTradeAmount"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="257"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="11"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objOurOffer">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText" from="def.nNewTradeAmount.formatNumber(0, true)"/>
+			<property name="nX" value="109"/>
+			<property name="nY" value="271"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objPlusOne">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue10CenterHighlight"/>
+			<property name="strText" value="+"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="273"/>
+			<property name="nDefaultWidth" value="29"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.nReduceBy -= 1;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objMinusOne">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue10CenterHighlight"/>
+			<property name="strText" value="-"/>
+			<property name="nX" value="66"/>
+			<property name="nY" value="273"/>
+			<property name="nDefaultWidth" value="29"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.nReduceBy += 1;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objCancel">
+			<property name="tmplTextButtonStyle" from="if(def.objOurTradeAgreement.eStatus != gs_tbg.TradeAgreementStatus.REJECTED,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlue'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlueGS'))
+			"/>
+			<property name="strText" from="locale.SID.UI.CancelTradeAgreement"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="197"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objOurTradeAgreement.eStatus.equals(gs_tbg.TradeAgreementStatus.ACCEPTED))
+							{
+								var action = gs_tbg.GActCancelTradeAgreement.create({
+									"refTradeAgreement": def.objOurTradeAgreement,
+                                    "objCancelingNation": def.objNation
+								});
+								mh2data.objAvatar.sendAction(action);
+
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<!-- Receive Actions -->
+		<object type="mlui.UI2DText" name="objReceiveLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Receive"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="306"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objAccept">
+			<property name="tmplTextButtonStyle" from="if(def.objOurTradeAgreement.eStatus == gs_tbg.TradeAgreementStatus.PROPOSED
+				AND def.objOurTradeAgreement.refProposingNation.resolve(mh2data.objAvatar) != mh2data.objNation,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlue'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlueGS'))
+			"/>
+			<property name="strText" from="locale.SID.UI.AcceptTradeAgreement"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="317"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objOurTradeAgreement.refProposingNation.resolve(mh2data.objAvatar) != mh2data.objNation)
+							{
+								var action = gs_tbg.GActAcceptTradeAgreement.create({
+									"refTradeAgreement": def.objOurTradeAgreement
+								});
+								mh2data.objAvatar.sendAction(action);
+	
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objReject">
+			<property name="tmplTextButtonStyle" from="if(def.objOurTradeAgreement.eStatus == gs_tbg.TradeAgreementStatus.PROPOSED
+				AND def.objOurTradeAgreement.refProposingNation.resolve(mh2data.objAvatar) != mh2data.objNation,
+					skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlue'),
+					skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlueGS'))
+			"/>
+			<property name="strText" from="locale.SID.UI.RejectTradeAgreement"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="347"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objOurTradeAgreement.refProposingNation.resolve(mh2data.objAvatar) != mh2data.objNation)
+							{
+								var action = gs_tbg.GActRejectTradeAgreement.create({
+									"refTradeAgreement": def.objOurTradeAgreement
+								});
+								mh2data.objAvatar.sendAction(action);
+	
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+
+	<!-- TODO: This is placeholder, remove when ready -->
+	<objectDef type="UI2DTreaty" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objAllianceIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconAllianceSm"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTreatyLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Treaty"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTreatyBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12LeftWrap"/>
+			<property name="strText" from="mh2data.strDiplomaticMessage"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTreatyType">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+			<property name="strText">
+                switch
+                {
+                    case mh2data.objTheirTreatyProposal.eType == gs_tbg.TreatyType.PEACE: locale.SID.UI.PeaceTreaty
+                    case mh2data.objTheirTreatyProposal.eType == gs_tbg.TreatyType.ALLIANCE: locale.SID.UI.AllianceTreaty
+                    case mh2data.objTheirTreatyProposal.eType == gs_tbg.TreatyType.MILITARY_ACCESS: locale.SID.UI.RequestMilitaryAccessTreaty
+                    case mh2data.objTheirTreatyProposal.eType == gs_tbg.TreatyType.PORT_ACCESS: locale.SID.UI.RequestPortAccessTreaty
+                    case mh2data.objTheirTreatyProposal.eType == gs_tbg.TreatyType.TERRITORIAL_TRANSFER: locale.SID.UI.TerritorialTransferTreaty
+                }
+			</property>
+			<property name="nX" value="33"/>
+			<property name="nY" from="def.objTreatyBlurb.nHeight + 36"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTreatyStatus">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+			<property name="strText">
+                switch
+                {
+                    case mh2data.objTheirTreatyProposal.eStatus == gs_tbg.TreatyStatus.PROPOSED: locale.SID.UI.Proposed
+                    case mh2data.objTheirTreatyProposal.eStatus == gs_tbg.TreatyStatus.RATIFIED: locale.SID.UI.Accepted
+                    case mh2data.objTheirTreatyProposal.eStatus == gs_tbg.TreatyStatus.REJECTED: locale.SID.UI.Rejected
+                }
+			</property>
+			<property name="nX" value="33"/>
+			<property name="nY" from="def.objTreatyBlurb.nHeight + 51"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<!-- placeholder --><object type="common_ui.UI2DList" name="objTreatyTerms">
+			<property name="nX" value="37"/>
+			<property name="nY" value="87"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="2"/>
+
+			<object type="mlui.UI2DText" name="objElements" tiedTo="mh2data.objTheirTreatyProposal.objTerms">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+				<property name="strText" from="'Term: ' + tiedTo.eType"/>
+				<property name="nWidth" value="250"/>
+				<property name="nHeight" value="12"/>
+			</object>
+		</object>
+
+		<!-- Receive Actions -->
+		<object type="mlui.UI2DText" name="objReceiveLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Receive"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="211"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objRatify">
+			<property name="tmplTextButtonStyle" from="if(mh2data.objTheirTreatyProposal != null,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlue'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlueGS'))
+			"/>
+			<property name="strText" from="locale.SID.UI.RatifyTreaty"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="222"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(mh2data.objTheirTreatyProposal != null)
+							{
+								var action = gs_tbg.GActRatifyTreaty.create({
+									"refTreaty": mh2data.objTheirTreatyProposal
+								});
+								mh2data.objAvatar.sendAction(action);
+								mh2data.objTheirTreatyProposal = null;
+
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objReject">
+			<property name="tmplTextButtonStyle" from="if(mh2data.objTheirTreatyProposal != null,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlue'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlueGS'))
+			"/>
+			<property name="strText" from="locale.SID.UI.RejectTreaty"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="252"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(mh2data.objTheirTreatyProposal != null)
+							{
+								var action = gs_tbg.GActRejectTreaty.create({
+									"refTreaty": mh2data.objTheirTreatyProposal
+								});
+								mh2data.objAvatar.sendAction(action);
+								mh2data.objTheirTreatyProposal = null;
+
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DPeaceTreaty" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<propertyDef name="objDemandsTreatyTerms" type="gs_tbg.TreatyTerm" variable="true">
+			filter(
+				?{term: term.refNationAffected == mh2data.objNation},
+				mh2data.objTheirTreatyProposal.objTerms
+			)
+		</propertyDef>
+		
+		<propertyDef name="objConcessionsTreatyTerms" type="gs_tbg.TreatyTerm" variable="true">
+			filter(
+				?{term: term.refNationAffected != mh2data.objNation},
+				mh2data.objTheirTreatyProposal.objTerms
+			)
+		</propertyDef>
+		
+		
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objAllianceIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconAllianceSm"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTreatyLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Treaty"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTreatyBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12LeftWrap"/>
+			<property name="strText" from="mh2data.strDiplomaticMessage"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTreatyType">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+			<property name="strText">
+                switch
+                {
+                    case mh2data.objTheirTreatyProposal.eType == gs_tbg.TreatyType.PEACE: locale.SID.UI.PeaceTreaty
+                    case mh2data.objTheirTreatyProposal.eType == gs_tbg.TreatyType.ALLIANCE: locale.SID.UI.AllianceTreaty
+                    case mh2data.objTheirTreatyProposal.eType == gs_tbg.TreatyType.MILITARY_ACCESS: locale.SID.UI.RequestMilitaryAccessTreaty
+                    case mh2data.objTheirTreatyProposal.eType == gs_tbg.TreatyType.PORT_ACCESS: locale.SID.UI.RequestPortAccessTreaty
+                    case mh2data.objTheirTreatyProposal.eType == gs_tbg.TreatyType.TERRITORIAL_TRANSFER: locale.SID.UI.TerritorialTransferTreaty
+                }			
+			</property>
+			<property name="nX" value="33"/>
+			<property name="nY" from="def.objTreatyBlurb.nHeight + 36"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTreatyStatus">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+			<property name="strText">
+                switch
+                {
+                    case mh2data.objTheirTreatyProposal.eStatus == gs_tbg.TreatyStatus.PROPOSED: locale.SID.UI.Proposed
+                    case mh2data.objTheirTreatyProposal.eStatus == gs_tbg.TreatyStatus.RATIFIED: locale.SID.UI.Accepted
+                    case mh2data.objTheirTreatyProposal.eStatus == gs_tbg.TreatyStatus.REJECTED: locale.SID.UI.Rejected
+                }			
+			</property>
+			<property name="nX" value="33"/>
+			<property name="nY" from="def.objTreatyBlurb.nHeight + 51"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objDemandsTreatyLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Demand"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="87"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="common_ui.UI2DList" name="objDemandsTreatyTermsList">
+			<property name="nX" value="33"/>
+			<property name="nY" value="104"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="2"/>
+			
+			
+			
+			<object type="UI2DTreatyTerm" name="objElements" tiedTo="def.objDemandsTreatyTerms">
+				<property name="objTreatyTerm" from="tiedTo"/>			
+			</object>
+			
+		</object>
+		
+		<object type="mlui.UI2DText" name="objConcessionsTreatyLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Concessions"/>
+			<property name="nX" value="33"/>
+			<property name="nY">
+				def.objDemandsTreatyTermsList.nY + def.objDemandsTreatyTermsList.nHeight + 20
+			</property>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="common_ui.UI2DList" name="objConcessionsTreatyTermsList">
+			<property name="nX" value="33"/>
+			<property name="nY">
+				def.objConcessionsTreatyLabel.nY + def.objConcessionsTreatyLabel.nHeight + 4
+			</property>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="2"/>
+			<object type="UI2DTreatyTerm" name="objElements" tiedTo="def.objConcessionsTreatyTerms">
+				<property name="objTreatyTerm" from="tiedTo"/>			
+			</object>
+			
+		</object>
+
+
+		<object type="mlui.UI2DTextButton" name="objRatify">
+			<property name="tmplTextButtonStyle" from="if(mh2data.objTheirTreatyProposal != null,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlue'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlueGS'))
+			"/>
+			<property name="strText" from="locale.SID.UI.RatifyTreaty"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="46"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(mh2data.objTheirTreatyProposal != null)
+							{
+								var action = gs_tbg.GActRatifyTreaty.create({
+									"refTreaty": mh2data.objTheirTreatyProposal
+								});
+								mh2data.objAvatar.sendAction(action);
+								mh2data.objTheirTreatyProposal = null;
+
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objReject">
+			<property name="tmplTextButtonStyle" from="if(mh2data.objTheirTreatyProposal != null,
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlue'),
+				skin.getTemplateRef(mlmedia.TextButtonStyleTemplate,'TxtBtnStyleReportBubbleBrownBlueGS'))
+			"/>
+			<property name="strText" from="locale.SID.UI.RejectTreaty"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="10"/>
+			<property name="nDefaultWidth" value="242"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(mh2data.objTheirTreatyProposal != null)
+							{
+								var action = gs_tbg.GActRejectTreaty.create({
+									"refTreaty": mh2data.objTheirTreatyProposal
+								});
+								mh2data.objAvatar.sendAction(action);
+								mh2data.objTheirTreatyProposal = null;
+
+								mh2data.closeDiplomaticActionsPopup();
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+
+	<!-- TODO: This is placeholder, remove when ready -->
+	<objectDef type="UI2DWarDeclaration" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objWarIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconCombat"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="27"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objWarLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.WarDeclaration"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objWarBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10LeftWrap"/>
+			<property name="strText" from="mh2data.strDiplomaticMessage"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="40"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+	
+	
+	
+	
+	
+	
+	<objectDef type="UI2DTreatyTerm" superType="mlui.UI2DElement">
+		<propertyDef name="objTreatyTerm" type="gs_tbg.TreatyTerm"/>
+		<property name="nWidth" value="250"/>
+		<property name="nHeight" from="self.objText.nHeight"/>
+		
+		<object type="common_ui.UI2DList" name="objText">
+			
+			<object type="mlui.UI2DText" name="objElements" existsWhile="def.objTreatyTerm.eType != gs_tbg.TreatyTermType.TERRITORIAL_TRANSFER">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+				<property name="strText">
+					switch
+					{
+						case def.objTreatyTerm.eType == gs_tbg.TreatyTermType.SURRENDER_OCCUPIED: locale.SID.UI.Demand_Surrender_Occupied
+						case def.objTreatyTerm.eType == gs_tbg.TreatyTermType.MILITARY_ACCESS: locale.SID.UI.Demand_Military_Access
+						case def.objTreatyTerm.eType == gs_tbg.TreatyTermType.JOIN_ALLIANCE: locale.SID.UI.Demand_Join_Alliance
+					}
+					
+				</property>
+				<property name="nWidth" value="250"/>
+				<property name="nHeight" value="12"/>
+			</object>
+			
+			<object type="common_ui.UI2DList" name="objElements" existsWhile="def.objTreatyTerm.eType == gs_tbg.TreatyTermType.TERRITORIAL_TRANSFER">
+				<object type="mlui.UI2DText" name="objElements" tiedTo="def.objTreatyTerm.objRegions">
+					<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+					<property name="strText">
+						tiedTo.strDisplayName
+					</property>
+					<property name="nWidth" value="250"/>
+					<property name="nHeight" value="12"/>
+				</object>
+				
+			</object>
+			
+		</object>
+	</objectDef>
+	
+	
+	
+	
+	
+	
+	
+</locust>

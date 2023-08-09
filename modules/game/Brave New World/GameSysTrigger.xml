@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <object type="gs_trigger.GameSysTrigger" name="objGameSysTrigger">
+		
+		<object type="gs_trigger.TriggerNationLevelEvents" name="objTriggers">
+			<object type="gs_trigger.PoliticalActivityData" name="objPoliticalActivityData">
+				<property name="nBasePercentChance" value="1"/>
+				<property name="nStabilityPoint" value="75"/>
+				<property name="fStabilitySlope" value=".5"/>
+				<property name="nMinPoints" value="2"/>
+				<property name="nMaxPoints" value="5"/>
+			</object>
+			<object type="gs_trigger.IPUChangeData" name="objIPUChangeData">
+				<property name="nBasePercentChance" value="1"/>
+				<property name="nFoodPercentPoint" value="50"/>
+				<property name="fFoodPercentSlope" value=".1"/>
+				<property name="nMinPoints" value="2"/>
+				<property name="nMaxPoints" value="5"/>
+			</object>
+			<!--<object type="gs_trigger.PuppetRevoltData" name="objPuppetRevoltData">-->
+			<!--	<property name="nBasePercentChance" value="1"/>-->
+			<!--	<property name="nPowerPointsPoint" value="35"/>-->
+			<!--	<property name="fPowerPointsSlope" value=".5"/>-->
+			<!--</object>-->
+		</object>
+
+		
+		<object type="gs_trigger.TriggerRegionLevelEvents" name="objTriggers">
+			<object type="gs_trigger.ResourceProductionChangeData" name="objResourceProductionChangeData">
+				<property name="fBasePercentChance" value=".5"/>
+				<property name="nMinPoints" value="5"/>
+				<property name="nMaxPoints" value="20"/>
+				<property name="nTurnDuration" value="5"/>
+				<property name="tmplResource" value="sd.Coal"/>
+			</object>
+			<object type="gs_trigger.ResourceProductionChangeData" name="objResourceProductionChangeData">
+				<property name="fBasePercentChance" value=".5"/>
+				<property name="nMinPoints" value="5"/>
+				<property name="nMaxPoints" value="20"/>
+				<property name="nTurnDuration" value="5"/>
+				<property name="tmplResource" value="sd.Oil"/>
+			</object>
+			<object type="gs_trigger.ResourceProductionChangeData" name="objResourceProductionChangeData">
+				<property name="fBasePercentChance" value=".5"/>
+				<property name="nMinPoints" value="5"/>
+				<property name="nMaxPoints" value="20"/>
+				<property name="nTurnDuration" value="5"/>
+				<property name="tmplResource" value="sd.Metals"/>
+			</object>
+			<object type="gs_trigger.FamineData" name="objFamineData">
+				<property name="nBasePercentChance" value="2"/>
+				<property name="nFoodPercentPoint" value="25"/>
+				<property name="fFoodPercentSlope" value=".25"/>
+				<property name="nMinPoints" value="5"/>
+				<property name="nMaxPoints" value="100"/>
+			</object>
+		</object>
+
+		<object type="gs_trigger.TriggerCityLevelEvents" name="objTriggers">
+			<object name="objResearchChangeData" type="gs_trigger.ResearchChangeData">
+				<property name="nBasePercentChance" value="2"/>
+				<property name="nChanceToBeBreakthrough" value="50"/>
+				<property name="nMinPoints" value="2"/>
+				<property name="nMaxPoints" value="5"/>
+			</object>
+			<object type="gs_trigger.FactoryStrikeData" name="objFactoryStrikeData">
+				<property name="nBasePercentChance" value="1"/>
+				<property name="nStabilityPoint" value="75"/>
+				<property name="fStabilitySlope" value=".25"/>
+				<property name="nMinPoints" value="5"/>
+				<property name="nMaxPoints" value="50"/>
+			</object>
+		</object>
+	</object>
+</locust>

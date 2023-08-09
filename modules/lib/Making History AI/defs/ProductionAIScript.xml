@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="ProductionAIScript" class="CMLObject">
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+
+        <propertyDef name="objGameSysNation" type="gs_tbg.GameSysNation"/>
+        <property name="objGameSysNation" from="self.objParentAI.objGameSysNation"/>
+        
+        <propertyDef name="objGameSysTrade" type="gs_tbg.GameSysTrade"/>
+        <property name="objGameSysTrade" from="self.objParentAI.objGameSysTrade"/>
+       
+
+<script type="application/javascript"><![CDATA[
+        
+// temporary object for research AI
+function ProductionAITempData(avatar)
+{
+    this.avatar = avatar;
+    this.pad = getPAD(avatar,PADMakingHistoryAI);
+    this.utilPAD = getPAD(avatar,gs_tbg.PADAIUtility);
+    this.nation = this.pad.objNation;
+    this.militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+    this.bestFortificationImprovementTemplate = null;
+    this.bestAADefenseImprovementTemplate = null;
+
+    this.getBestFortificationImprovementTemplate = function()
+    {
+        if (this.bestFortificationImprovementTemplate == null)
+        {
+            this.bestFortificationImprovementTemplate = this.militaryAI.getBestFortificationImprovementTemplate(this.avatar);
+        }
+        return this.bestFortificationImprovementTemplate;
+    }
+    
+    this.getBestAADefenseImprovementTemplate = function()
+    {
+        if (this.bestAADefenseImprovementTemplate == null)
+        {
+            this.bestAADefenseImprovementTemplate = this.militaryAI.getBestAADefenseImprovementTemplate(this.avatar);
+        }
+        return this.bestAADefenseImprovementTemplate;
+    }
+    
+    this.getResourceProductionPriority = function(resource, nationResource, supplyAndDemand, nEffectiveSupply, nEffectiveDemand)
+    {
+        var fPriority = this.militaryAI.getResourcePriority(this.avatar, resource);
+        
+        var bNationShortage = false;
+        if (nationResource.nAmount < 100)
+        {
+            bNationShortage = true;
+        }
+        else if (nationResource.eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_ONLY))
+        {
+            bNationShortage = true;
+        }
+        else if (nationResource.eAutotradeState.equals(gs_tbg.AutotradeState.AUTOTRADE_STATE_BUY_AND_SELL))
+        {
+            bNationShortage = (nationResource.nAmount < nationResource.nDesiredStockpile);
+        }
+        
+        // var bMarketShortage =  (supplyAndDemand.nSupply < supplyAndDemand.nDemand );
+        var bMarketShortage = (nEffectiveSupply < nEffectiveDemand);
+                
+        var bIsRawMaterial = resource.equals(self.objParentAI.objMetalsTemplate) || resource.equals(self.objParentAI.objOilTemplate) || resource.equals(self.objParentAI.objCoalTemplate);
+        if (bIsRawMaterial)
+        {
+            // production priority for raw materials
+            if ((!bNationShortage) || (!bMarketShortage))
+            {
+                fPriority *= 0.05;
+            }
+        }
+        else if (resource.equals(self.objParentAI.objArmsTemplate))
+        {
+            // production priority for arms
+            if (bNationShortage)
+            {
+                if (this.pad.bAtWar)
+                {
+                    if (bMarketShortage)
+                    {
+                        fPriority *= 35.0;
+                    }
+                    else
+                    {
+                        fPriority *= 20.0;
+                    }
+                }
+                else if (bMarketShortage)
+                {
+                    fPriority *= 10.0;
+                }
+                else
+                {
+                    fPriority *= 7.0;
+                }
+            }
+            else if (bMarketShortage)
+            {
+                fPriority *= 5.0;
+            }
+            else
+            {
+                fPriority *= 0.5;
+            }
+        }
+        else if (resource.equals(self.objParentAI.objFoodTemplate))
+        {
+            // production priority for food
+            if (bNationShortage || bMarketShortage)
+            {
+                fPriority *= 2.0;
+            }
+        }        
+                
+        return fPriority;
+    }
+    
+    this.updateProductionWeights = function(prodSim)
+    {
+        var debtStab = this.nation.nDebtStabilityModifier;
+        var nDebtFailTurnsAhead = self.objGameSysNation.predictStabilityTurns(this.nation, -20);
+        
+        if (this.pad.bWantProductionAILog)
+        {
+            var money = this.nation.getMoney(this.avatar);
+            var turn = self.objParentAI.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+            log("DEBUG: " + this.nation.strName + " money: " + money + ",turn: " + turn + ", debt stab: " + debtStab + ", turns until critical: " + nDebtFailTurnsAhead);
+        }
+        
+        var weights = prodSim.getWeights(this.avatar);
+        for (var r in weights.objResourceWeights)
+        {
+            var resourceWeight = weights.objResourceWeights[r];
+            var resource = resourceWeight.objResourceTemplate;
+            
+            var supplyAndDemand = self.objGameSysTrade.objSupplyAndDemand.find({"tmplResource":resource});
+            var nationResource = gs_tbg.getNationResource(this.avatar,this.nation,resource);
+            
+            var nEffectiveSupply = self.objGameSysTrade.getCachedSupplyForNation(this.avatar, this.nation, resource);
+            var nEffectiveDemand = self.objGameSysTrade.getCachedDemandForNation(this.avatar, this.nation, resource);
+            var bAvailableMarketShortage = (nEffectiveSupply < nEffectiveDemand);
+            
+            var fResourcePriority = this.getResourceProductionPriority(resource, nationResource, supplyAndDemand, nEffectiveSupply, nEffectiveDemand);
+            
+            // check market conditions            
+            if (supplyAndDemand != null)
+            {
+                var adjustTemplate = supplyAndDemand.tmplPriceAdjust.resolve();
+                if (adjustTemplate != null)
+                {
+                    var adjust = adjustTemplate.fPriceAdjust;
+                    if (adjust < 0.99) // it's reduced price on the world market
+                    {
+                        if (!resource.equals(self.objParentAI.objFoodTemplate))
+                        {
+                            // if not food
+                            fResourcePriority *= (adjust * adjust);
+                            if (nDebtFailTurnsAhead < 100)
+                            {
+                                fResourcePriority = 0; // Don't produce if it's cheap and we're in a debt spiral.
+                            }
+                        }
+                        else
+                        {
+                            fResourcePriority *= adjust; // less valuable
+                        }
+                    }
+                    else
+                    {
+                        fResourcePriority *= adjust; // more valuable
+                    }
+                }
+            }
+            
+            resourceWeight.nDesiredAmount = this.pad.getDesiredResourceAmount(resource);
+            resourceWeight.fWeight = fResourcePriority;
+            resourceWeight.fNegativeRange = 0.490;
+            resourceWeight.fNormalRange   = 0.509;
+            resourceWeight.fExcessRange   = 0.001;
+            
+            //if (this.pad.bWantProductionAILog) {
+            //    log("DEBUG: " + resource + " resourceWeight.nDesiredAmount = " + resourceWeight.nDesiredAmount);
+            //}
+            
+            //if (resource.equals(self.objParentAI.objArmsTemplate))
+            //{
+            //    resourceWeight.fNegativeRange = 0.50; // shortage
+            //    resourceWeight.fNormalRange   = 0.50; // stockpile
+            //    resourceWeight.fExcessRange   = 0.0; // above stockpile
+            //}
+            //else if (resource.equals(self.objParentAI.objFoodTemplate))
+            //{
+            //    resourceWeight.fNegativeRange = 0.50; // shortage
+            //    resourceWeight.fNormalRange   = 0.50; // stockpile
+            //    resourceWeight.fExcessRange   = 0.0; // above stockpile
+            //}
+            //else if (resource.equals(self.objParentAI.objMetalsTemplate) ||
+            //		 resource.equals(self.objParentAI.objOilTemplate) ||
+            //		 resource.equals(self.objParentAI.objCoalTemplate) )
+            //{                
+            //	resourceWeight.fNegativeRange = 0.50; // shortages 
+            //	resourceWeight.fNormalRange   = 0.50; // stockpile
+            //	resourceWeight.fExcessRange   = 0.0; // above stockpile
+            //}
+        }
+        
+        weights.n64DesiredMoney = this.nation.getMaxUsefulMoney(this.avatar);
+        if (weights.n64DesiredMoney < 1000000) // don't go too low
+            weights.n64DesiredMoney = 1000000;
+        
+        // weights.fMoneyWeight= 0.1;
+        weights.fMoneyNegativeRange = 0.35;
+        weights.fMoneyNormalRange = 0.55;
+        weights.fMoneyExcessRange = 0.10;
+                
+        var weightMode = "";
+        // tweak point
+        if (this.pad.bAtWar)
+        {
+            weights.fResourceOverallWeight = 0.11; // world market rebalance Nov 2012 tweak range: 0.011 to 1.0
+            weights.fUnitGroupCompositionOverallWeight = 0.25;
+            weights.fResearchNeedsOverallWeight = 2.0;
+            weights.fMilitaryRegionNeedsOverallWeight = 0.05;
+            weights.fCityIPUWeight = 0.0025;
+            weights.fCityRPUWeight = 0.0003;
+            weights.fMoneyWeight = 0.012; // tweak range: 0.007 to 0.016
+            
+            weightMode = "at war";
+        }        
+        else
+        {
+            weights.fResourceOverallWeight = 0.13; // world market rebalance Nov 2012 tweak range: 0.013 to 1.1
+            weights.fUnitGroupCompositionOverallWeight = 0.20;
+            weights.fResearchNeedsOverallWeight = 2.0;
+            weights.fMilitaryRegionNeedsOverallWeight = 0.04;
+            weights.fCityIPUWeight = 0.0030;
+            weights.fCityRPUWeight = 0.00031;
+            weights.fMoneyWeight = 0.014; // Tweak range 0.011 to 0.0.017
+            
+            weightMode = "at peace";
+        }
+        
+        if (prodSim.eProductionMode.equals(gs_tbg.ProductionMode.ECONOMIC_BUILDUP))
+        {
+            weights.fCityIPUWeight = 0.1;
+            weights.fResearchNeedsOverallWeight = 0;
+            weights.fMilitaryRegionNeedsOverallWeight = 0.02;
+            weights.fCityRPUWeight = 0;
+            weights.fMoneyWeight = 0.75; // Tweak range 0.7 to 0.8
+            
+            if (!this.pad.bAtWar)
+            {
+                weights.fMilitaryRegionNeedsOverallWeight = 0;
+                weights.fUnitGroupCompositionOverallWeight = 0.001;
+            }
+            
+            weightMode += "/economic buildup";
+        }
+        else if (prodSim.eProductionMode.equals(gs_tbg.ProductionMode.EMERGENCY_MILITARY_BUILDUP))
+        {
+            weights.fResourceOverallWeight = 0.1;
+            weights.fUnitGroupCompositionOverallWeight = 1.0;
+            weights.fResearchNeedsOverallWeight = 0.5;
+            weights.fMilitaryRegionNeedsOverallWeight = 0.1;
+            weights.fCityIPUWeight = 0.0025;
+            weights.fCityRPUWeight = 0.0003;
+            weights.fMoneyWeight = 0.0005; // Tweak range: 0.0001 to 0.001
+            
+            weightMode += "/emergency military buildup";
+        }
+        
+        
+        if ((debtStab < -20) && (!this.pad.bAtWar) )// getting too much in debt and not at war
+        {
+            var stabFactor = 1 - 3000.0 * (debtStab / 50); // 0 => 1, -50 => 3000
+        
+            weights.fMoneyWeight *= stabFactor; // we need money or the population will start rebelling
+
+            var reduceFactor1 = 1.0 + (debtStab + 2) / 6; // region
+            if (reduceFactor1 < 0.01)
+                reduceFactor1 = 0.01;
+                        
+            // weights.fResourceOverallWeight *= reduceFactor1;
+            weights.fMilitaryRegionNeedsOverallWeight *= reduceFactor1;
+            
+            var reduceFactor2 = 1.0 + (debtStab + 2) / 12; // military
+            if (reduceFactor2 < 0.01)
+                reduceFactor2 = 0.01;
+        
+            // reduce unit production
+            weights.fUnitGroupCompositionOverallWeight *= reduceFactor2;
+            
+            if (this.pad.bWantProductionAILog)
+            {
+                log("DEBUG: reduceFactor1=" + reduceFactor1 + ", reduceFactor2=" + reduceFactor2 + ", stabFactor=" + stabFactor);
+            }
+            
+            weightMode += "/debt";
+        }
+        
+        if (this.pad.bWantProductionAILog)
+        {
+            log("DEBUG: " + this.nation.strDisplayName + " production weightMode=" + weightMode);
+        }        
+        
+    } // updateProductionWeights
+                
+    // choose the best thing to produce at all our controlled cities
+    this.update = function()
+    {
+        if (this.pad.bWantProductionAILog)
+        {
+            log("DEBUG: ----- updateProduction() for " + this.nation.strName + " -----");
+        }
+
+        var prodSim = self.objGameSysAIUtility.getAINationProductionSimulator(this.avatar,this.nation);
+        prodSim.nPredictionTurnsAhead = 201; // tweak point
+        var updateRegionExclusions = this.pad.bUpdateRegionExclusions;
+        var updateFactoryExclusions = this.pad.bUpdateFactoryExclusions;
+
+        if (prodSim.objExclusions == null)
+        {
+            updateRegionExclusions = true;
+            updateFactoryExclusions = true;
+        }
+        else
+        {
+            var lastTurnData = this.pad.getLastTurnChangeData(false);
+            if (lastTurnData != null)
+            {
+                if ( (lastTurnData.objRegionLosses.size > 0) || (lastTurnData.objRegionGains.size > 0) )
+                {
+                     updateRegionExclusions = true;
+                }
+                else if (lastTurnData.objTopicsLearned.size > 0)
+                {
+                    for (var r in lastTurnData.objTopicsLearned)
+                    {
+                        var topic = lastTurnData.objTopicsLearned[r];
+                        if (this.pad.bWantProductionAILog)
+                        {
+                            log("DEBUG: " + this.nation.strName + " completed research on " + topic.strName + " last turn.");
+                        }
+                    }
+
+                    var fit = this.getBestFortificationImprovementTemplate();
+                    if (fit != null)
+                    {
+                        var exclusions = prodSim.getExclusions(this.avatar);
+                        var choice = exclusions.getChoice(this.avatar,fit);
+                        if ( (choice != null) && (choice.eChoice.equals(gs_tbg.ProdSimOutputChoice.OUTPUT_CHOICE_NEVER)) )
+                        {
+                            if (this.pad.bWantProductionAILog)
+                            {
+                                log("DEBUG: " + this.nation.strName + " was excluding " + fit.strName);
+                            }
+                            updateRegionExclusions = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (updateRegionExclusions || updateFactoryExclusions)
+        {
+            if (this.pad.bWantProductionAILog )
+            {
+                log("DEBUG: updating region and factory exclusions.");
+            }
+
+            var tmplAAImprovement = this.getBestAADefenseImprovementTemplate();
+            if (tmplAAImprovement == null)
+            {
+                // we may not know how to build any AA defenses.  
+                if (this.militaryAI.objBombedRegions.size > 0)
+                {
+                    if (this.pad.bWantProductionAILog)
+                        log("DEBUG: " + this.nation.strName + " needs to learn about AA defenses");
+                    var nWeight = 1;
+                    this.militaryAI.learnToBuildAADefenses(this.avatar, nWeight);
+                }
+            }
+
+            prodSim.updateExclusions(this.avatar);
+
+            this.pad.bUpdateRegionExclusions = false;
+            this.pad.bUpdateFactoryExclusions = false;
+        }
+        
+        this.updateProductionWeights(prodSim);
+        
+        // set log level
+        var nProductionAILogLevel = 0;
+        if (this.pad.bWantProductionAILog)
+            nProductionAILogLevel = 3; // 1 = just outputs, 2 = details, 3 = details just for specified city or region, +8=unit details
+        
+        if (nProductionAILogLevel > 1)
+        {
+            // test cases
+            //var cityRef = new GORef(gs_tbg.City, "StLouis");
+            //var city = cityRef.resolve(this.avatar);
+            //if (city != null)
+            //{
+            //    prodSim.setLogCity(city);
+            //    // nProductionAILogLevel = 11; // add unit info
+            //}
+            
+            //var regionRef = new GORef(gs_tbg.Region, "Wasatch");
+            //var region = regionRef.resolve(this.avatar);
+            //if (region != null)
+            //{
+            //    prodSim.setLogRegion(region);
+            //    nProductionAILogLevel = 3;
+            //}
+        }
+        
+        prodSim.setLogLevel(nProductionAILogLevel);
+        
+        // prodSim.setBestOutputs(this.avatar); // now part of gs_tbg AfterTurnStarted processing
+        
+    } // update
+
+    this.handleResearchTopicCompleted = function(topic)
+    {
+        var lastTurnData = this.pad.getLastTurnChangeData(true);
+        lastTurnData.objTopicsLearned.add(topic);
+    }
+
+    
+} // ProductionAITempData
+
+var gProductionAIData = null; // ProductionAITempData
+                
+function update(avatar)
+{
+    gProductionAIData = new ProductionAITempData(avatar);
+    gProductionAIData.update();
+}
+
+// gets the current per turn change in resources ( positive indicates increasing )
+function getCurrentResourcePerTurnChange(avatar,nation,resource)
+{
+    var nationResourceStatistics = self.objGameSysNation.objNationResourceStatistics.find({"refNation": nation, "tmplResource": resource});
+    
+    var otherProduction =   nationResourceStatistics.nRegionPerTurnProductionTotal + 
+                            nationResourceStatistics.nCityPerTurnProductionTotal + 
+                            nationResourceStatistics.nFactoryPerTurnProductionTotal;
+                            
+    var otherConsumption =  nationResourceStatistics.nRegionPerTurnDemandTotal +
+                            nationResourceStatistics.nCityPerTurnDemandTotal +
+                            nationResourceStatistics.nFactoryDemandTotal;
+    
+    var delta = (nationResourceStatistics.nDirectTradeImportTotal + otherProduction) - (nationResourceStatistics.nDirectTradeExportTotal + otherConsumption);
+    return delta;
+}
+
+function handleResearchTopicCompleted(avatar,topic)
+{
+    gProductionAIData = new ProductionAITempData(avatar);
+    gProductionAIData.handleResearchTopicCompleted(topic);
+}
+
+            
+]]></script>
+        
+    </objectDef><!-- ProductionAIScript -->
+    
+</locust>

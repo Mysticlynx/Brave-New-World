@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="EventNationChangedStatus" class="CMLOEventNationChangedStatus" superType="mlevent.Event" desc="Event for when a nation changed status">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="objOldStatus" type="NationStatus"/>
+        <propertyDef name="nTurn" type="int"/>
+    </objectDef>
+
+	<objectDef type="EventNationStabilityChanged" class="CMLOEventNationStabilityChanged" superType="mlevent.Event" desc="Event for when a nation stability changed">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="tmplNewStability" type="TemplateRef" restriction="StabilityTemplate"/>
+		<propertyDef name="tmplOldStability" type="TemplateRef" restriction="StabilityTemplate"/>
+    </objectDef>
+
+    <objectDef type="EventNationCreated" class="CMLOEventNationCreated" superType="mlevent.Event" desc="Event for when a nation is created">
+        <propertyDef name="objNation" type="Nation"/>
+    </objectDef>
+    
+    <objectDef type="EventNationColorChanged" class="CMLOEventNationColorChanged" superType="mlevent.Event" desc="Event for when a nation's color is changed">
+        <propertyDef name="objNation" type="Nation"/>
+    </objectDef>
+
+    <objectDef type="EventNationAnnexed" class="CMLOEventNationAnnexed" superType="mlevent.Event" desc="Event for when a nation is annexed">
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="objAnnexer" type="Nation"/>
+        <propertyDef name="bIsFragment" type="bool" default="false"/>
+        <propertyDef name="n64Money" type="int64" default="0"/>
+        <propertyDef name="objResources" type="ResourceAmount" variable="true" storesChildren="true"/>
+    </objectDef>
+
+    <objectDef type="EventNationDestroyed" class="CMLOEventNationDestroyed" superType="mlevent.Event" desc="Event for when a nation is destroyed">
+        <propertyDef name="objNation" type="Nation"/>
+    </objectDef>
+
+    <objectDef type="EventNationLiberated" class="CMLOEventNationLiberated" superType="mlevent.Event" desc="Event for when a nation is liberated">
+        <propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="objLiberator" type="Nation"/>
+    </objectDef>
+
+	<objectDef type="EventPoliticalActivity" superType="mlevent.Event">
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="tmplIdeology" type="TemplateRef" restriction="IdeologyTemplate"/>
+	</objectDef>
+</locust>

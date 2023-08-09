@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysCombat" class="CMLOGameSysCombat" superType="mlgame.GameSystem">
+        <propertyDef name="objEngagements" type="Engagement" variable="true" storesChildren="true"/>
+        <propertyDef name="nCollateralDamageDivisor" type="int" default="5"/>
+        <propertyDef name="nTransportationDamageWeight" type="int" default="1"/>
+        <propertyDef name="nFortificationDamageWeight" type="int" default="1"/>
+        <propertyDef name="nAADefensesDamageWeight" type="int" default="1"/>
+        <propertyDef name="nCoastalDefensesDamageWeight" type="int" default="1"/>
+        <propertyDef name="nAirbaseDamageWeight" type="int" default="1"/>
+        <propertyDef name="nResourcesDamageWeight" type="int" default="1"/>
+        <propertyDef name="objAirEncounters" type="AirEncounter" variable="true" storesChildren="true"/>
+        
+    	<script type="application/x-locust-query">
+                getNationAirEncounters = ?{nation:
+                    union(filter(?{encounter: encounter.objNation == nation}, self.objAirEncounters),
+                          filter(?{encounter: encounter.objEnemyNation == nation}, self.objAirEncounters))
+                }		
+    	</script>
+
+	</objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysCombat = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysCombat)
+		}
+
+		getAllEngagements = ?{gameroot:
+			getGameSysCombat(gameroot).objEngagements
+		}
+		
+        getNationAirEncounters = ?{gameroot,nation:
+            getGameSysCombat(gameroot).getNationAirEncounters(nation)
+        }
+	</script>
+
+</locust>

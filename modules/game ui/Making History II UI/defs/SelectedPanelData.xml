@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="SelectedPanelData" class="CMLObject">
+        <propertyDef name="bIsMoreInfo" type="bool" default="false"/>
+        
+        <object type="DiplomacyData" name="objDiplomacyData">
+            <script type="application/javascript"><![CDATA[
+                function showInfo(nation) {
+                    mh2data.setSelectedObject(nation);
+                    self.otTab = UI2DDiplomacyTabInfo;
+					self.objNation = nation;
+					def.closeHigherLayer()
+                }
+				
+				function showRegions(nation) {
+                    mh2data.setSelectedObject(nation);
+                    self.otTab = UI2DRegionTabAssets;
+					self.objNation = nation;
+					def.closeHigherLayer()
+                }
+				
+				function showCities(nation) {
+                    mh2data.setSelectedObject(nation);
+                    self.otTab = UI2DCityTabProductionList;
+					self.objNation = nation;
+					def.closeHigherLayer()
+                }
+				
+				function showLarge() {
+					spdata.bIsMoreInfo = true;
+				}
+				
+            ]]></script>
+        </object>
+        
+        <object type="UnitGroupData" name="objUnitGroupData">
+            <script type="application/javascript"><![CDATA[
+				function showUnitGroupPanel(unitgroup) {
+					spdata.bIsMoreInfo = false;
+                    mh2data.setSelectedObject(unitgroup);
+                    self.refUnitGroup = GORef(gs_tbg.UnitGroup, unitgroup);
+					def.closeHigherLayer()
+				}
+                function showUnitGroupInfo(unitgroup) {
+                    showUnitGroupPanel(unitgroup);
+                    self.eSection = UnitGroupSection.INFO;
+                }
+                function showUnitGroupMerge(unitgroup) {
+                   showUnitGroupPanel(unitgroup);
+                    self.eSection = UnitGroupSection.MERGE;
+                }
+                function showUnitGroupSplit(unitgroup) {
+					showUnitGroupPanel(unitgroup);
+                    self.eSection = UnitGroupSection.SPLIT;
+                }
+                function showUnitGroupList(unitgroup) {
+					showUnitGroupPanel(unitgroup);
+                    self.eSection = UnitGroupSection.LIST;
+                }
+                function showUnitGroupCarriers(unitgroup) {
+					showUnitGroupPanel(unitgroup);
+                    self.eSection = UnitGroupSection.CARRIERS;
+                }
+                function showUnitGroupTransports(unitgroup) {
+                    showUnitGroupPanel(unitgroup);
+                    self.eSection = UnitGroupSection.TRANSPORTS;
+                }
+                function showUnitGroupParatroopers(unitgroup) {
+                    showUnitGroupPanel(unitgroup);
+                    self.eSection = UnitGroupSection.PARATROOPERS;
+                }
+            ]]></script>
+        </object>
+        
+        <object type="CitySelectionData" name="objCityData">
+            <property name="eExpand" value="NONE"/>
+            <property name="eTab" value="PRODUCTION"/>
+            
+            <script type="application/javascript"><![CDATA[
+                function showCityPort(city) {
+                    mh2data.setSelectedObject(city);
+                    spdata.bIsMoreInfo = false;
+                    self.objCity = city;
+                    self.eExpand = CitySection.PORT;
+					def.closeHigherLayer()
+                }
+                function showCityResearch(city) {
+                    spdata.bIsMoreInfo = true;
+                    mh2data.setSelectedObject(city);
+                    self.objCity = city;
+                    self.eTab = CitySection.RESEARCH;
+					def.closeHigherLayer()
+                }
+               
+                function showCityProduction(city) {
+                    spdata.bIsMoreInfo = true;
+                    mh2data.setSelectedObject(city);
+                    self.objCity = city;
+                    self.eTab = CitySection.PRODUCTION;
+					def.closeHigherLayer()
+                }               
+                function showCityInfrastructure(city) {
+                    spdata.bIsMoreInfo = true;
+                    mh2data.setSelectedObject(city);
+                    self.objCity = city;
+                    self.eTab = CitySection.INFRASTRUCTURE;
+					def.closeHigherLayer()
+                }
+                function showMinInfo(city) {
+                    spdata.bIsMoreInfo = false;
+                    mh2data.setSelectedObject(city);
+                    self.objCity = city;
+                    self.eExpand = CitySection.NONE;
+					def.closeHigherLayer()
+                }
+                function showMaxInfo(city) {
+                    spdata.bIsMoreInfo = true;
+                    mh2data.setSelectedObject(city);
+                    self.objCity = city;
+                    if(self.objController != mh2data.objNation){
+                        self.eTab = CitySection.INFRASTRUCTURE;
+                    }   
+                    def.closeHigherLayer()
+                }
+                function showInfo(city) {                    
+                    mh2data.setSelectedObject(city);
+                    self.objCity = city;
+                    if(self.objController != mh2data.objNation){
+                        self.eTab = CitySection.INFRASTRUCTURE;
+                    }					
+                    self.eExpand = CitySection.NONE;
+					def.closeHigherLayer()
+                }
+            ]]></script>
+        </object>
+        
+        <object type="RegionData" name="objRegionData">
+            <property name="eTab" value="INFO"/>
+            <script type="application/javascript"><![CDATA[
+                function showRegionAssets(region) {
+                    mh2data.setSelectedObject(region);
+                    spdata.bIsMoreInfo = true;
+                    self.objRegion = region;
+                    self.eTab = RegionSection.ASSETS;
+					def.closeHigherLayer()
+                }
+                function showRegionStatistics(region) {
+                    mh2data.setSelectedObject(region);
+                    spdata.bIsMoreInfo = true;
+                    self.objRegion = region;
+                    self.eTab = RegionSection.STATISTICS;
+					def.closeHigherLayer()
+                }
+                function showRegionProduction(region) {
+                    mh2data.setSelectedObject(region);
+                    spdata.bIsMoreInfo = true;
+                    self.objRegion = region;
+                    self.eTab = RegionSection.PRODUCTION;
+					def.closeHigherLayer()
+                }
+                function showRegionInfrastructure(region) {
+                    mh2data.setSelectedObject(region);
+                    spdata.bIsMoreInfo = true;
+                    self.objRegion = region;
+                    self.eTab = RegionSection.INFRASTRUCTURE;
+					def.closeHigherLayer()
+                }
+                function showRegionInfo(region) {
+                    mh2data.setSelectedObject(region);
+                    spdata.bIsMoreInfo = true;
+                    self.objRegion = region;
+                    self.eTab = RegionSection.INFO;
+					def.closeHigherLayer()
+                }
+                function showRegionMax(region) {
+                    mh2data.setSelectedObject(region);
+                    spdata.bIsMoreInfo = true;
+                    self.objRegion = region;
+                    if(self.objController != mh2data.objNation){
+                        self.eTab = RegionSection.INFO;
+                    } 
+                    def.closeHigherLayer()
+                }
+                function showRegion(region) {
+                    mh2data.setSelectedObject(region);
+                    self.objRegion = region;
+                    if(self.objController != mh2data.objNation &&  self.eTab.equals(RegionSection.INFRASTRUCTURE)){
+                        self.eTab = RegionSection.INFO;
+                    }                    
+					def.closeHigherLayer()
+                }
+            ]]></script>
+        </object>
+        
+        <object type="SeaRegionData" name="objSeaRegionData">
+            <script type="application/javascript"><![CDATA[
+                function showSeaRegion(region) {
+					spdata.bIsMoreInfo = false;
+                    mh2data.setSelectedObject(region);
+                    self.objRegion = region;
+                    self.eExpand = SeaRegionSection.NONE;
+					def.closeHigherLayer()
+                }
+                function showSeaRegionExpand(region) {
+                    mh2data.setSelectedObject(region);
+                    self.objRegion = region;
+                    self.eExpand = SeaRegionSection.GROUPS;
+					spdata.bIsMoreInfo = false;
+					def.closeHigherLayer()
+                }
+            ]]></script>
+        </object>
+        
+		
+		<object type="SummaryPanelData" name="objSummaryPanelData">
+			<property name="objMH2Data" from="mh2data"/>
+		</object>
+        
+        <script type="application/javascript">
+                      <![CDATA[
+			function showMoreInfo() {
+				self.bIsMoreInfo = true;
+			}
+
+			function showLessInfo() {
+				self.bIsMoreInfo = false;
+			}
+            
+			function closeHigherLayer() {
+				encydata.closeEncy();
+				reportdata.closeReportPanel();
+			}
+			
+      function showNationInfo(nation) {
+				if(nation == mh2data.objNation,
+                    mh2data.setSelectedObject(nation),
+                    self.objDiplomacyData.showInfo(nation),
+                    showMoreInfo()
+                );
+			}
+            
+            function showCityInfo(city) {
+                self.objCityData.showInfo(city)
+			}
+            
+		]]></script>
+        
+    </objectDef>
+    
+</locust>

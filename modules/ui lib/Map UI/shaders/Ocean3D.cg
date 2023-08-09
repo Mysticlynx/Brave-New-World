@@ -1,0 +1,69 @@
+//uniform float fSeaLevel;
+uniform sampler2D regionAndBorderOverlay;
+uniform float fOffScreenCamLeft;
+uniform float fOffScreenCamRight;
+uniform float fOffScreenCamTop;
+uniform float fOffScreenCamBottom;
+
+//struct SGLight {
+//	float4 color;
+//	float4 position;
+//};
+//uniform SGLight sgLights[2];
+
+uniform float4x4 sgModelViewProj;
+uniform float4x4 sgModelView;
+
+struct VertexOutput {
+	float4 position : POSITION;
+	float3 vFlatPos : TEXCOORD0;
+	float3 viewSpacePosition : TEXCOORD1;
+};
+
+VertexOutput vertexProgram(
+	float3 position : POSITION,
+	float3 normal : NORMAL
+) {
+	VertexOutput output;
+
+	output.position = mul(sgModelViewProj, float4(position, 1));
+	
+	// Assume the camera for the off screen texture is in the same position
+	// as the current camera and translate to the camera's coordinate space
+	output.vFlatPos = mul(sgModelView, float4(position.xy,0.02, 1)).xyz; // Note: model is transformed to sea level so don't adjust (or you get double images)
+	
+	output.viewSpacePosition = mul(sgModelView, float4(position, 1)).xyz;
+	
+	return output;
+}
+
+
+
+struct FragmentOutput {
+	float4 color : COLOR;
+};
+
+FragmentOutput fragmentProgram(
+	float3 vFlatPos : TEXCOORD0, 
+	float3 viewSpacePosition : TEXCOORD1
+) {
+	// Determine region/border texture coordinates
+
+	// Find the off screen texture screen space coordinates for the position
+	float fScreenX = (2.0 * vFlatPos.x + (fOffScreenCamRight + fOffScreenCamLeft)
+			* vFlatPos.z) / (fOffScreenCamRight - fOffScreenCamLeft);
+	float fScreenY = (2.0 * vFlatPos.y + (fOffScreenCamTop + fOffScreenCamBottom)
+			* vFlatPos.z) / (fOffScreenCamTop - fOffScreenCamBottom);
+	
+	float2 vScreenSpacePos = float2(fScreenX, fScreenY) / -vFlatPos.z;
+	float2 uvRegionAndBorder = float2(0.5 + 0.5*vScreenSpacePos.x, 0.5 - 0.5*vScreenSpacePos.y);
+    
+	
+	// diffuse
+	float4 borderColor = tex2D(regionAndBorderOverlay, uvRegionAndBorder);
+	float4 oceanColor = float4(0.164, 0.300, 0.480 ,0.918); //" colEmission" value="#2a4c7eFF", "fTransparency" value="0.618"
+		
+	FragmentOutput output;
+	output.color = float4(lerp(oceanColor, borderColor, borderColor.a));
+	return output;
+}

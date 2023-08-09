@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Possible MilitaryPlanStatus enum values:
+            "MILITARY_PLAN_STATUS_START"
+            "MILITARY_PLAN_STATUS_ACTIVE"
+            "MILITARY_PLAN_STATUS_SUSPENDED"
+            "MILITARY_PLAN_STATUS_SUCCEEDED"
+            "MILITARY_PLAN_STATUS_FAILED"
+            "MILITARY_PLAN_STATUS_CANCELLED" -->
+
+    <objectDef type="AIMilitaryPlan" class="CMLOAIMilitaryPlan" desc="One of a nation's AI military plans">
+        <goDef gameSystem="GameSysAIUtility" storageProperty="objNationAIPlans">
+            <keyProperty name="refNation"/>
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="strPurpose" type="String"/>
+        <propertyDef name="eStatus" type="Enum" restriction="MilitaryPlanStatus"/>
+        <propertyDef name="fPriority" type="float"/>
+        <propertyDef name="fAllocationLevel" type="float"/>
+        <propertyDef name="objUnitRegionRequirements" type="AIUnitRegionRequirements" variable="true" storesChildren="true"/>
+        <propertyDef name="objPlanHistory" type="AIMilitaryPlanHistory" variable="true" storesChildren="true"/><!-- DEPRECATED -->
+        <propertyDef name="strComposition" type="String" default="DefaultArmy"/>
+        <propertyDef name="strPreferredComposition" type="String" default=""/>
+        <!-- 
+        builtin methods:
+                getOrCreateUnitRegionRequirements(region,strComposition)
+                getUnitRegionRequirements(region,strComposition) // returns null if no requirement was found or requirement was cleared
+                reassignUnitRegionRequirements(avatar,requirement,region) // clears requirement and appends any units that were allocated to it to the new region. same composition
+                temporarilyReassignUnitGroup(avatar,unitGroup,region,strComposition,fPriority) // give unitGroup a temporary high priority assignment (temporary flag cleared when unit gets to region)
+                unitGroup getReadyUnitGroup(avatar,region,strComposition)
+                nArrivedPercentPower getAssignedUnitGroups(avatar,region,strComposition,arrivedGroups,enRouteGroups)
+                bool canCombineIntoNavyGroup(avatar,groups,bLogWhyNot)
+                combinedGroup combineIntoNavyGroup(avatar,groups)
+                bool canCombineIntoAirGroup(avatar,groups)
+                combinedGroup combineIntoAirGroup(avatar,groups)
+                bool canCombineIntoSingleGroup(avatar,groups)
+                combinedGroup combineIntoSingleGroup(avatar,groups)
+                unitGroup getCompleteComposition(avatar,region,composition)
+                setCompleteComposition(avatar,region,composition,unitGroup)
+                releaseFromAssignment(avatar,unitGroup)
+        
+        expected methods:
+        <script type="application/javascript"><![CDATA[ 
+            function updateUnitRequirements(game,avatar)
+            {
+                // override me
+            }
+
+            function cleanup()
+            {
+                // override me to clear reference loops
+            }
+
+        ]]></script>-->
+        
+    </objectDef>
+
+    <objectDef type="AIMilitaryPlanDefendNation" superType="AIMilitaryPlan" class="CMLOAIMilitaryPlanDefendNation">
+		<propertyDef name="bRegionsNeedUpdated" type="bool" default="true"/>
+		
+		<!-- tweak values-->
+        <propertyDef name="fDefenseFactor" type="float" default="0.5"/>
+        <propertyDef name="strLowPriorityComposition" type="String" default="DefensiveInfantryGroup"/>
+        <propertyDef name="nMinBorderDefenseLevel" type="int" default="100"/>
+        <propertyDef name="fCompositionThreatFactor" type="float" default="0.31"/><!-- Used in formula for AI to choose defense composition vs border threat level -->
+
+        <!-- updateUnitRequirements and advance handled internally (doesn't call script) -->    
+    </objectDef>
+
+    <objectDef type="AIMilitaryPlanReturnToPort" superType="AIMilitaryPlan" class="CMLOAIMilitaryPlanReturnToPort">
+		<propertyDef name="strSubmarineComposition" type="String" default="SubmarineGroup"/>	
+        <!-- updateUnitRequirements and advance handled internally (doesn't call script) -->    
+		<property name="strComposition" value="AnyNavyGroup"/>
+    </objectDef>
+
+    <objectDef type="AIMilitaryPlanFerry" superType="AIMilitaryPlan" class="CMLOAIMilitaryPlanFerry">
+		<propertyDef name="strLandComposition" type="String" default="AnyArmy"/>
+		<propertyDef name="objFerryTargets" type="AIFerryTarget" variable="true" storesChildren="true"/>
+		<propertyDef name="nStrengthPerCapFactor" type="int" default="1000"/>
+		<propertyDef name="objDefaultLandUnloadRegion" type="Region"/>
+		<propertyDef name="fMinTransportPriority" type="float" default="0.7"/>
+        <!-- updateUnitRequirements and advance handled internally (doesn't call script) -->    
+		<property name="fPriority" value="0.5"/>
+		<property name="strComposition" value="FerryGroup"/>
+    </objectDef>
+    
+    <objectDef type="AIMilitaryPlanAirPatrolAndBombing" superType="AIMilitaryPlan" class="CMLOAIMilitaryPlanAirPatrolAndBombing">
+        <propertyDef name="nTotalOilNeeded" type="int" default="0"/>
+        <propertyDef name="nTotalArmsNeeded" type="int" default="0"/>
+        <propertyDef name="nSuspendUntilTurn" type="int" default="-1"/>
+        <propertyDef name="objMinStrengthPerAirbase" type="AICombatStrength" storesChildren="true"/>        
+        <!-- updateUnitRequirements and advance handled internally (doesn't call script) -->    
+    </objectDef>
+        
+    <objectDef type="AIMilitaryPlanNavyTradeInterdiction" superType="AIMilitaryPlan" class="CMLOAIMilitaryPlanNavyTradeInterdiction">
+        <propertyDef name="nSuspendUntilTurn" type="int" default="-1"/>
+        <!-- updateUnitRequirements and advance handled internally (doesn't call script) -->    
+    </objectDef>
+
+    <objectDef type="AIMilitaryPlanNavyPatrolAndIntercept" superType="AIMilitaryPlan" class="CMLOAIMilitaryPlanNavyPatrolAndIntercept">
+        <propertyDef name="strInterceptComposition" type="String" default="NavyAttackFleet"/>
+        <propertyDef name="nSuspendUntilTurn" type="int" default="-1"/>
+        <!-- updateUnitRequirements and advance handled internally (doesn't call script) -->
+        <property name="strComposition" value="NavyPatrol"/>       
+    </objectDef>
+    
+    <objectDef type="AIMilitaryPlanOpportunityAttack" superType="AIMilitaryPlan" class="CMLOAIMilitaryPlanOpportunityAttack">
+		<property name="strComposition" value="AnyArmy"/>
+        <propertyDef name="nMaxRegionsAtOnce" type="int" default="10"/><!-- should be nMaxDefenseRegions but keeping old name for save compatability -->
+        <propertyDef name="nMaxInvasionRegions" type="int" default="10"/>
+        <!-- updateUnitRequirements and advance handled internally (doesn't call script) -->
+    </objectDef>
+
+    <objectDef type="AIMilitaryPlanAirSupport" superType="AIMilitaryPlan" class="CMLOAIMilitaryPlanAirSupport">
+        <propertyDef name="strComposition" type="String" default="AirSupport"/>
+        <propertyDef name="strPatrolComposition" type="String" default="AirPatrol"/>
+        <propertyDef name="nPercentStrengthVsHitPoints" type="int" default="500"/>
+        <propertyDef name="objTargetRegions" type="Region" variable="true"/>        
+        <!-- updateUnitRequirements and advance handled internally (doesn't call script) -->
+    </objectDef>
+
+    <objectDef type="AIUnitGroupAssignment" class="CMLOAIUnitGroupAssignment" desc="plan and region a unit group is assigned to">
+        <goDef gameSystem="GameSysAIUtility" storageProperty="objAIUnitGroupAssignments">
+            <keyProperty name="objUnitGroup"/>
+        </goDef>
+        <propertyDef name="objUnitGroup" type="UnitGroup"/>
+        <propertyDef name="objPlan" type="AIMilitaryPlan"/>
+        <propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="strComposition" type="String"/>
+        <propertyDef name="fPriority" type="float"/>
+        <propertyDef name="nLastUpdateTurn" type="int"/>
+        <propertyDef name="bAvoidEngagements" type="bool" default="true" desc="pathfinding option"/>      
+        <propertyDef name="bAvoidEnemyRegions" type="bool" default="false" desc="pathfinding option"/>      
+        <propertyDef name="bIsCompletedComposition" type="bool" default="false"/>      
+        <propertyDef name="bIsChildOfCompletedComposition" type="bool" default="false"/>
+        <propertyDef name="bTemporaryAssignment" type="bool" default="false"/>
+        <propertyDef name="bCanDisbandObsoleteUnits" type="bool" default="true"/>
+    </objectDef>
+
+    <objectDef type="AINationInformation" class="CMLOAINationInformation" desc="information AI gathers about nations">
+        <goDef gameSystem="GameSysAIUtility" storageProperty="objAINationInformation">
+            <keyProperty name="refNation"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="nEstimatedMilitaryPower" type="int"/>
+        <propertyDef name="nNumRegionsControlled" type="int"/>
+        <propertyDef name="nNumCitiesControlled" type="int"/>
+        <propertyDef name="nEstimatedIPUs" type="int"/>
+        <propertyDef name="nLastUpdateTurn" type="int"/>
+        <propertyDef name="objPerimeter" type="NationPerimeter" storesChildren="true"/>
+    </objectDef>
+
+    <objectDef type="AINationProductionSimulator" class="CMLOAINationProductionSimulator" desc="production simulator for a nation">
+        <goDef gameSystem="GameSysAIUtility" storageProperty="objAINationProductionSimulators">
+            <keyProperty name="refNation"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objEconomicStrategyTemplate" type="AIEconomicStrategyTemplate"/>
+        <propertyDef name="nPredictionTurnsAhead" type="int"/>
+        <propertyDef name="objWeights" type="AIProductionSimulatorRatingWeights" storesChildren="true"/>
+        <propertyDef name="objExclusions" type="AIProductionSimulatorExclusions" storesChildren="true"/>
+        <propertyDef name="objCityDevelopmentTemplateSettings" type="AICityDevelopmentTemplateSetting" variable="true" storesChildren="true"/>
+        <propertyDef name="fTransportationPriority" type="float" default="0.25"/>
+        <propertyDef name="bEconomicBuildupMode" type="bool" default="false" desc="deprecated"/>
+        <propertyDef name="nEconomicBuildupModeEndTurn" type="int" default="-100" desc="deprecated"/>
+        <propertyDef name="eProductionMode" type="Enum" restriction="ProductionMode" default="NORMAL"/>
+        <propertyDef name="nProductionModeEndTurn" type="int" default="-100"/>
+        <propertyDef name="nLastEmergencyMilitaryBuildupTurn" type="int" default="-100"/>
+        
+        <!-- builtin method signatures:
+                getWeights(avatar)      // gets rating weights, creating object if needed
+                setBestOutputs(avatar,nProductionAILogLevel)  // sets city and region outputs to their best setting based on weights, exclusions, and turns ahead
+        -->
+    </objectDef>
+
+    <objectDef type="NationResearchAI" class="CMLONationResearchAI" desc="research AI for a nation">
+        <goDef gameSystem="GameSysAIUtility" storageProperty="objNationResearchAIs">
+            <keyProperty name="refNation"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objResearchTracks" type="ResearchAITrack" variable="true" storesChildren="true"/>
+        <propertyDef name="objSpecificFactoryItems" type="ResearchAISpecificFactoryItem" variable="true" storesChildren="true"/>
+        <propertyDef name="objSpecificRegionItems" type="ResearchAISpecificRegionItem" variable="true" storesChildren="true"/>
+        <propertyDef name="objDesignatedResearchCities" type="City" variable="true"/>
+        
+        <!-- builtin method signatures:
+            nNumProjects updateCities(avatar,bWantLog)
+            updateProductionNeeds(avatar,bWantLog)
+            updateResearchCapabilities(avatar,nSciencePolicy,bWantLog)
+            addSpecificFactoryOutput(avatar,objFactoryOutputTemplate,city,nWeight)
+            addSpecificRegionOutput(avatar,objRegionOutputTemplate,nWeight)
+            investigateUnitGroup(avatar,unitGroup,researchCity,unknownFactoryOutputs) - adds FactoryOutputTemplates that we need to research to unknownFactoryOutputs (without clearing it)
+        -->		
+    </objectDef>
+
+    <objectDef type="NationDiplomacyAI" class="CMLONationDiplomacyAI" desc="diplomacy AI for a nation">
+        <goDef gameSystem="GameSysAIUtility" storageProperty="objNationDiplomacyAIs">
+            <keyProperty name="refNation"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="nMinMilitaryAccessRequestFrequency" type="int" default="10"/>
+        <propertyDef name="nEstimatedTotalOurStrength" type="int"/>
+        <propertyDef name="nEstimatedTotalAllianceStrength" type="int"/>
+        <propertyDef name="nEstimatedTotalEnemyStrength" type="int"/>
+        <propertyDef name="objStrongestEnemy" type="Nation"/>
+        <propertyDef name="objAIPersonalityTemplate" type="AIPersonalityTemplate"/>
+        <propertyDef name="objAIInternationalPositionTemplate" type="AIInternationalPositionTemplate"/>
+        <propertyDef name="objAIRulingPhilosophyTemplate" type="AIRulingPhilosophyTemplate"/>       
+        <propertyDef name="nInternationalInvolvement" type="int" default="1"/>
+        <propertyDef name="nAggressiveNature" type="int" default="1"/>
+        <propertyDef name="nMilitaryDoctrine" type="int" default="1"/>
+        <propertyDef name="nSciencePolicy" type="int" default="0"/>
+        <propertyDef name="nArmyExpectedPercentile" type="int" default="-1"/>
+        <propertyDef name="nNavyExpectedPercentile" type="int" default="-1"/>
+        <propertyDef name="nAirForceExpectedPercentile" type="int" default="-1"/>
+        <propertyDef name="nSubmarineExpectedPercentile" type="int" default="-1"/>
+        <propertyDef name="nNationalProgramsBudgetPercent" type="int" default="5"/>
+        <propertyDef name="bWantLog" type="bool" default="false"/>
+        <propertyDef name="objAIDiplomaticLevelsTemplate" type="mh2_common.RangedTemplateList"/>
+        
+        <!-- builtin method signatures:
+            updateForceAllegiancePlans(avatar)
+	        recordAttemptedAlliance(avatar,otherNation)
+	        recordAttemptedPeace(avatar,otherNation)
+	        getLastAllianceAttemptTurn(avatar,otherNation)
+	        getLastPeaceAttemptTurn(avatar,otherNation)
+	        getPotentialNationalPrograms(avatar,otherNation,nationalProgramTypes)
+	        sabotageOneRegion(avatar,otherNation)
+	        getNationalProgramsTotalCost(avatar)
+	        cutNationalPrograms(avatar, arrValues, budgetTarget)
+            setDiplomacyAIScript(diplomacyAIScript)
+        -->		
+        <script type="application/javascript"><![CDATA[
+            // expected methods
+           
+            function setDesiredNation(avatar,script,forceAllegiancePlan,nation)
+            {
+                script.setDesiredNation(avatar,forceAllegiancePlan,nation);
+            }
+            
+            function sendAllianceTreaty(avatar,script,forceAllegiancePlan,nation)
+            {
+                script.sendForceAllegianceTreaty(avatar,forceAllegiancePlan,nation)
+            }
+
+            function requestMilitaryAccess(avatar,script,desiredAccess)
+            {
+                script.requestMilitaryAccess(avatar,desiredAccess);
+            }
+            
+        ]]></script>
+    </objectDef>
+
+
+    <objectDef type="NationMilitaryAI" class="CMLONationMilitaryAI" desc="Military AI for a nation">
+        <goDef gameSystem="GameSysAIUtility" storageProperty="objNationMilitaryAIs">
+            <keyProperty name="refNation"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objStrategyTemplate" type="AIMilitaryStrategyTemplate"/>
+        <propertyDef name="objAirbaseRegions" type="Region" variable="true"/>
+        <propertyDef name="objDesiredAirbaseRegions" type="Region" variable="true"/>
+        <propertyDef name="objIntendToControlRegions" type="Region" variable="true"/>
+        <propertyDef name="objEnemyDesignations" type="AIEnemyDesignation" variable="true" storesChildren="true" key="objNation"/>
+        <propertyDef name="objLiberateDesignations" type="AILiberateDesignation" variable="true" storesChildren="true" key="objNationTemplate"/>
+        <propertyDef name="objDesiredMilitaryAccesses" type="AIDesiredMilitaryAccess" variable="true" storesChildren="true" key="objNation"/>
+        <propertyDef name="objDesiredLandMasses" type="AIDesiredLandMass" variable="true" storesChildren="true" key="objTargetLandMassIDRegion"/>
+        <propertyDef name="objPotentialExpansions" type="AIPotentialExpansion" variable="true" storesChildren="true"/>
+        <propertyDef name="objEnemyNavyThreats" type="AIEnemyNavyThreat" variable="true" storesChildren="true"/><!-- DEPRECATED -->
+        <propertyDef name="objBombedRegions" type="Region" variable="true"/>
+        <propertyDef name="objTradeInterdictionSeaRegions" type="Region" variable="true"/>
+        <propertyDef name="bUseSubmarinesForTradeInterdiction" type="bool" default="false"/>
+        <propertyDef name="nEffectiveUnitCount" type="int" default="100"/>
+        <propertyDef name="fDesiredAttackRatio" type="float" default="1.0"/>
+        <propertyDef name="fMaxNavyThreatPathCost" type="float" default="5000.0"/>
+        <propertyDef name="nRefuelPathCost" type="int" default="10000"/>
+        <propertyDef name="fPowerPerPathCostFactor" type="float" default="1.0" desc="How much combat power is 1 unit of path cost worth (for comparison)"/>
+        <propertyDef name="nUnitGroupStrengthLimit" type="int" default="5000"/>
+        <propertyDef name="nMaxSeaExpansionDistance" type="int" default="1000"/>
+        
+        <!-- builtin method signatures:
+            updateWarPlans(avatar)
+            updateProspectiveAirbaseRegions(avatar,regions)
+            updateProspectiveFortificationRegions(avatar,regions,tmplProspectiveFortification)
+            getBestFortificationImprovementTemplate(avatar)
+            updateProspectiveAADefenseRegions(avatar,regions,tmplProspectiveAADefense)
+            getBestAADefenseImprovementTemplate(avatar)
+            propRegions getExistingAirbaseRegions(avatar)
+            updateProductionNeeds(avatar,objRegionOutputTemplate,numRegions,weight)
+            object getBombTarget(avatar,unitGroup)
+            bool hasBombRegionCapability(avatar,unitGroup)
+            bool knowsComposition(avatar,strComposition)
+            bool canBuildComposition(avatar,strComposition)
+            bool canBuildCompositionNear(avatar,sourceCity,strComposition)
+            int getCompositionProductionRatingNear(avatar,sourceCity,strComposition)            
+            learnToBuildCompositionAtCity(avatar,city, strComposition,nWeight)
+            learnToBuildAADefenses(avatar)
+            composition getComposition(avatar,strComposition)
+            bool canReachByLand(avatar,regionA,regionB,bConsiderEnemyRegionsPassable)
+            bool canReachBySea(avatar,regionA,regionB,bConsiderEnemyRegionsPassable)
+            bool canReachNationByLand(avatar,otherNation,bConsiderEnemyRegionsPassable)
+            bool canReachNationBySea(avatar,otherNation,bConsiderEnemyRegionsPassable)
+            region getAdjacentLandRegion(avatar,seaRegion)
+            region getAdjacentLandRegionControlledByNation(avatar,seaRegion,controllingNation)
+            region getAdjacentLandRegionToInvade(avatar,region,landMassIDRegion)
+            region getAdjacentSeaRegion(avatar,landRegion)
+            getAdjacentSeaRegions(avatar,landRegion,seaRegions)
+            bool getAccessAgreementPath(avatar,startRegion,targetNation,bAllowCrossingWater,bAllowCrossingEnemyRegions,accessNeededNations)
+            updateDesiredLandMasses(avatar)
+            getInvasionFront(avatar,sourceRegion,ourFrontRegions,enemyFrontRegions)
+            resultFlags updateFrontRegionsToAdvance(avatar,plan,attackRatio,sourceRegion,lvAdvanceRegions,lvRegionsToConquer,bLeaveInsideBorderRegions,advanceFromRegions,advanceToRegions)
+            calculateInvasionPath(avatar,sourceRegion,regionPathResult)
+            calculateMultipleCityInvasionPaths(avatar,sourceRegions,possibleRegionsToConquer,invasionPaths)
+            getNationsToInvadeOnLandMass(avatar, landMassIDRegion, enemyNations)
+            getInvasionColorMap(avatar)
+            getSeaInvasionLandRegions(avatar,desiredLandMass,sourceCity,landRegions,pathCosts)
+            isValidSeaInvasionLandRegion(avatar,desiredLandMass,sourceCity,landRegion)
+            getInvasionEnemyUnitGroupsInRegion(avatar,region,unitgroups)
+            getLandInvasionAccessNeededNations(avatar,startLandRegion,accessNeededNations)
+            getSeaInvasionAccessNeededNations(avatar,portCity,desiredLandMass,accessNeededNations)
+            addDesiredMilitaryAccessNation(avatar,nation)
+            updateMilitaryAccessRequests(avatar)
+            bool isOptionalInvadeRegion(avatar,region)
+            bool isDesignatedOrActualEnemy(avatar,nation)
+            object getEnemyDesignation(avatar,nation)
+            object createEnemyDesignation(avatar,nation)
+            addLandMassToEnemyDesignation(avatar,enemyDesignation,region)
+            bool anyUndeclaredEnemies(avatar)
+            getAdjacentNationsNearRegion(avatar,region,adjacentNations)
+            updatePotentialExpansions(avatar,nationsToConsider)
+            addLiberateNationTemplate(avatar,tmplNation)
+            getTicketedUnitGroups(avatar,unitGroups)
+            moveToNearestAccessRegion(avatar,unitGroup)
+            getEnemyUnitGroupsInRegion(avatar,region,bIncludeUndeclaredEnemies,unitGroups)
+            updateEnemyNavyThreats(avatar)
+            getEnemyNavyThreatConsolidatedShoreRegions(avatar,outShoreRegions,outCostsToShore)
+            getEnemyNavyThreatConsolidatedPortCities(avatar,outPortCities,outCostsToPort)
+            region getClosestNavyEnemyThreatRegion(avatar,city)
+            getAirbaseToAirbasePath(avatar,sourceRegion,targetRegion,range,pathRegions)
+            city getNearestReachableControlledCity(avatar,region)
+            getEnemyUnitGroupsOverStrength(avatar,regionsToCheck,bIncludeUndeclaredEnemies,bHumansOnly,minStrength,unitGroups)
+            getLargestEnemyStrength(avatar,regionsToCheck,bIncludeUndeclaredEnemies,bHumansOnly,strengthTest,largestStrengthInRegion)
+            determineBestLandAndSeaInvasions(avatar,strSeaInvasionComposition,resultObject)
+            getBestBorderRegionForResourceConquest(avatar,sourceNation,resource)
+            isAdjacentNation(avatar,nation)
+            setBestLandUnloadRegion(avatar,region)
+
+            updateFrontRegionsToAdvance resultFlag bits:
+                FRONTFLAG_NO_FRONT							= 1 // front not found (possible victory or defeat)
+                FRONTFLAG_FOUND_OUTSIDE_ADVANCE				= 2 // found enemy front regions in lvAdvanceRegions (likely from a prior advance)
+                FRONTFLAG_FOUND_INSIDE_GAPS					= 4 // found our front regions in lvAdvanceRegions (likely from a prior advance)
+                FRONTFLAG_FOUND_INSIDE_GAPS_WITH_ENEMIES	= 8 // found some inside gaps that have enemies (these get added back)
+                FRONTFLAG_FOUND_SECTION_TO_ADVANCE			= 16 // found a section of regions to advance (this removes our front regions and adds enemy front regions from lvAdvanceRegions)
+                FRONTFLAG_FOUND_EXTRA_REGIONS				= 32 // found some regions in lvAdvanceRegions that were not inside or outside border regions (removes these)
+                FRONTFLAG_FOUND_INSIDE_GAPS_THREATENED		= 64 // found some inside gaps that had adjacent unengaged enemies 
+                FRONTFLAG_CHANGED_ADVANCE_REGIONS			= 128 // changed lvAdvanceRegions
+                FRONTFLAG_NO_OUTSIDE_ADVANCE_REGIONS		= 256 // no outside border regions in lvRegionsToConquer
+                FRONTFLAG_NO_REGIONS_TO_CONQUER				= 512 // lvRegionsToConquer empty
+
+        -->		
+        <script type="application/javascript"><![CDATA[
+            // expected methods
+           
+            function activateWarPlanOperation(avatar,script,warPlan,warPlanOperation)
+            {
+                script.activateWarPlanOperation(avatar,warPlan,warPlanOperation);
+            }
+            
+            function notifyOperationCompleted(avatar,script,warPlan,warPlanOperation)
+            {
+                script.notifyOperationCompleted(avatar,warPlan,warPlanOperation);
+            }
+            
+        ]]></script>
+
+        <script type="application/x-locust-query">
+            getDesiredLandMass = ?{region: 
+                find(?{desiredLandMass: desiredLandMass.objTargetLandMassIDRegion == region}, self.objDesiredLandMasses)
+            }		
+        </script>
+    </objectDef>
+
+
+        
+    <objectDef type="AITrigger" class="CMLOAITrigger" desc="An AI trigger for scenario scripting">
+        <goDef gameSystem="GameSysAIUtility" storageProperty="objAITriggers">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="bFired" type="bool" default="false"/>
+        <propertyDef name="bExpired" type="bool" default="false"/>
+        <propertyDef name="objHandlers" type="mlevent.EventHandler" variable="true" storesChildren="true"/>
+        <propertyDef name="objAction" type="AITriggerAction" storesChildren="true" desc="What AI should do when getting the trigger fired event"/>
+        <script type="application/javascript"><![CDATA[
+            // expected method
+            function fireTrigger(game)
+            {
+                self.bFired = true;
+                game.sendEvent(local.EventAITriggerFired.create({"objGame": game,"objAction": self.objAction }));
+            }
+        ]]></script>
+    </objectDef>
+    
+    <objectDef type="AITurnTrigger" superType="AITrigger" desc="Trigger that fires on a particular turn">
+        <propertyDef name="nTurn" type="int" desc="When to fire"/>
+        
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="mh2_common.EventTurnStarted" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    //log("AITurnTrigger handling EventTurnStarted.");
+                    //log("self.nTurn=" + def.nTurn);
+                    //log("event.nTurn=" + event.nTurn);
+                    if (event.nTurn == def.nTurn)
+                        def.fireTrigger(game);
+                }
+            ]]></script>
+        </object>
+    </objectDef>
+
+    <objectDef type="AINationTrigger" superType="AITrigger" desc="Trigger for a specific nation">
+        <propertyDef name="refNation" type="GORef" restriction="Nation" desc="nation which will be triggered to respond"/>
+        <propertyDef name="refTriggerNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="tmplRegionList" type="TemplateRef" restriction="RegionListTemplate"/>
+        <propertyDef name="nWarSensitivity" type="int" default="100"/>
+        <propertyDef name="nEmbargoSensitivity" type="int" default="0"/>
+        <script type="application/javascript"><![CDATA[
+            function respondToOffense(game,offendingNation)
+            {                
+                var action = null;
+                var randGen = getGameSysAIUtility(game).randGen;
+                
+                var roll = randGen.getRandomIntInRange(0,99);
+                if (roll < self.nWarSensitivity)
+                {
+                    action = AITriggerActionDeclareWar.create({"objNationTrigger": self, "objOffendingNation": offendingNation});
+                }
+                else if (roll < self.nEmbargoSensitivity)
+                {
+                    var nation = self.refNation.resolve(game);
+                    if (getEmbargo(game, nation, offendingNation) == null)
+                    {
+                        action = AITriggerActionImposeEmbargo.create({"objNationTrigger": self, "objOffendingNation": offendingNation});
+                    }
+                }
+                
+                if (action)
+                {
+                    self.bFired = true;
+                    game.sendEvent(local.EventAITriggerFired.create({"objGame": game,"objAction": action }));
+                }
+            }
+        ]]></script>
+    </objectDef>
+    
+    <objectDef type="AIWarTrigger" superType="AINationTrigger" desc="Trigger that fires as a result of war being declared against trigger nation">
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="EventWarDeclared" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    var triggerNation = def.refTriggerNation.resolve(game);
+                    if (event.objTargetNation.equals(triggerNation))
+                    {
+                        var nation = def.refNation.resolve(game);
+                        if (nation == null)
+                            return;
+                    
+                        // suppress this trigger if WE are at war with refTriggerNation
+                        if(getWar(game, nation, triggerNation) != null)
+                            return;
+                            
+                        if (!nation.canDeclareWar())
+                            return;
+                                                        
+                        if(getWar(game, nation, event.objDeclaringNation) == null) // if not already at war with the declaring nation
+                        {
+                            def.respondToOffense(game,event.objDeclaringNation);
+                        }
+                    }
+                }
+            ]]></script>
+        </object>
+    </objectDef>
+    
+    <objectDef type="AIInvasionTrigger" superType="AINationTrigger" desc="Trigger that fires as a result of a nation or set of regions being invaded">
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+            <property name="otEventType" value="EventRegionChangedController" />
+            <script type="application/javascript"><![CDATA[
+                function handle(event, game)
+                {
+                    if (event.eReason.equals(RegionControlChangeReason.UNOPPOSED) ||
+                        event.eReason.equals(RegionControlChangeReason.ENGAGEMENT) )
+                    {
+                        var nation = def.refNation.resolve(game);
+                        if (nation == null)
+                            return;
+                            
+                        if (!nation.canDeclareWar())
+                            return;
+                            
+                        // check who the region was taken from.
+                        if (!nation.equals(event.objOldController))
+                        {
+                            if(getWar(game, nation, event.objOldController) != null)
+                            {
+                                // Suppress this trigger (enemy of our enemy)
+                                return;
+                            }
+                        }
+                        
+                        // check region owner
+                        var ownerNation = event.objRegion.refOwner.resolve(game);
+                        if (event.objNewController.equals(ownerNation))
+                        {
+                            // Suppress trigger if the original owner is taking back its own region
+                            return;
+                        }
+                            
+                        if (def.tmplRegionList != null)
+                        {
+                            var refRegions = def.tmplRegionList.resolve().refRegions;
+                            if (refRegions.contains(event.objRegion))
+                            {
+                                if(getWar(game, nation, event.objNewController) == null) // if not already at war with the offending nation
+                                {
+                                    def.respondToOffense(game,event.objNewController);
+                                }
+                            }
+                        }
+                        else if (event.objOldController.equals(def.refTriggerNation.resolve(game)))
+                        {
+                            if(getWar(game, nation, event.objNewController) == null) // if not already at war with the offending nation
+                            {
+                                def.respondToOffense(game,event.objNewController);
+                            }
+                        }
+                    }
+                }
+            ]]></script>
+        </object>
+    </objectDef>
+    
+
+    <objectDef type="WarPlan" class="CMLOWarPlan" desc="An overall military plan for a nation to follow">
+        <goDef gameSystem="GameSysAIUtility" storageProperty="objWarPlans">
+            <keyProperty name="refNation"/>
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="nWeight" type="int" default="1" desc="for random choice between multiple war plans"/>
+        <propertyDef name="nAggression" type="int"/>
+        <propertyDef name="objOperations" type="WarPlanOperation" variable="true" storesChildren="true"/>
+        <propertyDef name="bComplete" type="bool" default="false"/>
+    </objectDef>    
+    
+    <objectDef type="ForceAllegiancePlan" class="CMLOForceAllegiancePlan">
+        <goDef gameSystem="GameSysAIUtility" storageProperty="objNationForceAllegiancePlans">
+            <keyProperty name="refNation"/>
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="refWarTriggerNationA" type="GORef" restriction="Nation"/>
+        <propertyDef name="refWarTriggerNationB" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTargetNations" type="GORef" restriction="Nation" variable="true"/>
+
+        <!-- Treaty intervals and counts indicate the frequency and number of times it sends an alliance treaty before it gives up and declares war on them -->
+        <propertyDef name="nMinTreatyInterval" type="int"/>
+        <propertyDef name="nMaxTreatyInterval" type="int"/>
+        <propertyDef name="nMinTreatyCount" type="int"/>
+        <propertyDef name="nMaxTreatyCount" type="int"/>
+        <propertyDef name="nDeclareWarPercentChance" type="int"/>
+        <propertyDef name="nCurrentTargetNationIndex" type="int" default="-1"/>
+        <propertyDef name="nNextTurnActive" type="int" default="-1"/>
+        <propertyDef name="nAllowedTreatyCount" type="int" default="-1"/>
+        <propertyDef name="bActive" type="bool" default="false"/>
+        <propertyDef name="bComplete" type="bool" default="false"/>
+        <propertyDef name="eReason" type="Enum" restriction="Reason" default="ForceAllegiance"/>
+        <propertyDef name="refReasonNation" type="GORef" restriction="Nation" desc="If specified, use this nation as the enemy in alliance proposal message"/>
+    </objectDef>
+    
+</locust>

@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DCityProjectsTabs" superType="mlui.UI2DElement">
+		
+		<object type="LookupResearchData" name="objLookupResearchData">
+		</object>
+		
+		<object type="LookupResearchProjects" name="objLookupResearchProjects">
+			<property name="objLookupResearchData" from="def.objLookupResearchData"/>
+		</object>
+		
+		<!-- Lists of available projects -->
+		<object type="ResearchProjectListData" name="objAdvancedProjectListData">
+			<property name="objResearchProjects" from="def.objLookupResearchProjects.objAdvancedProjects"/>
+			<property name="objResearchProjectsBlocked" from="def.objLookupResearchProjects.objAdvancedProjectsBlocked"/>
+		</object>
+		
+		<object type="ResearchProjectListData" name="objIndustrialProjectListData">
+			<property name="objResearchProjects" from="def.objLookupResearchProjects.objIndustrialProjects"/>
+			<property name="objResearchProjectsBlocked" from="def.objLookupResearchProjects.objIndustrialProjectsBlocked"/>
+		</object>
+		
+		<object type="ResearchProjectListData" name="objMilitaryProjectListData">
+			<property name="objResearchProjects" from="def.objLookupResearchProjects.objMilitaryProjects"/>
+			<property name="objResearchProjectsBlocked" from="def.objLookupResearchProjects.objMilitaryProjectsBlocked"/>
+		</object>
+		
+		<object type="ResearchProjectListData" name="objNavalProjectListData">
+			<property name="objResearchProjects" from="def.objLookupResearchProjects.objNavalProjects"/>
+			<property name="objResearchProjectsBlocked" from="def.objLookupResearchProjects.objNavalProjectsBlocked"/>
+		</object>
+		
+		<object type="ResearchProjectListData" name="objAirProjectListData">
+			<property name="objResearchProjects" from="def.objLookupResearchProjects.objAirProjects"/>
+			<property name="objResearchProjectsBlocked" from="def.objLookupResearchProjects.objAirProjectsBlocked"/>
+		</object>
+		
+		<object type="ResearchProjectListData" name="objLandProjectListData">
+			<property name="objResearchProjects" from="def.objLookupResearchProjects.objLandProjects"/>
+			<property name="objResearchProjectsBlocked" from="def.objLookupResearchProjects.objLandProjectsBlocked"/>
+		</object>
+		
+
+		<!-- Tabs -->
+		<object type="UI2DCityProjectsTab" name="objCityLand" existsWhile="mh2data.strCityProjectsTab == 'Land'">
+			<property name="objLookupResearchData" from="def.objLookupResearchData"/>
+			<property name="objResearchProjectListData" from="def.objLandProjectListData"/>
+			<property name="strTabID" value="Land"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+		<object type="UI2DCityProjectsTab" name="objCityAir" existsWhile="mh2data.strCityProjectsTab == 'Air'">
+			<property name="objLookupResearchData" from="def.objLookupResearchData"/>
+			<property name="objResearchProjectListData" from="def.objAirProjectListData"/>
+			<property name="strTabID" value="Air"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+		<object type="UI2DCityProjectsTab" name="objCityNaval" existsWhile="mh2data.strCityProjectsTab == 'Naval'">
+			<property name="objLookupResearchData" from="def.objLookupResearchData"/>
+			<property name="objResearchProjectListData" from="def.objNavalProjectListData"/>
+			<property name="strTabID" value="Naval"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+		<object type="UI2DCityProjectsTab" name="objMilitaryTactics" existsWhile="mh2data.strCityProjectsTab == 'Military'">
+			<property name="objLookupResearchData" from="def.objLookupResearchData"/>
+			<property name="objResearchProjectListData" from="def.objMilitaryProjectListData"/>
+			<property name="strTabID" value="Military"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+		<object type="UI2DCityProjectsTab" name="objCityIndustrial" existsWhile="mh2data.strCityProjectsTab == 'Industrial'">
+			<property name="objLookupResearchData" from="def.objLookupResearchData"/>
+			<property name="objResearchProjectListData" from="def.objIndustrialProjectListData"/>
+			<property name="strTabID" value="Industrial"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+		<object type="UI2DCityProjectsTab" name="objCityAdvanced" existsWhile="mh2data.strCityProjectsTab == 'Advanced'">
+			<property name="objLookupResearchData" from="def.objLookupResearchData"/>
+			<property name="objResearchProjectListData" from="def.objAdvancedProjectListData"/>
+			<property name="strTabID" value="Advanced"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DResearchProjectList" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupResearchData" type="LookupResearchData"/>
+		<propertyDef name="objResearchProjectListData" type="ResearchProjectListData"/>
+
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="415"/>
+		<property name="nHeight" value="385"/>
+
+		<object type="mlui.UI2DScrollPane" name="objScrollPane">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="385"/>
+
+			<object type="mlui.SliderInfo" name="objHorizInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="411"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="16"/>
+				<property name="nMaxKnobLength" value="16"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="mlui.SliderInfo" name="objVertInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="12"/>
+				<property name="nLength" value="385"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="37"/>
+				<property name="nMaxKnobLength" value="37"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="UI2DResearchProjectListElements" name="objScrollable">
+				<property name="objResearchProjectListData" from="def.objResearchProjectListData"/>
+
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="400"/>
+				<property name="nHeight" from="(def.objLookupResearchData.nResearchTopics * 2) +
+					(def.objLookupResearchData.nResearchTopics * 83)
+				"/>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DResearchProjectListElements" superType="mlui.UI2DElement">
+		<propertyDef name="objResearchProjectListData" type="ResearchProjectListData"/>
+		
+		<object type="common_ui.UI2DList" name="objBubbles">
+			<property name="nSpacing" value="2"/>
+
+			<object type="UI2DResearchProjectListBubblesActive" name="objElements">
+				<property name="objResearchProjectListData" from="def.objResearchProjectListData"/>
+			</object>
+			
+			<object type="UI2DResearchProjectListBubblesBlocked" name="objElements">
+				<property name="objResearchProjectListData" from="def.objResearchProjectListData"/>
+			</object>
+
+		</object>
+		
+	</objectDef>
+
+	<objectDef type="UI2DResearchProjectListBubblesActive" superType="mlui.UI2DElement">
+		<propertyDef name="objResearchProjectListData" type="ResearchProjectListData"/>
+		
+		<propertyDef name="objFilteredProjects" type="gs_tbg.ResearchTopicTemplate" variable="true">
+			if(spdata.objCityData.objResearchProject != null,
+				filter(?{template: template != spdata.objCityData.objResearchProject.tmplResearchTopic.resolve()},
+					self.objResearchProjectListData.objResearchProjects),
+				self.objResearchProjectListData.objResearchProjects)
+		</propertyDef>
+		
+		<object type="UI2DResearchProjectListBubble" name="objBubbles" tiedTo="def.objFilteredProjects">
+			<property name="objResearchTopicTemplate" from="tiedTo"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="83"/>
+		</object>
+		
+		<object type="mlui.UILMFlow" name="objFlow">
+			<property name="listElements">
+				sortAscending(
+					?{data:
+						data.nRPUs
+					},
+					def.objBubbles
+				)
+			</property>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="2"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DResearchProjectListBubblesBlocked" superType="mlui.UI2DElement">
+		<propertyDef name="objResearchProjectListData" type="ResearchProjectListData"/>
+		
+		<propertyDef name="objFilteredProjectsBlocked" type="gs_tbg.ResearchTopicTemplate" variable="true">
+			if(spdata.objCityData.objResearchProject != null,
+				filter(?{template: template != spdata.objCityData.objResearchProject.tmplResearchTopic.resolve()},
+					self.objResearchProjectListData.objResearchProjectsBlocked),
+				self.objResearchProjectListData.objResearchProjectsBlocked)
+		</propertyDef>
+		
+		<object type="UI2DResearchProjectListBubbleBlocked" name="objBubbles" tiedTo="def.objFilteredProjectsBlocked">
+			<property name="objResearchTopicTemplate" from="tiedTo"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="83"/>
+		</object>
+		
+		<object type="mlui.UILMFlow" name="objFlow">
+			<property name="listElements">
+				sortAscending(
+					?{data:
+						data.nRPUs
+					},
+					def.objBubbles
+				)
+			</property>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="2"/>
+		</object>
+		
+	</objectDef>
+
+	<objectDef type="UI2DResearchProjectListBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRPUs" type="int">
+			self.objResearchTopicTemplate.nPointsRequired
+		</propertyDef>
+		<propertyDef name="objResearchTopicTemplate" type="gs_tbg.ResearchTopicTemplate"/>
+		
+		<propertyDef name="objFactoryOutputs" type="gs_tbg.FactoryOutputTemplate" variable="true">
+			map(
+				?{output:
+					output.objFactoryOutput
+				},
+				filter(
+					?{output:
+						output.tmplResearchTopic == self.objResearchTopicTemplate
+					}, encydata.objResearchFactoryOutputs
+				)
+			)
+		</propertyDef>
+		<propertyDef name="objRegionOutputs" type="gs_tbg.RegionOutputTemplate" variable="true">
+			map(
+				?{output:
+					output.objRegionOutput
+				},
+				filter(
+					?{output:
+						output.tmplResearchTopic == self.objResearchTopicTemplate
+					}, encydata.objResearchRegionOutputs
+				)
+			)
+		</propertyDef>
+		
+		<propertyDef name="objResearchProject" type="gs_tbg.ResearchProject"/>
+		<property name="objResearchProject">
+		    gs_tbg.getResearchProject(mh2data.objAvatar,self.objResearchTopicTemplate,mh2data.objNation)		
+		</property>
+		
+		<propertyDef name="nProjectPercent" type="int"/>
+			<property name="nProjectPercent" from="
+				if(self.objResearchProject != null,
+					if(self.objResearchTopicTemplate.nPointsRequired != 0,
+						self.objResearchProject.nPoints * 100 / self.objResearchTopicTemplate.nPointsRequired,
+						0),
+					0)
+			"/>
+
+		<object type="mlui.UI2DImage" name="objWorkOrderBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="83"/>
+		</object>
+		
+		<object type="UI2DElementMask" name="objAddOrderMask">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="400"/>
+			<property name="nHeight" value="83"/>
+			<property name="nDepth" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+					<property name="otEventType" value="mlui.EventMouseButtonDblClick" />
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(spdata.objCityData.objCity.canCommand(mh2data.objAvatar, spdata.objCityData.objController))
+							{
+								var action = gs_tbg.GActSetResearchProject.create({
+									"refCity": spdata.objCityData.objCity,
+									"tmplResearchTopic": def.objResearchTopicTemplate
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objOrderIconBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objOrderIcon">
+			<property name="tmplImage">
+				mh2data.objResearchCategoryIconTable.getEntry(def.objResearchTopicTemplate.tmplCategory).tmplImage
+			</property>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown13Left"/>
+			<property name="strText" from="def.objResearchTopicTemplate.strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="13"/>
+		</object>
+
+		<!--<object type="mlui.UI2DText" name="objCurrentProjectType">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>-->
+		<!--	<property name="strText" from="locale.SID.UI.ProjectType" />-->
+		<!--	<property name="nX" value="85"/>-->
+		<!--	<property name="nY" value="16"/>-->
+		<!--	<property name="nWidth" value="70"/>-->
+		<!--	<property name="nHeight" value="10"/>-->
+		<!--</object>-->
+		
+		<object type="mlui.UI2DText" name="objCompletedPercent" existsWhile="def.nProjectPercent GT 0">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18Left"/>
+			<property name="strText" from="def.nProjectPercent + '%'"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="25"/>
+			<property name="nWidth" value="55"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCompletedMeter" existsWhile="def.nProjectPercent GT 0">
+			<property name="tmplImage" value="skin.ImgMeterBG"/>
+			<property name="nX" value="132"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" value="15"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMeterFill" existsWhile="def.nProjectPercent GT 0">
+			<property name="tmplImage" from="if(def.nProjectPercent GT 66,
+				skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterGreen'),
+				if(def.nProjectPercent GT 33,
+					skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterPurple'),
+					skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterRed')))
+			"/>
+			<property name="nX" value="133"/>
+			<property name="nY" value="25"/>
+			<property name="nWidth" from="def.nProjectPercent"/>
+			<property name="nHeight" value="13"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objResearchPointsLabel" existsWhile="def.nProjectPercent == 0">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchPoints"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objResearchPoints" existsWhile="def.nProjectPercent == 0">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="def.objResearchTopicTemplate.nPointsRequired"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="31"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="UI2DInfoButton" name="objElements">
+			<property name="nX" value="353"/>
+			<property name="nDepth" value="100"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" value="20"/>
+			<property name="nDefaultHeight" value="20"/>
+			<property name="objTmpl" from="def.objResearchTopicTemplate"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objButtonPause" existsWhile="spdata.objCityData.objCity.canCommand(mh2data.objAvatar, spdata.objCityData.objController) == true">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleRegionProjectsAddToQueue')"/>
+			<property name="nX" value="375"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" value="20"/>
+			<property name="nDefaultHeight" value="20"/>
+			<property name="nDepth" value="75"/>
+			<property name="strToolTip" from="locale.SID.UI.SetResearchOrder"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(spdata.objCityData.objCity.canCommand(mh2data.objAvatar, spdata.objCityData.objController))
+							{
+								var action = gs_tbg.GActSetResearchProject.create({
+									"refCity": spdata.objCityData.objCity,
+									"tmplResearchTopic": def.objResearchTopicTemplate
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						}
+					]]></script>
+				</object>
+			</object>			
+		</object>
+		
+		
+		<object type="common_ui.UI2DListHorz" name="objFactoryRequirementsList">
+			<property name="nX" value="85"/>
+			<property name="nY" value="3"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nSpacing" value="2"/>
+			<property name="nDepth" value="100"/>
+
+			<object type="UI2DResearchTreeSmallIconBG" name="objElements" tiedTo="def.objResearchTopicTemplate.tmplPreReqs">
+				<property name="strToolTip" from="tiedTo.resolve().strDisplayName"/>
+				<property name="tmplImage">
+					mh2data.objResearchCategoryIconTable.getEntry(tiedTo.resolve().tmplCategory).tmplIcon
+				</property>
+			</object>
+			
+			<object type="UI2DResearchTreeSmallIconBG" name="objElements" tiedTo="def.objResearchTopicTemplate.tmplRequiredBuildings">
+				<property name="strToolTip" from="tiedTo.resolve().strDisplayName"/>
+				<property name="tmplImage">
+					mh2data.objResearchCenterBuildingDisplayTable.getEntry(tiedTo).tmplIcon
+				</property>
+			</object>
+		</object>
+		
+		
+		<object type="common_ui.UI2DListHorz" name="objFactoryRequirementsList">
+			<property name="nX" value="6"/>
+			<property name="nY" value="3"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nSpacing" value="2"/>
+			<property name="nDepth" value="100"/>
+
+			<object type="UI2DResearchTreeSmallIconBG" name="objElements" tiedTo="def.objFactoryOutputs">
+				<property name="strToolTip" from="tiedTo.strDisplayName"/>
+				<property name="objTest" from="tiedTo"/>
+				<property name="tmplImage">
+					switch{
+						case tiedTo.instanceOf(gs_tbg.FactoryOutputUnitTemplate):
+							mh2data.objUnitDisplayTable.getEntry(tiedTo.tmplUnit).tmplIcon
+						case tiedTo.instanceOf(gs_tbg.FactoryOutputResearchCenterBuildingTemplate):
+							mh2data.objResearchCenterBuildingDisplayTable.getEntry(tiedTo.tmplResearchCenterBuilding).tmplIcon
+						case tiedTo.instanceOf(gs_tbg.FactoryOutputCityBuildingTemplate):
+							mh2data.objCityBuildingDisplayTable.getEntry(tiedTo.tmplCityBuilding).tmplIcon
+					}					
+				</property>
+			</object>
+			
+			<object type="UI2DResearchTreeSmallIconBG" name="objElements" tiedTo="def.objRegionOutputs">
+				<property name="strToolTip" from="tiedTo.strDisplayName"/>
+				<property name="tmplImage">
+					switch {
+						case tiedTo.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Transportation'):
+							mh2data.objTransportationProdDisplayTable.getEntry(tiedTo.tmplTransportationImprovement).tmplIcon
+						
+						case tiedTo.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Military'):
+							switch {
+								case tiedTo.instanceOf(gs_tbg.CoastalDefenseOutputTemplate):
+									mh2data.objCoastalDefenseDisplayTable.getEntry(tiedTo.tmplCoastalDefenseImprovement).tmplIcon
+								
+								case tiedTo.instanceOf(gs_tbg.FortificationOutputTemplate):
+									mh2data.objFortificationDisplayTable.getEntry(tiedTo.tmplFortificationImprovement).tmplIcon
+									
+								case tiedTo.instanceOf(gs_tbg.AADefenseOutputTemplate):
+									mh2data.objAADefenseDisplayTable.getEntry(tiedTo.tmplAADefenseImprovement).tmplIcon
+									
+								default:
+									"skin.ImgInfoIconBuildingSm"
+							}
+						
+						case tiedTo.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(tiedTo).tmplIcon
+						
+						case tiedTo.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(tiedTo).tmplIcon
+							
+						}		
+				</property>
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	
+	<objectDef type="UI2DResearchProjectListBubbleBlocked" superType="UI2DResearchProjectListBubble">
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="100000"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="colColor" value="#00000066"/>
+		</object>
+		
+		<object type="mlui.UI2DElement" name="objMask">
+			<property name="nWidth" value="0"/>
+			<property name="nWidth" value="0"/>
+		</object>
+		
+	</objectDef>
+</locust>

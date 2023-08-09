@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DMilitaryButtons" superType="mlui.UI2DElement">
+		<property name="nWidth" from="self.objTabs.nWidth"/>
+		<property name="nHeight" from="self.objTabs.nHeight"/>
+		
+		<object type="common_ui.UI2DListHorz" name="objTabs">
+			<property name="nSpacing" value="1"/>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.World"/>
+				<property name="tmplIcon" value="skin.ImgWorldIcon"/>
+				<property name="bSelected">
+                    reportdata.objMilitaryData.eTab == MilitarySection.NATIONS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objMilitaryData.showNations(reportdata.objMilitaryData.objNation);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.NavalSub"/>
+				<property name="tmplIcon" value="skin.ImgSubsIcon"/>
+				<property name="bSelected">
+                    reportdata.objMilitaryData.eTab == MilitarySection.SUB_UNITS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objMilitaryData.showSubUnits(reportdata.objMilitaryData.objNation);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.NavalUnits"/>
+				<property name="tmplIcon" value="skin.ImgShipsIcon"/>
+				<property name="bSelected">
+                    reportdata.objMilitaryData.eTab == MilitarySection.NAVAL_UNITS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objMilitaryData.showNavalUnits(reportdata.objMilitaryData.objNation);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.AirUnits"/>
+				<property name="tmplIcon" value="skin.ImgPlanesIcon"/>
+				<property name="bSelected">
+                    reportdata.objMilitaryData.eTab == MilitarySection.AIR_UNITS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objMilitaryData.showAirUnits(reportdata.objMilitaryData.objNation);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+		
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.ArmyUnits"/>
+				<property name="tmplIcon" value="skin.ImgUnitsIcon"/>
+				<property name="bSelected">
+                    reportdata.objMilitaryData.eTab == MilitarySection.ARMY_UNITS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objMilitaryData.showArmyUnits(reportdata.objMilitaryData.objNation);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.NavalSubs"/>
+				<property name="tmplIcon" value="skin.ImgPacksIcon"/>
+				<property name="bSelected">
+                    reportdata.objMilitaryData.eTab == MilitarySection.SUB_GROUP
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objMilitaryData.showSubGroup(reportdata.objMilitaryData.objNation);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.NavalGroups"/>
+				<property name="tmplIcon" value="skin.ImgFleetIcon"/>
+				<property name="bSelected">
+                    reportdata.objMilitaryData.eTab == MilitarySection.NAVAL_GROUP
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objMilitaryData.showNavalGroup(reportdata.objMilitaryData.objNation);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.AirGroups"/>
+				<property name="tmplIcon" value="skin.ImgAirForceIcon"/>
+				<property name="bSelected">
+                    reportdata.objMilitaryData.eTab == MilitarySection.AIR_GROUP
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objMilitaryData.showAirGroup(reportdata.objMilitaryData.objNation);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.ArmyGroups"/>
+				<property name="tmplIcon" value="skin.ImgArmiesIcon"/>
+				<property name="bSelected">
+                    reportdata.objMilitaryData.eTab == MilitarySection.ARMY_GROUP
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objMilitaryData.showArmyGroup(reportdata.objMilitaryData.objNation);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+			
+			<object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.MilitaryStatus"/>
+				<property name="tmplIcon" value="skin.ImgStarsIcon"/>
+				<property name="bSelected">
+                    reportdata.objMilitaryData.eTab == MilitarySection.STATUS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.objMilitaryData.showStatus(reportdata.objMilitaryData.objNation);
+							}
+						]]></script>
+					</object>					
+				</object>
+            </object>
+		</object>		
+	</objectDef>
+</locust>

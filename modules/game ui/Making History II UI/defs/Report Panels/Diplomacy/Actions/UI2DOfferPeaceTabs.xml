@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DOfferPeaceTabs" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupPeaceData" type="LookupPeaceData"/>
+		
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="378"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSealIcon">
+			<property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate, if(mh2data.otOfferPeaceTab == UI2DOfferPeaceTabDemands,
+				'ImgInfoIconSealGreen', 'ImgInfoIconSealRed'))
+			"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objPeaceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.PeaceTerms"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objPeaceBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialRed10LeftWrap"/>
+			<property name="strText" from="if(mh2data.otOfferPeaceTab == UI2DOfferPeaceTabDemands,
+				locale.SID.UI.Demands, locale.SID.UI.Concessions)
+			"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="240"/>
+			<property name="nHeight" value="20"/>
+		</object>
+
+		<object type="UI2DOfferPeaceTabDemands" name="objDemands">
+			<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>
+			<property name="nY" value="45" />
+			<property name="nWidth" from="def.nWidth"/>
+            <property name="nHeight" from="def.nHeight"/>
+            <property name="bVisible" from="mh2data.otOfferPeaceTab == UI2DOfferPeaceTabDemands"/>
+        </object>
+
+		<object type="UI2DOfferPeaceTabConcessions" name="objConcessions">
+			<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>
+			<property name="nY" value="45" />
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+            <property name="bVisible" from="mh2data.otOfferPeaceTab == UI2DOfferPeaceTabConcessions"/>
+        </object>
+		
+		<object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="246"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<!-- placeholder --><object type="mlui.UI2DTextButton" name="objOfferPeaceAction">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.OfferPeace"/>
+			<property name="nX" value="28"/>
+			<property name="nY" value="257"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var terms = def.eTermTypes;
+							var bDemand = false;
+							var nation = def.objLookupPeaceData.objNation;
+							
+							if(def.objDemands.eTermTypes.length > 0){
+								bDemand = true;
+							}
+							var action = gs_tbg.GActProposePeaceTreaty.create({
+								"refProposingNation": mh2data.objNation,
+								"refReceivingNation": def.objLookupPeaceData.objNation,
+								"bDemand": bDemand,
+								"strMessage": locale.FSID.UI.OfferPeace.format('Nation', mh2data.objNation.strDisplayName)
+							});
+							for(i=0; i<def.objConcessions.eTermTypes.length; i++)
+							{					
+							    var termType = def.objConcessions.eTermTypes[i];
+							    log("adding term " + termType + " refAffectedNation " + mh2data.objNation.strName);
+							    
+								var term = gs_tbg.TreatyTerm.create({ "eType": termType, "refNationAffected": mh2data.objNation });
+								action.objTerms.add(term);							
+							}
+							for(i=0; i<def.objDemands.eTermTypes.length; i++)
+							{					
+							    var termType = def.objDemands.eTermTypes[i];
+							    log("adding term " + termType + " refAffectedNation " + nation.strName);
+							    
+								var term = gs_tbg.TreatyTerm.create({ "eType": termType, "refNationAffected": nation });
+								action.objTerms.add(term);							
+							}
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>		
+	</objectDef>
+	
+	<objectDef type="UI2DOfferPeaceTabDemands" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupPeaceData" type="LookupPeaceData"/>
+		<propertyDef name="eTermTypes" type="Enum" restriction="gs_tbg.TreatyTermType" variable="true" >
+			map(?{elements: elements.eType}, filter(?{options: options.bSelected AND !options.bMain}, self.objButtonList.objElements ) )
+		</propertyDef>
+		
+		<object type="common_ui.UI2DList" name="objButtonList">			
+			<property name="nX" value="20"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth-self.nX"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="3"/>					
+			<object type="UI2DPeaceOptions" name="objElements">
+				<property name="strText" from="locale.SID.UI.NoTerms"/>
+				<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>
+				<property name="bSelected" >
+					find(?{element: element.bSelected AND element != self}, def.objButtonList.objElements) == null
+				</property>
+				<property name="bMain" value="true" />
+				<property name="bUpdate" value="true" />
+			</object>			
+			<object type="UI2DPeaceOptions" name="objElements">
+				<property name="strText" from="locale.SID.UI.SurrenderOccupiedTerritory"/>
+				<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>	
+				<property name="bSelected" from="!def.objButtonList.objElements[0].bUpdate" />
+				<property name="eType" value="SURRENDER_OCCUPIED" />
+			</object>
+			<object type="UI2DPeaceOptions" name="objElements">
+				<property name="strText" from="locale.SID.UI.TotalMilitaryAccess"/>
+				<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>
+				<property name="bSelected" from="!def.objButtonList.objElements[0].bUpdate" />
+				<property name="eType" value="MILITARY_ACCESS" />
+			</object>
+			<object type="UI2DPeaceOptions" name="objElements">
+				<property name="strText" from="locale.SID.UI.JoinAlliance"/>
+				<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>
+				<property name="bSelected" from="!def.objButtonList.objElements[0].bUpdate" />
+				<property name="eType" value="JOIN_ALLIANCE" />
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DOfferPeaceTabConcessions" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupPeaceData" type="LookupPeaceData"/>
+		<propertyDef name="eTermTypes" type="Enum" restriction="gs_tbg.TreatyTermType" variable="true" >
+			map(
+				?{elements: elements.eType},
+				filter(
+					?{options:
+						options.bSelected AND !options.bMain
+					},
+					self.objButtonList.objElements
+				)
+			)
+		</propertyDef>
+		
+		<object type="common_ui.UI2DList" name="objButtonList">			
+			<property name="nX" value="20"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth-self.nX"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="3"/>					
+			<object type="UI2DPeaceOptions" name="objElements">
+				<property name="strText" from="locale.SID.UI.NoTerms"/>
+				<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>
+				<property name="bSelected" >
+					find(?{element: element.bSelected AND element != self}, def.objButtonList.objElements) == null
+				</property>
+				<property name="bMain" value="true" />
+				<property name="bUpdate" value="true" />
+			</object>			
+			<object type="UI2DPeaceOptions" name="objElements">
+				<property name="strText" from="locale.SID.UI.SurrenderOccupiedTerritory"/>
+				<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>	
+				<property name="bSelected" from="!def.objButtonList.objElements[0].bUpdate" />
+				<property name="eType" value="SURRENDER_OCCUPIED" />
+			</object>
+			<object type="UI2DPeaceOptions" name="objElements">
+				<property name="strText" from="locale.SID.UI.OfferMilitaryAccess"/>
+				<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>
+				<property name="bSelected" from="!def.objButtonList.objElements[0].bUpdate" />
+				<property name="eType" value="MILITARY_ACCESS" />
+			</object>
+			<object type="UI2DPeaceOptions" name="objElements">
+				<property name="strText" from="locale.SID.UI.JoinAlliance"/>
+				<property name="objLookupPeaceData" from="def.objLookupPeaceData"/>
+				<property name="bSelected" from="!def.objButtonList.objElements[0].bUpdate" />
+				<property name="eType" value="JOIN_ALLIANCE" />
+			</object>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DPeaceOptions" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupPeaceData" type="LookupPeaceData"/>
+		<property name="nWidth" value="379" />
+		<property name="nHeight" value="32" />
+		<propertyDef name="eType" type="Enum" restriction="gs_tbg.TreatyTermType"/>
+		<propertyDef name="strText" type="String" default="" />
+		<propertyDef name="bSelected" type="bool" default="false" />
+		<propertyDef name="bMain" type="bool" default="false" />
+		<propertyDef name="bUpdate" type="bool" default="false" />
+		
+		<object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="16"/>
+		</object>	
+		
+		<object type="mlui.UI2DImage" name="objSealIcon">
+			<property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate, if(def.bSelected,
+				'ImgDiplomacyButtonDown', 'ImgDiplomacyButtonUp'))"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objNotificationClickable">
+			<property name="tmplButtonStyle" from="if(def.bSelected, 'skin.BtnStyleHighlight', 'skin.BtnStyleHighlight')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" from="def.nWidth"/>
+			<property name="nDefaultHeight" from="32"/>
+			<property name="nDepth" value="150"/>
+	
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.bUpdate = false;
+							if(!def.bMain){
+								def.bSelected = !def.bSelected;
+							}
+							else if(!def.bSelected){
+								def.bUpdate = true;
+							}
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+</locust>

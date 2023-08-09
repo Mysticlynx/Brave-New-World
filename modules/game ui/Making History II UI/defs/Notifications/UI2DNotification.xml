@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DNotification" superType="mlui.UI2DElement">
+		<propertyDef name="objNotification" type="gs_notify.Notification" />
+			
+		<object type="UI2DNotificationPopup" name="objNotificationPopup">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="512"/>
+			<property name="nHeight" value="512"/>
+			<property name="nDepth" value="50"/>
+			<property name="objNotification" from="def.objNotification"/>
+		</object>
+                
+	</objectDef>
+	
+	<objectDef type="UI2DNotificationBase" superType="mlui.UI2DElement">
+		<propertyDef name="objNotification" type="gs_notify.Notification"/>
+	</objectDef>
+	 
+	<objectDef type="UI2DNotificationPopup" superType="UI2DNotificationBase">
+    
+		<object type="mlui.UI2DImage" name="objPanelBG">
+			<property name="tmplImage" value="skin.ImgNotificationBackground"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objDate">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Center"/>
+			<property name="strText" from="gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.dateCurrentDate"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="71"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="14"/>
+		</object>
+    
+    <object type="mlui.UI2DText" name="objHeadLineText">
+			<!--<property name="tmplTextStyle" value="locale.TxtStyleArialBlack34CenterWrap"/>-->
+      <property name="tmplTextStyle" >
+        switch
+        {
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateTrade):
+        'locale.TxtStyleArialBlack30CenterWrap'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateEngagement):
+        'locale.TxtStyleArialBlack30CenterWrap'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateStability):
+        'locale.TxtStyleArialBlack30CenterWrap'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateCity) :
+        'locale.TxtStyleArialBlack30CenterWrap'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateResearch) :
+        'locale.TxtStyleArialBlack30CenterWrap'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateRegion):
+        'locale.TxtStyleArialBlack30CenterWrap'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateGovernment):
+        'locale.TxtStyleArialBlack30CenterWrap'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateDiplomatic) :
+        'locale.TxtStyleArialBlack34CenterWrap'
+        default:
+        'locale.TxtStyleArialBlack30CenterWrap'
+        }
+      </property>
+      <property name="strText" from="def.objNotification.strMessage"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="86"/>
+			<property name="nWidth" from="472"/>
+		</object>
+   
+		<object type="mlui.UI2DImage" name="objNotificationsImage">
+			<property name="tmplImage" >
+        switch
+        {
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateTrade):
+        'skin.ImgNotificationTradeImg'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateEngagement):
+        'skin.ImgNotificationWarImg'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateStability):
+        'skin.ImgNotificationStabilityImg'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateCity) :
+        'skin.ImgNotificationProductionImg'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateResearch) :
+        'skin.ImgNotificationBluePrintImg'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateRegion):
+        'skin.ImgNotificationResourcesImg'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateGovernment):
+        'skin.ImgNotificationRevoltImg'
+        case def.objNotification.tmplNotification.resolve().instanceOf(gs_notify.NotificationTemplateDiplomatic) :
+        'skin.ImgNotificationDiplomaticImg'
+        default:
+        'skin.ImgNotificationRevoltImg'
+        }
+       </property>
+			<property name="nX" value="-5"/>
+      <property name="nY">
+          switch
+          {
+          case def.objHeadLineText.nHeight LT 40 : -80
+          case def.objHeadLineText.nHeight LT 100 : -40
+          default: 0
+          }
+      </property>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="411 - self.nY"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>       
+
+		<object type="mlui.UI2DImage" name="objPanelBGNewsText">
+			<property name="tmplImage" value="skin.ImgNotificationText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" from="def.objNotificationsImage.nY"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.objNotificationsImage.nHeight" />
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>        
+                
+		<object type="mlui.UI2DImage" name="objPanelBGGradient">
+			<property name="tmplImage" value="skin.ImgNotificationGradient"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+    <object type="mlui.UI2DButton" name="objJumpTarget">
+      <property name="tmplButtonStyle" value="skin.BtnJumpNotification"/>
+      <property name="nX" value="11"/>
+      <property name="nY" value="28"/>
+      <property name="nDefaultWidth" value="64"/>
+      <property name="nDefaultHeight" value="64"/>
+      <property name="nDepth" value="5"/>
+      <property name="strToolTip" from="locale.SID.UI.FocusEvent"/>
+
+      <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            //TODO redo this
+                        
+						    if (def.objNotification.refJumpTarget == null)
+						        return;
+						        
+							notification = def.objNotification.refJumpTarget.resolve(mh2data.objAvatar);
+							if (notification == null)
+							    return;
+							    
+                            if(notification.instanceOf(gs_tbg.Region)){
+                                mh2data.objMapData.selectRegion(notification);
+                                mapRegion = gs_tbg.getGameSysMap(mh2data.objAvatar).objMapRegions.find({"refRegion": notification});
+                                if (mapRegion != null)
+                                {
+                                    mh2data.objMapData.lookAt(mapRegion.vecCenter);
+                                }
+                            }
+                            else if(notification.instanceOf(gs_tbg.Engagement))
+                            {
+                                mh2data.objMapData.selectEngagement(notification);		
+                                mh2data.objMapData.lookAt(notification.refRegion.resolve(mh2data.objAvatar).vecPositions[0]);				
+                            }							
+							else if(notification.instanceOf(gs_tbg.Nation)){
+								mh2data.objMapData.selectNation(notification);
+    						    capCity = gs_tbg.getGameSysCity(mh2data.objAvatar).objCapitalCityNations.find({"refNation": notification});
+								if (capCity.refCapitalCity != null)
+								{
+									city = capCity.refCapitalCity.resolve(mh2data.objAvatar);
+									if (city != null)
+									{
+										mh2data.objMapData.lookAt(city.vecPosition);
+									}
+								}
+							}	
+							else if(notification.instanceOf(gs_tbg.Unit)){
+								group = notification.refUnitGroup.resolve(mh2data.objAvatar);
+								mh2data.objMapData.selectUnitGroup(group);
+							}	
+							else if(notification.instanceOf(gs_tbg.UnitGroup)){
+								mh2data.objMapData.selectUnitGroup(notification);
+							}	
+							else if(notification.instanceOf(gs_tbg.City)){
+								mh2data.objMapData.selectCity(notification);
+								mh2data.objMapData.lookAt(notification.vecPosition);
+							}
+                            else
+                            {
+                                log("unkown notification type " + notification);
+                            }	
+						}
+					]]></script>
+                </object>					
+            </object>
+        </object>
+    
+    <object type="mlui.UI2DButton" name="objDismissButton">
+            <property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+            <property name="nX" value="5"/>
+            <property name="nY" value="86"/>
+            <property name="nDefaultWidth" value="512"/>
+            <property name="nDefaultHeight" value="326"/>
+            <property name="nDepth" value="5"/>
+
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {
+							def.objNotification.bAlert = true;
+                        }
+                    ]]></script>
+                </object>					
+            </object>
+        </object>
+    
+    <object type="mlui.UI2DButton" name="objDismissAllButton">
+            <property name="tmplButtonStyle" value="skin.BtnCloseNotification"/>
+            <property name="nX" value="462"/>
+            <property name="nY" from="32"/>
+            <property name="nDefaultWidth" value="28"/>
+            <property name="nDefaultHeight" value="28"/>
+			      <property name="nDepth" value="5"/>
+            <property name="strToolTip" from="locale.SID.UI.DismissAll"/>
+            
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {
+                            notifications = mh2data.objAvatar.getPerAvatarData(gs_notify.PADNotification).objNotifications;
+                            for(i in notifications)
+                            {
+                                notifications[i].bAlert = true;
+                            }
+                        }
+                    ]]></script>
+                </object>					
+            </object>			
+        </object>        
+        
+	</objectDef>
+
+    
+    
+</locust>

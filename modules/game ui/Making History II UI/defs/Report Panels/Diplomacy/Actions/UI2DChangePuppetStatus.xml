@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI2DChangePuppetStatus" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSurveillanceIcon">
+			<property name="tmplImage" value="skin.ImgWNIndependant"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" value="27"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.GrantIndependence"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSurveillanceBlurb">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10LeftWrap"/>
+			<property name="strText" from="locale.SID.UI.GrantIndependenceBlurb"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<!--<object type="UI2DPuppetStatusSelection" name="objOptions">-->
+		<!--	<property name="nX" value="33"/>-->
+		<!--	<property name="nY" value="88"/>-->
+		<!--</object>-->
+		
+		<object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="233"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+
+		<object type="mlui.UI2DTextButton" name="objSend">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.GrantIndependence"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="244"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActSetNationStatus.create({
+								"refNation": def.objNation,
+								"otNationStatus" : gs_tbg.NationStatusIndependent,
+								"refController": def.objNation,
+								"nTurn": gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.nTurn
+								});
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+	
+	<!--<objectDef type="UI2DPuppetStatusSelection" superType="mlui.UI2DElement">-->
+	<!--	<property name="nWidth" from="self.objOptions.nWidth"/>-->
+	<!--	<property name="nHeight" from="self.objOptions.nHeight"/>-->
+		
+		<!--<object type="common_ui.UI2DList" name="objOptions">-->
+		<!--	<property name="nSpacing" value="1"/>-->
+		<!--	-->
+		<!--	<object type="UI2DPuppetStatusOption" name="objElements">-->
+		<!--		<property name="bSelected">-->
+		<!--			spdata.objDiplomacyData.tmplIdeology == sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Democratic')-->
+		<!--		</property>-->
+		<!--		<property name="strText">-->
+		<!--			sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Democratic').resolve().strDisplayName-->
+		<!--		</property>-->
+		<!--		-->
+		<!--		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--			<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--				<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--				<script type="application/javascript"><![CDATA[-->
+		<!--					function handle(event, owner)-->
+		<!--					{-->
+		<!--						spdata.objDiplomacyData.tmplIdeology = sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Democratic')-->
+		<!--					}-->
+		<!--				]]></script>-->
+		<!--			</object>-->
+		<!--		</object>-->
+		<!--		-->
+		<!--	</object>-->
+		<!--	-->
+		<!--	<object type="UI2DPuppetStatusOption" name="objElements">-->
+		<!--		<property name="bSelected">-->
+		<!--			spdata.objDiplomacyData.tmplIdeology == sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Communist')-->
+		<!--		</property>-->
+		<!--		<property name="strText">-->
+		<!--			sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Communist').resolve().strDisplayName-->
+		<!--		</property>-->
+		<!--		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--			<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--				<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--				<script type="application/javascript"><![CDATA[-->
+		<!--					function handle(event, owner)-->
+		<!--					{-->
+		<!--						spdata.objDiplomacyData.tmplIdeology = sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Communist')-->
+		<!--					}-->
+		<!--				]]></script>-->
+		<!--			</object>-->
+		<!--		</object>-->
+		<!--		-->
+		<!--	</object>-->
+		<!--	-->
+		<!--	<object type="UI2DPuppetStatusOption" name="objElements">-->
+		<!--		<property name="bSelected">-->
+		<!--			spdata.objDiplomacyData.tmplIdeology == sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Fascist')-->
+		<!--		</property>-->
+		<!--		<property name="strText">-->
+		<!--			sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Fascist').resolve().strDisplayName-->
+		<!--		</property>-->
+		<!--		-->
+		<!--		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--			<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--				<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--				<script type="application/javascript"><![CDATA[-->
+		<!--					function handle(event, owner)-->
+		<!--					{-->
+		<!--						spdata.objDiplomacyData.tmplIdeology = sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Fascist')-->
+		<!--					}-->
+		<!--				]]></script>-->
+		<!--			</object>-->
+		<!--		</object>-->
+		<!--		-->
+		<!--	</object>-->
+		<!--	-->
+		<!--	<object type="UI2DPuppetStatusOption" name="objElements">-->
+		<!--		<property name="bSelected">-->
+		<!--			spdata.objDiplomacyData.tmplIdeology == sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Authoritarian')-->
+		<!--		</property>-->
+		<!--		<property name="strText">-->
+		<!--			sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Authoritarian').resolve().strDisplayName-->
+		<!--		</property>-->
+		<!--		-->
+		<!--		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--			<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--				<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--				<script type="application/javascript"><![CDATA[-->
+		<!--					function handle(event, owner)-->
+		<!--					{-->
+		<!--						spdata.objDiplomacyData.tmplIdeology = sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Authoritarian')-->
+		<!--					}-->
+		<!--				]]></script>-->
+		<!--			</object>-->
+		<!--		</object>-->
+		<!--		-->
+		<!--	</object>-->
+		<!--	-->
+		<!--</object>-->
+	<!--	-->
+	<!--</objectDef>-->
+	
+	<objectDef type="UI2DPuppetStatusOption" superType="mlui.UI2DButton">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="bSelected" type="bool"/>
+		
+		<property name="nWidth" value="247"/>
+		<property name="nHeight" value="30"/>
+		<property name="tmplButtonStyle" value="skin.BtnStyleInvisible"/>
+		
+		<object type="mlui.UI2DImage" name="objBubble">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="31"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSelected">
+			<property name="tmplImage" value="skin.ImgTarget"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="31"/>
+			<property name="nHeight" value="30"/>
+			<property name="bVisible" from="def.bSelected"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objStatus">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftSizeToFit"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="36"/>
+			<property name="nY" value="10"/>
+			<property name="nHeight" value="15"/>
+		</object>
+		
+	</objectDef>
+	
+</locust>
+

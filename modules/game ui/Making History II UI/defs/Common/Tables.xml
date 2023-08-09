@@ -1,0 +1,2102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+	<objectDef type="MapIconTableEntry" class="CMLObject">
+        <propertyDef name="tmplMapView" type="TemplateRef" restriction="mapui.MapViewTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="MapIconTable" class="CMLObject">
+            
+            <object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewNationality')"/>
+                <property name="tmplImage" value="skin.ImgMapIconDemographics"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewIdeology')"/>
+                <property name="tmplImage" value="skin.ImgMapIconIdeology"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewCulture')"/>
+                <property name="tmplImage" value="skin.ImgMapIconDemographics"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewEthnicity')"/>
+                <property name="tmplImage" value="skin.ImgMapIconDemographics"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewReligion')"/>
+                <property name="tmplImage" value="skin.ImgMapIconDemographics"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewEmpire')"/>
+                <property name="tmplImage" value="skin.ImgMapIconEmpire"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewFortifications')"/>
+                <property name="tmplImage" value="skin.ImgMapIconRegion"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewAADefense')"/>
+                <property name="tmplImage" value="skin.ImgMapIconRegion"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewCoastalDefense')"/>
+                <property name="tmplImage" value="skin.ImgMapIconRegion"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTransportationImprovement')"/>
+                <property name="tmplImage" value="skin.ImgMapIconRegion"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTrade')"/>
+                <property name="tmplImage" value="skin.ImgMapIconTrade"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTerrainType')"/>
+                <property name="tmplImage" value="skin.ImgMapIconTerrain"/>
+            </object>
+			
+			<object type="MapIconTableEntry" name="objMapIconDisplayTableEntries">
+                <property name="tmplMapView" from="mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewSupply')"/>
+                <property name="tmplImage" value="skin.ImgMapIconSupply"/>
+            </object>
+            
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{mapView:
+                find(?{entry: entry.tmplMapView == mapView}, self.objMapIconDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+	
+	<objectDef type="ReligionDisplayTableEntry" class="CMLObject">
+        <propertyDef name="tmplReligion" type="TemplateRef" restriction="gs_tbg.ReligionTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="ReligionDisplayTable" class="CMLObject">
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'SunniIslam')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionSunni"/>
+		
+            </object>
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Sikh')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionSikh"/>
+		
+            </object>
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Shinto')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionShinto"/>
+		
+            </object>
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'ShiaIslam')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionShia"/>
+		
+            </object>
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Secular')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionSecular"/>
+		
+            </object>
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Protestant')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionProtestant"/>
+		
+            </object>
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Pagan')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionPagan"/>
+		
+            </object>
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Orthodox')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionOrthodox"/>
+			
+            </object>
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Hinduism')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionHindu"/>
+		
+            </object>
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Catholic')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionCatholic"/>
+		
+            </object>
+            
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+                <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Buddhism')"/>
+                <property name="tmplImage" value="skin.ImgIconReligionBuddhist"/>
+			
+            </object>
+
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+              <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Atheism')"/>
+              <property name="tmplImage" value="skin.ImgIconReligionAtheism"/>
+
+            </object>
+      
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+              <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Jewish')"/>
+              <property name="tmplImage" value="skin.ImgIconReligionJewish"/>
+
+            </object>
+      
+            <object type="ReligionDisplayTableEntry" name="objReligionDisplayTableEntries">
+              <property name="tmplReligion" from="sd.getTemplateRef(gs_tbg.ReligionTemplate, 'Mormon')"/>
+              <property name="tmplImage" value="skin.ImgIconReligionMormon"/>
+
+            </object>
+            
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{religion:
+                find(?{entry: entry.tmplReligion == religion}, self.objReligionDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+    
+
+    <objectDef type="TransportationDisplayTableEntry" class="CMLObject">
+        <propertyDef name="tmplTransportationImprovement" type="TemplateRef" restriction="gs_tbg.TransportationImprovementTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="TransportationDisplayTable" class="CMLObject">
+            
+            <object type="TransportationDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'UnpavedRoads')"/>
+                <property name="tmplImage" value="skin.ImgTransportUnpavedRoads"/>
+            </object>
+            
+            <object type="TransportationDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'Railroads')"/>
+                <property name="tmplImage" value="skin.ImgTransportRailroads"/>
+            </object>
+            
+            <object type="TransportationDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'PavedRoadways')"/>
+                <property name="tmplImage" value="skin.ImgTransportTransportation"/>
+            </object>
+            
+            <object type="TransportationDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'Highways')"/>
+                <property name="tmplImage" value="skin.ImgTransportInterstate"/>
+            </object>
+            
+            <object type="TransportationDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'RailDieselization')"/>
+                <property name="tmplImage" value="skin.ImgTransportHighSpeedRail"/>
+            </object>
+            
+            <object type="TransportationDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'Freeways')"/>
+                <property name="tmplImage" value="skin.ImgTransportFreeway"/>
+            </object>
+            
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{transportation:
+                find(?{entry: entry.tmplTransportationImprovement == transportation}, self.objTransportationDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+    
+    <objectDef type="TransportationProdDisplayTableEntry" class="CMLObject">
+        <propertyDef name="tmplTransportationImprovement" type="TemplateRef" restriction="gs_tbg.TransportationImprovementTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="TransportationProdDisplayTable" class="CMLObject">
+            
+            <object type="TransportationProdDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'UnpavedRoads')"/>
+                <property name="tmplImage" value="skin.ImgTransportUnpavedRoadsLG"/>
+                <property name="tmplIcon" value="skin.ImgTransportUnpavedRoads"/>
+            </object>
+            
+            <object type="TransportationProdDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'Railroads')"/>
+                <property name="tmplImage" value="skin.ImgTransportRailroadsLG"/>
+                <property name="tmplIcon" value="skin.ImgTransportRailroads"/>
+            </object>
+            
+            <object type="TransportationProdDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'PavedRoadways')"/>
+                <property name="tmplImage" value="skin.ImgTransportPavedRoadsLG"/>
+                <property name="tmplIcon" value="skin.ImgTransportTransportation"/>
+            </object>
+            
+            <object type="TransportationProdDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'Highways')"/>
+                <property name="tmplImage" value="skin.ImgTransportHighwaysLG"/>
+                <property name="tmplIcon" value="skin.ImgTransportInterstate"/>
+            </object>
+            
+            <object type="TransportationProdDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'RailDieselization')"/>
+                <property name="tmplImage" value="skin.ImgTransportRailDieselLG"/>
+                <property name="tmplIcon" value="skin.ImgTransportHighSpeedRail"/>
+            </object>
+            
+            <object type="TransportationProdDisplayTableEntry" name="objTransportationDisplayTableEntries">
+                <property name="tmplTransportationImprovement" from="sd.getTemplateRef(gs_tbg.TransportationImprovementTemplate, 'Freeways')"/>
+                <property name="tmplImage" value="skin.ImgTransportFreewaysLG"/>
+                <property name="tmplIcon" value="skin.ImgTransportFreeway"/>
+            </object>
+            
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{transportation:
+                find(?{entry: entry.tmplTransportationImprovement == transportation}, self.objTransportationDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+    
+    <objectDef type="FortificationDisplayTableEntry" class="CMLObject">
+        <propertyDef name="tmplFortificationImprovement" type="TemplateRef" restriction="gs_tbg.FortificationImprovementTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="FortificationDisplayTable" class="CMLObject">
+            
+            <object type="FortificationDisplayTableEntry" name="objFortificationDisplayTableEntries">
+                <property name="tmplFortificationImprovement" from="sd.getTemplateRef(gs_tbg.FortificationImprovementTemplate, 'Earthworks')"/>
+                <property name="tmplImage" value="skin.ImgRegionEarthworksLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionEarthworksSM"/>
+            </object>
+            
+            <object type="FortificationDisplayTableEntry" name="objFortificationDisplayTableEntries">
+                <property name="tmplFortificationImprovement" from="sd.getTemplateRef(gs_tbg.FortificationImprovementTemplate, 'ConcreteFortifications')"/>
+                <property name="tmplImage" value="skin.ImgRegionConcreteFortLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionConcreteFortSM"/>
+            </object>
+            
+            <object type="FortificationDisplayTableEntry" name="objFortificationDisplayTableEntries">
+                <property name="tmplFortificationImprovement" from="sd.getTemplateRef(gs_tbg.FortificationImprovementTemplate, 'FortifiedDefenseLine')"/>
+                <property name="tmplImage" value="skin.ImgRegionFortifiedDefenseLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionFortifiedDefenseSM"/>
+            </object>
+                        
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{fortification:
+                find(?{entry: entry.tmplFortificationImprovement == fortification}, self.objFortificationDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+	
+	<objectDef type="TradeResourceTableEntry" class="CMLObject">
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="TradeResourceDisplayTable" class="CMLObject">
+            
+            <object type="TradeResourceTableEntry" name="objTradeResourceTableEntries">
+                <property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Arms')"/>
+                <property name="tmplImage" value="skin.ImgNotificationArms"/>
+            </object>
+			
+			<object type="TradeResourceTableEntry" name="objTradeResourceTableEntries">
+                <property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Coal')"/>
+                <property name="tmplImage" value="skin.ImgNotificationCoal"/>
+            </object>
+			
+			<object type="TradeResourceTableEntry" name="objTradeResourceTableEntries">
+                <property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Metals')"/>
+                <property name="tmplImage" value="skin.ImgNotificationMetals"/>
+            </object>
+			
+			<object type="TradeResourceTableEntry" name="objTradeResourceTableEntries">
+                <property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Food')"/>
+                <property name="tmplImage" value="skin.ImgNotificationFood"/>
+            </object>
+			
+			<object type="TradeResourceTableEntry" name="objTradeResourceTableEntries">
+                <property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Oil')"/>
+                <property name="tmplImage" value="skin.ImgNotificationOil"/>
+            </object>
+                        
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{resource:
+                find(?{entry: entry.tmplResource == resource}, self.objTradeResourceTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+	
+	<objectDef type="MoneyDisplayTableEntry" class="CMLObject">
+        <propertyDef name="tmplMoney" type="TemplateRef" restriction="gs_tbg.FactoryOutputMoneyTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="MoneyDisplayTable" class="CMLObject">
+            
+            <object type="MoneyDisplayTableEntry" name="objMoneyDisplayTableEntries">
+                <property name="tmplMoney" from="sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Goods')"/>
+                <property name="tmplImage" value="skin.ImgIndustryGoodsLG"/>
+				<property name="tmplIcon" value="skin.ImgIndustryGoodsSM"/>
+            </object>
+			
+			<object type="MoneyDisplayTableEntry" name="objMoneyDisplayTableEntries">
+                <property name="tmplMoney" from="sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Textiles')"/>
+                <property name="tmplImage" value="skin.ImgIndustryTextilesLG"/>
+				<property name="tmplIcon" value="skin.ImgIndustryTextilesSM"/>
+            </object>
+			
+			<object type="MoneyDisplayTableEntry" name="objMoneyDisplayTableEntries">
+                <property name="tmplMoney" from="sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Coal')"/>
+                <property name="tmplImage" value="skin.ImgIndustryMPUtoCoalLG"/>
+				<property name="tmplIcon" value="skin.ImgIndustryMPUtoCoalSM"/>
+            </object>
+			
+			<object type="MoneyDisplayTableEntry" name="objMoneyDisplayTableEntries">
+                <property name="tmplMoney" from="sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Bread')"/>
+                <property name="tmplImage" value="skin.ImgIndustryBreadLG"/>
+				<property name="tmplIcon" value="skin.ImgIndustryBreadSM"/>
+            </object>
+			
+			<object type="MoneyDisplayTableEntry" name="objMoneyDisplayTableEntries">
+                <property name="tmplMoney" from="sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'MetalRecycling')"/>
+                <property name="tmplImage" value="skin.ImgIndustryMetalRecyclingLG"/>
+				<property name="tmplIcon" value="skin.ImgIndustryMetalRecyclingSM"/>
+            </object>
+			
+			<object type="MoneyDisplayTableEntry" name="objMoneyDisplayTableEntries" existsWhile="sd.hasTemplate(gs_tbg.FactoryOutputTemplate, 'WroughtIron')"><!-- fix for old mods -->
+                <property name="tmplMoney">
+                    sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, if (sd.hasTemplate(gs_tbg.FactoryOutputTemplate, 'WroughtIron'),'WroughtIron','Goods') )
+                </property>
+                <property name="tmplImage" value="skin.ImgIndustryWroughtIronLG"/>
+				<property name="tmplIcon" value="skin.ImgIndustryWroughtIronSM"/>
+            </object>
+			
+			<object type="MoneyDisplayTableEntry" name="objMoneyDisplayTableEntries" existsWhile="sd.hasTemplate(gs_tbg.FactoryOutputTemplate, 'Petroleum')"><!-- fix for old mods -->
+                <property name="tmplMoney">
+                    sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, if (sd.hasTemplate(gs_tbg.FactoryOutputTemplate, 'Petroleum'),'Petroleum','Goods') )
+                </property>
+                <property name="tmplImage" value="skin.ImgIndustryPetroleumLG"/>
+				<property name="tmplIcon" value="skin.ImgIndustryPetroleumSM"/>
+            </object>
+			
+			<object type="MoneyDisplayTableEntry" name="objMoneyDisplayTableEntries">
+                <property name="tmplMoney" from="sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Appliances')"/>
+                <property name="tmplImage" value="skin.ImgIndustryAppliancesLG"/>
+				<property name="tmplIcon" value="skin.ImgIndustryAppliancesSM"/>
+            </object>
+			
+			<object type="MoneyDisplayTableEntry" name="objMoneyDisplayTableEntries">
+                <property name="tmplMoney" from="sd.getTemplateRef(gs_tbg.FactoryOutputTemplate, 'Automobiles')"/>
+                <property name="tmplImage" value="skin.ImgIndustryAutosLG"/>
+				<property name="tmplIcon" value="skin.ImgIndustryAutosSM"/>
+            </object>
+                        
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{product:
+                find(?{entry: entry.tmplMoney == product}, self.objMoneyDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+    
+    <objectDef type="AADefenseDisplayTableEntry" class="CMLObject">
+        <propertyDef name="tmplAADefenseImprovement" type="TemplateRef" restriction="gs_tbg.AADefenseImprovementTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="AADefenseDisplayTable" class="CMLObject">
+            
+            <object type="AADefenseDisplayTableEntry" name="objAADefenseDisplayTableEntries">
+                <property name="tmplAADefenseImprovement" from="sd.getTemplateRef(gs_tbg.AADefenseImprovementTemplate, 'AntiAirBatteries')"/>
+                <property name="tmplImage" value="skin.ImgRegionAABatteriesLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionAABatteriesSM"/>
+            </object>
+            
+            <object type="AADefenseDisplayTableEntry" name="objAADefenseDisplayTableEntries">
+                <property name="tmplAADefenseImprovement" from="sd.getTemplateRef(gs_tbg.AADefenseImprovementTemplate, 'EarlyWarningRadar')"/>
+                <property name="tmplImage" value="skin.ImgRegionEarlyWarningRadarLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionEarlyWarningRadarSM"/>
+            </object>
+            
+            <object type="AADefenseDisplayTableEntry" name="objAADefenseDisplayTableEntries">
+                <property name="tmplAADefenseImprovement" from="sd.getTemplateRef(gs_tbg.AADefenseImprovementTemplate, 'GroundControlledInterception')"/>
+                <property name="tmplImage" value="skin.ImgRegionInterceptionLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionInterceptionSM"/>
+            </object>
+            
+            <object type="AADefenseDisplayTableEntry" name="objAADefenseDisplayTableEntries">
+                <property name="tmplAADefenseImprovement" from="sd.getTemplateRef(gs_tbg.AADefenseImprovementTemplate, 'FlakTowers')"/>
+                <property name="tmplImage" value="skin.ImgRegionFlakTowersLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionFlakTowersSM"/>
+            </object>
+                        
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{aadefense:
+                find(?{entry: entry.tmplAADefenseImprovement == aadefense}, self.objAADefenseDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+    
+    <objectDef type="CoastalDefenseDisplayTableEntry" class="CMLObject">
+        <propertyDef name="tmplCoastalDefenseImprovement" type="TemplateRef" restriction="gs_tbg.CoastalDefenseImprovementTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="CoastalDefenseDisplayTable" class="CMLObject">
+            
+            <object type="CoastalDefenseDisplayTableEntry" name="objCoastalDefenseDisplayTableEntries">
+                <property name="tmplCoastalDefenseImprovement" from="sd.getTemplateRef(gs_tbg.CoastalDefenseImprovementTemplate, 'IntegratedCoastalDefense')"/>
+                <property name="tmplImage" value="skin.ImgRegionIntegratedCoastLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionIntegratedCoastSM"/>
+            </object>
+            
+            <object type="CoastalDefenseDisplayTableEntry" name="objCoastalDefenseDisplayTableEntries">
+                <property name="tmplCoastalDefenseImprovement" from="sd.getTemplateRef(gs_tbg.CoastalDefenseImprovementTemplate, 'ShoreBatteries')"/>
+                <property name="tmplImage" value="skin.ImgRegionShoreBatteriesLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionShoreBatteriesSM"/>
+            </object>
+
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{coastal:
+                find(?{entry: entry.tmplCoastalDefenseImprovement == coastal}, self.objCoastalDefenseDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+    
+    <objectDef type="ResourceProducerOutputDisplayTableEntry" class="CMLObject">
+        <propertyDef name="tmplResourceImprovement" type="TemplateRef" restriction="gs_tbg.RegionOutputTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="ResourceProducerOutputDisplayTable" class="CMLObject">
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'OilWell')"/>
+                <property name="tmplImage" value="skin.ImgRegionOilFieldLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOilFieldSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'OilRefinery')"/>
+                <property name="tmplImage" value="skin.ImgRegionOilField2LG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOilField2SM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'OilRefineryUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionOilField2LG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOilField2SM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'CoalMine')"/>
+                <property name="tmplImage" value="skin.ImgRegionCoalMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionCoalMineSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'CoalMineUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionCoalMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionCoalMineSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'Foundry')"/>
+                <property name="tmplImage" value="skin.ImgRegionIronMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionIronMineSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'IronMineUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionIronMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionIronMineSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'DeepShaftCoalMine')"/>
+                <property name="tmplImage" value="skin.ImgRegionDSCoalMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionDSCoalMineSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'DeepShaftIronMine')"/>
+                <property name="tmplImage" value="skin.ImgRegionDSIronMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionDSIronMineSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'DeepShaftCoalMineUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionDSCoalMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionDSCoalMineSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'DeepShaftIronMineUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionDSIronMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionDSIronMineSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'IronPit')"/>
+                <property name="tmplImage" value="skin.ImgRegionMetalsPitLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionMetalsPitSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'CoalPit')"/>
+                <property name="tmplImage" value="skin.ImgRegionCoalPitLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionCoalPitSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'DeepOilWell')"/>
+                <property name="tmplImage" value="skin.ImgRegionOilWellLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOilWellSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'EnclosedFarm')"/>
+                <property name="tmplImage" value="skin.ImgRegionEnclosedFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionEnclosedFarmSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'DeepOilWellUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionOilWellLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOilWellSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'EnclosedFarmUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionOpenFieldFarmUpgradeLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOpenFieldFarmUpgradeSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'OpenFieldFarm')"/>
+                <property name="tmplImage" value="skin.ImgRegionOpenFieldFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOpenFieldFarmSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'Plantation')"/>
+                <property name="tmplImage" value="skin.ImgRegionPlantationsLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionPlantationsSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'CollectiveFarms')"/>
+                <property name="tmplImage" value="skin.ImgRegionCollectiveFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionCollectiveFarmSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'MechanizedFarm')"/>
+                <property name="tmplImage" value="skin.ImgRegionMechanizedFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionMechanizedFarmSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'CorporateFarm')"/>
+                <property name="tmplImage" value="skin.ImgRegionCorporateFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionCorporateFarmSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'FactoryFarm')"/>
+                <property name="tmplImage" value="skin.ImgRegionFactoryFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionFactoryFarmSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'PlantationUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionOpenFieldFarmUpgradeLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOpenFieldFarmUpgradeSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'CollectiveFarmsUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionEnclosedFarmUpgradeLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionEnclosedFarmUpgradeSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'MechanizedFarmUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionEnclosedFarmUpgradeLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionEnclosedFarmUpgradeSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'CorporateFarmUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionFactoryFarmUpgradeLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionFactoryFarmUpgradeSM"/>
+            </object>
+            
+            <object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'FactoryFarmUpgrade')"/>
+                <property name="tmplImage" value="skin.ImgRegionMechanizedFarmUpgradeLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionMechanizedFarmUpgradeSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'LandClearing')"/>
+                <property name="tmplImage" value="skin.ImgRegionLandClearingLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionLandClearingSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'OilExploration')"/>
+                <property name="tmplImage" value="skin.ImgRegionOilExLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOilExSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'CoalExploration')"/>
+                <property name="tmplImage" value="skin.ImgRegionCoalExLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionCoalExSM"/>
+            </object>
+			
+			<object type="ResourceProducerOutputDisplayTableEntry" name="objResourceProducerOutputDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.RegionOutputTemplate, 'MetalsExploration')"/>
+                <property name="tmplImage" value="skin.ImgRegionMetalsExLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionMetalsExSM"/>
+            </object>
+
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{resource:
+                find(?{entry: entry.tmplResourceImprovement == resource}, self.objResourceProducerOutputDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+	
+	<objectDef type="ResourceProducerDisplayTableEntry" class="CMLObject">
+        <propertyDef name="tmplResourceImprovement" type="TemplateRef" restriction="gs_tbg.ResourceImprovementTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="ResourceProducerDisplayTable" class="CMLObject">
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'OilWell')"/>
+                <property name="tmplImage" value="skin.ImgRegionOilFieldLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOilFieldSM"/>
+            </object>
+			
+			<object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'IronPit')"/>
+                <property name="tmplImage" value="skin.ImgRegionMetalsPitLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionMetalsPitSM"/>
+            </object>
+			
+			<object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'CoalPit')"/>
+                <property name="tmplImage" value="skin.ImgRegionCoalPitLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionCoalPitSM"/>
+            </object>
+			
+			<object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'DeepOilWell')"/>
+                <property name="tmplImage" value="skin.ImgRegionOilWellLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOilWellSM"/>
+            </object>
+			
+			<object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'OilRefinery')"/>
+                <property name="tmplImage" value="skin.ImgRegionOilField2LG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOilField2SM"/>
+            </object>
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'CoalMine')"/>
+                <property name="tmplImage" value="skin.ImgRegionCoalMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionCoalMineSM"/>
+            </object>
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'Foundry')"/>
+                <property name="tmplImage" value="skin.ImgRegionIronMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionIronMineSM"/>
+            </object>
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'DeepShaftCoalMine')"/>
+                <property name="tmplImage" value="skin.ImgRegionDSCoalMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionDSCoalMineSM"/>
+            </object>
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'DeepShaftIronMine')"/>
+                <property name="tmplImage" value="skin.ImgRegionDSIronMineLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionDSIronMineSM"/>
+            </object>
+			
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'EnclosedFarm')"/>
+                <property name="tmplImage" value="skin.ImgRegionEnclosedFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionEnclosedFarmSM"/>
+            </object>
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'OpenFieldFarm')"/>
+                <property name="tmplImage" value="skin.ImgRegionOpenFieldFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionOpenFieldFarmSM"/>
+            </object>
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'Plantation')"/>
+                <property name="tmplImage" value="skin.ImgRegionPlantationsLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionPlantationsSM"/>
+            </object>
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'CollectiveFarms')"/>
+                <property name="tmplImage" value="skin.ImgRegionCollectiveFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionCollectiveFarmSM"/>
+            </object>
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'MechanizedFarm')"/>
+                <property name="tmplImage" value="skin.ImgRegionMechanizedFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionMechanizedFarmSM"/>
+            </object>
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'CorporateFarm')"/>
+                <property name="tmplImage" value="skin.ImgRegionFactoryFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionFactoryFarmSM"/>
+            </object>
+            
+            <object type="ResourceProducerDisplayTableEntry" name="objResourceProducerDisplayTableEntries">
+                <property name="tmplResourceImprovement" from="sd.getTemplateRef(gs_tbg.ResourceImprovementTemplate, 'FactoryFarm')"/>
+                <property name="tmplImage" value="skin.ImgRegionFactoryFarmLG"/>
+                <property name="tmplIcon" value="skin.ImgRegionFactoryFarmSM"/>
+            </object>
+			
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{resource:
+                find(?{entry: entry.tmplResourceImprovement == resource}, self.objResourceProducerDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+    
+	<objectDef type="IdeologyDisplayTableEntry" class="CMLObject">
+        <propertyDef name="tmplIdeology" type="TemplateRef" restriction="gs_tbg.IdeologyTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+	
+	<objectDef type="IdeologyDisplayTable" class="CMLObject">
+            
+		<object type="IdeologyDisplayTableEntry" name="objEntries">
+			<property name="tmplIdeology" from="sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Democratic')"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconDemocracySm"/>
+		</object>
+		
+		<object type="IdeologyDisplayTableEntry" name="objEntries">
+			<property name="tmplIdeology" from="sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Communist')"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconCommunistSm"/>
+		</object>
+		
+		<object type="IdeologyDisplayTableEntry" name="objEntries">
+			<property name="tmplIdeology" from="sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Fascist')"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconFascistSm"/>
+		</object>
+		
+		<object type="IdeologyDisplayTableEntry" name="objEntries">
+			<property name="tmplIdeology" from="sd.getTemplateRef(gs_tbg.IdeologyTemplate, 'Authoritarian')"/>
+			<property name="tmplIcon" value="skin.ImgInfoIconAuthoritarianSm"/>
+		</object>
+
+		<script type="application/x-locust-query"> <![CDATA[
+		
+		getEntry = ?{ideology:
+			find(?{entry: entry.tmplIdeology == ideology}, self.objEntries)
+		}
+		
+		]]>
+		</script>
+            
+    </objectDef>
+    
+    <objectDef type="UnitTypeDisplayTableEntry" class="CMLObject">
+        <propertyDef name="eUnitCategory" type="Enum" restriction="gs_tbg.UnitCategory"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="UnitTypeDisplayTable" class="CMLObject">
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Artillery"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabArtillery"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Infantry"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabGround"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="MobileInfantry"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabGround"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Armored"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabArmor"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="MissileLaunchers"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabMissiles"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Fighters"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabFighter"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="AirRecon"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabFighter"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Bombers"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabBomber"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="AirTransport"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabAirTrans"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Transport"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabNavalTrans"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Battleships"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabBattleship"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Submarines"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabSub"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Destroyers"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabDestroyer"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Carriers"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabCarrier"/>
+            </object>
+            
+            <object type="UnitTypeDisplayTableEntry" name="objUnitTypeDisplayTableEntries">
+                <property name="eUnitCategory" value="Cruisers"/>
+                <property name="tmplImage" value="skin.ImgMilitaryTabCruiser"/>
+            </object>
+            
+            <script type="application/x-locust-query"> <![CDATA[
+            
+            getEntry = ?{category:
+                find(?{entry: entry.eUnitCategory == category}, self.objUnitTypeDisplayTableEntries)
+            }
+            
+            ]]>
+            </script>
+            
+    </objectDef>
+    
+    <objectDef type="NotificationTableEntry" class="CMLObject">
+        <propertyDef name="tmplNotificationType" type="ObjectType"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="NotificationDisplayTable" class="CMLObject">            
+    
+        <!--
+        <object type="NotificationTableEntry" name="objNotificationTableEntries">
+            <property name="tmplNotificationType" value="NotificationTemplateEngagement"/>
+            <property name="tmplImage" value="skin.ImgNotificationWar"/>
+        </object>
+        -->
+        
+        <object type="NotificationTableEntry" name="objNotificationTableEntries">
+            <property name="tmplNotificationType" from="gs_notify.NotificationTemplateEngagement"/>
+            <property name="tmplImage" value="skin.ImgNotificationEncounter"/>
+        </object>
+        
+        <object type="NotificationTableEntry" name="objNotificationTableEntries">
+            <property name="tmplNotificationType" from="gs_notify.NotificationTemplateCity"/>
+            <property name="tmplImage" value="skin.ImgNotificationCity"/>
+        </object>
+            
+        <object type="NotificationTableEntry" name="objNotificationTableEntries">
+            <property name="tmplNotificationType" from="gs_notify.NotificationTemplateRegion"/>
+            <property name="tmplImage" value="skin.ImgNotificationRegion"/>
+        </object>
+    
+        <object type="NotificationTableEntry" name="objNotificationTableEntries">
+            <property name="tmplNotificationType" from="gs_notify.NotificationTemplateResearch"/>
+            <property name="tmplImage" value="skin.ImgNotificationResearch"/>
+        </object>
+    
+        <object type="NotificationTableEntry" name="objNotificationTableEntries">
+            <property name="tmplNotificationType" from="gs_notify.NotificationTemplateDiplomatic"/>
+            <property name="tmplImage" value="skin.ImgNotificationDiplomacy"/>
+        </object>
+        
+        <object type="NotificationTableEntry" name="objNotificationTableEntries">
+            <property name="tmplNotificationType" from="gs_notify.NotificationTemplateGovernment"/>
+            <property name="tmplImage" value="skin.ImgNotificationGovernment"/>
+        </object>
+        
+        <!--
+        <object type="NotificationTableEntry" name="objNotificationTableEntries">
+            <property name="tmplNotificationType" value="Supply"/>
+            <property name="tmplImage" value="skin.ImgNotificationSupply"/>
+        </object>
+        -->
+        
+        <object type="NotificationTableEntry" name="objNotificationTableEntries">
+            <property name="tmplNotificationType" from="gs_notify.NotificationTemplateStability"/>
+            <property name="tmplImage" value="skin.ImgNotificationFlag"/>
+        </object>
+        
+        <object type="NotificationTableEntry" name="objNotificationTableEntries">
+            <property name="tmplNotificationType" from="gs_notify.NotificationTemplateTrade"/>
+            <property name="tmplImage" value="skin.ImgNotificationMoney"/>
+        </object>
+        
+        <script type="application/x-locust-query"> <![CDATA[
+        
+        getEntry = ?{category:
+            find(?{entry: category.instanceOf(entry.tmplNotificationType)}, self.objNotificationTableEntries)
+        }
+        
+        ]]>
+        </script>
+        
+    </objectDef>
+	
+    <objectDef type="CityBuldingDisplayEntry" class="CMLObject">
+        <propertyDef name="tmplCityBuilding" type="TemplateRef" restriction="gs_tbg.CityBuildingTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="CityBuildingDisplayTable" class="CMLObject">
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'AircraftPlant')" /> 
+            <property name="tmplImage" value="skin.ImgBldgAircraftPlantLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgAircraftPlantSM" /> 
+        </object>
+            
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'Mill')" /> 
+            <property name="tmplImage" value="skin.ImgBldgMillLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgMillSM" /> 
+        </object>
+            
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'RecyclingCenter')" /> 
+            <property name="tmplImage" value="skin.ImgBldgRecyclingCenterLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgRecyclingCenterSM" /> 
+        </object>
+            
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'FactoryMillUpgrade')" /> 
+            <property name="tmplImage" value="skin.ImgBldgFactoryMillUpgradeLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgFactoryMillUpgradeSM" /> 
+        </object>
+            
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'CottageFactory')" /> 
+            <property name="tmplImage" value="skin.ImgBldgCottageFactoryLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgCottageFactorySM" /> 
+        </object>
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'FoodProcessingPlants')" />
+            <property name="tmplImage" value="skin.ImgBldgFoodProcessingPlantLG" />
+            <property name="tmplIcon" value="skin.ImgBldgFoodProcessingPlantSM" />
+        </object>
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialEnterprise')" /> 
+            <property name="tmplImage" value="skin.ImgBldgIndustrialEnterpriseLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgIndustrialEnterpriseSM" /> 
+        </object>
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialEnterpriseUpgrade')" /> 
+            <property name="tmplImage" value="skin.ImgBldgIndustrialEnterpriseUpgradeLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgIndustrialEnterpriseUpgradeSM" /> 
+        </object>
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialPlant')" /> 
+            <property name="tmplImage" value="skin.ImgBldgIndustrialPlantLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgIndustrialPlantSM" /> 
+        </object>
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialPlantUpgrade')" /> 
+            <property name="tmplImage" value="skin.ImgBldgIndustrialPlantUpgradeLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgIndustrialPlantUpgradeSM" /> 
+        </object>
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'IndustrialShipyard')" /> 
+            <property name="tmplImage" value="skin.ImgBldgNavalBaseLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgNavalBaseSM" /> 
+        </object>
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'LargeFactory')" /> 
+            <property name="tmplImage" value="skin.ImgBldgLargeFactoryLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgLargeFactorySM" /> 
+        </object>
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'LargeFactoryUpgrade')" /> 
+            <property name="tmplImage" value="skin.ImgBldgLargeFactoryUpgradeLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgLargeFactoryUpgradeSM" /> 
+        </object>
+        
+        <!--<object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">-->
+        <!--    <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'ElectricGenerator')" /> -->
+        <!--    <property name="tmplImage" value="skin.ImgBldgLargePowerStationLG" /> -->
+        <!--    <property name="tmplIcon" value="skin.ImgBldgLargePowerStationSM" /> -->
+        <!--</object>-->
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'MechanizedFactory')" /> 
+            <property name="tmplImage" value="skin.ImgBldgMechanizedFactoryLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgMechanizedFactorySM" /> 
+        </object>
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'MechanizedFactoryUpgrade')" /> 
+            <property name="tmplImage" value="skin.ImgBldgMechanizedFactoryUpgradeLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgMechanizedFactoryUpgradeSM" /> 
+        </object>
+            
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'MunitionsPlant')" /> 
+            <property name="tmplImage" value="skin.ImgBldgMunitionsFactoryLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgMunitionsFactorySM" /> 
+        </object>
+            
+            <!--<object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">-->
+            <!--<property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'NavalBase')" /> -->
+            <!--<property name="tmplImage" value="skin.ImgBldgNavalBaseLG" /> -->
+            <!--<property name="tmplIcon" value="skin.ImgBldgNavalBaseSM" /> -->
+            <!--</object>-->
+            
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'NuclearPowerPlant')" />
+            <property name="tmplImage" value="skin.ImgBldgNuclearPowerPlantLG" />
+            <property name="tmplIcon" value="skin.ImgBldgNuclearPowerPlantSM" />
+        </object>
+            
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'CoalPlant')" />
+            <property name="tmplImage" value="skin.ImgBldgCoalPlantLG" />
+            <property name="tmplIcon" value="skin.ImgBldgCoalPlantSM" />
+        </object>
+		
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'Shipyard')" /> 
+            <property name="tmplImage" value="skin.ImgBldgShipyardLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgShipyardSM" /> 
+        </object>
+            
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'SyntheticFuelPlant')" /> 
+            <property name="tmplImage" value="skin.ImgBldgSyntheticFuelPlantLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgSyntheticFuelPlantSM" /> 
+        </object>
+        
+        <object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'VehiclePlant')" /> 
+            <property name="tmplImage" value="skin.ImgBldgVehiclePlantLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgVehiclePlantSM" /> 
+        </object>
+		
+<!--		<object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">-->
+<!--            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'BombShelter')" /> -->
+<!--            <property name="tmplImage" value="skin.ImgBldgBombShelterLG" /> -->
+<!--            <property name="tmplIcon" value="skin.ImgBldgBombShelterSM" /> -->
+<!--        </object>-->
+		
+<!--		<object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">-->
+<!--            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'FalloutShelter')" /> -->
+<!--            <property name="tmplImage" value="skin.ImgBldgFalloutShelterLG" /> -->
+<!--            <property name="tmplIcon" value="skin.ImgBldgFalloutShelterSM" /> -->
+<!--        </object>-->
+		
+<!--		<object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">-->
+<!--            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'SubShelter')" /> -->
+<!--            <property name="tmplImage" value="skin.ImgBldgSubShelterLG" /> -->
+<!--            <property name="tmplIcon" value="skin.ImgBldgSubShelterSM" /> -->
+<!--        </object>-->
+		
+		<object type="CityBuldingDisplayEntry" name="objCityBuildingDisplayEntries">
+            <property name="tmplCityBuilding" from="sd.getTemplateRef(gs_tbg.CityBuildingTemplate, 'UndergroundFactory')" /> 
+            <property name="tmplImage" value="skin.ImgBldgUndergroundFactoryLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgUndergroundFactorySM" /> 
+        </object>
+  
+        <script type="application/x-locust-query"> <![CDATA[
+        
+        getEntry = ?{building:
+            if(find(?{entry: entry.tmplCityBuilding == building}, self.objCityBuildingDisplayEntries)==null,
+                self.objCityBuildingDisplayEntries.getArbitraryValue(),
+                find(?{entry: entry.tmplCityBuilding == building}, self.objCityBuildingDisplayEntries)
+            )
+        }
+        
+        ]]>
+        </script>
+            
+    </objectDef>
+        
+    <objectDef type="ResearchCenterBuldingDisplayEntry" class="CMLObject">
+        <propertyDef name="tmplResearchCenterBuilding" type="TemplateRef" restriction="gs_tbg.ResearchCenterBuildingTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="ResearchCenterBuildingDisplayTable" class="CMLObject">
+            
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'AirForceAcademy')" /> 
+            <property name="tmplImage" value="skin.ImgBldgAirforceAcademyLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgAirforceAcademySM" /> 
+        </object>
+            
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'ChemicalLab')" /> 
+            <property name="tmplImage" value="skin.ImgBldgChemicalLabLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgChemicalLabSM" /> 
+        </object>
+        
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'JetPropulsionLab')" /> 
+            <property name="tmplImage" value="skin.ImgBldgJetPropulsionLabLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgJetPropulsionLabSM" /> 
+        </object>
+        
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'MedicalCenter')" /> 
+            <property name="tmplImage" value="skin.ImgBldgMedicalCenterLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgMedicalCenterSM" /> 
+        </object>
+        
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'MilitaryAcademy')" /> 
+            <property name="tmplImage" value="skin.ImgBldgMilitaryAcademyLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgMilitaryAcademySM" /> 
+        </object>
+            
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'NavalAcademy')" /> 
+            <property name="tmplImage" value="skin.ImgBldgNavalAcademyLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgNavalAcademySM" /> 
+        </object>
+            
+            <!--<object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">-->
+            <!--<property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'NavalBase')" /> -->
+            <!--<property name="tmplImage" value="skin.ImgBldgNavalBaseLG" /> -->
+            <!--<property name="tmplIcon" value="skin.ImgBldgNavalBaseSM" /> -->
+            <!--</object>-->
+            
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'NuclearLab')" /> 
+            <property name="tmplImage" value="skin.ImgBldgNuclearLabLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgNuclearLabSM" /> 
+        </object>
+            
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'OrbitalScienceLab')" /> 
+            <property name="tmplImage" value="skin.ImgBldgOrbitalScienceLabLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgOrbitalScienceLabSM" /> 
+        </object>
+            
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'ResearchFacility')" /> 
+            <property name="tmplImage" value="skin.ImgBldgResearchFacilityLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgResearchFacilitySM" /> 
+        </object>
+            
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'RocketLab')" /> 
+            <property name="tmplImage" value="skin.ImgBldgRocketLabLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgRocketLabSM" /> 
+        </object>
+        
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'TechnologyCenter')" /> 
+            <property name="tmplImage" value="skin.ImgBldgTechnologyCenterLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgTechnologyCenterSM" /> 
+        </object>
+            
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'University')" /> 
+            <property name="tmplImage" value="skin.ImgBldgUniversityLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgUniversitySM" /> 
+        </object>
+            
+        <object type="ResearchCenterBuldingDisplayEntry" name="objResearchCenterBuildingDisplayEntries">
+            <property name="tmplResearchCenterBuilding" from="sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, 'PublicSchool')" /> 
+            <property name="tmplImage" value="skin.ImgBldgPublicSchoolLG" /> 
+            <property name="tmplIcon" value="skin.ImgBldgPublicSchoolSM" /> 
+        </object>
+
+        <script type="application/x-locust-query"> <![CDATA[
+        
+        getEntry = ?{building:
+            find(?{entry: entry.tmplResearchCenterBuilding == building}, self.objResearchCenterBuildingDisplayEntries)
+        }
+        
+        ]]>
+        </script>
+            
+    </objectDef>
+    
+    <objectDef type="UnitDisplayEntry" class="CMLObject">
+        <propertyDef name="tmplUnit" type="TemplateRef" restriction="gs_tbg.UnitTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="UnitDisplayTable" class="CMLObject">
+            
+        <object type="UnitDisplayEntry" name="objDefaultEntry">
+			<property name="tmplImage" value="skin.ImgDefaultProjectLG"/>
+			<property name="tmplIcon" value="skin.ImgDefaultProjectSM"/>
+		</object>
+        
+        <object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'AdvancedFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitAdvancedFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitAdvancedFightersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'BasicCarrierFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitBasicCarrierFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitBasicCarrierFightersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'BasicFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitBasicFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitBasicFightersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'BasicJetFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitBasicJetFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitBasicJetFightersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'BasicNavalBombers')"/>
+			<property name="tmplImage" value="skin.ImgUnitBasicNavalBombersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitBasicNavalBombersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'BiPlaneBombers')"/>
+			<property name="tmplImage" value="skin.ImgUnitBiPlaneBombersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitBiPlaneBombersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'BiPlaneFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitBiPlaneFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitBiPlaneFightersSM"/>
+		</object>
+		<!--<object type="UnitDisplayEntry" name="objUnitDisplayEntries">-->
+		<!--	<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyBiPlaneFighters')"/>-->
+		<!--	<property name="tmplImage" value="skin.ImgUnitEarlyBiPlaneFightersLG"/>-->
+		<!--	<property name="tmplIcon" value="skin.ImgUnitEarlyBiPlaneFightersSM"/>-->
+		<!--</object>-->
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyBombers')"/>
+			<property name="tmplImage" value="skin.ImgUnitEarlyBombersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEarlyBombersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyCarrierFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitEarlyCarrierFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEarlyCarrierFightersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitEarlyFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEarlyFightersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyJetFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitEarlyJetFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEarlyJetFightersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'HeavyBombers')"/>
+			<property name="tmplImage" value="skin.ImgUnitHeavyBombersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitHeavyBombersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'HeavyFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitHeavyFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitHeavyFightersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'ImprovedCarrierFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitImprovedCarrierFighterLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitImprovedCarrierFighterSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'ImprovedFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitImprovedFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitImprovedFightersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'ImprovedNavalBombers')"/>
+			<property name="tmplImage" value="skin.ImgUnitImprovedNavalBombersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitImprovedNavalBombersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'TorpedoDiveBombers')"/>
+			<property name="tmplImage" value="skin.ImgUnitTorpedoDiveBombersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitTorpedoDiveBombersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'JetBombers')"/>
+			<property name="tmplImage" value="skin.ImgUnitJetBombersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitJetBombersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'LightBombers')"/>
+			<property name="tmplImage" value="skin.ImgUnitLightBombersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitLightBombersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'LightGlider')"/>
+			<property name="tmplImage" value="skin.ImgUnitLightGlidersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitLightGlidersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MediumBomber')"/>
+			<property name="tmplImage" value="skin.ImgUnitMediumBombersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMediumBombersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'StrategicBombers')"/>
+			<property name="tmplImage" value="skin.ImgUnitStrategicBombersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitStrategicBombersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'AirTransport1')"/>
+			<property name="tmplImage" value="skin.ImgUnitTransportsLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitTransportsSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'HeavyTanks2')"/>
+			<property name="tmplImage" value="skin.ImgUnitHeavyTanksIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitHeavyTanksIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'HeavyTanks1')"/>
+			<property name="tmplImage" value="skin.ImgUnitHeavyTanksILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitHeavyTanksISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'LightTanks2')"/>
+			<property name="tmplImage" value="skin.ImgUnitLightTanksIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitLightTanksIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'LightTanks1')"/>
+			<property name="tmplImage" value="skin.ImgUnitLightTanksILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitLightTanksISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MainBatttleTank2')"/>
+			<property name="tmplImage" value="skin.ImgUnitMainBattleTankIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMainBattleTankIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MainBatttleTank1')"/>
+			<property name="tmplImage" value="skin.ImgUnitMainBattleTankILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMainBattleTankISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MediumTanks2')"/>
+			<property name="tmplImage" value="skin.ImgUnitMediumTanksIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMediumTanksIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MediumTanks1')"/>
+			<property name="tmplImage" value="skin.ImgUnitMediumTanksILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMediumTanksISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'SuperheavyTanks')"/>
+			<property name="tmplImage" value="skin.ImgUnitSuperHeavyTanksLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitSuperHeavyTanksSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'BallisticMissiles')"/>
+			<property name="tmplImage" value="skin.ImgUnitBallisticMissileLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitBallisticMissileSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'GuidedBombs')"/>
+			<property name="tmplImage" value="skin.ImgUnitGuidedMissileLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitGuidedMissileSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'GunHowitzer')"/>
+			<property name="tmplImage" value="skin.ImgUnitGunHowitzerLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitGunHowitzerSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'HeavyArtillery')"/>
+			<property name="tmplImage" value="skin.ImgUnitHeavyArtilleryLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitHeavyArtillerySM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'HorseArtillery')"/>
+			<property name="tmplImage" value="skin.ImgUnitHorseArtilleryLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitHorseArtillerySM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'ICBMs')"/>
+			<property name="tmplImage" value="skin.ImgUnitICBMsLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitICBMsSM"/>
+		</object>
+		<!--<object type="UnitDisplayEntry" name="objUnitDisplayEntries">-->
+		<!--	<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MotorizedArtillery')"/>-->
+		<!--	<property name="tmplImage" value="skin.ImgUnitMotorizedArtilleryLG"/>-->
+		<!--	<property name="tmplIcon" value="skin.ImgUnitMotorizedArtillerySM"/>-->
+		<!--</object>-->
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'RocketArtillery')"/>
+			<property name="tmplImage" value="skin.ImgUnitRocketArtilleryLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitRocketArtillerySM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'SelfPropelledArtillery')"/>
+			<property name="tmplImage" value="skin.ImgUnitSelfPropelledArtilleryLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitSelfPropelledArtillerySM"/>
+		</object>
+		<!--object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Airborne3')"/>
+			<property name="tmplImage" value="skin.ImgUnitAirborneIIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitAirborneIIISM"/>
+		</object-->
+		<!--<object type="UnitDisplayEntry" name="objUnitDisplayEntries">-->
+		<!--	<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Airborne2')"/>-->
+		<!--	<property name="tmplImage" value="skin.ImgUnitAirborneIILG"/>-->
+		<!--	<property name="tmplIcon" value="skin.ImgUnitAirborneIISM"/>-->
+		<!--</object>-->
+		<!--<object type="UnitDisplayEntry" name="objUnitDisplayEntries">-->
+		<!--	<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Airborne1')"/>-->
+		<!--	<property name="tmplImage" value="skin.ImgUnitAirborneILG"/>-->
+		<!--	<property name="tmplIcon" value="skin.ImgUnitAirborneISM"/>-->
+		<!--</object>-->
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Airborne4')"/>
+			<property name="tmplImage" value="skin.ImgUnitAirborneIVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitAirborneIVSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Airborne6')"/>
+			<property name="tmplImage" value="skin.ImgUnitAirborneVILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitAirborneVISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Airborne5')"/>
+			<property name="tmplImage" value="skin.ImgUnitAirborneVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitAirborneVSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Engineers3')"/>
+			<property name="tmplImage" value="skin.ImgUnitEngineerIIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEngineerIIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Engineers2')"/>
+			<property name="tmplImage" value="skin.ImgUnitEngineerIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEngineerIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Engineers1')"/>
+			<property name="tmplImage" value="skin.ImgUnitEngineerILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEngineerISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Engineers4')"/>
+			<property name="tmplImage" value="skin.ImgUnitEngineerIVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEngineerIVSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Engineers6')"/>
+			<property name="tmplImage" value="skin.ImgUnitEngineerVILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEngineerVISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Engineers5')"/>
+			<property name="tmplImage" value="skin.ImgUnitEngineerVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEngineerVSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Marines3')"/>
+			<property name="tmplImage" value="skin.ImgUnitMarineIIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMarineIIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Marines2')"/>
+			<property name="tmplImage" value="skin.ImgUnitMarineIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMarineIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Marines1')"/>
+			<property name="tmplImage" value="skin.ImgUnitMarineILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMarineISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Marines4')"/>
+			<property name="tmplImage" value="skin.ImgUnitMarineIVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMarineIVSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Marines6')"/>
+			<property name="tmplImage" value="skin.ImgUnitMarineVILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMarineVISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Marines5')"/>
+			<property name="tmplImage" value="skin.ImgUnitMarineVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMarineVSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Militia1')"/>
+			<property name="tmplImage" value="skin.ImgUnitMilitia1LG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMilitia1SM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Militia2')"/>
+			<property name="tmplImage" value="skin.ImgUnitMilitia2LG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMilitia2SM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Militia3')"/>
+			<property name="tmplImage" value="skin.ImgUnitMilitia3LG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMilitia3SM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountainInfantry3')"/>
+			<property name="tmplImage" value="skin.ImgUnitMountainIIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMountainIIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountainInfantry2')"/>
+			<property name="tmplImage" value="skin.ImgUnitMountainIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMountainIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountainInfantry1')"/>
+			<property name="tmplImage" value="skin.ImgUnitMountainILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMountainISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountainInfantry4')"/>
+			<property name="tmplImage" value="skin.ImgUnitMountainIVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMountainIVSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountainInfantry6')"/>
+			<property name="tmplImage" value="skin.ImgUnitMountainVILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMountainVISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountainInfantry5')"/>
+			<property name="tmplImage" value="skin.ImgUnitMountainVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMountainVSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountedInfantry3')"/>
+			<property name="tmplImage" value="skin.ImgUnitMountedIIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMountedIIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountedInfantry2')"/>
+			<property name="tmplImage" value="skin.ImgUnitMountedIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMountedIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountedInfantry1')"/>
+			<property name="tmplImage" value="skin.ImgUnitMountedILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMountedISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Infantry3')"/>
+			<property name="tmplImage" value="skin.ImgUnitRegularIIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitRegularIIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Infantry2')"/>
+			<property name="tmplImage" value="skin.ImgUnitRegularIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitRegularIISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Infantry1')"/>
+			<property name="tmplImage" value="skin.ImgUnitRegularILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitRegularISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Infantry4')"/>
+			<property name="tmplImage" value="skin.ImgUnitRegularIVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitRegularIVSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Infantry6')"/>
+			<property name="tmplImage" value="skin.ImgUnitRegularVILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitRegularVISM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Infantry5')"/>
+			<property name="tmplImage" value="skin.ImgUnitRegularVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitRegularVSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MechanizedInfantry3')"/>
+			<property name="tmplImage" value="skin.ImgUnitMechanizedIIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMechanizedSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MechanizedInfantry4')"/>
+			<property name="tmplImage" value="skin.ImgUnitMechanizedIVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMechanizedSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MechanizedInfantry6')"/>
+			<property name="tmplImage" value="skin.ImgUnitMechanizedVILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMechanizedSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MechanizedInfantry5')"/>
+			<property name="tmplImage" value="skin.ImgUnitMechanizedVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMechanizedSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MotorizedInfantry3')"/>
+			<property name="tmplImage" value="skin.ImgUnitMotorizedIIILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMotorizedSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MotorizedInfantry4')"/>
+			<property name="tmplImage" value="skin.ImgUnitMotorizedIVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMotorizedSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MotorizedInfantry6')"/>
+			<property name="tmplImage" value="skin.ImgUnitMotorizedVILG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMotorizedSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MotorizedInfantry5')"/>
+			<property name="tmplImage" value="skin.ImgUnitMotorizedVLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMotorizedSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'AdvancedBattleship')"/>
+			<property name="tmplImage" value="skin.ImgUnitAdvancedBattleshipsLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitAdvancedBattleshipsSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'AdvancedJetFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitAdvancedJetFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitAdvancedJetFightersSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'AdvancedDestroyer')"/>
+			<property name="tmplImage" value="skin.ImgUnitAdvancedDestroyerLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitAdvancedDestroyerSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Dreadnought')"/>
+			<property name="tmplImage" value="skin.ImgUnitDreadnoughtLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitDreadnoughtSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'MotorizedFieldArtillery')"/>
+			<property name="tmplImage" value="skin.ImgUnitMotorizedArtilleryLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitMotorizedArtillerySM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'IroncladFrigate')"/>
+			<property name="tmplImage" value="skin.ImgUnitTorpedoBoatDestroyerLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitTorpedoBoatDestroyerSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Frigate')"/>
+			<property name="tmplImage" value="skin.ImgUnitFrigateLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitFrigateSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'ImprovedJetFighters')"/>
+			<property name="tmplImage" value="skin.ImgUnitImprovedJetFightersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitImprovedJetFightersSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'ObservationBlimp')"/>
+			<property name="tmplImage" value="skin.ImgUnitObservationBlimpLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitObservationBlimpSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'FastAttackCraft')"/>
+			<property name="tmplImage" value="skin.ImgUnitFastAttackCraftLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitFastAttackCraftSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'FastBattleships')"/>
+			<property name="tmplImage" value="skin.ImgUnitFastBattleshipsLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitFastBattleshipsSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyNavalBombers')"/>
+			<property name="tmplImage" value="skin.ImgUnitEarlyNavalBomberLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEarlyNavalBomberSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyTanks')"/>
+			<property name="tmplImage" value="skin.ImgUnitEarlyTanksLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEarlyTanksSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'AttackSubmarines')"/>
+			<property name="tmplImage" value="skin.ImgUnitAttackSubLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitAttackSubSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'NuclearSubmarine')"/>
+			<property name="tmplImage" value="skin.ImgUnitNuclearSubmarineLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitNuclearSubmarineSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyAntiAirGuns')"/>
+			<property name="tmplImage" value="skin.ImgUnitEarlyAntiAirGunsLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEarlyAntiAirGunsSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'SAMs')"/>
+			<property name="tmplImage" value="skin.ImgUnitSAMsLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitSAMsSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'BomberAirships')"/>
+			<property name="tmplImage" value="skin.ImgUnitBomberAirshipsLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitBomberAirshipsSM"/>
+		</object>
+		
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Battlecruiser')"/>
+			<property name="tmplImage" value="skin.ImgUnitBattlecruisersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitBattlecruisersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyDestroyers')"/>
+			<property name="tmplImage" value="skin.ImgUnitCorvettesLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitCorvettesSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Destroyers')"/>
+			<property name="tmplImage" value="skin.ImgUnitDestroyersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitDestroyersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlySubmarines')"/>
+			<property name="tmplImage" value="skin.ImgUnitEarlySubmarinesLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEarlySubmarinesSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EscortCarrier')"/>
+			<property name="tmplImage" value="skin.ImgUnitEscortCarriersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEscortCarriersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'EscortDestroyers')"/>
+			<property name="tmplImage" value="skin.ImgUnitEscortDestroyersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitEscortDestroyersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'FleetCarrier')"/>
+			<property name="tmplImage" value="skin.ImgUnitFleetCarriersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitFleetCarriersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'HeavyCruiser')"/>
+			<property name="tmplImage" value="skin.ImgUnitHeavyCruisersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitHeavyCruisersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'LargeCruiser')"/>
+			<property name="tmplImage" value="skin.ImgUnitLargeCruisersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitLargeCruisersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'LightCarrier')"/>
+			<property name="tmplImage" value="skin.ImgUnitLightCarriersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitLightCarriersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'LightCruiser')"/>
+			<property name="tmplImage" value="skin.ImgUnitLightCruisersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitLightCruisersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'LongRangeSubmarines')"/>
+			<property name="tmplImage" value="skin.ImgUnitLongRangeSubmarinesLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitLongRangeSubmarinesSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'ShortRangeSubmarines')"/>
+			<property name="tmplImage" value="skin.ImgUnitShortRangeSubmarinesLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitShortRangeSubmarinesSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'StandardBattleship')"/>
+			<property name="tmplImage" value="skin.ImgUnitStandardBattleshipsLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitStandardBattleshipsSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'SuperCarriers')"/>
+			<property name="tmplImage" value="skin.ImgUnitSuperCarriersLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitSuperCarriersSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'NuclearCarrier')"/>
+			<property name="tmplImage" value="skin.ImgUnitNuclearCarrierLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitNuclearCarrierSM"/>
+		</object>
+		<object type="UnitDisplayEntry" name="objUnitDisplayEntries">
+			<property name="tmplUnit" from="sd.getTemplateRef(gs_tbg.UnitTemplate, 'Troopships')"/>
+			<property name="tmplImage" value="skin.ImgUnitTroopshipsLG"/>
+			<property name="tmplIcon" value="skin.ImgUnitTroopshipsSM"/>
+		</object>
+        
+        <script type="application/x-locust-query"> <![CDATA[
+        
+        getEntry = ?{unit:
+				?{foundEntry:
+					if(foundEntry != null, foundEntry, self.objDefaultEntry)
+				}(find(?{entry: entry.tmplUnit == unit}, self.objUnitDisplayEntries))
+			}
+        
+        ]]>
+        </script>
+            
+    </objectDef>
+	
+	<objectDef type="ResearchCategoryIconTableEntry" class="CMLObject">
+        <propertyDef name="tmplCategory" type="TemplateRef" restriction="gs_tbg.ResearchCategoryTemplate"/>
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+    
+    <objectDef type="ResearchCategoryIconTable" class="CMLObject">
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Advanced')"/>
+			<property name="tmplImage" value="skin.ImgRTopicElectronicsLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicElectronicsSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Rocketry')"/>
+			<property name="tmplImage" value="skin.ImgRTopicRocketryLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicRocketrySM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Nuclear')"/>
+			<property name="tmplImage" value="skin.ImgRTopicNuclearLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicNuclearSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Chemical')"/>
+			<property name="tmplImage" value="skin.ImgRTopicChemicalLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicChemicalSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Industrial')"/>
+			<property name="tmplImage" value="skin.ImgRTopicIndustryLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicIndustrySM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Infrastructure')"/>
+			<property name="tmplImage" value="skin.ImgRCategoryIndustrialLG"/>
+			<property name="tmplIcon" value="skin.ImgRCategoryIndustrialSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Agriculture')"/>
+			<property name="tmplImage" value="skin.ImgRTopicAgricultureLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicAgricultureSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'TankWarfare')"/>
+			<property name="tmplImage" value="skin.ImgRTopicMilitaryEngineeringLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicMilitaryEngineeringSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'VehicleLogistics')"/>
+			<property name="tmplImage" value="skin.ImgRTopicMilitaryOperationsLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicMilitaryOperationsSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Infantry')"/>
+			<property name="tmplImage" value="skin.ImgRCategoryArmyLG"/>
+			<property name="tmplIcon" value="skin.ImgRCategoryArmySM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Special')"/>
+			<property name="tmplImage" value="skin.ImgRCategoryTacticsLG"/>
+			<property name="tmplIcon" value="skin.ImgRCategoryTacticsSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Artillery')"/>
+			<property name="tmplImage" value="skin.ImgRTopicEngineeringLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicEngineeringSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'AerialEngineering')"/>
+			<property name="tmplImage" value="skin.ImgRTopicAerialEngineeringLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicAerialEngineeringSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'AerialTactics')"/>
+			<property name="tmplImage" value="skin.ImgRTopicAerialTacticsLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicAerialTacticsSM"/>
+		</object>
+		
+		<object type="ResearchCategoryIconTableEntry" name="objResearchCategoryIconTableEntries">
+			<property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'NavalEngineering')"/>
+			<property name="tmplImage" value="skin.ImgRTopicNavalEngineeringLG"/>
+			<property name="tmplIcon" value="skin.ImgRTopicNavalEngineeringSM"/>
+		</object>
+
+		<script type="application/x-locust-query"> <![CDATA[
+		
+		getEntry = ?{category:
+			find(?{research: research.tmplCategory == category}, self.objResearchCategoryIconTableEntries)
+		}
+		
+		]]>
+		</script>
+            
+    </objectDef>
+	
+</locust>

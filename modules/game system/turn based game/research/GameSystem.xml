@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysResearch" class="CMLOGameSysResearch" superType="mlgame.GameSystem">
+        <propertyDef name="objResearchPrograms" type="ResearchProgram" variable="true" storesChildren="true"/>
+        <propertyDef name="objResearchProjects" type="ResearchProject" variable="true" storesChildren="true"/>
+        <propertyDef name="tmplDefaultResearchTopicList" type="TemplateRef" restriction="TemplateList"/>
+        <propertyDef name="objResearchCenters" type="ResearchCenter" variable="true" storesChildren="true"/>
+        <propertyDef name="objResearchTopicHierarchyPositions" type="ResearchTopicHierarchyPosition" variable="true" storesChildren="true"/>
+		<propertyDef name="tmplBuildingDamageLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+		
+		<script type="application/x-locust-query">
+		    getResearchProject = ?{research_topic, nation:
+			    find(?{project: project.tmplResearchTopic == research_topic AND project.refResearchProgram == nation.refResearchProgram}, self.objResearchProjects)
+		    }
+		    
+		    getNationCompletedResearchProjects = ?{nation:
+		    	filter(?{project:
+					project.refResearchProgram == nation.refResearchProgram AND
+					project.eStatus == 'STATUS_COMPLETE'
+				}, self.objResearchProjects)
+			}
+
+    	</script>
+
+	</objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysResearch = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysResearch)
+		}
+		
+		getAllResearchPrograms = ?{gameroot:
+			getGameSysResearch(gameroot).objResearchPrograms
+		}
+		
+		getAllResearchProjects = ?{gameroot:
+			getGameSysResearch(gameroot).objResearchProjects
+		}
+		getResearchProject = ?{gameroot, research_topic, nation:
+		    getGameSysResearch(gameroot).getResearchProject(research_topic, nation)
+		}
+		
+		getAllResearchTopics = ?{gameroot:
+			map(?{ref: ref.resolve()}, getGameSysResearch(gameroot).tmplResearchTopicList.resolve().tmplRefs)
+		}		
+
+        getNationCompletedResearchProjects = ?{gameroot,nation:
+            getGameSysResearch(gameroot).getNationCompletedResearchProjects(nation)
+        }
+		
+	</script>
+
+</locust>

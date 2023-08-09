@@ -1,0 +1,104 @@
+uniform float3 mapMin;
+uniform float3 mapMax;
+uniform float2 tileMin;
+uniform float2 tileMax;
+uniform float fSeaLevel;
+uniform sampler2D TileSampler; // Combined tile texture
+//uniform sampler2D terrainDetailChannels;
+uniform sampler2D shadowSampler; 
+//uniform float fOffScreenCamLeft;
+//uniform float fOffScreenCamRight;
+//uniform float fOffScreenCamTop;
+//uniform float fOffScreenCamBottom;
+
+struct SGLight {
+	float4 color;
+	float4 position;
+};
+uniform SGLight sgLights[2];
+
+uniform float4x4 sgModelViewProj;
+uniform float4x4 sgModelView;
+
+struct VertexOutput {
+	float4 position : POSITION;
+	float2 uvTile : TEXCOORD0;
+};
+
+VertexOutput vertexProgram(
+	float3 position : POSITION,
+	float3 normal : NORMAL
+) {
+	VertexOutput output;
+
+	output.position = mul(sgModelViewProj, float4(position, 1));
+    
+	// Assume the camera for the off screen texture is in the same position
+	// as the current camera and translate to the camera's coordinate space
+	
+	output.uvTile = float2( ( position.x - tileMin.x) / (tileMax.x - tileMin.x), 1.0 - (position.y - tileMin.y) / (tileMax.y - tileMin.y));
+	
+	return output;
+}
+
+
+
+struct FragmentOutput {
+	float4 color : COLOR;
+};
+
+FragmentOutput fragmentProgram(
+	float2 uvTile : TEXCOORD0
+) {
+	// get precalculated combined texture color
+	float3 color = tex2D(TileSampler, uvTile);
+    
+	FragmentOutput output;
+	output.color = float4(color,1);
+	return output;
+}
+
+struct VertexOutput2 {
+	float4 position : POSITION;
+	float2 uvTile : TEXCOORD0;
+    float4 uvShadow : TEXCOORD1;
+};
+
+VertexOutput2 vertexProgramWithShadows(
+	float3 position : POSITION,
+	float3 normal : NORMAL
+) {
+	VertexOutput2 output;
+
+	output.position = mul(sgModelViewProj, float4(position, 1));
+    
+	// Assume the camera for the off screen texture is in the same position
+	// as the current camera and translate to the camera's coordinate space
+	
+	output.uvTile = float2( ( position.x - tileMin.x) / (tileMax.x - tileMin.x), 1.0 - (position.y - tileMin.y) / (tileMax.y - tileMin.y));
+    output.uvShadow = output.position;
+	
+	return output;
+}
+
+
+FragmentOutput fragmentProgramWithShadows(
+	float2 uvTile : TEXCOORD0,
+	float4 uvShadow : TEXCOORD1
+) {
+	// get precalculated combined texture color
+	float3 color = tex2D(TileSampler, uvTile);
+    
+    // get shadow.  Could soften by averaging multiple samples
+    float view_x = uvShadow.x / uvShadow.w;
+    float view_y = uvShadow.y / uvShadow.w;
+    float2 uv = float2(0.5 + 0.5*view_x, 0.5-0.5*view_y);    
+    float shadow_alpha = 0.5 - tex2D(shadowSampler, uv).r * 0.5;
+    
+    float3 shadow_color = float3(0,0,0);
+        
+	FragmentOutput output;
+	output.color = float4(lerp(color.rgb,shadow_color,shadow_alpha), 1);
+        
+	return output;
+}

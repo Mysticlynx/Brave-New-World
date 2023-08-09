@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="mh2 locale"
+	name="it"
+	version="1.0"
+	locustVersion="2.11"
+>
+	<import module="mlcore" default="true"/>
+	<import module="ml:script:javascript:1.0" as="mljs"/>
+	<import module="lib:media" as="mlmedia"/>
+
+	<include>
+        defs/sd-stringTable.xml
+        defs/gameui-stringTable.xml
+        defs/uilib-stringTable.xml
+        defs/ObjectNamerFunctions.xml
+        defs/tgq-stringTable.xml
+        defs/bfw-stringTable.xml
+        defs/ldop-stringTable.xml
+        defs/tbs-stringTable.xml
+        defs/tgf-stringTable.xml
+		defs/text styles.xml
+		defs/textures.xml
+		defs/LandAreas.xml
+		defs/SeaAreas.xml
+		defs/editor-stringTable.xml
+    </include>
+</locustModule>

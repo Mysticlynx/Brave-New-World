@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<template type="ml3dworld.SharedSurfaceTemplate" name="ShadowSurface">
+		<object name="objRenderTarget" type="ml3dworld.RenderTarget">
+			<property name="strName" value="shadowSurface"/>
+			<property name="nWidth" value="1024"/>
+			<property name="nHeight" value="1024"/>
+		</object>
+	</template>
+
+    <!-- for use with tile luminance textures -->
+	<template type="ml3dworld.EffectTemplate" name="TerrainEffect">
+		<property name="eEffectType" value="EFFECT_TYPE_PRIMARY"/>
+		<object type="ml3dworld.FXTechnique" name="objTechniques">
+			<object type="ml3dworld.FXPass" name="objPasses">
+				<object type="ml3dworld.FXShader" name="objShaders">
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+						<property name="strSupportedProfiles" value="vs_2_0"/>
+						<property name="fileProgram" value="Terrain3D.cg"/>
+						<property name="strEntryPoint" value="vertexProgram"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="glslf"/>
+						<property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+						<property name="fileProgram" value="Terrain3D.cg"/>
+						<property name="strEntryPoint" value="fragmentProgram"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+						<property name="strSupportedProfiles" value="vs_2_0"/>
+						<property name="fileProgram" value="Terrain3D_vertexProgram.glsl"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="linux">
+						<property name="strSupportedProfiles" value="glslf"/>
+						<property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+						<property name="fileProgram" value="Terrain3D_fragmentProgram.glsl"/>
+					</object>
+				</object>
+			</object>
+		</object>
+	</template>
+    
+    <!-- for use with tile combined textures -->
+	<template type="ml3dworld.EffectTemplate" name="PreCombinedTerrainEffectWithShadows">
+		<property name="eEffectType" value="EFFECT_TYPE_PRIMARY"/>
+		<object type="ml3dworld.FXTechnique" name="objTechniques">
+			<object name="objSharedSurfaceRenderTargets" type="ml3dworld.SharedSurfaceRenderTarget">
+				<property name="strName" value="shadowSurface"/>
+				<property name="tmplSharedSurface" value="ShadowSurface"/>
+			</object>        
+			<object type="ml3dworld.FXPass" name="objPasses">
+				<object type="ml3dworld.FXShader" name="objShaders">
+                
+                    <!-- cg shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+						<property name="strSupportedProfiles" value="vs_2_0"/>
+						<property name="fileProgram" value="PreCombinedTerrain3D.cg"/>
+						<property name="strEntryPoint" value="vertexProgramWithShadows"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="glslf"/>
+						<property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+						<property name="fileProgram" value="PreCombinedTerrain3D.cg"/>
+						<property name="strEntryPoint" value="fragmentProgramWithShadows"/>
+					</object>
+
+                    <!-- glsl shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+						<property name="strSupportedProfiles" value="vs_2_0"/>
+						<property name="fileProgram" value="PreCombinedTerrain3D_vertexProgramWithShadows.glsl"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="linux">
+						<property name="strSupportedProfiles" value="glslf"/>
+						<property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+						<property name="fileProgram" value="PreCombinedTerrain3D_fragmentProgramWithShadows.glsl"/>
+					</object>
+                    
+				</object>
+                <object type="ml3dworld.FXParamSampler" name="objParams">
+                    <property name="strName" value="shadowSampler"/>
+                    <object type="ml3dworld.SamplerFromRenderTarget" name="objSampler">
+                        <property name="strTarget" value="shadowSurface"/>
+                        <property name="eWrapS" value="WRAP_CLAMP"/>
+                        <property name="eWrapT" value="WRAP_CLAMP"/>                        
+                        <property name="eMinFilter" value="FILTER_LINEAR"/>
+                        <property name="eMagFilter" value="FILTER_LINEAR"/>                    
+                        <property name="eMipFilter" value="FILTER_NONE"/>
+                    </object>
+                </object>                                    
+			</object>
+		</object>
+	</template>
+    
+	<template type="ml3dworld.EffectTemplate" name="PreCombinedTerrainEffect">
+		<property name="eEffectType" value="EFFECT_TYPE_PRIMARY"/>
+		<object type="ml3dworld.FXTechnique" name="objTechniques">
+			<object type="ml3dworld.FXPass" name="objPasses">
+				<object type="ml3dworld.FXShader" name="objShaders">
+                
+                    <!-- cg shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+						<property name="strSupportedProfiles" value="vs_2_0"/>
+						<property name="fileProgram" value="PreCombinedTerrain3D.cg"/>
+						<property name="strEntryPoint" value="vertexProgram"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="glslf"/>
+						<property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+						<property name="fileProgram" value="PreCombinedTerrain3D.cg"/>
+						<property name="strEntryPoint" value="fragmentProgram"/>
+					</object>
+                    
+                    <!-- glsl shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+						<property name="strSupportedProfiles" value="vs_2_0"/>
+						<property name="fileProgram" value="PreCombinedTerrain3D_vertexProgram.glsl"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="linux">
+						<property name="strSupportedProfiles" value="glslf"/>
+						<property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+						<property name="fileProgram" value="PreCombinedTerrain3D_fragmentProgram.glsl"/>
+					</object>
+				</object>
+			</object>
+		</object>
+	</template>
+    
+	
+	<template type="ml3dworld.EffectTemplate" name="OceanEffect">
+		<property name="eEffectType" value="EFFECT_TYPE_PRIMARY"/>
+		<object type="ml3dworld.FXTechnique" name="objTechniques">
+			<object type="ml3dworld.FXPass" name="objPasses">
+				<object type="ml3dworld.FXShader" name="objShaders">
+                
+                    <!-- cg shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+						<property name="strSupportedProfiles" value="vs_2_0"/>
+						<property name="fileProgram" value="Ocean3D.cg"/>
+						<property name="strEntryPoint" value="vertexProgram"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="glslf"/>
+						<property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+						<property name="fileProgram" value="Ocean3D.cg"/>
+						<property name="strEntryPoint" value="fragmentProgram"/>
+					</object>
+
+                    <!-- glsl shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+						<property name="strSupportedProfiles" value="vs_2_0"/>
+						<property name="fileProgram" value="Ocean3D_vertexProgram.glsl"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="linux">
+						<property name="strSupportedProfiles" value="glslf"/>
+						<property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+						<property name="fileProgram" value="Ocean3D_fragmentProgram.glsl"/>
+					</object>
+                    
+				</object>
+			</object>
+		</object>
+	</template>
+
+	<template type="ml3dworld.EffectTemplate" name="SkinnedEffect">
+		<property name="eEffectType" value="EFFECT_TYPE_PRIMARY"/>    
+		<object type="ml3dworld.FXTechnique" name="objTechniques">
+			<object type="ml3dworld.FXPass" name="objPasses">
+				<object type="ml3dworld.FXShader" name="objShaders">
+                
+                    <!-- cg shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+                        <property name="strSupportedProfiles" value="vs_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit.cg"/>
+						<property name="strEntryPoint" value="vertexProgram"/><!-- P3F_N3F_T2F_NW1F_W4F_J4F -->
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbfp1"/>
+                        <property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit.cg"/>
+						<property name="strEntryPoint" value="fragmentProgram"/>
+					</object>
+                    
+                    <!-- glsl shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+                        <property name="strSupportedProfiles" value="vs_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit_vertexProgram.glsl"/><!-- P3F_N3F_T2F_NW1F_W4F_J4F -->
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbfp1"/>
+                        <property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit_fragmentProgram.glsl"/>
+					</object>
+				</object>
+				<object type="ml3dworld.FXShader" name="objShaders">
+                
+                    <!-- cg shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+                        <property name="strSupportedProfiles" value="vs_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit.cg"/>
+						<property name="strEntryPoint" value="vertexProgram2"/><!-- P3F_N3F_T2F_NW1F_W4F_J4F_W4F_J4F -->
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbfp1"/>
+                        <property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit.cg"/>
+						<property name="strEntryPoint" value="fragmentProgram"/>
+					</object>
+                    
+                    <!-- glsl shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+                        <property name="strSupportedProfiles" value="vs_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit_vertexProgram2.glsl"/><!-- P3F_N3F_T2F_NW1F_W4F_J4F_W4F_J4F -->
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbfp1"/>
+                        <property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit_fragmentProgram.glsl"/>
+					</object>
+                    
+				</object>                
+			</object>
+		</object>
+	</template>        
+    
+	<template type="ml3dworld.EffectTemplate" name="SkinnedShadowEffect">
+		<property name="eEffectType" value="EFFECT_TYPE_SURFACE"/>
+		<property name="tmplSurfaceOutput" value="ShadowSurface"/>
+		<object type="ml3dworld.FXTechnique" name="objTechniques">
+			<object type="ml3dworld.FXPass" name="objPasses">
+				<object type="ml3dworld.FXShader" name="objShaders">
+                
+                    <!-- cg shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+                        <property name="strSupportedProfiles" value="vs_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit.cg"/>
+						<property name="strEntryPoint" value="vertexProgramShadow"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbfp1"/>
+                        <property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit.cg"/>
+						<property name="strEntryPoint" value="fragmentProgramShadow"/>
+					</object>
+                    
+                    <!-- glsl shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+                        <property name="strSupportedProfiles" value="vs_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit_vertexProgramShadow.glsl"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbfp1"/>
+                        <property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit_fragmentProgramShadow.glsl"/>
+					</object>
+				</object>
+				<object type="ml3dworld.FXShader" name="objShaders">
+                
+                    <!-- cg shader -->                
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+                        <property name="strSupportedProfiles" value="vs_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit.cg"/>
+						<property name="strEntryPoint" value="vertexProgramShadow2"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbfp1"/>
+                        <property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit.cg"/>
+						<property name="strEntryPoint" value="fragmentProgramShadow2"/>
+					</object>
+
+                    <!-- glsl shader -->                
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+                        <property name="strSupportedProfiles" value="vs_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit_vertexProgramShadow2.glsl"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbfp1"/>
+                        <property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit_fragmentProgramShadow2.glsl"/> <!-- Note / TODO: identical to fragmentProgramShadow2 -->
+					</object>
+                    
+				</object>                
+				<object type="ml3dworld.FXShader" name="objShaders">
+                    <!-- cg shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+                        <property name="strSupportedProfiles" value="vs_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit.cg"/>
+						<property name="strEntryPoint" value="vertexProgramShadowUnskinned"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbfp1"/>
+                        <property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit.cg"/>
+						<property name="strEntryPoint" value="fragmentProgramShadowUnskinned"/>
+					</object>
+                    
+                    <!-- glsl shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+                        <property name="strSupportedProfiles" value="vs_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit_vertexProgramShadowUnskinned.glsl"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbfp1"/>
+                        <property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+                        <property name="fileProgram" value="SkinnedUnit_fragmentProgramShadowUnskinned.glsl"/>
+					</object>
+				</object>                
+				<object name="objBehavior" type="ml3dworld.RenderPassBehavior">
+					<property name="colClearColor" value="#FFFFFFFF"/>
+					<property name="bClearColorBuffer" value="true"/>
+					<property name="bClearDepthBuffer" value="true"/>
+				</object>                
+			</object>
+		</object>
+	</template>
+    
+    <!-- for use with tile combined textures -->
+	<template type="ml3dworld.EffectTemplate" name="EmissionWithShadowEffect">
+		<property name="eEffectType" value="EFFECT_TYPE_PRIMARY"/>
+		<object type="ml3dworld.FXTechnique" name="objTechniques">
+			<object name="objSharedSurfaceRenderTargets" type="ml3dworld.SharedSurfaceRenderTarget">
+				<property name="strName" value="shadowSurface"/>
+				<property name="tmplSharedSurface" value="ShadowSurface"/>
+			</object>        
+			<object type="ml3dworld.FXPass" name="objPasses">            
+				<object type="ml3dworld.FXShader" name="objShaders">
+                
+                    <!-- cg shader -->            
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+						<property name="strSupportedProfiles" value="vs_2_0"/>
+						<property name="fileProgram" value="EmissionWithShadow.cg"/>
+						<property name="strEntryPoint" value="vertexProgram"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="win32,mac">
+						<property name="strSupportedProfiles" value="glslf"/>
+						<property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+						<property name="fileProgram" value="EmissionWithShadow.cg"/>
+						<property name="strEntryPoint" value="fragmentProgram"/>
+					</object>
+                    
+                    <!-- glsl shader -->
+					<object type="ml3dworld.FXShaderProgram" name="objVertexProgram" platform="linux">
+						<property name="strSupportedProfiles" value="arbvp1"/>
+						<property name="strSupportedProfiles" value="vs_2_0"/>
+						<property name="fileProgram" value="EmissionWithShadow_vertexProgram.glsl"/>
+					</object>
+					<object type="ml3dworld.FXShaderProgram" name="objFragmentProgram" platform="linux">
+						<property name="strSupportedProfiles" value="glslf"/>
+						<property name="strSupportedProfiles" value="ps_2_x"/>
+                        <property name="strSupportedProfiles" value="ps_2_0"/>
+						<property name="fileProgram" value="EmissionWithShadow_fragmentProgram.glsl"/>
+					</object>
+				</object>
+                <object type="ml3dworld.FXParamSampler" name="objParams">
+                    <property name="strName" value="shadowSampler"/>
+                    <object type="ml3dworld.SamplerFromRenderTarget" name="objSampler">
+                        <property name="strTarget" value="shadowSurface"/>
+                        <property name="eWrapS" value="WRAP_CLAMP"/>
+                        <property name="eWrapT" value="WRAP_CLAMP"/>                        
+                        <property name="eMinFilter" value="FILTER_LINEAR"/>
+                        <property name="eMagFilter" value="FILTER_LINEAR"/>                    
+                        <property name="eMipFilter" value="FILTER_NONE"/>
+                    </object>
+                </object>                                    
+			</object>
+		</object>
+	</template>
+    
+</locust>

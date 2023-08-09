@@ -1,0 +1,2241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Deprecated but needed for old saves -->
+    <template type="gs_tbg.WarDeclarationEffectsTemplate" name="DefaultWarDeclarationEffectsTemplate"/>
+
+    <template type="gs_tbg.DiplomaticEffectsTemplate" name="DefaultDiplomaticEffectsTemplate">
+        <!-- Diplomatic Effects of war -->
+        <object type="gs_tbg.WarDeclarationsEffectItem" name="objWarItems">
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-500"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-500"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-500"/>
+            </object>
+        </object>
+        <object type="gs_tbg.WarDeclarationsEffectItem" name="objWarItems">
+            <property name="eRelation" value="ALLY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-500"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-500"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-500"/>
+            </object>
+        </object>
+        <object type="gs_tbg.WarDeclarationsEffectItem" name="objWarItems">
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.WarDeclarationsEffectItem" name="objWarItems">
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="5"/>
+            </object>
+        </object>
+        <object type="gs_tbg.WarDeclarationsEffectItem" name="objWarItems">
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.WarDeclarationsEffectItem" name="objWarItems">
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-5"/>
+            </object>
+        </object>
+        <object type="gs_tbg.WarDeclarationsEffectItem" name="objWarItems">
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.WarDeclarationsEffectItem" name="objWarItems">
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-20"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-20"/>
+            </object>
+        </object>
+
+        <!-- Diplomatic Effects of treaties -->
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-5"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="5"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="5"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-5"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="MILITARY_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="125"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="125"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="125"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-125"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-125"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-125"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-20"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-20"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-20"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="20"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="20"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="20"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-125"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-125"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-125"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="ALLY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-125"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-125"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-125"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="125"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="125"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="125"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="20"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="20"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="20"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-10"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-10"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="ALLIANCE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-20"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-20"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-20"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="250"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="250"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="250"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="ALLY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="250"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="250"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="250"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-25"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="25"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="ALLY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PEACE"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="25"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="ALLY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="25"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-25"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-5"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-3"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-3"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-3"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="3"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="3"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="3"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRatified"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="5"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-25"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="ALLY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-25"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="25"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-5"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-3"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-3"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-3"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="3"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="3"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="3"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TreatyDiplomaticEffectItem" name="objTreatyItems">
+            <property name="otEvent" value="gs_tbg.EventTreatyRejected"/>
+            <property name="eTreatyType" value="PORT_ACCESS"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="5"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="5"/>
+            </object>
+        </object>
+
+        <!-- Diplomatic Effects of Embargos -->
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoPlaced"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoPlaced"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoPlaced"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoPlaced"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoPlaced"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoPlaced"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoPlaced"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoLifted"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoLifted"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="-50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="-50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoLifted"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoLifted"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoLifted"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoLifted"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="25"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="25"/>
+            </object>
+        </object>
+        <object type="gs_tbg.EmbargoDiplomaticEffectItem" name="objEmbargoItems">
+            <property name="otEvent" value="gs_tbg.EventEmbargoLifted"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="50"/>
+            </object>
+        </object>
+
+        <!-- Diplomatic Effects of Trade -->
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeAgreementAccepted"/>
+            <property name="objResourceTemplate" value="Arms"/>
+            <property name="bAid" value="false"/>
+            <property name="nCap" value="2"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeAgreementAccepted"/>
+            <property name="objResourceTemplate" value="Food"/>
+            <property name="bAid" value="false"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeAgreementAccepted"/>
+            <property name="objResourceTemplate" value="Coal"/>
+            <property name="bAid" value="false"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeAgreementAccepted"/>
+            <property name="objResourceTemplate" value="Metals"/>
+            <property name="bAid" value="false"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeAgreementAccepted"/>
+            <property name="objResourceTemplate" value="Oil"/>
+            <property name="bAid" value="false"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeAgreementCancelled"/>
+            <property name="objResourceTemplate" value="Arms"/>
+            <property name="bAid" value="false"/>
+            <property name="nCap" value="2"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeAgreementCancelled"/>
+            <property name="objResourceTemplate" value="Food"/>
+            <property name="bAid" value="false"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeAgreementCancelled"/>
+            <property name="objResourceTemplate" value="Coal"/>
+            <property name="bAid" value="false"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeAgreementCancelled"/>
+            <property name="objResourceTemplate" value="Metals"/>
+            <property name="bAid" value="false"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeAgreementCancelled"/>
+            <property name="objResourceTemplate" value="Oil"/>
+            <property name="bAid" value="false"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeOccurred"/>
+            <property name="objResourceTemplate" value="Arms"/>
+            <property name="bAid" value="true"/>
+            <property name="nCap" value="2"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="50"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="50"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeOccurred"/>
+            <property name="objResourceTemplate" value="Food"/>
+            <property name="bAid" value="true"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeOccurred"/>
+            <property name="objResourceTemplate" value="Coal"/>
+            <property name="bAid" value="true"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeOccurred"/>
+            <property name="objResourceTemplate" value="Metals"/>
+            <property name="bAid" value="true"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventTradeOccurred"/>
+            <property name="objResourceTemplate" value="Oil"/>
+            <property name="bAid" value="true"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.TradeDiplomaticEffectItem" name="objTradeItems">
+            <property name="otEvent" value="gs_tbg.EventMoneyTransferOccurred"/>
+            <property name="bAid" value="true"/>
+            <property name="nCap" value="1"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100000000"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100000000"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100000000"/>
+            </object>
+        </object>
+    
+        <!-- Diplomatic Effects of Nation Status Changes -->
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusIndependent"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="100"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="100"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusIndependent"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusIndependent"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusIndependent"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusIndependent"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusIndependent"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusIndependent"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationLiberated"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationChangedStatus"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="SELF"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationChangedStatus"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationChangedStatus"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationChangedStatus"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationChangedStatus"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationChangedStatus"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationChangedStatus"/>
+            <property name="otStatus" value="gs_tbg.NationStatusPuppet"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationAnnexed"/>
+            <property name="eRelation" value="ENEMY"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationAnnexed"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsTerrible"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationAnnexed"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsPoor"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationAnnexed"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrained"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationAnnexed"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+        <object type="gs_tbg.NationStatusChangeDiplomaticEffectItem" name="objNationStatusChangeItems">
+            <property name="otEvent" value="gs_tbg.EventNationAnnexed"/>
+            <property name="eRelation" value="NONE"/>
+            <property name="objRelationsLevelTemplate" value="DiplomaticRelationsVeryStrong"/>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="StatusQuo"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Expansionist"/>
+                <property name="nValue" value="0"/>
+            </object>
+            <object type="gs_tbg.InternationalPositionValuePair" name="objIntlPositionValuePairs">
+                <property name="objAIInternationalPositionTemplate" value="Neutral"/>
+                <property name="nValue" value="0"/>
+            </object>
+        </object>
+    
+    </template><!-- DefaultDiplomaticEffectsTemplate -->
+    
+    <!-- Diplomatic Effects of National Programs -->
+    <template type="gs_tbg.NationalProgramsDiplomaticEffectsTemplate" name="DefaultNationalProgramsDiplomaticEffectsTemplate">
+        <object type="gs_tbg.NationalProgramsDiplomaticEffectItem" name="objItems">
+            <property name="otNationalProgram" value="gs_tbg.RegionSurveillance"/>
+            <property name="nEffect" value="-10"/>
+        </object>
+        <object type="gs_tbg.NationalProgramsDiplomaticEffectItem" name="objItems">
+            <property name="otNationalProgram" value="gs_tbg.StealResearch"/>
+            <property name="nEffect" value="-25"/>
+        </object>
+        <object type="gs_tbg.NationalProgramsDiplomaticEffectItem" name="objItems">
+            <property name="otNationalProgram" value="gs_tbg.SabotageRegion"/>
+            <property name="nEffect" value="-30"/>
+        </object>
+        <object type="gs_tbg.NationalProgramsDiplomaticEffectItem" name="objItems">
+            <property name="otNationalProgram" value="gs_tbg.OppositionSupport"/>
+            <property name="nEffect" value="-40"/>
+        </object>
+        <object type="gs_tbg.NationalProgramsDiplomaticEffectItem" name="objItems">
+            <property name="otNationalProgram" value="gs_tbg.PoliticalSupport"/>
+            <property name="nEffect" value="10"/>
+        </object>
+    </template>
+    
+
+</locust>

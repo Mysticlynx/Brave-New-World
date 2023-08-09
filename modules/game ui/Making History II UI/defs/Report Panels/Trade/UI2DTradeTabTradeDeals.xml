@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<enumDef name="TradeDealsSort">
+        <value name="TYPE"/>
+		<value name="FLOW"/>
+		<value name="AID"/>
+		<value name="NATION"/>
+		<value name="COST"/>
+    </enumDef>
+    
+     <objectDef type="TradeDealsData" class="CMLObject" >
+	<!-- input -->
+        <propertyDef name="objTradeAgreement" type="gs_tbg.TradeAgreement" />
+
+    <!-- internals -->        
+		<propertyDef name="tmplResource" type="Template" restriction="gs_tbg.ResourceTemplate">
+            self.objTradeAgreement.tmplResource.resolve()
+        </propertyDef>
+        
+    <!-- properties for bubbles and sorting -->
+		<propertyDef name="objNation" type="gs_tbg.Nation">
+            if(mh2data.objNation == self.objTradeAgreement.refSourceNation.resolve(mh2data.objAvatar),
+				self.objTradeAgreement.refDestNation.resolve(mh2data.objAvatar),
+				self.objTradeAgreement.refSourceNation.resolve(mh2data.objAvatar))
+        </propertyDef>
+        <propertyDef name="strType" type="String" >
+            self.tmplResource.strName
+        </propertyDef>
+        <propertyDef name="nFlow" type="int" >
+            self.objTradeAgreement.nAmount
+        </propertyDef>
+        <propertyDef name="strAid" type="String" >
+            if(self.objTradeAgreement.bAid,
+                'a' + self.strNation
+                ,
+                'b' + self.strNation
+            )
+        </propertyDef>
+        <propertyDef name="strNation" type="String" >
+            if(self.objNation != null,
+                self.objNation.strName
+                ,
+                ''
+            )
+        </propertyDef>
+        <propertyDef name="nMoney" type="int64" >
+            switch{
+                case self.objTradeAgreement.bAid:
+                    0
+                default:
+                    int64(self.tmplResource.nPrice)
+                        * int64(find(?{snd: snd.tmplResource == self.tmplResource}, gs_tbg.getAllSupplyAndDemand(mh2data.objAvatar)).tmplPriceAdjust.resolve().fPriceAdjust)
+                        * int64(self.objTradeAgreement.nAmount)
+            }
+        </propertyDef>
+    </objectDef>
+    
+    <objectDef type="UI2DTradeTabTradeDeals" superType="mlui.UI2DElement">
+	<!-- Import Agreements Section -->
+		<object type="mlui.UI2DText" name="objImportAgreementsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.ImportAgreements"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objImportAgreementsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="436"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="UI2DImportOrExportAgreements" name="objImportAgreements">
+			<property name="bImport" value="true"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="436"/>
+			<property name="nHeight" value="521"/>
+            <property name="objTradeAgreements" >
+                filter(
+                    ?{agreement: agreement.eStatus == gs_tbg.TradeAgreementStatus.ACCEPTED},
+                        filter(?
+                            {exportta: exportta.refDestNation == mh2data.objNation},
+                                gs_tbg.getAllTradeAgreements(mh2data.objAvatar)))
+            </property>
+		</object>
+
+	<!-- Export Agreements Section -->
+		<object type="mlui.UI2DText" name="objExportAgreementsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.ExportAgreements"/>
+			<property name="nX" value="451"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objExportAgreementsBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="448"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="436"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="UI2DImportOrExportAgreements" name="objExportAgreements">
+			<property name="bImport" value="false"/>
+			<property name="nX" value="448"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="436"/>
+			<property name="nHeight" value="521"/>
+            <property name="objTradeAgreements" >
+                filter(
+                    ?{agreement: agreement.eStatus == gs_tbg.TradeAgreementStatus.ACCEPTED},
+                        filter(?
+                            {importta: importta.refSourceNation == mh2data.objNation},
+                                gs_tbg.getAllTradeAgreements(mh2data.objAvatar)))
+            </property>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DImportOrExportAgreements" superType="mlui.UI2DElement">
+		<propertyDef name="objTradeAgreements" type="gs_tbg.TradeAgreement" variable="true"/>
+		<propertyDef name="bImport" type="bool"/>
+        
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="TradeDealsSort.NATION"/>
+		</object> -->
+        
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="1"/>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Type"/>
+				<property name="objData" from="mh2data.objTradeDealsSortTableData"/>
+				<property name="eSortBy" from="TradeDealsSort.TYPE"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="32"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Flow"/>
+				<property name="objData" from="mh2data.objTradeDealsSortTableData"/>
+				<property name="eSortBy" from="TradeDealsSort.FLOW"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="33"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Aid"/>
+				<property name="objData" from="mh2data.objTradeDealsSortTableData"/>
+				<property name="eSortBy" from="TradeDealsSort.AID"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="31"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Nation"/>
+				<property name="objData" from="mh2data.objTradeDealsSortTableData"/>
+				<property name="eSortBy" from="TradeDealsSort.NATION"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="174"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.Trade + ' ' + if(def.bImport, locale.SID.UI.Cost, locale.SID.UI.Revenue)"/>
+				<property name="objData" from="mh2data.objTradeDealsSortTableData"/>
+				<property name="eSortBy" from="TradeDealsSort.COST"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="100"/>
+				<property name="nHeight" value="23"/>
+			</object>
+            
+		</object>
+        
+		<propertyDef name="objTradeDealsData" type="TradeDealsData" variable="true" storesChildren="true"/>
+        <property name="objTradeDealsData">
+            map(?{tradeagreement:
+					<object type="TradeDealsData">
+						<property name="objTradeAgreement" from="tradeagreement"/>
+					</object>
+				},
+                self.objTradeAgreements
+            )
+		</property>
+        
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nY" value="26"/>
+			<property name="nWidth" value="436"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+                switch{
+					case mh2data.objTradeDealsSortTableData.eColm == TradeDealsSort.TYPE:
+						if(mh2data.objTradeDealsSortTableData.bAsc,
+							sortAscending(?{data: data.strType}, def.objTradeDealsData),
+							sortDescending(?{data: data.strType}, def.objTradeDealsData)
+						)
+					case mh2data.objTradeDealsSortTableData.eColm == TradeDealsSort.FLOW:
+						if(mh2data.objTradeDealsSortTableData.bAsc,
+							sortAscending(?{data: data.nFlow}, def.objTradeDealsData),
+							sortDescending(?{data: data.nFlow}, def.objTradeDealsData)
+						)
+					case mh2data.objTradeDealsSortTableData.eColm == TradeDealsSort.AID:
+						if(mh2data.objTradeDealsSortTableData.bAsc,
+							sortAscending(?{data: data.strAid}, def.objTradeDealsData),
+							sortDescending(?{data: data.strAid}, def.objTradeDealsData)
+						)
+					case mh2data.objTradeDealsSortTableData.eColm == TradeDealsSort.NATION:
+						if(mh2data.objTradeDealsSortTableData.bAsc,
+							sortAscending(?{data: data.strNation}, def.objTradeDealsData),
+							sortDescending(?{data: data.strNation}, def.objTradeDealsData)
+						)
+					case mh2data.objTradeDealsSortTableData.eColm == TradeDealsSort.COST:
+						if(mh2data.objTradeDealsSortTableData.bAsc,
+							sortAscending(?{data: data.nMoney}, def.objTradeDealsData),
+							sortDescending(?{data: data.nMoney}, def.objTradeDealsData)
+						)
+					default:
+                        LinkedList(def.objTradeDealsData)
+                }
+            </property>
+			<property name="nRowWidth" value="421"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="otRowType" value="UI2DTradeDealsBubble"/>
+			<property name="strPropForItem" value="objTradeDealData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>        
+	</objectDef>
+	
+	<objectDef type="UI2DTradeDealsRowBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int" default="0"/>
+		
+		<property name="nHeight" value="30"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" from="if(def.nRow % 2 == 0, 'skin.ImgRowBubbleGrey', 'skin.ImgRowBubbleWhite')"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DTradeDealsRowBubbleNation" superType="UI2DTradeDealsRowBubble">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		
+		<property name="nWidth" value="420"/>
+		<property name="nHeight" value="30"/>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>	
+		
+		<object type="mlui.UI2DText" name="objNationName">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objNation.strDisplayName"/>
+			<property name="nX" value="53"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="122"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DTradeDealsRowBubbleIcon" superType="UI2DTradeDealsRowBubble">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+	</objectDef>
+	
+	<objectDef type="UI2DTradeDealsRowBubbleButtons" superType="UI2DTradeDealsRowBubble">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="objTradeAgreement" type="gs_tbg.TradeAgreement"/>
+		
+		<object type="mlui.UI2DButton" name="objTradeButtonNegotiate">
+			<property name="tmplButtonStyle" value="skin.BtnStyleTradeButtonNegotiate"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="strToolTip" from="locale.SID.UI.Negotiate"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.objSelectedTradeAgreement.setTradeAgreement(def.objTradeAgreement);
+                            mh2data.strDiplomaticMessage = "";
+							spdata.objDiplomacyData.showInfo(def.objNation);
+							spdata.bIsMoreInfo = true;
+							mh2data.openDiplomaticActionAll(UI2DTradeAgreementRcvd)
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objTradeButtonCancel">
+			<property name="tmplButtonStyle" value="skin.BtnStyleTradeButtonCancel"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="strToolTip" from="locale.SID.UI.Cancel"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							//TODO: Check canCommand
+							var action = gs_tbg.GActCancelTradeAgreement.create({
+								"refTradeAgreement": def.objTradeAgreement,
+                                "objCancelingNation": def.objNation
+							});
+							mh2data.objAvatar.sendAction(action);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+		
+	<objectDef type="UI2DTradeDealsRowBubbleTextCenter" superType="UI2DTradeDealsRowBubble">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DTradeDealsBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objTradeDealData" type="TradeDealsData"/>
+		<propertyDef name="nRow" type="int"/>
+        
+		<object type="LookupResourceIcons" name="objLookupResourceIcons">
+			<property name="tmplResource" from="def.objTradeDealData.tmplResource"/>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+		
+			<!-- Type -->
+			<object type="UI2DTradeDealsRowBubbleIcon" name="objElements">
+				<property name="nWidth" value="31"/>
+				<property name="nRow" from="def.nRow"/>
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage" from="def.objLookupResourceIcons.tmplIcon32x32"/>
+					<property name="nX" value="-1"/>
+					<property name="nY" value="-1"/>
+					<property name="nWidth" value="32"/>
+					<property name="nHeight" value="32"/>
+				</object>
+			</object>
+			
+			<!-- Flow -->
+			<object type="UI2DTradeDealsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText" from="def.objTradeDealData.nFlow"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="33"/>
+			</object>
+						
+			<!-- Aid -->
+			<object type="UI2DTradeDealsRowBubbleIcon" name="objElements">
+				<property name="nWidth" value="31"/>
+				<property name="nRow" from="def.nRow"/>
+				<object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objTradeDealData.objTradeAgreement.bAid">
+					<property name="tmplImage" value="skin.ImgInfoIconAid"/>
+					<property name="nX" value="0"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="31"/>
+					<property name="nHeight" value="30"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+				</object>
+			</object>
+			
+			<!-- Nation -->
+			<object type="UI2DTradeDealsRowBubbleNation" name="objElements">
+				<property name="objNation" from="def.objTradeDealData.objNation"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+				<property name="nWidth" value="174"/>
+			</object>
+			
+			<!-- TradeCost/Revenues -->
+			<object type="UI2DTradeDealsRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle">
+					if(mh2data.objNation == def.objTradeDealData.objTradeAgreement.refSourceNation.resolve(mh2data.objAvatar),
+					'locale.TxtStyleArialGreen12Center', 'locale.TxtStyleArialRed12Center')
+				</property>
+				<property name="strText">
+						switch{
+							case def.objTradeDealData.objTradeAgreement.bAid:
+							'$0'
+							default:
+							'$' + def.objTradeDealData.nMoney.formatNumber(0, true)
+						}
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="100"/>
+			</object>
+			
+			<!-- Buttons -->
+			<object type="UI2DTradeDealsRowBubbleButtons" name="objElements">
+				<property name="objNation" from="def.objTradeDealData.objNation"/>
+				<property name="objTradeAgreement" from="def.objTradeDealData.objTradeAgreement"/>
+				<property name="nWidth" value="59"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+		
+		</object>
+	</objectDef>
+</locust>

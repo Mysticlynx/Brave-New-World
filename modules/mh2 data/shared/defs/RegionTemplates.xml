@@ -1,0 +1,1502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Terrain Templates -->
+    <template type="gs_tbg.TerrainTemplate" name="Plains">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.Plains"/>
+        <property name="bWater" value="false"/>
+        <property name="bImpassable" value="false"/>
+        <property name="nFoodCapacityModifier" value="0"/>
+        <property name="nFoodProductionModifier" value="0"/>
+        <property name="colColor" value="#DEFF00FF"/>
+    </template>
+    <template type="gs_tbg.TerrainTemplate" name="Hills">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.Hills"/>
+        <property name="bWater" value="false"/>
+        <property name="bImpassable" value="false"/>
+        <property name="nFoodCapacityModifier" value="-25"/>
+        <property name="nFoodProductionModifier" value="0"/>
+        <property name="colColor" value="#32821DFF"/>
+    </template>
+    <template type="gs_tbg.TerrainTemplate" name="Forests">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.Forests"/>
+        <property name="bWater" value="false"/>
+        <property name="bImpassable" value="false"/>
+        <property name="nFoodCapacityModifier" value="-25"/>
+        <property name="nFoodProductionModifier" value="-25"/>
+        <property name="colColor" value="#0A2D00FF"/>
+    </template>
+    <template type="gs_tbg.TerrainTemplate" name="Jungle">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.Jungle"/>
+        <property name="bWater" value="false"/>
+        <property name="bImpassable" value="false"/>
+        <property name="nFoodCapacityModifier" value="-50"/>
+        <property name="nFoodProductionModifier" value="-25"/>
+        <property name="colColor" value="#00AB00FF"/>
+    </template>
+    <template type="gs_tbg.TerrainTemplate" name="Mountains">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.Mountains"/>
+        <property name="bWater" value="false"/>
+        <property name="bImpassable" value="false"/>
+        <property name="nFoodCapacityModifier" value="-50"/>
+        <property name="nFoodProductionModifier" value="-50"/>
+        <property name="colColor" value="#9E6900FF"/>
+    </template>
+    <template type="gs_tbg.TerrainTemplate" name="Tundra">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.Tundra"/>
+        <property name="bWater" value="false"/>
+        <property name="bImpassable" value="false"/>
+        <property name="nFoodCapacityModifier" value="-75"/>
+        <property name="nFoodProductionModifier" value="-75"/>
+        <property name="colColor" value="#939393FF"/>
+    </template>
+    <template type="gs_tbg.TerrainTemplate" name="Desert">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.Desert"/>
+        <property name="bWater" value="false"/>
+        <property name="bImpassable" value="false"/>
+        <property name="nFoodCapacityModifier" value="-75"/>
+        <property name="nFoodProductionModifier" value="-75"/>
+        <property name="colColor" value="#FABC76FF"/>
+    </template>
+    <template type="gs_tbg.TerrainTemplate" name="Ocean">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.Ocean"/>
+        <property name="bWater" value="true"/>
+        <property name="bImpassable" value="false"/>
+        <property name="nFoodCapacityModifier" value="-100"/>
+        <property name="nFoodProductionModifier" value="-100"/>
+        <property name="colColor" value="#0000FFFF"/>
+    </template>
+    <template type="gs_tbg.TerrainTemplate" name="Lake">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.Lake"/>
+        <property name="bWater" value="true"/>
+        <property name="bImpassable" value="true"/>
+        <property name="nFoodCapacityModifier" value="-100"/>
+        <property name="nFoodProductionModifier" value="-100"/>
+        <property name="colColor" value="#0000FFFF"/>
+    </template>
+    <template type="gs_tbg.TerrainTemplate" name="PolarSea">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.PolarSea"/>
+        <property name="bWater" value="true"/>
+        <property name="bImpassable" value="true"/>
+        <property name="nFoodCapacityModifier" value="-100"/>
+        <property name="nFoodProductionModifier" value="-100"/>
+        <property name="colColor" value="#FFFFFFFF"/>
+    </template>
+    <template type="gs_tbg.TerrainTemplate" name="Polar">
+        <property name="strDisplayName" from="locale.SID.Terrain.DisplayName.Polar"/>
+        <property name="bWater" value="false"/>
+        <property name="bImpassable" value="true"/>
+        <property name="nFoodCapacityModifier" value="-100"/>
+        <property name="nFoodProductionModifier" value="-100"/>
+        <property name="colColor" value="#FFFFFFFF"/>
+    </template>
+
+    <!-- Region Output Category Templates -->
+    <template type="gs_tbg.RegionOutputCategoryTemplate" name="Transportation">
+        <property name="strDisplayName" from="locale.SID.RegionOutputCategory.DisplayName.Transportation"/>
+    </template>
+    <template type="gs_tbg.RegionOutputCategoryTemplate" name="Military">
+        <property name="strDisplayName" from="locale.SID.RegionOutputCategory.DisplayName.Military"/>
+    </template>
+    <template type="gs_tbg.RegionOutputCategoryTemplate" name="Food">
+        <property name="strDisplayName" from="locale.SID.RegionOutputCategory.DisplayName.Food"/>
+    </template>
+    <template type="gs_tbg.RegionOutputCategoryTemplate" name="Resources">
+        <property name="strDisplayName" from="locale.SID.RegionOutputCategory.DisplayName.Resources"/>
+    </template>
+
+    <!-- Region Output Templates -->
+    <template type="gs_tbg.AirbaseOutputTemplate" name="Airbase">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.Airbase"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAirbase"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionAirbase"/>
+        <property name="tmplCategory" value="Military"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplUnitBase" value="RegionAirbase"/>
+        <property name="nMPURequirement" value="10"/>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="AirInfrastructure"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="OilWell">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.OilWell"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionOilWell"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionOilWell"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="5"/>
+        <property name="tmplResourceImprovement" value="OilWell"/>
+        <property name="nAmount" value="5"/>
+        <property name="nMPURequirement" value="40"/>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="OilDrilling"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="DeepOilWell">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.DeepOilWell"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionDeepOilWell"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionDeepOilWell"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplResourceImprovement" value="DeepOilWell"/>
+        <property name="nAmount" value="10"/>
+        <property name="nMPURequirement" value="20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="DeepOilExtraction"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="DeepOilWellUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.DeepOilWellUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionDeepOilWellUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionDeepOilWellUpgrade"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="5"/>
+        <property name="tmplResourceImprovement" value="DeepOilWell"/>
+        <property name="nAmount" value="10"/>
+        <property name="tmplResourceImprovementToUpgrade" value="OilWell"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="OilWell"/>
+		</object>
+        <property name="nMPURequirement" value="-20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="DeepOilExtraction"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="OilRefinery">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.OilRefinery"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionOilRefinery"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionOilRefinery"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="20"/>
+        <property name="tmplResourceImprovement" value="OilRefinery"/>
+        <property name="nAmount" value="20"/>
+        <property name="nMPURequirement" value="20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="OilDistilationProcess"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="OilRefineryUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.OilRefineryUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionOilRefineryUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionOilRefineryUpgrade"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplResourceImprovement" value="OilRefinery"/>
+        <property name="nAmount" value="20"/>
+        <property name="tmplResourceImprovementToUpgrade" value="DeepOilWell"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="DeepOilWell"/>
+		</object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="OilDistilationProcess"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="CoalPit">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.CoalPit"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCoalPit"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionCoalPit"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="5"/>
+        <property name="tmplResourceImprovement" value="CoalPit"/>
+        <property name="nAmount" value="5"/>
+        <property name="nMPURequirement" value="40"/>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="SurfaceMining"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="CoalMine">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.CoalMine"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCoalMine"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionCoalMine"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplResourceImprovement" value="CoalMine"/>
+        <property name="nAmount" value="10"/>
+        <property name="nMPURequirement" value="20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="ImprovedExcavationMethods"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="CoalMineUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.CoalMineUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCoalMineUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionCoalMineUpgrade"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="5"/>
+        <property name="tmplResourceImprovement" value="CoalMine"/>
+        <property name="nAmount" value="10"/>
+        <property name="tmplResourceImprovementToUpgrade" value="CoalPit"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="CoalPit"/>
+		</object>
+        <property name="nMPURequirement" value="-20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="ImprovedExcavationMethods"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="DeepShaftCoalMine">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.DeepShaftCoalMine"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionDeepShaftCoalMine"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionDeepShaftCoalMine"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="20"/>
+        <property name="tmplResourceImprovement" value="DeepShaftCoalMine"/>
+        <property name="nAmount" value="20"/>
+        <property name="nMPURequirement" value="20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="MineMechanization"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="DeepShaftCoalMineUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.DeepShaftCoalMineUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionDeepShaftCoalMineUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionDeepShaftCoalMineUpgrade"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplResourceImprovement" value="DeepShaftCoalMine"/>
+        <property name="nAmount" value="20"/>
+        <property name="tmplResourceImprovementToUpgrade" value="CoalMine"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="CoalMine"/>
+		</object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="MineMechanization"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="IronPit">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.IronPit"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionIronPit"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionIronPit"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="5"/>
+        <property name="tmplResourceImprovement" value="IronPit"/>
+        <property name="nAmount" value="5"/>
+        <property name="nMPURequirement" value="40"/>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="SurfaceMining"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="Foundry">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.Foundry"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFoundry"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionFoundry"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplResourceImprovement" value="Foundry"/>
+        <property name="nAmount" value="10"/>
+        <property name="nMPURequirement" value="20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="ImprovedExcavationMethods"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="IronMineUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.IronMineUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionIronMineUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionIronMineUpgrade"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="5"/>
+        <property name="tmplResourceImprovement" value="Foundry"/>
+        <property name="nAmount" value="10"/>
+        <property name="tmplResourceImprovementToUpgrade" value="IronPit"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="IronPit"/>
+		</object>
+        <property name="nMPURequirement" value="-20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="ImprovedExcavationMethods"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="DeepShaftIronMine">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.DeepShaftIronMine"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionDeepShaftIronMine"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionDeepShaftIronMine"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="20"/>
+        <property name="tmplResourceImprovement" value="DeepShaftIronMine"/>
+        <property name="nAmount" value="20"/>
+        <property name="nMPURequirement" value="20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="MineMechanization"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="DeepShaftIronMineUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.DeepShaftIronMineUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionDeepShaftIronMineUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionDeepShaftIronMineUpgrade"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplResourceImprovement" value="DeepShaftIronMine"/>
+        <property name="nAmount" value="20"/>
+        <property name="tmplResourceImprovementToUpgrade" value="Foundry"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="Foundry"/>
+		</object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="MineMechanization"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="OpenFieldFarm">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.OpenFieldFarm"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionOpenFieldFarm"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionOpenFieldFarm"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplResourceImprovement" value="OpenFieldFarm"/>
+        <property name="nAmount" value="5"/>
+        <property name="nMPURequirement" value="30"/>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="SubsistenceEconomy"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="EnclosedFarm">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.EnclosedFarm"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionEnclosedFarm"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionEnclosedFarm"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="15"/>
+        <property name="tmplResourceImprovement" value="EnclosedFarm"/>
+        <property name="nAmount" value="15"/>
+        <property name="nMPURequirement" value="30"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="CropRotation"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="EnclosedFarmUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.EnclosedFarmUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionEnclosedFarmUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionEnclosedFarmUpgrade"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="5"/>
+        <property name="tmplResourceImprovement" value="EnclosedFarm"/>
+        <property name="nAmount" value="15"/>
+        <property name="tmplResourceImprovementToUpgrade" value="OpenFieldFarm"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="OpenFieldFarm"/>
+		</object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="25"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="CropRotation"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="Plantation">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.Plantation"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionPlantation"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionPlantation"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="20"/>
+        <property name="tmplResourceImprovement" value="Plantation"/>
+        <property name="nAmount" value="25"/>
+        <property name="nMPURequirement" value="100"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="75"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="AgrarianReform"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="PlantationUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.PlantationUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionPlantationUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionPlantationUpgrade"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplResourceImprovement" value="Plantation"/>
+        <property name="nAmount" value="25"/>
+        <property name="tmplResourceImprovementToUpgrade" value="OpenFieldFarm"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="OpenFieldFarm"/>
+		</object>
+        <property name="nMPURequirement" value="70"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="75"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="AgrarianReform"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="CollectiveFarms">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.CollectiveFarms"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCollectiveFarms"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionCollectiveFarms"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="25"/>
+        <property name="tmplResourceImprovement" value="CollectiveFarms"/>
+        <property name="nAmount" value="25"/>
+        <property name="nMPURequirement" value="45"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="125"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="75"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="ChemicalFertilizers"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="CollectiveFarmsUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.CollectiveFarmsUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCollectiveFarmsUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionCollectiveFarmsUpgrade"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplResourceImprovement" value="CollectiveFarms"/>
+        <property name="nAmount" value="25"/>
+        <property name="tmplResourceImprovementToUpgrade" value="EnclosedFarm"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="EnclosedFarm"/>
+		</object>
+        <property name="nMPURequirement" value="15"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="75"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="ChemicalFertilizers"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="MechanizedFarm">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.MechanizedFarm"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMechanizedFarm"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionMechanizedFarm"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="30"/>
+        <property name="tmplResourceImprovement" value="MechanizedFarm"/>
+        <property name="nAmount" value="20"/>
+        <property name="nMPURequirement" value="30"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="175"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="FarmMechanization"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="MechanizedFarmUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.MechanizedFarmUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMechanizedFarmUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionMechanizedFarmUpgrade"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="15"/>
+        <property name="tmplResourceImprovement" value="MechanizedFarm"/>
+        <property name="nAmount" value="20"/>
+        <property name="tmplResourceImprovementToUpgrade" value="EnclosedFarm"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="EnclosedFarm"/>
+		</object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="150"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="FarmMechanization"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="FactoryFarm">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.FactoryFarm"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFactoryFarm"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionFactoryFarm"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="35"/>
+        <property name="tmplResourceImprovement" value="FactoryFarm"/>
+        <property name="nAmount" value="25"/>
+        <property name="nMPURequirement" value="25"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="275"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="150"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="Antibiotics"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="FactoryFarmUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.FactoryFarmUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFactoryFarmUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionFactoryFarmUpgrade"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="5"/>
+        <property name="tmplResourceImprovement" value="FactoryFarm"/>
+        <property name="nAmount" value="25"/>
+        <property name="tmplResourceImprovementToUpgrade" value="MechanizedFarm"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="MechanizedFarm"/>
+		</object>
+        <property name="nMPURequirement" value="-5"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="Antibiotics"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="CorporateFarm">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.CorporateFarm"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCorporateFarm"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionCorporateFarm"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="40"/>
+        <property name="tmplResourceImprovement" value="CorporateFarm"/>
+        <property name="nAmount" value="30"/>
+        <property name="nMPURequirement" value="20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="375"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="SyntheticPesticides"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProducerOutputTemplate" name="CorporateFarmUpgrade">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.CorporateFarmUpgrade"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCorporateFarmUpgrade"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionCorporateFarmUpgrade"/>
+        <property name="tmplCategory" value="Food"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="5"/>
+        <property name="tmplResourceImprovement" value="CorporateFarm"/>
+        <property name="nAmount" value="30"/>
+        <property name="tmplResourceImprovementToUpgrade" value="FactoryFarm"/>
+        <!-- also specify the resource improvement as a prerequisite of the upgrade -->
+		<object type="gs_tbg.RegionRequirementResourceImprovement" name="objRegionRequirements">
+			<property name="tmplResourceImprovement" value="FactoryFarm"/>
+		</object>
+        <property name="nMPURequirement" value="-5"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="SyntheticPesticides"/>
+        </object>
+    </template>
+    <template type="gs_tbg.TransportationOutputTemplate" name="UnpavedRoads">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.UnpavedRoads"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionUnpavedRoads"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionUnpavedRoads"/>
+        <property name="tmplCategory" value="Transportation"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplTransportationImprovement" value="UnpavedRoads"/>
+        <property name="nMPURequirement" value="7"/>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="CompulsoryMilitaryService"/>
+        </object>
+    </template>
+    <template type="gs_tbg.TransportationOutputTemplate" name="Railroads">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.Railroads"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionRailroads"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionRailroads"/>
+        <property name="tmplCategory" value="Transportation"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="15"/>
+        <property name="tmplTransportationImprovement" value="Railroads"/>
+        <property name="nMPURequirement" value="14"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="400"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="InterchangeableParts"/>
+        </object>
+    </template>
+    <template type="gs_tbg.TransportationOutputTemplate" name="PavedRoadways">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.PavedRoadways"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionPavedRoadways"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionPavedRoadways"/>
+        <property name="tmplCategory" value="Transportation"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="20"/>
+        <property name="tmplTransportationImprovement" value="PavedRoadways"/>
+        <property name="nMPURequirement" value="21"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Oil"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="TarmacadamRoadways"/>
+        </object>
+    </template>
+    <template type="gs_tbg.TransportationOutputTemplate" name="Highways">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.Highways"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionHighways"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionHighways"/>
+        <property name="tmplCategory" value="Transportation"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="25"/>
+        <property name="tmplTransportationImprovement" value="Highways"/>
+        <property name="nMPURequirement" value="28"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Oil"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="AdvancedInfrastructure"/>
+        </object>
+    </template>
+    <template type="gs_tbg.TransportationOutputTemplate" name="RailDieselization">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.RailDieselization"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionRailDieselization"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionRailDieselization"/>
+        <property name="tmplCategory" value="Transportation"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="30"/>
+        <property name="tmplTransportationImprovement" value="RailDieselization"/>
+        <property name="nMPURequirement" value="35"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Oil"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="DigitalComputers"/>
+        </object>
+    </template>
+    <template type="gs_tbg.TransportationOutputTemplate" name="Freeways">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.Freeways"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFreeways"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionFreeways"/>
+        <property name="tmplCategory" value="Transportation"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="35"/>
+        <property name="tmplTransportationImprovement" value="Freeways"/>
+        <property name="nMPURequirement" value="42"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Oil"/>
+            <property name="nAmount" value="300"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="AdvancedPhysics"/>
+        </object>
+    </template>
+	<template type="gs_tbg.FortificationOutputTemplate" name="Earthworks">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.Earthworks"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionEarthworks"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionEarthworks"/>
+        <property name="tmplCategory" value="Military"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="5"/>
+        <property name="tmplFortificationImprovement" value="Earthworks"/>
+        <property name="nMPURequirement" value="10"/>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="CompulsoryMilitaryService"/>
+        </object>
+    </template>
+	<template type="gs_tbg.FortificationOutputTemplate" name="ConcreteFortifications">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.Pillboxes"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionPillboxes"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionPillboxes"/>
+        <property name="tmplCategory" value="Military"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="10"/>
+        <property name="tmplFortificationImprovement" value="ConcreteFortifications"/>
+        <property name="nMPURequirement" value="20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="ConcreteFortifications"/>
+        </object>
+    </template>
+	<template type="gs_tbg.FortificationOutputTemplate" name="FortifiedDefenseLine">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.FortifiedDefenseLine"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFortifiedDefenseLine"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionFortifiedDefenseLine"/>
+        <property name="tmplCategory" value="Military"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="15"/>
+        <property name="tmplFortificationImprovement" value="FortifiedDefenseLine"/>
+        <property name="nMPURequirement" value="30"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="EngineeringSciences"/>
+        </object>
+    </template>
+	<template type="gs_tbg.AADefenseOutputTemplate" name="AntiAirBatteries">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.AntiAirBatteries"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionAntiAirBatteries"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionAntiAirBatteries"/>
+        <property name="tmplCategory" value="Military"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="5"/>
+		<property name="tmplAADefenseImprovement" value="AntiAirBatteries"/>
+        <property name="nMPURequirement" value="10"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="EarlyCounterAirDefence"/>
+        </object>
+    </template>
+	<template type="gs_tbg.AADefenseOutputTemplate" name="EarlyWarningRadar">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.EarlyWarningRadar"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionEarlyWarningRadar"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionEarlyWarningRadar"/>
+        <property name="tmplCategory" value="Military"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="10"/>
+		<property name="tmplAADefenseImprovement" value="EarlyWarningRadar"/>
+        <property name="nMPURequirement" value="20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="AdvancedInfrastructure"/>
+        </object>
+    </template>
+	<template type="gs_tbg.AADefenseOutputTemplate" name="GroundControlledInterception">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.GroundControlledInterception"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionGroundControlledInterception"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionGroundControlledInterception"/>
+        <property name="tmplCategory" value="Military"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="15"/>
+		<property name="tmplAADefenseImprovement" value="GroundControlledInterception"/>
+        <property name="nMPURequirement" value="30"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="150"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="BombingCountermeasures"/>
+        </object>
+    </template>
+	<template type="gs_tbg.AADefenseOutputTemplate" name="FlakTowers">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.FlakTowers"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionFlakTowers"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionFlakTowers"/>
+        <property name="tmplCategory" value="Military"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="20"/>
+		<property name="tmplAADefenseImprovement" value="FlakTowers"/>
+        <property name="nMPURequirement" value="40"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="FlakCannons"/>
+        </object>
+    </template>
+	<template type="gs_tbg.CoastalDefenseOutputTemplate" name="ShoreBatteries">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.ShoreBatteries"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionShoreBatteries"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionShoreBatteries"/>
+        <property name="tmplCategory" value="Military"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="10"/>
+		<property name="tmplCoastalDefenseImprovement" value="ShoreBatteries"/>
+        <property name="nMPURequirement" value="20"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="100"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="ConcreteFortifications"/>
+        </object>
+    </template>
+	<template type="gs_tbg.CoastalDefenseOutputTemplate" name="IntegratedCoastalDefense">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.IntegratedCoastalDefense"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionIntegratedCoastalDefense"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionIntegratedCoastalDefense"/>
+        <property name="tmplCategory" value="Military"/>
+        <property name="bMultiple" value="false"/>
+        <property name="nTurns" value="20"/>
+		<property name="tmplCoastalDefenseImprovement" value="IntegratedCoastalDefense"/>
+        <property name="nMPURequirement" value="30"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Metals"/>
+            <property name="nAmount" value="200"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="EngineeringSciences"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProspectingOutputTemplate" name="LandClearing">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.LandClearing"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionLandClearing"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionLandClearing"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="25"/>
+        <property name="tmplResource" value="Food"/>
+        <property name="nAmount" value="1"/>
+        <property name="nMPURequirement" value="10"/>
+        <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="50"/>
+        </object>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="FarmMechanization"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProspectingOutputTemplate" name="OilExploration">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.OilExploration"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionOilExploration"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionOilExploration"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="40"/>
+        <property name="tmplResource" value="Oil"/>
+        <property name="nAmount" value="1"/>
+        <property name="nMPURequirement" value="10"/>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="DigitalComputers"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProspectingOutputTemplate" name="CoalExploration">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.CoalExploration"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionCoalExploration"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionCoalExploration"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="30"/>
+        <property name="tmplResource" value="Coal"/>
+        <property name="nAmount" value="1"/>
+        <property name="nMPURequirement" value="10"/>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="Electromagnetism"/>
+        </object>
+    </template>
+    <template type="gs_tbg.ResourceProspectingOutputTemplate" name="MetalsExploration">
+        <property name="strDisplayName" from="locale.SID.RegionOutput.DisplayName.MetalsExploration"/>
+        <property name="strEncyclopediaDescription" from="locale.SID.UI.EncyclopediaDescriptionMetalsExploration"/>
+		<property name="strShortDescription" from="locale.SID.UI.ShortDescriptionMetalsExploration"/>
+        <property name="tmplCategory" value="Resources"/>
+        <property name="bMultiple" value="true"/>
+        <property name="nTurns" value="30"/>
+        <property name="tmplResource" value="Metals"/>
+        <property name="nAmount" value="1"/>
+        <property name="nMPURequirement" value="10"/>
+        <object type="gs_tbg.RegionRequirementResearchProject" name="objRegionRequirements">
+            <property name="tmplResearchTopic" value="Electromagnetism"/>
+        </object>
+    </template>
+
+    <template type="TemplateList" name="RegionOutputTemplateList">
+        <property name="otTemplateType" value="gs_tbg.RegionOutputTemplate"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::Airbase"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::OilWell"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::DeepOilWell"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::DeepOilWellUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::OilRefinery"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::OilRefineryUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::CoalPit"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::CoalMine"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::CoalMineUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::DeepShaftCoalMine"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::DeepShaftCoalMineUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::IronPit"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::Foundry"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::IronMineUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::DeepShaftIronMine"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::DeepShaftIronMineUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::OpenFieldFarm"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::EnclosedFarm"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::EnclosedFarmUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::Plantation"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::PlantationUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::CollectiveFarms"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::CollectiveFarmsUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::MechanizedFarm"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::MechanizedFarmUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::FactoryFarm"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::FactoryFarmUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::CorporateFarm"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::CorporateFarmUpgrade"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::UnpavedRoads"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::Railroads"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::PavedRoadways"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::Highways"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::RailDieselization"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::Freeways"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::Earthworks"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::ConcreteFortifications"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::FortifiedDefenseLine"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::AntiAirBatteries"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::EarlyWarningRadar"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::GroundControlledInterception"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::FlakTowers"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::ShoreBatteries"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::IntegratedCoastalDefense"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::LandClearing"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::OilExploration"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::CoalExploration"/>
+        <property name="tmplRefs" value="gs_tbg.RegionOutputTemplate::MetalsExploration"/>
+    </template>
+
+    <!-- Resource Improvement Templates -->
+    <template type="gs_tbg.ResourceImprovementTemplate" name="OilWell">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.OilWell"/>
+        <property name="nAmount" value="5"/>
+        <property name="nMaintenanceCost" value="500000"/>
+        <property name="nMPUs" value="40"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Oil"/>
+		<property name="nLevel" value="1"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="DeepOilWell">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.DeepOilWell"/>
+        <property name="nAmount" value="10"/>
+        <property name="nMaintenanceCost" value="1000000"/>
+        <property name="nMPUs" value="20"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Oil"/>
+		<property name="nLevel" value="2"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="OilRefinery">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.OilRefinery"/>
+        <property name="nAmount" value="20"/>
+        <property name="nMaintenanceCost" value="2000000"/>
+        <property name="nMPUs" value="20"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Oil"/>
+		<property name="nLevel" value="3"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="CoalPit">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.CoalPit"/>
+        <property name="nAmount" value="5"/>
+        <property name="nMaintenanceCost" value="500000"/>
+        <property name="nMPUs" value="40"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Coal"/>
+		<property name="nLevel" value="1"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="CoalMine">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.CoalMine"/>
+        <property name="nAmount" value="10"/>
+        <property name="nMaintenanceCost" value="1000000"/>
+        <property name="nMPUs" value="20"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Coal"/>
+		<property name="nLevel" value="2"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="DeepShaftCoalMine">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.DeepShaftCoalMine"/>
+        <property name="nAmount" value="20"/>
+        <property name="nMaintenanceCost" value="2000000"/>
+        <property name="nMPUs" value="20"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Coal"/>
+		<property name="nLevel" value="3"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="IronPit">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.IronPit"/>
+        <property name="nAmount" value="5"/>
+        <property name="nMaintenanceCost" value="500000"/>
+        <property name="nMPUs" value="40"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Metals"/>
+		<property name="nLevel" value="1"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="Foundry">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.Foundry"/>
+        <property name="nAmount" value="10"/>
+        <property name="nMaintenanceCost" value="1000000"/>
+        <property name="nMPUs" value="20"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Metals"/>
+		<property name="nLevel" value="2"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="DeepShaftIronMine">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.DeepShaftIronMine"/>
+        <property name="nAmount" value="20"/>
+        <property name="nMaintenanceCost" value="2000000"/>
+        <property name="nMPUs" value="20"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Metals"/>
+		<property name="nLevel" value="3"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="OpenFieldFarm">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.OpenFieldFarm"/>
+        <property name="nAmount" value="5"/>
+        <property name="nMaintenanceCost" value="750000"/>
+        <property name="nMPUs" value="30"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Food"/>
+		<property name="nLevel" value="1"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="EnclosedFarm">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.EnclosedFarm"/>
+        <property name="nAmount" value="15"/>
+        <property name="nMaintenanceCost" value="1500000"/>
+        <property name="nMPUs" value="30"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Food"/>
+		<property name="nLevel" value="2"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="Plantation">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.Plantation"/>
+        <property name="nAmount" value="25"/>
+        <property name="nMaintenanceCost" value="1750000"/>
+        <property name="nMPUs" value="100"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Food"/>
+		<property name="nLevel" value="3"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="CollectiveFarms">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.CollectiveFarms"/>
+        <property name="nAmount" value="25"/>
+        <property name="nMaintenanceCost" value="2250000"/>
+        <property name="nMPUs" value="45"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Food"/>
+		<property name="nLevel" value="4"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="MechanizedFarm">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.MechanizedFarm"/>
+        <property name="nAmount" value="20"/>
+        <property name="nMaintenanceCost" value="1350000"/>
+        <property name="nMPUs" value="30"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Food"/>
+		<property name="nLevel" value="5"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="FactoryFarm">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.FactoryFarm"/>
+        <property name="nAmount" value="25"/>
+        <property name="nMaintenanceCost" value="2000000"/>
+        <property name="nMPUs" value="25"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Food"/>
+		<property name="nLevel" value="6"/>
+    </template>
+    <template type="gs_tbg.ResourceImprovementTemplate" name="CorporateFarm">
+        <property name="strDisplayName" from="locale.SID.ResourceImprovement.DisplayName.CorporateFarm"/>
+        <property name="nAmount" value="30"/>
+        <property name="nMaintenanceCost" value="2500000"/>
+        <property name="nMPUs" value="20"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="tmplResource" value="Food"/>
+		<property name="nLevel" value="7"/>
+    </template>
+
+	<!-- Transportation Improvement Templates -->
+	<template type="gs_tbg.TransportationImprovementTemplate" name="UnpavedRoads">
+		<property name="strDisplayName" from="locale.SID.TransportationImprovement.DisplayName.UnpavedRoads"/>
+		<property name="colColor" value="#9A700DFF"/>
+		<property name="nMaintenanceCost" value="100000"/>
+        <property name="nModifierValue" value="25"/>
+        <property name="nMPUGrowthModifier" value="7"/>
+        <property name="nMPUs" value="7"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nLevel" value="0"/>
+    </template>
+	<template type="gs_tbg.TransportationImprovementTemplate" name="Railroads">
+		<property name="strDisplayName" from="locale.SID.TransportationImprovement.DisplayName.Railroads"/>
+		<property name="colColor" value="#6C71B9FF"/>
+		<property name="nMaintenanceCost" value="200000"/>
+        <property name="nModifierValue" value="50"/>
+        <property name="nMPUGrowthModifier" value="14"/>
+        <property name="nMPUs" value="14"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nLevel" value="1"/>
+    </template>
+	<template type="gs_tbg.TransportationImprovementTemplate" name="PavedRoadways">
+		<property name="strDisplayName" from="locale.SID.TransportationImprovement.DisplayName.PavedRoadways"/>
+		<property name="colColor" value="#868686FF"/>
+		<property name="nMaintenanceCost" value="300000"/>
+        <property name="nModifierValue" value="75"/>
+        <property name="nMPUGrowthModifier" value="21"/>
+        <property name="nMPUs" value="21"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nLevel" value="2"/>
+    </template>
+	<template type="gs_tbg.TransportationImprovementTemplate" name="Highways">
+		<property name="strDisplayName" from="locale.SID.TransportationImprovement.DisplayName.Highways"/>
+		<property name="colColor" value="#FFF87BFF"/>
+		<property name="nMaintenanceCost" value="400000"/>
+        <property name="nModifierValue" value="100"/>
+        <property name="nMPUGrowthModifier" value="28"/>
+        <property name="nMPUs" value="28"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nLevel" value="3"/>
+    </template>
+	<template type="gs_tbg.TransportationImprovementTemplate" name="RailDieselization">
+		<property name="strDisplayName" from="locale.SID.TransportationImprovement.DisplayName.RailDieselization"/>
+		<property name="colColor" value="#00C1C8FF"/>
+		<property name="nMaintenanceCost" value="500000"/>
+        <property name="nModifierValue" value="150"/>
+        <property name="nMPUGrowthModifier" value="35"/>
+        <property name="nMPUs" value="35"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nLevel" value="4"/>
+    </template>
+	<template type="gs_tbg.TransportationImprovementTemplate" name="Freeways">
+		<property name="strDisplayName" from="locale.SID.TransportationImprovement.DisplayName.Freeways"/>
+		<property name="colColor" value="#85FF7BFF"/>
+		<property name="nMaintenanceCost" value="600000"/>
+        <property name="nModifierValue" value="200"/>
+        <property name="nMPUGrowthModifier" value="42"/>
+        <property name="nMPUs" value="42"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nLevel" value="5"/>
+    </template>
+
+	<!-- Fortification Improvement Templates -->
+	<template type="gs_tbg.FortificationImprovementTemplate" name="Earthworks">
+		<property name="strDisplayName" from="locale.SID.FortificationImprovement.DisplayName.Earthworks"/>
+        <property name="nMaintenanceCost" value="100000"/>
+        <property name="nMPUs" value="10"/>
+        <property name="colColor" value="#000000FF"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nLevel" value="0"/>
+		<object type="gs_tbg.CombatModifier" name="objCombatModifiers">
+			<property name="eCombatProperty" value="COMBAT_PROPERTY_RESISTANCE"/>
+			<property name="nModifierValue" value="10"/>
+		</object>
+	</template>
+	<template type="gs_tbg.FortificationImprovementTemplate" name="ConcreteFortifications">
+		<property name="strDisplayName" from="locale.SID.FortificationImprovement.DisplayName.Pillboxes"/>
+        <property name="nMaintenanceCost" value="200000"/>
+        <property name="nMPUs" value="20"/>
+        <property name="colColor" value="#717171FF"/>
+        <property name="nHitPoints" value="200"/>
+        <property name="nLevel" value="1"/>
+		<object type="gs_tbg.CombatModifier" name="objCombatModifiers">
+			<property name="eCombatProperty" value="COMBAT_PROPERTY_RESISTANCE"/>
+			<property name="nModifierValue" value="20"/>
+		</object>
+	</template>
+	<template type="gs_tbg.FortificationImprovementTemplate" name="FortifiedDefenseLine">
+		<property name="strDisplayName" from="locale.SID.FortificationImprovement.DisplayName.FortifiedDefenseLine"/>
+        <property name="nMaintenanceCost" value="300000"/>
+        <property name="nMPUs" value="30"/>
+        <property name="colColor" value="#481D00FF"/>
+        <property name="nHitPoints" value="300"/>
+        <property name="nLevel" value="2"/>
+		<object type="gs_tbg.CombatModifier" name="objCombatModifiers">
+			<property name="eCombatProperty" value="COMBAT_PROPERTY_RESISTANCE"/>
+			<property name="nModifierValue" value="30"/>
+		</object>
+	</template>
+
+	<!-- AADefense Improvement Templates -->
+	<template type="gs_tbg.AADefenseImprovementTemplate" name="AntiAirBatteries">
+		<property name="strDisplayName" from="locale.SID.AADefenseImprovement.DisplayName.AntiAirBatteries"/>
+		<property name="nMaintenanceCost" value="100000"/>
+        <property name="nMPUs" value="30"/>
+        <property name="nHitPoints" value="300"/>
+        <property name="nShots" value="6"/>
+		<property name="nPercentHit" value="50"/>
+        <property name="colColor" value="#174AB9FF"/>
+        <property name="nLevel" value="0"/>
+    </template>
+	<template type="gs_tbg.AADefenseImprovementTemplate" name="EarlyWarningRadar">
+		<property name="strDisplayName" from="locale.SID.AADefenseImprovement.DisplayName.EarlyWarningRadar"/>
+		<property name="nMaintenanceCost" value="200000"/>
+        <property name="nMPUs" value="30"/>
+        <property name="nHitPoints" value="300"/>
+        <property name="nShots" value="10"/>
+		<property name="nPercentHit" value="60"/>
+        <property name="colColor" value="#CD002CFF"/>
+        <property name="nLevel" value="1"/>
+    </template>
+	<template type="gs_tbg.AADefenseImprovementTemplate" name="GroundControlledInterception">
+		<property name="strDisplayName" from="locale.SID.AADefenseImprovement.DisplayName.GroundControlledInterception"/>
+		<property name="nMaintenanceCost" value="300000"/>
+        <property name="nMPUs" value="30"/>
+        <property name="nHitPoints" value="300"/>
+        <property name="nShots" value="13"/>
+		<property name="nPercentHit" value="70"/>
+        <property name="colColor" value="#E4EA24FF"/>
+        <property name="nLevel" value="2"/>
+    </template>
+	<template type="gs_tbg.AADefenseImprovementTemplate" name="FlakTowers">
+		<property name="strDisplayName" from="locale.SID.AADefenseImprovement.DisplayName.FlakTowers"/>
+		<property name="nMaintenanceCost" value="400000"/>
+        <property name="nMPUs" value="30"/>
+        <property name="nHitPoints" value="300"/>
+        <property name="nShots" value="15"/>
+		<property name="nPercentHit" value="80"/>
+        <property name="colColor" value="#19EAE7FF"/>
+        <property name="nLevel" value="3"/>
+    </template>
+
+	<!-- CoastalDefense Improvement Templates -->
+	<template type="gs_tbg.CoastalDefenseImprovementTemplate" name="ShoreBatteries">
+		<property name="strDisplayName" from="locale.SID.CoastalDefenseImprovement.DisplayName.ShoreBatteries"/>
+		<property name="nMaintenanceCost" value="100000"/>
+        <property name="nMPUs" value="20"/>
+        <property name="colColor" value="#000BCFFF"/>
+        <property name="nHitPoints" value="100"/>
+        <property name="nShots" value="10"/>
+		<property name="nPercentHit" value="60"/>
+		<object type="gs_tbg.CombatModifier" name="objCombatModifiers">
+			<property name="eCombatProperty" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+			<property name="nModifierValue" value="25"/>
+		</object>
+        <property name="nLevel" value="0"/>
+    </template>
+	<template type="gs_tbg.CoastalDefenseImprovementTemplate" name="IntegratedCoastalDefense">
+		<property name="strDisplayName" from="locale.SID.CoastalDefenseImprovement.DisplayName.IntegratedCoastalDefense"/>
+		<property name="nMaintenanceCost" value="200000"/>
+        <property name="nMPUs" value="30"/>
+        <property name="colColor" value="#1CCF00FF"/>
+        <property name="nHitPoints" value="200"/>
+        <property name="nShots" value="15"/>
+		<property name="nPercentHit" value="80"/>
+		<object type="gs_tbg.CombatModifier" name="objCombatModifiers">
+			<property name="eCombatProperty" value="COMBAT_PROPERTY_LAND_DEFENSE"/>
+			<property name="nModifierValue" value="50"/>
+		</object>
+        <property name="nLevel" value="1"/>
+    </template>
+
+	<!-- Airbase Improvement Templates -->
+    <template type="gs_tbg.UnitBaseTemplate" name="RegionAirbase">
+        <property name="strDisplayName" from="locale.SID.AirbaseImprovement.DisplayName.Airbase"/>
+        <property name="nMaintenanceCost" value="1000000"/>
+        <property name="nMPUs" value="10"/>
+        <property name="nHitPoints" value="100"/>
+    </template>
+
+    <template type="gs_tbg.NavalBaseTemplate" name="NavalBase">
+    </template>
+
+</locust>

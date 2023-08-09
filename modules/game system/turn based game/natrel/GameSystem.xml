@@ -1,0 +1,1107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GameSysNationRelations" class="CMLOGameSysNationRelations" superType="mlgame.GameSystem">
+		<propertyDef name="objDiplomaticRelations" type="DiplomaticRelations" variable="true" storesChildren="true"/>
+		<propertyDef name="objEmbargos" type="Embargo" variable="true" storesChildren="true"/>
+		<propertyDef name="objWars" type="War" variable="true" storesChildren="true"/>
+		<propertyDef name="objTreaties" type="Treaty" variable="true" storesChildren="true"/>
+		<propertyDef name="objAlliances" type="Alliance" variable="true" storesChildren="true"/>
+		<propertyDef name="objAllianceMemberships" type="AllianceMembership" variable="true" storesChildren="true"/>
+		<propertyDef name="objHistoricNations" type="HistoricNation" variable="true" storesChildren="true"/>
+		<propertyDef name="objAccessAgreements" type="AccessAgreement" variable="true" storesChildren="true"/>
+		<propertyDef name="tmplDiplomaticRelationLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+        <propertyDef name="tmplRevoltRiskLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList" desc="deprecated"/>
+        <propertyDef name="tmplRegionStabilityLevels" type="TemplateRef" restriction="mh2_common.RangedTemplateList"/>
+        <propertyDef name="nMaxRevoltRisk" type="int" default="1000"/>
+		<propertyDef name="bWantDebugLog" type="bool" default="false"/>
+        <propertyDef name="randGen" type="Random"/>
+        <propertyDef name="nDefaultDiplomaticRelations" type="int" default="400"/>
+        <propertyDef name="nDDRSameNation" type="int" default="-400"/>
+        <propertyDef name="nDDRSameNationality" type="int" default="20"/>
+        <propertyDef name="nDDRSameReligion" type="int" default="50"/>
+        <propertyDef name="nDDRSameCulture" type="int" default="50"/>
+        <propertyDef name="nDDRAreAllies" type="int" default="100"/>
+        <propertyDef name="nDDRAtWar" type="int" default="-300"/>
+        <propertyDef name="objWarDeclarationEffectsTemplate" type="WarDeclarationEffectsTemplate" desc="deprecated"/>
+        <propertyDef name="objDiplomaticEffectsTemplate" type="DiplomaticEffectsTemplate"/>
+
+        <!-- builtin method signatures:
+			bool declareWar(gameroot, declaringNation, targetNation, eJustification, message)
+			bool placeEmbargo(gameroot, declaringNation, embargoedNation)
+			bool liftEmbargo(gameroot, declaringNation, embargoedNation)
+			bool proposeAlliance(gameroot, proposingNation, receivingNation, message)
+			bool proposeMilitaryAccessTreaty(gameroot, proposingNation, receivingNation, message)
+			bool proposePortAccessTreaty(gameroot, proposingNation, receivingNation, message)
+			bool ratifyTreaty(gameroot, treaty, message)
+			bool rejectTreaty(gameroot, treaty, message)
+            bool leaveAlliance(game, nation)
+			War getWarEx(gameroot, nation1, nation2, bConsiderChildNations) // Ex because there is a query called getWar...
+			DiplomaticRelations getDiplomaticRelations(nation1, nation2)
+			bool areAllies(gameroot, nation1, nation2, bConsiderChildNations)
+			bool areAlliedWithEnemy(gameroot, ourNation, otherNation, bConsiderChildNations)
+			bool areAlliedWithEnemyExcludingNation(gameroot, ourNation, otherNation, excludeNation, bConsiderChildNations)
+			getEnemies(gameroot,nation,enemyNations)
+            hasLandAccess(gameroot,nation,region)
+            hasNationLandAccess(gameroot,nation,otherNation)
+            hasNationPortAccess(gameroot,nation,otherNation)
+			atWar(nation)
+            getOccupiedRegions(gameRoot,occupierNation,otherNation,regions)
+	        separateRegionsOfHistoricInterest(gameRoot,nation,regions,historicRegions,nonHistoricRegions)
+			
+			RegionStabilityTemplate getRegionStabilityTemplate(nRegionStability)
+			-->
+
+		<script type="application/javascript">
+                    <![CDATA[
+
+			function handleGameStarted(game,eventGameStarted)
+			{
+				setRandomSeed(eventGameStarted.nSeed);
+			}
+
+            function setRandomSeed(nSeed)
+			{
+				var strSeed = "seed:" + nSeed
+				self.randGen = strSeed;
+				log("DEBUG: GameSysNationRelations randGen " + strSeed);
+			}
+
+            // expected method
+			function handleWarDeclared(event,game)
+			{
+				log(event.objDeclaringNation.strName + " declares war on " + event.objTargetNation.strName);
+				
+                if (self.objDiplomaticEffectsTemplate == null)
+                {
+                    logWarn("No objDiplomaticEffectsTemplate specified.")
+                    return;
+                }
+                
+                var gameSysAIUtility = getGameSysAIUtility(game);
+
+				var backstab = self.areAllies(game,event.objDeclaringNation,event.objTargetNation, false);
+
+				// adjust relations between declaring nation and all other nations
+				var nations = getAllNations(game);
+				for (var i in nations)
+				{
+					var nation = nations[i];
+					if (nation.equals(event.objDeclaringNation))
+						continue;
+
+                    // no reaction by puppet if master declares war						
+				    if (event.objDeclaringNation.equals(nation.getMasterNation(game)))
+				        continue;
+				        
+                    // no reaction by master if puppet declares war						
+				    if (nation.equals(event.objDeclaringNation.getMasterNation(game)))
+				        continue;
+						
+                    var avatar = nation.refAIAvatar.resolve(game);
+                    if (!avatar.bConnected)
+                        continue; // don't react for human
+
+					var isTarget = nation.equals(event.objTargetNation);
+					var isAllyOfTarget = false;
+					if (!isTarget)
+					{
+						isAllyOfTarget = self.areAllies(game,nation,event.objTargetNation, false);
+					}
+					var isAllyOfAttacker = self.areAllies(game,nation,event.objDeclaringNation, false);
+					var isEnemyOfAttacker = self.getWarEx(game, nation,event.objDeclaringNation, false);
+
+					var isEnemyOfTarget = false;
+					var isEnemyOfTargetAlliance = false;
+
+					if ((!isTarget) && (!isAllyOfTarget))
+					{
+						isEnemyOfTarget = (self.getWarEx(game,nation,event.objTargetNation,false) != null);
+						if (!isEnemyOfTarget)
+						{
+							// don't give declaring nation credit for attacking a common enemy if the common enemy is itself.
+							isEnemyOfTargetAlliance = self.areAlliedWithEnemyExcludingNation(game,nation,event.objTargetNation, event.objDeclaringNation,false);
+						}
+					}
+
+					if (self.bWantDebugLog)
+					{
+						log("Determining effect on diplomatic relations between " + nation.strName + " and " + event.objDeclaringNation.strName );
+					}
+					
+					var diplomaticChange = 0;
+					
+					var relationsTemplate = null;
+					
+				    if (!isTarget)
+				    {
+				        var relations = self.getDiplomaticRelations(nation, event.objTargetNation);
+				        if (relations)
+				        {
+				            relationsTemplate = relations.tmplDiplomaticRelations.resolve();
+				        }
+				    }
+					
+					var eRelation = null;
+					
+					if (isTarget)
+					{
+					    eRelation = EnumNationRelation.SELF;
+					}
+					else if (isAllyOfTarget)
+					{
+					    eRelation = EnumNationRelation.ALLY;
+					}
+					else if (isEnemyOfTarget)
+				    {
+					    eRelation = EnumNationRelation.ENEMY;
+				    }
+				    
+					var items = null;
+			        items = self.objDiplomaticEffectsTemplate.objWarItems.filter({"eRelation": eRelation})
+				    if ((items == null) || (items.size == 0))
+				    {
+					    items = self.objDiplomaticEffectsTemplate.objWarItems.filter({"eRelation": EnumNationRelation.NONE});				    
+    				    if ( (items == null) || (items.size == 0) )
+				        {
+				            // no effect specified
+				            continue;
+				        }
+				    }
+				    
+				    
+				    var bestItem = null;
+				    for (var i in items)
+				    {
+				        var item = items[i];
+				        if (item.objRelationsLevelTemplate == null)
+				        {
+				            bestItem = item;
+				            break;
+				        }
+				        
+				        if (relationsTemplate != null)
+				        {
+				            if (item.objRelationsLevelTemplate.equals(relationsTemplate))
+				            {
+				                bestItem = item;
+				                break;
+				            }
+				        }
+				    }
+				    
+				    if (bestItem == null)
+				        continue;
+				        
+				    // look up international position from objNationDiplomacyAIs.
+				    // This data should be specified in content even for human players in case their AI takes over.
+				    
+				    var diploAI = gameSysAIUtility.objNationDiplomacyAIs.find({"refNation":nation});
+				    if (diploAI == null)
+				    {
+				        logWarn("unable to determine international position for " + nation.strName);
+				        continue;
+				    }
+				    
+				    var intlPos = diploAI.objAIInternationalPositionTemplate;
+				    var valuePair = bestItem.objIntlPositionValuePairs.find({"objAIInternationalPositionTemplate": intlPos});
+				    if (valuePair == null)
+				    {
+				        // no change specified
+				        continue;
+				    }
+				    
+				    diplomaticChange = valuePair.nValue;
+				    
+					if (diplomaticChange != 0)
+					{
+                        if (diplomaticChange > 0)					    
+                            messageType = "DiplomaticBonus";
+                        else
+                            messageType = "DiplomaticPenalty";
+                            
+                        var thirdParty = event.objTargetNation;
+                        if (isTarget)
+                            thirdParty = null;
+                            
+                        var messageCriteria = AIMessageSelectionCriteria.create({ 
+                            "objSendingNation": nation, 
+                            "objReceivingNation": event.objDeclaringNation,
+                            "objOtherNation": thirdParty,
+                            "nAmount": abs(diplomaticChange) });
+
+                        messageCriteria.objReasons.add(ReasonPair.create({"eReason": Reason.DeclaredWar, "nWeight": 100 }));
+                        var message = gameSysAIUtility.getAppropriateMessage(avatar,messageType,messageCriteria);
+					    
+						self.adjustDiplomaticRelations(game,event.objDeclaringNation,nation,diplomaticChange, EventWarDeclared, message);
+					}
+
+				} // for nations
+			} // handleWarDeclared
+			
+			
+			// adjust diplomatic relations in response to treaty events
+            function handleDiplomaticEffectsOfTreaties(event, game)
+            {
+                if (self.objDiplomaticEffectsTemplate == null)
+                {
+                    logWarn("No objDiplomaticEffectsTemplate specified.")
+                    return;
+                }
+                
+                var gameSysAIUtility = getGameSysAIUtility(game);
+                
+                var isRejection = false;
+                var actingNation = null;
+                var otherNation = null;
+                var eTreatyType;
+                if (event.instanceOf(EventTreatyRatified))
+                {
+                    actingNation = event.objTreaty.refReceivingNation.resolve(game);
+                    otherNation = event.objTreaty.refProposingNation.resolve(game);
+                    eTreatyType = event.objTreaty.eType;
+                    isRejection = false;
+                }
+                else if (event.instanceOf(EventTreatyRejected))
+                {
+                    actingNation = event.objTreaty.refReceivingNation.resolve(game);
+                    otherNation = event.objTreaty.refProposingNation.resolve(game);
+                    eTreatyType = event.objTreaty.eType;
+                    isRejection = true;
+                }
+                else if (event.instanceOf(EventMilitaryAccessChanged))
+                {
+                    actingNation = event.objGrantingNation;
+                    otherNation = event.objReceivingNation;
+                    
+                    if (event.bPortAccessOnly)
+                        eTreatyType = TreatyType.PORT_ACCESS;
+                    else
+                        eTreatyType = TreatyType.MILITARY_ACCESS;
+                        
+                    isRejection = !event.bGrant;
+                }
+                else
+                {
+                    logWarn("Not expecting " + event);
+                    return;
+                }
+                
+                var otEvent;
+                var eReason = Reason.NoReason;               
+                if (isRejection)
+                {
+                    otEvent = EventTreatyRejected;
+                    switch(eTreatyType.index)
+                    {
+                        case TreatyType.PEACE.index:
+                            eReason = Reason.PeaceTreatyRejected;
+                            break;
+                            
+                        case TreatyType.ALLIANCE.index:
+                            eReason = Reason.AllianceRejected;
+                            break;
+                        
+                        case TreatyType.MILITARY_ACCESS.index:
+                            eReason = Reason.MilitaryAccessRefused;
+                            break;
+                            
+                        case TreatyType.PORT_ACCESS.index:
+                            eReason = Reason.PortAccessRefused;
+                            break;
+                    }
+                }
+                else
+                {
+                    otEvent = EventTreatyRatified;
+                    switch(eTreatyType.index)
+                    {
+                        case TreatyType.PEACE.index:
+                            eReason = Reason.PeaceTreatyAccepted;
+                            break;
+                            
+                        case TreatyType.ALLIANCE.index:
+                            eReason = Reason.AllianceAccepted;
+                            break;
+                        
+                        case TreatyType.MILITARY_ACCESS.index:
+                            eReason = Reason.MilitaryAccessGranted;
+                            break;
+                            
+                        case TreatyType.PORT_ACCESS.index:
+                            eReason = Reason.PortAccessGranted;
+                            break;
+                    }
+                }
+
+				// check to adjust relations between acting nation and all other nations
+				var nations = getAllNations(game);
+				for (var i in nations)
+				{
+					var nation = nations[i];
+					if (nation.equals(actingNation))
+						continue;
+						
+                    var avatar = nation.refAIAvatar.resolve(game);
+                    if (!avatar.bConnected)
+                        continue; // don't react for human
+						
+					var isOtherNation = nation.equals(otherNation);
+					var isAllyOfOtherNation = false;
+					var isEnemyOfOtherNation = false;
+					if (!isOtherNation)
+					{
+						isAllyOfOtherNation = self.areAllies(game, nation, otherNation, false);
+						if (!isAllyOfOtherNation)
+						{
+						    isEnemyOfOtherNation = (self.getWarEx(game,nation,otherNation,false) != null);
+						}
+					}
+					
+					var diplomaticChange = 0;
+					
+					var relationsTemplate = null;
+					
+				    if (!isOtherNation)
+				    {
+				        var relations = self.getDiplomaticRelations(nation, otherNation);
+				        if (relations)
+				        {
+				            relationsTemplate = relations.tmplDiplomaticRelations.resolve();
+				        }
+				    }
+					
+					var eRelation = null;
+					
+					if (isOtherNation)
+					{
+					    eRelation = EnumNationRelation.SELF;
+					}
+					else if (isAllyOfOtherNation)
+					{
+					    eRelation = EnumNationRelation.ALLY;
+					}
+					else if (isEnemyOfOtherNation)
+				    {
+					    eRelation = EnumNationRelation.ENEMY;
+				    }
+				    
+					var items = null;
+			        items = self.objDiplomaticEffectsTemplate.objTreatyItems.filter({
+			            "otEvent" : otEvent,
+                        "eTreatyType" : eTreatyType,
+			            "eRelation": eRelation });
+			            
+				    if ((items == null) || (items.size == 0))
+				    {
+					    items = self.objDiplomaticEffectsTemplate.objTreatyItems.filter({
+			                "otEvent" : otEvent,
+                            "eTreatyType" : eTreatyType,
+					        "eRelation": EnumNationRelation.NONE });
+					        
+    				    if ( (items == null) || (items.size == 0) )
+				        {
+				            // no effect specified
+				            continue;
+				        }
+				    }
+				    
+				    var bestItem = null;
+				    for (var i in items)
+				    {
+				        var item = items[i];
+				        if (item.objRelationsLevelTemplate == null)
+				        {
+				            bestItem = item;
+				            break;
+				        }
+				        
+				        if (relationsTemplate != null)
+				        {
+				            if (item.objRelationsLevelTemplate.equals(relationsTemplate))
+				            {
+				                bestItem = item;
+				                break;
+				            }
+				        }
+				    }
+				    
+				    if (bestItem == null)
+				        continue;
+				        
+				    // look up international position from objNationDiplomacyAIs.
+				    // This data should be specified in content even for human players in case their AI takes over.
+				    
+				    var diploAI = gameSysAIUtility.objNationDiplomacyAIs.find({"refNation":nation});
+				    if (diploAI == null)
+				    {
+				        logWarn("unable to determine international position for " + nation.strName);
+				        continue;
+				    }
+				    
+				    var intlPos = diploAI.objAIInternationalPositionTemplate;
+				    var valuePair = bestItem.objIntlPositionValuePairs.find({"objAIInternationalPositionTemplate": intlPos});
+				    if (valuePair == null)
+				    {
+				        // no change specified
+				        continue;
+				    }
+				    
+				    diplomaticChange = valuePair.nValue;
+				    
+					if (diplomaticChange != 0)
+					{
+                        if (diplomaticChange > 0)					    
+                            messageType = "DiplomaticBonus";
+                        else
+                            messageType = "DiplomaticPenalty";
+                        
+                        var thirdParty = otherNation;
+                        if (isOtherNation)
+                            thirdParty = null;
+                                                    
+                        var messageCriteria = AIMessageSelectionCriteria.create({ 
+                            "objSendingNation": nation, 
+                            "objReceivingNation": actingNation,
+                            "objOtherNation": thirdParty,
+                            "nAmount": abs(diplomaticChange) });
+                            
+                        messageCriteria.objReasons.add(ReasonPair.create({"eReason": eReason, "nWeight": 100 }));
+                        var message = gameSysAIUtility.getAppropriateMessage(avatar,messageType,messageCriteria);
+					    
+						self.adjustDiplomaticRelations(game, actingNation, nation, diplomaticChange, otEvent, message);
+					}
+					
+				} // for nations
+            } // handleDiplomaticEffectsOfTreaties
+            
+            function handleDiplomaticEffectsOfEmbargos(event, game)
+            {
+                if (self.objDiplomaticEffectsTemplate == null)
+                {
+                    logWarn("No objDiplomaticEffectsTemplate specified.")
+                    return;
+                }
+                
+                var gameSysAIUtility = getGameSysAIUtility(game);
+                
+                var isLifted;
+                var otEvent;
+               
+                if (event.instanceOf(EventEmbargoPlaced))
+                {
+                    isLifted = false;
+                    otEvent = EventEmbargoPlaced;
+                }
+                else if (event.instanceOf(EventEmbargoLifted))
+                {
+                    isLifted = true;
+                    otEvent = EventEmbargoLifted;
+                }
+                else
+                {
+                    logWarn("Not expecting " + event);
+                    return;
+                }
+
+                var actingNation = event.objEmbargo.refInitiatingNation.resolve(game);
+                var otherNation = event.objEmbargo.refEmbargoedNation.resolve(game);
+                
+                var eReason;               
+                if (isLifted)
+                {
+                    eReason = Reason.EmbargoLifted;
+                }
+                else
+                {
+                    eReason = Reason.EmbargoPlaced;
+                }
+
+				// check to adjust relations between acting nation and all other nations
+				var nations = getAllNations(game);
+				for (var i in nations)
+				{
+					var nation = nations[i];
+					if (nation.equals(actingNation))
+						continue;
+						
+                    var avatar = nation.refAIAvatar.resolve(game);
+                    if (!avatar.bConnected)
+                        continue; // don't react for human
+						
+					var isOtherNation = nation.equals(otherNation);
+					var isAllyOfOtherNation = false;
+					var isEnemyOfOtherNation = false;
+					if (!isOtherNation)
+					{
+						isAllyOfOtherNation = self.areAllies(game, nation, otherNation, false);
+						if (!isAllyOfOtherNation)
+						{
+						    isEnemyOfOtherNation = (self.getWarEx(game,nation,otherNation,false) != null);
+						}
+					}
+					
+					var diplomaticChange = 0;
+					
+					var relationsTemplate = null;
+					
+				    if (!isOtherNation)
+				    {
+				        var relations = self.getDiplomaticRelations(nation, otherNation);
+				        if (relations)
+				        {
+				            relationsTemplate = relations.tmplDiplomaticRelations.resolve();
+				        }
+				    }
+					
+					var eRelation = null;
+					
+					if (isOtherNation)
+					{
+					    eRelation = EnumNationRelation.SELF;
+					}
+					else if (isAllyOfOtherNation)
+					{
+					    eRelation = EnumNationRelation.ALLY;
+					}
+					else if (isEnemyOfOtherNation)
+				    {
+					    eRelation = EnumNationRelation.ENEMY;
+				    }
+				    
+					var items = null;
+			        items = self.objDiplomaticEffectsTemplate.objEmbargoItems.filter({
+			            "otEvent" : otEvent,
+			            "eRelation": eRelation });
+			            
+				    if ((items == null) || (items.size == 0))
+				    {
+					    items = self.objDiplomaticEffectsTemplate.objEmbargoItems.filter({
+    			            "otEvent" : otEvent,
+					        "eRelation": EnumNationRelation.NONE });				    
+    				    if ( (items == null) || (items.size == 0) )
+				        {
+				            // no effect specified
+				            continue;
+				        }
+				    }
+				    
+				    var bestItem = null;
+				    for (var i in items)
+				    {
+				        var item = items[i];
+				        if (item.objRelationsLevelTemplate == null)
+				        {
+				            bestItem = item;
+				            break;
+				        }
+				        
+				        if (relationsTemplate != null)
+				        {
+				            if (item.objRelationsLevelTemplate.equals(relationsTemplate))
+				            {
+				                bestItem = item;
+				                break;
+				            }
+				        }
+				    }
+				    
+				    if (bestItem == null)
+				        continue;
+				        
+				    // look up international position from objNationDiplomacyAIs.
+				    // This data should be specified in content even for human players in case their AI takes over.
+				    
+				    var diploAI = gameSysAIUtility.objNationDiplomacyAIs.find({"refNation":nation});
+				    if (diploAI == null)
+				    {
+				        logWarn("unable to determine international position for " + nation.strName);
+				        continue;
+				    }
+				    
+				    var intlPos = diploAI.objAIInternationalPositionTemplate;
+				    var valuePair = bestItem.objIntlPositionValuePairs.find({"objAIInternationalPositionTemplate": intlPos});
+				    if (valuePair == null)
+				    {
+				        // no change specified
+				        continue;
+				    }
+				    
+				    diplomaticChange = valuePair.nValue;
+				    
+					if (diplomaticChange != 0)
+					{
+                        if (diplomaticChange > 0)					    
+                            messageType = "DiplomaticBonus";
+                        else
+                            messageType = "DiplomaticPenalty";
+                        
+                        var thirdParty = otherNation;
+                        if (isOtherNation)
+                            thirdParty = null;
+                                                    
+                        var messageCriteria = AIMessageSelectionCriteria.create({ 
+                            "objSendingNation": nation, 
+                            "objReceivingNation": actingNation,
+                            "objOtherNation": thirdParty,
+                            "nAmount": abs(diplomaticChange) });
+                            
+                        messageCriteria.objReasons.add(ReasonPair.create({"eReason": eReason, "nWeight": 100 }));
+                        var message = gameSysAIUtility.getAppropriateMessage(avatar,messageType,messageCriteria);
+					    
+						self.adjustDiplomaticRelations(game, actingNation, nation, diplomaticChange, otEvent, message);
+					}
+					
+				} // for nations
+            } // handleDiplomaticEffectsOfEmbargos
+            
+            // expected method           
+            function handleDiplomaticEffectsOfTrade(game, actingNation, reactingNation, resource, n64TransactionAmount, otReasonEventType, bIsAid)
+            {
+                if (self.objDiplomaticEffectsTemplate == null)
+                {
+                    logWarn("No objDiplomaticEffectsTemplate specified.")
+                    return;
+                }
+                
+                var avatar = reactingNation.refAIAvatar.resolve(game);
+                if (avatar.bConnected == false)
+                    return; // don't react for human
+                
+                var gameSysAIUtility = getGameSysAIUtility(game);
+               
+                var eReason = Reason.NoReason;                               
+                if (otReasonEventType.equals(EventTradeAgreementAccepted))
+                {
+                    eReason = Reason.TradeAgreementMade;
+                }
+                else if (otReasonEventType.equals(EventTradeAgreementCancelled))
+                {
+                    eReason = Reason.TradeAgreementCancelled;
+                }
+                else if (otReasonEventType.equals(EventTradeOccurred))
+                {
+                    if (bIsAid)
+                    {
+                        eReason = Reason.ResourceAidReceived;
+                    }
+                }
+                else if (otReasonEventType.equals(EventMoneyTransferOccurred))
+                {
+                    eReason = Reason.FinancialAidReceived;
+                }
+                
+                if (eReason.equals(Reason.NoReason))
+                {
+                    logWarn("unexpected otReasonEventType=" + otReasonEventType + ", bIsAid=" + bIsAid);
+                    return;
+                }
+				
+				var bestItem = self.objDiplomaticEffectsTemplate.objTradeItems.find({
+		            "otEvent" : otReasonEventType,
+		            "bAid": bIsAid,
+		            "objResourceTemplate": resource });
+		            
+		        if (bestItem == null)
+		            return; // no diplomatic effect specified
+				        
+			    // look up international position from objNationDiplomacyAIs.
+			    // This data should be specified in content even for human players in case their AI takes over.
+			    var diploAI = gameSysAIUtility.objNationDiplomacyAIs.find({"refNation":reactingNation});
+			    if (diploAI == null)
+			    {
+			        logWarn("unable to determine international position for " + reactingNation.strName);
+			        return;
+			    }
+			    
+			    var intlPos = diploAI.objAIInternationalPositionTemplate;
+			    var valuePair = bestItem.objIntlPositionValuePairs.find({"objAIInternationalPositionTemplate": intlPos});
+			    if (valuePair == null)
+			    {
+			        // no change specified
+			        return;
+			    }
+			    
+			    var adjustmentPerAmount = valuePair.nValue;
+			    if (adjustmentPerAmount == 0)
+			    {
+			        logWarn("bad amount: " + valuePair);
+			        return;
+			    }
+				    
+				var diplomaticChange = Math.floor(n64TransactionAmount / adjustmentPerAmount);
+                
+                if (diplomaticChange > bestItem.nCap)
+                {
+                    diplomaticChange = bestItem.nCap;
+                }
+				
+				if (diplomaticChange != 0)
+				{
+                    if (diplomaticChange > 0)					    
+                        messageType = "DiplomaticBonus";
+                    else
+                        messageType = "DiplomaticPenalty";
+                                                
+                    var messageCriteria = AIMessageSelectionCriteria.create({ 
+                        "objSendingNation": reactingNation, 
+                        "objReceivingNation": actingNation,
+                        "objResourceTemplate": resource,
+                        "nAmount": abs(diplomaticChange) });
+                        
+                    messageCriteria.objReasons.add(ReasonPair.create({"eReason": eReason, "nWeight": 100 }));
+                    
+                    var message = gameSysAIUtility.getAppropriateMessage(avatar,messageType,messageCriteria);
+				    
+					self.adjustDiplomaticRelations(game, actingNation, reactingNation, diplomaticChange, otReasonEventType, message);
+				}
+					
+            } // handleDiplomaticEffectsOfTrade
+            
+            
+            function handleDiplomaticEffectsOfNationStatusChange(game, actingNation, targetNation, otEvent, otStatus)
+            {
+                //log("DEBUG: handleDiplomaticEffectsOfNationStatusChange(game," + actingNation.strDisplayName + "," + targetNation.strDisplayName + "," + otEvent + "," + otStatus + ")");
+                
+                if (self.objDiplomaticEffectsTemplate == null)
+                {
+                    logWarn("No objDiplomaticEffectsTemplate specified.")
+                    return;
+                }
+                
+                var gameSysAIUtility = getGameSysAIUtility(game);
+
+				// adjust relations between actingNation and all other nations
+				var nations = getAllNations(game);
+				for (var i in nations)
+				{
+					var nation = nations[i];
+					if (nation.equals(actingNation))
+						continue;
+						
+                    var avatar = nation.refAIAvatar.resolve(game);
+                    if (!avatar.bConnected)
+                        continue; // don't react for human
+
+					var isTargetNation = nation.equals(targetNation);
+					var isAllyOfTargetNation = false;
+					var isEnemyOfTargetNation = false;
+					if (!isTargetNation)
+					{
+						isAllyOfTargetNation = self.areAllies(game,nation,targetNation, false);
+    					isEnemyOfTargetNation = self.getWarEx(game, nation, targetNation, false);
+					}
+					
+					var relationsTemplate = null;
+					
+				    if (!isTargetNation)
+				    {
+				        var relations = self.getDiplomaticRelations(nation, targetNation);
+				        if (relations)
+				        {
+				            relationsTemplate = relations.tmplDiplomaticRelations.resolve();
+				        }
+				    }
+					
+					var eRelation = null;
+					
+					if (isTargetNation)
+					{
+					    eRelation = EnumNationRelation.SELF;
+					}
+					else if (isAllyOfTargetNation)
+					{
+					    eRelation = EnumNationRelation.ALLY;
+					}
+					else if (isEnemyOfTargetNation)
+				    {
+					    eRelation = EnumNationRelation.ENEMY;
+				    }
+				    
+					var items = null;
+			        items = self.objDiplomaticEffectsTemplate.objNationStatusChangeItems.filter({
+			            "otEvent" : otEvent,    
+			            "otStatus": otStatus,   // could be NationStatusPuppet, NationStatusIndependent, or NULL
+			            "eRelation": eRelation });
+			            
+				    if ((items == null) || (items.size == 0))
+				    {
+					    items = self.objDiplomaticEffectsTemplate.objNationStatusChangeItems.filter({
+    			            "otEvent" : otEvent,
+    			            "otStatus": otStatus,
+					        "eRelation": EnumNationRelation.NONE });				    
+    				    if ( (items == null) || (items.size == 0) )
+				        {
+				            // no effect specified
+				            continue;
+				        }
+				    }
+				    
+				    var bestItem = null;
+				    for (var i in items)
+				    {
+				        var item = items[i];
+				        if (item.objRelationsLevelTemplate == null)
+				        {
+				            bestItem = item;
+				            break;
+				        }
+				        
+				        if (relationsTemplate != null)
+				        {
+				            if (item.objRelationsLevelTemplate.equals(relationsTemplate))
+				            {
+				                bestItem = item;
+				                break;
+				            }
+				        }
+				    }
+				    
+				    if (bestItem == null)
+				        continue;
+				        
+				    // look up international position from objNationDiplomacyAIs.
+				    // This data should be specified in content even for human players in case their AI takes over.
+				    
+				    var diploAI = gameSysAIUtility.objNationDiplomacyAIs.find({"refNation":nation});
+				    if (diploAI == null)
+				    {
+				        logWarn("unable to determine international position for " + nation.strName);
+				        continue;
+				    }
+				    
+				    var intlPos = diploAI.objAIInternationalPositionTemplate;
+				    var valuePair = bestItem.objIntlPositionValuePairs.find({"objAIInternationalPositionTemplate": intlPos});
+				    if (valuePair == null)
+				    {
+				        // no change specified
+				        continue;
+				    }
+				    
+                    var diplomaticChange = valuePair.nValue;
+				    
+					if (diplomaticChange != 0)
+					{
+                        if (diplomaticChange > 0)					    
+                            messageType = "DiplomaticBonus";
+                        else
+                            messageType = "DiplomaticPenalty";
+                            
+                        var eReason = Reason.NoReason;
+					    if (otEvent.equals(EventNationLiberated))
+					    {
+					        eReason = Reason.NationLiberated;
+					    }
+					    else if (otEvent.equals(EventNationAnnexed))
+					    {
+					        eReason = Reason.NationAnnexed;
+					    }
+					    else if (otStatus.equals(NationStatusPuppet))
+					    {
+                            eReason = Reason.NationMadePuppet;				    
+					    }
+                            
+                        var thirdParty = targetNation;
+                        if (isTargetNation)
+                            thirdParty = null;
+                            
+                        var messageCriteria = AIMessageSelectionCriteria.create({ 
+                            "objSendingNation": nation, 
+                            "objReceivingNation": actingNation,
+                            "objOtherNation": thirdParty,
+                            "nAmount": abs(diplomaticChange) });
+
+                        messageCriteria.objReasons.add(ReasonPair.create({"eReason": eReason, "nWeight": 100 }));
+                        var message = gameSysAIUtility.getAppropriateMessage(avatar,messageType,messageCriteria);
+					    
+						self.adjustDiplomaticRelations(game, actingNation, nation, diplomaticChange, otEvent, message);
+					}
+
+				} // for nations
+            }
+
+            // expected method                        
+            function handleDiplomaticEffectsOfLiberation(game, liberator, freedNation, freedNationStatus)
+            {
+                handleDiplomaticEffectsOfNationStatusChange(game, liberator, freedNation, EventNationLiberated, freedNationStatus.type );
+            }
+            
+            // expected method                        
+            function handleDiplomaticEffectsOfAnnexing(game, annexer, victim)
+            {
+                handleDiplomaticEffectsOfNationStatusChange(game, annexer, victim, EventNationAnnexed, null);
+            }
+            
+            // expected method                        
+            function handleDiplomaticEffectsOfMakingPuppet(game, master, puppet)
+            {
+                handleDiplomaticEffectsOfNationStatusChange(game, master, puppet, EventNationChangedStatus, NationStatusPuppet);
+            }
+            
+		]]></script>
+    	<script type="application/x-locust-query">
+   			getNationAlliance = ?{gameroot, nation:
+			    ?{member: if(member != null, member.refAlliance.resolve(gameroot), null)} (find(?{member: member.refNation == nation}, self.objAllianceMemberships))
+		    }
+
+		    getDiplomaticRelation = ?{nation1, nation2:
+			    if(nation1.strName LTE nation2.strName,
+				    find(?{drel: drel.refNationA == nation1 AND drel.refNationB == nation2}, self.objDiplomaticRelations),
+				    find(?{drel: drel.refNationB == nation1 AND drel.refNationA == nation2}, self.objDiplomaticRelations)
+			    )
+		    }
+
+		    getAccessAgreement = ?{receiver, granter:
+			    find(?{drel: drel.refReceivingNation == receiver AND drel.refGrantingNation == granter}, self.objAccessAgreements)
+		    }
+		    
+		    getAccessNationsGranted = ?{gameroot, nation:
+			    map(
+				    ?{agreement: agreement.refReceivingNation.resolve(gameroot)},
+				    filter(?{agreement: agreement.refGrantingNation == nation}, self.objAccessAgreements)
+			    )
+		    }
+		    
+		    getAccessNationsReceived = ?{gameroot, nation:
+			    map(
+				    ?{agreement: agreement.refGrantingNation.resolve(gameroot)},
+				    filter(?{agreement: agreement.refReceivingNation == nation}, self.objAccessAgreements)
+			    )
+		    }
+		    
+		    getNationAccessAgreements = ?{nation:
+                union(
+				    filter(?{agreement: agreement.refGrantingNation == nation}, self.objAccessAgreements),
+				    filter(?{agreement:agreement.refReceivingNation == nation}, self.objAccessAgreements)
+			    )
+            }
+		    
+		    getNationEmbargoes = ?{initiatingNation:
+			    filter( ?{embargo: embargo.refInitiatingNation == initiatingNation}, self.objEmbargos)
+		    }
+		    
+		    getEmbargosAgainstNation = ?{embargoedNation:
+			    filter(?{embargo: embargo.refEmbargoedNation == embargoedNation}, self.objEmbargos)
+		    }
+		    
+		    getEmbargo = ?{initiatingNation, embargoedNation:
+			    find(?{embargo: embargo.refInitiatingNation == initiatingNation AND 
+			           embargo.refEmbargoedNation == embargoedNation}, self.objEmbargos)
+		    }
+    	    
+        </script>
+	</objectDef>
+
+	<script type="application/x-locust-query">
+		getGameSysNationRelations = ?{gameroot:
+			mlgame.getGameSysOfType(gameroot, GameSysNationRelations)
+		}
+
+		getAllWars = ?{gameroot:
+			getGameSysNationRelations(gameroot).objWars
+		}
+
+		getAllAlliances = ?{gameroot:
+			getGameSysNationRelations(gameroot).objAlliances
+		}
+
+		getAllAllianceMemberships = ?{gameroot:
+			getGameSysNationRelations(gameroot).objAllianceMemberships
+		}
+
+        getAllDiplomaticRelations = ?{gameroot:
+            getGameSysNationRelations(gameroot).objDiplomaticRelations
+        }
+
+        getAllAccessAgreements = ?{gameroot:
+            getGameSysNationRelations(gameroot).objAccessAgreements
+        }
+
+		getNationAccessAgreements = ?{gameroot, nation:
+		    getGameSysNationRelations(gameroot).getNationAccessAgreements(nation)
+        }
+
+        getAllEmbargos = ?{gameroot:
+            getGameSysNationRelations(gameroot).objEmbargos
+        }
+
+		getNationEmbargoes = ?{gameroot, initiatingNation:
+		    getGameSysNationRelations(gameroot).getNationEmbargoes(initiatingNation)
+		}
+        
+		getEmbargosAgainstNation = ?{gameroot, embargoedNation:
+		    getGameSysNationRelations(gameroot).getEmbargosAgainstNation(embargoedNation)
+		}
+
+		getEmbargo = ?{gameroot, initiatingNation, embargoedNation:
+		    getGameSysNationRelations(gameroot).getEmbargo(initiatingNation, embargoedNation)
+		}
+
+		getNationWars = ?{gameroot, nation:
+			filter(
+				?{war:
+					war.objAttackers.contains(nation) OR war.objDefenders.contains(nation)
+				}, getAllWars(gameroot)
+			)
+		}
+
+		getWar = ?{gameroot, nation1, nation2:
+			find(?{war: (war.objAttackers.contains(nation1) AND war.objDefenders.contains(nation2)) OR
+                        (war.objDefenders.contains(nation1) AND war.objAttackers.contains(nation2))
+                 }, getAllWars(gameroot)
+            )
+		}
+
+		getNationAlliance = ?{gameroot, nation:
+		    getGameSysNationRelations(gameroot).getNationAlliance(gameroot,nation)
+		}
+
+		getNationAllies = ?{gameroot, nation:
+			filter(
+				?{
+					nat:
+					nat != nation
+				},
+				getNationAlliance(gameroot, nation).getNations(gameroot)
+			)
+		}
+
+		getNationEnemies = ?{gameroot, nation:
+            union(
+                flattenSet(
+                    map(?{war: war.objDefenders}, filter(?{war: war.objAttackers.contains(nation)}, getAllWars(gameroot)))
+                ),
+                flattenSet(
+                    map(?{war: war.objAttackers}, filter(?{war: war.objDefenders.contains(nation)}, getAllWars(gameroot)))
+                )
+            )
+		}
+
+		getDiplomaticRelation = ?{gameroot, nation1, nation2:
+		    getGameSysNationRelations(gameroot).getDiplomaticRelation(nation1,nation2)
+		}
+
+		getAccessAgreement = ?{gameroot, receiver, granter:
+		    getGameSysNationRelations(gameroot).getAccessAgreement(receiver,granter)
+		}
+		
+		getAccessNationsGranted = ?{gameroot, nation:
+		    getGameSysNationRelations(gameroot).getAccessNationsGranted(gameroot,nation)
+		}
+		
+		getAccessNationsReceived = ?{gameroot, nation:
+		    getGameSysNationRelations(gameroot).getAccessNationsReceived(gameroot,nation)
+		}
+
+		areAlliesOrSame = ?{gameroot, nation1, nation2:
+			if(nation1==nation2,true,
+			    let ally1=getNationAlliance(gameroot,nation1)
+			    {
+			        (ally1 != null) AND (ally1==getNationAlliance(gameroot,nation2))
+			    }
+            )			        
+		}
+
+		</script>
+
+</locust>

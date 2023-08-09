@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<object type="gs_tbg.GameSysTrade" name="objGameSysTrade">
+
+        <property name="tmplPriceAdjustmentList" value="sd.PriceAdjustmentTemplateList"/>
+
+		<!-- Starting Trade Agreements -->
+		<object type="gs_tbg.MoneyTransfer" name="objMoneyTransfers">
+			<property name="refSourceNation" value="Japan"/>
+			<property name="refDestNation" value="ComChina"/>
+			<property name="refProposingNation" value="Japan"/>
+			<property name="refReceivingNation" value="ComChina"/>
+			<property name="eStatus" value="ACCEPTED"/>
+			<property name="n64Amount" value="21500"/>
+			<property name="nDuration" value="1"/>
+		</object>
+
+	</object>
+</locust>

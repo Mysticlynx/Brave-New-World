@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="AirEncounter" class="CMLOAirEncounter" desc="Air combat and/or AA">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="objEnemyNation" type="Nation"/>
+        <propertyDef name="nUnitsAtStart" type="int"/>
+        <propertyDef name="nUnitsKilledByAirCombat" type="int"/>
+        <propertyDef name="nUnitsKilledByAA" type="int"/>
+        <propertyDef name="nEnemyUnitsAtStart" type="int"/>
+        <propertyDef name="nEnemyUnitsKilledByAirCombat" type="int"/>
+    </objectDef>
+
+</locust>

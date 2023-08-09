@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="LookupDynamicListData" class="CMLObject">
+		<propertyDef name="nElements" type="int"/>
+		<propertyDef name="nElementWidth" type="int"/>
+		<propertyDef name="nElementHeight" type="int"/>
+		<propertyDef name="nElementSpacing" type="int"/>
+		<propertyDef name="nRowSpacing" type="int"/>
+		<propertyDef name="nMaxElementsPerRow" type="int"/>
+
+		<propertyDef name="nRemainder" type="int"/>
+		<property name="nRemainder" from="self.nElements % self.nMaxElementsPerRow"/>
+
+		<propertyDef name="nRows" type="int"/>
+		<property name="nRows" from="if(self.nRemainder GT 0,
+			self.nElements / self.nMaxElementsPerRow + 1,
+			self.nElements / self.nMaxElementsPerRow)
+		"/>
+
+		<propertyDef name="nWidth" type="int"/>
+		<property name="nWidth" from="self.nElementWidth * self.nMaxElementsPerRow + self.nElementSpacing * (self.nMaxElementsPerRow - 1)"/>
+
+		<propertyDef name="nHeight" type="int"/>
+		<property name="nHeight" from="self.nElementHeight * self.nRows + self.nRowSpacing * (self.nRows - 1)"/>
+	</objectDef>
+
+	<objectDef type="LookupAccessAgreements" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objAccessAgreements" type="gs_tbg.AccessAgreement" variable="true"/>
+		<property name="objAccessAgreements">
+			filter(?{agreement: agreement.refGrantingNation == self.objNation}, gs_tbg.getAllAccessAgreements(self.objMH2Data.objAvatar))
+		</property>
+
+		<propertyDef name="objAccessNations" type="gs_tbg.Nation" variable="true"/>
+		<property name="objAccessNations">
+			map(?{agreement: agreement.refReceivingNation.resolve(self.objMH2Data.objAvatar)}, self.objAccessAgreements)
+		</property>
+	</objectDef>
+
+	<!--<objectDef type="LookupAllianceResourceTotal" class="CMLObject">-->
+	<!--	<propertyDef name="objMH2Data" type="MH2Data"/>-->
+	<!--	<propertyDef name="objAllianceData" type="AllianceData"/>-->
+	<!--	<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>-->
+	<!---->
+	<!--	<propertyDef name="objNationResources" type="gs_tbg.NationResource" variable="true"/>-->
+	<!--	<property name="objNationResources">-->
+	<!--		filter(?{natres: natres.objResourceTemplate == self.tmplResource}, self.objAllianceData.objAllianceResources)-->
+	<!--	</property>-->
+	<!---->
+	<!--	<propertyDef name="nTotal" type="int"/>-->
+	<!--	<property name="nTotal">-->
+	<!--		sum(map(?{natres: natres.nAmount}, self.objNationResources))-->
+	<!--	</property>-->
+	<!--</objectDef>-->
+	<!---->
+
+	<objectDef type="LookupAllianceMoneyTotal" class="CMLObject">
+		<propertyDef name="objAlliance" type="gs_tbg.Alliance"/>
+
+		<propertyDef name="objNations" type="gs_tbg.Nation" variable="true"/>
+		<property name="objNations" from="self.objAlliance.getNations(mh2data.objAvatar)"/>
+
+		<propertyDef name="objNationResources" type="gs_tbg.NationResource" variable="true"/>
+		<property name="objNationResources">
+			filter(?{natres: natres.objResourceTemplate == self.tmplResource}, self.objAllianceData.objAllianceResources)
+		</property> 
+
+		<propertyDef name="nTotal" type="int64"/>
+		<property name="nTotal">
+			sum(map(?{nation: nation.objFinance.n64Money}, self.objNations))
+		</property>
+	</objectDef>
+
+	<!-- Looks up if nations that have placed an embargo on "this" nation -->
+	<objectDef type="LookupNationEmbargos" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objEmbargos" type="gs_tbg.Embargo" variable="true"/>
+		<property name="objEmbargos">
+			filter(?{embargo: embargo.refEmbargoedNation == self.objNation}, gs_tbg.getAllEmbargos(mh2data.objAvatar))
+		</property>
+
+		<propertyDef name="objEmbargoingNations" type="gs_tbg.Nation" variable="true"/>
+		<property name="objEmbargoingNations">
+			map(?{agreement: agreement.refInitiatingNation.resolve(mh2data.objAvatar)}, self.objEmbargos)
+		</property>
+	</objectDef>
+
+	<!-- looks up trade agreements of any status and involving any resource -->
+	<objectDef type="LookupNationTradeAgreements" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objImportTradeAgreements" type="gs_tbg.TradeAgreement" variable="true"/>
+		<property name="objImportTradeAgreements">
+			filter(
+                ?{agreement: agreement.eStatus == gs_tbg.TradeAgreementStatus.ACCEPTED},
+                    filter(?
+                        {importta: importta.refDestNation == self.objNation},
+                            gs_tbg.getAllTradeAgreements(mh2data.objAvatar)))
+		</property>
+
+		<propertyDef name="objExportTradeAgreements" type="gs_tbg.TradeAgreement" variable="true"/>
+		<property name="objExportTradeAgreements">
+			filter(
+                ?{agreement: agreement.eStatus == gs_tbg.TradeAgreementStatus.ACCEPTED},
+                    filter(?
+                        {exportta: exportta.refSourceNation == self.objNation},
+                            gs_tbg.getAllTradeAgreements(mh2data.objAvatar)))
+		</property>
+
+		<propertyDef name="objImportNations" type="gs_tbg.Nation" variable="true"/>
+		<property name="objImportNations">
+			map(?{importta: importta.refSourceNation.resolve(mh2data.objAvatar)}, self.objImportTradeAgreements)
+		</property>
+
+		<propertyDef name="objExportNations" type="gs_tbg.Nation" variable="true"/>
+		<property name="objExportNations">
+			map(?{exportta: exportta.refDestNation.resolve(mh2data.objAvatar)}, self.objExportTradeAgreements)
+		</property>
+	</objectDef>
+
+	<objectDef type="LookupTradeAgreementResource" class="CMLObject">
+		<propertyDef name="objLookupNationTradeAgreements" type="LookupNationTradeAgreements"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+
+		<propertyDef name="objImportTradeAgreements" type="gs_tbg.TradeAgreement" variable="true"/>
+			<property name="objImportTradeAgreements">
+			filter(?{importta: importta.tmplResource == self.tmplResource}, self.objLookupNationTradeAgreements.objImportTradeAgreements)
+			</property>
+
+		<propertyDef name="objExportTradeAgreements" type="gs_tbg.TradeAgreement" variable="true"/>
+			<property name="objExportTradeAgreements">
+			filter(?{exportta: exportta.tmplResource == self.tmplResource}, self.objLookupNationTradeAgreements.objExportTradeAgreements)
+			</property>
+
+		<propertyDef name="nNetAmount" type="int"/>
+			<property name="nNetAmount">
+			sum(map(?{importta: importta.nAmount}, self.objImportTradeAgreements))
+			- sum(map(?{exportta: exportta.nAmount}, self.objExportTradeAgreements))
+			</property>
+	</objectDef>
+
+	<objectDef type="LookupTradeAgreementbyResource" class="CMLObject">
+		<propertyDef name="strResource" type="String"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="objResource" type="gs_tbg.ResourceTemplate">
+			sd.getTemplateRef(gs_tbg.ResourceTemplate, self.strResource)
+		</propertyDef>
+		<propertyDef name="objAgreements" type="gs_tbg.TradeAgreement" variable="true">
+			filter(
+                ?{agreements:
+                    (agreements.refSourceNation == self.objNation OR
+                    agreements.refDestNation == self.objNation)
+                    AND agreements.eStatus == gs_tbg.TradeAgreementStatus.ACCEPTED
+                },
+                    gs_tbg.getTradeAgreementsByResource(mh2data.objAvatar, self.objResource)
+            )
+		</propertyDef>
+	</objectDef>
+
+	<objectDef type="LookupTradeResourceData" class="CMLObject">
+		<propertyDef name="objNationHistory" type="gs_tbg.NationHistory"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+
+		<propertyDef name="objNationHistoryTrade" type="gs_tbg.NationHistoryTrade"/>
+		<property name="objNationHistoryTrade">
+			find(?{nhtrade: nhtrade.tmplResource == self.tmplResource}, self.objNationHistory.objTrades)
+		</property>
+
+		<propertyDef name="nDirectTotal" type="int"/>
+		<property name="nDirectTotal" from="self.objNationHistoryTrade.nDirectImports - self.objNationHistoryTrade.nDirectExports"/>
+
+		<propertyDef name="nMarketTotal" type="int"/>
+		<property name="nMarketTotal" from="self.objNationHistoryTrade.nMarketImports - self.objNationHistoryTrade.nMarketExports"/>
+
+		<propertyDef name="nTotal" type="int"/>
+		<property name="nTotal" from="self.nDirectTotal + self.nMarketTotal"/>
+
+		<propertyDef name="nTotalImports" type="int"/>
+		<property name="nTotalImports" from="self.objNationHistoryTrade.nDirectImports + self.objNationHistoryTrade.nMarketImports"/>
+
+		<propertyDef name="nTotalExports" type="int"/>
+		<property name="nTotalExports" from="self.objNationHistoryTrade.nDirectExports + self.objNationHistoryTrade.nMarketExports"/>
+	</objectDef>
+
+	<objectDef type="LookupNationResource" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+
+        <propertyDef name="objNationResource" type="gs_tbg.NationResource"/>
+		<property name="objNationResource">
+			find(?{natres: natres.refNation == self.objNation AND natres.objResourceTemplate == self.tmplResource},
+				gs_tbg.getAllNationResources(mh2data.objAvatar))
+		</property>
+	</objectDef>
+
+	<objectDef type="LookupSupplyAndDemand" class="CMLObject">
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+
+        <propertyDef name="objSupplyAndDemand" type="gs_tbg.SupplyAndDemand"/>
+		<property name="objSupplyAndDemand">
+			find(?{snd: snd.tmplResource == self.tmplResource}, gs_tbg.getAllSupplyAndDemand(mh2data.objAvatar))
+		</property>
+	</objectDef>
+
+<!-- Region -->
+    <objectDef type="LookupResourceImprovements" class="CMLObject">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+
+		<propertyDef name="objResourceCapacity" type="gs_tbg.ResourceCapacity">
+				find(?{rescap: rescap.tmplResource == self.tmplResource}, self.objRegion.objResourceCapacities)
+		</propertyDef>
+			
+		<propertyDef name="fFoodCapacityMod" type="float" from="1 - ((float(self.objRegion.tmplTerrain.resolve().nFoodCapacityModifier) / float(100)) * -1 )"/>
+		<propertyDef name="fFoodProductionMod" type="float" from="1 - ((float(self.objRegion.tmplTerrain.resolve().nFoodProductionModifier) / float(100)) * -1 )"/>
+		
+		<!--<propertyDef name="fSupplyProductionMod" type="float" from="1"/>-->
+		<propertyDef name="fSupplyProductionMod" type="float" from="(float(self.objRegion.nArmsLimit) / 100)"/>
+
+		<propertyDef name="nImprovementSlots" type="int" default="0"/>
+            <property name="nImprovementSlots" from="self.objResourceCapacity.nImprovementSlots - self.objResourceCapacity.objImprovements.size"/>
+
+		<propertyDef name="nModifiedAmount" type="int">
+			switch{
+				case self.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Food'):
+					self.objResourceCapacity.nBaseProduction * self.fFoodProductionMod * self.fSupplyProductionMod
+				default:
+					self.objResourceCapacity.nBaseProduction * self.fSupplyProductionMod
+			}
+		</propertyDef>
+		
+		<propertyDef name="nTotalOutput" type="int"/>
+            <property name="nTotalOutput" from="self.nModifiedAmount"/>
+
+		<propertyDef name="nSurplus" type="int"/>
+			<property name="nSurplus" value="0"/>
+
+		<propertyDef name="nMPUs" type="int"/>
+			<property name="nMPUs" from="self.objResourceCapacity.nMPUs"/>
+
+		<propertyDef name="nBaseProduction" type="int"/>
+			<property name="nBaseProduction" from="self.objResourceCapacity.nBaseProduction"/>
+
+		<propertyDef name="nTotalCost" type="int"/>
+			<property name="nTotalCost" from="self.objResourceCapacity.nMaintenanceCost"/>
+	</objectDef>
+
+	<objectDef type="LookupCurrentRegionProject" class="CMLObject">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+
+		<propertyDef name="objProject" type="gs_tbg.RegionProject">
+			find(?{project: project.nPriority == 1}, self.objRegion.objRegionProjects)
+		</propertyDef>
+
+		<propertyDef name="objOutputTemplate" type="gs_tbg.RegionOutputTemplate">
+			self.objProject.tmplRegionOutput.resolve()
+		</propertyDef>
+
+		<propertyDef name="nProjectTurns" type="int">
+			self.objOutputTemplate.nTurns - self.objProject.nTurns
+		</propertyDef>
+
+		<propertyDef name="nProjectPercent" type="int">
+			if(
+				self.objOutputTemplate.nTurns != 0,
+				self.objProject.nTurns * 100 / self.objOutputTemplate.nTurns,
+				0
+			)
+		</propertyDef>
+	</objectDef>
+
+	<objectDef type="LookupSeaRegionData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+
+		<propertyDef name="nWidth" type="int"/>
+		<property name="nWidth" value="351"/>
+
+		<propertyDef name="nHeight" type="int"/>
+		<property name="nHeight" value="310"/>
+
+		<propertyDef name="nItemWidth" type="int"/>
+		<property name="nItemWidth" value="328"/>
+
+		<propertyDef name="nItemHeight" type="int"/>
+		<property name="nItemHeight" value="53"/>
+
+		<propertyDef name="objGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<property name="objGroups">
+		    gs_tbg.getGroupsAtLocation(self.objMH2Data.objAvatar, self.objRegion)
+		</property>
+
+		<propertyDef name="objNavalGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<property name="objNavalGroups">
+			filter(?{group: group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')}, self.objGroups)
+		</property>
+
+		<!-- TODO: remove duplicates once implemented in locust -->
+		<propertyDef name="objNavalNations" type="gs_tbg.Nation" variable="true"/>
+		<property name="objNavalNations">
+			map(?{group: group.refController.resolve(self.objMH2Data.objAvatar)}, self.objNavalGroups)
+		</property>
+	</objectDef>
+
+	<!-- TODO: use this data object once peace action is in -->
+	<objectDef type="LookupPeaceData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="bDemand" type="bool" default="false" />
+		<propertyDef name="objTerms" type="gs_tbg.TreatyTerm" variable="true" />
+	</objectDef>
+
+	<objectDef type="LookupTerritoryData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="bYourNation" type="bool"/>
+
+		<object type="LookupTerritoryRegionsData" name="objYourRegions">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objNation" from="def.objMH2Data.objNation"/>
+		</object>
+
+		<object type="LookupTerritoryRegionsData" name="objTheirRegions">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objNation" from="def.objNation"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="LookupTerritoryRegionsData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objRegions" type="gs_tbg.Region" variable="true"/>
+		<property name="objRegions">
+			filter(?{region: region.refOwner == self.objNation},
+				mh2data.getAllRegions())
+		</property>
+
+		<propertyDef name="objChosenRegions" type="gs_tbg.Region" variable="true"/>
+
+		<!-- TODO: Once locust supports, concatenate the region names into this string for display -->
+		<propertyDef name="strRegions" type="String"/>
+	</objectDef>
+
+	<!-- Trade Agreement Data -->
+	<objectDef type="LookupTradeAgreementData" class="CMLObject">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+        <propertyDef name="objMH2Data" type="MH2Data"/>
+
+		<!-- Money -->
+		<propertyDef name="bOfferFinancial" type="bool" default="true"/>
+		<propertyDef name="bSingleTransaction" type="bool" default="true"/>
+		<propertyDef name="n64FinancialAidAmount" type="int64" default="100000"/>
+		
+		
+	</objectDef>
+
+	<enumDef name="TradeOffer">
+        <value name="BUY"/>
+        <value name="SELL"/>
+        <value name="GIVE"/>
+        <value name="REQUEST"/>
+	</enumDef>
+
+	<objectDef type="LookupResourceAgreementData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="tmplResource" type="gs_tbg.ResourceTemplate"/>
+
+		<propertyDef name="tmplIcon" type="mlmedia.ImageTemplate"/>
+		<property name="tmplIcon">
+			switch {
+				case self.tmplResource.equals(sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Arms')):
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconArms')
+                case self.tmplResource.equals(sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Metals')):
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconMetals')
+                case self.tmplResource.equals(sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Oil')):
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconOil')
+                case self.tmplResource.equals(sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Coal')):
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconCoal')
+				case self.tmplResource.equals(sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Food')):
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconFood')
+                default:
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconGoods')
+			}
+		</property>
+
+		<propertyDef name="tmplIconSm" type="mlmedia.ImageTemplate"/>
+		<property name="tmplIconSm">
+			switch {
+				case self.tmplResource.equals(sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Arms')):
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconArms21x21')
+                case self.tmplResource.equals(sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Metals')):
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconMetals21x21')
+                case self.tmplResource.equals(sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Oil')):
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconOil21x21')
+                case self.tmplResource.equals(sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Coal')):
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconCoal21x21')
+				case self.tmplResource.equals(sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Food')):
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconFood21x21')
+				default:
+					skin.getTemplateRef(mlmedia.ImageTemplate, 'ImgInfoIconGoods21x21')
+			}
+		</property>
+
+		<propertyDef name="strOfferText" type="String"/>
+		<property name="strOfferText">
+			switch {
+				case self.eTradeOffer == TradeOffer.BUY:
+					locale.SID.UI.Buy + ' ' + self.tmplResource.strDisplayName
+				case self.eTradeOffer == TradeOffer.SELL:
+					locale.SID.UI.Sell + ' ' + self.tmplResource.strDisplayName
+				case self.eTradeOffer == TradeOffer.GIVE:
+					locale.SID.UI.Send + ' ' + self.tmplResource.strDisplayName + ' ' + locale.SID.UI.Aid
+				case self.eTradeOffer == TradeOffer.REQUEST:
+					locale.SID.UI.Request + ' ' + self.tmplResource.strDisplayName + ' ' + locale.SID.UI.Aid
+				default:
+					'Error'
+			}
+		</property>
+
+        <propertyDef name="objSupplyAndDemand" type="gs_tbg.SupplyAndDemand"/>
+		<property name="objSupplyAndDemand">
+			find(?{snd: snd.tmplResource == self.tmplResource}, gs_tbg.getAllSupplyAndDemand(self.objMH2Data.objAvatar))
+		</property>
+
+		<propertyDef name="nMarketPrice" type="int"/>
+		<property name="nMarketPrice" from="self.tmplResource.nPrice * self.objSupplyAndDemand.tmplPriceAdjust.resolve().fPriceAdjust"/>
+
+		<propertyDef name="nMarketDemand" type="int"/>
+		<property name="nMarketDemand" from="self.objSupplyAndDemand.nDemand"/>
+
+		<propertyDef name="nOurOffer" type="int"/>
+		<propertyDef name="nTradeAmount" type="int" >
+			if(self.objMH2Data.bRegnegotiateTrade,
+				self.objMH2Data.objTheirTradeProposal.nAmount,
+				10
+			)
+		</propertyDef>
+
+        <propertyDef name="nDuration" type="int" >
+			if(self.objMH2Data.bRegnegotiateTrade,
+				self.objMH2Data.objTheirTradeProposal.nDuration,
+				-1
+			)
+		</propertyDef>
+
+		<propertyDef name="n64TradeValue" type="int64"/>
+		<property name="n64TradeValue" from="int64(self.nMarketPrice) * int64(self.nTradeAmount)"/>
+
+		<propertyDef name="strActionText" type="String"/>
+		<property name="strActionText">
+			switch {
+				case self.eTradeOffer == TradeOffer.BUY:
+					locale.SID.UI.OfferToBuy
+				case self.eTradeOffer == TradeOffer.SELL:
+					locale.SID.UI.OfferToSell
+				case self.eTradeOffer == TradeOffer.GIVE:
+					locale.SID.UI.SendAid
+				case self.eTradeOffer == TradeOffer.REQUEST:
+					locale.SID.UI.RequestAid
+				default:
+					'Error'
+			}
+		</property>
+		
+		<propertyDef name="bImporting" type="bool" > 
+			if(self.objMH2Data.bRegnegotiateTrade,
+				self.objMH2Data.objTheirTradeProposal.refSourceNation != mh2data.objNation,
+				false
+			)
+		</propertyDef>
+		
+		<propertyDef name="eTradeOffer" type="Enum" restriction="TradeOffer" >
+			switch
+			{
+				case self.objMH2Data.bRegnegotiateTrade AND self.objMH2Data.objTheirTradeProposal.bAid AND self.bImporting:
+					TradeOffer.REQUEST
+				case self.objMH2Data.bRegnegotiateTrade AND self.objMH2Data.objTheirTradeProposal.bAid AND !self.bImporting:
+					TradeOffer.GIVE
+				case self.objMH2Data.bRegnegotiateTrade AND !self.objMH2Data.objTheirTradeProposal.bAid AND self.bImporting:
+					TradeOffer.BUY
+				case self.objMH2Data.bRegnegotiateTrade AND !self.objMH2Data.objTheirTradeProposal.bAid AND !self.bImporting:
+					TradeOffer.SELL
+				default :
+					TradeOffer.BUY
+			}
+		</propertyDef>			
+	</objectDef>
+
+	<!-- City -->
+	<objectDef type="LookupCityData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<property name="objRegion" from="self.objCity.refRegion.resolve(self.objMH2Data.objAvatar)"/>
+
+		<propertyDef name="objOwner" type="gs_tbg.Nation"/>
+		<property name="objOwner" from="self.objRegion.refOwner.resolve(self.objMH2Data.objAvatar)"/>
+
+		<propertyDef name="objController" type="gs_tbg.Nation"/>
+		<property name="objController" from="self.objRegion.refController.resolve(self.objMH2Data.objAvatar)"/>
+
+		<propertyDef name="objCapitalCityNation" type="gs_tbg.CapitalCityNation"/>
+		<property name="objCapitalCityNation" from="self.objController.getGOExtension(gs_tbg.CapitalCityNation, self.objMH2Data.objAvatar)"/>
+
+		<propertyDef name="objCapitalCity" type="gs_tbg.City"/>
+		<property name="objCapitalCity" from="self.objCapitalCityNation.refCapitalCity.resolve(self.objMH2Data.objAvatar)"/>
+
+		<propertyDef name="bCanCommand" type="bool"/>
+		<property name="bCanCommand" from="self.objCity.canCommand(self.objMH2Data.objAvatar, self.objController)"/>
+
+		<propertyDef name="objCurrentWorkOrder" type="gs_tbg.WorkOrder"/>
+		<property name="objCurrentWorkOrder">
+			find(?{order: order.nPriority == 1}, self.objCity.objWorkOrders)
+		</property>
+
+		<propertyDef name="objCompletedResearchProjects" type="gs_tbg.ResearchProject" variable="true"/>
+		<property name="objCompletedResearchProjects">
+		    gs_tbg.getNationCompletedResearchProjects(self.objMH2Data.objAvatar,self.objController)
+		</property>
+
+		<propertyDef name="objFactoryOutputTemplate" type="gs_tbg.FactoryOutputTemplate"/>
+		<property name="objFactoryOutputTemplate" from="self.objCurrentWorkOrder.tmplFactoryOutput.resolve()"/>
+
+		<propertyDef name="objResearchCenter" type="gs_tbg.ResearchCenter"/>
+		<property name="objResearchCenter" from="self.objCity.refResearchCenter.resolve(self.objMH2Data.objAvatar)"/>
+
+		<propertyDef name="objResearchProject" type="gs_tbg.ResearchProject"/>
+		<property name="objResearchProject" from="self.objResearchCenter.refResearchProject.resolve(self.objMH2Data.objAvatar)"/>
+
+		<propertyDef name="objResearchTopicTemplate" type="gs_tbg.ResearchTopicTemplate"/>
+		<property name="objResearchTopicTemplate" from="self.objResearchProject.tmplResearchTopic.resolve()"/>
+
+		<propertyDef name="nOrderTurnsBase" type="int"/>
+		<property name="nOrderTurnsBase" from="if(self.objCity.nIPUs != 0,
+			(self.objFactoryOutputTemplate.nIPUs - self.objCurrentWorkOrder.nIPUs) / self.objCity.nIPUs, 0)
+		"/>
+
+		<propertyDef name="nOrderTurnsModifier" type="int"/>
+		<property name="nOrderTurnsModifier" from="if((self.objFactoryOutputTemplate.nIPUs - self.objCurrentWorkOrder.nIPUs)
+			% self.objCity.nIPUs != 0, 1, 0)
+		"/>
+
+		<propertyDef name="nOrderTurns" type="int"/>
+		<property name="nOrderTurns" from="self.nOrderTurnsBase + self.nOrderTurnsModifier"/>
+
+		<propertyDef name="nOrderPercent" type="int"/>
+		<property name="nOrderPercent" from="if(self.objFactoryOutputTemplate.nIPUs != 0,
+			self.objCurrentWorkOrder.nIPUs * 100 / self.objFactoryOutputTemplate.nIPUs, 0)
+		"/>
+
+		<propertyDef name="nProjectPercent" type="int"/>
+		<property name="nProjectPercent" from="if(self.objResearchTopicTemplate.nPointsRequired != 0,
+			self.objResearchProject.nPoints * 100 / self.objResearchTopicTemplate.nPointsRequired, 0)
+		"/>
+
+		<propertyDef name="nTotalFoodDemand" type="int"/>
+		<property name="nTotalFoodDemand" from="self.objCity.nFoodDemand"/>
+
+		<object type="LookupDynamicListData" name="objProductionBuildingListData">
+			<property name="nElements" from="def.objCity.objCityBuildings.size"/>
+			<property name="nElementWidth" value="84"/>
+			<property name="nElementHeight" value="109"/>
+			<property name="nElementSpacing" value="4"/>
+			<property name="nRowSpacing" value="5"/>
+			<property name="nMaxElementsPerRow" value="5"/>
+		</object>
+
+		<object type="LookupDynamicListData" name="objResearchBuildingListData">
+			<property name="nElements" from="def.objResearchCenter.objBuildings.size"/>
+			<property name="nElementWidth" value="84"/>
+			<property name="nElementHeight" value="109"/>
+			<property name="nElementSpacing" value="4"/>
+			<property name="nRowSpacing" value="5"/>
+			<property name="nMaxElementsPerRow" value="5"/>
+		</object>
+
+		<object type="LookupDynamicListData" name="objResearchProjectsListData">
+			<property name="nElements" from="def.objCompletedResearchProjects.size"/>
+			<property name="nElementWidth" value="84"/>
+			<property name="nElementHeight" value="109"/>
+			<property name="nElementSpacing" value="4"/>
+			<property name="nRowSpacing" value="5"/>
+			<property name="nMaxElementsPerRow" value="5"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="LookupResearchData" class="CMLObject">
+		<propertyDef name="objCity" type="gs_tbg.City" from="spdata.objCityData.objCity"/>
+
+		<!-- TODO: this needs to be replaced with a query -->
+		<object type="gs_tbg.AvailableResearchTopicsLookup" name="objLookupProjects">
+			<property name="objGameRoot" from="mh2data.objAvatar"/>
+			<property name="objCity" from="def.objCity"/>
+		</object>
+
+		<propertyDef name="objResearchProgram" type="gs_tbg.ResearchProgram"/>
+		<property name="objResearchProgram" from="spdata.objCityData.objController.refResearchProgram.resolve(mh2data.objAvatar)"/>
+
+		<propertyDef name="nResearchTopics" type="int"/>
+		<property name="nResearchTopics" from="self.objLookupProjects.objValidResearchTopics.size"/>
+	</objectDef>
+
+	<objectDef type="LookupResearchProjects" class="CMLObject">
+		<propertyDef name="objLookupResearchData" type="LookupResearchData"/>
+
+		<propertyDef name="objMilitaryProjects" type="gs_tbg.ResearchTopicTemplate" variable="true"/>
+		<property name="objMilitaryProjects">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Special') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'VehicleLogistics') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'AerialTactics')},
+				self.objLookupResearchData.objLookupProjects.objValidResearchTopics)
+		</property>
+		<propertyDef name="objMilitaryProjectsBlocked" type="gs_tbg.ResearchTopicTemplate" variable="true">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Special') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'VehicleLogistics') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'AerialTactics')},
+				self.objLookupResearchData.objLookupProjects.objBlockedResearchTopics)
+		</propertyDef>
+
+		<propertyDef name="objIndustrialProjects" type="gs_tbg.ResearchTopicTemplate" variable="true"/>
+		<property name="objIndustrialProjects">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Industrial') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Infrastructure') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Resources') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Agriculture')},
+				self.objLookupResearchData.objLookupProjects.objValidResearchTopics)
+		</property>
+		<propertyDef name="objIndustrialProjectsBlocked" type="gs_tbg.ResearchTopicTemplate" variable="true">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Industrial') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Infrastructure') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Resources') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Agriculture')},
+				self.objLookupResearchData.objLookupProjects.objBlockedResearchTopics)
+		</propertyDef>
+
+		<propertyDef name="objLandProjects" type="gs_tbg.ResearchTopicTemplate" variable="true"/>
+		<property name="objLandProjects">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Infantry') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'TankWarfare') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Artillery')},
+				self.objLookupResearchData.objLookupProjects.objValidResearchTopics)
+		</property>
+		<propertyDef name="objLandProjectsBlocked" type="gs_tbg.ResearchTopicTemplate" variable="true">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Infantry') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'TankWarfare') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Artillery')},
+				self.objLookupResearchData.objLookupProjects.objBlockedResearchTopics)
+		</propertyDef>
+
+		<propertyDef name="objNavalProjects" type="gs_tbg.ResearchTopicTemplate" variable="true"/>
+		<property name="objNavalProjects">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'NavalEngineering')},
+				self.objLookupResearchData.objLookupProjects.objValidResearchTopics)
+		</property>
+		<propertyDef name="objNavalProjectsBlocked" type="gs_tbg.ResearchTopicTemplate" variable="true">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'NavalEngineering')},
+				self.objLookupResearchData.objLookupProjects.objBlockedResearchTopics)
+		</propertyDef>
+
+		<propertyDef name="objAirProjects" type="gs_tbg.ResearchTopicTemplate" variable="true"/>
+		<property name="objAirProjects">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'AerialEngineering') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'AerialTactics')},
+				self.objLookupResearchData.objLookupProjects.objValidResearchTopics)
+		</property>
+		<propertyDef name="objAirProjectsBlocked" type="gs_tbg.ResearchTopicTemplate" variable="true">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'AerialEngineering') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'AerialTactics')},
+				self.objLookupResearchData.objLookupProjects.objBlockedResearchTopics)
+		</propertyDef>
+
+		<propertyDef name="objAdvancedProjects" type="gs_tbg.ResearchTopicTemplate" variable="true"/>
+		<property name="objAdvancedProjects">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Advanced') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Chemical') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Rocketry') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Nuclear')},
+				self.objLookupResearchData.objLookupProjects.objValidResearchTopics)
+		</property>
+		<propertyDef name="objAdvancedProjectsBlocked" type="gs_tbg.ResearchTopicTemplate" variable="true">
+			filter(?{template: template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Advanced') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Chemical') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Rocketry') OR
+					template.tmplCategory == sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Nuclear')},
+				self.objLookupResearchData.objLookupProjects.objBlockedResearchTopics)
+		</propertyDef>
+	</objectDef>
+
+	<objectDef type="LookupIndustryFactoryOutputs" class="CMLObject">
+		<propertyDef name="objAvatar" type="mlgame.Avatar"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+
+		<object type="gs_tbg.AvailableFactoryOutputsLookup" name="objAvailableFactoryOutputsLookup">
+			 <property name="objGameRoot" from="def.objAvatar"/>
+			<property name="objCity" from="def.objCity"/>
+		</object>
+
+		<propertyDef name="objOutput" type="gs_tbg.FactoryOutputTemplate" variable="true"/>
+		<property name="objOutput">
+			filter(?{output: output.instanceOf(gs_tbg.FactoryOutputResourceTemplate)},
+				self.objAvailableFactoryOutputsLookup.objValidFactoryOutputs)
+		</property>
+	</objectDef>
+
+	<objectDef type="LookupInfrastructureFactoryOutputs" class="CMLObject">
+		<propertyDef name="objAvatar" type="mlgame.Avatar"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+
+		<object type="gs_tbg.AvailableFactoryOutputsLookup" name="objAvailableFactoryOutputsLookup">
+            <property name="objGameRoot" from="def.objAvatar"/>
+            <property name="objCity" from="def.objCity"/>
+        </object>
+
+		<propertyDef name="objOutput" type="gs_tbg.FactoryOutputTemplate" variable="true"/>
+		<property name="objOutput">
+			filter(?{output: output.instanceOf(gs_tbg.FactoryOutputCityBuildingTemplate) OR
+			output.instanceOf(gs_tbg.FactoryOutputResearchCenterBuildingTemplate)},
+				self.objAvailableFactoryOutputsLookup.objValidFactoryOutputs)
+		</property>
+	</objectDef>
+
+<!-- Group -->
+	<objectDef type="LookupEngagementData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objEngagement" type="gs_tbg.Engagement"/>
+
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<property name="objRegion" from="self.objEngagement.refRegion.resolve(self.objMH2Data.objAvatar)"/>
+
+		<propertyDef name="objAttacker" type="gs_tbg.Nation"/>
+		<property name="objAttacker" from="self.objEngagement.refAttacker.resolve(self.objMH2Data.objAvatar)"/>
+
+		<propertyDef name="objDefender" type="gs_tbg.Nation"/>
+		<property name="objDefender" from="self.objEngagement.refDefender.resolve(self.objMH2Data.objAvatar)"/>
+
+		<propertyDef name="objGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<property name="objGroups">
+            gs_tbg.getGroupsAtLocation(self.objMH2Data.objAvatar,self.objRegion)
+        </property>
+
+		<propertyDef name="objAttackerGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<property name="objAttackerGroups">
+            filter(?{group: gs_tbg.areAlliesOrSame(self.objMH2Data.objAvatar, group.refController.resolve(self.objMH2Data.objAvatar),self.objAttacker)}, self.objGroups)
+        </property>
+
+		<propertyDef name="objDefenderGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<property name="objDefenderGroups">
+            filter(?{group: gs_tbg.areAlliesOrSame(self.objMH2Data.objAvatar, group.refController.resolve(self.objMH2Data.objAvatar),self.objDefender)}, self.objGroups)
+        </property>
+		
+		<propertyDef name="objSeason" type="gs_tbg.Season" />
+		<property name="objSeason">
+			gs_tbg.getRegionSeason(self.objMH2Data.objAvatar, self.objRegion)
+		</property>
+		
+	</objectDef>
+
+	<objectDef type="LookupUnitFactoryOutputs" class="CMLObject">
+		<propertyDef name="objAvatar" type="mlgame.Avatar"/>
+		<propertyDef name="objCity" type="gs_tbg.City"/>
+
+		<object type="gs_tbg.AvailableFactoryOutputsLookup" name="objAvailableFactoryOutputsLookup">
+            <property name="objGameRoot" from="def.objAvatar"/>
+            <property name="objCity" from="def.objCity"/>
+        </object>
+
+        <propertyDef name="objLandUnitOutputs" type="gs_tbg.FactoryOutputUnitTemplate" variable="true"/>
+		<property name="objLandUnitOutputs">
+			filter(?{output: output.instanceOf(gs_tbg.FactoryOutputUnitTemplate) AND
+			output.tmplUnit.resolve().tmplUnitSubBranch.resolve().tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')},
+				self.objAvailableFactoryOutputsLookup.objValidFactoryOutputs)
+		</property>
+
+        <propertyDef name="objAirUnitOutputs" type="gs_tbg.FactoryOutputUnitTemplate" variable="true"/>
+		<property name="objAirUnitOutputs">
+			filter(?{output: output.instanceOf(gs_tbg.FactoryOutputUnitTemplate) AND
+			output.tmplUnit.resolve().tmplUnitSubBranch.resolve().tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')},
+				self.objAvailableFactoryOutputsLookup.objValidFactoryOutputs)
+		</property>
+
+        <propertyDef name="objNavalUnitOutputs" type="gs_tbg.FactoryOutputUnitTemplate" variable="true"/>
+		<property name="objNavalUnitOutputs">
+			filter(?{output: output.instanceOf(gs_tbg.FactoryOutputUnitTemplate) AND
+			output.tmplUnit.resolve().tmplUnitSubBranch.resolve().tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')},
+				self.objAvailableFactoryOutputsLookup.objValidFactoryOutputs)
+		</property>
+	</objectDef>
+
+	<objectDef type="LookupGroupData" class="CMLObject">
+		<propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+
+		<propertyDef name="objController" type="gs_tbg.Nation"/>
+		<property name="objController" from="self.objGroup.refController.resolve(mh2data.objAvatar)"/>
+
+		<propertyDef name="nHealthPercent" type="int"/>
+		<property name="nHealthPercent" from="self.objGroup.nHitPoints * 100 / self.objGroup.nMaxHitPoints"/>
+
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<property name="objRegion" from="self.objGroup.refLocation.resolve(mh2data.objAvatar)"/>
+
+		<propertyDef name="objUnitOrderMove" type="gs_tbg.UnitOrderMove"/>
+        <property name="objUnitOrderMove" from="self.objGroup.objUnitOrder"/>
+
+		<!-- TODO: Sorting not yet implemented -->
+		<!--<object type="mlutility.Sorter" name="objWaypointSorter">-->
+		<!--	<property name="pathToStorage" value="def.objUnitOrderMove.objWaypoints"/>-->
+		<!--	<property name="otSortedType" value="gs_tbg.MoveWaypoint"/>-->
+		<!--	<property name="strSortBy" value="nPosition"/>-->
+		<!--	<property name="strSortMethod" value="Dictionary"/>-->
+		<!--</object>-->
+
+		<propertyDef name="objLastWaypoint" type="gs_tbg.MoveWaypoint"/>
+		<!--<property name="objLastWaypoint" from="def.objWaypointSorter.objLast"/>-->
+
+		<propertyDef name="objDestinationRegion" type="gs_tbg.Region"/>
+		<!--<property name="objDestinationRegion" from="resolveGORef(def.objLastWaypoint.refRegion, def.objMH2Data.objAvatar)"/>-->
+
+		<propertyDef name="nArmsPercent" type="int"/>
+        <property name="nArmsPercent" from="if(self.objGroup.nArmsCarry != 0, (self.objGroup.nArms * 100 / self.objGroup.nArmsCarry), 100)"/>
+
+	</objectDef>
+
+	<objectDef type="LookupUnitData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objUnit" type="gs_tbg.Unit"/>
+
+        <propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+            <property name="objGroup" from="self.objUnit.refUnitGroup.resolve(mh2data.objAvatar)"/>
+
+		<object type="LookupGroupData" name="objLookupGroupData">
+			<property name="objGroup" from="def.objUnit.refUnitGroup.resolve(def.objMH2Data.objAvatar)"/>
+		</object>
+
+		<propertyDef name="objUnitTemplate" type="gs_tbg.UnitTemplate"/>
+            <property name="objUnitTemplate" from="self.objUnit.objUnitTemplate"/>
+
+		<propertyDef name="nHealthPercent" type="int"/>
+            <property name="nHealthPercent" from="self.objUnit.nHitPoints * 100 / self.objUnitTemplate.nHitPoints"/>
+	</objectDef>
+
+<!-- Military -->
+	<objectDef type="LookupMilitaryData" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objAllGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<property name="objAllGroups">
+			gs_tbg.getNationGroups(mh2data.objAvatar, self.objNation)
+		</property>
+
+		<propertyDef name="objAllUnits" type="gs_tbg.Unit" variable="true"/>
+		<property name="objAllUnits">
+			gs_tbg.getNationUnits(mh2data.objAvatar, self.objNation)
+		</property>
+
+		<propertyDef name="objArmyGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<property name="objArmyGroups">
+			filter(?{group: group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')}, self.objAllGroups)
+		</property>
+
+		<propertyDef name="objArmyUnits" type="gs_tbg.Unit" variable="true"/>
+		<property name="objArmyUnits">
+			filter(?{unit: unit.objUnitTemplate.tmplUnitSubBranch.resolve().tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')},
+				self.objAllUnits)
+		</property>
+
+		<propertyDef name="objAirGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<property name="objAirGroups">
+			filter(?{group: group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')}, self.objAllGroups)
+		</property>
+
+		<propertyDef name="objAirUnits" type="gs_tbg.Unit" variable="true"/>
+		<property name="objAirUnits">
+			filter(?{unit: unit.objUnitTemplate.tmplUnitSubBranch.resolve().tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')},
+				self.objAllUnits)
+		</property>
+
+		<propertyDef name="objNavalGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<property name="objNavalGroups">
+			filter(?{group: group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')}, self.objAllGroups)
+		</property>
+
+		<propertyDef name="objNavalUnits" type="gs_tbg.Unit" variable="true"/>
+		<property name="objNavalUnits">
+			filter(?{unit: unit.objUnitTemplate.tmplUnitSubBranch.resolve().tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')},
+				self.objAllUnits)
+		</property>
+
+		<propertyDef name="nArmyArmsCost" type="int"/>
+		<property name="nArmyArmsCost" from="self.objNation.objMilitaryTotals.nArmyArmsCost"/>
+
+		<propertyDef name="nAirArmsCost" type="int"/>
+		<property name="nAirArmsCost" from="self.objNation.objMilitaryTotals.nAirArmsCost"/>
+
+		<propertyDef name="nNavalArmsCost" type="int"/>
+		<property name="nNavalArmsCost" from="self.objNation.objMilitaryTotals.nNavyArmsCost + self.objNation.objMilitaryTotals.nSubmarineArmsCost"/>
+
+		<propertyDef name="nTotalArmsCost" type="int"/>
+		<property name="nTotalArmsCost" from="self.nArmyArmsCost + self.nAirArmsCost + self.nNavalArmsCost"/>
+	</objectDef>
+
+	<objectDef type="LookupEngagements" class="CMLObject">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<propertyDef name="objAllEngagements" type="gs_tbg.Engagement" variable="true"/>
+		<property name="objAllEngagements">
+			filter(?{engagement: engagement.refAttacker == self.objNation OR engagement.refDefender == self.objNation},
+				gs_tbg.getAllEngagements(self.objMH2Data.objAvatar))
+		</property>
+
+		<propertyDef name="objAttackerEngagements" type="gs_tbg.Engagement" variable="true"/>
+		<property name="objAttackerEngagements">
+			filter(?{engagement: engagement.refAttacker == self.objNation}, self.objAllEngagements)
+		</property>
+
+		<propertyDef name="objDefenderEngagements" type="gs_tbg.Engagement" variable="true"/>
+		<property name="objAllEngagements">
+			filter(?{engagement: engagement.refDefender == self.objNation}, self.objAllEngagements)
+		</property>
+	</objectDef>
+
+<!-- Icon Lookups -->
+	<objectDef type="LookupResourceIcons" class="CMLObject">
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+
+		<propertyDef name="objEntry" type="media_tables.ResourceDisplayTableEntry"/>
+		<property name="objEntry">
+			find(?{entry: entry.tmplResource == self.tmplResource}, mh2data.objResourceDisplayTable.objEntries)
+		</property>
+
+		<propertyDef name="tmplIcon21x21" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="tmplIcon21x21" from="if(self.objEntry != null,
+			self.objEntry.tmplIcon21x21, mh2data.objResourceDisplayTable.objDefaultEntry.tmplIcon21x21)
+		"/>
+
+		<propertyDef name="tmplIcon32x32" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="tmplIcon32x32" from="if(self.objEntry != null,
+			self.objEntry.tmplIcon32x32, mh2data.objResourceDisplayTable.objDefaultEntry.tmplIcon32x32)
+		"/>
+	</objectDef>
+
+	<objectDef type="LookupNationIcons" class="CMLObject">
+		<propertyDef name="tmplNation" type="TemplateRef" restriction="gs_tbg.NationTemplate"/>
+		<propertyDef name="tmplIdeology" type="TemplateRef" restriction="gs_tbg.IdeologyTemplate"/>
+    <propertyDef name="tmplNationality" type="TemplateRef" restriction="gs_tbg.NationalityTemplate" />
+
+		<propertyDef name="objEntry" type="media_tables.FlagModelTextureTableEntry">
+			mh2data.objFlagModelTextureTable.getEntry(self.tmplNation.resolve().tmplDefaultNationality, self.tmplIdeology)
+		</propertyDef>
+
+		<propertyDef name="tmplFlag256x128" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="tmplFlag256x128" from="self.objEntry.tmplFlag256x128"/>
+
+		<propertyDef name="tmplFlag46x24" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="tmplFlag46x24" from="self.objEntry.tmplFlag46x24"/>
+
+		<propertyDef name="tmplIcon28x28" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="tmplIcon28x28" from="self.objEntry.tmplIcon28x28"/>
+
+		<propertyDef name="tmplDecal128x128" type="TemplateRef" restriction="mlmedia.TextureTemplate"/>
+		<property name="tmplDecal128x128" from="self.objEntry.tmplDecal128x128"/>
+	</objectDef>
+
+	<objectDef type="LookupTerrainIcon" class="CMLObject">
+		<propertyDef name="tmplTerrain" type="TemplateRef" restriction="gs_tbg.TerrainTemplate"/>
+
+		<propertyDef name="objEntry" type="media_tables.TerrainDisplayTableEntry"/>
+		<property name="objEntry">
+			find(?{entry: entry.tmplTerrain == self.tmplTerrain}, mh2data.objTerrainDisplayTable.objEntries)
+		</property>
+
+		<propertyDef name="tmplIcon22x22" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="tmplIcon22x22" from="if(self.objEntry != null,
+			self.objEntry.tmplIcon22x22, mh2data.objTerrainDisplayTable.objDefaultEntry.tmplIcon22x22)
+		"/>
+	</objectDef>
+</locust>

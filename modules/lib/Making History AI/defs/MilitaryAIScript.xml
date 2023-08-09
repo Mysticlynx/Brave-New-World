@@ -1,0 +1,2978 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+<objectDef type="MilitaryAIScript" class="CMLObject">
+    <propertyDef name="objParentAI" type="MHAISysScript"/>
+    <propertyDef name="objGameSysRegion" type="gs_tbg.GameSysRegion"/>
+    <propertyDef name="objGameSysCity" type="gs_tbg.GameSysCity"/>
+    <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+    <propertyDef name="objGameSysNationRelations" type="gs_tbg.GameSysNationRelations"/>
+    <propertyDef name="objGameSysUnit" type="gs_tbg.GameSysUnit"/>
+    <propertyDef name="objGameSysNation" type="gs_tbg.GameSysNation"/>
+    <propertyDef name="objGameSysCombat" type="gs_tbg.GameSysCombat"/>
+    <propertyDef name="strSeaInvasionComposition" type="String" default="InvasionFleet"/>
+    <propertyDef name="strParatrooperComposition" type="String" default="ParatrooperGroup"/>
+    <propertyDef name="strNavalBombardComposition" type="String" default="BombardShoreGroup"/>
+
+    <property name="objGameSysRegion" from="self.objParentAI.objGameSysRegion"/>
+    <property name="objGameSysCity" from="self.objParentAI.objGameSysCity"/>
+    <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+    <property name="objGameSysNationRelations" from="self.objParentAI.objGameSysNationRelations"/>
+    <property name="objGameSysUnit" from="self.objParentAI.objGameSysUnit"/>
+    <property name="objGameSysNation" from="self.objParentAI.objGameSysNation"/>
+    <property name="objGameSysCombat" from="self.objParentAI.objGameSysCombat"/>
+
+    <script type="application/javascript"><![CDATA[
+
+function PotentialExpansionRating(data,homeRegion,potentialExpansion,diplomaticWeight)
+{
+    this.potentialExpansion = potentialExpansion;
+    this.MuchBetter = 1;
+    this.Comparable = 0;
+    this.MuchWorse = -1;
+
+    var homeLandMassIDRegion = data.geoColorMap.getLandMassIDRegion(data.avatar, homeRegion);
+    this.bIsOnHomeLandMass = homeLandMassIDRegion.equals(potentialExpansion.objTargetLandMassIDRegion);
+    this.bTargetIsAlly = self.objGameSysNationRelations.areAllies(data.avatar,data.nation,potentialExpansion.objTargetNation,true);
+
+    var ourInfo = self.objGameSysAIUtility.getAINationInformation(data.avatar,data.nation);
+    var otherInfo = self.objGameSysAIUtility.getAINationInformation(data.avatar,potentialExpansion.objTargetNation);
+
+    var ourStrength = ourInfo.nEstimatedMilitaryPower;
+    var otherStrength = otherInfo.nEstimatedMilitaryPower;
+
+    // add master nation strength if they have a master nation    
+    var otherMasterNation = potentialExpansion.objTargetNation.getMasterNation(data.avatar);
+    if (!potentialExpansion.objTargetNation.equals(otherMasterNation))
+    {
+        var otherMasterInfo = self.objGameSysAIUtility.getAINationInformation(data.avatar,otherMasterNation);
+        
+        // log("DEBUG: adding military power " + otherMasterInfo.nEstimatedMilitaryPower + " from " + otherMasterNation.strName + " to child " + potentialExpansion.objTargetNation.strName + " strength " + otherStrength);
+        
+        otherStrength += otherMasterInfo.nEstimatedMilitaryPower;
+    }
+
+    var otherStrengthHere = potentialExpansion.nEstimatedTargetAttackPower + potentialExpansion.nEstimatedTargetDefensePower;
+
+    this.bRequiresSeaInvasion = ( (potentialExpansion.bCanAttackByLand == false) || (potentialExpansion.objOurCities.length == 0) );
+    this.bFragmented = ((potentialExpansion.bCanAttackByLand == false) && (potentialExpansion.objOurCities.length > 0));
+    this.bTargetIsMuchWeakerOnLandMass = (ourStrength > otherStrengthHere * 2);
+    this.bTargetIsStrongerOnLandMass = (otherStrengthHere > ourStrength);
+    this.bTargetIsMuchWeakerOverall = (otherStrength * 2 < ourStrength);
+    this.bTargetIsStrongerOverall = (otherStrength > ourStrength);
+    this.bTargetIsMuchStrongerOverall = (otherStrength > 2 * ourStrength);
+
+    this.diplomaticWeight = diplomaticWeight;
+
+    this.compareTo = function(otherRating)
+    {
+        if (this.potentialExpansion.bHistoric != otherRating.potentialExpansion.bHistoric)
+        {
+            if (this.potentialExpansion.bHistoric)
+            {
+                //log("DEBUG: " + data.nation.strName + " potential expansion " + this.potentialExpansion + " is much better than " + otherRating.potentialExpansion + " because of historic claims.");
+                return this.MuchBetter;
+            }
+            else
+            {
+                //log("DEBUG: " + data.nation.strName + " potential expansion " + this.potentialExpansion + " is much worse than " + otherRating.potentialExpansion + " because of its lack of historic claims.");
+                return this.MuchWorse;
+            }
+        }
+
+        if (this.bRequiresSeaInvasion != otherRating.bRequiresSeaInvasion)
+        {
+            if (this.bRequiresSeaInvasion)
+            {
+                // log("DEBUG: " + data.nation.strName + " potential expansion " + this.potentialExpansion + " is much worse than " + otherRating.potentialExpansion + " because it's a sea invasion.");
+                return this.MuchWorse;
+            }
+            else
+            {
+                // log("DEBUG: " + data.nation.strName + " potential expansion " + this.potentialExpansion + " is much better than " + otherRating.potentialExpansion + " because it's not a sea invasion.");           
+                return this.MuchBetter;
+            }
+        }
+        
+        if (this.bTargetIsMuchStrongerOverall != otherRating.bTargetIsMuchStrongerOverall)
+        {
+            // are we being suicidal?
+            if (this.bTargetIsMuchStrongerOverall)
+                return this.MuchWorse;
+            else
+                return this.MuchBetter;
+        }
+
+        if ( abs(this.diplomaticWeight - otherRating.diplomaticWeight) > 50 )
+        {
+            if (this.diplomaticWeight < otherRating.diplomaticWeight)
+                return this.MuchWorse;
+            else
+                return this.MuchBetter;
+        }
+
+        if (this.bFragmented != otherRating.bFragmented)
+        {
+            if (this.bFragmented)
+                return this.MuchWorse;
+            else
+                return this.MuchBetter;
+        }
+
+        if (this.bIsOnHomeLandMass != otherRating.bIsOnHomeLandMass)
+        {
+            // expand on home land mass first
+            if (this.bIsOnHomeLandMass)
+                return this.MuchBetter;
+            else
+                return this.MuchWorse;
+        }
+
+        return this.Comparable;
+    }
+}
+
+// class for military AI, temporary
+function MilitaryAITempData(avatar)
+{
+    this.avatar = avatar;
+    this.turn = gs_tbg.getGameSysTurnBasedGame(avatar).objTurnBasedGame.nTurn;
+    this.pad = getPAD(avatar,PADMakingHistoryAI);
+    this.nation = this.pad.objNation;
+    this.landInvasionPlans = null;
+    this.seaInvasionPlans = null;
+    this.vitalPlans = null;
+    this.militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+    this.geoColorMap = self.objGameSysAIUtility.getGeographicColorMap(this.avatar);
+
+    this.checkNavalPlans = function()
+    {
+        var numThreats = this.militaryAI.updateEnemyNavyThreats(this.avatar);
+
+        if (numThreats > 0)
+        {
+            if (this.pad.objPlanNavyPatrolAndIntercept == null)
+            {
+                // create plan
+                var action = gs_tbg.GActCreateAIMilitaryPlan.create({
+                    "refNation": this.nation,
+                    "strPurpose": "NavyPatrolAndIntercept",
+                    "otType": gs_tbg.AIMilitaryPlanNavyPatrolAndIntercept
+                    });
+                this.avatar.sendAction(action);
+                var plan = action.objPlan;
+                //plan.objParentAI = self.objParentAI;
+                //plan.objMilitaryAI = this.militaryAI;
+                plan.strComposition = "NavyPatrol"; // default for this plan
+
+                this.setPlanStatus(plan,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE,"create plan");
+                plan.fPriority = 0.5;
+                plan.fAllocationLevel = 1.0;
+
+                this.pad.objPlanNavyPatrolAndIntercept = plan;
+            }
+        } // if there are known navy threats
+
+        var interdictionCheckInterval = 13; // must be >= 2
+        if (this.pad.nNextInterdictionCheckTurn == 0)
+        {
+            this.pad.nNextInterdictionCheckTurn = self.objParentAI.getRandomIntInRange(0,interdictionCheckInterval);
+        }
+
+        if (this.turn >= this.pad.nNextInterdictionCheckTurn)
+        {
+            this.pad.nNextInterdictionCheckTurn = this.turn + interdictionCheckInterval + self.objParentAI.getRandomIntInRange(-1,1);
+
+            this.militaryAI.updateTradeInterdictionSeaRegions(this.avatar);
+
+            if (this.militaryAI.objTradeInterdictionSeaRegions.size > 0)
+            {
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: " + this.nation.strName + " found " + this.militaryAI.objTradeInterdictionSeaRegions.size + " sea interdiction regions.");
+                }
+
+                if (this.pad.objPlanTradeInterdiction == null)
+                {
+                    // determine if we should use submarines or surface ships
+                    var bUseSubmarines = false;
+
+                    if (this.militaryAI.knowsComposition(this.avatar, "SubmarineGroup"))
+                    {
+                        var ourPower = getTotalNavySurfaceStrength(this.avatar, this.nation);
+
+                        var enemyNations = new Array();
+                        self.objGameSysNationRelations.getEnemies(this.avatar,this.nation,enemyNations, true);
+                        for (var i in enemyNations)
+                        {
+                            var enemyNation = enemyNations[i];
+                            var enemyPower = getTotalNavySurfaceStrength(this.avatar, enemyNation);
+                            if (enemyPower > ourPower * 2.0)
+                            {
+                                if (this.pad.bWantMilitaryAILog)
+                                {
+                                    log("DEBUG: " + this.nation.strName + " plans to use submarines for trade interdiction.");
+                                }
+                                bUseSubmarines = true;
+                                break;
+                            }
+                        }
+                    }
+                    this.militaryAI.bUseSubmarinesForTradeInterdiction = bUseSubmarines
+
+                    // create plan
+                    var action = gs_tbg.GActCreateAIMilitaryPlan.create({
+                        "refNation": this.nation,
+                        "strPurpose": "NavyTradeInterdiction",
+                        "otType": gs_tbg.AIMilitaryPlanNavyTradeInterdiction
+                        });
+                    this.avatar.sendAction(action);
+                    var plan = action.objPlan;
+                    //plan.objParentAI = self.objParentAI;
+                    //plan.objMilitaryAI = this.militaryAI;
+                    if (this.militaryAI.bUseSubmarinesForTradeInterdiction)
+                        plan.strComposition = "SubmarineGroup";
+                    else
+                        plan.strComposition = "NavyPatrol";
+
+                    this.setPlanStatus(plan,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE,"create plan");
+                    plan.fPriority = 0.5;
+                    plan.fAllocationLevel = 1.0;
+
+                    this.pad.objPlanTradeInterdiction = plan;
+                }
+            } // if we have any sea interdiction regions
+        } // if it's time to update sea interdiction regions
+    }
+
+    this.checkAirForcePlans = function()
+    {
+        if (this.pad.objPlanAirPatrolAndBombing == null)
+        {
+            var airbaseRegions = this.militaryAI.getExistingAirbaseRegions(this.avatar);
+            if (airbaseRegions.size > 0)
+            {
+                // create plan
+                var action = gs_tbg.GActCreateAIMilitaryPlan.create({
+                    "refNation": this.nation,
+                    "strPurpose": "AirPatrolAndBombing",
+                    "otType": gs_tbg.AIMilitaryPlanAirPatrolAndBombing
+                    });
+                this.avatar.sendAction(action);
+                var plan = action.objPlan;
+                //plan.objParentAI = self.objParentAI;
+                //plan.objMilitaryAI = this.militaryAI;
+                plan.strComposition = "BomberGroup"; // default for this plan
+                
+                // set minumum strength per airbase
+                plan.objMinStrengthPerAirbase = gs_tbg.AICombatStrength.create();
+                plan.objMinStrengthPerAirbase.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK, 500);
+                plan.objMinStrengthPerAirbase.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_AIR, 1000);
+                plan.objMinStrengthPerAirbase.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_SEA_SURFACE, 500);
+                plan.objMinStrengthPerAirbase.setCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_INFRASTRUCTURE, 500);
+
+                this.setPlanStatus(plan,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE,"create plan");
+                plan.fPriority = 0.5;
+                plan.fAllocationLevel = 1.0;
+
+                this.pad.objPlanAirPatrolAndBombing = plan;
+            }
+            else
+            {
+                //log("no airbase regions.");
+            }
+        }
+    }
+
+    // create an opportunity attack plan for our current regions to supplement our defense plan
+    this.createDefenseOpportunityAttackPlan = function()
+    {
+        if (this.pad.bWantMilitaryAILog)
+            log("DEBUG: creating opportunity defense plan");
+
+        var action = gs_tbg.GActCreateAIMilitaryPlan.create({
+            "refNation": this.nation,
+            "strPurpose": "take undefended regions",
+            "otType": gs_tbg.AIMilitaryPlanOpportunityAttack
+            });
+        this.avatar.sendAction(action);
+        var plan = action.objPlan;
+        plan.strPreferredComposition = "FastArmyGroup";
+        this.setPlanStatus(plan,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE,"created");
+        plan.fPriority = 1.0;
+        plan.fAllocationLevel = 1.0;
+    }
+
+    this.clearVitalRegionAttacks = function()
+    {
+        for (var i in this.vitalPlans)
+        {
+            var plan = this.vitalPlans[i];
+            this.setPlanStatus(plan,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_CANCELLED,"obsolete invasion plan");
+        }
+        this.pad.objVitalRegions.clear();
+    }
+
+    // note: city can be null
+    this.fillInvasionPlanProperties = function(plan,desiredLandMass,city)
+    {
+        // log("DEBUG: fillInvasionPlanProperties, plan.strPurpose=" + plan.strPurpose);
+
+        plan.objSourceCity = city;
+        plan.objLandMassIDRegion = desiredLandMass.objTargetLandMassIDRegion;
+        plan.objMilitaryAI = this.militaryAI;
+
+        var bCanBuildParatroopers = false;
+        if (this.militaryAI.knowsComposition(this.avatar, self.strParatrooperComposition ))
+        {
+            bCanBuildParatroopers = this.militaryAI.canBuildComposition(this.avatar, self.strParatrooperComposition );
+        }
+
+        plan.objParentAI = self.objParentAI;
+        this.setPlanStatus(plan,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE,"create land invasion plan");
+        plan.fPriority = 1.0; // Could use desiredLandMass.fPriority
+        plan.fAllocationLevel = 1.0;
+        plan.bUseParatroopers = bCanBuildParatroopers;
+
+        //  fill in regions to attack
+        plan.objRegionsToConquer.clear();
+        for (var r in desiredLandMass.objRegionsToConquer)
+        {
+            var region = desiredLandMass.objRegionsToConquer[r];
+            plan.objRegionsToConquer.add(region);
+        }
+    }
+
+    // note: city or startRegion could be null
+    this.createLandInvasionPlan = function(desiredLandMass,city,startRegion)
+    {
+        var purpose;
+        if (city != null)
+            purpose = "Land Invasion from city " + city.strName;
+        else
+            purpose = "Land Invasion from region " + startRegion.strName;
+
+        var action = gs_tbg.GActCreateAIMilitaryPlan.create({
+            "refNation": this.pad.objNation,
+            "strPurpose": purpose,
+            "otType": AIPlanLandInvasion
+            });
+        this.avatar.sendAction(action);
+        var plan = action.objPlan;
+
+        if (startRegion != null)
+            plan.objStartLandRegion = startRegion;
+        else if (city != null)
+            plan.objStartLandRegion = city.refRegion.resolve(this.avatar);
+
+        this.fillInvasionPlanProperties(plan,desiredLandMass,city);
+        this.addLandInvasionPlan(plan);
+
+        if (this.pad.bWantMilitaryAILog)
+        {
+            log("DEBUG: created AIPlanLandInvasion by " + this.nation.strName + " from " + plan.objStartLandRegion.strName);
+            log("DEBUG: purpose=" + purpose);
+        }
+
+        return plan;
+    }
+
+    this.getLandInvasionPlanForLandMassFromStartRegion = function(landMassIDRegion, startRegion)
+    {
+        this.buildAttackPlans();
+        var plans = this.landInvasionPlans[landMassIDRegion.strName];
+        if (plans != undefined)
+        {
+            var invasionColorMap = this.militaryAI.getInvasionColorMap(this.avatar);
+            var testColor = invasionColorMap.getRegionInvasionColor(startRegion);
+            for (var i in plans)
+            {
+                var plan = plans[i];
+                var color = invasionColorMap.getRegionInvasionColor(plan.objStartLandRegion);
+                if (color == testColor)
+                    return plan;
+            }
+        }
+        return null;
+    }
+
+    // create a land invasion from a sea invasion (if there's not already one present)
+    this.createLandInvasionIfNeeded = function(seaInvasionPlan, landedUnitGroup)
+    {
+        var dlm = seaInvasionPlan.objDesiredLandMass;
+        if (dlm == null)
+        {
+            log("DEBUG: createLandInvasionIfNeeded - no desired land mass found for " + seaInvasionPlan); // may have won
+            return null;
+        }
+
+        var landMassIDRegion = seaInvasionPlan.objLandMassIDRegion;
+        var startRegion = seaInvasionPlan.objStartLandRegion;
+        var plan = this.getLandInvasionPlanForLandMassFromStartRegion(landMassIDRegion, startRegion);
+        if (plan == null)
+        {
+            plan = this.createLandInvasionPlan(dlm,null,startRegion);
+        }
+        else if (this.pad.bWantMilitaryAILog)
+        {
+            log("DEBUG: land invasion handled by " + plan.strPurpose);
+        }
+        plan.checkAssignmentForLandedUnitGroup(this.avatar,landedUnitGroup)
+        return plan;
+    }
+
+    // determine the arrived strength of all land invasion plans for a land mass
+    this.getLandInvasionArrivedStrength = function(seaInvasionPlan)
+    {
+        var dlm = seaInvasionPlan.objDesiredLandMass;
+        if (dlm == null)
+        {
+            log("DEBUG: getLandInvasionArrivedStrength - no desired land mass found for " + seaInvasionPlan); // may have won
+            return 0;
+        }
+
+        var arrivedStrength = 0;
+        this.buildAttackPlans();
+        var landMassIDRegion = seaInvasionPlan.objLandMassIDRegion;
+        var plans = this.landInvasionPlans[landMassIDRegion.strName];
+        if (plans != undefined)
+        {
+            for (i in plans)
+            {
+                var plan = plans[i];
+                for (r in plan.objUnitRegionRequirements)
+                {
+                    var reqs = plan.objUnitRegionRequirements[r];
+                    if (reqs.nLastUpdateTurn >= this.turn) // is it up to date?
+                    {
+                        var objAllocatedStrength = reqs.getCombatStrengthAllocated();
+                        var allocatedLandAttackStrength = objAllocatedStrength.getCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK);
+                        var allocatedLandDefenseStrength = objAllocatedStrength.getCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_DEFENSE);
+                        var avgLandStrength = ( allocatedLandAttackStrength + allocatedLandDefenseStrength ) / 2;
+                        arrivedStrength += avgLandStrength;
+                    }
+                }
+            }
+        }
+        return arrivedStrength;
+    }
+
+    // fill in plan.objUnloadRegion, self.objStartLandRegion, and self.objRefuelPortCity
+    this.determineSeaInvasionUnloadAndLandRegions = function(plan)
+    {
+        var dlm = plan.objDesiredLandMass;
+        if (dlm == null)
+        {
+            log("DEBUG: determineSeaInvasionUnloadAndLandRegions - no dlm for " + plan);
+            return false;
+        }
+        
+        var fRandomFactor = 0.05;
+        var totalFailures = ( (dlm.nLandInvasionFailures > 0) || (dlm.nSeaInvasionFailures > 0) );
+        if (totalFailures > 0)
+        {
+            // become more unpredictable over time
+            if (totalFailures > 3)
+            {
+                fRandomFactor = 0.5; 
+            }
+            else
+            {
+                fRandomFactor = 0.25; 
+            }
+        }
+
+        var landRegions = new Array();
+        var pathCosts = new Array();
+        this.militaryAI.getSeaInvasionLandRegions(this.avatar, dlm, plan.objSourceCity, landRegions, pathCosts);
+
+        if (landRegions.length == 0)
+        {
+            log("DEBUG: " + this.nation.strName + " getSeaInvasionLandRegions from " + plan.objSourceCity.strName + " to landMass of " + dlm.objTargetLandMassIDRegion.strName + " returned no landRegions");
+            return false;
+        }
+
+        var bestLandRegion = null;
+        var bestUnloadRegion = null;
+        var bestRating; // lower is better
+        var bestLandStrength = 1;
+        var bestSeaStrength = 1;
+
+        var unitGroups = new Array();
+        var adjacentSeaRegions = new Array();
+
+        for (var r in landRegions)
+        {
+            var region = landRegions[r];
+            var cost = pathCosts[r];
+
+            var totalEnemyLandDefenseStrength = 0;
+            this.militaryAI.getEnemyUnitGroupsInRegion(this.avatar,region,true,unitGroups)
+            for (var g in unitGroups)
+            {
+                var unitGroup = unitGroups[g];
+                var landDefensePower = unitGroup.getEffectiveCombatStrength(this.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_DEFENSE);
+                
+                totalEnemyLandDefenseStrength += landDefensePower;
+            }
+
+            var adjSeaRegion = null;
+            var adjSeaRegionPower;
+            this.militaryAI.getAdjacentSeaRegions(this.avatar,region, adjacentSeaRegions);
+            for (var s in adjacentSeaRegions)
+            {
+                var totalEnemySeaSurfacePower = 0;
+                var seaRegion = adjacentSeaRegions[s];
+                this.militaryAI.getEnemyUnitGroupsInRegion(this.avatar,region,true,unitGroups)
+                for (var g in unitGroups)
+                {
+                    var unitGroup = unitGroups[g];
+                    var surfacePower = unitGroup.getEffectiveCombatStrength(this.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_SEA_SURFACE);
+                    // var submergedPower = unitGroup.getEffectiveCombatStrength(this.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_SEA_SUBMERGED);
+                    totalEnemySeaSurfacePower += surfacePower;
+                }
+
+                if ((adjSeaRegion != null) && (totalEnemySeaSurfacePower > adjSeaRegionPower))
+                    continue;
+
+                adjSeaRegion = seaRegion;
+                adjSeaRegionPower = totalEnemySeaSurfacePower;
+            }
+
+            if (adjSeaRegion == null)
+                throw "adjSeaRegion not found";
+
+            // calculate a combined rating for region and adjSeaRegion
+            var regionRating = totalEnemyLandDefenseStrength + adjSeaRegionPower + cost * this.militaryAI.fPowerPerPathCostFactor;
+            
+            // add some unpredictability
+            var randomModifier = 1.0 + self.objParentAI.getRandomFloat() * fRandomFactor;
+            regionRating = regionRating * randomModifier;
+            
+            if (this.pad.bWantMilitaryAILog)
+            {
+                log("DEBUG: rating for " + region.strName + ": " + regionRating + ", totalEnemyLandDefenseStrength=" + totalEnemyLandDefenseStrength + ", adjSeaRegionPower=" + adjSeaRegionPower + ",cost=" + cost + "*" + this.militaryAI.fPowerPerPathCostFactor);
+            }
+            
+            if ((bestLandRegion != null) && (regionRating > bestRating))
+                continue;
+
+            bestLandRegion = region;
+            bestRating = regionRating;
+            bestUnloadRegion = adjSeaRegion;
+            bestLandStrength = totalEnemyLandDefenseStrength;
+            bestSeaStrength = totalEnemySeaSurfacePower;
+        } // for landRegions
+
+        if ((bestLandRegion != null) && (bestUnloadRegion != null))
+        {
+            if (this.pad.bWantMilitaryAILog)
+            {
+                log("DEBUG: chose landRegion " + bestLandRegion.strName + " and sea region " + bestUnloadRegion.strName + ", bestRating=" + bestRating);
+            }
+        
+            plan.objStartLandRegion = bestLandRegion;
+            plan.objUnloadRegion = bestUnloadRegion;
+            plan.objRefuelPortCity = this.militaryAI.getSeaInvasionRefuelPort(this.avatar, plan.objSourceCity, bestUnloadRegion);
+
+            if (plan.nMinLandStrengthNeeded < bestLandStrength)
+            {
+                plan.nMinLandStrengthNeeded = bestLandStrength;
+            }
+            
+            if (plan.nMinSeaSurfaceStrengthNeeded < bestSeaStrength)
+            {
+                plan.nMinSeaSurfaceStrengthNeeded = bestSeaStrength;
+            }
+            
+            return true;
+        }
+
+        return false;
+    } // determineSeaInvasionUnloadAndLandRegions
+
+
+    this.createSeaInvasionPlan = function(desiredLandMass,city)
+    {
+        var purpose = "Sea Invasion from " + city.strName + " to continent containing " + desiredLandMass.objTargetLandMassIDRegion.strName;
+        var action = gs_tbg.GActCreateAIMilitaryPlan.create({
+            "refNation": this.pad.objNation,
+            "strPurpose": purpose,
+            "otType": AIPlanSeaInvasion
+            });
+        this.avatar.sendAction(action);
+        var plan = action.objPlan;
+        plan.strComposition = self.strSeaInvasionComposition;
+
+        this.fillInvasionPlanProperties(plan,desiredLandMass,city);
+        // this.determineSeaInvasionUnloadAndLandRegions(plan);
+        this.addSeaInvasionPlan(plan);
+
+        return plan;
+    }
+
+    this.setPlanStatus = function(plan,status,reason)
+    {
+        if (status.equals(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_CANCELLED) && (plan.handleCancel != undefined) )
+        {
+            plan.handleCancel(avatar);
+        }
+    
+        this.avatar.sendAction(
+            gs_tbg.GActSetAIMilitaryPlanStatus.create({
+                "objPlan": plan,
+                "eStatus": status,
+                "strReason": reason,
+                "nTurn": this.turn
+                }) );
+    }
+
+    // add a land invasion plan to javascript list of plans
+    this.addLandInvasionPlan = function(plan)
+    {
+        if (this.landInvasionPlans != null)
+        {
+            var region = plan.objLandMassIDRegion;
+            if (this.landInvasionPlans[region.strName] == undefined)
+            {
+                this.landInvasionPlans[region.strName] = new Array();
+            }
+            this.landInvasionPlans[region.strName].push(plan);
+        }
+    }
+
+    // add a sea invasion plan to javascript list of plans
+    this.addSeaInvasionPlan = function(plan)
+    {
+        if (this.seaInvasionPlans != null)
+        {
+            var region = plan.objLandMassIDRegion;
+            var sourceCity = plan.objSourceCity;
+
+            if (this.seaInvasionPlans[region.strName] == undefined)
+            {
+                this.seaInvasionPlans[region.strName] = new Object;
+            }
+            this.seaInvasionPlans[region.strName][sourceCity.strName] = plan;
+        }
+    }
+
+    this.buildAttackPlans = function()
+    {
+        if (this.landInvasionPlans == null)
+        {
+            this.landInvasionPlans = new Object();
+            this.seaInvasionPlans = new Object();
+            this.vitalPlans = new Object();
+
+            var ourPlans = self.objGameSysAIUtility.objNationAIPlans.filter({"refNation": this.nation});
+            for (var i in ourPlans)
+            {
+                var plan = ourPlans[i];
+                if (notEqual(plan.eStatus,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE))
+                    continue;
+
+                if ( plan.instanceOf(local.AIPlanLandInvasion) )
+                {
+                    this.addLandInvasionPlan(plan);
+                }
+                else if (plan.instanceOf(local.AIPlanSeaInvasion) )
+                {
+                    this.addSeaInvasionPlan(plan);
+                }
+                else if (plan.instanceOf(local.AIPlanSingleRegionAttack))
+                {
+                    var region = plan.refRegionToConquer.resolve(this.avatar);
+                    if (plan.strPurpose == "AttackVitalRegion")
+                    {
+                        this.vitalPlans[region.strName] = plan;
+                    }
+                }
+            }
+        }
+    } // this.buildAttackPlans
+
+    // get any land invasion plan for the specified land mass
+    this.getLandInvasionPlanForLandMass = function(landMassIDRegion)
+    {
+        this.buildAttackPlans();
+        var plans = this.landInvasionPlans[landMassIDRegion.strName];
+        if (plans != undefined)
+        {
+            for (var i in plans)
+            {
+                return plans[i];
+            }
+        }
+        return null;
+    }
+
+    // return javascript object containing sea invasions to invade land mass containing region
+    this.getSeaInvasionPlansForLandMass = function(landMassIDRegion)
+    {
+        this.buildAttackPlans();
+        return this.seaInvasionPlans[landMassIDRegion.strName];
+    }
+
+    this.getSeaInvasionPlansFromCityToLandMass = function(city, landMassIDRegion)
+    {
+        this.buildAttackPlans();
+        var plan = null;
+        var plans = this.getSeaInvasionPlansForLandMass(landMassIDRegion);
+        if (plans != null)
+        {
+            plan = plans[city.strName];
+            if (plan != undefined)
+                return plan;
+        }
+
+        // Could check for cities that got taken and see if there's one from a different city on the same continent
+        return null;
+    }
+
+    this.createPlanToConquerRegionWithResource = function(resource)
+    {
+        var sourceCity = self.objParentAI.getNationHomeCity(this.avatar,this.nation);
+        if (sourceCity == null)
+        {
+            if (this.pad.bWantMilitaryAILog)
+            {
+                log("No home city"); // Could find another city (if this plan is useful)
+            }
+            return;
+        }
+        
+        var bestRegion = this.militaryAI.getBestBorderRegionForResourceConquest(this.avatar, sourceCity, resource);
+        if (bestRegion == null)
+        {
+            if (this.pad.bWantMilitaryAILog)
+            {
+                log("DEBUG: no border region found with " + resource.strName + " for conquest");
+            }
+            return;
+        }
+        
+        if (bestRegion == null)
+        {
+            if (this.pad.bWantMilitaryAILog)
+            {
+                log("DEBUG: No outside border regions found with " + resource.strName);
+            }
+        }
+        else
+        {
+            var bestOpponent = bestRegion.refController.resolve(this.avatar);
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: Creating military plan for " + this.nation.strName + " to conquer region " + bestRegion.strName + " for it's " + resource.strName);
+
+            var action = gs_tbg.GActCreateAIMilitaryPlan.create({
+                "refNation": this.nation,
+                "strPurpose": "ObtainResource",
+                "otType": local.AIPlanLandInvasion
+                });
+            this.avatar.sendAction(action);
+            var plan = action.objPlan;
+            plan.objParentAI = self.objParentAI;
+            plan.objMilitaryAI = this.militaryAI;
+            plan.objSourceCity = sourceCity;
+            plan.objStartLandRegion = sourceCity.refRegion.resolve(this.avatar);
+            plan.objLandMassIDRegion = this.geoColorMap.getLandMassIDRegion(this.avatar, bestRegion);
+
+            var statusLogText = "create plan to grab region with " +  resource.strName;
+            this.setPlanStatus(plan,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE,statusLogText);
+
+            plan.fPriority = 0.95;
+            plan.fAllocationLevel = 1.0;
+            plan.objRegionsToConquer.add(bestRegion);
+
+            if (this.pad.bWantMilitaryAILog)
+            {
+                log("DEBUG: resource region= " + bestRegion.strName + " controlled by " + bestOpponent.strName);
+            }
+            this.militaryAI.addRegionToConquer(this.avatar, bestRegion);
+
+            // make sure bestOpponent is a designated enemy
+            var enemyDesignation = this.militaryAI.getEnemyDesignation(this.avatar,bestOpponent);
+            if (enemyDesignation == null)
+            {
+                enemyDesignation = this.militaryAI.createEnemyDesignation(this.avatar,bestOpponent);
+                enemyDesignation.eReasonForDesignation = gs_tbg.ReasonForDesignation.RFD_RANDOM_AGGRESSION;
+            }
+            enemyDesignation.bLandMassScopeAll = true; // Could just include the land masses that include the specified regions
+            enemyDesignation.bRegionScopeSpecified = true;
+        }
+    } // this.createPlanToConquerRegionWithResource
+
+
+    this.getOpposingStrengthInRegion = function(region,opponentNation)
+    {
+        var opposingGroups = self.objGameSysUnit.objUnitGroups.filter({"refLocation": GORef(gs_tbg.Region, region), "refController": opponentNation});
+        var totalStrength = 0;
+        for (var i in opposingGroups)
+        {
+            var unitGroup = opposingGroups[i];
+            totalStrength += unitGroup.nLandAttackPower + unitGroup.nLandDefensePower;
+        }
+        return totalStrength;
+    }
+
+    // specify a nation as an enemy we want to entirely conquer
+    this.addEnemyNationDesignation = function(enemyNation, eReasonForDesignation, warPlan)
+    {
+        if (self.objGameSysAIUtility.bAITestMode)
+        {
+            log("designating " + enemyNation.strName + " as enemy.");
+        }
+
+        var enemyDesignation = this.militaryAI.getEnemyDesignation(this.avatar,enemyNation);
+        if (enemyDesignation == null)
+        {
+            enemyDesignation = this.militaryAI.createEnemyDesignation(this.avatar,enemyNation);
+            enemyDesignation.eReasonForDesignation = eReasonForDesignation;
+        }
+        if (warPlan != null)
+        {
+            enemyDesignation.objReasonSources.add(warPlan);
+            // increase priority if needed
+            //if (enemyDesignation.fPriority < warPlan.fPriority)
+            //	enemyDesignation.fPriority = warPlan.fPriority;
+        }
+        enemyDesignation.fPriority = 1.0;
+
+        // make sure our scope is broad enough
+        enemyDesignation.bLandMassScopeAll = true;
+        enemyDesignation.bRegionScopeAll = true;
+    }
+
+    // specify a set of regions we want to conquer
+    // warPlan and specifiedEnemy could be null.  If specifiedEnemy is not null, we only designate
+    // it as an enemy and not any controllers of regions in the region list.
+    this.addRegionsToConquer = function(refRegions, eReasonForDesignation, warPlan, specifiedEnemy)
+    {
+        if (specifiedEnemy == undefined)
+            specifiedEnemy = null;
+            
+        var enemyDesignation = null;
+        
+        if (specifiedEnemy != null)
+        {
+            if (self.objGameSysNationRelations.canDeclareWarOn(this.avatar, this.nation, specifiedEnemy) == false)
+            {
+                log("DEBUG: " + this.nation.strName + " wants to declare war on " + specifiedEnemy.strName + " but can't");
+                return;
+            }
+            
+            enemyDesignation = this.militaryAI.getEnemyDesignation(this.avatar,specifiedEnemy);
+        }
+    
+        for (var r in refRegions)
+        {
+            var regionRef = refRegions[r];
+            var region = regionRef.resolve(this.avatar);
+            var regionController = region.refController.resolve(this.avatar);
+            if (regionController == null)
+                continue;
+                
+            var enemyNation = null;
+                
+            if (specifiedEnemy != null)
+            {
+                // we are interested on keeping the region list from specifiedEnemy
+                // so it is always the enemy regardless of who controls the regions
+                enemyNation = specifiedEnemy;
+            }
+            else
+            {
+                if (regionController.equals(this.nation))
+                    continue;
+
+                enemyNation = regionController;
+                                
+                if (self.objGameSysNationRelations.canDeclareWarOn(this.avatar, this.nation, enemyNation) == false)
+                {
+                    log("DEBUG: " + this.nation.strName + " can't declare war on " + enemyNation.strName + " which controls " + region.strName);
+                    continue;
+                }
+                
+                if (self.objGameSysNationRelations.areAllies(this.avatar, this.nation, enemyNation, true) )
+                {
+                    log("DEBUG: " + this.nation.strName + " avoids declaring war on ally " + enemyNation.strName + " over control of " + region.strName);
+                    continue;
+                }
+                
+                // get enemy designation
+                enemyDesignation = this.militaryAI.getEnemyDesignation(this.avatar,enemyNation);
+            }
+
+            if (enemyDesignation == null)
+            {
+                if (warPlan != null)
+                {
+                    if (self.objGameSysNationRelations.canDeclareWarOn(this.avatar, this.nation, enemyNation) == false)
+                        continue;
+                
+                    // don't expand against an ally due to a war plan region list
+                    if (self.objGameSysNationRelations.areAllies(this.avatar, this.nation, enemyNation,true))
+                        continue;
+                }
+                
+                if (self.objGameSysAIUtility.bAITestMode)
+                {
+                    if (specifiedEnemy == null)
+                        log("DEBUG: " + this.nation.strName + " designating " + enemyNation.strName + " as enemy because of its control of " + region.strName);
+                    else
+                        log("DEBUG: " + this.nation.strName + " designating " + enemyNation.strName + " as enemy as specified due to " + eReasonForDesignation.name);
+                }
+
+                enemyDesignation = this.militaryAI.createEnemyDesignation(this.avatar,enemyNation);
+                enemyDesignation.eReasonForDesignation = eReasonForDesignation;
+                enemyDesignation.bLandMassScopeSpecified = true;
+                enemyDesignation.bRegionScopeSpecified = true;
+
+                if (warPlan != null)
+                    enemyDesignation.objReasonSources.add(warPlan);
+
+                enemyDesignation.fPriority = 1.0;
+            }
+            else
+            {
+                // see if we already want to conquer all regions of the controller nation
+
+                var testA = ( enemyDesignation.bLandMassScopeAll && enemyDesignation.bRegionScopeAll );
+                var testB = ( (enemyDesignation.bLandMassScopeAll == true) && (enemyDesignation.bRegionScopeAll == true) );
+                if (testA != testB)
+                {
+                    log("DEBUG: testA = " + testA);
+                    log("DEBUG: testB = " + testB);
+                    log("DEBUG: enemyDesignation=" + enemyDesignation);
+                    throw "compare bug?";
+                }
+
+                if ((enemyDesignation.bLandMassScopeAll==true) && (enemyDesignation.bRegionScopeAll==true))
+                {
+                    log("skipping specified target region " + region.strName + " since " + this.nation.strName + " was already planning on conquering all of " + enemyNation.strName);
+                    continue; // no need to add anything to this designation
+                }
+
+                // we're expanding this designation
+                if (!enemyDesignation.bRegionScopeSpecified)
+                {
+                    log("expanding scope of operations against " + enemyNation.strName + " to include specified regions.");
+
+                    enemyDesignation.bRegionScopeSpecified = true;
+                    enemyDesignation.bLandMassScopeSpecified = true;
+
+                    if (warPlan != null)
+                        enemyDesignation.objReasonSources.add(warPlan);
+
+                    enemyDesignation.fPriority = 1.0;
+                }
+            }
+
+            if (self.objGameSysAIUtility.bAITestMode)
+            {
+                log("adding specified target region " + region.strName);
+            }
+
+            this.militaryAI.addRegionToConquer(this.avatar,region);
+            this.militaryAI.addLandMassToEnemyDesignation(this.avatar,enemyDesignation,region);
+        }  // for refRegions
+    } // addRegionsToConquer
+
+
+    this.activateWarPlanOperation = function(warPlan,warPlanOperation)
+    {
+        if (self.objGameSysAIUtility.bAITestMode)
+        {
+            log(this.nation.strName + " activating war plan " + warPlan.strName + " operation " + warPlanOperation.strName);
+        }
+        // warPlanOperation.bActive = true;
+
+        // create AIMilitaryPlan(s) to carry out operation.
+        for (var nationIndex in warPlanOperation.refTargetNations)
+        {
+            var enemyNation = warPlanOperation.refTargetNations[nationIndex].resolve(this.avatar);
+            if (enemyNation != null)
+            {
+                this.addEnemyNationDesignation(enemyNation, gs_tbg.ReasonForDesignation.RFD_WAR_PLAN, warPlan);
+            }
+            else
+            {
+                if (self.objGameSysAIUtility.bAITestMode)
+                {
+                    log("WARN(4) : refTargetNations[" + nationIndex + "] " + warPlanOperation.refTargetNations[nationIndex] + " resolves to null." );
+                }
+            }
+        } // for target nations
+
+        if (warPlanOperation.refTargetRegions.size > 0)
+        {
+            this.addRegionsToConquer(warPlanOperation.refTargetRegions, gs_tbg.ReasonForDesignation.RFD_WAR_PLAN, warPlan);
+        } // if any target regions were specified
+
+    } // activateWarPlanOperation
+
+
+    this.notifyOperationCompleted = function(warPlan, warPlanOperation)
+    {
+        if (warPlanOperation.bOfferPeaceWhenComplete)
+        {
+            var peaceNations = new Array();
+            this.militaryAI.getEnemyNationsSuitableForPeaceOffer(this.avatar, warPlan, warPlanOperation, peaceNations);
+            
+            var diplomacyAI = self.objGameSysAIUtility.getDiplomacyAI(this.avatar,this.nation);
+            
+            // offer peace to peaceNations
+            for (var i in peaceNations)
+            {
+                var enemyToMakePeaceWith = peaceNations[i];
+                
+                var eReason = gs_tbg.Reason.NoReason;
+                var messageCriteria = gs_tbg.AIMessageSelectionCriteria.create({
+                    "objSendingNation": this.nation,
+                    "objReceivingNation": enemyToMakePeaceWith
+                    });
+
+                messageCriteria.objReasons.add(gs_tbg.ReasonPair.create({"eReason": eReason,"nWeight": 100 }));
+
+                var message = self.objGameSysAIUtility.getAppropriateMessage(this.avatar,"ProposePeace",messageCriteria);
+
+                log("DEBUG: " + this.nation.strName + " proposing peace with " + enemyToMakePeaceWith.strName + ": " + message);
+                
+                // record attempt
+                diplomacyAI.recordAttemptedPeace(this.avatar,enemyToMakePeaceWith);
+                var action = gs_tbg.GActProposePeaceTreaty.create({
+                    "refProposingNation" : this.nation,
+                    "refReceivingNation" : enemyToMakePeaceWith,
+                    "bDemand": false,
+                    "strMessage" : message
+                    });
+
+                // possible terms:
+                // SURRENDER_OCCUPIED
+                // JOIN_ALLIANCE,	
+                // MILITARY_ACCESS,	
+                // RETREAT_TO_CORE,	
+                // ACCEPT_PUPPET,	
+                // PORT_ACCESS,		
+                // CHANGE_GOVERNMENT,
+                // DROP_CLAIM,		
+
+                //var term = gs_tbg.TreatyTerm.create({ "eType": gs_tbg.TreatyTermType.DROP_CLAIM, "refNationAffected": enemyToMakePeaceWith });
+                //action.objTerms.add(term);
+
+                this.avatar.sendAction(action);
+            }
+        }
+    } // notifyOperationCompleted 
+
+    // trigger a declaration of war on enemy nation with an optional region list
+    this.triggerActionDeclareWar = function(enemyNation,tmplRegionList)
+    {
+        var refRegions = null;
+        if (tmplRegionList != null)
+        {
+            refRegions = tmplRegionList.resolve().refRegions;
+        }
+
+        if (refRegions != null)
+        {
+            this.addRegionsToConquer(refRegions, gs_tbg.ReasonForDesignation.RFD_TRIGGERED, null, enemyNation);
+        }
+        else
+        {
+            if (this.nation.equals(enemyNation))
+            {
+                log("WARN(4) - ignoring triggerActionDeclareWar on self for " + this.nation.strName);
+            }
+            else if (self.objGameSysNationRelations.canDeclareWarOn(this.avatar, this.nation, enemyNation) == false)
+            {
+                log("WARN(4) - " + this.nation.strName + " unable to declare war on " + enemyNation.strName + ". Ignoring triggerActionDeclareWar");
+            }
+            else if ( this.nation.objStatus.instanceOf(gs_tbg.NationStatusPuppet) )
+            {
+                log("WARN(4) - puppet " + this.nation.strName + " not declaring war on " + enemyNation.strName + ". Ignoring triggerActionDeclareWar");
+            }
+            else
+            {
+                this.addEnemyNationDesignation(enemyNation, gs_tbg.ReasonForDesignation.RFD_TRIGGERED, null);
+            }
+        }
+    } // triggerActionDeclareWar
+
+
+    // check if we can start a land invasion from city
+    // and update access needed nations if we can't
+    this.checkLandInvasionAccess = function(dlm,city)
+    {
+        var region = city.refRegion.resolve(this.avatar);
+
+        // see if there are any nations to ask for military access
+        var accessNeededNations = new Array();
+        this.militaryAI.getLandInvasionAccessNeededNations(this.avatar, region, accessNeededNations);
+        var numAccessNations = accessNeededNations.length;
+        if (numAccessNations > 0)
+        {
+            if (numAccessNations < 2) // only ask if we just need 1
+            {
+                var targetNations = new Array();
+                this.militaryAI.getNationsToInvadeOnLandMass(this.avatar, dlm.objTargetLandMassIDRegion, targetNations);
+
+                for (var n in accessNeededNations)
+                {
+                    var nation = accessNeededNations[n];
+                    this.militaryAI.addDesiredMilitaryAccess(this.avatar, nation, targetNations);
+                }
+            }
+
+            if (this.pad.bWantMilitaryAILog)
+            {
+                log("DEBUG: need access from " + numAccessNations + " nation(s) to start land invasion from " + city.strName);
+            }
+
+            return false;
+        }
+        return true;
+    }
+
+    // check if we can start a sea invasion from the specified city
+    // and update access needed nations if we can't
+    this.checkSeaInvasionAccess = function(dlm,portCity)
+    {
+        var accessNeededNations = new Array();
+        this.militaryAI.getSeaInvasionAccessNeededNations(this.avatar, portCity, dlm, accessNeededNations);
+        
+        var numAccessNations = accessNeededNations.length;
+        if (numAccessNations > 0)
+        {
+            if (numAccessNations < 2) // only ask if there's just one nation
+            {
+                var targetNations = new Array();
+                this.militaryAI.getNationsToInvadeOnLandMass(this.avatar, dlm.objTargetLandMassIDRegion, targetNations);
+
+                for (var n in accessNeededNations)
+                {
+                    var nation = accessNeededNations[n];
+                    this.militaryAI.addDesiredMilitaryAccess(avatar, nation, targetNations);
+                }
+            }
+            
+            if (this.pad.bWantMilitaryAILog)
+            {
+                var region = dlm.objTargetLandMassIDRegion;
+                log("DEBUG: " + this.nation.strName + " needs access from " + numAccessNations + " nation(s) to start sea invasion from " + portCity.strName + " to " + dlm + "(on " + region.strAreaDisplayName + ")" );
+            }
+            return false;
+        }
+        return true;
+    }
+
+    this.manageInvasions = function()
+    {
+        // make sure we have a designation for all declared enemies
+        var enemyNations = new Array();
+        self.objGameSysNationRelations.getEnemies(this.avatar,this.nation,enemyNations, true);
+        for (var i in enemyNations)
+        {
+            var enemyNation = enemyNations[i];
+            var enemyDesignation = this.militaryAI.getEnemyDesignation(this.avatar,enemyNation);
+            if (enemyDesignation == null)
+            {
+                if (this.pad.bWantMilitaryAILog)
+                    log(this.nation.strName + " creating designation for declared enemy " + enemyNation.strName);
+                    
+                enemyDesignation = this.militaryAI.createEnemyDesignation(this.avatar,enemyNation);
+                enemyDesignation.eReasonForDesignation = gs_tbg.ReasonForDesignation.RFD_PROVOKED;
+                enemyDesignation.fPriority = 0.8; // tweak point
+                
+                // make sure our scope is broad enough
+                enemyDesignation.bLandMassScopeAll = true;
+                enemyDesignation.bRegionScopeAll = true;
+            }
+        }
+    
+        this.militaryAI.updateDesiredLandMasses(this.avatar);
+        var defaultLandUnloadRegion = self.objParentAI.getNationHomeRegion(avatar,this.nation);
+        var bestSeaInvasionStartRegion = null;
+        var bestSeaInvasionStartRegionPriority = 0;
+        var bestLandInvasionStartRegion = null;
+        var bestLandInvasionStartRegionPriority = 0;
+
+
+        var bCanBuildInvasionFleet = false;
+        if (this.militaryAI.knowsComposition(this.avatar, self.strSeaInvasionComposition))
+        {
+            bCanBuildInvasionFleet = this.militaryAI.canBuildComposition(this.avatar, self.strSeaInvasionComposition);
+        }
+
+        var desiredLandMasses = this.militaryAI.objDesiredLandMasses;                        
+        if (desiredLandMasses.length > 0)
+        {
+            // pick primary land and sea invasions
+            var resultObject = new Object();
+            this.militaryAI.determineBestLandAndSeaInvasions(this.avatar, self.strSeaInvasionComposition, self.strNavalBombardComposition, resultObject, this.pad.bWantMilitaryAILog);
+                
+            var primary_dlm_land = resultObject.objBestLandInvasionDesiredLandMass;
+            var primary_dlm_sea = resultObject.objBestSeaInvasionDesiredLandMass;
+            var primary_dlm_sea_can_build = resultObject.bCanBuildBestSeaInvasionComposition;
+            var primary_dlm_land_best_city = resultObject.objBestLandInvasionCity;
+            var primary_dlm_sea_best_city = resultObject.objBestSeaInvasionCity;
+            
+            var num_sea_invasions_in_buildup_phase = 0; // if 0, we consider creating another sea invasion
+            var second_best_sea_dlm = null;
+            var second_best_sea_dlm_city = null;
+            
+            // create invasion plan from primary_dlm_land_best_city
+            for (i in desiredLandMasses)
+            {
+                var dlm = desiredLandMasses[i];
+                var non_primary_dlm_land_best_city = null; // set to a city if we should create a land invasion plan from here.
+                for (var c in dlm.objSourceCities)
+                {
+                    var city = dlm.objSourceCities[c];
+                    var region = city.refRegion.resolve(this.avatar);
+                    var seaRegion = null;
+                    if (city.refSeaRegion != null)
+                    {
+                        seaRegion = city.refSeaRegion.resolve(this.avatar);
+                    }
+                    
+                    // is a land invasion possible?
+                    var eGeoConn = this.geoColorMap.getGeographicConnection(this.avatar, region, dlm.objTargetLandMassIDRegion);
+                    if (eGeoConn.equals(gs_tbg.GeographicConnection.GEOCONN_SAME_LAND_MASS))
+                    {
+                        // make sure there's at least one land invasion for this land mass
+                        var plan = this.getLandInvasionPlanForLandMass(dlm.objTargetLandMassIDRegion);
+                        if (plan == null)
+                        {                                
+                            var haveAccess = this.checkLandInvasionAccess(dlm,city);
+                            if (haveAccess)
+                            {
+                                if (city.equals(primary_dlm_land_best_city)) {                                    
+                                    // create land invasion
+                                    if(this.pad.bWantMilitaryAILog)
+                                    {
+                                        log("DEBUG: creating land invasion plan for " + dlm.objTargetLandMassIDRegion.strName);
+                                    }
+                                    plan = this.createLandInvasionPlan(dlm,city,null);
+                                }
+                                else {
+                                    if (! dlm.equals(primary_dlm_land) )
+                                    {
+                                        // evaluate the city
+                                        var better = false;
+                                        if (non_primary_dlm_land_best_city != null) {
+                                            better = ( city.nIPUs > non_primary_dlm_land_best_city.nIPUs);                                                
+                                        }
+                                        else {
+                                            better = true;
+                                        }
+                                        if (better) {
+                                            non_primary_dlm_land_best_city = city;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (plan != null)
+                        {
+                            plan.fPriority = dlm.fPriority;
+
+                            if ( dlm.equals(primary_dlm_land) )
+                            {
+                                // see if we can build our preferred invasion composition
+                                if ( (plan.strPreferredComposition != "") && (plan.strComposition != plan.strComposition) )
+                                {
+                                    if (this.militaryAI.knowsComposition(this.avatar, plan.strPreferredComposition))
+                                    {
+                                        bCanBuildPreferredInvasionComposition = this.militaryAI.canBuildCompositionNear(this.avatar, city, plan.strPreferredComposition);
+                                        if (!bCanBuildPreferredInvasionComposition)
+                                        {
+                                            var nWeight = 1;
+                                            this.militaryAI.learnToBuildCompositionAtCity(this.avatar, city, self.strPreferredComposition, nWeight);
+                                        }
+                                    }
+                                } // if our land invasion plan specified a perferred composition
+                                
+                                if (self.objGameSysNationRelations.hasLandAccess(this.avatar,this.nation, region))
+                                {
+                                    bestLandInvasionStartRegion = region;
+                                    bestLandInvasionStartRegionPriority = plan.fPriority;
+                                }
+                                else
+                                {
+                                    if (this.pad.bWantMilitaryAILog)
+                                    {
+                                        logWarn(this.nation.strDisplayName + " does not have land access to " + region.strName ); // how is this even possible?
+                                    }
+                                }
+                                
+                            } // if this is our primary desired land mass
+                        } // if we have a plan for this land mass
+                    } // if a land invasion is possible
+                    
+                    if (seaRegion != null)
+                    {
+                        if (bCanBuildInvasionFleet)
+                        {
+                            if ( dlm.equals(primary_dlm_sea) && city.equals(primary_dlm_sea_best_city) )
+                            {
+                                if (this.militaryAI.canBuildCompositionNear(this.avatar, city, self.strSeaInvasionComposition))
+                                {
+                                    // make sure there's a sea invasion from the specified city to this land mass
+                                    var plan = this.getSeaInvasionPlansFromCityToLandMass(city, dlm.objTargetLandMassIDRegion);
+                                    if (plan == null)
+                                    {
+                                        // see if we need access
+                                        var haveAccess = this.checkSeaInvasionAccess(dlm,city);
+                                        if (haveAccess)
+                                        {
+                                            // need to create one
+                                            if(this.pad.bWantMilitaryAILog)
+                                            {
+                                                var oneRegionToConquer = dlm.objRegionsToConquer.getArbitraryValue();
+                                                var numRegionsToConquer = dlm.objRegionsToConquer.size;
+                                                
+                                                log("DEBUG: creating sea invasion plan from " + city.strName + " to conquer " + numRegionsToConquer + " region(s) including " + oneRegionToConquer.strName);
+                                            }
+                                            plan = this.createSeaInvasionPlan(dlm,city);
+                                        }
+                                    }
+                                    
+                                    if (plan != null)
+                                    {
+                                        plan.fPriority = dlm.fPriority; // make sure our priority is correct for the primary
+                                        if (plan.objStartLandRegion != null)
+                                        {
+                                            if (self.objGameSysNationRelations.hasLandAccess(this.avatar,this.nation, plan.objStartLandRegion))
+                                            {
+                                                bestSeaInvasionStartRegion = plan.objStartLandRegion;
+                                                bestSeaInvasionStartRegionPriority = plan.fPriority;
+                                            }
+                                            else
+                                            {
+                                                if (this.pad.bWantMilitaryAILog)
+                                                {
+                                                    log("DEBUG: " + this.nation.strDisplayName + " does not have land access to " + plan.objStartLandRegion.strName );
+                                                }                                            
+                                            }
+                                        }
+                                        if (!plan.isPastBuildupPhase()) {
+                                            num_sea_invasions_in_buildup_phase += 1;
+                                        }
+                                    }
+                                } // if we can build our fleet
+                                else
+                                {
+                                    // we need to learn how to build an invasion fleet here
+                                    var nWeight = 1;
+                                    this.militaryAI.learnToBuildCompositionAtCity(this.avatar, city, self.strSeaInvasionComposition, nWeight);
+                                    if(this.pad.bWantMilitaryAILog)
+                                    {
+                                        log("DEBUG: want to build fleet at " + city.strName);
+                                    }
+                                }
+                            } // if this is our primary sea invasion
+                            else
+                            {
+                                // don't create a new plan. Just adjust priority
+                                var plan = this.getSeaInvasionPlansFromCityToLandMass(city, dlm.objTargetLandMassIDRegion);
+                                if (plan != null)
+                                {
+                                    if (!plan.isPastBuildupPhase()) {
+                                        num_sea_invasions_in_buildup_phase += 1;
+                                    }
+                                
+                                    if(this.pad.bWantMilitaryAILog)
+                                    {
+                                        var oneRegionToConquer = dlm.objRegionsToConquer.getArbitraryValue();
+                                        var numRegionsToConquer = dlm.objRegionsToConquer.size;
+                                        
+                                        log("DEBUG: low priority for sea invasion from " + city.strName + " to conquer " + numRegionsToConquer + " region(s) including " + oneRegionToConquer.strName);
+                                    }
+                                    plan.fPriority = 0.5 * dlm.fPriority;
+                                    
+                                    if (plan.objStartLandRegion != null)
+                                    {
+                                        if ( (bestSeaInvasionStartRegion == null) || (bestSeaInvasionStartRegionPriority < plan.fPriority) )
+                                        {
+                                            if (self.objGameSysNationRelations.hasLandAccess(this.avatar,this.nation, plan.objStartLandRegion))
+                                            {
+                                                bestSeaInvasionStartRegion = plan.objStartLandRegion;
+                                                bestSeaInvasionStartRegionPriority = plan.fPriority;
+                                            }
+                                            else
+                                            {
+                                                if (this.pad.bWantMilitaryAILog)
+                                                {
+                                                    log("DEBUG: " + this.nation.strDisplayName + " does not have land access to " + plan.objStartLandRegion.strName );
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    var second_best = true;
+                                    if (second_best_sea_dlm != null) {
+                                        var rating = dlm.objRegionsToConquer.length;
+                                        var best_rating = second_best_sea_dlm.objRegionsToConquer.length;
+                                        if (rating < best_rating) {
+                                            second_best = false;
+                                        }
+                                    }
+                                    if (second_best) {
+                                        second_best_sea_dlm = dlm; 
+                                        second_best_sea_dlm_city = city;
+                                    }
+                                    
+                                    if(this.pad.bWantMilitaryAILog)
+                                    {
+                                        var oneRegionToConquer = dlm.objRegionsToConquer.getArbitraryValue();
+                                        log("DEBUG: sea invasion from " + city.strName + " to region(s) including " + oneRegionToConquer.strName + " not started (low priority)");
+                                    }
+                                }
+                            }
+                        } // if can build invasion fleet
+                        else
+                        {
+                            if(this.pad.bWantMilitaryAILog)
+                            {
+                                log("DEBUG: want sea invasion plan for " + dlm.objTargetLandMassIDRegion.strName + " from " + city.strName + " but can't build invasion fleet anywhere.");
+                            }
+                            this.considerResearchingInvasionFleetForDesiredLandMass(dlm);
+                        }
+                    } // else not a port city
+                } // for source cities
+                
+                if (non_primary_dlm_land_best_city) {
+                    // create an invasion plan from this city
+                    if (this.pad.bWantMilitaryAILog) {
+                        log("Creating land invasion plan for " + dlm.objTargetLandMassIDRegion.strName + " from " + non_primary_dlm_land_best_city.strName );
+                    }
+                    var plan = this.createLandInvasionPlan(dlm,non_primary_dlm_land_best_city,null);
+                }
+                
+            } // for desired land masses
+            
+            if ((num_sea_invasions_in_buildup_phase == 0) && (second_best_sea_dlm != null)) {
+                if (this.pad.bWantMilitaryAILog) {
+                    log("Creating extra sea invasion plan for " + second_best_sea_dlm.objTargetLandMassIDRegion.strName + " from " + second_best_sea_dlm_city.strName );
+                }                
+                var second_plan = this.createSeaInvasionPlan(second_best_sea_dlm,second_best_sea_dlm_city);
+                second_plan.fPriority = 0.5 * second_best_sea_dlm.fPriority;
+            }        
+            
+        } // if we have any desired land masses
+                
+        // consolidate land invasion plans that have the same front (remove all but one)
+        var invasionColorMap = null;
+        var existingStartRegions = new Array();
+        for (var landIndex in this.landInvasionPlans)
+        {
+            var plans = this.landInvasionPlans[landIndex];
+            if (plans.length > 1)
+            {
+                var keepers = new Array();
+                var bAnyPlansCancelled = false;
+                if (invasionColorMap == null)
+                    invasionColorMap = this.militaryAI.getInvasionColorMap(this.avatar);
+
+                var planColorMap = new Object();
+                for (var i in plans)
+                {
+                    var plan = plans[i];
+                    var color = invasionColorMap.getRegionInvasionColor(plan.objStartLandRegion);
+                    existingStartRegions.push(plan.objStartLandRegion);
+                    if (planColorMap[color] == undefined)
+                    {
+                        planColorMap[color] = plan;
+                        keepers.push(plan);
+                        if ((bestLandInvasionStartRegion == null) || (bestLandInvasionStartRegionPriority < plan.fPriority))
+                        {
+                            if (self.objGameSysNationRelations.hasLandAccess(this.avatar,this.nation, plan.objStartLandRegion))
+                            {
+                                bestLandInvasionStartRegion = plan.objStartLandRegion;
+                                bestLandInvasionStartRegionPriority = plan.fPriority;
+                            }
+                            else
+                            {
+                                if (this.pad.bWantMilitaryAILog)
+                                {
+                                    logWarn(this.nation.strDisplayName + " does not have land access to " + plan.objStartLandRegion.strName ); // invalid plan?
+                                }                                            
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // extra plan. Cancel it.
+                        log("DEBUG: cancelling " + plan.strName + " in favor of " + planColorMap[color].strName);
+                        this.setPlanStatus(plan,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_CANCELLED,"duplicate land invasion");
+                        bAnyPlansCancelled = true;
+                    }
+                }
+
+                // replace plans with keepers
+                if (bAnyPlansCancelled)
+                {
+                    this.landInvasionPlans[landIndex] = keepers;
+                }
+            } // if there is more than one plan here
+            else // only one plan
+            {
+                for (var i in plans)
+                {
+                    var plan = plans[i];
+                    existingStartRegions.push(plan.objStartLandRegion);
+                    if ((bestLandInvasionStartRegion == null) || (bestLandInvasionStartRegionPriority < plan.fPriority))
+                    {
+                        if (self.objGameSysNationRelations.hasLandAccess(this.avatar,this.nation, plan.objStartLandRegion))
+                        {
+                            bestLandInvasionStartRegion = plan.objStartLandRegion;
+                            bestLandInvasionStartRegionPriority = plan.fPriority;
+                        }
+                        else
+                        {
+                            if (this.pad.bWantMilitaryAILog)
+                            {
+                                logWarn(this.nation.strDisplayName + " does not have land access to " + plan.objStartLandRegion.strName ); // invalid plan?
+                            }
+                        }
+                    }
+                }            
+            }
+        } // for landInvasionPlans
+        
+        if (true) // this.pad.bNeedToUpdateState || (this.nTurn == 2) )
+        {
+            if (this.pad.bWantMilitaryAILog) {
+                log("DEBUG: Calling getStartRegionInvasionsNeeded");
+            }
+            // add invasion plans anywhere we have troops on their own color and an enemy border
+            var neededStartRegions = new Array();
+            this.militaryAI.getStartRegionInvasionsNeeded(this.avatar, existingStartRegions, neededStartRegions);
+            for (var i in neededStartRegions) {
+                var startRegion = neededStartRegions[i];
+                if (this.pad.bWantMilitaryAILog)
+                {
+                    log("DEBUG: need to add an invasion for start region " + startRegion.strName);                    
+                }                
+                // create an invasion plan from this start region
+                var landMassIDRegion = this.geoColorMap.getLandMassIDRegion(this.avatar, startRegion);
+                var dlm = this.militaryAI.objDesiredLandMasses.find({objTargetLandMassIDRegion: landMassIDRegion});
+                var plan = this.getLandInvasionPlanForLandMassFromStartRegion(landMassIDRegion, startRegion);
+                if (plan == null)
+                {
+                    plan = this.createLandInvasionPlan(dlm,null,startRegion);
+                }                
+            }
+        }
+        
+        
+        if (bestSeaInvasionStartRegion == null) // need to determine bestSeaInvasionStartRegion for best defaultLandUnloadRegion
+        {
+            for (var seaIndex in this.seaInvasionPlans)
+            {
+                var plans = this.seaInvasionPlans[seaIndex];
+                for (var i in plans)
+                {
+                    var plan = plans[i];
+                    if (plan.objStartLandRegion != null)
+                    {
+                        if ( (bestSeaInvasionStartRegion == null) || (bestSeaInvasionStartRegionPriority < plan.fPriority) )
+                        {
+                            if (self.objGameSysNationRelations.hasLandAccess(this.avatar,this.nation, plan.objStartLandRegion))
+                            {
+                                bestSeaInvasionStartRegion = plan.objStartLandRegion;
+                                bestSeaInvasionStartRegionPriority = plan.fPriority;
+                            }
+                            else
+                            {
+                                if (this.pad.bWantMilitaryAILog)
+                                {
+                                    log("DEBUG: " + this.nation.strDisplayName + " does not have land access to " + plan.objStartLandRegion.strName );
+                                }
+                            }
+                        }
+                    }
+                }
+            }        
+        }
+
+        if ( (this.pad.bWantMilitaryAILog) || (self.objParentAI.bWantInvasionSummaryLog) )
+        {
+            this.buildAttackPlans();
+            var geoColorMap = self.objGameSysAIUtility.getGeographicColorMap(this.avatar);
+            var numLandPlans = 0;
+
+            for (var landIndex in this.landInvasionPlans)
+            {
+                var plans = this.landInvasionPlans[landIndex];
+                for (var i in plans)
+                {
+                    var plan = plans[i];
+                    if (numLandPlans == 0)
+                        log("DEBUG: Land invasion plans for " + this.nation.strName);
+                    numLandPlans++;
+
+                    var description = numLandPlans + ". ";
+
+                    if (plan.objSourceCity != null)
+                    {
+                        description += "sourceCity=" + plan.objSourceCity.strName;
+                    }
+                    else if (plan.objStartLandRegion != null)
+                    {
+                        description += "landRegion=" + plan.objStartLandRegion.strName;
+                    }
+
+                    nColor = geoColorMap.getRegionColor(this.avatar,plan.objLandMassIDRegion);
+                    description += plan.objLandMassIDRegion.strAreaDisplayName + "(landMass " + nColor + ")" + " front " + i;
+
+                    log(description);
+                }
+            }
+            var numSeaPlans = 0;
+            for (var seaIndex in this.seaInvasionPlans)
+            {
+                var plans = this.seaInvasionPlans[seaIndex];
+                for (var i in plans)
+                {
+                    var plan = plans[i];
+                    if (numSeaPlans == 0)
+                        log("DEBUG: Sea invasion plans for " + this.nation.strName);
+                    numSeaPlans++;
+
+                    var description = numSeaPlans + ". " + i + " to ";
+                    if (plan.objStartLandRegion != null)
+                        description += plan.objStartLandRegion.strName;
+
+                    nColor = geoColorMap.getRegionColor(this.avatar,plan.objLandMassIDRegion);
+                    description += plan.objLandMassIDRegion.strAreaDisplayName + "(landMass " + nColor + ")";
+
+                    log(description);
+                }
+            }
+            if ((numLandPlans > 0) || (numSeaPlans > 0))
+                log("DEBUG: numLandPlans=" + numLandPlans + ", numSeaPlans=" + numSeaPlans);
+        } // if bWantMilitaryAILog
+        
+        if (bestSeaInvasionStartRegion != null)
+        {        
+            defaultLandUnloadRegion = bestSeaInvasionStartRegion;
+            if (this.pad.bWantMilitaryAILog)
+            {
+                log("DEBUG: choosing defaultLandUnloadRegion from bestSeaInvasionStartRegion " + bestSeaInvasionStartRegion.strName);                
+            }
+        }
+        else if (bestLandInvasionStartRegion != null)
+        {
+            defaultLandUnloadRegion = bestLandInvasionStartRegion;
+            if (this.pad.bWantMilitaryAILog)
+            {
+                log("DEBUG: choosing defaultLandUnloadRegion from bestLandInvasionStartRegion " + bestLandInvasionStartRegion.strName);                
+            }
+        }
+        else
+        {
+            if (this.pad.bWantMilitaryAILog)
+            {
+                if (defaultLandUnloadRegion != null)
+                {
+                    log("DEBUG: using default defaultLandUnloadRegion (home region) " + defaultLandUnloadRegion.strName); 
+                    log("DEBUG: primary_dlm_land_best_city = " + primary_dlm_land_best_city);
+                }
+                else
+                {
+                    log("DEBUG: using null defaultLandUnloadRegion.");                
+                }
+            }
+        }
+        this.militaryAI.setBestLandUnloadRegion(this.avatar,defaultLandUnloadRegion);
+    } // this.manageInvasions
+
+    // return true if this.nation is otherNation or either is controlled by the other
+    this.nationsAreRelated = function(nationA,nationB)
+    {
+        if (nationB.equals(nationA))
+        {
+            // log(nationB.strName + " equals " + nationA.strName);
+            return true;
+        }
+
+        if (nationB.objStatus.instanceOf(gs_tbg.NationStatusPuppet) )
+        {
+            // check parent weight
+            var parentNation = nationB.objStatus.refController.resolve(this.avatar);
+            if (parentNation.equals(nationA))
+            {
+                if (this.pad.bWantMilitaryAILog)
+                    log(nationA.strName + " is the parent of " + nationB.strName);
+                return true;
+            }
+        }
+
+        if (nationA.objStatus.instanceOf(gs_tbg.NationStatusPuppet) )
+        {
+            // check parent weight
+            var parentNation = nationA.objStatus.refController.resolve(this.avatar);
+            if (parentNation.equals(nationB))
+            {
+                if (this.pad.bWantMilitaryAILog)
+                    log(nationB.strName + " is the parent of " + nationA.strName);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    this.considerExpansion = function()
+    {
+        if (!this.nation.canDeclareWar())
+        {
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: " + this.nation.strName +  " cannot declare war");
+            return false;
+        }
+        
+        if ( this.nation.objStatus.instanceOf(gs_tbg.NationStatusPuppet) )
+        {
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: puppet " + this.nation.strName +  " not considering expansion.");
+            return false;
+        }
+
+        if (this.pad.nNextExpansionCheckTurn > this.turn)
+        {
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: " + this.nation.strName +  " waiting until turn " + this.pad.nNextExpansionCheckTurn + " before considering expansion.");
+            return false;
+        }
+                
+        var aggressionScale = this.militaryAI.getAggressionScale(this.avatar);
+        
+        //var forceExpansionist = false;
+        
+        var turnCheckReduction = 0;
+        if (aggressionScale >= 100) // hyper aggressive (not in normal content)
+            turnCheckReduction = 10;
+        else if (aggressionScale > 70)
+            turnCheckReduction = 5;
+
+        var turnsAhead = self.objParentAI.getRandomIntInRange(12-turnCheckReduction,24 - turnCheckReduction * 2);
+        this.pad.nNextExpansionCheckTurn = this.turn + turnsAhead;
+        
+        // debug test line
+        if (this.pad.bTestBoostResources)
+        {
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: expansion overridden by test");
+            return false;
+        }
+                
+        // aggressiveness roll
+        var aggressionRoll = self.objParentAI.getRandomIntInRange(0,100);
+        
+        if (this.pad.bWantMilitaryAILog)
+        {
+            log("DEBUG: " + this.nation.strName + " aggressionScale= " + aggressionScale + ", aggressionRoll=" + aggressionRoll);
+        }
+        
+        if (aggressionRoll >= aggressionScale)
+        {
+            return false;
+        }
+        
+        // aggressiveness vs strength needed
+        var strengthRatingNeeded = 80;
+        if (aggressionScale > 90)
+        {
+            strengthRatingNeeded = 20;
+        }
+        if (aggressionScale > 70)
+        {
+            strengthRatingNeeded = 40;
+        }        
+        else if (aggressionScale > 50)
+        {
+            strengthRatingNeeded = 60;
+        }
+
+        // see if we can take on any more
+        var strengthRating = self.objParentAI.objDiplomacyAI.getOurStrengthVsEnemyStrengthRating(this.avatar,this.nation);
+        if (strengthRating < strengthRatingNeeded)
+        {
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: " + this.nation.strName + " not strong enough to expand. " + strengthRating + " < " + strengthRatingNeeded);
+            return false;
+        }
+
+        // see if we have any undeclared enemies
+        if (this.militaryAI.anyUndeclaredEnemies(this.avatar))
+        {
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: " + this.nation.strName + " already preparing for war");
+            return false;
+        }
+
+        // check our international position
+        var roll = self.objParentAI.getRandomFloat();
+
+        var diplomacyAI = self.objGameSysAIUtility.getDiplomacyAI(this.avatar,this.nation);
+        var objAIInternationalPositionTemplate = diplomacyAI.objAIInternationalPositionTemplate;
+        //if (forceExpansionist)
+        //    objAIInternationalPositionTemplate = sd.getTemplate(gs_tbg.AIInternationalPositionTemplate, "Expansionist");
+
+        if (this.pad.bWantMilitaryAILog)
+            log("DEBUG: " + this.nation.strName + " expansion rolled " + roll + " vs " + objAIInternationalPositionTemplate.fExpansionist);
+
+        if (objAIInternationalPositionTemplate.fExpansionist <= roll)
+            return false;
+
+        if (this.pad.bWantMilitaryAILog)
+            log("DEBUG: " + this.nation.strName + " looking for place to expand");
+
+        var homeCity = self.objParentAI.getNationHomeCity(this.avatar,this.nation);
+        if (homeCity == null)
+        {
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: " + this.nation.strName + " has no home city");
+            return false; // can't expand if we have no home city
+        }
+        
+        var homeRegion = homeCity.refRegion.resolve(this.avatar);
+
+        // build a list of nations we're ok with attacking (or expanding attack on)
+        var nationsToConsider = new Array();
+        var diplomaticWeights = new Object();
+        for (var i in self.objGameSysNation.objNations)
+        {
+            var otherNation = self.objGameSysNation.objNations[i];
+            if (this.nationsAreRelated(this.nation,otherNation))
+            {
+                if (this.pad.bWantMilitaryAILog)
+                    log("DEBUG: " + this.nation.strName + " has ties to " + otherNation.strName);
+                continue;
+            }
+            
+            var weight = self.objParentAI.objDiplomacyAI.getUnprovokedAttackWeight(this.avatar,otherNation);
+            if (weight < 1)
+            {
+                if (this.pad.bWantMilitaryAILog)
+                    log("DEBUG: " + this.nation.strName + " would not consider an unprovoked attack on " + otherNation.strName);
+                continue;
+            }
+
+            nationsToConsider.push(otherNation);
+            diplomaticWeights[otherNation.strName] = weight;
+        }
+
+        if (nationsToConsider.length == 0)
+        {
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: " + this.nation.strName + " didn't find any nations to consider attacking");
+            return false;
+        }
+
+        this.militaryAI.updatePotentialExpansions(this.avatar,nationsToConsider);
+
+        var desiredAttackRatio = this.militaryAI.fDesiredAttackRatio / objAIInternationalPositionTemplate.fExpansionist;
+        
+        // only consider sea invasions if we already have some transports
+        //var considerSeaExpansion = false;
+        //var navyTransportCapacity = this.militaryAI.getNavyTransportCapacity(this.avatar);
+        //if (navyTransportCapacity > 15)
+        //    considerSeaExpansion = true;
+
+        // go thru all our potential expansions and build a list of ones to pick from
+
+        var bestPotentialExpansions = new Array();
+        var bestRating = null;
+        var totalBestWeight = 0;
+        
+        var ourHomeRegion = self.objParentAI.getNationHomeRegion(this.avatar,this.nation);
+
+        for (var p in this.militaryAI.objPotentialExpansions)
+        {
+            var pe = this.militaryAI.objPotentialExpansions[p];
+            if ( (pe.objTargetCities.length == 0) && (!pe.bHistoric) && (!pe.bCanAttackByLand) )
+            {
+                continue; // don't bother with a sea invasion unless we get a city or historic region out of it
+            }
+            
+            if (pe.bCanAttackByLand)
+            {
+                // don't expand against non-adjacent nations
+                if (this.militaryAI.isAdjacentNation(this.avatar,otherNation))
+                    continue;
+            }
+
+            
+            var diplomaticWeight = diplomaticWeights[pe.objTargetNation.strName];
+            var rating = new PotentialExpansionRating(this,homeRegion,pe,diplomaticWeight);
+            if ((rating.bTargetIsStrongerOnLandMass==true) && (rating.bTargetIsMuchStrongerOverall==true))
+            {
+                if (this.pad.bWantMilitaryAILog)
+                    log("DEBUG: " + this.nation.strName + " fears the might of " + pe.objTargetNation.strName);
+                continue; // uhh... let's skip this one
+            }
+            
+            if (!pe.bHistoric)
+            {
+                if ( rating.bTargetIsStrongerOverall  )
+                {
+                    // don't consider expanding against stronger nations unless trying to get historic regions
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: " + this.nation.strName + " not considering expanding against non-historic and stronger " + pe.objTargetNation.strName);
+                    
+                    continue;
+                }
+                
+                // skip them if they have an alliance and they're not the lead nation (quicker than getting totals of all members)
+                var allianceMembership = self.objGameSysNationRelations.objAllianceMemberships.find({"refNation":pe.objTargetNation});
+                if (allianceMembership != null)
+                {
+                    alliance = allianceMembership.refAlliance.resolve(this.avatar);
+                    if (alliance != null)
+                    {
+                        if (!pe.objTargetNation.equals(alliance.refLeadNation))
+                        {
+                            if (this.pad.bWantMilitaryAILog)
+                                log("DEBUG: " + this.nation.strName + " not considering expanding against non-historic " + pe.objTargetNation.strName + " because of their alliance.");
+                                
+                            continue;
+                        }
+                    }
+                }
+            } // if not historic
+
+            if (bestRating != null)
+            {
+                var comparison = rating.compareTo(bestRating);
+                if (comparison == PotentialExpansionRating.MuchBetter)
+                {
+                    bestRating = rating;
+                    bestPotentialExpansions = new Array();
+                    totalBestWeight = 0;
+                    
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: " + this.nation.strName + " starting new list of best expansions.");
+                }
+                else if (comparison == PotentialExpansionRating.MuchWorse)
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                bestRating = rating;
+            }
+
+            // determine a weight based on ratings values
+            var weight = 1;
+            if (rating.bTargetIsMuchWeakerOnLandMass)
+                weight += 10;
+
+            if (!rating.bTargetIsStrongerOnLandMass)
+                weight += 10;
+
+            if (rating.bTargetIsMuchWeakerOverall)
+                weight += 10;
+
+            if (!rating.bTargetIsMuchStrongerOverall)
+                weight += 10;
+                
+            // compare capital distances
+            var conquerRegion = pe.objRegionsToConquer.getArbitraryValue();
+            var distance = self.objGameSysAIUtility.getDistanceBetweenRegions(this.avatar,ourHomeRegion,conquerRegion);
+            
+            var score = (12000 - distance * distance) / 12;
+            if (score < 0)
+                score = 0;
+                
+            weight += score;
+
+            weight += pe.objTargetCities.length * 10;
+            weight += pe.objOurCities.length * 20; // cities on same land mass
+
+            weight += pe.objRegionsToConquer.length;
+            weight += diplomaticWeight; // or rating.diplomaticWeight;
+            
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: " + this.nation.strName + " considering expanding against " + pe.objRegionsToConquer.length + " regions of " + pe.objTargetNation.strName + " weight=" + weight + ", distance score=" + score + ", diplomaticWeight=" + diplomaticWeight + ", distance=" + distance);
+            
+            pe.nWeight = weight;
+            bestPotentialExpansions.push(pe);
+            totalBestWeight += weight;
+        }
+
+        if (bestPotentialExpansions.length < 1)
+        {
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: " + this.nation.strName + " didn't find any potential expansions");
+            return false;
+        }
+
+        var chosenExpansion = null;
+
+        // pick randomly from bestPotentialExpansions
+        var roll = self.objParentAI.getRandomIntInRange(0,totalBestWeight-1);
+        for (var i in bestPotentialExpansions)
+        {
+            chosenExpansion = bestPotentialExpansions[i];
+            roll -= chosenExpansion.nWeight;
+            if (roll <= 0)
+                break;
+        }
+
+        var targetNation = chosenExpansion.objTargetNation;
+
+        if (this.pad.bWantMilitaryAILog)
+        {
+            log("DEBUG: " + this.nation.strName + " decided to expand against " + targetNation.strName);
+            log("chosenExpansion=" + chosenExpansion);
+
+            // log more info about chosen expansion
+            var regionNames = "";
+            var numRegionNames = 0;
+            for (var r in chosenExpansion.objRegionsToConquer)
+            {
+                var region = chosenExpansion.objRegionsToConquer[r];
+                regionNames += region.strName + " ";
+                numRegionNames++;
+                if (numRegionNames > 5)
+                {
+                    regionNames += "...";
+                    break;
+                }
+            }
+            log("regions to conquer: " + regionNames);
+        }
+
+        var enemyDesignation = this.militaryAI.getEnemyDesignation(this.avatar,targetNation);
+        if (enemyDesignation == null)
+        {
+            enemyDesignation = this.militaryAI.createEnemyDesignation(this.avatar,targetNation);
+            enemyDesignation.eReasonForDesignation = gs_tbg.ReasonForDesignation.RFD_RANDOM_AGGRESSION;
+        }
+        enemyDesignation.bLandMassScopeSpecified = true;
+        enemyDesignation.bRegionScopeAll = true;
+        this.militaryAI.addLandMassToEnemyDesignation(this.avatar,enemyDesignation,chosenExpansion.objTargetLandMassIDRegion);
+        return true;
+    } // considerExpansion
+
+    this.considerHelpingAlly = function()
+    {
+        var allianceMembership = self.objGameSysNationRelations.objAllianceMemberships.find({"refNation": this.nation});
+        if (allianceMembership == null)
+            return;
+
+        var bCanBuildInvasionFleet = false;
+        if (this.militaryAI.knowsComposition(this.avatar, self.strSeaInvasionComposition))
+        {
+            bCanBuildInvasionFleet = this.militaryAI.canBuildComposition(this.avatar, self.strSeaInvasionComposition);
+        }
+
+        // See if there is an engagement where an ally is losing to someone we don't mind attacking
+        // and we have a military presence in the area.
+        var bestEngagement = null;
+        var bestAlly = null;
+        var bestEnemy = null;
+        var bestRegion = null;
+        var bestCity = null;
+
+        var engagements = self.objGameSysCombat.objEngagements;
+        for (var i in engagements)
+        {
+            var engagement = engagements[i];
+            if (!engagement.eEngagementStatus.equals(gs_tbg.EngagementStatus.ENGAGEMENT_STATUS_ONGOING))
+                continue;
+            
+            var attacker = engagement.refAttacker.resolve(this.avatar);
+            if (attacker.equals(this.nation))
+                continue;
+
+            var defender = engagement.refDefender.resolve(this.avatar);
+            if (defender.equals(this.nation))
+                continue;
+
+            var ally = null;
+            var potentialEnemy = null;
+            var allyIsDefending = false;
+            if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,attacker,true))
+            {
+                ally = attacker;
+                potentialEnemy = defender;
+            }
+            else if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,defender,true))
+            {
+                ally = defender;
+                potentialEnemy = attacker;
+                allyIsDefending = true;
+            }
+            else
+            {
+                continue;
+            }
+
+            var region = engagement.refRegion.resolve(this.avatar);
+            var owner = null;
+            if (region.refOwner != null)
+                owner = region.refOwner.resolve(this.avatar);
+            if (!equals(owner,ally))
+                continue;
+
+            if (this.militaryAI.isOrWouldBeRegionToConquer(this.avatar,region,potentialEnemy))
+                continue; // already planning to attack this region
+
+            var city = this.militaryAI.getNearbyControlledCityToAttackRegion(this.avatar,region,potentialEnemy);
+            var portCity = null;
+            if (city == null)
+            {
+                if (bestCity != null)
+                    continue;
+
+                if (!bCanBuildInvasionFleet)
+                    continue;
+
+                // see if there's a port city we can invade from
+                portCity = this.militaryAI.getControlledPortCityToAttackRegion(this.avatar,region,potentialEnemy, self.strSeaInvasionComposition);
+                if (portCity == null)
+                    continue;
+            }
+
+            var results = engagement.getExpectedDuration(this.avatar,10);
+            if (results.objProjectedWinner != null)
+            {
+                if (results.objProjectedWinner.equals(ally))
+                    continue; // they don't need help here.
+            }
+
+            bestEngagement = engagement;
+            bestAlly = ally;
+            bestEnemy = potentialEnemy;
+            bestRegion = region;
+            bestCity = city;
+            bestPortCity = portCity;
+
+            if (bestCity != null)
+                break;
+        } // for engagements
+
+        if (bestEngagement != null)
+        {
+            var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,bestEnemy,true) != null);
+            if (!bAtWar)
+            {
+                log("DEBUG: " + this.nation.strName + " declaring war against " + bestEnemy.strName + " in order to help " + bestAlly.strName + " at " + bestEngagement.refRegion.resolve(this.avatar).strName);
+            
+                self.objParentAI.objDiplomacyAI.declareWarAgainst(this.avatar,bestEnemy,gs_tbg.WarJustification.DefendAlly,gs_tbg.Reason.WarWithOurAlly,bestAlly,null);
+            }
+
+            if (bestPortCity != null)
+                log("DEBUG: engagement at " + region.strName + " triggers " + this.nation.strName + " to help " + bestAlly.strName + " across ocean against " + bestEnemy.strName);
+            else
+                log("DEBUG: engagement at " + region.strName + " triggers " + this.nation.strName + " to help " + bestAlly.strName + " against " + bestEnemy.strName);
+
+            var enemyDesignation = this.militaryAI.getEnemyDesignation(this.avatar,bestEnemy);
+            if (enemyDesignation == null)
+            {
+                enemyDesignation = this.militaryAI.createEnemyDesignation(this.avatar,bestEnemy);
+                enemyDesignation.eReasonForDesignation = gs_tbg.ReasonForDesignation.RFD_ENEMY_OF_ALLY;
+                enemyDesignation.fPriority = 0.9; // tweak point
+            }
+            this.militaryAI.addLandMassToEnemyDesignation(this.avatar,enemyDesignation,bestRegion);
+            enemyDesignation.bRegionScopeSelfOwned = true;
+            enemyDesignation.bRegionScopeAllyOwned = true;
+
+            if (this.pad.bWantMilitaryAILog)
+            {
+                this.militaryAI.updateDesiredLandMasses(this.avatar);
+                if (!this.militaryAI.isOrWouldBeRegionToConquer(this.avatar,bestRegion,bestEnemy))
+                {
+                    var message = "isOrWouldBeRegionToConquer unexpectedly returned false for region " + bestRegion.strName;
+                    this.militaryAI.test(1,message);
+                    log("DEBUG: " + message + ", bestRegion=" + bestRegion + ", enemyDesignation=" + enemyDesignation);
+
+                    // call again to debug
+                    this.militaryAI.updateDesiredLandMasses(this.avatar);
+                    this.militaryAI.isOrWouldBeRegionToConquer(this.avatar,bestRegion,bestEnemy);
+
+                    throw message;
+                }
+            }
+
+        }
+    } // this.considerHelpingAlly
+
+
+    // this gets called if we can't build an invasion fleet to get to a desired land mass
+    this.considerResearchingInvasionFleetForDesiredLandMass = function(dlm)
+    {
+        // pick one of the cities from desiredLandMass to learn to build an invasion fleet
+        var bestPortCity = null;
+        var bestIPUs = 0;
+        for (var c in dlm.objSourceCities)
+        {
+            var city = dlm.objSourceCities[c];
+            if (city.refSeaRegion == null)
+                continue;
+
+            var region = city.refRegion.resolve(this.avatar);
+            var eGeoConn = this.geoColorMap.getGeographicConnection(this.avatar, region, dlm.objTargetLandMassIDRegion);
+            if (eGeoConn.equals(gs_tbg.GeographicConnection.GEOCONN_SAME_LAND_MASS))
+                continue;
+
+            var ipus = city.nIPUs;
+            if ((bestPortCity != null) && (ipus < bestIPUs))
+                continue;
+
+            bestPortCity = city;
+        }
+        if (bestPortCity == null)
+            return;
+
+        var nWeight = 1;
+        this.militaryAI.learnToBuildCompositionAtCity(this.avatar, bestPortCity, self.strSeaInvasionComposition,nWeight);
+    } // considerResearchingInvasionFleetForDesiredLandMass
+
+    this.handleWarDeclared = function(attackingNation)
+    {
+        // make sure we want to get regions we consider ours from attackingNation
+        var enemyDesignation = this.militaryAI.getEnemyDesignation(this.avatar,attackingNation);
+        if (enemyDesignation == null)
+        {
+            if (this.pad.bWantMilitaryAILog)
+            {
+                log(this.nation.strName + " creating designation for attacker " + attackingNation.strName);
+            }
+        
+            enemyDesignation = this.militaryAI.createEnemyDesignation(this.avatar,attackingNation);
+            enemyDesignation.eReasonForDesignation = gs_tbg.ReasonForDesignation.RFD_PROVOKED;
+            
+            var responseLevel = 1; // self-defense default
+            if (attackingNation.getAIAvatar(this.avatar).bConnected)
+            {
+                // AI vs AI
+                var diplomacyAI = self.objGameSysAIUtility.getDiplomacyAI(this.avatar,this.nation);
+                var objAIInternationalPositionTemplate = diplomacyAI.objAIInternationalPositionTemplate;
+                
+                var roll = self.objParentAI.getRandomFloat();
+                if (roll < objAIInternationalPositionTemplate.fExpansionist)
+                {
+                    responseLevel = 2;
+                }
+                else
+                {
+                    responseLevel = 1;
+                }
+            }
+            else
+            {
+                responseLevel = 3;
+            }
+            
+            if (responseLevel == 3)
+            {
+                // all out
+                enemyDesignation.fPriority = 1.0;
+                enemyDesignation.bRegionScopeAll = true;
+                enemyDesignation.bLandMassScopeAll = true;
+            }
+            else if (responseLevel == 2)
+            {
+                // our regions and our allies
+                enemyDesignation.fPriority = 1.0;
+                enemyDesignation.bLandMassScopeAllyOwned = true;
+                enemyDesignation.bLandMassScopeSelfOwned = true;
+                enemyDesignation.bRegionScopeAllyOwned = true;
+                enemyDesignation.bRegionScopeSelfOwned = true;
+            }
+            else
+            {
+                // just our own regions
+                enemyDesignation.fPriority = 1.0;
+                enemyDesignation.bLandMassScopeSelfOwned = true;
+                enemyDesignation.bRegionScopeSelfOwned = true;
+            }
+        }
+        else
+        {
+            // escalation
+            enemyDesignation.fPriority = 1.0;
+            enemyDesignation.bRegionScopeAll = true;
+            enemyDesignation.bLandMassScopeAll = true;
+        }
+    }
+
+    this.handlePeace = function(enemyNation)
+    {
+        this.militaryAI.removeEnemyDesignation(this.avatar,enemyNation,false);
+    }
+
+    this.handleAllianceMemberConquered = function(conqueredNation)
+    {
+        if (this.pad.bWantMilitaryAILog)
+            log("DEBUG: " + this.nation.strName + " notices that it's ally " + conqueredNation.strName + " was conquered.");
+
+        var tmplNation = conqueredNation.tmplNation.resolve();
+        if (this.militaryAI.getLiberateDesignation(this.avatar,tmplNation) == null)
+        {
+            this.militaryAI.createLiberateDesignation(this.avatar,tmplNation,this.turn);
+        }
+    }
+
+    this.handleDefeatBy = function(parentNation)
+    {
+        this.militaryAI.removeEnemyDesignation(this.avatar, parentNation, true);
+    } // handleDefeatBy
+
+
+    this.handleVictoryOver = function(defeatedNation)
+    {
+        this.militaryAI.removeEnemyDesignation(this.avatar, defeatedNation,false);
+    }
+
+    this.update = function()
+    {
+        this.militaryAI.setWantDebugLog(this.pad.bWantMilitaryAILog);
+        
+        var bIsIndependent = (this.nation.equals(this.nation.getMasterNation(this.avatar)));
+        
+        // choose and advance goals
+        if (this.pad.bNeedToUpdateState)
+        {
+            var enemyNations = new Array();
+            self.objGameSysNationRelations.getEnemies(this.avatar,this.nation,enemyNations, true);
+            this.pad.bAtWar = (enemyNations.length > 0);
+            this.pad.bEnemyChange = true;
+        }
+
+        if (bIsIndependent && this.nation.canDeclareWar() && (this.turn > 1))
+        {
+            this.militaryAI.updateWarPlans(this.avatar,self);
+        }
+
+        if (this.pad.objPlanDefense == null)
+        {
+            if (this.pad.bWantMilitaryAILog)
+                log("DEBUG: creating defense plan");
+
+            var action = gs_tbg.GActCreateAIMilitaryPlan.create({
+                "refNation": this.pad.objNation,
+                "strPurpose": "DefendNation",
+                "otType": local.AIPlanDefendNation
+                });
+            this.avatar.sendAction(action);
+            var plan = action.objPlan;
+            plan.objParentAI = self.objParentAI;
+            this.setPlanStatus(plan,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE,"created");
+            plan.fPriority = 0.97;
+            plan.fAllocationLevel = 1.0;
+            plan.objMilitaryAI = this.militaryAI;
+
+            // create an opportunity attack plan for our current regions to supplement our defense plan
+            this.createDefenseOpportunityAttackPlan();
+
+            this.pad.objPlanDefense = plan;
+        } // if defense plan not created
+
+        var lastTurnData = this.pad.getLastTurnChangeData(false);
+        if (lastTurnData != null)
+        {
+            if (lastTurnData.bMilitaryAccessLost)
+            {
+                var callback = local.CallbackEventMilitaryAccessLost.create({"objAvatar": this.avatar, "objAI": self.objParentAI});
+                self.objGameSysAIUtility.enumPlans(this.avatar,this.nation,callback);
+            }
+        }
+
+        this.militaryAI.moveTicketedUnitGroups(this.avatar);       
+
+        this.militaryAI.updateLiberateDesignations(this.avatar);
+
+        if (this.turn > 1)
+        {
+            this.manageInvasions();
+
+            var bExpanded = this.considerExpansion();
+            
+            if (bExpanded == false)
+            {
+                this.considerHelpingAlly();
+            }
+        }
+
+        if (!this.pad.bEnemyChange)
+        {
+            // see if there were any region control changes
+            if (lastTurnData != null)
+            {
+                var nationsToCheck = new Object();
+                for (var i in lastTurnData.objRegionLosses)
+                {
+                    var regionLoss = lastTurnData.objRegionLosses[i];
+                    var nation = regionLoss.objTakingNation;
+                    var nationName = nation.strName;
+                    if (nationsToCheck[nationName] == undefined)
+                        nationsToCheck[nationName] = 1;
+                    else
+                        nationsToCheck[nationName] += 1;
+                }
+
+                for (var nationName in nationsToCheck)
+                {
+                    var nationRef = new GORef(gs_tbg.Nation, nationName);
+                    var nation = nationRef.resolve(this.avatar);
+                    if (nation == null)
+                        continue; // nation was apparently destroyed
+                        
+                    var count = nationsToCheck[nationName];
+                    if (this.pad.bWantMilitaryAILog)
+                        log("DEBUG: " + nation.strName + " took " + count + " regions from " + this.pad.objNation.strName + " last turn.");
+
+                    var bAtWar = (self.objGameSysNationRelations.getWarEx(this.avatar,this.pad.objNation,nation,true) != null);
+                    if (bAtWar)
+                    {
+                        // this.checkToCreateObtainClaimedRegionsPlan(nation);
+                    }
+                    else
+                    {
+                        if (nation.objStatus.instanceOf(gs_tbg.NationStatusIndependent))
+                        {
+                            // log("ERROR(1) - How did a nation we're not at war with take one of our regions?");
+                        }
+                    }
+                }
+            }
+        } // else (enemies hadn't changed)
+
+        this.checkNavalPlans();
+
+        this.checkAirForcePlans();
+        
+        this.landInvasionPlans = null;
+        this.seaInvasionPlans = null;
+        this.vitalPlans = null;
+    } // this.update
+
+} // end function MilitaryAITempData(avatar)
+
+function update(avatar)
+{
+    context = new MilitaryAITempData(avatar);
+    context.update();
+}
+
+function createPlanToConquerRegionWithResource(avatar,resource)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.createPlanToConquerRegionWithResource(resource);
+}
+
+function activateWarPlanOperation(avatar,warPlan,warPlanOperation)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.activateWarPlanOperation(warPlan,warPlanOperation);
+}
+
+function notifyOperationCompleted(avatar,warPlan,warPlanOperation)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.notifyOperationCompleted(warPlan,warPlanOperation);
+}
+
+function triggerActionDeclareWar(avatar,enemyNation,tmplRegionList)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.triggerActionDeclareWar(enemyNation,tmplRegionList);
+}
+
+// build a single string which shows the types and number of units in a group
+function getUnitTypesString(avatar,unitGroup)
+{
+    var units = self.objGameSysUnit.objUnits.filter({"refUnitGroup": unitGroup});
+    var tmpls = new Object();
+    for (var u in units)
+    {
+        var unit = units[u];
+        var tmplUnit = unit.objUnitTemplate;
+        if (tmpls[tmplUnit.strName] == undefined)
+            tmpls[tmplUnit.strName] = 1;
+        else
+            tmpls[tmplUnit.strName]++;
+    }
+    var strTypes = "";
+    var prefix="";
+    for (var t in tmpls)
+    {
+        var n = tmpls[t];
+        strTypes += prefix + ( t + "(x" + n + ")");
+        prefix=",";
+    }
+    return strTypes;
+}
+
+function logUnitsInGroup(avatar, unitGroup, bLogSubGroups, strPrefix)
+{
+    var prefix = "UnitGroup";
+    if (strPrefix != undefined)
+        prefix = strPrefix;
+
+    var objLoc = unitGroup.refLocation.resolve(avatar);
+    var strLoc = objLoc.strName; // hopefully all the possible object types have this property
+
+    var strUnits = getUnitTypesString(avatar,unitGroup);
+    log(prefix + ": " + unitGroup.strName + "@" + strLoc + "=" + strUnits);
+
+    if (bLogSubGroups)
+    {
+        // also log units underneath this group.
+        var subGroups = new Array();
+        self.objGameSysUnit.getUnitGroupsAtLocation(avatar,unitGroup,subGroups);
+        if (subGroups.length > 0)
+        {
+            log("subgroups of " + unitGroup.strName + ":");
+            for (var i in subGroups)
+            {
+                var subGroup = subGroups[i];
+                var subPrefix = prefix + " Subgroup";
+                logUnitsInGroup(avatar,subGroup, true, subPrefix);
+            }
+        }
+
+        // now log any subgroups under individual units in case any of our units are carriers
+        var units = self.objGameSysUnit.objUnits.filter({"refUnitGroup": unitGroup});
+        for (var u in units)
+        {
+            var unit = units[u];
+            var subGroups = new Array();
+            self.objGameSysUnit.getUnitGroupsAtLocation(avatar,unit,subGroups);
+            if (subGroups.length > 0)
+            {
+                log("subgroups of " + unit.strName + ":");
+                for (var i in subGroups)
+                {
+                    var subGroup = subGroups[i];
+                    var subPrefix = prefix + " Subgroup";
+                    logUnitsInGroup(avatar,subGroup, true, subPrefix);
+                }
+            }
+        }
+    }
+}
+
+function logAssignmentsForRegion(avatar,plan,req)
+{
+    var region = req.objRegion;
+    var assignments = self.objGameSysAIUtility.objAIUnitGroupAssignments.filter({ "objPlan": plan, "objRegion": region });
+
+    if (assignments.length > 0)
+    {
+        var planName = plan.strName;
+        log("unitGroup assignments for " + planName + " " + req.strComposition + " region " + region.strName);
+    }
+
+    for (var a in assignments)
+    {
+        var assignment = assignments[a];
+        var unitGroup = assignment.objUnitGroup;
+        // log("unitGroup=" + unitGroup);
+
+        logUnitsInGroup(avatar,unitGroup,false);
+    }
+
+} // logAssignmentsForRegion
+
+function logAssignmentsForPlan(avatar,plan)
+{
+    for (var r in plan.objUnitRegionRequirements)
+    {
+        var req = plan.objUnitRegionRequirements[r];
+        logAssignmentsForRegion(avatar,plan,req);
+    }
+}
+
+// returns true if the order is in progress.
+// returns false if we've already entered portCity
+function orderUnitGroup_enterPort(avatar,group,portCity)
+{
+    if (portCity.equals(group.refLocation.resolve(avatar)))
+    {
+        return false;
+    }
+
+    if (group.objUnitOrder != null)
+    {
+        if (group.objUnitOrder.instanceOf(gs_tbg.UnitOrderMoveIntoPort))
+        {
+            if (portCity.equals(group.objUnitOrder.refTarget.resolve(avatar)))
+            {
+                // already entering port
+                //log("DEBUG: unitGroup " + group.strName + " entering port");
+                return true;
+            }
+        }
+        
+        var cancelOrder = gs_tbg.GActCancelUnitOrder.create({"refUnitGroup": group});
+        avatar.sendAction(cancelOrder);
+    }
+
+    // give enter port order
+    var actSetEnterPortOrder = gs_tbg.GActSetEnterPortOrder.create({"refUnitGroup": group, "objTarget": portCity});
+    avatar.sendAction(actSetEnterPortOrder);
+    return true;
+}
+
+
+// helper function to send actions for a group to exit a port.
+// returns false if not in port or true if it is exiting
+function orderUnitGroup_exitPort(avatar,group)
+{
+    if (group.eStatus.equals(gs_tbg.UnitGroupStatus.STATUS_IN_PORT))
+    {
+        if (group.objUnitOrder != null)
+        {
+            if (group.objUnitOrder.instanceOf(gs_tbg.UnitOrderExitPort))
+            {
+                // already leaving port
+                //log("DEBUG: unitGroup " + group.strName + "waiting to leave port");
+                return false;
+            }
+            else
+            {
+                log("DEBUG: cancelling " + group.strName + " order: " + group.objUnitOrder);
+                var cancelOrder = gs_tbg.GActCancelUnitOrder.create({"refUnitGroup": group});
+                avatar.sendAction(cancelOrder);
+            }
+        }
+
+        // give leave port order
+        //log("DEBUG: unitGroup " + group.strName + " leaving port.");
+        var exitPortOrder = gs_tbg.GActSetExitPortOrder.create({"refUnitGroup": group});
+        avatar.sendAction(exitPortOrder);
+        return true;
+    }
+    return false; // not in port
+} // orderUnitGroup_exitPort
+
+// helper function to send actions for a group to patrol a region.
+// returns true if order given or false if they already have the order
+function orderUnitGroup_navyPatrol(avatar,group,patrolRegion)
+{
+    if (group.objUnitOrder != null)
+    {
+        if (group.objUnitOrder.instanceOf(gs_tbg.UnitOrderSeaPatrol))
+        {
+            var sameRegion = 0;
+            var differentRegion = 0;
+            for (var i in group.objUnitOrder.refRegions)
+            {
+                var refRegion = group.objUnitOrder.refRegions[i];
+                var region = refRegion.resolve(avatar);
+                if (region.equals(patrolRegion))
+                    sameRegion++;
+                else
+                {
+                    differentRegion++;
+                    break;
+                }
+            }
+            if ((sameRegion > 0) && (differentRegion == 0))
+                return false;
+        }
+
+        //log("DEBUG: cancelling " + group.strName + " order: " + group.objUnitOrder);
+        var cancelOrder = gs_tbg.GActCancelUnitOrder.create({"refUnitGroup": group});
+        avatar.sendAction(cancelOrder);
+    }
+
+    // give patrol order
+    //log("DEBUG: giving sea patrol order to unitGroup " + group.strName + " for " + patrolRegion.strName);
+    var setSeaPatrolOrder = gs_tbg.GActSetSeaPatrolOrder.create({
+        "refUnitGroup": group,
+        "objTarget": patrolRegion
+        });
+
+    avatar.sendAction(setSeaPatrolOrder);
+    return true;
+} // orderUnitGroup_navyPatrol
+
+// helper function to give orders for group to move to destinationRegion.
+// returns false if it's already there otherwise returns true.
+function orderUnitGroup_moveToRegion(avatar,group,destinationRegion)
+{
+    var avoidEngagements = true;
+    var avoidEnemyRegions = false;
+
+    if (group.getRegion(avatar).equals(destinationRegion))
+        return false;
+
+    // make sure group is moving to destinationRegion
+    if (group.objUnitOrder != null)
+    {
+        if (group.objUnitOrder.instanceOf(gs_tbg.UnitOrderMove))
+        {
+            var lastRegion = group.objUnitOrder.getLastRegion(avatar,group);
+            if (destinationRegion.equals(lastRegion))
+            {
+                // already going to the desired region
+                //log("DEBUG: unitGroup " + group.strName + " moving to region " + lastRegion.strName);
+                return true;
+            }
+        }
+        //log("DEBUG: cancelling " + group.strName + " order: " + group.objUnitOrder);
+        var cancelOrder = gs_tbg.GActCancelUnitOrder.create({"refUnitGroup": group});
+        avatar.sendAction(cancelOrder);
+    }
+
+    // give group orders to move to the region
+    var moveOptions = gs_tbg.PathFinderOptions.create({
+        "bAvoidEngagements": avoidEngagements,
+        "bAvoidEnemyRegions": avoidEnemyRegions
+    });
+
+    //log("DEBUG: unitGroup " + group.strName + " ordered to move to " + destinationRegion.strName);
+    var moveOrder = gs_tbg.GActSetMoveOrder.create({
+        "refUnitGroup": group,
+        "objTarget": destinationRegion,
+        "objPathFinderOptions": moveOptions
+    });
+    
+    var result = true;
+    try
+    {
+        avatar.sendAction(moveOrder);
+    }
+    catch(err)
+    {
+        log("ERROR(1): moveOrder for " + group.refController + " " + group.strName + " to " + destinationRegion.strName + " failed.");
+        result = null;
+        
+        self.objParentAI.considerErrorSave(avatar);
+    }
+        
+    return result;
+} // orderUnitGroup_moveToRegion
+
+// helper function to send actions to get group to unload onto specified landRegion
+function orderUnitGroup_unloadToRegion(avatar,group,landRegion,bWantLog)
+{
+    if (bWantLog == undefined)
+        bWantLog = false;
+
+    if (group.objUnitOrder != null)
+    {
+        if (group.objUnitOrder.instanceOf(gs_tbg.UnitOrderUnloadFromTransport))
+        {
+            // don't need to change this
+            if (bWantLog)
+                log("DEBUG: waiting for unload of " + group.strName);
+        }
+        else
+        {
+            // cancel whatever they were doing
+            if (bWantLog)
+                log("DEBUG: cancelling group " + group.strName + " order: " + group.objUnitOrder);
+            var cancelOrder = gs_tbg.GActCancelUnitOrder.create({"refUnitGroup": group});
+            avatar.sendAction(cancelOrder);
+        }
+    }
+    else
+    {
+        if (bWantLog)
+            log("DEBUG: unloading " + group + " onto " + landRegion.strName);
+        var unloadOrder = gs_tbg.GActSetUnloadFromTransportsOrder.create({"refUnitGroup": group, "objTarget": landRegion});
+        avatar.sendAction(unloadOrder);
+    }
+} // orderUnitGroup_unloadToRegion
+
+function createParatrooperSubPlan(avatar, nation, parentPlan, turn)
+{
+    log("DEBUG: creating paratrooper subplan for " + parentPlan);
+
+    // add paratrooper sub-subPlan
+    var action = gs_tbg.GActCreateAIMilitaryPlan.create({
+        "refNation": nation,
+        "strPurpose": "ParatrooperComponent",
+        "otType": local.AISubPlanParatroopers
+        });
+    avatar.sendAction(action);
+    var subPlan = action.objPlan;
+    subPlan.objParentAI = parentPlan.objParentAI;
+    subPlan.objMilitaryAI = parentPlan.objMilitaryAI;
+    subPlan.fPriority = parentPlan.fPriority;
+    subPlan.fAllocationLevel = 1.0;
+
+    // connect child and parent plans
+    subPlan.objParentPlan = parentPlan;
+    subPlan.objMilitaryAI = parentPlan.objMilitaryAI;
+    parentPlan.refParatrooperSubPlan = new GORef(gs_tbg.AIMilitaryPlan, subPlan);
+
+    // activate subplan
+    avatar.sendAction(
+        gs_tbg.GActSetAIMilitaryPlanStatus.create({
+            "objPlan": subPlan,
+            "eStatus": gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE,
+            "strReason": "create subplan",
+            "nTurn": turn
+            }) );
+} // createParatrooperSubPlan
+
+function getPlanTypeForTactic(chosenTactic)
+{
+    if (chosenTactic.equals(gs_tbg.Tactic.CaptureCitiesFirst))
+    {
+        return AISubPlanCaptureCities;
+    }
+    if (chosenTactic.equals(gs_tbg.Tactic.SoftenUpShoreDefenses))
+    {
+        return AISubPlanSoftenUpShoreDefenses;
+    }
+    return null;
+}
+
+function createTacticalSubPlan(avatar, nation, parentPlan, chosenTactic, turn)
+{
+    var otType = getPlanTypeForTactic(chosenTactic);
+    if (otType == null)
+    {
+        log("DEBUG: unable to create plan for tactic " + chosenTactic);
+        return;
+    }
+
+    var strPurpose = "TacticalSubPlan " + chosenTactic.name;
+    //log("DEBUG: creating " + strPurpose + " for " + parentPlan);
+
+    // add paratrooper sub-subPlan
+    var action = gs_tbg.GActCreateAIMilitaryPlan.create({
+        "refNation": nation,
+        "strPurpose": strPurpose,
+        "otType": otType
+        });
+    avatar.sendAction(action);
+    var subPlan = action.objPlan;
+    subPlan.objParentAI = parentPlan.objParentAI;
+    subPlan.objMilitaryAI = parentPlan.objMilitaryAI;
+    subPlan.fPriority = parentPlan.fPriority;
+    subPlan.fAllocationLevel = 1.0;
+
+    // connect child and parent plans
+    subPlan.objParentPlan = parentPlan;
+    subPlan.objMilitaryAI = parentPlan.objMilitaryAI;
+    parentPlan.refTacticalSubPlan = new GORef(gs_tbg.AIMilitaryPlan, subPlan);
+
+    // activate subplan
+    avatar.sendAction(
+        gs_tbg.GActSetAIMilitaryPlanStatus.create({
+            "objPlan": subPlan,
+            "eStatus": gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE,
+            "strReason": "create subplan",
+            "nTurn": turn
+            }) );
+} // createTacticalSubPlan
+
+
+function createLandInvasionIfNeeded(avatar,plan,landedUnitGroup)
+{
+    context = new MilitaryAITempData(avatar);
+    return context.createLandInvasionIfNeeded(plan,landedUnitGroup);
+}
+
+function getLandInvasionArrivedStrength(avatar,plan)
+{
+    context = new MilitaryAITempData(avatar);
+    return context.getLandInvasionArrivedStrength(plan);
+}
+
+function determineSeaInvasionUnloadAndLandRegions(avatar,seaInvasionPlan)
+{
+    context = new MilitaryAITempData(avatar);
+    return context.determineSeaInvasionUnloadAndLandRegions(seaInvasionPlan);
+}
+
+// we just became a colony or puppet of controllingNation
+function handleDefeatBy(avatar, controllingNation)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.handleDefeatBy(controllingNation);
+}
+
+function handleVictoryOver(avatar, defeatedNation)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.handleVictoryOver(defeatedNation);
+}
+
+// attackingNation just declared war on us.
+function handleWarDeclared(avatar,attackingNation)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.handleWarDeclared(attackingNation);
+}
+
+function handlePeace(avatar,enemyNation)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.handlePeace(enemyNation);
+}
+
+function handleAllianceMemberConquered(avatar,nationConquered)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.handleAllianceMemberConquered(nationConquered);
+}
+
+function getTotalNavySurfaceStrength(avatar,nation)
+{
+    var totalStrength = 0;
+    var navyGroups = self.objGameSysUnit.objUnitGroups.filter({"refController":nation, "tmplUnitBranch":self.objGameSysAIUtility.objUnitBranchTemplateNavy});
+    for (var j in navyGroups)
+    {
+        var group = navyGroups[j];
+        var strength = group.getEffectiveCombatStrength(avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_SEA_SURFACE);
+        totalStrength += strength;
+    }
+    return totalStrength;
+}
+
+function createOpportunityAttackPlan(avatar)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.createDefenseOpportunityAttackPlan();
+}
+
+function clearVitalRegionAttacks(avatar)
+{
+    var context = new MilitaryAITempData(avatar);
+    context.clearVitalRegionAttacks();
+}
+
+
+    ]]></script>
+
+</objectDef>
+
+<!-- ************************************************** Callbacks **************************************************  -->
+
+<objectDef type="CallbackEventMilitaryAccessLost" superType="mh2_common.Callback" >
+    <propertyDef name="objAvatar" type="mlgame.Avatar"/>
+    <propertyDef name="objAI" type="MHAISysScript"/>
+    <script type="application/javascript"><![CDATA[
+    function callback(plan)
+    {
+        if (plan.eStatus.equals(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE))
+        {
+            if (plan.handleMilitaryAccessLost != null)
+            {
+                plan.handleMilitaryAccessLost(self.objAvatar);
+            }
+        }
+    }
+    ]]></script>
+</objectDef>
+
+
+</locust>

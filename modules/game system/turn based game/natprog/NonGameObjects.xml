@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="NationalProgram" class="CMLONationalProgram" desc="A national program">
+        <propertyDef name="nSuccessPercent" type="int" default="0"/>
+        <propertyDef name="nCost" type="int" default="0"/>
+        <propertyDef name="nTime" type="int"/>
+        <propertyDef name="nTimeRemaining" type="int"/>
+        <propertyDef name="bPaid" type="bool" default="false"/>
+        <propertyDef name="bCompleted" type="bool" default="false"/>
+        <propertyDef name="nRPUs" type="int"/>
+    </objectDef>
+
+    <objectDef type="DeploymentSurveillance" class="CMLODeploymentSurveillance" superType="NationalProgram" desc="A spy program to detect target nation's unit group positions">
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objRegionsSurveiled" type="Region" variable="true"/>
+    </objectDef>
+
+    <objectDef type="RegionSurveillance" class="CMLORegionSurveillance" superType="NationalProgram" desc="A spy program to unfog a region">
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTargetRegion" type="GORef" restriction="Region"/>
+    </objectDef>
+
+    <objectDef type="StealResearch" class="CMLOStealResearch" superType="NationalProgram" desc="A spy program to steal target nation's research">
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+    </objectDef>
+
+    <objectDef type="SabotageRegion" class="CMLOSabotageRegion" superType="NationalProgram" desc="A spy program to sabotage the production of target region">
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTargetRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="eSabotageRegionParam" type="Enum" restriction="SabotageRegionParam"/>
+    </objectDef>
+
+    <objectDef type="PoliticalSupport" class="CMLOPoliticalSupport" superType="NationalProgram" desc="A program to increase the support for the ruling ideology of the target nation">
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="tmplIdeology" type="TemplateRef" restriction="IdeologyTemplate"/>
+    </objectDef>
+
+    <objectDef type="OppositionSupport" class="CMLOOppositionSupport" superType="NationalProgram" desc="A program to increase the support for an opposition ideology of the target nation">
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="tmplIdeology" type="TemplateRef" restriction="IdeologyTemplate"/>
+    </objectDef>
+
+    <objectDef type="InternalSupport" class="CMLOInternalSupport" superType="NationalProgram" desc="A program to increase the support for the ruling ideology of program owner">
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+    </objectDef>
+ 
+   <objectDef type="NationalProgramsDiplomaticEffectItem" class="CMLONationalProgramsDiplomaticEffectItem">
+        <propertyDef name="otNationalProgram" type="ObjectType" restriction="NationalProgram"/>
+        <propertyDef name="nEffect" type="int"/>
+    </objectDef>
+    
+	<objectDef type="NationalProgramsDiplomaticEffectsTemplate" superType="Template" class ="CMLONationalProgramsDiplomaticEffectsTemplate" templateBase="true">
+        <propertyDef name="objItems" type="NationalProgramsDiplomaticEffectItem" variable="true" storesChildren="true"/>
+    </objectDef>
+
+</locust>

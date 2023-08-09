@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<object type="gs_tbg.GameSysResource" name="objGameSysResource">
+
+        <property name="tmplResourceList" value="sd.ResourceTemplateList"/>
+
+        <!-- Predefined template refs -->
+        <property name="tmplArms" value="sd.Arms"/>
+        <property name="tmplFood" value="sd.Food"/>
+        <property name="tmplCoal" value="sd.Coal"/>
+        <property name="tmplMetals" value="sd.Metals"/>
+        <property name="tmplOil" value="sd.Oil"/>
+		<property name="tmplAtomicBombs" value="sd.AtomicBombs"/>
+
+    </object>
+</locust>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="EventRegionChangedController" class="CMLOEventRegionChangedController" superType="mlevent.Event" desc="Event for when a region changes controller">
+		<propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objOldController" type="Nation"/>
+        <propertyDef name="objNewController" type="Nation"/>
+        <propertyDef name="eReason" type="Enum" restriction="RegionControlChangeReason"/>
+        <!-- RegionControlChangeReason enum names:
+                INITIALIZATION (note: this event is not normally sent with this reason)
+                UNOPPOSED
+                ENGAGEMENT
+                NATION_STATUS
+                SURRENDER
+                RETREAT
+                RETURN
+                LIBERATE
+                REVOLT  -->
+	</objectDef>
+
+    <objectDef type="EventRegionChangedOwner" class="CMLOEventRegionChangedOwner" superType="mlevent.Event" desc="Event for when a region changes owner">
+		<propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objOldOwner" type="Nation"/>
+        <propertyDef name="objNewOwner" type="Nation"/>
+        <propertyDef name="objOldColony" type="Colony"/>
+	</objectDef>
+
+    <objectDef type="EventRegionOutputProduced" class="CMLOEventRegionOutputProduced" superType="mlevent.Event" desc="Event for when a region output is produced">
+        <propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="tmplRegionOutput" type="TemplateRef" restriction="RegionOutputTemplate"/>
+    </objectDef>
+
+	<objectDef type="EventResourceProductionIncrease" superType="mlevent.Event">
+		<propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nAmount" type="int" default="0"/>
+    </objectDef>
+
+	<objectDef type="EventResourceProductionDecrease" superType="mlevent.Event">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nAmount" type="int" default="0"/>
+    </objectDef>
+
+	<objectDef type="EventResourceProductionIncreaseEnd" superType="mlevent.Event">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+	</objectDef>
+	
+	<objectDef type="EventResourceProductionDecreaseEnd" superType="mlevent.Event">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+	</objectDef>
+	
+    <objectDef type="EventAirbaseDestroyed" class="CMLOEventAirbaseDestroyed" superType="mlevent.Event" desc="Event for when an airbase is destroyed">
+        <propertyDef name="objRegion" type="Region"/>
+    </objectDef>
+	
+	<objectDef type="EventAADefenseDestroyed" class="CMLOEventAADefenseDestroyed" superType="mlevent.Event" desc="Event for when an anti-air defense is destroyed">
+        <propertyDef name="objRegion" type="Region"/>
+    </objectDef>
+	
+	<objectDef type="EventCoastalDefenseDestroyed" class="CMLOEventCoastalDefenseDestroyed" superType="mlevent.Event" desc="Event for when a coastal defense is destroyed">
+        <propertyDef name="objRegion" type="Region"/>
+    </objectDef>
+	
+	<objectDef type="EventFortificationDestroyed" class="CMLOEventFortificationDestroyed" superType="mlevent.Event" desc="Event for when a fortification is destroyed">
+        <propertyDef name="objRegion" type="Region"/>
+    </objectDef>
+	
+	<objectDef type="EventTransportationDestroyed" class="CMLOEventTransportationDestroyed" superType="mlevent.Event" desc="Event for when a transportation improvement is destroyed">
+        <propertyDef name="objRegion" type="Region"/>
+    </objectDef>
+	
+	<objectDef type="EventResourceImprovementDestroyed" class="CMLOEventResourceImprovementDestroyed" superType="mlevent.Event" desc="Event for when a resource improvement is destroyed">
+        <propertyDef name="objResourceImprovement" type="ResourceImprovement"/>
+		<propertyDef name="objRegion" type="Region"/>
+    </objectDef>
+
+    <objectDef type="EventMPUDecrease" superType="mlevent.Event">
+        <propertyDef name="objRegion" type="Region"/>
+    </objectDef>
+</locust>

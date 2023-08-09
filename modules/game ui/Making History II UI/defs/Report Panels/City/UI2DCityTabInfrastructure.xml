@@ -1,0 +1,975 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DCityTabInfrastructure" superType="mlui.UI2DElement">
+
+	<!-- Industrial Infrastructure -->
+		<object type="mlui.UI2DText" name="objIndustrialInfrastructureLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.IndustrialInfrastructure"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objLeftPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="447"/>
+			<property name="nHeight" value="520"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objLeftPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="443"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+        
+        <object type="UI2DIndustrialInfrastructure" name="objIndustrial">
+            <property name="nX" value="11"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="447"/>
+			<property name="nHeight" value="520"/>
+        </object>
+        
+	<!-- Production -->
+		<object type="mlui.UI2DText" name="objProductionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchInfrastructure"/>
+			<property name="nX" value="461"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRightPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBLSq"/>
+			<property name="nX" value="457"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="426"/>
+			<property name="nHeight" value="520"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="459"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="422"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+        
+        <object type="UI2DResearchInfrastructure" name="objResearch">
+            <property name="nX" value="457"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="426"/>
+			<property name="nHeight" value="520"/>
+        </object>
+	</objectDef>
+    
+    <objectDef type="UI2DIndustrialInfrastructure" superType="mlui.UI2DElement">
+                
+        <!-- Production Capacity -->
+		<object type="mlui.UI2DText" name="objProductionCapacityLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.ProductionCapacity"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objIndustrialCapacity">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue20LeftFIT"/>
+			<property name="strText" from="spdata.objCityData.objCity.nIPUs"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="19"/>
+			<property name="nHeight" value="20"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objIndustrialCapacityIPUs">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="if(spdata.objCityData.objCity.nIPUs GT 1, locale.SID.UI.IPUs, locale.SID.UI.IPU)"/>
+			<property name="nX" from="def.objIndustrialCapacity.nWidth + 10"/>
+			<property name="nY" value="26"/>
+			<property name="nWidth" value="60"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objFactoryLaborLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.FactoryLabor"/>
+			<property name="nX" value="157"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objFactoryLabor">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText" from="spdata.objCityData.objCity.nCityMPUs"/>
+			<property name="nX" value="157"/>
+			<property name="nY" value="19"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        
+        <object type="mlui.UI2DText" name="objFactoryLaborMPUs">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.MPUs"/>
+			<property name="nX" from="def.objFactoryLabor.nWidth + 160"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="60"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objLaborEfficiencyLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.LaborEfficiency"/>
+			<property name="nX" value="254"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objLaborEfficiency">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText">
+				if(float(def.objFactoryLabor.strText)==0,
+				"0.00",
+					(float(def.objIndustrialCapacity.strText) /
+						float(def.objFactoryLabor.strText))
+							.formatNumber(2, true)
+				)
+            </property>    
+			<property name="nX" value="254"/>
+			<property name="nY" value="19"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        
+        <object type="mlui.UI2DText" name="objLaborEfficiencyMPUs">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.PerMPU"/>
+			<property name="nX" from="def.objLaborEfficiency.nWidth + 257"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="80"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objLaborEfficiencyLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.SupplyPenalty"/>
+			<property name="nX" value="351"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objSupplyPenalty">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText">
+                -(100 - spdata.objCityData.objCity.refRegion.resolve(mh2data.objAvatar).nArmsLimit) + '%'
+            </property>    
+			<property name="nX" value="351"/>
+			<property name="nY" value="19"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+      <object type="mlui.UI2DText" name="objRegionalNationalityLabel">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+        <property name="strText" from="locale.SID.UI.RegionalNationality"/>
+        <property name="nX" value="186"/>
+        <property name="nY" value="54"/>
+        <property name="nWidth" value="150"/>
+        <property name="nHeight" value="12"/>
+      </object>
+      
+		<object type="LookupNationIcons" name="objLookupNationIcons">
+			<property name="tmplNation" from="spdata.objCityData.objCity.refRegion.resolve(mh2data.objAvatar).tmplNation"/>
+			<property name="tmplIdeology" from="spdata.objCityData.objCity.refRegion.resolve(mh2data.objAvatar).refOwner.resolve(mh2data.objAvatar).tmplIdeology"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28"/>
+			<property name="nX" value="155"/>
+			<property name="nY" value="51"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+      <object type="mlui.UI2DText" name="objMilitaryMPUsNationality">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+        <property name="strText" from="spdata.objCityData.objCity.refRegion.resolve(mh2data.objAvatar).tmplNation.resolve().tmplDefaultNationality.resolve().strDisplayName"/>
+        <property name="nX" value="186"/>
+        <property name="nY" value="64"/>
+        <property name="nWidth" value="200"/>
+        <property name="nHeight" value="14"/>
+      </object>
+      
+
+		<!-- Maintenance Costs -->
+		<object type="mlui.UI2DText" name="objMaintenanceCostsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.MaintenanceCosts"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMaintenanceCostsBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="52"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMaintenanceCostsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMaintenanceSm"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="54"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="26"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMaintenanceCosts">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGreen12Left"/>
+            <property name="strText" from="spdata.objCityData.objCity.nMaintenanceCost.formatNumber(0, true)"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="62"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+        
+		<!-- Production Modifiers -->
+		<!--<object type="mlui.UI2DText" name="objProductionModifiersLabel">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>-->
+		<!--	<property name="strText" from="locale.SID.UI.ProductionModifiers"/>-->
+		<!--	<property name="nX" value="157"/>-->
+		<!--	<property name="nY" value="41"/>-->
+		<!--	<property name="nWidth" value="150"/>-->
+		<!--	<property name="nHeight" value="10"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DImage" name="objProductionModifiersBG">-->
+		<!--	<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>-->
+		<!--	<property name="nX" value="155"/>-->
+		<!--	<property name="nY" value="52"/>-->
+		<!--	<property name="nWidth" value="205"/>-->
+		<!--	<property name="nHeight" value="30"/>-->
+		<!--	<property name="nDepth" value="-100"/>-->
+		<!--</object>-->
+
+		<object type="mlui.UI2DImage" name="objBuildingBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="99"/>
+			<property name="nWidth" value="422"/>
+			<property name="nHeight" value="419"/>
+		</object>
+        
+        <!-- Buildings -->
+		<object type="UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="5"/>
+			<property name="nY" value="102"/>
+			<property name="nWidth" value="417"/>
+			<property name="nHeight" value="413"/>
+
+			<object type="UI2DCityBuildingList" name="objScrollable">
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="401"/>
+			</object>
+		</object>
+    </objectDef>
+    
+    <objectDef type="UI2DResearchInfrastructure" superType="mlui.UI2DElement">
+        
+        <!-- Production Capacity -->
+		<object type="mlui.UI2DText" name="objTechCapacityLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.TechCapacity"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTechCapacity">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue20LeftFIT"/>
+			<property name="strText" from="spdata.objCityData.objCity.nRPUs"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="17"/>
+			<property name="nHeight" value="20"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTechCapacityRPUs">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.Points"/>
+			<property name="nX" from="def.objTechCapacity.nWidth + 11"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="60"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<!-- placeholder --><!--<object type="mlui.UI2DText" name="objTechRatingLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.TechRating"/>
+			<property name="nX" value="157"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>-->
+
+		<!-- placeholder --><!--<object type="mlui.UI2DText" name="objTechRating">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText" value="0.0"/>
+			<property name="nX" value="157"/>
+			<property name="nY" value="19"/>
+			<property name="nHeight" value="18"/>
+		</object>		-->
+
+		<object type="mlui.UI2DText" name="objLaborPerFactoryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchLabor"/>
+			<property name="nX" value="157"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objLaborPerCenter">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText">
+                if(spdata.objCityData.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings.size != 0,
+                (sum(map(?{building: building.tmplBuilding.resolve().nMPUs},
+                    spdata.objCityData.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings))).formatNumber(0, true), 0)
+            </property>
+			<property name="nX" value="157"/>
+			<property name="nY" value="19"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<!-- placeholder --><object type="mlui.UI2DText" name="objLaborPerCenterMPUs">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.MPUs"/>
+			<property name="nX" from="def.objLaborPerCenter.nWidth + 160"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="50"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<!-- Maintenance Costs -->
+		<object type="mlui.UI2DText" name="objMaintenanceCostsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.MaintenanceCosts"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objMaintenanceCostsBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="52"/>
+			<property name="nWidth" value="128"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMaintenanceCostsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMaintenanceSm"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="54"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="26"/>
+		</object>	
+
+		<!-- placeholder --><object type="mlui.UI2DText" name="objMaintenanceCosts">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGreen12Left"/>
+			<property name="strText">
+                '$' + if(spdata.objCityData.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings.size != 0,
+                (sum(map(?{building: building.tmplBuilding.resolve().nMaintenanceCost},
+                    spdata.objCityData.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings))).formatNumber(0, true), 0)
+            </property>
+			<property name="nX" value="35"/>
+			<property name="nY" value="62"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<!-- Production Modifiers -->	
+		<!--<object type="mlui.UI2DText" name="objResearchModifiersLabel">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>-->
+		<!--	<property name="strText" from="locale.SID.UI.ResearchModifiers"/>-->
+		<!--	<property name="nX" value="157"/>-->
+		<!--	<property name="nY" value="41"/>-->
+		<!--	<property name="nWidth" value="150"/>-->
+		<!--	<property name="nHeight" value="10"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DImage" name="objResearchModifiersBG">-->
+		<!--	<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>-->
+		<!--	<property name="nX" value="155"/>-->
+		<!--	<property name="nY" value="52"/>-->
+		<!--	<property name="nWidth" value="205"/>-->
+		<!--	<property name="nHeight" value="30"/>-->
+		<!--	<property name="nDepth" value="-100"/>-->
+		<!--</object>-->
+
+		<!--<object type="mlui.UI2DImage" name="objTechIcon">-->
+		<!--	<property name="tmplImage" value="skin.ImgInfoIconTech"/>-->
+		<!--	<property name="nX" value="161"/>-->
+		<!--	<property name="nY" value="55"/>-->
+		<!--	<property name="nWidth" value="21"/>-->
+		<!--	<property name="nHeight" value="25"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DText" name="objTech">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>-->
+		<!--	<property name="strText" value="0.0"/>-->
+		<!--	<property name="nX" value="186"/>-->
+		<!--	<property name="nY" value="62"/>-->
+		<!--	<property name="nWidth" value="100"/>-->
+		<!--	<property name="nHeight" value="12"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DImage" name="objScienceIcon">-->
+		<!--	<property name="tmplImage" value="skin.ImgInfoIconScientist"/>-->
+		<!--	<property name="nX" value="208"/>-->
+		<!--	<property name="nY" value="54"/>-->
+		<!--	<property name="nWidth" value="26"/>-->
+		<!--	<property name="nHeight" value="26"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DText" name="objScience">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>-->
+		<!--	<property name="strText" value="0.0"/>-->
+		<!--	<property name="nX" value="236"/>-->
+		<!--	<property name="nY" value="62"/>-->
+		<!--	<property name="nWidth" value="100"/>-->
+		<!--	<property name="nHeight" value="12"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DImage" name="objLightIcon">-->
+		<!--	<property name="tmplImage" value="skin.ImgInfoIconLightSm"/>-->
+		<!--	<property name="nX" value="263"/>-->
+		<!--	<property name="nY" value="55"/>-->
+		<!--	<property name="nWidth" value="14"/>-->
+		<!--	<property name="nHeight" value="25"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DText" name="objLight">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>-->
+		<!--	<property name="strText" value="0.0"/>-->
+		<!--	<property name="nX" value="281"/>-->
+		<!--	<property name="nY" value="62"/>-->
+		<!--	<property name="nWidth" value="100"/>-->
+		<!--	<property name="nHeight" value="12"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DImage" name="objOccupationIcon">-->
+		<!--	<property name="tmplImage" value="skin.ImgInfoIconOccupationSm"/>-->
+		<!--	<property name="nX" value="307"/>-->
+		<!--	<property name="nY" value="56"/>-->
+		<!--	<property name="nWidth" value="23"/>-->
+		<!--	<property name="nHeight" value="24"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DText" name="objOccupation">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialRed12Left"/>-->
+		<!--	<property name="strText" value="0.0"/>-->
+		<!--	<property name="nX" value="333"/>-->
+		<!--	<property name="nY" value="62"/>-->
+		<!--	<property name="nWidth" value="100"/>-->
+		<!--	<property name="nHeight" value="12"/>-->
+		<!--</object>-->
+        
+        <object type="mlui.UI2DImage" name="objBuildingListBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="99"/>
+			<property name="nWidth" value="420"/>
+			<property name="nHeight" value="419"/>
+		</object>
+		
+		<object type="UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="5"/>
+			<property name="nY" value="102"/>
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="413"/>
+
+			<object type="UI2DResearchBuildingList" name="objScrollable">
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="401"/>
+			</object>
+		</object>
+		
+    </objectDef>
+    
+    <objectDef type="UI2DResearchBuildingList" superType="mlui.UI2DElement">
+		
+		<property name="nWidth" from="self.objList.nWidth"/>
+		<property name="nHeight" from="self.objList.nHeight + self.objList2.nHeight + 55"/>
+			
+		<object type="mlui.UI2DText" name="objResearchFacilities">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchFacilities"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objList">
+			<property name="nX" value="2"/>
+			<property name="nY" value="20"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nMaxEltsPerRow" value="5"/>
+			
+			<object type="UI2DResearchBuildingBubble" name="objElements"
+					tiedTo="filter(?{researchBuilding: researchBuilding.tmplBuilding.resolve().nRPUs GT 0},
+						spdata.objCityData.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings)">
+				<property name="objResearchCenterBuilding" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="78"/>
+				<property name="nHeight" from="140"/>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objSpecialty" existsWhile="def.objList2.nHeight GT 0">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.SpecialtyBuildings"/>
+			<property name="nX" value="4"/>
+			<property name="nY" from="def.objList.nHeight + 29"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objList2">
+			<property name="nX" value="2"/>
+			<property name="nY" from="def.objSpecialty.nY + 16"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nMaxEltsPerRow" value="5"/>
+
+			<object type="UI2DResearchBuildingBubble" name="objElements"
+					tiedTo="filter(?{researchBuilding: researchBuilding.tmplBuilding.resolve().nRPUs == 0},
+						spdata.objCityData.objCity.refResearchCenter.resolve(mh2data.objAvatar).objBuildings)">
+				<property name="objResearchCenterBuilding" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="78"/>
+				<property name="bRPUs" value="false" />
+				<property name="nHeight" from="110"/>
+			</object>
+		</object>
+		
+	</objectDef>
+        
+    <objectDef type="UI2DCityBuildingList" superType="mlui.UI2DElement">
+		
+		<property name="nWidth" from="self.objList.nWidth"/>
+		<property name="nHeight" from="self.objList.nHeight + self.objList2.nHeight + 55"/>
+			
+		<object type="mlui.UI2DText" name="objFactories">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Factories"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objList">
+			<property name="nX" value="2"/>
+			<property name="nY" value="20"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nMaxEltsPerRow" value="5"/>
+
+			<object type="UI2DCityBuildingBubble" name="objElements"
+					tiedTo="filter(?{cityBuilding: cityBuilding.tmplCityBuilding.resolve().nIPUs GT 0},
+						spdata.objCityData.objCity.objCityBuildings)">
+				<property name="objCityBuilding" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="78"/>
+				<property name="nHeight" from="140"/>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objSpecialty">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.SpecialtyBuildings"/>
+			<property name="nX" value="4"/>
+			<property name="nY" from="def.objList.nHeight + 29"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objList2">
+			<property name="nX" value="2"/>
+			<property name="nY" from="def.objSpecialty.nY + 16"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nMaxEltsPerRow" value="5"/>
+
+			<object type="UI2DCityBuildingBubble" name="objElements"
+					tiedTo="filter(?{cityBuilding: cityBuilding.tmplCityBuilding.resolve().nIPUs == 0},
+						spdata.objCityData.objCity.objCityBuildings)">
+				<property name="objCityBuilding" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="78"/>
+				<property name="nHeight" from="110"/>
+				<property name="bMPUs" value="false"/>
+			</object>
+		</object>
+		
+	</objectDef>
+    
+    <objectDef type="UI2DCityBuildingBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objCityBuilding" type="gs_tbg.CityBuilding"/>
+
+		<propertyDef name="objCityBuildingTemplate" type="gs_tbg.CityBuildingTemplate"/>
+		<property name="objCityBuildingTemplate" from="self.objCityBuilding.tmplCityBuilding.resolve()"/>
+		
+		<propertyDef name="bMPUs" type="bool" default="true" />
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBuildingIcon">
+			<property name="tmplImage">
+				mh2data.objCityBuildingDisplayTable.getEntry(def.objCityBuildingTemplate).tmplImage
+			</property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+			<property name="strToolTip" from="def.objCityBuildingTemplate.strDisplayName"/>
+		</object>
+		
+		<object type="UI2DBldgHealthBar" name="objHealth">
+			<property name="fPercent" from="float(float(def.objCityBuilding.nHitPoints) / float(def.objCityBuildingTemplate.nHitPoints))"/>
+			<property name="nX" value="5"/>
+			<property name="nY" from="def.nHeight - 25"/>
+			<property name="nHeight" value="4"/>
+			<property name="nWidth" from="def.nWidth - 10"/>
+		</object>
+				
+		<object type="mlui.UI2DImage" name="objResourceBG" existsWhile="def.bMPUs" >
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="86"/>
+			<property name="nWidth" from="74"/>
+			<property name="nHeight" from="25"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIPUsIcon" existsWhile="def.bMPUs" >
+			<property name="tmplImage" value="skin.ImgInfoIconIndustrySm"/>
+			<property name="strToolTip" from="locale.SID.UI.IPUs"/>
+			<property name="nX" value="7"/>
+			<property name="nY" value="88"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="30"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objResourcesOutputText" existsWhile="def.bMPUs" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue20RightMiddle"/>
+			<property name="strText" from="def.objCityBuildingTemplate.nIPUs"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="88"/>
+			<property name="nWidth" from="def.nWidth-10"/>
+			<property name="nHeight" from="30"/>
+		</object>
+		
+        <!--<object type="mlui.UI2DButton" name="objRepairButton" existsWhile="spdata.objCityData.objCity.objController == mh2data.objNation">			
+            <property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonRepair')"/>
+            <property name="nX" value="1"/>
+			<property name="nY" from="def.nHeight - 20"/>
+            <property name="nDepth" value="3"/>
+            <property name="nDefaultWidth" from="19"/>
+            <property name="nDefaultHeight" from="19"/>
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {
+                            log("TODO :: repair" );
+                        }
+                    ]]></script>
+                </object>					
+            </object>
+        </object>	
+      
+        <object type="mlui.UI2DButton" name="objUpgradeButton" existsWhile="spdata.objCityData.objCity.objController == mh2data.objNation">				
+            <property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonUpgrade')"/>
+            <property name="nX" value="20"/>
+			<property name="nY" from="def.nHeight - 20"/>
+            <property name="nDepth" value="3"/>
+            <property name="nDefaultWidth" from="19"/>
+            <property name="nDefaultHeight" from="19"/>
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {
+                            log("TODO :: upgrade");
+                        }
+                    ]]></script>
+                </object>					
+            </object>
+        </object>	-->
+      
+        <object type="mlui.UI2DButton" name="objDestroyButton" existsWhile="spdata.objCityData.objCity.objController == mh2data.objNation">			
+            <property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonDestroy')"/>
+            <property name="nX" value="39"/>
+			<property name="nY" from="def.nHeight - 20"/>
+            <property name="nDepth" value="3"/>
+            <property name="nDefaultWidth" from="19"/>
+            <property name="nDefaultHeight" from="19"/>
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {                             
+                            var action = gs_tbg.GActDismantleCityBuilding.create({
+                                "objCityBuilding": def.objCityBuilding
+                            });
+                            mh2data.objAvatar.sendAction(action);	                           
+                        }
+                    ]]></script>
+                </object>					
+            </object>
+        </object>			
+        <object type="mlui.UI2DButton" name="objEncyButton">			
+            <property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonInfo')"/>
+            <property name="nX" value="58"/>
+			<property name="nY" from="def.nHeight - 20"/>
+            <property name="nDepth" value="3"/>
+            <property name="nDefaultWidth" from="19"/>
+            <property name="nDefaultHeight" from="19"/>
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {				
+                            encydata.objEncyclopediaData.showCityBuildings();
+                            var entry = def.getEncyEntry();
+                            encydata.objEncyclopediaData.objSelected = entry.objEntry;
+                        }
+                    ]]></script>
+                </object>					
+            </object>
+		</object>
+		
+		<script type="application/x-locust-query">			
+			getEncyEntry = ?{:				
+				find(?{entry: entry.objEntry.instanceOf(gs_tbg.CityBuildingTemplate) AND entry.objEntry == self.objCityBuildingTemplate}, encydata.objEncyclopediaData.objEntries)
+			}			
+		</script>			
+	</objectDef>
+    
+    <objectDef type="UI2DResearchBuildingBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objResearchCenterBuilding" type="gs_tbg.ResearchCenterBuilding"/>
+
+		<propertyDef name="objResearchCenterBuildingTemplate" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+		<property name="objResearchCenterBuildingTemplate" from="self.objResearchCenterBuilding.tmplBuilding.resolve()"/>
+		
+		<propertyDef name="bRPUs" type="bool" default="true" />
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objBuildingIcon">
+			<property name="tmplImage">
+				mh2data.objResearchCenterBuildingDisplayTable.getEntry(def.objResearchCenterBuildingTemplate).tmplImage
+			</property>	
+			<property name="nX" value="0"/>
+			<property name="nY" value="9"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+			<property name="strToolTip" from="def.objResearchCenterBuildingTemplate.strDisplayName"/>
+		</object>
+		
+		<object type="UI2DBldgHealthBar" name="objHealth">
+			<property name="fPercent" from="float(float(def.objResearchCenterBuilding.nHitPoints) / float(def.objResearchCenterBuildingTemplate.nHitPoints))"/>
+			<property name="nX" value="5"/>
+			<property name="nY" from="def.nHeight - 25"/>
+			<property name="nHeight" value="4"/>
+			<property name="nWidth" from="def.nWidth - 10"/>
+		</object>
+				
+		<object type="mlui.UI2DImage" name="objResourceBG" existsWhile="def.bRPUs" >
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="86"/>
+			<property name="nWidth" from="74"/>
+			<property name="nHeight" from="25"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objResearchIcon" existsWhile="def.bRPUs" >
+			<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="89"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="30"/>
+		</object>
+		<object type="mlui.UI2DText" name="objResourcesOutputText" existsWhile="def.bRPUs" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue20RightMiddle"/>
+			<property name="strText" from="def.objResearchCenterBuildingTemplate.nRPUs"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="88"/>
+			<property name="nWidth" from="def.nWidth-10"/>
+			<property name="nHeight" from="30"/>
+		</object>
+			
+        <!--<object type="mlui.UI2DButton" name="objRepairButton" existsWhile="spdata.objCityData.objCity.objController == mh2data.objNation">			
+            <property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonRepair')"/>
+            <property name="nX" value="1"/>
+			<property name="nY" from="def.nHeight - 20"/>
+            <property name="nDepth" value="3"/>
+            <property name="nDefaultWidth" from="19"/>
+            <property name="nDefaultHeight" from="19"/>
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {
+                            log("TODO :: repair" );
+                        }
+                    ]]></script>
+                </object>					
+            </object>
+        </object>	
+        <object type="mlui.UI2DButton" name="objUpgradeButton" existsWhile="spdata.objCityData.objCity.objController == mh2data.objNation">		
+            <property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonUpgrade')"/>
+            <property name="nX" value="20"/>
+			<property name="nY" from="def.nHeight - 20"/>
+            <property name="nDepth" value="3"/>
+            <property name="nDefaultWidth" from="19"/>
+            <property name="nDefaultHeight" from="19"/>
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {
+                            log("TODO :: upgrade");
+                        }
+                    ]]></script>
+                </object>					
+            </object>
+        </object>-->	
+        <object type="mlui.UI2DButton" name="objDestroyButton" existsWhile="spdata.objCityData.objCity.objController == mh2data.objNation">				
+            <property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonDestroy')"/>
+            <property name="nX" value="39"/>
+			<property name="nY" from="def.nHeight - 20"/>
+            <property name="nDepth" value="3"/>
+            <property name="nDefaultWidth" from="19"/>
+            <property name="nDefaultHeight" from="19"/>
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {
+                            var action = gs_tbg.GActDismantleResearchBuilding.create({
+                                "refCity": spdata.objCityData.objCity,
+                                "objResearchBuilding": def.objResearchCenterBuilding
+                            });
+                            mh2data.objAvatar.sendAction(action);
+                        }
+                    ]]></script>
+                </object>					
+            </object>
+        </object>			
+        <object type="mlui.UI2DButton" name="objEncycButton">			
+            <property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate, 'BtnStyleBldgButtonInfo')"/>
+            <property name="nX" value="58"/>
+			<property name="nY" from="def.nHeight - 20"/>
+            <property name="nDepth" value="3"/>
+            <property name="nDefaultWidth" from="19"/>
+            <property name="nDefaultHeight" from="19"/>
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {				
+                            encydata.objEncyclopediaData.showResearchBuildings();
+                            var entry = def.getEncyEntry();
+                            log("----------" + entry);
+                            encydata.objEncyclopediaData.objSelected = entry.objEntry;
+                        }
+                    ]]></script>
+                </object>					
+            </object>
+        </object>
+		
+		<script type="application/x-locust-query">			
+			getEncyEntry = ?{:				
+				find(?{entry: entry.objEntry.instanceOf(gs_tbg.ResearchCenterBuildingTemplate) AND entry.objEntry == self.objResearchCenterBuildingTemplate}, encydata.objEncyclopediaData.objEntries)
+			}			
+		</script>			
+	</objectDef>
+	
+	<objectDef type="UI2DBldgHealthBar" superType="mlui.UI2DElement">
+		<propertyDef name="fPercent" type="float"/>
+		<property name="nWidth" value="58"/>
+		<property name="nHeight" value="7"/>
+		
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				#CCC2B6FF				
+			</property>	
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="colColor">
+				if(def.fPercent LTE 0.3, #CC0000FF,
+					if(def.fPercent LTE 0.7, #EDEF1DFF, #578426FF))
+			</property>	
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="(def.nWidth * def.fPercent)"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<property name="strToolTip" from="(self.fPercent * 100).formatNumber(0, true) + '%'"/>		
+	</objectDef>
+	
+</locust>

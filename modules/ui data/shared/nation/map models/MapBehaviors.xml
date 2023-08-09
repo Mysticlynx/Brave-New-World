@@ -1,0 +1,1699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<object type="mapui.MapBehaviorTableGOSelected" name="MapBehaviorTableGOSelectedDefault">
+		<object type="mapui.MapBehaviorEntryGOSelected" name="objEntries">
+			<property name="otGO" value="gs_tbg.UnitGroup"/>
+
+			<script type="application/javascript"><![CDATA[
+
+				function trigger(gameroot, mapdata, mouseparams, GO)
+                {
+                    mapdata.selectUnitGroup(GO);
+				}
+
+            ]]></script>
+		</object>
+
+		<object type="mapui.MapBehaviorEntryGOSelected" name="objEntries">
+			<property name="otGO" value="gs_tbg.Region"/>
+
+			<script type="application/javascript"><![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, GO)
+                {
+                    mapdata.selectRegion(GO);
+                }
+
+            ]]></script>
+		</object>
+
+		<object type="mapui.MapBehaviorEntryGOSelected" name="objEntries">
+			<property name="otGO" value="mapui.UI3DGroupStackSelect"/>
+
+			<script type="application/javascript"><![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, GO)
+                {
+                    GO.objGroupStack.advanceHeadUnitGroup();
+					mapdata.selectUnitGroup(GO.objGroupStack.objHeadUnitGroup);
+                }
+
+            ]]></script>
+		</object>
+
+		<object type="mapui.MapBehaviorEntryGOSelected" name="objEntries">
+			<property name="otGO" value="mapui.UI3DStackIndicator"/>
+
+			<script type="application/javascript"><![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, GO)
+                {
+                    //GO.objStack.advanceHeadUnitGroup()
+					mapdata.selectUnitGroup(GO.objStack.objHeadUnitGroup);
+                }
+
+            ]]></script>
+		</object>
+
+ 		<object type="mapui.MapBehaviorEntryGOSelected" name="objEntries">
+			<property name="otGO" value="gs_tbg.City"/>
+
+			<script type="application/javascript"><![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, GO)
+                {
+                    mapdata.selectCity(GO)
+                }
+
+            ]]></script>
+		</object>
+
+ 		<object type="mapui.MapBehaviorEntryGOSelected" name="objEntries">
+			<property name="otGO" value="gs_tbg.Engagement"/>
+
+			<script type="application/javascript"><![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, GO)
+                {
+                    mapdata.selectEngagement(GO)
+                }
+
+            ]]></script>
+		</object>
+	</object>
+
+    <object type="mapui.MapBehaviorTableGOQueried" name="MapBehaviorTableGOQueriedDefault">
+		<object type="mapui.MapBehaviorEntryGOQueried" name="objEntries">
+			<property name="otGO" value="gs_tbg.UnitGroup"/>
+
+			<script type="application/javascript">
+    <![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, objGO)
+                {
+					var sd_module = mapdata.objModuleSD;
+					
+					// check to see if multiple groups in region
+					var stack = mapdata.objStacks.getStackForUnitGroup(objGO);
+                    var groups = stack.objUnitGroups;
+
+					var menudata = common_elements.MenuData.create({
+						"vecPosition": Vec3D(mouseparams.nPosX, mouseparams.nPosY, 0.0),
+						"tmplItemButtonStyle": "skin.TxtBtnStyleBubbleHighlightWhiteCenterMiddleFIT",
+						"tmplTitleStyle": "skin.ImgPanelTopBG",
+						"nDefaultItemWidth": 300,
+						"nDefaultItemHeight": 22
+					});
+
+					if(groups.length > 0)
+					{						
+						if(groups.size >= 2 && stack.objHeadUnitGroup.refController.resolve(gameroot)==mapdata.objNation)
+						{
+							
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.MergeForces,
+								"objHoverExecuteObject": eo.HEOUnitGroupMergeMenu.create({
+                                    "objRoot": self.objRoot,
+									"objMapData": mapdata,
+									"objUnitGroup": objGO,
+									"objStack": stack
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+						for(i in groups)
+						{
+							var group = groups[i];
+                            if(group != null)
+                            {
+                                var menuitem = common_elements.MenuItem.create({
+                                    "strDisplayName": locale.FSID.UI.SelectObject.format('Object', group.strDisplayName),
+                                    "objExecuteObject": eo.EOMapDataSelectGroup.create({
+                                        "objRoot": self.objRoot,
+                                        "objMapData": mapdata,
+                                        "objGroup": group
+                                    })
+                                });
+                                menudata.objItems.add(menuitem);
+
+								if(group.tmplUnitBranch.resolve().equals(sd_module.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')) && gs_tbg.getNationResource(gameroot, mapdata.objNation, sd_module.getTemplateRef(gs_tbg.ResourceTemplate, 'AtomicBombs')).nAmount > 0)
+								{
+									var atombombers = group.getUnitsWithUnitCapability(gameroot, gs_tbg.UnitCapDropAtomicBomb)
+									if(atombombers.length > 0)
+									{
+										var menuitem = common_elements.MenuItem.create({
+											"strDisplayName": locale.FSID.UI.LoadAtomBombOn.format('Group', group.strDisplayName),
+											"objHoverExecuteObject": eo.HEOMapDataLoadAtomBombSubMenu.create({
+												"objMapData": mapdata,
+												"objUnits": atombombers,
+												"objRoot": self.objRoot
+											})
+										});
+										menudata.objItems.add(menuitem);
+									}
+								}
+                                
+                                if (mlgame.client.objReplicatedServer.getAttribValue("AITestMode") == true) {
+                                    var menuitem = common_elements.MenuItem.create({
+                                        strDisplayName: 'AILog',
+                                        objExecuteObject:
+                                            eo.EOMapDataDumpAILogForGroup.create({
+                                                objRoot: self.objRoot,
+                                                objMapData: mapdata,
+                                                objGroup: group
+                                            })
+                                    });
+                                    menudata.objItems.add(menuitem);                                    
+                                }
+                            }
+						}
+					}
+
+					if ((objGO.objUnitOrder != null) && objGO.canCommand(gameroot, mapdata.objNation))
+                    {
+                        var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.SID.UI.CancelCurrentOrder,
+							"objExecuteObject": eo.ExecuteObjectUnitGroupCancelOrder.create({
+								"objGameRoot": gameroot,
+								"objRoot": self.objRoot,
+								"objUnitGroup": objGO
+							})
+						});
+						menudata.objItems.add(menuitem);
+                    }
+					if(objGO.refLocation.resolve(gameroot).instanceOf(gs_tbg.Region))
+					{
+						citiesinregion = objGO.refLocation.resolve(gameroot).getCitiesInRegion(gameroot, gs_tbg.getAllCities(gameroot))
+					}
+					for(i in citiesinregion)
+					{
+						var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SelectObject.format('Object', citiesinregion[i].strDisplayName),
+							"tmplIconImage": "skin.ImgCityIconSmall",
+							"objExecuteObject": eo.EOMapDataSelectCity.create({
+								"objMapData": mapdata,
+								"objCity": citiesinregion[i]
+							})
+						});
+						menudata.objItems.add(menuitem);
+					}
+
+                    var menuitem = common_elements.MenuItem.create({
+                        "strDisplayName": locale.FSID.UI.SelectObject.format('Object', objGO.refLocation.resolve(gameroot).strDisplayName),
+						"tmplIconImage": "skin.ImgRegionIconSmall",
+                        "objExecuteObject": eo.EOMapDataSelectRegion.create({
+                            "objMapData": mapdata,
+                            "objRegion": objGO.refLocation.resolve(gameroot)
+                        })
+                    });
+                    menudata.objItems.add(menuitem);
+
+                    if(!objGO.refLocation.resolve(gameroot).tmplTerrain.resolve().bWater)
+                    {
+                        var menuitem = common_elements.MenuItem.create({
+                            "strDisplayName": locale.FSID.UI.SelectObject.format('Object', objGO.refLocation.resolve(gameroot).refController.resolve(gameroot).strDisplayName),
+							"tmplIconImage": "skin.ImgNationIconSmall",
+                            "objExecuteObject": eo.EOMapDataSelectNation.create({
+                                "objMapData": mapdata,
+                                "objNation": objGO.refLocation.resolve(gameroot).refController.resolve(gameroot)
+                            })
+                        });
+                        menudata.objItems.add(menuitem);
+                    }
+
+					var menutitle = common_elements.MenuTitle.create({
+							"strTableTitle": objGO.strDisplayName,
+							"strOwnerTag": objGO.refController.resolve(gameroot).strDisplayName
+						});
+						menudata.objTitle = menutitle;
+
+					mlui.ActSendEventToUIElement.execute({
+						"objElement": self.objRoot,
+						"objEvent": common_elements.EventRequestPopUpMenu.create({
+								"objMenuData": menudata
+						})
+					});
+                }
+
+            ]]></script>
+		</object>
+
+		<object type="mapui.MapBehaviorEntryGOQueried" name="objEntries">
+			<property name="otGO" value="gs_tbg.Region"/>
+
+			<script type="application/javascript">
+                            <![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, objGO)
+                {
+					//create a basis for a pop up menu
+                    var menudata = common_elements.MenuData.create({
+                        "vecPosition": Vec3D(mouseparams.nPosX, mouseparams.nPosY, 0.0),
+						"tmplItemButtonStyle": "skin.TxtBtnStyleBubbleHighlightWhiteCenterMiddleFIT",
+						"tmplTitleStyle": "skin.ImgPanelTopBG",
+						"nDefaultItemWidth": 300,
+						"nDefaultItemHeight": 22
+                    });
+
+					if(!objGO.tmplTerrain.resolve().bWater)
+					{
+						if(objGO.canCommand(mapdata.objAvatar, mapdata.objNation))
+						{
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.FSID.UI.SetProductionFor.format('Producer', objGO.strDisplayName),
+								"objHoverExecuteObject": eo.HEOOpenRegionProductionSubMenu.create({
+									"objMapData": mapdata,
+									"objRegion": objGO,
+									"objRoot": self.objRoot
+								})
+							});
+							menudata.objItems.add(menuitem);
+
+						}
+
+						if(objGO.getMasterNation(gameroot) != mapdata.objNation)
+						{
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.FSID.UI.SabotageRegion.format('Region', objGO.strDisplayName),
+								"objHoverExecuteObject": eo.HEOMapDataSabotageRegionSubMenu.create({
+									"objMapData": mapdata,
+									"objRegion": objGO,
+									"objRoot": self.objRoot
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+
+						citiesinregion = objGO.getCitiesInRegion(gameroot, gs_tbg.getAllCities(gameroot))
+						for(i in citiesinregion)
+						{
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.FSID.UI.SelectObject.format('Object', citiesinregion[i].strDisplayName),
+								"tmplIconImage": "skin.ImgCityIconSmall",
+								"objExecuteObject": eo.EOMapDataSelectCity.create({
+									"objMapData": mapdata,
+									"objCity": citiesinregion[i]
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+
+						var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SelectObject.format('Object', objGO.strDisplayName),
+							"tmplIconImage": "skin.ImgRegionIconSmall",
+							"objExecuteObject": eo.EOMapDataSelectRegion.create({
+								"objMapData": mapdata,
+								"objRegion": objGO
+							})
+						});
+						menudata.objItems.add(menuitem);
+
+						if(objGO.refOwner.resolve(gameroot) != objGO.refController.resolve(gameroot))
+						{
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.FSID.UI.SelectObject.format('Object', objGO.refOwner.resolve(gameroot).strDisplayName),
+								"tmplIconImage": "skin.ImgNationIconSmall",
+								"objExecuteObject": eo.EOMapDataSelectNation.create({
+									"objMapData": mapdata,
+									"objNation": objGO.refOwner.resolve(gameroot)
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+
+						var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SelectObject.format('Object', objGO.refController.resolve(gameroot).strDisplayName),
+							"tmplIconImage": "skin.ImgNationIconSmall",
+							"objExecuteObject": eo.EOMapDataSelectNation.create({
+								"objMapData": mapdata,
+								"objNation": objGO.refController.resolve(gameroot)
+							})
+						});
+						menudata.objItems.add(menuitem);
+                        
+                        if (mlgame.client.objReplicatedServer.getAttribValue("AITestMode") == true) {
+                            var menuitem = common_elements.MenuItem.create({
+                                strDisplayName: 'AIRegionLog',
+                                objExecuteObject:
+                                    eo.EOMapDataAIRegionLog.create({
+                                        objRoot: self.objRoot,
+                                        objMapData: mapdata,
+                                        objRegion: objGO
+                                    })
+                            });
+                            menudata.objItems.add(menuitem);                                    
+                        }
+
+						var menutitle = common_elements.MenuTitle.create({
+								"strTableTitle": objGO.strDisplayName,
+								"strOwnerTag": objGO.refController.resolve(gameroot).strDisplayName
+							});
+							menudata.objTitle = menutitle;
+					}
+
+					else{
+						var menutitle = common_elements.MenuTitle.create({
+								"strTableTitle": objGO.strDisplayName
+							});
+							menudata.objTitle = menutitle;
+					}
+
+                    //send it off to the UI
+                    mlui.ActSendEventToUIElement.execute({
+                        "objElement": self.objRoot,
+                        "objEvent": common_elements.EventRequestPopUpMenu.create({
+                                "objMenuData": menudata
+                            })
+                        });
+                }
+
+            ]]></script>
+		</object>
+
+		<object type="mapui.MapBehaviorEntryGOQueried" name="objEntries">
+			<property name="otGO" value="gs_tbg.City"/>
+
+			<script type="application/javascript">
+                            <![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, objGO)
+                {
+                    //create a basis for a pop up menu
+                    var menudata = common_elements.MenuData.create({
+                        "vecPosition": Vec3D(mouseparams.nPosX, mouseparams.nPosY, 0.0),
+						"tmplItemButtonStyle": "skin.TxtBtnStyleBubbleHighlightWhiteCenterMiddleFIT",
+						"tmplTitleStyle": "skin.ImgPanelTopBG",
+						"nDefaultItemWidth": 300,
+						"nDefaultItemHeight": 22
+                    });
+
+					if(objGO.canCommand(mapdata.objAvatar, mapdata.objNation))
+					{
+						var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SetProductionFor.format('Producer', objGO.strDisplayName),
+							"objHoverExecuteObject": eo.HEOOpenCityProductionSubMenu.create({
+								"objMapData": mapdata,
+								"objCity": objGO,
+								"objRoot": self.objRoot
+							})
+						});
+						menudata.objItems.add(menuitem);
+
+						if(objGO.nRPUs != 0)
+						{
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.FSID.UI.SetResearchFor.format('City', objGO.strDisplayName),
+								"objHoverExecuteObject": eo.HEOOpenCityResearchSubMenu.create({
+									"objMapData": mapdata,
+									"objCity": objGO,
+									"objRoot": self.objRoot
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+					}
+
+					if(objGO.refRegion.resolve(gameroot).getMasterNation(gameroot) != mapdata.objNation)
+					{
+						menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SabotageCity.format('City', objGO.strDisplayName),
+							"objExecuteObject": eo.EOMapDataSabotageRegion.create({
+								"objMapData": mapdata,
+								"objRegion": objGO.refRegion.resolve(gameroot),
+								"eSabotageRegionParam": gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_CITY
+							})
+						});
+						menudata.objItems.add(menuitem);
+					}
+
+                    var menutitle = common_elements.MenuTitle.create({
+						"strTableTitle": objGO.strDisplayName,
+						"strOwnerTag": objGO.refRegion.resolve(gameroot).refController.resolve(gameroot).strDisplayName
+					});
+					menudata.objTitle = menutitle;
+
+					var shipsinport = gs_tbg.getAllUnitGroups(gameroot).filter({
+							"refLocation": objGO
+						});
+
+					for(var i in shipsinport)
+					{
+						shipgroup = shipsinport[i]
+						menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SelectObject.format('Object', shipgroup.strDisplayName),
+							"objExecuteObject": eo.EOMapDataSelectGroup.create({
+								"objRoot": self.objRoot,
+								"objMapData": mapdata,
+								"objGroup": shipgroup
+							})
+						});
+						menudata.objItems.add(menuitem);
+					}
+
+                    var menuitem = common_elements.MenuItem.create({
+                        "strDisplayName": locale.FSID.UI.SelectObject.format('Object', objGO.strDisplayName),
+						"tmplIconImage": "skin.ImgCityIconSmall",
+                        "objExecuteObject": eo.EOMapDataSelectCity.create({
+                            "objMapData": mapdata,
+                            "objCity": objGO
+                        })
+                    });
+                    menudata.objItems.add(menuitem);
+
+                    var menuitem = common_elements.MenuItem.create({
+                        "strDisplayName": locale.FSID.UI.SelectObject.format('Object', objGO.refRegion.resolve(gameroot).strDisplayName),
+						"tmplIconImage": "skin.ImgRegionIconSmall",
+                        "objExecuteObject": eo.EOMapDataSelectRegion.create({
+                            "objMapData": mapdata,
+                            "objRegion": objGO.refRegion.resolve(gameroot)
+                        })
+                    });
+                    menudata.objItems.add(menuitem);
+
+                    var menuitem = common_elements.MenuItem.create({
+                        "strDisplayName": locale.FSID.UI.SelectObject.format('Object', objGO.refRegion.resolve(gameroot).refController.resolve(gameroot).strDisplayName),
+						"tmplIconImage": "skin.ImgNationIconSmall",
+                        "objExecuteObject": eo.EOMapDataSelectNation.create({
+                            "objMapData": mapdata,
+                            "objNation": objGO.refRegion.resolve(gameroot).refController.resolve(gameroot)
+                        })
+                    });
+                    menudata.objItems.add(menuitem);
+
+                    //send it off to the UI
+                    mlui.ActSendEventToUIElement.execute({
+                        "objElement": self.objRoot,
+                        "objEvent": common_elements.EventRequestPopUpMenu.create({
+                                "objMenuData": menudata
+                            })
+                        });
+
+                }
+
+            ]]></script>
+		</object>
+
+		<object type="mapui.MapBehaviorEntryGOQueried" name="objEntries">
+			<property name="otGO" value="gs_tbg.Engagement"/>
+
+			<script type="application/javascript">
+                            <![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, objGO)
+                {
+					// check to see if multiple groups in region
+					var gsUnit = gs_tbg.getGameSysUnit(gameroot);
+
+					var groups = gsUnit.objUnitGroups.filter({
+						"refLocation": objGO.refRegion
+					});
+
+					var menudata = common_elements.MenuData.create({
+						"vecPosition": Vec3D(mouseparams.nPosX, mouseparams.nPosY, 0.0),
+						"tmplItemButtonStyle": "skin.TxtBtnStyleBubbleHighlightWhiteCenterMiddleFIT",
+						"tmplTitleStyle": "skin.ImgPanelTopBG",
+						"nDefaultItemWidth": 300,
+						"nDefaultItemHeight": 22
+					});
+
+					var menutitle = common_elements.MenuTitle.create({
+						"strTableTitle": locale.FSID.UI.BattleOf.format('Region', objGO.refRegion.resolve(gameroot).strDisplayName)
+					});
+					menudata.objTitle = menutitle;
+
+					if(groups.length > 1)
+					{
+						for(i in groups)
+						{
+							var menuitem = common_elements.MenuItem.create({
+							    "strDisplayName": locale.FSID.UI.SelectObject.format('Object', groups[i].strDisplayName),
+							    "objExecuteObject": eo.EOMapDataSelectGroupInEngagement.create({
+									"objMapData": mapdata,
+							        "objGroup": groups[i]
+							    })
+							});
+
+							menudata.objItems.add(menuitem);
+						}
+					}
+
+                    if(!objGO.refRegion.resolve(gameroot).tmplTerrain.resolve().bWater)
+                    {
+                        var menuitem = common_elements.MenuItem.create({
+                            "strDisplayName": locale.FSID.UI.SelectObject.format('Object', objGO.refRegion.resolve(gameroot).refController.resolve(gameroot).strDisplayName),
+							"tmplIconImage": "skin.ImgNationIconSmall",
+                            "objExecuteObject": eo.EOMapDataSelectNation.create({
+                                "objMapData": mapdata,
+                                "objNation": objGO.refRegion.resolve(gameroot).refController.resolve(gameroot)
+                            })
+                        });
+                        menudata.objItems.add(menuitem);
+                    }
+
+                    var menuitem = common_elements.MenuItem.create({
+                        "strDisplayName": locale.FSID.UI.SelectObject.format('Object', objGO.refRegion.resolve(gameroot).strDisplayName),
+						"tmplIconImage": "skin.ImgRegionIconSmall",
+                        "objExecuteObject": eo.EOMapDataSelectRegion.create({
+                            "objMapData": mapdata,
+                            "objRegion": objGO.refRegion.resolve(gameroot)
+                        })
+                    });
+                    menudata.objItems.add(menuitem);
+
+					mlui.ActSendEventToUIElement.execute({
+						"objElement": self.objRoot,
+						"objEvent": common_elements.EventRequestPopUpMenu.create({
+								"objMenuData": menudata
+						})
+					});
+
+                }
+
+            ]]></script>
+		</object>
+    </object>
+
+	<object type="mapui.MapBehaviorTableGOTargetting" name="MapBehaviorTableGOTargettingDefault">
+        <!-- Unit Group -> Region -->
+        <object type="mapui.MapBehaviorEntryGOTargetting" name="objEntries">
+			<property name="otGO" value="gs_tbg.UnitGroup"/>
+            <property name="otTargetGO" value="gs_tbg.Region"/>
+
+			<script type="application/javascript">
+                                    <![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, GO, TargetGO)
+                {
+                    var worldPosition = gs_tbg.getGameSysMap(gameroot).getUnwrappedPosition(mouseparams.vecRayIntersect);
+                    var CurrentUnitGroupActions = GO.getValidActionsForTarget(gameroot, TargetGO, worldPosition)
+                    log("Found " + CurrentUnitGroupActions.objUnitGroupActions.length + " additional actions for this Region")
+					if ((CurrentUnitGroupActions.objUnitGroupActions.length == 1) && 
+					        ( CurrentUnitGroupActions.objUnitGroupActions[0].otAction.equals(gs_tbg.GActSetMoveOrder) ||
+					          CurrentUnitGroupActions.objUnitGroupActions[0].otAction.equals(gs_tbg.GActSetUnitGroupPosition) )
+					   )
+					{
+                        var shortcut = eo.ExecuteObjectUnitGroupWithTarget.create({
+								"otAction": CurrentUnitGroupActions.objUnitGroupActions[0].otAction,
+                                "objGameRoot": gameroot,
+                                "objUnitGroup": GO,
+                                "objTarget": TargetGO,
+                                "vecPosition": CurrentUnitGroupActions.objUnitGroupActions[0].vecPosition
+                            })
+                        shortcut.execute();
+					}
+//                    else if ((GO.objUnitOrder != null) && (GO.objUnitOrder.instanceOf(gs_tbg.UnitOrderMove)) && (GO.objUnitOrder.objEndWaypoint.refRegion.resolve(mapdata.objAvatar) != TargetGO))
+//                    {
+//
+//                        var shortcut = eo.ExecuteObjectUnitGroupWithTarget.create({
+//								"otAction": gs_tbg.GActAddMoveWaypoint,
+//                                "objGameRoot": gameroot,
+//                                "objUnitGroup": GO,
+//                                "objTarget": TargetGO
+//                            })
+//                            shortcut.execute();
+//                    }
+					else
+					{
+						//create an empty menudata
+						var menudata = common_elements.MenuData.create({
+							"vecPosition": Vec3D(mouseparams.nPosX, mouseparams.nPosY, 0.0),
+							"tmplItemButtonStyle": "skin.TxtBtnStyleBubbleHighlightWhiteCenterMiddleFIT",
+							"tmplTitleStyle": "skin.ImgPanelTopBG",
+							"nDefaultItemWidth": 300,
+							"nDefaultItemHeight": 22
+						});
+
+						for (i in CurrentUnitGroupActions.objUnitGroupActions)
+						{
+							var foundAutomaticOrder = false;
+							var automaticOrder = null;
+							var cancelPrevious = false;
+							if (CurrentUnitGroupActions.objUnitGroupActions[i] != null)
+							{
+								var menuText = "Default menu text";
+
+								if ( (!CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActAddMoveWaypoint)) &&
+								     (!CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetUnitGroupPosition)) )
+								{
+									if(GO.objUnitOrder != null)
+									{
+										cancelPrevious = true;
+									}
+								}
+								
+								if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetUnitGroupPosition))
+								{
+									menuText = locale.FSID.UI.Reposition.format('Group', GO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetMoveOrder))
+								{
+									menuText = locale.FSID.UI.MoveTo.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActAddMoveWaypoint))
+								{
+									menuText = locale.FSID.UI.AddMove.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRebaseOrder))
+								{
+									menuText = locale.FSID.UI.RebaseTo.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRetreatOrder))
+								{
+									menuText = locale.FSID.UI.RetreatTo.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetAirPatrolOrder))
+								{
+									menuText = locale.FSID.UI.StartAirPatrol.format('Group', CurrentUnitGroupActions.objUnitGroupActions[i].refUnitGroup.resolve(gameroot).strDisplayName, 'Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetSeaPatrolOrder))
+								{
+									menuText = locale.FSID.UI.StartSeaPatrol.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActAddSeaPatrolTarget))
+								{
+									menuText = locale.FSID.UI.AddSeaPatrol.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionTransportationOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionTransportation.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionFortificationOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionFortifications.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionAADefenseOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionAADefenses.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionCoastalDefenseOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionCoastDefenses.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionAirbaseOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionAirbase.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionUnitsOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionUnits.format('Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetUnloadFromTransportsOrder))
+								{
+									menuText = locale.FSID.UI.UnloadToRegion.format('Group', CurrentUnitGroupActions.objUnitGroupActions[i].refUnitGroup.resolve(gameroot).strDisplayName, 'Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetUnloadFromCarrierOrder))
+								{
+									menuText = locale.FSID.UI.RebaseFromCarrier.format('Group', CurrentUnitGroupActions.objUnitGroupActions[i].refUnitGroup.resolve(gameroot).strDisplayName, 'Region', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetDropParatrooperOrder))
+								{
+									menuText = locale.FSID.UI.DropParatroopersOnRegion.format('Region', TargetGO.strDisplayName);;
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetExitPortOrder))
+								{
+									menuText = locale.FSID.UI.ExitPortTo.format('Region', TargetGO.strDisplayName);
+								}
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetShoreBombardmentCoastalOrder))
+                                {
+                                    menuText = locale.FSID.UI.ShoreBombardCoastalDefenses.format('Region', TargetGO.strDisplayName);
+                                }
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackTransportationOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackTransportation.format('Region', TargetGO.strDisplayName);
+                                }
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackFortificationOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackFortification.format('Region', TargetGO.strDisplayName);
+                                }
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackAADefenseOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackAADefense.format('Region', TargetGO.strDisplayName);
+                                }
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackCoastalDefenseOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackCoastalDefense.format('Region', TargetGO.strDisplayName);
+                                }
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetSubAttack))
+								{
+									menuText = locale.FSID.UI.SubAttackRegion.format('Region', TargetGO.strDisplayName);
+								}
+                                
+								if(cancelPrevious == true)
+								{
+									var menuitem = common_elements.MenuItem.create({
+										"strDisplayName": menuText,
+										"objExecuteObject": eo.ExecuteObjectUnitGroupOverrideOrder.create({
+											"otAction": CurrentUnitGroupActions.objUnitGroupActions[i].otAction,
+											"objGameRoot": gameroot,
+											"objUnitGroup": CurrentUnitGroupActions.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+											"objTarget": CurrentUnitGroupActions.objUnitGroupActions[i].objTarget
+										})
+									});
+								}
+								else
+								{
+									var menuitem = common_elements.MenuItem.create({
+										"strDisplayName": menuText,
+										"objExecuteObject": eo.ExecuteObjectUnitGroupWithTarget.create({
+											"otAction": CurrentUnitGroupActions.objUnitGroupActions[i].otAction,
+											"objGameRoot": gameroot,
+											"objUnitGroup": CurrentUnitGroupActions.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+											"objTarget": CurrentUnitGroupActions.objUnitGroupActions[i].objTarget,
+											"vecPosition": CurrentUnitGroupActions.objUnitGroupActions[i].vecPosition
+										})
+									});
+								}
+								menudata.objItems.add(menuitem);
+							}
+						}
+
+						if(!TargetGO.tmplTerrain.resolve().bWater)
+						{
+							if(TargetGO.canCommand(mapdata.objAvatar, mapdata.objNation))
+							{
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.FSID.UI.SetProductionFor.format('Producer', TargetGO.strDisplayName),
+									"objHoverExecuteObject": eo.HEOOpenRegionProductionSubMenu.create({
+										"objMapData": mapdata,
+										"objRegion": TargetGO,
+										"objRoot": self.objRoot
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+
+							if(TargetGO.getMasterNation(gameroot) != mapdata.objNation)
+							{
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.FSID.UI.SabotageRegion.format('Region', TargetGO.strDisplayName),
+									"objHoverExecuteObject": eo.HEOMapDataSabotageRegionSubMenu.create({
+										"objMapData": mapdata,
+										"objRegion": TargetGO,
+										"objRoot": self.objRoot
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+
+							citiesinregion = TargetGO.getCitiesInRegion(gameroot, gs_tbg.getAllCities(gameroot))
+							for(i in citiesinregion)
+							{
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.FSID.UI.SelectObject.format('Object', citiesinregion[i].strDisplayName),
+									"tmplIconImage": "skin.ImgCityIconSmall",
+									"objExecuteObject": eo.EOMapDataSelectCity.create({
+										"objMapData": mapdata,
+										"objCity": citiesinregion[i]
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+							if(TargetGO.refOwner.resolve(gameroot) != TargetGO.refController.resolve(gameroot))
+							{
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.FSID.UI.SelectObject.format('Object', TargetGO.refOwner.resolve(gameroot).strDisplayName),
+									"tmplIconImage": "skin.ImgNationIconSmall",
+									"objExecuteObject": eo.EOMapDataSelectNation.create({
+										"objMapData": mapdata,
+										"objNation": TargetGO.refOwner.resolve(gameroot)
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.FSID.UI.SelectObject.format('Object', TargetGO.refController.resolve(gameroot).strDisplayName),
+								"tmplIconImage": "skin.ImgNationIconSmall",
+								"objExecuteObject": eo.EOMapDataSelectNation.create({
+									"objMapData": mapdata,
+									"objNation": TargetGO.refController.resolve(gameroot)
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+
+						var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SelectObject.format('Object', TargetGO.strDisplayName),
+							"tmplIconImage": "skin.ImgRegionIconSmall",
+							"objExecuteObject": eo.EOMapDataSelectRegion.create({
+								"objMapData": mapdata,
+								"objRegion": TargetGO
+							})
+						});
+						menudata.objItems.add(menuitem);
+
+						if(foundAutomaticOrder)
+						{
+							automaticOrder.execute();
+						}
+						else
+						{
+							if (GO.objUnitOrder != null)
+							{
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.SID.UI.CancelCurrentOrder,
+									"objExecuteObject": eo.ExecuteObjectUnitGroupCancelOrder.create({
+										"objGameRoot": gameroot,
+										"objRoot": self.objRoot,
+										"objUnitGroup": GO
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+								if(!TargetGO.tmplTerrain.resolve().bWater)
+								{
+									var menutitle = common_elements.MenuTitle.create({
+										"strTableTitle": TargetGO.strDisplayName,
+										"strOwnerTag": TargetGO.refController.resolve(gameroot).strDisplayName
+									});
+									menudata.objTitle = menutitle;
+								}
+								else
+								{
+									var menutitle = common_elements.MenuTitle.create({
+										"strTableTitle": TargetGO.strDisplayName
+									});
+									menudata.objTitle = menutitle;
+								}
+
+							//send the menu off to the UI
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": self.objRoot,
+								"objEvent": common_elements.EventRequestPopUpMenu.create({
+										"objMenuData": menudata
+								})
+							});
+						}
+					}
+                }
+            ]]></script>
+		</object>
+
+        <!-- Unit Group -> Unit Group -->
+        <object type="mapui.MapBehaviorEntryGOTargetting" name="objEntries">
+			<property name="otGO" value="gs_tbg.UnitGroup"/>
+            <property name="otTargetGO" value="gs_tbg.UnitGroup"/>
+
+			<script type="application/javascript">
+                            <![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, GO, TargetGO)
+                {
+					var sd_module = mapdata.objModuleSD;
+					
+                    var worldPosition = gs_tbg.getGameSysMap(gameroot).getUnwrappedPosition(mouseparams.vecRayIntersect);               
+					var CurrentUnitGroupActions = GO.getValidActionsForTarget(gameroot, TargetGO, worldPosition);
+					log("Found " + CurrentUnitGroupActions.objUnitGroupActions.length + " action(s) for this GO");
+					var CurrentUnitGroupActionsForRegion = GO.getValidActionsForTarget(gameroot, TargetGO.refLocation.resolve(mapdata.objAvatar));
+					log("Found " + CurrentUnitGroupActionsForRegion.objUnitGroupActions.length + " action(s) for target's region");
+//					Uncomment to auto-add orders
+//					if(CurrentUnitGroupActions.objUnitGroupActions.length == 0 && CurrentUnitGroupActionsForRegion.objUnitGroupActions.length == 1 && CurrentUnitGroupActionsForRegion.objUnitGroupActions[0].otAction.equals(gs_tbg.GActSetMoveOrder))
+//					{
+//                        var shortcut = eo.ExecuteObjectUnitGroupWithTarget.create({
+//								"otAction": gs_tbg.GActSetMoveOrder,
+//                                "objGameRoot": gameroot,
+//                                "objUnitGroup": GO,
+//                                "objTarget": TargetGO.refLocation.resolve(mapdata.objAvatar)
+//                            })
+//                        shortcut.execute();
+//					}
+//                    else if ((GO.objUnitOrder != null) && (GO.objUnitOrder.instanceOf(gs_tbg.UnitOrderMove)) && (GO.objUnitOrder.objEndWaypoint.refRegion.resolve(mapdata.objAvatar) != TargetGO.refLocation.resolve(mapdata.objAvatar)))
+//                    {
+//
+//                        var shortcut = eo.ExecuteObjectUnitGroupWithTarget.create({
+//								"otAction": gs_tbg.GActAddMoveWaypoint,
+//                                "objGameRoot": gameroot,
+//                                "objUnitGroup": GO,
+//                                "objTarget": TargetGO.refLocation.resolve(mapdata.objAvatar)
+//                            })
+//                            shortcut.execute();
+//
+//                    }
+//                    else
+//                    {
+						//create an empty menudata
+						var menudata = common_elements.MenuData.create({
+							"vecPosition": Vec3D(mouseparams.nPosX, mouseparams.nPosY, 0.0),
+							"tmplItemButtonStyle": "skin.TxtBtnStyleBubbleHighlightWhiteCenterMiddleFIT",
+							"tmplTitleStyle": "skin.ImgPanelTopBG",
+							"nDefaultItemWidth": 300,
+							"nDefaultItemHeight": 22
+						});
+
+						var menutitle = common_elements.MenuTitle.create({
+							"strTableTitle": TargetGO.strDisplayName,
+							"strOwnerTag": TargetGO.refController.resolve(gameroot).strDisplayName
+						});
+						menudata.objTitle = menutitle;
+						
+						if(TargetGO.refLocation.resolve(gameroot) == GO.refLocation.resolve(gameroot) &&
+						   TargetGO.tmplUnitBranch.equals(GO.tmplUnitBranch) && TargetGO.refController.resolve(gameroot) == GO.refController.resolve(gameroot))
+						{
+							var stack = mapdata.objStacks.getStackForUnitGroup(TargetGO);
+							
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.MergeForces,
+								"objHoverExecuteObject": eo.HEOUnitGroupMergeMenu.create({
+                                    "objRoot": self.objRoot,
+									"objMapData": mapdata,
+									"objUnitGroup": GO,
+									"objStack": stack
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+						
+						//now create the individual menu items and add them to the menudata
+						for (i in CurrentUnitGroupActions.objUnitGroupActions)
+						{
+							if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction != null)
+							{
+								var menuText = "Default menu text";
+
+								if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetLoadOnTransportsOrder))
+								{
+									menuText = locale.FSID.UI.LoadOnTo.format('UnitGroup', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetLoadOnCarrierOrder))
+								{
+									menuText = locale.FSID.UI.RebaseToCarrier.format('Unit', CurrentUnitGroupActions.objUnitGroupActions[i].objTarget.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetSubAttackGroup))
+								{
+									menuText = locale.FSID.UI.SubAttackGroup.format('Unit', CurrentUnitGroupActions.objUnitGroupActions[i].objTarget.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetUnitGroupPosition))
+								{
+									menuText = locale.FSID.UI.RepositionOntoStack.format('TargetGroup', CurrentUnitGroupActions.objUnitGroupActions[i].objTarget.strDisplayName);
+                                }
+                                
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": menuText,
+									"objExecuteObject": eo.ExecuteObjectUnitGroupWithTarget.create({
+										"otAction": CurrentUnitGroupActions.objUnitGroupActions[i].otAction,
+										"objGameRoot": gameroot,
+										"objUnitGroup": CurrentUnitGroupActions.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+										"objTarget": CurrentUnitGroupActions.objUnitGroupActions[i].objTarget
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+						}
+
+						for (i in CurrentUnitGroupActionsForRegion.objUnitGroupActions)
+						{
+							var cancelPrevious = false;
+							if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i] != null)
+							{
+								var menuText = "Default menu text";
+								if(!CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActAddMoveWaypoint))
+								{
+									if(GO.objUnitOrder != null)
+									{
+										cancelPrevious = true;
+									}
+								}
+								if(CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetMoveOrder))
+								{
+									menuText = locale.FSID.UI.MoveTo.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if(CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActAddMoveWaypoint))
+								{
+									menuText = locale.FSID.UI.AddMove.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRebaseOrder))
+								{
+									menuText = locale.FSID.UI.RebaseTo.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetAirPatrolOrder))
+								{
+									menuText = locale.FSID.UI.StartAirPatrol.format('Group', CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].refUnitGroup.resolve(gameroot).strDisplayName, 'Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetSeaPatrolOrder))
+								{
+									menuText = locale.FSID.UI.StartSeaPatrol.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActAddSeaPatrolTarget))
+								{
+									menuText = locale.FSID.UI.AddSeaPatrol.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+                                else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackTransportationOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackTransportation.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+                                }
+                                else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackFortificationOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackFortification.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+                                }
+                                else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackAADefenseOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackAADefense.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+                                }
+                                else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackCoastalDefenseOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackCoastalDefense.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+                                }
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionTransportationOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionTransportation.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionFortificationOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionFortifications.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionAADefenseOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionAADefenses.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionCoastalDefenseOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionCoastDefenses.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionAirbaseOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionAirbase.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionUnitsOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionUnits.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetUnloadFromTransportsOrder))
+								{
+									menuText = locale.FSID.UI.UnloadToRegion.format('Group', CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].refUnitGroup.resolve(gameroot).strDisplayName, 'Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetUnloadFromCarrierOrder))
+								{
+									menuText = locale.FSID.UI.RebaseFromCarrier.format('Group', CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].refUnitGroup.resolve(gameroot).strDisplayName, 'Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetDropParatrooperOrder))
+								{
+									menuText = locale.FSID.UI.DropParatroopersOnRegion.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);;
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetExitPortOrder))
+								{
+									menuText = locale.FSID.UI.ExitPortTo.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRetreatOrder))
+								{
+								    menuText = locale.FSID.UI.RetreatTo.format('Region', TargetGO.refLocation.resolve(gameroot).strDisplayName);
+								}
+								else
+								{
+								    logWarn("Missing menuText for CurrentUnitGroupActionsForRegion.objUnitGroupActions[" + i + "].otAction = " + CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction );
+								}
+
+								if(cancelPrevious == true)
+								{
+									var menuitem = common_elements.MenuItem.create({
+										"strDisplayName": menuText,
+										"objExecuteObject": eo.ExecuteObjectUnitGroupOverrideOrder.create({
+											"otAction": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction,
+											"objGameRoot": gameroot,
+											"objUnitGroup": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+											"objTarget": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].objTarget
+										})
+									});
+								}
+								else
+								{
+									var menuitem = common_elements.MenuItem.create({
+										"strDisplayName": menuText,
+										"objExecuteObject": eo.ExecuteObjectUnitGroupWithTarget.create({
+											"otAction": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction,
+											"objGameRoot": gameroot,
+											"objUnitGroup": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+											"objTarget": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].objTarget
+										})
+									});
+								}
+								menudata.objItems.add(menuitem);
+							}
+						}
+
+						if ((GO.objUnitOrder != null) && GO.canCommand(gameroot, mapdata.objNation))
+						{
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.CancelCurrentOrder,
+								"objExecuteObject": eo.ExecuteObjectUnitGroupCancelOrder.create({
+									"objGameRoot": gameroot,
+									"objRoot": self.objRoot,
+									"objUnitGroup": GO
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+
+
+						var stack = mapdata.objStacks.getStackForUnitGroup(TargetGO);
+						var groups = stack.objUnitGroups;
+
+						if(groups.length > 0)
+						{
+							for(i in groups)
+							{
+								var group = groups[i]
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.FSID.UI.SelectObject.format('Object', group.strDisplayName),
+									"objExecuteObject": eo.EOMapDataSelectGroup.create({
+										"objRoot": self.objRoot,
+										"objMapData": mapdata,
+										"objGroup": group
+									})
+								});
+								menudata.objItems.add(menuitem);
+
+								if(group.tmplUnitBranch.resolve().equals(sd_module.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')) &&
+								   gs_tbg.getNationResource(gameroot, mapdata.objNation, sd_module.getTemplateRef(gs_tbg.ResourceTemplate, 'AtomicBombs')).nAmount > 0)
+								{
+									var atombombers = group.getUnitsWithUnitCapability(gameroot, gs_tbg.UnitCapDropAtomicBomb);
+									if(atombombers.length > 0)
+									{
+										var menuitem = common_elements.MenuItem.create({
+											"strDisplayName": locale.FSID.UI.LoadAtomBombOn.format('Group', group.strDisplayName),
+											"objHoverExecuteObject": eo.HEOMapDataLoadAtomBombSubMenu.create({
+												"objMapData": mapdata,
+												"objUnits": atombombers,
+												"objRoot": self.objRoot
+											})
+										});
+										menudata.objItems.add(menuitem);
+									}
+								}
+							}
+						}
+
+						if(!TargetGO.refLocation.resolve(gameroot).tmplTerrain.resolve().bWater)
+						{
+							citiesinregion = TargetGO.refLocation.resolve(gameroot).getCitiesInRegion(gameroot, gs_tbg.getAllCities(gameroot))
+							for(i in citiesinregion)
+							{
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.FSID.UI.SelectObject.format('Object', citiesinregion[i].strDisplayName),
+									"tmplIconImage": "skin.ImgCityIconSmall",
+									"objExecuteObject": eo.EOMapDataSelectCity.create({
+										"objMapData": mapdata,
+										"objCity": citiesinregion[i]
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.FSID.UI.SelectObject.format('Object', TargetGO.refLocation.resolve(gameroot).refController.resolve(gameroot).strDisplayName),
+								"tmplIconImage": "skin.ImgNationIconSmall",
+								"objExecuteObject": eo.EOMapDataSelectNation.create({
+									"objMapData": mapdata,
+									"objNation": TargetGO.refLocation.resolve(gameroot).refController.resolve(gameroot)
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+
+						var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SelectObject.format('Object', TargetGO.refLocation.resolve(gameroot).strDisplayName),
+							"tmplIconImage": "skin.ImgRegionIconSmall",
+							"objExecuteObject": eo.EOMapDataSelectRegion.create({
+								"objMapData": mapdata,
+								"objRegion": TargetGO.refLocation.resolve(gameroot)
+							})
+						});
+						menudata.objItems.add(menuitem);
+
+						//send the menu off to the UI
+						mlui.ActSendEventToUIElement.execute({
+							"objElement": self.objRoot,
+							"objEvent": common_elements.EventRequestPopUpMenu.create({
+									"objMenuData": menudata
+							})
+						});
+					//}
+                }
+
+            ]]></script>
+		</object>
+
+        <!-- Unit Group -> City -->
+		<object type="mapui.MapBehaviorEntryGOTargetting" name="objEntries">
+			<property name="otGO" value="gs_tbg.UnitGroup"/>
+            <property name="otTargetGO" value="gs_tbg.City"/>
+
+			<script type="application/javascript">
+                                    <![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, GO, TargetGO)
+                {
+					var CurrentUnitGroupActions = GO.getValidActionsForTarget(gameroot, TargetGO)
+					log("Found " + CurrentUnitGroupActions.objUnitGroupActions.length + " action(s) for this GO")
+					var CurrentUnitGroupActionsForRegion = GO.getValidActionsForTarget(gameroot, TargetGO.refRegion.resolve(mapdata.objAvatar))
+					log("Found " + CurrentUnitGroupActionsForRegion.objUnitGroupActions.length + " action(s) for target's region")
+
+					var shipsinport = gs_tbg.getAllUnitGroups(gameroot).filter({
+							"refLocation": TargetGO
+						});
+
+						//create an empty menudata
+						var menudata = common_elements.MenuData.create({
+							"vecPosition": Vec3D(mouseparams.nPosX, mouseparams.nPosY, 0.0),
+							"tmplItemButtonStyle": "skin.TxtBtnStyleBubbleHighlightWhiteCenterMiddleFIT",
+							"tmplTitleStyle": "skin.ImgPanelTopBG",
+							"nDefaultItemWidth": 300,
+							"nDefaultItemHeight": 22
+						});
+
+						var menutitle = common_elements.MenuTitle.create({
+							"strTableTitle": TargetGO.strDisplayName,
+							"strOwnerTag": TargetGO.refRegion.resolve(gameroot).refController.resolve(gameroot).strDisplayName
+						});
+						menudata.objTitle = menutitle;
+
+						for (i in CurrentUnitGroupActions.objUnitGroupActions)
+						{
+							var cancelPrevious = false;
+							if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction != null)
+							{
+								var menuText = "Default menu text";
+								if(GO.objUnitOrder != null)
+								{
+									cancelPrevious = true;
+								}
+
+								if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetDropAtomicBombOrder))
+								{
+									menuText = locale.FSID.UI.DropAtomBombOn.format('City', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetEnterPortOrder))
+								{
+									menuText = locale.FSID.UI.EnterPort.format('City', TargetGO.strDisplayName);
+                                    if (GO.objUnitOrder != null && GO.objUnitOrder.instanceOf(gs_tbg.UnitOrderMove))
+                                    {
+                                        cancelPrevious = false;
+                                    }
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombCityInfrastructureOrder))
+								{
+									menuText = locale.FSID.UI.BombCityInfrastructure.format('City', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombCityPortOrder))
+								{
+									menuText = locale.FSID.UI.BombCityPort.format('City', TargetGO.strDisplayName);
+								}
+								else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombCityResearchOrder))
+								{
+									menuText = locale.FSID.UI.BombCityResearch.format('City', TargetGO.strDisplayName);
+								}
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetShoreBombardmentCityInfrastructureOrder))
+								{
+									menuText = locale.FSID.UI.ShoreBombardCityInfrastructure.format('City', TargetGO.strDisplayName);
+								}
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetShoreBombardmentCityResearchOrder))
+								{
+									menuText = locale.FSID.UI.ShoreBombardCityResearch.format('City', TargetGO.strDisplayName);
+								}
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetShoreBombardmentCityPortOrder))
+								{
+									menuText = locale.FSID.UI.ShoreBombardCityPort.format('City', TargetGO.strDisplayName);
+								}
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackInfrastructureOrder))
+								{
+									menuText = locale.FSID.UI.RangedAttackInfrastructure.format('City', TargetGO.strDisplayName);
+								}
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackResearchOrder))
+								{
+									menuText = locale.FSID.UI.RangedAttackResearch.format('City', TargetGO.strDisplayName);
+								}
+                                else if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackAtomicOrder))
+								{
+									menuText = locale.FSID.UI.RangedAttackAtomic.format('City', TargetGO.strDisplayName);
+								}
+
+								if(cancelPrevious == true)
+								{
+									var menuitem = common_elements.MenuItem.create({
+										"strDisplayName": menuText,
+										"objExecuteObject": eo.ExecuteObjectUnitGroupOverrideOrder.create({
+											"otAction": CurrentUnitGroupActions.objUnitGroupActions[i].otAction,
+											"objGameRoot": gameroot,
+											"objUnitGroup": CurrentUnitGroupActions.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+											"objTarget": CurrentUnitGroupActions.objUnitGroupActions[i].objTarget
+										})
+									});
+									menudata.objItems.add(menuitem);
+								}
+								else
+								{
+									var menuitem = common_elements.MenuItem.create({
+										"strDisplayName": menuText,
+										"objExecuteObject": eo.ExecuteObjectUnitGroupWithTarget.create({
+											"otAction": CurrentUnitGroupActions.objUnitGroupActions[i].otAction,
+											"objGameRoot": gameroot,
+											"objUnitGroup": CurrentUnitGroupActions.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+											"objTarget": CurrentUnitGroupActions.objUnitGroupActions[i].objTarget
+										})
+									});
+									menudata.objItems.add(menuitem);
+								}
+							}
+						}
+
+
+						for(var i in shipsinport)
+						{
+							var CurrentUnitGroupActionsForShipInPort = GO.getValidActionsForTarget(gameroot, shipsinport[i])
+							log("Found " + CurrentUnitGroupActionsForShipInPort.objUnitGroupActions.length + " additional actions targetting units in this City")
+
+							for (var o in CurrentUnitGroupActionsForShipInPort.objUnitGroupActions)
+							{
+								var menuText = "A Unit Order";
+								if (CurrentUnitGroupActionsForShipInPort.objUnitGroupActions[o] != null)
+								{
+									if (CurrentUnitGroupActionsForShipInPort.objUnitGroupActions[o].otAction.equals(gs_tbg.GActSetLoadOnCarrierOrder))
+									{
+										menuText = locale.FSID.UI.RebaseToCarrier.format('Unit', CurrentUnitGroupActionsForShipInPort.objUnitGroupActions[o].objTarget.strDisplayName);
+									}
+									else if (CurrentUnitGroupActionsForShipInPort.objUnitGroupActions[o].otAction.equals(gs_tbg.GActSetLoadOnTransportsOrder))
+									{
+										menuText = locale.FSID.UI.LoadOnTo.format('UnitGroup', CurrentUnitGroupActionsForShipInPort.objUnitGroupActions[o].objTarget.strDisplayName);
+									}
+								}
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": menuText,
+									"objExecuteObject": eo.ExecuteObjectUnitGroupWithTarget.create({
+										"otAction": CurrentUnitGroupActionsForShipInPort.objUnitGroupActions[o].otAction,
+										"objGameRoot": gameroot,
+										"objUnitGroup": CurrentUnitGroupActionsForShipInPort.objUnitGroupActions[o].refUnitGroup.resolve(gameroot),
+										"objTarget": CurrentUnitGroupActionsForShipInPort.objUnitGroupActions[o].objTarget
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+						}
+
+						for (i in CurrentUnitGroupActionsForRegion.objUnitGroupActions)
+						{
+							var cancelPrevious = false;
+							if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i] != null)
+							{
+								if(!CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActAddMoveWaypoint))
+								{
+									if(GO.objUnitOrder != null)
+									{
+										cancelPrevious = true;
+									}
+								}
+								var menuText = "Default menu text";
+								if(CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetMoveOrder))
+								{
+									menuText = locale.FSID.UI.MoveTo.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								if(CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActAddMoveWaypoint))
+								{
+									menuText = locale.FSID.UI.AddMove.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRebaseOrder))
+								{
+									menuText = locale.FSID.UI.RebaseTo.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetAirPatrolOrder))
+								{
+									menuText = locale.FSID.UI.StartAirPatrol.format('Group', CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].refUnitGroup.resolve(gameroot).strDisplayName, 'Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActAddAirPatrolTarget))
+								{
+									menuText = locale.FSID.UI.AddAirPatrol.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetSeaPatrolOrder))
+								{
+									menuText = locale.FSID.UI.StartSeaPatrol.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActAddSeaPatrolTarget))
+								{
+									menuText = locale.FSID.UI.AddSeaPatrol.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+                                else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackTransportationOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackTransportation.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+                                }
+                                else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackFortificationOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackFortification.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+                                }
+                                else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackAADefenseOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackAADefense.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+                                }
+                                else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetRangedAttackCoastalDefenseOrder))
+                                {
+                                    menuText = locale.FSID.UI.RangedAttackCoastalDefense.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+                                }
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionTransportationOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionTransportation.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionFortificationOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionFortifications.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionAADefenseOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionAADefenses.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionCoastalDefenseOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionCoastDefenses.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionAirbaseOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionAirbase.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombRegionUnitsOrder))
+								{
+									menuText = locale.FSID.UI.BombRegionUnits.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetUnloadFromTransportsOrder))
+								{
+									menuText = locale.FSID.UI.UnloadToRegion.format('Group', CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].refUnitGroup.resolve(gameroot).strDisplayName, 'Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetUnloadFromCarrierOrder))
+								{
+									menuText = locale.FSID.UI.RebaseFromCarrier.format('Group', CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].refUnitGroup.resolve(gameroot).strDisplayName, 'Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetDropParatrooperOrder))
+								{
+									menuText = locale.FSID.UI.DropParatroopersOnRegion.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);;
+								}
+								else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetExitPortOrder))
+								{
+									menuText = locale.FSID.UI.ExitPortTo.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+								}
+                                else if (CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetShoreBombardmentCoastalOrder))
+                                {
+                                    menuText = locale.FSID.UI.ShoreBombardCoastalDefenses.format('Region', TargetGO.refRegion.resolve(gameroot).strDisplayName);
+                                }
+
+								if(cancelPrevious == true)
+								{
+									var menuitem = common_elements.MenuItem.create({
+										"strDisplayName": menuText,
+										"objExecuteObject": eo.ExecuteObjectUnitGroupOverrideOrder.create({
+											"otAction": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction,
+											"objGameRoot": gameroot,
+											"objUnitGroup": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+											"objTarget": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].objTarget
+										})
+									});
+								}
+								else
+								{
+									var menuitem = common_elements.MenuItem.create({
+										"strDisplayName": menuText,
+										"objExecuteObject": eo.ExecuteObjectUnitGroupWithTarget.create({
+											"otAction": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].otAction,
+											"objGameRoot": gameroot,
+											"objUnitGroup": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+											"objTarget": CurrentUnitGroupActionsForRegion.objUnitGroupActions[i].objTarget
+										})
+									});
+								}
+								menudata.objItems.add(menuitem);
+							}
+						}
+
+						if ((GO.objUnitOrder != null))
+						{
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.SID.UI.CancelCurrentOrder,
+								"objExecuteObject": eo.ExecuteObjectUnitGroupCancelOrder.create({
+									"objGameRoot": gameroot,
+									"objRoot": self.objRoot,
+									"objUnitGroup": GO
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+						if(TargetGO.canCommand(mapdata.objAvatar, mapdata.objNation))
+						{
+							var menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.FSID.UI.SetProductionFor.format('Producer', TargetGO.strDisplayName),
+								"objHoverExecuteObject": eo.HEOOpenCityProductionSubMenu.create({
+									"objMapData": mapdata,
+									"objCity": TargetGO,
+									"objRoot": self.objRoot
+								})
+							});
+							menudata.objItems.add(menuitem);
+
+							if(TargetGO.nRPUs != 0)
+							{
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": locale.FSID.UI.SetResearchFor.format('City', TargetGO.strDisplayName),
+									"objHoverExecuteObject": eo.HEOOpenCityResearchSubMenu.create({
+										"objMapData": mapdata,
+										"objCity": TargetGO,
+										"objRoot": self.objRoot
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+						}
+
+						if(TargetGO.refRegion.resolve(gameroot).getMasterNation(gameroot) != mapdata.objNation)
+						{
+							menuitem = common_elements.MenuItem.create({
+								"strDisplayName": locale.FSID.UI.SabotageCity.format('City', TargetGO.strDisplayName),
+								"objExecuteObject": eo.EOMapDataSabotageRegion.create({
+									"objMapData": mapdata,
+									"objRegion": TargetGO.refRegion.resolve(gameroot),
+									"eSabotageRegionParam": gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_CITY
+								})
+							});
+							menudata.objItems.add(menuitem);
+						}
+
+						var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SelectObject.format('Object', TargetGO.strDisplayName),
+							"tmplIconImage": "skin.ImgCityIconSmall",
+							"objExecuteObject": eo.EOMapDataSelectCity.create({
+								"objMapData": mapdata,
+								"objCity": TargetGO
+							})
+						});
+						menudata.objItems.add(menuitem);
+
+						var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SelectObject.format('Object', TargetGO.refRegion.resolve(gameroot).strDisplayName),
+							"tmplIconImage": "skin.ImgRegionIconSmall",
+							"objExecuteObject": eo.EOMapDataSelectRegion.create({
+								"objMapData": mapdata,
+								"objRegion": TargetGO.refRegion.resolve(gameroot)
+							})
+						});
+						menudata.objItems.add(menuitem);
+
+						var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": locale.FSID.UI.SelectObject.format('Object', TargetGO.refRegion.resolve(gameroot).refController.resolve(gameroot).strDisplayName),
+							"tmplIconImage": "skin.ImgNationIconSmall",
+							"objExecuteObject": eo.EOMapDataSelectNation.create({
+								"objMapData": mapdata,
+								"objNation": TargetGO.refRegion.resolve(gameroot).refController.resolve(gameroot)
+							})
+						});
+						menudata.objItems.add(menuitem);
+
+						//send the menu off to the UI
+						mlui.ActSendEventToUIElement.execute({
+							"objElement": self.objRoot,
+							"objEvent": common_elements.EventRequestPopUpMenu.create({
+									"objMenuData": menudata
+								})
+							});
+					//}
+				}
+            ]]></script>
+		</object>
+
+        <!-- Unit Group -> ResourceCapacity -->
+        <object type="mapui.MapBehaviorEntryGOTargetting" name="objEntries">
+			<property name="otGO" value="gs_tbg.UnitGroup"/>
+            <property name="otTargetGO" value="gs_tbg.ResourceCapacity"/>
+
+			<script type="application/javascript">
+                            <![CDATA[
+
+                function trigger(gameroot, mapdata, mouseparams, GO, TargetGO)
+                {
+                    var CurrentUnitGroupActions = GO.getValidActionsForTarget(gameroot, TargetGO)
+                    log("Found " + CurrentUnitGroupActions.objUnitGroupActions.length + " additional actions for this Resource Capacity")
+
+					//create an empty menudata
+					var menudata = common_elements.MenuData.create({
+						"vecPosition": Vec3D(mouseparams.nPosX, mouseparams.nPosY, 0.0),
+						"tmplItemButtonStyle": "skin.TxtBtnStyleBubbleHighlightWhiteCenterMiddleFIT",
+						"tmplTitleStyle": "skin.ImgPanelTopBG",
+						"nDefaultItemWidth": 300,
+						"nDefaultItemHeight": 22
+					});
+
+					var menutitle = common_elements.MenuTitle.create({
+						"strTableTitle": TargetGO.tmplResource.resolve().strDisplayName,
+						"strOwnerTag": TargetGO.parent.strDisplayName
+					});
+					menudata.objTitle = menutitle;
+
+					for (i in CurrentUnitGroupActions.objUnitGroupActions)
+					{
+                    	var cancelPrevious = false;
+
+						if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction != null)
+						{
+							var menuText = "Default menu text";
+
+							if (CurrentUnitGroupActions.objUnitGroupActions[i].otAction.equals(gs_tbg.GActSetBombResourceOrder))
+							{
+								menuText = locale.FSID.UI.BombResources.format('Resource', TargetGO.tmplResource.resolve().strDisplayName);
+							}
+
+							if(cancelPrevious == true)
+							{
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": menuText,
+									"objExecuteObject": eo.ExecuteObjectUnitGroupOverrideOrder.create({
+										"otAction": CurrentUnitGroupActions.objUnitGroupActions[i].otAction,
+										"objGameRoot": gameroot,
+										"objUnitGroup": CurrentUnitGroupActions.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+										"objTarget": CurrentUnitGroupActions.objUnitGroupActions[i].objTarget
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+							else
+							{
+								var menuitem = common_elements.MenuItem.create({
+									"strDisplayName": menuText,
+									"objExecuteObject": eo.ExecuteObjectUnitGroupWithTarget.create({
+										"otAction": CurrentUnitGroupActions.objUnitGroupActions[i].otAction,
+										"objGameRoot": gameroot,
+										"objUnitGroup": CurrentUnitGroupActions.objUnitGroupActions[i].refUnitGroup.resolve(gameroot),
+										"objTarget": CurrentUnitGroupActions.objUnitGroupActions[i].objTarget
+									})
+								});
+								menudata.objItems.add(menuitem);
+							}
+						}
+					}
+
+
+					//send the menu off to the UI
+					mlui.ActSendEventToUIElement.execute({
+						"objElement": self.objRoot,
+						"objEvent": common_elements.EventRequestPopUpMenu.create({
+							"objMenuData": menudata
+						})
+					});
+                }
+            ]]></script>
+		</object>
+
+    </object>
+
+</locust>

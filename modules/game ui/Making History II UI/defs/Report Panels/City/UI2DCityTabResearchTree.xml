@@ -1,0 +1,1483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="ResearchFactoryOutput" class="CMLObject">
+		<propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="gs_tbg.ResearchTopicTemplate"/>
+		<propertyDef name="objFactoryOutput" type="gs_tbg.FactoryOutputTemplate"/>
+	</objectDef>
+	<objectDef type="ResearchRegionOutput" class="CMLObject">
+		<propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="gs_tbg.ResearchTopicTemplate"/>
+		<propertyDef name="objRegionOutput" type="gs_tbg.RegionOutputTemplate"/>
+	</objectDef>
+	<objectDef type="ResearchRequiredFor" class="CMLObject">
+		<propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="gs_tbg.ResearchTopicTemplate"/>
+		<propertyDef name="tmplRequiredForTopic" type="TemplateRef" restriction="gs_tbg.ResearchTopicTemplate"/>
+	</objectDef>
+	
+	<objectDef type="ResearchTreeData" class="CMLObject">
+		<propertyDef name="nZoom" type="int" default="440"/>
+		<propertyDef name="nMinZoom" type="int" default="440"/>
+        <propertyDef name="nMaxZoom" type="int" default="1240"/>
+        <propertyDef name="nZoomIncrement" type="int" default="400"/>
+		<propertyDef name="vecPosition" type="Vec3D"/>
+		
+		<propertyDef name="nElementWidth" type="int" default="406"/>
+		<propertyDef name="nElementHeight" type="int" default="90"/>
+		<propertyDef name="nListWidth" type="int" from="nextPow2(self.nElementWidth*5)"/>
+		<propertyDef name="nListHeight" type="int" from="nextPow2(self.objProjectDatas.size/5 * self.nElementHeight)"/>
+		
+		<propertyDef name="nLargestIndent" type="int">
+			sortAscending(
+				map(
+					?{position:
+						position.nIndentation
+					},
+					gs_tbg.getGameSysResearch(mh2data.objAvatar).objResearchTopicHierarchyPositions
+				)
+				
+			).last
+		</propertyDef>
+		
+		<object type="ResearchProjectData" name="objProjectDatas" tiedTo="gs_tbg.getGameSysResearch(mh2data.objAvatar).objResearchTopicHierarchyPositions">
+			<property name="objPosition" from="tiedTo"/>
+			<property name="objFactoryOutputs">
+				map(
+					?{output:
+						output.objFactoryOutput
+					},
+					filter(
+						?{output:
+							output.tmplResearchTopic == tiedTo.tmplResearchTopic
+						}, encydata.objResearchFactoryOutputs
+					)
+				)
+			</property>
+			<property name="objRegionOutputs">
+				map(
+					?{output:
+						output.objRegionOutput
+					},
+					filter(
+						?{output:
+							output.tmplResearchTopic == tiedTo.tmplResearchTopic
+						}, encydata.objResearchRegionOutputs
+					)
+				)
+			</property>
+			<property name="nWidth" from="def.nElementWidth"/>
+			<property name="nHeight" from="def.nElementHeight"/>
+			<property name="nLargestIndent" from="def.nLargestIndent"/>
+		</object>
+		
+		<propertyDef name="objLatestResearcProjectData" type="ResearchProjectData">
+			sortDescending(?{
+					project:
+					project.objPosition.nColumn
+				},
+				filter(
+					?{
+						projectData:
+						projectData.objPosition.nRow == 0 AND
+						(
+							projectData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_IN_PROGRESS OR
+							projectData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_PAUSED OR
+							projectData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_COMPLETE
+						)
+					},
+					self.objProjectDatas
+				)
+			).first
+		</propertyDef>
+		
+		<propertyDef name="bDragging" type="bool" default="false"/>
+		<propertyDef name="bSelecting" type="bool" default="false"/>
+		<propertyDef name="vecCameraStart" type="Vec3D"/>
+	    <propertyDef name="vecClickStart" type="Vec3D"/>
+        <propertyDef name="nPosX" type="int"/>
+        <propertyDef name="nPosY" type="int"/>
+		
+		<propertyDef name="vecMin" type="Vec3D">
+			self.objLatestResearcProjectData.getVecMin()
+		</propertyDef>
+		<propertyDef name="nMinX" type="int">
+			self.vecMin.x
+		</propertyDef>
+		<propertyDef name="nMinY" type="int">
+			self.vecMin.y
+		</propertyDef>
+		
+		<object type="ml3dworld.TransformTranslate" name="objTransform">
+			<property name="vecTranslation">
+				Vec3D(0, 0, 260.1)
+			</property>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="ResearchProjectData" class="CMLObject">
+		<!-- INPUT -->
+		<propertyDef name="objPosition" type="gs_tbg.ResearchTopicHierarchyPosition"/>
+		<propertyDef name="objFactoryOutputs" type="gs_tbg.FactoryOutputTemplate" variable="true"/>
+		<propertyDef name="objRegionOutputs" type="gs_tbg.RegionOutputTemplate" variable="true"/>
+		<propertyDef name="nWidth" type="int"/>
+		<propertyDef name="nHeight" type="int"/>
+		<propertyDef name="nLargestIndent" type="int"/>
+		<!-- INTERNAL -->
+		<propertyDef name="nIndex" type="int">
+			self.objPosition.nTopicIndex
+		</propertyDef>
+		<propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="gs_tbg.ResearchTopicTemplate">
+			self.objPosition.tmplResearchTopic
+		</propertyDef>
+		<propertyDef name="objProject"  type="gs_tbg.ResearchProject">
+			gs_tbg.getResearchProject(mh2data.objAvatar, self.objPosition.tmplResearchTopic, mh2data.objNation)
+		</propertyDef>
+		<propertyDef name="eState" type="Enum" restriction="ResearchProjectState"/>
+		
+		<propertyDef name="nHorzSpacing" type="int" default="10"/>
+		<propertyDef name="nVertSpacing" type="int" default="25"/>
+		<propertyDef name="nIndentSize" type="int" default="15"/>
+		
+		<propertyDef name="nIndentLineWidth" type="int" default="7"/>
+		<propertyDef name="nFirstChildVertLineHeight" type="int" default="77"/>
+		<propertyDef name="nVertLineHeight" type="int" default="117"/>
+		<propertyDef name="nTopLevelHorzLineWidth" type="int">
+			18 + (self.nLargestIndent*self.nIndentSize)
+		</propertyDef>
+		<propertyDef name="nHalfBubbleHeight" type="int">
+			self.nHeight/2
+		</propertyDef>
+		
+		<propertyDef name="objCity" type="gs_tbg.City">
+			find(
+				?{city:
+					city.refResearchCenter.resolve(mh2data.objAvatar).refResearchProject.resolve(mh2data.objAvatar).tmplResearchTopic == self.tmplResearchTopic
+				},
+				gs_tbg.getNationCities(mh2data.objAvatar, mh2data.objNation)
+			)
+		</propertyDef>
+		
+		<script type="application/x-locust-query">
+			getVecMax = ?{: Vec3D(
+								self.objPosition.nColumn * (self.nWidth + self.nHorzSpacing + (self.nLargestIndent * self.nIndentSize)) + 
+								(self.objPosition.nIndentation * self.nIndentSize) + self.nWidth,
+								-(self.objPosition.nRow * (self.nHeight + self.nVertSpacing)),
+								0
+							)
+						}
+			
+			getVecMin = ?{: Vec3D(
+								self.objPosition.nColumn * (self.nWidth + self.nHorzSpacing + (self.nLargestIndent * self.nIndentSize)) +
+								(self.objPosition.nIndentation * self.nIndentSize),
+								-(self.objPosition.nRow * (self.nHeight + self.nVertSpacing)) - self.nHeight,
+								0
+							)
+						}
+			
+			getVecCenter = ?{: Vec3D(
+								self.objPosition.nColumn * (self.nWidth + self.nHorzSpacing + (self.nLargestIndent * self.nIndentSize)) +
+								(self.objPosition.nIndentation * self.nIndentSize) + (self.nWidth/2),
+								-(self.objPosition.nRow * (self.nHeight + self.nVertSpacing)) - (self.nHeight/2),
+								0
+							)
+						}
+			
+			getVertLineVecMin = ?{:
+									switch{
+										case self.objPosition.nRow == 0:
+											Vec3D(0, 0, 0)
+										default:
+											self.getVecMin() + Vec3D(-self.nIndentLineWidth - 3, self.nHalfBubbleHeight, 0)
+									}
+								}
+			getVertLineMax = ?{:
+								switch{
+										case self.objPosition.nRow == 0:
+											Vec3D(0, 0, 0)
+										case self.objPosition.nPreviousSiblingRow == -1:
+											self.getVertLineVecMin() + Vec3D(3, self.nFirstChildVertLineHeight, 0)
+										default:
+											self.getVertLineVecMin() + Vec3D(3, self.nVertLineHeight*(self.objPosition.nRow - self.objPosition.nPreviousSiblingRow), 0)
+								}
+							}
+								
+			getHorzLineVecMin = ?{:
+									switch{
+										case self.objPosition.nRow == 0 AND self.objPosition.nColumn == 0:
+											Vec3D(0, 0, 0)
+										case self.objPosition.nIndentation == 0:
+											self.getVecMin() + Vec3D(-self.nTopLevelHorzLineWidth, self.nHalfBubbleHeight-1, 0)
+										default:
+											self.getVecMin() + Vec3D(-self.nIndentLineWidth, self.nHalfBubbleHeight-1, 0)
+									}
+								}
+			getHorzLineVecMax = ?{:
+									switch{
+										case self.objPosition.nRow == 0 AND self.objPosition.nColumn == 0:
+											Vec3D(0, 0, 0)
+										case self.objPosition.nIndentation == 0:
+											self.getHorzLineVecMin() + Vec3D(self.nTopLevelHorzLineWidth, 3, 0)
+										default:
+											self.getHorzLineVecMin() + Vec3D(self.nIndentLineWidth, 3, 0)
+									}
+								}
+				
+		</script>
+		
+		
+		
+	</objectDef>
+	
+	<enumDef name="ResearchProjectState">
+        <value name="OPEN"/>
+        <value name="ACTIVE"/>
+		<value name="BLOCKED"/>
+		<value name="PAUSED"/>
+		<value name="COMPLETE"/>
+    </enumDef>
+	
+	<objectDef type="UI2DCityTabResearchTree" superType="mlui.UI2DElement">
+		<script type="application/javascript">
+          <![CDATA[
+				function notifyAddedToUI()
+				{
+					mh2data.eResearchTree = ResearchTree.LARGE;
+				}
+				function notifyRemovedFromUI()
+				{
+					mh2data.eResearchTree = ResearchTree.NONE;
+				}
+			]]></script>
+	</objectDef>
+	
+	<objectDef type="UI2DResearchTree" superType="mlui.UI2DElement">
+		<object type="ResearchTreeData" name="objData">
+		</object>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="tmplImage" value="skin.ImgWhite"/>
+		</object>
+
+		<object type="UI2DViewPortResearchTree" name="objViewPort">
+			<property name="objData" from="def.objData"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DViewPortResearchTree" superType="mlui.UI2DViewPort">
+		<propertyDef name="objData" type="ResearchTreeData"/>
+		
+		<object type="mlui.CameraRefFromUICamera" name="objCameraRef">
+			<property name="objCamera" from="def.objLayer.objCameraNode.objCamera"/>   
+		</object>
+		
+		<object type="UI3DLayerResearch" name="objLayer">
+			<property name="objData" from="def.objData"/>
+		</object>
+    
+        <propertyDef name="fDragThreshold" type="float" value="20.0"/>
+	
+		<!-- Methods -->
+		<script type="application/javascript"><![CDATA[
+		
+			function notifyAddedToUI()
+			{
+			    self.zoomTo(self.objData.nZoom);
+				// self.objData.objTransform.vecTranslation = Vec3D(self.objData.nMinX + self.objData.objLatestResearcProjectData.nWidth, self.objData.nMinY - 140, 260.1)
+			}
+			
+			function handleMouseLeftDown(mouseparams)
+			{
+				self.objData.bSelecting = true;
+                self.objData.bDragging = false;
+
+                self.objData.nPosX = mouseparams.nPosX;
+                self.objData.nPosY = mouseparams.nPosY;
+
+                self.objData.vecCameraStart = self.objData.objTransform.vecTranslation;
+                if ( mouseparams.vecRayDir.z != 0)
+                {
+                    self.objData.vecClickStart = Vec3D(
+                        (-mouseparams.vecRayDir.x / mouseparams.vecRayDir.z) * mouseparams.vecRayStart.z + mouseparams.vecRayStart.x,
+                        (-mouseparams.vecRayDir.y / mouseparams.vecRayDir.z) * mouseparams.vecRayStart.z + mouseparams.vecRayStart.y,
+                        0.0);
+                }
+                else
+                {
+                    self.objData.vecClickStart = Vec3D(mouseparams.vecRayStart.x, mouseparams.vecRayStart.y, 0.0);
+                }
+
+                log("Click Coords: [" + mouseparams.vecRayIntersect.x + ", " + mouseparams.vecRayIntersect.y + ", " + mouseparams.vecRayIntersect.z + "]");
+			}
+
+            function handleMouseLeftDrag(mouseparams)
+            {
+
+                if(!self.objData.bDragging)
+                {
+                    var dist = Math.sqrt(Math.pow((self.objData.nPosX - mouseparams.nPosX), 2) + Math.pow((self.objData.nPosY - mouseparams.nPosY), 2));
+
+                    if(dist > self.fDragThreshold)
+                    {
+                        self.objData.bSelecting = false;
+                        self.objData.bDragging = true;
+                    }
+                }
+
+                if(self.objData.bDragging)
+                {
+                    var vecStart = self.objData.vecClickStart;
+                    var vecPoint;
+                    if (mouseparams.vecRayDir.z != 0)
+                    {
+                        vecPoint = Vec3D(
+                            (-mouseparams.vecRayDir.x / mouseparams.vecRayDir.z) * mouseparams.vecRayStart.z + mouseparams.vecRayStart.x,
+                            (-mouseparams.vecRayDir.y / mouseparams.vecRayDir.z) * mouseparams.vecRayStart.z + mouseparams.vecRayStart.y,
+                            0.0);
+                    }
+                    else
+                    {
+                        vecPoint = Vec3D(mouseparams.vecRayStart.x, mouseparams.vecRayStart.y, 0);
+                    }
+					log("VecPoint 1:" + vecPoint.toString())
+                    var vecChange = vecPoint.minus(vecStart);
+
+                    var vecNewLookAt = self.objData.vecCameraStart.minus(vecChange);
+
+                    self.objData.objTransform.vecTranslation = vecNewLookAt;
+
+                    self.objData.vecCameraStart = self.objData.objTransform.vecTranslation;
+                }
+            }
+
+            function handleMouseLeftUp(mouseparams)
+			{
+                //if dragging, stop dragging
+                if (self.objData.bDragging)
+                {
+                    self.objData.bDragging = false;
+
+                    self.objData.vecCameraStart = Vec3D(0.0, 0.0, 0.0);
+                    self.objData.vecClickStart = Vec3D(0.0, 0.0, 0.0);
+                }
+			}
+			
+			function zoomTo(distance)
+			{
+                if(distance < self.objData.nMinZoom) {
+                    distance = self.objData.nMinZoom;
+                }
+                else if (distance > self.objData.nMaxZoom) {
+                    distance = self.objData.nMaxZoom;
+                }
+                
+                self.objData.nZoom = distance;
+                var translate = self.objData.objTransform.vecTranslation;
+                self.objData.objTransform.vecTranslation = Vec3D(translate.x, translate.y, distance);
+            }
+
+            function zoomCameraIn()
+            {
+                self.zoomTo(self.objData.nZoom - self.objData.nZoomIncrement);
+            }
+			
+            function zoomCameraOut()
+            {
+                self.zoomTo(self.objData.nZoom + self.objData.nZoomIncrement);
+			}
+			
+		]]></script>
+		
+		<!--<object type="mlui.UI2DButton" name="objFullScreenButton" existsWhile="mh2data.eResearchTree == ResearchTree.SMALL">
+			<property name="tmplButtonStyle" value="skin.BtnResearchTreeFullscreen"/>
+			<property name="nX" value="4"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nDepth" value="10000"/>
+			<property name="strToolTip" from="locale.SID.UI.Maximize"/>
+
+		--><!-- Opens the port panel --><!--
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.eResearchTree = ResearchTree.LARGE
+							log(def.objData.objTransform.vecTranslation)
+							def.objData.objTransform.vecTranslation = Vec3D(def.objData.objTransform.vecTranslation.x, def.objData.objTransform.vecTranslation.y, def.nHeight/2)
+							log(def.objData.objTransform.vecTranslation)
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>-->
+
+
+    <object type="mlui.UI2DButton" name="objFullScreenButton" existsWhile="mh2data.eResearchTree == ResearchTree.LARGE">
+			<!--<property name="tmplButtonStyle" value="skin.BtnResearchTreeMinscreen"/>-->
+      <property name="tmplButtonStyle" value="skin.BtnFullClose"/>
+			<property name="nX" value="8"/>
+			<property name="nY" value="8"/>
+			<property name="nDefaultWidth" value="64"/>
+			<property name="nDefaultHeight" value="30"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nDepth" value="10000"/>
+			<property name="strToolTip" from="locale.SID.UI.Close"/>
+
+		<!-- Opens the port panel -->
+			<!--<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.eResearchTree = ResearchTree.SMALL
+							log(def.objData.objTransform.vecTranslation)
+							def.objData.objTransform.vecTranslation = Vec3D(def.objData.objTransform.vecTranslation.x, def.objData.objTransform.vecTranslation.y, def.nHeight/2)
+							log(def.objData.objTransform.vecTranslation)
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>-->
+
+    <!-- Opens the port panel -->
+    <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+      <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+        <property name="otEventType" value="mlui.EventButtonClicked"/>
+        <script type="application/javascript">
+          <![CDATA[
+							function handle(event, owner)
+							{
+									reportdata.closeReportPanel();
+							}
+					]]>
+        </script>
+      </object>
+    </object>
+    </object>
+
+    <object type="mlevent.EventHandlerMap" name="objEventHandlerMap" overrideBehavior="extend">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonDblClick" />
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+						{
+							def.handleMouseLeftDown(event.objParams);
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonDown" />
+				<property name="strName" value="Handle Left Mouse Button Down" />
+	
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+						{
+							def.handleMouseLeftDown(event.objParams);
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseButtonUp" />
+				<property name="strName" value="Handle Left Mouse Button Up" />
+	
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+						{
+							def.handleMouseLeftUp(event.objParams);
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers" >
+				<property name="otEventType" value="mlui.EventMouseMoved" />
+				<property name="strName" value="Handle Left Mouse Button Drag" />
+	
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						if (event.eMouseButtonsDown.contains(mlui.MouseButton.MOUSE_BUTTON_LEFT))
+						{
+							def.handleMouseLeftDrag(event.objParams);
+						}
+					}
+				]]></script>
+			</object>
+      
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventMouseWheelUp"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.zoomCameraIn();
+					}
+				]]></script>
+			</object>
+			
+      <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventMouseWheelDown"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						def.zoomCameraOut();
+					}
+				]]></script>
+			</object>
+      
+		</object>	
+	</objectDef>
+	
+	<objectDef type="UI3DLayerResearch" superType="mlui.UI3DLayer">
+		<property name="nDepth" value="100"/>
+		<property name="bClearColorBuffer" value="false"/>
+		<property name="bClearDepthBuffer" value="true"/>
+		<property name="bUseDepthBuffer" value="false"/>
+		
+		<propertyDef name="objData" type="ResearchTreeData"/>
+		
+		<object type="mlui.UIDataMaterial" name="objMaterial">
+			<object type="mlmedia.Material" name="objMaterial">
+				<property name="nEmissionTexCoordSet" value="0"/>
+				<object type="mlui.SamplerFromUI" name="objEmissionSampler">
+					<object type="UI2DResearchTreeList" name="objRoot">
+						<property name="objData" from="def.objData"/>
+					</object>
+					<property name="eWrapS" value="WRAP_CLAMP"/>
+					<property name="eWrapT" value="WRAP_CLAMP"/>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>
+					<property name="eMipFilter" value="FILTER_NONE"/>
+					<property name="colBorderColor" value="#FFFFFF00"/>
+					<property name="colBackgroundColor" value="#FFFFFF00"/>
+					<property name="nSurfaceWidth" from="self.objRoot.nWidth"/>
+					<property name="nSurfaceHeight" from="self.objRoot.nHeight"/>
+				</object>
+				
+			</object>
+		</object>
+
+		<object type="UI3DResearchNode" name="objCameraNode">
+			<property name="objTransform" from="def.objData.objTransform"/>
+			<object type="mlui.UICamera" name="objCamera">
+				<object type="ml3dworld.CameraPerspYFOV" name="objCamera">
+					<property name="fYFOV" value="90.0"/>
+					<property name="fNear" value="0.1"/>
+					<property name="fFar" value="3000.0"/>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI3DResearchNode" name="objBillboard" tiedTo="self.objData.objProjectDatas">
+			
+			<object type="mlui.UIDataGeometry" name="objData">
+				<object type="ml3dworld.GeomBillboard" name="objGeometry">
+					<property name="vecMin" from="tiedTo.getVecMin()"/>
+					<property name="vecMax" from="tiedTo.getVecMax()"/>
+					<property name="fMinU" from="float(tiedTo.nIndex%5*def.objData.nElementWidth)  / float(def.objData.nListWidth)"/>
+					<property name="fMaxU" from="float((tiedTo.nIndex%5+1)*def.objData.nElementWidth) / float(def.objData.nListWidth)"/>
+					<property name="fMinV" from="float(tiedTo.nIndex/5*def.objData.nElementHeight) / float(def.objData.nListHeight)"/>
+					<property name="fMaxV" from="float((tiedTo.nIndex/5+1)*def.objData.nElementHeight) / float(def.objData.nListHeight)"/>
+				</object>
+			</object>
+			
+		</object>
+		
+		<object type="UI3DResearchNode" name="objVertLines">
+			
+			<object type="mlui.UIDataMaterial" name="objData">
+				<object type="mlmedia.Material" name="objMaterial">
+					<property name="colEmission" value="#2B485FFF"/>
+				</object>
+			</object>
+			
+			<object type="UI3DResearchNode" name="objChildren" tiedTo="def.objData.objProjectDatas">
+				<object type="mlui.UIDataGeometry" name="objData">
+					<object type="ml3dworld.GeomBillboard" name="objGeometry">
+						<property name="vecMin" from="tiedTo.getVertLineVecMin()"/>
+						<property name="vecMax" from="tiedTo.getVertLineMax()"/>
+					</object>
+				</object>
+			</object>
+			
+		</object>
+		
+		<object type="UI3DResearchNode" name="objHorzLines">
+			
+			<object type="mlui.UIDataMaterial" name="objData">
+				<object type="mlmedia.Material" name="objMaterial">
+					<property name="colEmission" value="#2B485FFF"/>
+				</object>
+			</object>
+			
+			<object type="UI3DResearchNode" name="objChildren" tiedTo="def.objData.objProjectDatas">
+				<object type="mlui.UIDataGeometry" name="objData">
+					<object type="ml3dworld.GeomBillboard" name="objGeometry">
+						<property name="vecMin" from="tiedTo.getHorzLineVecMin()"/>
+						<property name="vecMax" from="tiedTo.getHorzLineVecMax()"/>
+					</object>
+				</object>
+			</object>
+			
+		</object>
+
+		<!--<object type="UI3DResearchNode" name="objBillboard">-->
+		<!--	-->
+		<!--	<object type="mlui.UIDataGeometry" name="objData">-->
+		<!--		<object type="ml3dworld.GeomBillboard" name="objGeometry">-->
+		<!--			<property name="vecMin" value="[0, -1000, 0]"/>-->
+		<!--			<property name="vecMax" value="[1000, 0, 0]"/>-->
+		<!--			<property name="fMinU" value="0"/>-->
+		<!--			<property name="fMaxU" value="1"/>-->
+		<!--			<property name="fMinV" value="0"/>-->
+		<!--			<property name="fMaxV" value="1"/>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--	-->
+		<!--</object>-->
+
+	</objectDef>
+	
+	<objectDef type="UI2DResearchTreeList" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<propertyDef name="objData" type="ResearchTreeData"/>
+		
+		<property name="nWidth" from="self.objData.nListWidth"/>
+		<property name="nHeight" from="self.objData.nListHeight"/>
+		
+		<propertyDef name="objElements" variable="true" storesChildren="true">
+			
+				map(?{data:
+					<object type="UI2DResearchTreeBubble">
+						<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+						<property name="nWidth" from="def.objData.nElementWidth"/>
+						<property name="nHeight" from="def.objData.nElementHeight"/>
+						<property name="nY" from="data.nIndex/5 * data.nHeight"/>
+						<property name="nX" from="data.nIndex%5 * data.nWidth"/>
+						<property name="objData" from="data"/>
+					</object>
+				}, self.objData.objProjectDatas)
+			
+		</propertyDef>
+	</objectDef>
+	
+	<objectDef type="UI3DResearchNode" superType="mlui.UI3DElement">
+		<propertyDef name="objChildren" type="mlui.UI3DElement" variable="true" storesChildren="true"/>
+		<propertyDef name="objData" type="mlui.UIData" variable="true" storesChildren="true"/>
+		<propertyDef name="objCamera" type="mlui.UICamera" storesChildren="true"/>
+	</objectDef>
+	
+	<objectDef type="UI2DResearchTreeBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="ResearchProjectData"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="tmplImage">
+				switch{
+					case def.objData.objProject != null:
+						switch{
+							case def.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_IN_PROGRESS:
+								'skin.ImgResearchTreeWhiteBubble'
+							case def.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_PAUSED:
+								'skin.ImgResearchTreeYellowBubble'
+							case def.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_COMPLETE:
+								'skin.ImgResearchTreeGreenBubble'
+						}
+					case def.objData.objPosition.tmplResearchTopic.resolve().meetsPreReqs(mh2data.objAvatar, mh2data.objNation.refResearchProgram.resolve(mh2data.objAvatar)):
+						'skin.ImgResearchTreeWhiteBubble'
+					default:
+						'skin.ImgResearchTreeGreyBubble'
+				}
+			</property>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objOrderIconBG">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objOrderIcon">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage">
+				mh2data.objResearchCategoryIconTable.getEntry(def.objData.tmplResearchTopic.resolve().tmplCategory).tmplImage
+			</property>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="71"/>
+			<property name="nHeight" value="73"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown13Left"/>
+			<property name="strText" from="def.objData.tmplResearchTopic.resolve().strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="255"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<propertyDef name="objInfo" storesChildren="true">
+			switch{
+				case self.objData.objProject != null:
+					switch{
+						case self.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_IN_PROGRESS:
+							<object type="UI2DResearchBubbleInfoActive">
+								<property name="objData" from="def.objData"/>
+								<property name="nDepth" value="100"/>
+								<property name="nX" value="85"/>
+								<property name="nY" value="16"/>
+							</object>
+						case self.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_PAUSED:
+							<object type="UI2DResearchBubbleInfoPaused">
+								<property name="objData" from="def.objData"/>
+								<property name="nDepth" value="100"/>
+								<property name="nX" value="85"/>
+								<property name="nY" value="19"/>
+							</object>
+						case self.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_COMPLETE:
+							<object type="UI2DResearchBubbleInfoComplete">
+								<property name="nDepth" value="100"/>
+								<property name="nX" value="85"/>
+								<property name="nY" value="19"/>
+							</object>
+					}
+				case self.objData.objPosition.tmplResearchTopic.resolve().meetsPreReqs(mh2data.objAvatar, mh2data.objNation.refResearchProgram.resolve(mh2data.objAvatar)):
+					<object type="UI2DResearchBubbleInfoOpen">
+						<property name="objData" from="def.objData"/>
+						<property name="nDepth" value="100"/>
+						<property name="nX" value="85"/>
+						<property name="nY" value="19"/>
+					</object>
+				default:
+					<object type="UI2DResearchBubbleInfoBlocked">
+						<property name="objData" from="def.objData"/>
+						<property name="nDepth" value="100"/>
+						<property name="nX" value="85"/>
+						<property name="nY" value="19"/>
+					</object>
+			}
+		</propertyDef>
+		
+		<object type="common_ui.UI2DListHorz" name="objFactoryRequirementsList">
+			<property name="nX" value="85"/>
+			<property name="nY" value="10"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nSpacing" value="2"/>
+
+			<object type="UI2DResearchTreeSmallIconBG" name="objElements" tiedTo="def.objData.tmplResearchTopic.resolve().tmplPreReqs">
+				<property name="strToolTip" from="tiedTo.resolve().strDisplayName"/>
+				<property name="tmplResearchTopic" from="def.objData.tmplResearchTopic"/>
+				<property name="bIncomplete" from="!tiedTo.resolve().meetsPreReqs(mh2data.objAvatar, mh2data.objNation.refResearchProgram.resolve(mh2data.objAvatar))"/>
+				<property name="tmplImage">
+					mh2data.objResearchCategoryIconTable.getEntry(tiedTo.resolve().tmplCategory).tmplIcon
+				</property>
+			</object>
+			
+			<object type="UI2DResearchTreeSmallIconBG" name="objElements" tiedTo="def.objData.tmplResearchTopic.resolve().tmplRequiredBuildings">
+				<property name="strToolTip" from="tiedTo.resolve().strDisplayName"/>
+				<property name="tmplResearchTopic" from="def.objData.tmplResearchTopic"/>
+				<property name="tmplImage">
+					mh2data.objResearchCenterBuildingDisplayTable.getEntry(tiedTo).tmplIcon
+				</property>
+			</object>
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objFactoryRequirementsList">
+			<property name="nX" value="10"/>
+			<property name="nY" value="10"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nSpacing" value="2"/>
+			
+			<object type="UI2DResearchTreeSmallIconBGCity" name="objElements" tiedTo="def.objData.objFactoryOutputs">
+				<property name="strToolTip" from="tiedTo.strDisplayName"/>
+				<property name="tmplResearchTopic" from="def.objData.tmplResearchTopic"/>
+				<property name="objTest" from="tiedTo"/>
+				<property name="tmplImage">
+          switch{
+          case tiedTo.instanceOf(gs_tbg.FactoryOutputUnitTemplate):
+          mh2data.objUnitDisplayTable.getEntry(tiedTo.tmplUnit).tmplIcon
+
+          case tiedTo.instanceOf(gs_tbg.FactoryOutputMoneyTemplate):
+          switch{
+          case tiedTo.strName == 'Appliances':
+          'skin.ImgIndustryAppliancesSM'
+          case tiedTo.strName == 'Automobiles':
+          'skin.ImgIndustryAutosSM'
+          case tiedTo.strName == 'Goods':
+          'skin.ImgIndustryGoodsSM'
+          case tiedTo.strName == 'Textiles':
+          'skin.ImgIndustryTextilesSM'
+          case tiedTo.strName == 'WroughtIron':
+		  'skin.ImgIndustryWroughtIronSM'
+		  case tiedTo.strName == 'Petroleum':
+		  'skin.ImgIndustryPetroleumSM'
+          case tiedTo.strName == 'CannedGoods':
+          'skin.ImgIndustryCannedGoodsSM'
+          case tiedTo.strName == 'FishProducts':
+          'skin.ImgIndustryFishProductsSM'
+          default:
+          'skin.ImgIndustryGoodsSM'
+          }
+
+          case tiedTo.instanceOf(gs_tbg.FactoryOutputResearchCenterBuildingTemplate):
+          mh2data.objResearchCenterBuildingDisplayTable.getEntry(tiedTo.tmplResearchCenterBuilding).tmplIcon
+
+          case tiedTo.instanceOf(gs_tbg.FactoryOutputCityBuildingTemplate):
+          switch{
+          case tiedTo.strName == 'AircraftPlant':
+          'skin.ImgBldgAircraftPlantSM'
+          case tiedTo.strName == 'CoalPlant':
+          'skin.ImgBldgCoalPlantSM'
+          case tiedTo.strName == 'RecyclingCenter':
+          'skin.ImgBldgRecyclingCenterSM'
+          case tiedTo.strName == 'FoodProcessingPlants':
+          'skin.ImgBldgFoodProcessingPlantSM'
+          case tiedTo.strName == 'MunitionsPlant':
+          'skin.ImgBldgMunitionsFactorySM'
+          case tiedTo.strName == 'NuclearPowerPlant':
+          'skin.ImgBldgNuclearPowerPlantSM'
+          case tiedTo.strName == 'SyntheticFuelPlant':
+          'skin.ImgBldgSyntheticFuelPlantSM'
+          case tiedTo.strName == 'VehiclePlant':
+          'skin.ImgBldgVehiclePlantSM'
+          case tiedTo.strName == 'Shipyard':
+          'skin.ImgBldgShipyardSM'
+          case tiedTo.strName == 'IndustrialShipyard':
+          'skin.ImgBldgIndustrialShipyardSM'
+          case tiedTo.strName == 'Mill':
+          'skin.ImgBldgMillSM'
+          case tiedTo.strName == 'FactoryMillUpgrade':
+          'skin.ImgBldgFactoryMillUpgradeSM'
+          case tiedTo.strName == 'CottageFactory':
+          'skin.ImgBldgCottageFactorySM'
+          case tiedTo.strName == 'MechanizedFactory':
+          'skin.ImgBldgMechanizedFactorySM'
+          case tiedTo.strName == 'MechanizedFactoryUpgrade':
+          'skin.ImgBldgMechanizedFactoryUpgradeSM'
+          case tiedTo.strName == 'LargeFactory':
+          'skin.ImgBldgLargeFactorySM'
+          case tiedTo.strName == 'LargeFactoryUpgrade':
+          'skin.ImgBldgLargeFactoryUpgradeSM'
+          case tiedTo.strName == 'IndustrialPlant':
+          'skin.ImgBldgIndustrialPlantSM'
+          case tiedTo.strName == 'IndustrialPlantUpgrade':
+          'skin.ImgBldgIndustrialPlantUpgradeSM'
+          case tiedTo.strName == 'IndustrialEnterprise':
+          'skin.ImgBldgIndustrialEnterpriseSM'
+          case tiedTo.strName == 'IndustrialEnterpriseUpgrade':
+          'skin.ImgBldgIndustrialEnterpriseUpgradeSM'
+          case tiedTo.strName == 'UndergroundFactory':
+          'skin.ImgBldgUndergroundFactorySM'
+          default:
+          'skin.ImgUnknownProjectSM'
+          }
+
+          case tiedTo.instanceOf(gs_tbg.FactoryOutputResourceTemplate):
+          switch{
+          case tiedTo.strName == 'AtomicBombs':
+          'skin.ImgBombFissionSM'
+          case tiedTo.strName == 'Arms':
+          'skin.ImgIndustryArmsSM'
+          case tiedTo.strName == 'Coal':
+          'skin.ImgIndustryMPUtoCoalSM'
+          case tiedTo.strName == 'Bread':
+          'skin.ImgIndustryBreadSM'
+          case tiedTo.strName == 'Oil':
+          'skin.ImgIndustryOilSM'
+          case tiedTo.strName == 'MetalRecycling':
+          'skin.ImgIndustryMetalRecyclingSM'
+          default:
+          'skin.ImgUnknownProjectSM'
+          }
+          }
+        </property>
+			</object>
+			
+			<object type="UI2DResearchTreeSmallIconBGRegion" name="objElements" tiedTo="def.objData.objRegionOutputs">
+				<property name="strToolTip" from="tiedTo.strDisplayName"/>
+				<property name="tmplResearchTopic" from="def.objData.tmplResearchTopic"/>
+				<property name="bIncomplete" from="tiedTo.objRegionRequirements.size GTE 2"/>
+				<property name="tmplImage">
+					switch {
+						case tiedTo.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Transportation'):
+							mh2data.objTransportationProdDisplayTable.getEntry(tiedTo.tmplTransportationImprovement).tmplIcon
+						
+						case tiedTo.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Military'):
+							switch {
+								case tiedTo.instanceOf(gs_tbg.CoastalDefenseOutputTemplate):
+									mh2data.objCoastalDefenseDisplayTable.getEntry(tiedTo.tmplCoastalDefenseImprovement).tmplIcon
+								
+								case tiedTo.instanceOf(gs_tbg.FortificationOutputTemplate):
+									mh2data.objFortificationDisplayTable.getEntry(tiedTo.tmplFortificationImprovement).tmplIcon
+									
+								case tiedTo.instanceOf(gs_tbg.AADefenseOutputTemplate):
+									mh2data.objAADefenseDisplayTable.getEntry(tiedTo.tmplAADefenseImprovement).tmplIcon
+									
+								default:
+									"skin.ImgRegionAirBaseSM"
+							}
+						
+						case tiedTo.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(tiedTo).tmplIcon
+						
+						case tiedTo.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources'):
+							mh2data.objResourceProducerOutputDisplayTable.getEntry(tiedTo).tmplIcon
+							
+						}		
+				</property>
+			</object>
+		</object>
+		
+		<!--<object type="common_ui.UI2DListHorz" name="objOptions">-->
+		<!--	<property name="nX" value="8"/>-->
+		<!--	<property name="nY" value="4"/>-->
+		<!--	<property name="haXAlign" value="RIGHT"/>-->
+		<!--	-->
+		<!--	<object type="UI2DInfoButton" name="objElements">-->
+		<!--		<property name="nX" value="353"/>-->
+		<!--		<property name="nY" value="2"/>-->
+		<!--		<property name="nDefaultWidth" value="20"/>-->
+		<!--		<property name="nDefaultHeight" value="20"/>-->
+		<!--		<property name="objTmpl" from="def.objData.objProject.tmplResearchTopic"/>-->
+		<!--	</object>-->
+		<!--	-->
+		<!--	<property name="objElements">-->
+		<!--	switch{-->
+		<!--		case def.objData.objProject != null:-->
+		<!--			switch{-->
+		<!--				case def.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_COMPLETE:-->
+		<!--					<object type="mlui.UI2DElement">-->
+		<!--					</object>-->
+		<!--				case def.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_IN_PROGRESS AND def.objData.objProject.objCity:-->
+		<!--					<object type="mlui.UI2DButton">-->
+		<!--						<property name="tmplButtonStyle" value="skin.BtnStyleCityQueueButtonRemove"/>-->
+		<!--						<property name="nX" value="375"/>-->
+		<!--						<property name="nY" value="2"/>-->
+		<!--						<property name="nDefaultWidth" value="20"/>-->
+		<!--						<property name="nDefaultHeight" value="20"/>-->
+		<!--						<property name="strToolTip" from="locale.SID.UI.SetResearchOrder"/>-->
+		<!--						-->
+		<!--						<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--							<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--								<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--								<script type="application/javascript"><![CDATA[-->
+		<!--									function handle(event, owner)-->
+		<!--									{-->
+		<!--										var action = gs_tbg.GActClearResearchProject.create({-->
+		<!--											"refCity": def.objData.objCity-->
+		<!--										});-->
+		<!--										mh2data.objMapData.objAvatar.sendAction(action);-->
+		<!--									}-->
+		<!--								]]></script>-->
+		<!--							</object>					-->
+		<!--						</object>-->
+		<!--						-->
+		<!--					</object>-->
+		<!--				-->
+		<!--			}-->
+		<!--		case def.objData.objPosition.tmplResearchTopic.resolve().meetsPreReqs(mh2data.objAvatar, mh2data.objNation.refResearchProgram.resolve(mh2data.objAvatar)):-->
+		<!--			<object type="mlui.UI2DButton">-->
+		<!--				<property name="tmplButtonStyle" value="skin.BtnStyleRegionProjectsAddToQueue"/>-->
+		<!--				<property name="nX" value="375"/>-->
+		<!--				<property name="nY" value="2"/>-->
+		<!--				<property name="nDefaultWidth" value="20"/>-->
+		<!--				<property name="nDefaultHeight" value="20"/>-->
+		<!--				<property name="strToolTip" from="locale.SID.UI.SetResearchOrder"/>-->
+		<!--				-->
+		<!--				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--					<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--						<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--						<script type="application/javascript"><![CDATA[-->
+		<!--							function handle(event, owner)-->
+		<!--							{-->
+		<!--								var menuX = def.nScreenX;-->
+		<!--								var menuY = def.nScreenY;-->
+		<!--								//create a basis for a pop up menu-->
+		<!--								var menudata = common_elements.MenuData.create({-->
+		<!--									"vecPosition": Vec3D(menuX, menuY, 0.0),-->
+		<!--									"nDefaultItemWidth": 200,-->
+		<!--									"nDefaultItemHeight": 30-->
+		<!--								});-->
+		<!--								-->
+		<!--								var cities = gs_tbg.getNationCities(mh2data.objAvatar, mh2data.objNation)-->
+		<!--								for(i in cities)-->
+		<!--								{-->
+		<!--									var menuitem = common_elements.MenuItem.create({-->
+		<!--										"strDisplayName": cities[i].strDisplayName,-->
+		<!--										"objExecuteObject": eo.EOMapDataSetCityResearch.create({-->
+		<!--											"objMapData": mh2data.objMapData,-->
+		<!--											"objCity": cities[i],-->
+		<!--											"objProject": def.objData.tmplResearchTopic-->
+		<!--										})-->
+		<!--									});-->
+		<!--									menudata.objItems.add(menuitem);-->
+		<!--								}-->
+		<!--								-->
+		<!--								mlui.ActSendEventToUIElement.execute({-->
+		<!--									"objElement": mlui.objUI.objRoot,-->
+		<!--									"objEvent": common_elements.EventRequestPopUpMenu.create({-->
+		<!--										 "objMenuData": menudata-->
+		<!--									})-->
+		<!--								});-->
+		<!--							}-->
+		<!--						]]></script>-->
+		<!--					</object>					-->
+		<!--				</object>-->
+		<!--				-->
+		<!--			</object>-->
+		<!--	}-->
+		<!--	</property>-->
+		<!--	-->
+		<!--</object>-->
+		
+	</objectDef>
+	<objectDef type="UI2DResearchTreeBubbleSimple" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="ResearchProjectData"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="tmplImage">
+				switch{
+					case def.objData.objProject != null:
+						switch{
+							case def.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_IN_PROGRESS:
+								'skin.ImgResearchTreeWhiteBubble'
+							case def.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_PAUSED:
+								'skin.ImgResearchTreeYellowBubble'
+							case def.objData.objProject.eStatus == gs_tbg.ResearchProjectStatus.STATUS_COMPLETE:
+								'skin.ImgResearchTreeGreenBubble'
+						}
+					case def.objData.objPosition.tmplResearchTopic.resolve().meetsPreReqs(mh2data.objAvatar, mh2data.objNation.refResearchProgram.resolve(mh2data.objAvatar)):
+						'skin.ImgResearchTreeWhiteBubble'
+					default:
+						'skin.ImgResearchTreeGreyBubble'
+				}
+			</property>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objOrderIconBG">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objOrderIcon">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage">
+				mh2data.objResearchCategoryIconTable.getEntry(def.objData.tmplResearchTopic.resolve().tmplCategory).tmplImage
+			</property>
+			<property name="nX" value="5"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="71"/>
+			<property name="nHeight" value="73"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objName">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown24LeftMiddle"/>
+			<property name="strText" from="def.objData.tmplResearchTopic.resolve().strDisplayName"/>
+			<property name="nX" value="85"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="300"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DResearchTreeSmallIconBG" superType="mlui.UI2DElement">
+		<propertyDef name="objTest" type="Object"/>
+		<propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="gs_tbg.ResearchTopicTemplate"/>
+		<propertyDef name="bIncomplete" type="bool" default="false"/>
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="nWidth" value="30"/>
+		<property name="nHeight" value="30"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage">
+				if(def.bIncomplete == true, "skin.ImgResearchTreeSmallIconBGRED", "skin.ImgResearchTreeSmallIconBG")
+			</property>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage" from="def.tmplImage"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DResearchTreeSmallIconBGRegion" superType="mlui.UI2DElement">
+		<propertyDef name="objTest" type="Object"/>
+		<propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="gs_tbg.ResearchTopicTemplate"/>
+		<propertyDef name="bIncomplete" type="bool" default="false"/>
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="nWidth" value="30"/>
+		<property name="nHeight" value="30"/>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage">
+				if(def.bIncomplete == true, "skin.ImgResearchTreeSmallIconBGRED", "skin.ImgResearchTreeSmallIconBG")
+			</property>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage" from="def.tmplImage"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DResearchTreeSmallIconBGCity" superType="mlui.UI2DElement">
+		<propertyDef name="objTest" type="Object"/>
+		<propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="gs_tbg.ResearchTopicTemplate"/>
+		<propertyDef name="bIncomplete" type="bool">
+			self.tmplResearchReq != null
+		</propertyDef>
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="nWidth" value="30"/>
+		<property name="nHeight" value="30"/>
+		
+		<propertyDef name="objRequiredResearch" type="Object" restriction="gs_tbg.ResearchProject">
+			gs_tbg.getResearchProject(mh2data.objAvatar, self.tmplResearchReq, mh2data.objNation)
+		</propertyDef>		
+		
+		<propertyDef name="tmplResearchReq" type="TemplateRef" restriction="gs_tbg.ResearchTopicTemplate">
+			find(
+				?{PreReq:
+					PreReq.tmplResearchTopic != self.tmplResearchTopic
+				},
+				filter(
+					?{prereq: prereq.instanceOf(gs_tbg.FactoryRequirementResearchProject)},
+					self.objTest.objFactoryRequirements
+				)
+			).tmplResearchTopic
+		</propertyDef>	
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage">
+				if(def.bIncomplete == true, "skin.ImgResearchTreeSmallIconBGRED", "skin.ImgResearchTreeSmallIconBG")
+			</property>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplImage" from="def.tmplImage"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DResearchBubbleInfoComplete" superType="mlui.UI2DElement">
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<property name="nWidth" value="314"/>
+		<property name="nHeight" value="27"/>
+		
+		<object type="mlui.UI2DText" name="objTitle">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Status"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="300"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objFinished">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="locale.SID.UI.Finished"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="12"/>
+			<property name="nWidth" value="300"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DResearchBubbleInfoPaused" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="ResearchProjectData"/>
+		
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<property name="nWidth" value="314"/>
+		<property name="nHeight" value="27"/>
+		
+		<object type="mlui.UI2DText" name="objTitle">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchPoints"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objFinished">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.objData.tmplResearchTopic.resolve().nPointsRequired"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="12"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		
+		<!--<object type="mlui.UI2DText" name="objTitle">-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>-->
+		<!--	<property name="strText" from="locale.SID.UI.PerTurnCost"/>-->
+		<!--	<property name="nX" value="89"/>-->
+		<!--	<property name="nY" value="2"/>-->
+		<!--	<property name="nWidth" value="88"/>-->
+		<!--	<property name="nHeight" value="13"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DText" name="objFinished">-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialGreen14Left"/>-->
+		<!--	<property name="strText" from="'$' + def.objData.tmplResearchTopic.resolve().nPerTurnCost.formatNumber(0, true)"/>-->
+		<!--	<property name="nX" value="89"/>-->
+		<!--	<property name="nY" value="12"/>-->
+		<!--	<property name="nWidth" value="88"/>-->
+		<!--	<property name="nHeight" value="14"/>-->
+		<!--</object>-->
+		
+		<object type="mlui.UI2DText" name="objTitle">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Completed"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="185"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objFinished">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="String(100 * float(def.objData.objProject.nPoints) / float(def.objData.tmplResearchTopic.resolve().nPointsRequired)) + '%'"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="12"/>
+			<property name="nWidth" value="185"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DResearchBubbleInfoActive" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="ResearchProjectData"/>
+		<propertyDef name="nPercent" type="int">
+			100 * float(self.objData.objProject.nPoints) / float(self.objData.tmplResearchTopic.resolve().nPointsRequired)
+		</propertyDef>
+				
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<property name="nWidth" value="314"/>
+		<property name="nHeight" value="52"/>
+		
+		<object type="mlui.UI2DText" name="objType">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="def.objData.objCity.strDisplayName"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="80"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objCompletedPercent">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18Left"/>
+			<property name="strText" from="def.nPercent + '%'"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="13"/>
+			<property name="nWidth" value="55"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objCompletedMeter">
+			<property name="tmplImage" value="skin.ImgMeterBG"/>
+			<property name="nX" value="39"/>
+			<property name="nY" value="13"/>
+			<property name="nWidth" value="102"/>
+			<property name="nHeight" value="15"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMeterFill">
+			<property name="tmplImage" from="if(def.nPercent GT 66,
+				skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterGreen'),
+				if(def.nPercent GT 33,
+					skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterPurple'),
+					skin.getTemplateRef(mlmedia.ImageTemplate,'ImgMeterRed')))
+			"/>
+			<property name="nX" value="40"/>
+			<property name="nY" value="14"/>
+			<property name="nWidth" from="def.nPercent"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objTitle">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchPoints"/>
+			<property name="nX" value="155"/>
+			<property name="nY" value="11"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objPoints">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="String(def.objData.objProject.nPoints) + ' ' + locale.SID.UI.of +  ' ' + String(def.objData.tmplResearchTopic.resolve().nPointsRequired)"/>
+			<property name="nX" value="155"/>
+			<property name="nY" value="18"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+	</objectDef>
+	
+	<objectDef type="UI2DResearchBubbleInfoOpen" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="ResearchProjectData"/>
+		
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<property name="nWidth" value="314"/>
+		<property name="nHeight" value="27"/>
+		
+		<object type="mlui.UI2DText" name="objTitle">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchPoints"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objFinished">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.objData.tmplResearchTopic.resolve().nPointsRequired"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="12"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		
+		<!--<object type="mlui.UI2DText" name="objTitle">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.PerTurnCost"/>
+			<property name="nX" value="89"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objFinished">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGreen14Left"/>
+			<property name="strText" from="'$' + def.objData.tmplResearchTopic.resolve().nPerTurnCost.formatNumber(0, true)"/>
+			<property name="nX" value="89"/>
+			<property name="nY" value="12"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="14"/>
+		</object>--> 
+		
+	</objectDef>
+	
+	<objectDef type="UI2DResearchBubbleInfoBlocked" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="ResearchProjectData"/>
+		<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		<property name="nWidth" value="314"/>
+		<property name="nHeight" value="27"/>
+		
+		<object type="mlui.UI2DText" name="objTitle">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchPoints"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="13"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objFinished">
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.objData.tmplResearchTopic.resolve().nPointsRequired"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="12"/>
+			<property name="nWidth" value="88"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		
+		<!--<object type="mlui.UI2DText" name="objTitle">-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>-->
+		<!--	<property name="strText" from="locale.SID.UI.PerTurnCost"/>-->
+		<!--	<property name="nX" value="89"/>-->
+		<!--	<property name="nY" value="2"/>-->
+		<!--	<property name="nWidth" value="88"/>-->
+		<!--	<property name="nHeight" value="13"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DText" name="objFinished">-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialGreen14Left"/>-->
+		<!--	<property name="strText" from="'$' + def.objData.tmplResearchTopic.resolve().nPerTurnCost.formatNumber(0, true)"/>-->
+		<!--	<property name="nX" value="89"/>-->
+		<!--	<property name="nY" value="12"/>-->
+		<!--	<property name="nWidth" value="88"/>-->
+		<!--	<property name="nHeight" value="14"/>-->
+		<!--</object> -->
+		
+	</objectDef>
+	
+</locust>
+
+
+
+

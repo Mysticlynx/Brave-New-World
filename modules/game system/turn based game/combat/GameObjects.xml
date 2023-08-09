@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="Engagement" class="CMLOEngagement" desc="An engagement">
+        <replicationRule>
+            ?{avatar, game:
+            game.isRegionVisible(avatar, self.refRegion.resolve(avatar))
+            }
+        </replicationRule>
+        <goDef gameSystem="GameSysCombat" storageProperty="objEngagements">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+		<propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="refAttacker" type="GORef" restriction="Nation"/>
+        <propertyDef name="refDefender" type="GORef" restriction="Nation"/>
+        <propertyDef name="eEngagementStatus" type="Enum" restriction="EngagementStatus"/>
+		<propertyDef name="nAttackerModifiedPower" type="int" default="0"/>
+        <propertyDef name="nDefenderModifiedPower" type="int" default="0"/>
+		<propertyDef name="nAttackerResistance" type="int" default="0"/>
+        <propertyDef name="nDefenderResistance" type="int" default="0"/>
+        <propertyDef name="nAttackerUtility" type="int" default="0"/>
+        <propertyDef name="nDefenderUtility" type="int" default="0"/>
+        <propertyDef name="dateStart" type="Date"/>
+		<propertyDef name="nDeadLandAttackers" type="int" default="0"/>
+		<propertyDef name="nDeadSeaAttackers" type="int" default="0"/>
+		<propertyDef name="nDeadAirAttackers" type="int" default="0"/>
+		<propertyDef name="nDeadLandDefenders" type="int" default="0"/>
+		<propertyDef name="nDeadSeaDefenders" type="int" default="0"/>
+		<propertyDef name="nDeadAirDefenders" type="int" default="0"/>
+		<!-- builtin methods
+			results = getExpectedDuration(gameroot,maxTurns) // results has named properties nProjectedTurns and objProjectedWinner
+			results = getAllAllies(gameroot, allAllies) //Fills in allAllies with all nations allied with the attacker and defender. Results is just for error checking
+
+			//Fills involvedNations with all nations, allied with either the attacker or defender, currently fighting the engagement. Results is just for error checking
+			results = getInvolvedNations(gameroot, involvedNations)
+
+			//Fills involvedUnitGroups with the UnitGroups in the engagement allied to the attacker if bAttacker == true, or to the defender otherwise. Results is just for error checking
+			results = getInvolvedUnitGroups(gameroot, bAttacker, involvedUnitGroups)
+		-->
+	</objectDef>
+
+    <objectDef type="SeaEngagement" class="CMLOSeaEngagement" superType="Engagement" desc="A sea engagement">
+        <replicationRule>
+            ?{avatar, game:
+            game.isRegionVisible(avatar, self.refRegion.resolve(avatar))
+            }
+        </replicationRule>
+    </objectDef>
+
+</locust>

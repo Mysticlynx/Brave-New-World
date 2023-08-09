@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">	
+	<objectDef type="UI2DSeaRegionGroup" superType="mlui.UI2DElement">
+		<propertyDef name="objGroup" type="gs_tbg.UnitGroup"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanBeige"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="328"/>
+			<property name="nHeight" value="53"/>
+		</object>
+		
+	<!-- ID -->
+		<propertyDef name="objController" type="gs_tbg.Nation"/>
+		<property name="objController" from="self.objGroup.refController.resolve(mh2data.objAvatar)"/>
+	
+		<object type="UI2DNationIcon" name="objControllerIcon">
+			<property name="objNation" from="def.objController"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+			<property name="nDepth" value="100"/>
+		</object>
+	
+		<object type="mlui.UI2DText" name="objNameLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="def.objGroup.strDisplayName"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="255"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objOpen">
+			<property name="tmplButtonStyle" value="skin.BtnStyleUnitButtonOpen"/>
+			<property name="nX" value="306"/>
+			<property name="nY" value="1"/>
+			<property name="nDefaultWidth" value="21"/>
+			<property name="nDefaultHeight" value="21"/>
+			<property name="nDepth" value="100"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.setSelectedObject(def.objGroup);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+	<!-- Offense -->
+		<object type="mlui.UI2DImage" name="objOffenseIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconOffenseTny"/>
+			<property name="nX" value="118"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="15"/>
+			<property name="nHeight" value="11"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objOffense">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="def.objGroup.nLandAttackPower"/>
+			<property name="nX" value="114"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="24"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	<!-- Defense -->
+		<object type="mlui.UI2DImage" name="objDefenseIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconDefenseTny"/>
+			<property name="nX" value="151"/>
+			<property name="nY" value="23"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objDefense">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="def.objGroup.nLandDefensePower"/>
+			<property name="nX" value="145"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="24"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	<!-- Health -->
+		<object type="mlui.UI2DImage" name="objHealthIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconHealthTny"/>
+			<property name="nX" value="183"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="11"/>
+			<property name="nHeight" value="11"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objHealth">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="((def.objGroup.nHitPoints * 100) / if(def.objGroup.nMaxHitPoints != 0, def.objGroup.nMaxHitPoints, 1)) + '%'"/>
+			<property name="nX" value="174"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	<!-- Morale -->
+		<object type="mlui.UI2DImage" name="objMoraleIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMoraleTny"/>
+			<property name="nX" value="217"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="13"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMorale">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="def.objGroup.nMorale + '%'"/>
+			<property name="nX" value="210"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+	<!-- Experience -->	
+		<object type="mlui.UI2DImage" name="objExperienceIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconExperienceTny"/>
+			<property name="nX" value="252"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="13"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objExperience">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="def.objGroup.nExperience"/>
+			<property name="nX" value="240"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	<!-- Command -->	
+		<object type="mlui.UI2DImage" name="objCommandIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconCommandTny"/>
+			<property name="nX" value="274"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="13"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objCommand">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="def.objGroup.nCommand"/>
+			<property name="nX" value="267"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+	<!-- Divisions -->	
+		<object type="mlui.UI2DImage" name="objDivisionsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconDivisionsTny"/>
+			<property name="nX" value="301"/>
+			<property name="nY" value="24"/>
+			<property name="nWidth" value="13"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objDivisions">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="def.objGroup.nUnitCount"/>
+			<property name="nX" value="295"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="12"/>
+		</object>
+	</objectDef>
+</locust>

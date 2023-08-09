@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="AvailableRegionOutputsLookup" class="CMLObject">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objParam" type="Object"/>
+		<propertyDef name="objValidRegionOutputs" type="RegionOutputTemplate" variable="true" storesChildren="true"/>
+		<property name="objValidRegionOutputs">
+			filter(?{output: self.objGameRoot != null AND
+					self.objRegion != null AND
+					output.canQueue(self.objGameRoot, self.objRegion, self.objParam)},
+				getAllRegionOutputs(self.objGameRoot))
+		</property>
+	</objectDef>
+
+</locust>

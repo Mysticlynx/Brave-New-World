@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+<template type="mlmedia.ImageTemplateSingleTexture" name="ImgModFlag46x24">
+    <property name="colColor" value="#FFFFFFFF" /> 
+    <property name="amApplyMode" value="MODULATE" /> 
+    <property name="tmplTexture" value="TexModFlag46x24"/> 
+    <property name="nImageWidth" value="46" /> 
+    <property name="nImageHeight" value="24" /> 
+    <property name="fmUFillMode" value="FIXED" /> 
+    <property name="fmVFillMode" value="FIXED" /> 
+</template>
+<template type="mlmedia.ImageTemplateSingleTexture" name="ImgModFlag256x128">
+    <property name="colColor" value="#FFFFFFFF" /> 
+    <property name="amApplyMode" value="MODULATE" /> 
+    <property name="tmplTexture" value="TexModFlag256x128"/> 
+    <property name="nImageWidth" value="202" /> 
+    <property name="nImageHeight" value="101" /> 
+    <property name="fmUFillMode" value="FIXED" /> 
+    <property name="fmVFillMode" value="FIXED" /> 
+</template>
+<template type="mlmedia.ImageTemplateSingleTexture" name="ImgModDecalIcon28x28">
+    <property name="colColor" value="#FFFFFFFF" /> 
+    <property name="amApplyMode" value="MODULATE" /> 
+    <property name="tmplTexture" value="TexModDecalIcon28x28"/> 
+    <property name="nImageWidth" value="28" /> 
+    <property name="nImageHeight" value="28" /> 
+    <property name="fmUFillMode" value="FIXED" /> 
+    <property name="fmVFillMode" value="FIXED" /> 
+</template>
+
+</locust>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="ui lib"
+	name="Map UI"
+	version="1.0"
+	locustVersion="2.11"
+	dll="mh2-mapui-1_30.dll"
+>
+	<import module="mlcore" default="true"/>
+	<import module="lib:mlgame" as="mlgame"/>
+	<import module="script:javascript" as="mljs"/>
+	<import module="lib:mlscript" as="mlscript"/>
+	<import module="lib:mlui" as="mlui"/>
+	<import module="lib:3d_world" as="ml3dworld"/>
+	<import module="lib:mlevent" as="mlevent"/>
+	<import module="lib:media" as="mlmedia"/>
+	<import module="ui lib:Media Tables" as="media_tables"/>
+	<import module="ui lib:Common Elements" as="common_elements"/>
+	<import module="ui lib:common ui" as="common_ui"/>
+	<import module="ui lib:skin" as="skin"/>
+	<import module="game system:turn based game" as="gs_tbg"/>
+	<import module="media:Default Media" as="default_media"/>
+	<import module="model:shared" as="models"/>
+
+	<include>
+        defs/Actions.xml
+        defs/BehaviorTable.xml
+        defs/Camera.xml
+        defs/Events.xml
+        defs/Lights.xml
+        defs/Lookups.xml
+        defs/MapData.xml
+        defs/MapView.xml
+        defs/ModelTable.xml
+        defs/UnitModelTable.xml
+        defs/Stacking.xml
+        defs/UI2DMapViewPort.xml
+        defs/UI3DMapTile.xml
+        defs/UI3DMapModel.xml
+        defs/MapSamplerFromUI.xml
+
+        defs/3D Layers/UI3DLayerModel.xml
+        defs/3D Layers/UI3DLayerOcean.xml
+        defs/3D Layers/UI3DLayerTerrain.xml
+        defs/3D Layers/UI3DLayerWorldEdge.xml
+
+        defs/Flat Layers/UI3DFlatMapLayer.xml
+        defs/Flat Layers/UI3DLayerControlBorder.xml
+        defs/Flat Layers/UI3DLayerDecal.xml
+        defs/Flat Layers/UI3DLayerEngagements.xml
+        defs/Flat Layers/UI3DLayerTrade.xml
+        defs/Flat Layers/UI3DLayerMoveArrows.xml
+        defs/Flat Layers/UI3DLayerRegion.xml
+        defs/Flat Layers/UI3DLayerRegionSelection.xml
+        defs/Flat Layers/UI3DLayerRegionVisibility.xml
+        defs/Flat Layers/UI3DLayerRivers.xml
+        defs/Flat Layers/UI3DLayerRoads.xml
+        defs/Flat Layers/UI3DLayerLakes.xml
+
+        defs/GO models/UI3DAirbase.xml
+        defs/GO models/UI3DCity.xml
+        defs/GO models/UI3DRegionImprovement.xml
+        defs/GO models/UI3DEngagementModel.xml
+        defs/GO models/UI3DResourceCapacity.xml
+        defs/GO models/UI3DUnitGroup.xml
+
+        shaders/shaders.xml
+        textures/textures.xml
+	</include>
+</locustModule>

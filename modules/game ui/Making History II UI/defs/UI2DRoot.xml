@@ -1,0 +1,1542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<object type="MH2Data" name="mh2data">
+		<property name="objSelectedObject" from="self.objMapData.objSelectedObject"/>
+
+		<object type="mapui.MapData" name="objMapData">
+		    <property name="objModuleSD" from="sd"/>
+			<property name="objAvatar" from="mh2data.objAvatar"/>
+    		<property name="objGameRoot" from="mh2data.objAvatar"/>		
+            <property name="bShadows" from="mh2data.bShadows"/>
+			<property name="tmplMapView" value="mapui.MapViewStandard"/>
+
+            <property name="tmplAirbaseMapModel" value="uidata.MapModelUnitBase_Air"/>
+            <property name="tmplEngagementMapModel" value="uidata.MapModelDefaultCombat"/>
+            <property name="tmplInterdictionMapModel" value="uidata.MapModelDefaultInterdiction"/>
+			<property name="tmplFlagMapModel" value="uidata.MapModelFlag"/>
+			<property name="tmplFlagPoleMapModel" value="uidata.MapModelFlagPole"/>
+			<property name="tmplPortMapModel" value="uidata.MapModelCityPort"/>
+			<property name="tmplDockMapModel" value="uidata.MapModelCityDock"/>
+			<property name="tmplFarmWorkerMapModel" value="uidata.MapModelFarmWorker"/>
+			<property name="tmplMilitaryWorkerMapModel" value="uidata.MapModelMilitaryWorker"/>
+			<property name="tmplResourcesWorkerMapModel" value="uidata.MapModelResourcesWorker"/>
+			<property name="tmplRoadWorkerMapModel" value="uidata.MapModelRoadWorker"/>
+			<property name="tmplCityConstructionProjectMapModel" value="uidata.MapModelCityConstructionProject"/>
+			<property name="tmplCoastalDefense1MapModel" value="uidata.MapModelCoastalDefense1"/>
+			<property name="tmplCoastalDefense2MapModel" value="uidata.MapModelCoastalDefense2"/>
+			<property name="tmplWorldEdgeNorthMapModel" value="uidata.MapModelWorldEdgeNorth"/>
+						
+            <property name="vecDefaultLookAt" from="mh2data.objCapitalCity.vecPosition"/>
+			<property name="vecCurLookAt" from="self.vecDefaultLookAt"/>
+			
+			<object type="mapui.CityModelTable" name="objCityModelTable">
+				<proto name="city_model_mapping.MapModelCityTableDefault" />
+				<property name="objMapData" from="self.parent"/>	
+			</object>
+			<object type="mapui.ResourceCapacityModelTable" name="objResourceCapacityModelTable">
+				<proto name="uidata.MapModelResourceCapacityTableDefault" />
+				<property name="objMapData" from="self.parent"/>	
+			</object>
+			<object type="mapui.RegionImprovementModelTable" name="objRegionImprovementModelTable">
+				<proto name="uidata.MapModelRegionImprovementTableDefault" />
+				<property name="objMapData" from="self.parent"/>	
+			</object>
+			
+            <object type="mapui.UnitModelTable" name="objUnitModelTable">
+                <proto name="unit_model_mapping.UnitModelTableDefault"/>
+                <property name="objGameRoot" from="mh2data.objAvatar"/>
+                <property name="objMapData" from="mh2data.objMapData"/>
+                <property name="strUnitModelSetResolution" from="mh2data.objAvatar.getAttribValue('UnitModelSet')"/>
+            </object>
+			
+    		<property name="objFlagModelTextureTable" from="mh2data.objFlagModelTextureTable"/>
+
+			<object type="mapui.MapBehaviorTableGOSelected" name="objMapBehaviorTableGOSelected">
+				<proto name="uidata.MapBehaviorTableGOSelectedDefault" />
+        		<property name="objMapData" from="mh2data.objMapData"/>
+			</object>
+			<object type="mapui.MapBehaviorTableGOQueried" name="objMapBehaviorTableGOQueried">
+				<proto name="uidata.MapBehaviorTableGOQueriedDefault" />
+        		<property name="objMapData" from="mh2data.objMapData"/>
+			</object>
+			<object type="mapui.MapBehaviorTableGOTargetting" name="objMapBehaviorTableGOTargetting">
+				<proto name="uidata.MapBehaviorTableGOTargettingDefault" />
+			</object>
+
+			<!-- Instanciate variable storage of template MovmentImprovement objects-->
+			<object type="mapui.TransImprovementEntry" name="objTransportationImprovementTable">
+				<property name="tmplTransportationImprovement" value="sd.UnpavedRoads"/>
+				<property name="colColor" value="#000000FF"/>
+			</object>
+
+			<object type="mapui.TransImprovementEntry" name="objTransportationImprovementTable">
+				<property name="tmplTransportationImprovement" value="sd.Railroads"/>
+				<property name="colColor" value="#FF0000FF"/>
+			</object>
+
+			<object type="mapui.TransImprovementEntry" name="objTransportationImprovementTable">
+				<property name="tmplTransportationImprovement" value="sd.PavedRoadways"/>
+				<property name="colColor" value="#00FF00FF"/>
+			</object>
+
+			<object type="mapui.TransImprovementEntry" name="objTransportationImprovementTable">
+				<property name="tmplTransportationImprovement" value="sd.Highways"/>
+				<property name="colColor" value="#0000FFFF"/>
+			</object>
+
+			<object type="mapui.TransImprovementEntry" name="objTransportationImprovementTable">
+				<property name="tmplTransportationImprovement" value="sd.RailDieselization"/>
+				<property name="colColor" value="#FFFF00FF"/>
+			</object>
+
+			<object type="mapui.TransImprovementEntry" name="objTransportationImprovementTable">
+				<property name="tmplTransportationImprovement" value="sd.Freeways"/>
+				<property name="colColor" value="#00FFFFFF"/>
+			</object>
+
+			<property name="objIdeologyTemplateDemocratic" value="sd.Democratic"/>
+			<property name="objIdeologyTemplateCommunist" value="sd.Communist"/>
+			<property name="objIdeologyTemplateAuthoritarian" value="sd.Authoritarian"/>
+			<property name="objIdeologyTemplateFascist" value="sd.Fascist"/>
+			
+            <property name="objUnitBranchTemplateArmy" value="sd.Army"/>
+            <property name="objUnitBranchTemplateNavy" value="sd.Navy"/>
+            <property name="objUnitBranchTemplateAirForce" value="sd.AirForce"/>
+            <property name="objUnitBranchTemplateSubmarine" value="sd.Submarine"/>
+            
+            <property name="objFactoryOutputCategoryTemplateCityBuildings" value="sd.CityBuildings"/>
+            
+            <property name="objCityBuildingTemplateIndustrialEnterprise" value="sd.IndustrialEnterprise"/>
+            <property name="objCityBuildingTemplateIndustrialPlant" value="sd.IndustrialPlant"/>
+            <property name="objCityBuildingTemplateLargeFactory" value="sd.LargeFactory"/>
+            <property name="objCityBuildingTemplateMechanizedFactory" value="sd.MechanizedFactory"/>
+            <property name="objCityBuildingTemplateCottageFactory" value="sd.CottageFactory"/>
+            <property name="objCityBuildingTemplateMill" value="sd.Mill"/>
+            <property name="objCityBuildingTemplateMunitionsPlant" value="sd.MunitionsPlant"/>
+            <property name="objCityBuildingTemplateNuclearPowerPlant" value="sd.NuclearPowerPlant"/>
+            <property name="objCityBuildingTemplateCoalPlant" value="sd.CoalPlant"/>
+            <property name="objCityBuildingTemplateRecyclingCenter" value="sd.RecyclingCenter"/>
+            <property name="objCityBuildingTemplateVehiclePlant" value="sd.VehiclePlant"/>
+            <property name="objCityBuildingTemplateAircraftPlant" value="sd.AircraftPlant"/>
+            <property name="objCityBuildingTemplateSyntheticFuelPlant" value="sd.SyntheticFuelPlant"/>
+            <property name="objCityBuildingTemplateFoodProcessingPlants" value="sd.FoodProcessingPlants"/>
+            <property name="objCityBuildingTemplateIndustrialShipyard" value="sd.IndustrialShipyard"/>
+            <property name="objCityBuildingTemplateShipyard" value="sd.Shipyard"/>
+            
+            <property name="objResearchCenterBuildingTemplateUniversity" value="sd.University"/>
+            <property name="objResearchCenterBuildingTemplateMilitaryAcademy" value="sd.MilitaryAcademy"/>
+            <property name="objResearchCenterBuildingTemplateNavalAcademy" value="sd.NavalAcademy"/>
+            <property name="objResearchCenterBuildingTemplateAirForceAcademy" value="sd.AirForceAcademy"/>
+            <property name="objResearchCenterBuildingTemplateMedicalCenter" value="sd.MedicalCenter"/>
+            <property name="objResearchCenterBuildingTemplatePublicSchool" value="sd.PublicSchool"/>
+            <property name="objResearchCenterBuildingTemplateTechnologyCenter" value="sd.TechnologyCenter"/>
+            <property name="objResearchCenterBuildingTemplateResearchFacility" value="sd.ResearchFacility"/>
+            <property name="objResearchCenterBuildingTemplateChemicalLab" value="sd.ChemicalLab"/>
+            <property name="objResearchCenterBuildingTemplateRocketLab" value="sd.RocketLab"/>
+            <property name="objResearchCenterBuildingTemplateJetPropulsionLab" value="sd.JetPropulsionLab"/>
+            <property name="objResearchCenterBuildingTemplateNuclearLab" value="sd.NuclearLab"/>
+            <property name="objResearchCenterBuildingTemplateOrbitalScienceLab" value="sd.OrbitalScienceLab"/>
+            
+            <property name="objCoastalDefenseImprovementTemplateShoreBatteries" value="sd.ShoreBatteries"/>
+            <property name="objCoastalDefenseImprovementTemplateIntegratedCoastalDefense" value="sd.IntegratedCoastalDefense"/>
+            
+            <property name="objRegionOutputCategoryTemplateMilitary" value="sd.Military"/>
+            <property name="objRegionOutputCategoryTemplateTransportation" value="sd.Transportation"/>
+            <property name="objRegionOutputCategoryTemplateFood" value="sd.Food"/>
+            <property name="objRegionOutputCategoryTemplateResources" value="sd.Resources"/>
+            
+            <property name="objRegionOutputTemplateAirbase" value="sd.Airbase"/>
+
+			<script type="application/javascript"><![CDATA[
+			
+				function selectNation(nation)
+				{
+					if(nation == mh2data.objNation)
+					{
+						reportdata.setReportPanel(ReportPanelSelection.DOMESTIC)
+					}
+					else
+					{
+						spdata.showNationInfo(nation);
+					}
+				}
+				
+				function selectCity(city)
+				{
+					spdata.showCityInfo(city);
+					
+                    // Play a city select sound
+					if(city.nIPUs < 35)
+					{
+						objRunnable.objRoot.playSoundOnce("City Pre-Industrial")
+					}
+					else if(city.nIPUs >= 35 && city.nIPUs < 80)
+					{
+						objRunnable.objRoot.playSoundOnce("City Industrial")
+					}
+					else if(city.nIPUs >= 80 && city.nIPUs)
+					{
+						objRunnable.objRoot.playSoundOnce("City Advanced")
+					}
+				}
+				
+				function selectUnitGroup(unitgroup)
+				{
+					spdata.objUnitGroupData.showUnitGroupInfo(unitgroup);
+					
+                    // Play a unit select sound
+                    var bEngaged = (unitgroup.eStatus == gs_tbg.UnitGroupStatus.STATUS_IN_COMBAT);
+                    var displayUnit = self.getUnitDisplayedForUnitGroup(unitgroup);
+
+					if(unitgroup.tmplUnitBranch.equals(sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')))
+					{
+						objRunnable.objRoot.playSoundOnce("Select Ship");
+					}
+					else if(unitgroup.tmplUnitBranch.equals(sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')))
+					{
+					    if (bEngaged || (displayUnit == null) )
+					    {
+							objRunnable.objRoot.playSoundOnce("Units Engaged Alt");
+					    }
+					    else if(displayUnit.objUnitTemplate.tmplUnitSubBranch.equals(sd.getTemplateRef(gs_tbg.UnitSubBranchTemplate, 'Bomber')))
+					    {
+						    objRunnable.objRoot.playSoundOnce("Select Bomber");
+					    }
+					    else
+					    {
+						    objRunnable.objRoot.playSoundOnce("Select Plane");
+					    }
+					}
+					else if(unitgroup.tmplUnitBranch.equals(sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')))
+					{
+						if (bEngaged || (displayUnit == null))
+						{
+							objRunnable.objRoot.playSoundOnce("Units Engaged Alt");
+						}
+						else if(displayUnit.objUnitTemplate.tmplUnitSubBranch.equals(sd.getTemplateRef(gs_tbg.UnitSubBranchTemplate, 'Foot')) ||
+						        displayUnit.objUnitTemplate.tmplUnitSubBranch.equals(sd.getTemplateRef(gs_tbg.UnitSubBranchTemplate, 'Horse')))
+						{
+							objRunnable.objRoot.playSoundOnce("Select Troop");
+						}
+						else
+						{
+							objRunnable.objRoot.playSoundOnce("Select Tank");
+						}
+					}
+					else if (unitgroup.tmplUnitBranch.equals(sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Submarine')))
+					{
+						objRunnable.objRoot.playSoundOnce("Select Submarine");
+					}
+					else
+					{
+					    logWarn("Unexpected branch " + unitgroup.tmplUnitBranch);
+					}
+				} // selectUnitGroup
+				
+				function selectRegion(region)
+				{
+					if(region.tmplTerrain.resolve().bWater){
+						spdata.objSeaRegionData.showSeaRegion(region);
+						objRunnable.objRoot.playSoundOnce("Select Water");
+					}
+					else{
+						spdata.objRegionData.showRegion(region);
+						objRunnable.objRoot.playSoundOnce("Select Land");
+					};
+				}
+				
+				function selectEngagement(engagement)
+				{
+					objRunnable.objRoot.playSoundOnce("Units Engaged Alt");
+					self.makeGOSelectedOnMap(engagement);
+				}
+				
+                function getInfantryTemplateFromClassRank(nClassRank)
+                {
+				    switch(nClassRank)
+				    {
+					    case 1: return sd.getTemplate(gs_tbg.UnitTemplate, 'Infantry1');
+					    case 2: return sd.getTemplate(gs_tbg.UnitTemplate, 'Infantry2');
+					    case 3: return sd.getTemplate(gs_tbg.UnitTemplate, 'Infantry3');
+					    case 4: return sd.getTemplate(gs_tbg.UnitTemplate, 'Infantry4');
+					    case 5: return sd.getTemplate(gs_tbg.UnitTemplate, 'Infantry5');
+					    case 6: return sd.getTemplate(gs_tbg.UnitTemplate, 'Infantry6');
+				    }
+                }
+                
+                function getUnitTemplate(strUnitTemplate)
+                {
+                    return getTemplate(gs_tbg.UnitTemplate, strUnitTemplate);
+                }
+				
+			]]></script>
+
+		</object><!-- objMapData -->
+		
+		<script type="application/javascript"><![CDATA[
+			function initializeUI()
+			{
+				var city = gs_tbg.getCapitalCity(self.objAvatar, self.objNation)
+				self.setSelectedObject(city);
+				spdata.objCityData.showMinInfo(city)
+				self.getUserNotificationSettings();
+                self.bShadows = getShadowsEnabled();
+                self.bCompressedTerrainTextures = getCompressedTerrainTextures();
+                self.bHasCompressedTexturesOption = gs_tbg.getGameSysMap(self.objAvatar).hasCompressedTerrainTexturesOption();               				
+			}
+			
+            // Note: get/setUserSettingBitFlags index can be 0 to 255. 
+            // We allocate the first range to NotificationTemplateList.                
+            // The remaining ones are for other settings.            
+            var UserSettingIndex =
+            {
+                MaxUserNotifications: 100,
+                Shadows:101,
+                CompressedTerrainTextures:102
+            }
+            
+            function _getUserSettingBit(i)
+            {
+                var index = int(i / 32);
+                var mask = 1 << (i % 32);
+                var flags = gs_tbg.getUserSettingBitFlags(self.objAvatar,index);
+                return ((flags & mask) == mask);
+            }
+
+            function _setUserSettingBit(i,bValue)
+            {
+                var index = int(i / 32);
+                var mask = 1 << (i % 32);
+                var flags = gs_tbg.getUserSettingBitFlags(self.objAvatar,index);
+                if (bValue) {
+                    flags |= mask;
+                } else {
+                    flags &= (~mask);
+                }                
+                gs_tbg.setUserSettingBitFlags(self.objAvatar,index,flags);
+            }
+            
+            function getShadowsEnabled()
+            {
+                return _getUserSettingBit(UserSettingIndex.Shadows);
+            }
+            
+            function setShadowsEnabled(bEnable)
+            {
+                _setUserSettingBit(UserSettingIndex.Shadows, bEnable);                
+                self.bShadows = bEnable;
+            }
+			
+            function getCompressedTerrainTextures()
+            {
+                return _getUserSettingBit(UserSettingIndex.CompressedTerrainTextures);
+            }
+            
+            function setCompressedTerrainTextures(bEnable)
+            {
+                _setUserSettingBit(UserSettingIndex.CompressedTerrainTextures, bEnable);
+                self.bCompressedTerrainTextures = bEnable;
+            }           
+            
+			function setUserNotificationFlag(tmpl,bNewValue)
+			{
+			    if (tmpl.strDisplayName == undefined)
+			    {
+			        tmpl = tmpl.resolve();
+			    }
+			    
+			    if (self.objAvatar != null)
+			    {
+                    var refs = sd.getTemplate(TemplateList, 'NotificationTemplateList').tmplRefs;
+                    var r = refs.indexOf(tmpl);
+                    if (r<0)
+                     {
+                        logError("NotificationTemplateList didn't contain " + tmpl);
+                        return;
+                    }
+                    var i = Number(r)
+                    var index = int((i+1) / 32);
+                    var mask = 1 << ((i+1) % 32);
+                    var flags = gs_tbg.getUserSettingBitFlags(self.objAvatar,index);
+                    var bExistingValue = ((flags & mask) == mask);
+                    if (bExistingValue != bNewValue)
+                    {
+                        if (bNewValue)
+                        {
+                            flags |= mask;
+                        }
+                        else
+                        {
+                            flags &= (~mask);
+                        }
+                        gs_tbg.setUserSettingBitFlags(self.objAvatar,index,flags);
+                    }
+                }
+			}
+			
+			function getUserNotificationSettings()
+			{
+				// fill in objShowNotifications from settings bits (if any are set)
+				var current_index = 0;
+				var current_flags = gs_tbg.getUserSettingBitFlags(self.objAvatar,current_index);
+				
+                var refs = sd.getTemplate(TemplateList, 'NotificationTemplateList').tmplRefs;
+                var last_user_bit_index = 0;
+				
+				if ((current_flags & 1) == 1) // very first bit indicates if we actually have any data
+				{
+                    for (var r in refs)
+                    {
+                        var tmpl = refs[r];
+                        var i = Number(r); // r is (apparently) interpreted as a string
+                        var flag_index = int((i+1) / 32);
+                        var flag_mask = (1 << ((i+1) % 32));
+                        if (flag_index != current_index)
+                        {
+                            current_index = flag_index;
+            				current_flags = gs_tbg.getUserSettingBitFlags(self.objAvatar,current_index);
+                        }
+                        
+                        if ((current_flags & flag_mask) == flag_mask)
+                        {
+                            objRunnable.objRoot.objShowNotifications.checkAdd(tmpl);
+                        }
+                        else
+                        {
+        				    objRunnable.objRoot.objShowNotifications.remove(tmpl);
+        				}
+
+                        last_user_bit_index = i + 1;                        
+                    }
+				}
+				else
+				{
+				    // establish bits
+				    current_flags = 1;
+				    var last_written_index = -1;
+                    for (var r in refs)
+                    {
+                        var tmpl = refs[r];
+                        var i = Number(r); // otherwise it's interpreted as a string
+                        flag_index = int((i+1) / 32);
+                        var flag_mask = (1 << ((i+1) % 32));
+                        if (flag_index != current_index)
+                        {
+                            // write and update
+            				gs_tbg.setUserSettingBitFlags(self.objAvatar, current_index, current_flags);
+            				last_written_index = current_index;
+            				current_index = flag_index;
+            				current_flags = 0;
+                        }
+                        
+                        if (objRunnable.objRoot.objShowNotifications.tmplNotifications.contains(tmpl))
+                        {
+                            current_flags |= flag_mask;
+                        }
+                        
+                        last_user_bit_index = i + 1;                        
+				    }
+				    
+				    if (last_written_index != current_index)
+				    {
+    				    gs_tbg.setUserSettingBitFlags(self.objAvatar, current_index, current_flags);
+    				}
+				}
+                    
+                log("DEBUG: last_user_bit_index=" + last_user_bit_index); // FIXME: remove spam
+                if (last_user_bit_index > UserSettingIndex.MaxUserNotifications)
+                {
+                    logError("Too many NotificationTemplateList values (" + last_user_bit_index + ") for assigned range (" + UserSettingIndex.MaxUserNotifications + ") of UserSettingBitFlags");
+                }                                    
+			}
+			
+		]]></script>
+		
+	</object><!-- mh2data -->
+
+	<object type="EncyData" name="encydata">
+	</object>
+
+	<object type="ReportData" name="reportdata">
+	</object>
+	
+	<object type="SelectedPanelData" name="spdata">
+	</object>
+
+	<objectDef type="UI2DRoot" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data" from="mh2data"/>
+		<propertyDef name="objSounds" type="mlui.UISound" storesChildren="true" variable="true"/>
+		<propertyDef name="objJukebox" type="mlui.UIJukebox" storesChildren="true"/>
+		<propertyDef name="fSoundVolume" type="float" from="gs_tbg.getSoundVolume(mh2data.objAvatar)"/>	
+		<propertyDef name="fMusicVolume" type="float" from="gs_tbg.getMusicVolume(mh2data.objAvatar)"/>	
+		
+		<!-- Notifications to display (initial). This needs to precede objInitializeUI so it is created before initializeUI() is called -->
+		
+		<object type="CMLOShowNotifications" name="objShowNotifications" >
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateTradeAgreementAccepted"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateTradeAgreementAccepted"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateTradeAgreementCancelled"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateTradeMoneyTransferAccepted"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateTradeMoneyTransferCancelled"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticWarDeclared"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticAllianceCreated"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticAllianceJoined"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticAllianceLeft"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticNationDefeated"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticEmbargoPlaced"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticEmbargoLifted"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateResearchProjectCompleted"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticGenRegionSeceded"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticGenCivilWarStarted"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticGenNationLiberated"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticGenIndependentNationFounded"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticMilitaryAccessChanged"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticGenResearchStolen"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateEngagementGenCityNuked"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateCityUnitProduced"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateCityFactoryOutputProduced"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateCityGenCityBuildingDestroyed"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateCityGenResearchCenterBuildingDestroyed"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticGenOppositionSupportConcluded"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticGenPoliticalSupportConcluded"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticGenRegionSurveillanceConcluded"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateGovernmentGenNationRevolt"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateGovernmentGenNation"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateDiplomaticNationAnnexed"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateGovernmentGenInternalSupportConcluded"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateGovernmentGenNationIdeology"/>
+            <!-- <property name="tmplNotifications" value="gs_notify.NotificationTemplateStabilityGenRegionChangedController"/> -->
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateStabilityNationChanged"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateRegionOutputProduced"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateRegionGenRegionResource"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateRegionGenAirbaseDestroyed"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateRegionGenAADefenseDestroyed"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateRegionGenCoastalDefenseDestroyed"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateRegionGenFortificationDestroyed"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateRegionGenTransportationDestroyed"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateRegionGenResourceImprovementDestroyed"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateRegionGenRegionSabotaged"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateRegionDamaged"/>
+            <property name="tmplNotifications" value="gs_notify.NotificationTemplateCollateralDamage"/>
+        </object>
+		
+		
+		<object type="mlui.UIElement" name="objInitializeUI" existsWhile="mh2data != null AND mh2data.objNation != null">
+			<script type="application/javascript"><![CDATA[
+				function notifyAddedToUI()
+				{
+					mh2data.initializeUI();
+                    
+                    // setup inactivity timeout if we were started from web
+                    if(gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.bStartedFromWeb) {
+                        mlui.objUI.fMaxIdleTime = 1800; // 1800 = 30 minutes
+                        // log("Set idle timeout to " + mlui.objUI.fMaxIdleTime + " seconds.");
+                    }
+				}
+			]]></script>
+		</object>
+        
+        <propertyDef type="bool" name="bIsFinishedLoading" default="false"/>
+		<object type="mlui.UIElement" name="objFinishLoading" existsWhile="!objRunnable.objLoadingLayer.bIsLoading">
+			<script type="application/javascript"><![CDATA[
+				function notifyAddedToUI() {
+					def.bIsFinishedLoading = true;
+				}
+			]]></script>
+		</object>
+        <object type="UITestMode" name="objTestModeUI" existsWhile="
+            mlgame.client.objReplicatedServer.bTestMode AND 
+            mh2data != null AND
+            mh2data.objAvatar != null AND
+            self.bIsFinishedLoading
+        ">
+        </object>
+		
+	    <property name="nWidth" from="mlui.objUI.nWidth"/>
+		<property name="nHeight" from="mlui.objUI.nHeight"/>
+		
+		<script type="application/x-locust-query"><![CDATA[
+			getSound = ?{name:
+				find(?{sound: sound.strName == name}, self.objSounds)
+			}
+		]]></script>
+				
+		<script type="application/javascript"><![CDATA[
+			function notifyAddedToUI()
+			{
+				//  mh2data.objNation variable is not set at this point - causes errors so I remove it				
+				//	mh2data.setSelectedObject(gs_tbg.getCapitalCity(mh2data.objAvatar, mh2data.objNation));
+			}
+			
+			function playPlaylist(playlist)
+			{
+				self.objJukebox.play(playlist)
+			}
+			
+			function playSoundOnce(name) {
+				self.getSound(name).playOnce();
+			}
+
+			function playSoundLooped(name) {
+				self.getSound(name).playLoop();
+			}
+			
+			function stopSound(name) {
+				self.getSound(name).stop();
+			}
+			
+			function toggleExpandedSelectionPanel()
+			{
+				if(reportdata.ePanel.equals(ReportPanelSelection.NONE) && encydata.ePanel.equals(EncySelection.NONE))
+				{
+					if(mh2data.objSelectedObject.instanceOf(gs_tbg.UnitGroup))
+					{
+						if(spdata.objUnitGroupData.eSection.equals(UnitGroupSection.INFO))
+						{
+							spdata.objUnitGroupData.showUnitGroupList(spdata.objUnitGroupData.objUnitGroup);
+						}
+						else
+						{
+							spdata.objUnitGroupData.showUnitGroupInfo(spdata.objUnitGroupData.objUnitGroup);
+						}
+					}
+					else if(mh2data.objSelectedObject.instanceOf(gs_tbg.Engagement)){
+						if(mh2data.bEngagementPanelMin == false)
+						{
+							mh2data.bEngagementPanelMin = true;
+						}
+						else
+						{
+							mh2data.bEngagementPanelMin = false;
+						}
+					}
+					else
+					{
+						spdata.bIsMoreInfo = !spdata.bIsMoreInfo;
+					}
+				}
+			}
+			// Double click is now just doing the same thing as spacebar again, using toggleExpandedSelectionPanel()
+			//function dblclickToggleExpandedSelectionPanel()
+			//{
+			//	if(reportdata.ePanel.equals(ReportPanelSelection.NONE) && encydata.ePanel.equals(EncySelection.NONE))
+			//	{
+			//		if(mh2data.objSelectedObject.instanceOf(gs_tbg.UnitGroup))
+			//		{
+			//			spdata.objUnitGroupData.showUnitGroupList(spdata.objUnitGroupData.objUnitGroup);
+			//		}
+			//		else if(mh2data.objSelectedObject.instanceOf(gs_tbg.Engagement))
+			//		{
+			//			mh2data.bEngagementPanelMin = false;
+			//		}
+			//		else
+			//		{
+			//			spdata.bIsMoreInfo = true;
+			//		}
+			//	}
+			//}
+		]]></script>
+		
+
+		<object type="mlui.UI2DImage" name="objDemoTile" existsWhile="gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.InDemoMode()">
+			<property name="tmplImage" value="skin.ImgDemoTileBG"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="mlui.objUI.nWidth"/>
+			<property name="nHeight" from="mlui.objUI.nHeight"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+        
+		<!-- Map -->
+		<object type="mapui.UI2DMapViewPort" name="objMap">
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="objAvatar" from="mh2data.objAvatar"/>
+			<property name="objMapData" from="mh2data.objMapData"/>
+			<property name="objNation" from="mh2data.objNation"/>
+            <property name="bShadows" from="mh2data.bShadows"/>       
+            <property name="bCompressedTerrainTextures" from="mh2data.bCompressedTerrainTextures" />
+        </object>
+        
+		<object type="UI2DMainMenu" name="objMainMenu" existsWhile="mh2data.otMainMenu != null">
+			<property name="nWidth" from="def.nWidth"/>
+            <property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="250"/>
+			<property name="objShowNotifications" from="def.objShowNotifications" />
+		</object>
+
+		<object type="UI2DSummaryPanelMinLayout" name="objSummaryPanelMinLayout" existsWhile="self.objMH2Data.otSummaryPanelPopup != UI2DSummaryPanelLayout">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="nY" value="58"/>
+		</object>
+
+		<object type="UI2DSummaryPanelLayout" name="objElements" existsWhile="self.objMH2Data.otSummaryPanelPopup == UI2DSummaryPanelLayout">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="nY" value="58"/>
+		</object>
+
+		<object type="UI2DNationFlag46x24NS" name="objNationFlagIcon">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="17"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="RIGHT"/>
+            <property name="nDepth" value="10"/>
+            <property name="strToolTip" from="locale.SID.UI.Nation"/>
+        </object>
+
+		<object type="mlui.UI2DImage" name="objSummaryPanelMinBGTop">
+			<property name="tmplImage" value="skin.ImgFlagCrest"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="12"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+
+		<object type="UI2DInfoBar" name="objInfoBar">
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" value="4"/>
+		</object>
+
+		<object type="UI2DGamePanel" name="objGamePanel">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+		</object>
+		
+		<!-- Performance Info -->
+		<!--<object type="mlui.UI2DPerformanceInfo" name="objPerformanceInfo">-->
+		<!--	<property name="haXAlign" value="CENTER"/>-->
+		<!--	<property name="vaYAlign" value="MIDDLE"/>			-->
+		<!--</object>-->
+
+		<!-- Popup Windows -->
+		<!--<object type="UI2DSelectionPanelPopups" name="objSelectionPanelPopups">-->
+		<!--	<property name="objMH2Data" from="def.objMH2Data"/>-->
+		<!--	<property name="nWidth" from="def.nWidth"/>-->
+		<!--	<property name="nHeight" from="def.nHeight"/>-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="UI2DReportPanelPopups" name="objReportPanelPopups">-->
+		<!--	<property name="objMH2Data" from="def.objMH2Data"/>-->
+		<!--	<property name="nWidth" from="def.nWidth"/>-->
+		<!--	<property name="nHeight" from="def.nHeight"/>-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--</object>-->
+
+		<object type="UI2DSOLayer" name="objSelectedObjectLayer">
+			<property name="nDepth" value="15"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+		<object type="UI2DReportLayer" name="objReportLayer">
+			<property name="nDepth" value="100"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+		<object type="UI2DEncyLayer" name="objEncyLayer">
+			<property name="nDepth" value="200"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DResearchTree" name="objViewPort" existsWhile="mh2data.eResearchTree != ResearchTree.NONE">
+			<property name="nWidth">
+				if(mh2data.eResearchTree == ResearchTree.SMALL,
+					876,
+					if(mh2data.eResearchTree == ResearchTree.LARGE,
+						def.nWidth,
+						0
+					)
+				)
+			</property>
+			<property name="nHeight">
+				if(mh2data.eResearchTree == ResearchTree.SMALL,
+					546,
+					if(mh2data.eResearchTree == ResearchTree.LARGE,
+						def.nHeight,
+						0
+					)
+				)
+			</property>
+			<property name="nX">
+				if(mh2data.eResearchTree == ResearchTree.SMALL,
+					9,
+					if(mh2data.eResearchTree == ResearchTree.LARGE,
+						0,
+						0
+					)
+				)
+			</property>
+			<property name="nY">
+				if(mh2data.eResearchTree == ResearchTree.SMALL,
+					9,
+					if(mh2data.eResearchTree == ResearchTree.LARGE,
+						0,
+						0
+					)
+				)
+			</property>
+			<property name="nDepth" value="150"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+		</object>
+
+		<object type="mlui.UI2DElement" name="objBlocker" existsWhile="self.objMH2Data.objDecisionPoints.size GT 0">
+			<property name="nDepth" value="299"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						}
+					]]></script>
+				</object>
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventKeyDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						}
+					]]></script>
+				</object>
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventKeyUp"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DDecisionPoint" name="objChosenDecision" tiedTo="self.objMH2Data.objDecisionPoints">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="objDecisionPoint" from="tiedTo"/>
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="263"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<!--<property name="bVisible" from="!def.bTurnEnded"/>-->
+			<property name="nDepth" value="300"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						}
+					]]></script>
+				</object>
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventKeyDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						}
+					]]></script>
+				</object>
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventKeyUp"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DTradeProposal" name="objTradeProposal" existsWhile="mh2data.otTradeProposal == UI2DTradeProposal">
+			<property name="objTradeAgreement" from="mh2data.objSelectedTradeAgreement.objTradeAgreement"/>
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="263"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nDepth" value="400"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DConfirmAnnex" name="objConfirmation" existsWhile="mh2data.otConfirmDialogue == UI2DConfirmAnnex">
+			<property name="nWidth" value="415"/>
+			<property name="nHeight" value="263"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="nDepth" value="400"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DRegionToggle" name="objRegionToggle" existsWhile="mh2data.otMapToggle == UI2DRegionToggle">
+			<property name="nX" value="490"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nWidth" value="184"/>
+			<property name="nHeight" value="156"/>
+			<property name="nDepth" value="10"/>
+		</object>
+
+		<object type="UI2DDemographicToggle" name="objDemographicToggle" existsWhile="mh2data.otMapToggle == UI2DDemographicToggle">
+			<property name="nX" value="348"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nWidth" value="184"/>
+			<property name="nHeight" value="156"/>
+			<property name="nDepth" value="10"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objDemoRelease" existsWhile="gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.InDemoMode()">
+			<property name="tmplImage" value="skin.ImgDemoRelease"/>
+			<property name="nX" value="108"/>
+			<property name="nY" value="134"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="nDepth" value="50"/>
+            <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DMapViewKeyPanel" name="objMapViewKeyPanel" existsWhile="self.objMH2Data.objMapData.tmplMapView.resolve().getKeyItems(self.objMH2Data.objMapData) != null">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			<property name="nDepth" value="5"/>
+		</object>
+		
+		<propertyDef name="bTurnEnded" type="bool">
+			find(?{PAD: PAD.instanceOf(gs_tbg.PADTurnBasedGame)}, mh2data.objAvatar.objPerAvatarData).bEndedTurn
+		</propertyDef>
+
+		<propertyDef name="objCurrentNotifications" type="gs_notify.Notification" variable="true">
+			filter(?{notification: !notification.bAlert AND self.objShowNotifications.tmplNotifications.contains(notification.tmplNotification.resolve())}, mh2data.objAvatar.getPerAvatarData(gs_notify.PADNotification).objNotifications)
+		</propertyDef>
+		<propertyDef name="objCurrentNotification" type="gs_notify.Notification">
+			self.objCurrentNotifications.getArbitraryValue()
+		</propertyDef>
+		<object type="UI2DNotification" name="objNotificationPopup" existsWhile="self.objCurrentNotification != null  AND self.bTurnEnded != true">
+			<property name="objNotification" from="def.objCurrentNotification"/>
+			<property name="nWidth" value="512"/>
+			<property name="nHeight" value="512"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nDepth" value="500"/>
+		</object>
+
+        <propertyDef name="objMenuData" type="common_elements.MenuData"/>
+        <propertyDef name="objSubMenuData" type="common_elements.MenuData"/>
+
+        <object type="common_elements.UI2DPopUpMenuLayer" name="objPopUpMenuLayer" existsWhile="self.objMenuData != null">
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="101"/>
+            <property name="objMenuData" from="def.objMenuData"/>
+			<property name="objSubMenuData" from="def.objSubMenuData"/>
+			<property name="nDepth" value="600"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+        </object>
+        
+		<object type="UI2DGameStartNationInfo" name="objGameStartNationInfo" >
+			<property name="nDepth" value="999"/>
+            <property name="bVisible" from="mh2data.bShowNationInfo" />
+		</object>
+		
+		<object type="UI2DGameEndDemoMode" name="objGameEndDemo" existsWhile="gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.InDemoMode()">
+	        <property name="strVendor" from="mh2data.objAvatar.getAttribValue('Vendor')"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="1000"/>
+			<property name="bVisible" value="false" />
+		</object>
+        
+		<object type="UI2DGameEnd" name="objGameEnd"  existsWhile="!gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.InDemoMode()">
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="1000"/>
+			<property name="bVisible" value="false"/>
+		</object>
+		
+		<object type="NationListData" name="objNationList">
+		</object>
+
+		<!-- Key Binds -->
+		<object type="mlui.KeyBindList" name="objKeyBindList">
+            <object type="mlui.KeyBindMethod" name="objKeyBinds">
+                <property name="strName" from="locale.SID.UI.Deselect"/>
+                <property name="otEventType" value="mlui.EventKeyPressed"/>
+                <property name="eKey" value="KEY_CODE_ESCAPE"/>
+                <script type="application/javascript">
+                    <![CDATA[
+					function notifyTriggered(owner)
+					{
+                        if(gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.bStartedFromWeb) {
+                            mlui.objUI.setResolution(0, 0, false);
+                        }
+					}
+				]]>
+                </script>
+            </object>
+            <object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.Deselect"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_TAB"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if (def.objElements.objPanel == null)
+						{
+							mh2data.openSummaryPanel(UI2DSummaryPanelLayout);
+							spdata.objSummaryPanelData.setPanel(UI2DSummaryPanelWorldPowers, null);
+						}
+						else
+						{
+							spdata.objSummaryPanelData.clearPanel();
+						}
+						def.objElements.objButtons.clearButtons();
+
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.Deselect"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_RETURN"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if (def.objElements.objPanel == null)
+						{
+							mh2data.openSummaryPanel(UI2DSummaryPanelLayout);
+							spdata.objSummaryPanelData.setPanel(UI2DSummaryPanelChat, null);
+						}
+						else
+						{
+							spdata.objSummaryPanelData.clearPanel();
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_E"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if (encydata.ePanel.equals(EncySelection.ENCY))
+						{
+							encydata.closeEncy();
+						}
+						else 
+						{
+							encydata.objEncyclopediaData.showEncyclopedia();						
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.ResetMapPos"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_NUMPAD5"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+                        mh2data.objMapData.setViewToDefault();
+					}
+				]]></script>
+			</object>
+
+		<!-- UI Navigation Hotkeys -->
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanelMinMax"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_SPACE"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.toggleExpandedSelectionPanel();
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.Military"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_M"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{							
+						if ((reportdata.ePanel.equals(ReportPanelSelection.MILITARY)) && (encydata.ePanel.equals(EncySelection.NONE)))
+						{
+							reportdata.closeReportPanel();
+						}
+						else if (!reportdata.ePanel.equals(ReportPanelSelection.MILITARY))
+						{
+							reportdata.objMilitaryData.showStatus(mh2data.objNation);						
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.Military"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_Z"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if(mh2data.otMainMenu == null)
+						{
+							mh2data.openMainMenu();
+						}
+						else
+						{
+							mh2data.closeMainMenu();
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.Diplomacy"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_N"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if (reportdata.ePanel.equals(ReportPanelSelection.DIPLOMATIC)  && (encydata.ePanel.equals(EncySelection.NONE)))
+						{
+							reportdata.closeReportPanel();
+						}
+						else if (!reportdata.ePanel.equals(ReportPanelSelection.DIPLOMATIC) )
+						{
+							reportdata.objDiplomacyData.showWorldNationInfo();				
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.Government"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_G"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if (reportdata.ePanel.equals(ReportPanelSelection.DOMESTIC) && (encydata.ePanel.equals(EncySelection.NONE)))
+						{
+							reportdata.closeReportPanel();
+						}
+						else if (!reportdata.ePanel.equals(ReportPanelSelection.DOMESTIC))
+						{
+							reportdata.setReportPanel(ReportPanelSelection.DOMESTIC);
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.City"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_C"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if (reportdata.ePanel.equals(ReportPanelSelection.CITY) && (encydata.ePanel.equals(EncySelection.NONE)))
+						{
+							reportdata.closeReportPanel();
+						}
+						else if (!reportdata.ePanel.equals(ReportPanelSelection.CITY))
+						{
+							reportdata.objCityData.showCityProductionList();
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.Research"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_R"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if (reportdata.ePanel.equals(ReportPanelSelection.RESEARCH) && (encydata.ePanel.equals(EncySelection.NONE)))
+						{
+							reportdata.closeReportPanel();
+						}
+						else if (!reportdata.ePanel.equals(ReportPanelSelection.RESEARCH))
+						{
+							reportdata.objResearchData.showResearchTree();
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.TradeandFinances"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_T"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if (reportdata.ePanel.equals(ReportPanelSelection.TRADE) && (encydata.ePanel.equals(EncySelection.NONE)))
+						{
+							reportdata.closeReportPanel();
+						}
+						else if (!reportdata.ePanel.equals(ReportPanelSelection.TRADE))
+						{
+							reportdata.objTradeData.showStockpile(mh2data.objNation);
+						}
+					}
+				]]></script>
+			</object>
+
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanRight"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_F1"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						mh2data.objMapData.tmplMapView = mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewStandard');
+						mh2data.closeMapToggle();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanRight"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_F2"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						mh2data.objMapData.tmplMapView = mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewController');
+						mh2data.closeMapToggle();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanRight"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_F3"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						mh2data.objMapData.tmplMapView = mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewEmpire');
+						mh2data.closeMapToggle();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanRight"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_F4"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewNationality'));
+							mh2data.openMapToggle(UI2DDemographicToggle);
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanRight"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_F5"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewRevoltRisk'));
+							mh2data.closeMapToggle();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanRight"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_F6"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						def.objMH2Data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewIdeology'));
+							mh2data.closeMapToggle();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="strName" from="locale.SID.UI.PanRight"/>
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_F7"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTerrainType'));
+							mh2data.closeMapToggle();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_F8"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						mh2data.setMapView(mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewAADefense'));
+							mh2data.openMapToggle(UI2DRegionToggle);
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_F9"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						mh2data.objMapData.tmplMapView = mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewTrade');
+						mh2data.closeMapToggle();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eKey" value="KEY_CODE_F10"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						mh2data.objMapData.tmplMapView = mapui.getTemplateRef(mapui.MapViewTemplate, 'MapViewSupply');
+						mh2data.closeMapToggle();
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eMetaKeys" value="META_KEY_CTRL"/>
+				<property name="eKey" value="KEY_CODE_Z"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						if(spdata.objUnitGroupData.objUnitGroup.canCommand(mh2data.objAvatar, mh2data.objNation))
+						{
+                            var action = gs_tbg.GActCancelUnitOrder.create({
+                                    "refUnitGroup": spdata.objUnitGroupData.objUnitGroup
+                                });
+                            mh2data.objAvatar.sendAction(action);
+						}
+					}
+				]]></script>
+			</object>
+			<object type="mlui.KeyBindMethod" name="objKeyBinds">
+				<property name="otEventType" value="mlui.EventKeyPressed"/>
+				<property name="eMetaKeys" value="META_KEY_SHIFT"/>
+				<property name="eKey" value="KEY_CODE_SPACE"/>
+				<script type="application/javascript"><![CDATA[
+					function notifyTriggered(owner)
+					{
+						objRunnable.objRoot.playSoundOnce("Icon End Turn");
+
+						if(mh2data.bSaving != true)
+						{
+							if(!gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.bEndingTurn)
+							{
+								var action = gs_tbg.GActEndTurn.create({"objAvatar": mh2data.objAvatar});
+								mh2data.objAvatar.sendAction(action);
+							}
+						}
+					}
+				]]></script>
+			</object>
+		</object>
+
+		<!-- Event Handlers -->
+		<!-- TODO: This is really ugly and could be cleaned up -->
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlgame.EventGameSaveFinished"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						mh2data.bSaving = false;
+					}
+				]]></script>
+			</object>
+			
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlgame.EventGameSaveStarted"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						mh2data.bSaving = true;
+					}
+				]]></script>
+			</object>
+			
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="bBroadcast" value="true"/>
+				<property name="otEventType" value="gs_tbg.EventVCTurnLimit"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+                        if(def.objGameEndDemo != null)
+                        {
+                            def.objGameEndDemo.bVisible = true;
+                        }
+                        else
+                        {
+                            def.objGameEnd.bVisible = true;
+                        }
+					}
+				]]></script>
+			</object>
+			
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="bBroadcast" value="true"/>
+				<property name="otEventType" value="gs_tbg.EventVCCities"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+                        if(def.objGameEndDemo != null)
+                        {
+                            def.objGameEndDemo.bVisible = true;
+                        }
+                        else
+                        {
+                            def.objGameEnd.bVisible = true;
+                        }
+						log("Fired game end");
+					}
+				]]></script>
+			</object>
+			
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="bBroadcast" value="true"/>
+				<property name="otEventType" value="gs_tbg.EventGameOver"/>
+				<script type="application/javascript"><![CDATA[
+                    function getNationSpecificVC(vc_sys,nation) {
+                        for (var i in vc_sys.objVictoryConditions) {
+                            var vc = vc_sys.objVictoryConditions[i];
+                            if (vc.instanceOf(gs_tbg.VictoryConditionCities)) {
+                                var vcNation = vc.refNation.resolve(mh2data.objAvatar);
+                                if (mh2data.objNation.equals(vcNation)) {
+                                    return vc;
+                                }
+                            }
+                        }
+                        return null;
+                    }
+                    
+                    function getFirstRank() {
+                        var ranks = gs_tbg.getTeamRanks(mh2data.objAvatar);
+                        var firstRank = null;
+                        for (var i in ranks) {
+                            var r = ranks[i];
+                            if (firstRank != null) {
+                                if (r.nTotalRank > firstRank.nTotalRank) {
+                                    continue;
+                                }
+                            }
+                            firstRank = r;
+                        }
+                        return firstRank;
+                    }
+					function handle(event, owner)
+					{
+                        if(def.objGameEndDemo != null)
+                        {
+                            def.objGameEndDemo.bVisible = true;
+                        }
+                        else
+                        {
+                            def.objGameEnd.bVisible = true;
+                        }
+						log("Fired game end");
+                        
+                        var vc_sys = gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar);
+                        var bWon = false;
+                        if ((mh2data.objNation == null) || mh2data.objNation.bDisabled) {
+                            log("player's nation was defeated");
+                        }
+                        else if (vc_sys.bUseNationSpecificVCs) {
+                            var vc = getNationSpecificVC(vc_sys,mh2data.objNation);
+                            if (vc && vc.bConditionMet) {
+                                bWon = true;
+                            }
+                        }
+                        else {
+                            var firstRank = getFirstRank();
+                            var team = gs_tbg.getNationTeamID(mh2data.objAvatar,mh2data.objNation);
+                            if (team.equals(firstRank.objTeamID)) {
+                                bWon = true;
+                            }
+                        }
+                        
+                        var achievements = [];
+                        gs_tbg.getGameSysTurnBasedGame(mlgame.client).checkForGameOverAchievements(mlgame.client, mh2data.objNation, bWon, achievements);
+                        if (achievements.length > 0) {
+                            // TODO: show achievements in the UI somewhere...
+                            log("New achievements:");
+                            for (var i in achievements) {
+                                log(achievements[i]);
+                            }
+                        }
+					}
+				]]></script>
+			</object>
+			
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="common_elements.EventRequestPopUpMenu"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+                        owner.objMenuData = event.objMenuData;
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="common_elements.EventDismissPopUpMenu"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+                        owner.objMenuData = null;
+						owner.objSubMenuData = null;
+					}
+				]]></script>
+			</object>
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="common_elements.EventRequestPopUpSubMenu"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+                        owner.objSubMenuData = event.objMenuData;
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="common_elements.EventDismissPopUpSubMenu"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+                        owner.objSubMenuData = null;
+					}
+				]]></script>
+			</object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventMouseButtonDown" />
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						mlui.ActSendEventToUIElement.execute({
+							"objElement": mlui.objUI.objRoot,
+							"objEvent": common_elements.EventDismissPopUpMenu.create()
+						});
+					}
+				]]></script>
+			</object>
+		</object>
+	</objectDef>
+</locust>

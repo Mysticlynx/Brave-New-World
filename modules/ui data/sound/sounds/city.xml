@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<template type="mlmedia.SoundTemplate" name="City Advanced">
+		<property name="fileSource" value="city/city_advanced.ogg"/>
+	</template>
+
+	<template type="mlmedia.SoundTemplate" name="City Industrial">
+		<property name="fileSource" value="city/city_industrial.ogg"/>
+	</template>
+
+	<template type="mlmedia.SoundTemplate" name="City Pre-Industrial">
+		<property name="fileSource" value="city/city_pre_industrial.ogg"/>
+	</template>
+
+	<template type="mlmedia.SoundTemplate" name="City Universal">
+		<property name="fileSource" value="city/city_universal.ogg"/>
+	</template>
+</locust>

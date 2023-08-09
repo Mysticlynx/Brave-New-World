@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <objectDef type="EventVCAllRegions" class="CMLOEventVCAllRegions" superType="mlevent.Event" desc="Event for when the all regions victory condition is met">
+        <propertyDef name="objNation" type="Nation"/>
+    </objectDef>
+    
+    <objectDef type="EventVCRegions" class="CMLOEventVCRegions" superType="mlevent.Event" desc="Event for when the regions victory condition is met">
+        <propertyDef name="objNation" type="Nation"/>
+    </objectDef>
+
+</locust>

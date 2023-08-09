@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DGroupIDIcons" superType="mlui.UI2DElement">
+		
+		<object type="UI2DArmyCompDisplay" name="objArmyIDIcons" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch ==
+			sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')">
+			<property name="objUnitGroup" from="spdata.objUnitGroupData.objUnitGroup"/>
+      <property name="bJustifyLeft" value="false"/>
+      <property name="bInfoBar" value="true"/>
+      <property name="nX" value="0"/>
+			<property name="nY" value="0"/>	
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="UI2DNavalCompDisplay" name="objNavalIDIcons" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch ==
+			sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')">
+			<property name="objUnitGroup" from="spdata.objUnitGroupData.objUnitGroup"/>
+      <property name="bJustifyLeft" value="false"/>
+      <property name="bInfoBar" value="true"/>
+      <property name="nX" value="0"/>
+			<property name="nY" value="0"/>	
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="UI2DNavalCompDisplay" name="objSubNavalIDIcons" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch ==
+			sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Submarine')">
+			<property name="objUnitGroup" from="spdata.objUnitGroupData.objUnitGroup"/>
+      <property name="bJustifyLeft" value="false"/>
+      <property name="bInfoBar" value="true"/>
+      <property name="nX" value="0"/>
+			<property name="nY" value="0"/>	
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="28"/>
+		</object>
+		
+		<object type="UI2DAirCompDisplay" name="objAirIDIcons" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch ==
+			sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')">
+			<property name="objUnitGroup" from="spdata.objUnitGroupData.objUnitGroup"/>
+      <property name="bJustifyLeft" value="false"/>
+      <property name="bInfoBar" value="true"/> 
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>	
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="28"/>
+		</object>
+	</objectDef>
+
+  <!--****************************************************************************-->
+
+  <objectDef type="UI2DArmyCompDisplay" superType="mlui.UI2DElement">
+    <propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+    <propertyDef name="bJustifyLeft" type="bool" default="false"/>
+    <propertyDef name="bInfoBar" type="bool" default="false"/>
+
+    <propertyDef name="objArtillery" type="Object" variable="true" storesChildren="true">
+      self.objUnitGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Artillery)
+    </propertyDef>
+
+    <propertyDef name="objMissileLaunchers" type="Object" variable="true" storesChildren="true">
+      self.objUnitGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.MissileLaunchers)
+    </propertyDef>
+
+    <propertyDef name="objArmor" type="Object" variable="true" storesChildren="true">
+      self.objUnitGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Armored)
+    </propertyDef>
+
+    <propertyDef name="objInfantry" type="Object" variable="true" storesChildren="true">
+      self.objUnitGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Infantry)
+    </propertyDef>
+
+    <propertyDef name="nMechanizedInfantrySize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MechanizedInfantry3')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MechanizedInfantry4')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MechanizedInfantry5')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MechanizedInfantry6')).size
+    </propertyDef>
+
+    <propertyDef name="nMotorizedInfantrySize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MotorizedInfantry3')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MotorizedInfantry4')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MotorizedInfantry5')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MotorizedInfantry6')).size
+    </propertyDef>
+
+    <propertyDef name="nMountedInfantrySize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountedInfantry1')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountedInfantry2')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'MountedInfantry3')).size
+    </propertyDef>
+
+    <object type="common_ui.UI2DSortedListHorz" name="objIcons">
+      <property name="nX" value="0"/>
+      <property name="nY" value="0"/>
+      <property name="haXAlign">
+        if(def.bJustifyLeft, 'LEFT', 'RIGHT')
+      </property>
+      <property name="nSpacing">
+        if(def.bInfoBar, 2, 6)
+      </property>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.objArtillery.size GT 0" >
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconArtillery"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="28"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="28"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText" from="def.objArtillery.size"/>
+        <property name="strToolTip">
+          if(def.objArtillery.size GT 1, def.objArtillery.size + ' ' + locale.SID.UI.Artillery + ' ' + locale.SID.UI.Units,
+          def.objArtillery.size + ' ' + locale.SID.UI.Artillery + ' ' + locale.SID.UI.Unit
+          )
+        </property>
+      </object>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.objMissileLaunchers.size GT 0" >
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconMissile"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="28"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="28"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText" from="def.objMissileLaunchers.size"/>
+        <property name="strToolTip">
+          if(def.objMissileLaunchers.size GT 1, def.objMissileLaunchers.size + ' ' + locale.SID.UI.Missile + ' ' + locale.SID.UI.Units,
+          def.objMissileLaunchers.size + ' ' + locale.SID.UI.Missile + ' ' + locale.SID.UI.Unit
+          )
+        </property>
+      </object>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.objArmor.size GT 0" >
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconArmored"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="28"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="28"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText" from="def.objArmor.size"/>
+        <property name="strToolTip">
+          if(def.objArmor.size GT 1, def.objArmor.size + ' ' + locale.SID.UI.Armored + ' ' + locale.SID.UI.Units,
+          def.objArmor.size + ' ' + locale.SID.UI.Armored + ' ' + locale.SID.UI.Unit
+          )
+        </property>
+      </object>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="(def.objInfantry.size + def.nMountedInfantrySize + def.nMechanizedInfantrySize + def.nMotorizedInfantrySize) GT 0">
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconDivisions"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="28"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="28"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText" from="(def.objInfantry.size + def.nMountedInfantrySize + def.nMechanizedInfantrySize + def.nMotorizedInfantrySize)"/>
+
+        <property name="strToolTip">
+          if(def.objInfantry.size GT 0, def.objInfantry.size + ' ' + locale.SID.UI.InfBasic, "")
+          + if(def.nMountedInfantrySize GT 0, if(def.objInfantry.size GT 0,'&#010;',"") + def.nMountedInfantrySize + ' ' + locale.SID.UI.InfMounted, "")
+          + if(def.nMechanizedInfantrySize GT 0, if(def.objInfantry.size + def.nMountedInfantrySize GT 0,'&#010;',"") + def.nMechanizedInfantrySize + ' ' + locale.SID.UI.InfMechanized, "")
+          + if(def.nMotorizedInfantrySize GT 0, if(def.objInfantry.size + def.nMountedInfantrySize + def.nMechanizedInfantrySize GT 0,'&#010;',"") + def.nMotorizedInfantrySize + ' ' + locale.SID.UI.InfMotorized, "")
+        </property>
+      </object>
+    </object>
+
+  </objectDef>
+
+  <!--Navy - Display sorted from LEFT-->
+  <objectDef type="UI2DNavalCompDisplay" superType="mlui.UI2DElement">
+    <propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+    <propertyDef name="bJustifyLeft" type="bool" default="false"/>
+    <propertyDef name="bInfoBar" type="bool" default="false"/>
+
+    <propertyDef name="nCarrierCapacity" type="int">
+      self.objUnitGroup.getCarrierCapacity(mh2data.objAvatar)
+    </propertyDef>
+
+    <propertyDef name="nCarrierCapacityUsed" type="int">
+      self.objUnitGroup.getCarrierCapacityUsed(mh2data.objAvatar)
+    </propertyDef>
+
+    <propertyDef name="nSubSize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'LongRangeSubmarines')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'ShortRangeSubmarines')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlySubmarines')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'AttackSubmarines')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'NuclearSubmarine')).size
+    </propertyDef>
+
+    <propertyDef name="nEscortSize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'FastAttackCraft')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyDestroyers')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'Destroyers')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'EscortDestroyers')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'AdvancedDestroyer')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'IroncladFrigate')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'Frigate')).size
+    </propertyDef>
+
+    <propertyDef name="nIroncladFrigateSize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'IroncladFrigate')).size
+    </propertyDef>
+
+    <propertyDef name="nEarlyDestroyersSize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyDestroyers')).size
+    </propertyDef>
+
+    <propertyDef name="nFrigateSize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'IroncladFrigate')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'Frigate')).size
+    </propertyDef>
+
+    <propertyDef name="nFastAttackCraftSize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'FastAttackCraft')).size
+    </propertyDef>
+
+    <propertyDef name="nDestroyerSize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'EarlyDestroyers')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'Destroyers')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'EscortDestroyers')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'AdvancedDestroyer')).size
+    </propertyDef>
+
+    <propertyDef name="nCapitalshipSize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'Battlecruiser')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'Dreadnought')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'LightCarrier')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'LightCruiser')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'HeavyCruiser')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'StandardBattleship')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'EscortCarrier')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'FastBattleships')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'FleetCarrier')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'LargeCruiser')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'AdvancedBattleship')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'SuperCarriers')).size +
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'NuclearCarrier')).size
+    </propertyDef>
+
+    <propertyDef name="objCarrier" type="Object" variable="true" storesChildren="true">
+      self.objUnitGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Carriers)
+    </propertyDef>
+
+    <propertyDef name="objBattleship" type="Object" variable="true" storesChildren="true">
+      self.objUnitGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Battleships)
+    </propertyDef>
+
+    <propertyDef name="objCruiser" type="Object" variable="true" storesChildren="true">
+      self.objUnitGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Cruisers)
+    </propertyDef>
+
+    <propertyDef name="objTransport" type="Object" variable="true" storesChildren="true">
+      self.objUnitGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Transport)
+    </propertyDef>
+
+    <propertyDef name="nTransportCapacity" type="int">
+      self.objUnitGroup.getTransportCapacity(mh2data.objAvatar)
+    </propertyDef>
+
+    <propertyDef name="nTransportCapacityUsed" type="int">
+      self.objUnitGroup.getTransportCapacityUsed(mh2data.objAvatar)
+    </propertyDef>
+
+    <object type="common_ui.UI2DSortedListHorz" name="objIcons">
+      <property name="nX" value="0"/>
+      <property name="nY" value="0"/>
+      <property name="haXAlign">
+        if(def.bJustifyLeft, 'LEFT', 'RIGHT')
+      </property>
+      <property name="nSpacing">
+        if(def.bInfoBar, 2, 6)
+      </property>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.nCarrierCapacity GT 0">
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconCarrierCapacity"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="33"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="33"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText" from="def.nCarrierCapacityUsed + '/' + def.nCarrierCapacity"/>
+        <property name="strToolTip" from="locale.SID.UI.CarrierCapacity"/>
+      </object>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.nTransportCapacity GT 0">
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconTransportCapacity"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="33"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="33"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText" from="def.nTransportCapacityUsed + '/' + def.nTransportCapacity"/>
+        <property name="strToolTip">
+          locale.SID.UI.TransportCapacity + '&#010;'
+          + if(def.objTransport.size == 1, def.objTransport.size + ' ' + locale.SID.UI.Transport,
+          def.objTransport.size + ' ' + locale.SID.UI.Transports)
+        </property>
+      </object>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.nCapitalshipSize GT 0" >
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconCapitalship"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="38"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="38"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText" from="def.nCapitalshipSize"/>
+        <property name="strToolTip">
+          locale.SID.UI.CapitalShips + '&#010;'
+          + if(def.objCarrier.size GT 0,
+          if(def.objCarrier.size == 1, def.objCarrier.size + ' ' + locale.SID.UI.Carrier,
+          def.objCarrier.size + ' ' + locale.SID.UI.Carriers)
+          + '&#010;', ""
+          )
+          + if(def.objBattleship.size GT 0,
+          if(def.objBattleship.size == 1, def.objBattleship.size + ' ' + locale.SID.UI.Battleship,
+          def.objBattleship.size + ' ' + locale.SID.UI.Battleships)
+          + '&#010;', ""
+          )
+          + if(def.objCruiser.size GT 0,
+          if(def.objCruiser.size == 1, def.objCruiser.size + ' ' + locale.SID.UI.Cruiser,
+          def.objCruiser.size + ' ' + locale.SID.UI.Cruisers)
+          + '&#010;', ""
+          )
+        </property>
+      </object>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.nEscortSize GT 0" >
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconEscort"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="33"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="33"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText" from="def.nEscortSize"/>
+        <property name="strToolTip">
+          locale.SID.UI.EscortPatrolFlotillas + '&#010;'
+          + if(def.nDestroyerSize GT 0,
+          if(def.nDestroyerSize == 1, def.nDestroyerSize + ' ' + locale.SID.UI.Destroyer,
+          def.nDestroyerSize + ' ' + locale.SID.UI.Destroyer)
+          + '&#010;', ""
+          )
+          + if(def.nFrigateSize GT 0,
+          if(def.nFrigateSize == 1, def.nFrigateSize + ' ' + locale.SID.UI.Frigate,
+          def.nFrigateSize + ' ' + locale.SID.UI.Frigate)
+          + '&#010;', ""
+          )
+          + if(def.nFastAttackCraftSize GT 0,
+          if(def.nFastAttackCraftSize == 1, def.nFastAttackCraftSize + ' ' + locale.SID.UI.FastAttackCraft,
+          def.nFastAttackCraftSize + ' ' + locale.SID.UI.FastAttackCraft)
+          + '&#010;', ""
+          )
+
+        </property>
+      </object>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.nSubSize GT 0" >
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconSub"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="33"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="33"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText" from="def.nSubSize"/>
+        <property name="strToolTip">
+          if(def.nSubSize == 1,
+          def.nSubSize + ' ' + locale.SID.UI.Submarine + ' ' + locale.SID.UI.Flotilla,
+          def.nSubSize + ' ' + locale.SID.UI.Submarine + ' ' + locale.SID.UI.Flotillas)
+        </property>
+      </object>
+    </object>
+  </objectDef>
+
+  <!--Air Force  - Display sorted from LEFT-->
+  <objectDef type="UI2DAirCompDisplay" superType="mlui.UI2DElement">
+    <propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+    <propertyDef name="bJustifyLeft" type="bool" default="false"/>
+    <propertyDef name="bInfoBar" type="bool" default="false"/>
+
+    <propertyDef name="nTransportCapacity" type="int">
+      self.objUnitGroup.getTransportCapacity(mh2data.objAvatar)
+    </propertyDef>
+
+    <propertyDef name="nTransportCapacityUsed" type="int">
+      self.objUnitGroup.getTransportCapacityUsed(mh2data.objAvatar)
+    </propertyDef>
+
+    <!-- Bombers -->
+    <propertyDef name="nBomberSize" type="int">
+      self.objUnitGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Bombers).size
+    </propertyDef>
+
+    <!-- Fighters -->
+    <propertyDef name="nFighterSize" type="int">
+      self.objUnitGroup.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Fighters).size
+    </propertyDef>
+
+    <propertyDef name="nAirTransportSize" type="int">
+      self.objUnitGroup.getUnitsByUnitTemplate(mh2data.objAvatar, sd.getTemplateRef(gs_tbg.UnitTemplate, 'AirTransport1')).size
+    </propertyDef>
+
+    <object type="common_ui.UI2DSortedListHorz" name="objIcons">
+      <property name="nX" value="0"/>
+      <property name="nY" value="0"/>
+      <property name="haXAlign">
+        if(def.bJustifyLeft, 'LEFT', 'RIGHT')
+      </property>
+      <property name="nSpacing">
+        if(def.bInfoBar, 2, 6)
+      </property>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.nTransportCapacity GT 0">
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconAirCapacity"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="33"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="33"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText" from="def.nTransportCapacityUsed + '/' + def.nTransportCapacity"/>
+        <property name="strToolTip">
+          locale.SID.UI.TransportCapacity + '&#010;'
+          + if(def.nAirTransportSize == 1, def.nAirTransportSize + ' ' + locale.SID.UI.AirTransport,
+          def.nAirTransportSize + ' ' + locale.SID.UI.AirTransports)
+        </property>
+      </object>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.nBomberSize GT 0">
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconBomber"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="32"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="32"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText">
+          if(def.bInfoBar, def.nBomberSize, '       ' + def.nBomberSize)
+        </property>
+        <!--<property name="strText" from="'       ' + def.nBomberSize"/>-->
+        <property name="strToolTip">
+          if(def.nBomberSize GT 1, def.nBomberSize + ' ' + locale.SID.UI.Bomber + ' ' + locale.SID.UI.Units,
+          def.nBomberSize + ' ' + locale.SID.UI.Bomber + ' ' + locale.SID.UI.Unit
+          )
+        </property>
+      </object>
+
+      <object type="UI2DIDIcon" name="objElements" existsWhile="def.nFighterSize GT 0" >
+        <property name="bInfoBar" from="def.bInfoBar"/>
+        <property name="tmplImage" value="skin.ImgIDIconFighter"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="28"/>
+        <property name="nHeight" value="28"/>
+        <property name="nBGWidth" value="28"/>
+        <property name="nIconX" value="0"/>
+        <property name="nIconY" value="0"/>
+        <property name="strText">
+          if(def.bInfoBar, def.nFighterSize, '       ' + def.nFighterSize)
+        </property>
+        <!--<property name="strText" from="def.nFighterSize"/>-->
+        <property name="strToolTip">
+          if(def.nFighterSize GT 1, def.nFighterSize + ' ' + locale.SID.UI.Fighter + ' ' + locale.SID.UI.Units,
+          def.nFighterSize + ' ' + locale.SID.UI.Fighter + ' ' + locale.SID.UI.Unit
+          )
+        </property>
+      </object>
+    </object>
+  </objectDef>
+
+
+</locust>

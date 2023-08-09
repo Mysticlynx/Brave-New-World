@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="Trigger" class="CMLOTrigger" desc="A trigger (scripted event)">
+        <goDef gameSystem="GameSysTrigger" storageProperty="objTriggers">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+		<propertyDef name="objConditions" type="TriggerCondition" variable="true" storesChildren="true"/>
+		<propertyDef name="objEffects" type="TriggerEffect" variable="true" storesChildren="true"/>
+		<propertyDef name="bTriggered" type="bool" default="false" desc="has this trigger already been fired?"/>
+		<propertyDef name="bActive" type="bool" default="true" desc="Does this trigger get checked each turn?"/>
+
+		<!-- <script type="application/javascript"><![CDATA[ 
+            function handleTurnStarted(game)
+            {
+				// this needs to be specified in each derived class.
+                return true; 
+            }
+        ]]></script> -->
+	</objectDef>
+
+	<objectDef type="EndEffect" class="CMLObject">
+		<propertyDef name="nTurn" type="int"/>
+		<script type="application/javascript"><![CDATA[ 
+            function endEffect(game)
+            {
+				
+            }
+        ]]></script>
+	</objectDef>
+	
+	<objectDef type="TriggerGlobalLevelEvents" superType="Trigger">
+		
+	</objectDef>
+	
+	<objectDef type="TriggerNationLevelEvents" superType="Trigger">
+		<propertyDef name="objPoliticalActivityData" type="PoliticalActivityData" storesChildren="true"/>
+		<propertyDef name="objIPUChangeData" type="IPUChangeData" storesChildren="true"/>
+		<propertyDef name="objPuppetRevoltData" type="PuppetRevoltData" storesChildren="true"/>
+		
+		<script type="application/javascript"><![CDATA[ 
+			function handleTurnStarted(game)
+			{
+				var randGen = getGameSysTrigger(game).randGen;
+				var nationSys = getGameSysNation(game);
+				var nations = nationSys.objNations;
+				
+				for(var i in nations)
+				{
+					var nation = nations[i];
+//					Save this for colonies?
+								//var action = GActLiberateNation.create({
+								//		"refLiberator": nation.objStatus.refController.resolve(game),
+								//		"tmplNation": nation.tmplNation,
+								//		"tmplIdeology": nation.tmplIdeology,
+								//		"objRegions": getAllOwnedRegions(game, nation),
+								//		"eStatus": NationStatusType.NATION_STATUS_INDEPENDENT
+								//	});
+								//nation.refAvatar.resolve(game).sendAction(action);
+								
+//					Check for a puppet revolt event
+					if(self.objPuppetRevoltData != null && nation.objStatus.instanceOf(NationStatusPuppet))
+					{
+						var powerpointspercent = nation.objPowerPoints.nTotalPoints / nation.objStatus.refController.resolve(game).objPowerPoints.nTotalPoints * 100;
+						if(powerpointspercent > self.objPuppetRevoltData.nPowerPointsPoint)
+						{
+							var roll = randGen.getRandomIntInRange(1,100);
+							var threshold = self.objPuppetRevoltData.nBasePercentChance + (self.objPuppetRevoltData.fPowerPointsSlope * (powerpointspercent - self.objPuppetRevoltData.nPowerPointsPoint))
+							if(roll < threshold)
+							{
+								self.handlePuppetRevolt(game, nation);
+							}
+						}
+					}
+					
+//					Check for an IPU change event
+					if(self.objIPUChangeData != null)
+					{
+						var roll = randGen.getRandomIntInRange(1,100);
+						
+						var tmplFood = getGameSysResource(game).tmplFood;
+						var nationFood = nationSys.getNationResource(nation,tmplFood);
+						var percentSupplied =  (nationFood.nConsumed * 100 / nationFood.nDemand);
+						if (percentSupplied < 0)
+							percentSupplied = 0;
+						else if (percentSupplied > 100)
+							percentSupplied = 100;
+	
+						//log("DEBUG: " + nation.strName + " percentSupplied = " + percentSupplied);
+						
+						if(percentSupplied > self.objIPUChangeData.nFoodPercentPoint)
+						{
+							var threshold = self.objIPUChangeData.nBasePercentChance + ((self.objIPUChangeData.nFoodPercentPoint - percentSupplied) * self.objIPUChangeData.fFoodPercentSlope)
+							if (roll <= threshold)
+								self.handleIPUBonus(game, nation);
+						}
+						else
+						{
+							var threshold = self.objIPUChangeData.nBasePercentChance + ((percentSupplied - self.objIPUChangeData.nFoodPercentPoint) * self.objIPUChangeData.fFoodPercentSlope)
+							if (roll <= threshold)
+								self.handleIPUPenalty(game, nation);
+						}
+					}
+					
+//					Check for a political activity change event
+					if(self.objPoliticalActivityData != null)
+					{
+						var roll = randGen.getRandomIntInRange(1,100);
+						if(nations[i].nStability < self.objPoliticalActivityData.nStabilityPoint)
+						{
+							var threshold = self.objPoliticalActivityData.nBasePercentChance + (self.objPoliticalActivityData.fStabilitySlope * (self.objPoliticalActivityData.nStabilityPoint - nations[i].nStability));
+							if(roll <= threshold)
+							{
+								self.handlePoliticalActivityStrengthen(game, nations[i])
+							}
+						}
+						else
+						{
+							var threshold = self.objPoliticalActivityData.nBasePercentChance + (self.objPoliticalActivityData.fStabilitySlope * (nations[i].nStability - self.objPoliticalActivityData.nStabilityPoint));
+							if(roll <= threshold)
+							{
+								self.handlePoliticalActivityWeaken(game, nations[i])
+							}
+						}
+					}
+				}
+				return true;
+			}
+			
+			function handlePuppetRevolt(game,nation)
+			{
+			    log("puppet " + nation.strName + " revolts and declares independence.");
+			    
+				GActPuppetDeclareIndependence.execute({
+					"objGame": game,
+					"objNation": nation
+				})
+			}
+			function handleIPUBonus(game, nation)
+			{
+				var randGen = getGameSysTrigger(game).randGen;
+				// see if the nation has any work orders
+				var bWorkOrderFound = false;
+				var cities = getNationCities(game, nation);
+				for (var j in cities)
+				{
+					var city = cities[j];
+					if (city.objWorkOrders.size > 0)
+					{
+						bWorkOrderFound = true;
+						break;
+					}
+				}
+
+				if (bWorkOrderFound)
+				{
+					var nPoints = randGen.getRandomIntInRange(self.objIPUChangeData.nMinPoints, self.objIPUChangeData.nMaxPoints);
+					
+					GActHighMoraleIPUBonus.execute({
+						"objGame": game,
+						"objNation": nation,
+						"nIPUBonus": nPoints
+						});
+				}
+			}
+			
+			function handleIPUPenalty(game, nation)
+			{
+				var randGen = getGameSysTrigger(game).randGen;
+				// see if the nation has any work orders
+				var bWorkOrderFound = false;
+				var cities = getNationCities(game, nation);
+				for (var j in cities)
+				{
+					var city = cities[j];
+					if (city.objWorkOrders.size > 0)
+					{
+						bWorkOrderFound = true;
+						break;
+					}
+				}
+
+				if (bWorkOrderFound)
+				{
+					var nPoints = randGen.getRandomIntInRange(self.objIPUChangeData.nMinPoints, self.objIPUChangeData.nMaxPoints);
+					
+					GActLowMoraleIPUPenalty.execute({
+						"objGame": game,
+						"objNation": nation,
+						"nIPUPenalty": nPoints
+						});
+				}
+			}
+			
+			function handlePoliticalActivityStrengthen(game, nation)
+			{
+				var randGen = getGameSysTrigger(game).randGen;
+				var nationSys = getGameSysNation(game);
+				var nPointChange = randGen.getRandomIntInRange(self.objPoliticalActivityData.nMinPoints, self.objPoliticalActivityData.nMaxPoints);
+				var strengthenedIdeology;
+				do
+				{
+					var ideoroll = randGen.getRandomIntInRange(1,4);
+					switch(ideoroll)
+					{
+						case 1:
+							strengthenedIdeology = nationSys.tmplIdeologyTemplateList.resolve().tmplRefs[0].resolve();
+							break;
+						case 2:
+							strengthenedIdeology = nationSys.tmplIdeologyTemplateList.resolve().tmplRefs[1].resolve();
+							break;
+						case 3:
+							strengthenedIdeology = nationSys.tmplIdeologyTemplateList.resolve().tmplRefs[2].resolve();
+							break;
+						case 4:
+							strengthenedIdeology = nationSys.tmplIdeologyTemplateList.resolve().tmplRefs[3].resolve();
+							break;
+					}
+				}
+				while(strengthenedIdeology.equals(nation.tmplIdeology));
+				GActIdeologyShift.execute({
+					"objGame": game,
+					"objNation": nation,
+					"tmplIdeology": strengthenedIdeology,
+					"nPointShift": nPointChange,
+					"bPositive": false
+					});
+			}
+			
+			function handlePoliticalActivityWeaken(game, nation)
+			{
+				var randGen = getGameSysTrigger(game).randGen;
+				var nationSys = getGameSysNation(game);
+				var nPointChange = randGen.getRandomIntInRange(self.objPoliticalActivityData.nMinPoints, self.objPoliticalActivityData.nMaxPoints);
+				var weakenedIdeology;
+				do
+				{
+					var ideoroll = randGen.getRandomIntInRange(1,4);
+					switch(ideoroll)
+					{
+						case 1:
+							weakenedIdeology = nationSys.tmplIdeologyTemplateList.resolve().tmplRefs[0].resolve();
+							break;
+						case 2:
+							weakenedIdeology = nationSys.tmplIdeologyTemplateList.resolve().tmplRefs[1].resolve();
+							break;
+						case 3:
+							weakenedIdeology = nationSys.tmplIdeologyTemplateList.resolve().tmplRefs[2].resolve();
+							break;
+						case 4:
+							weakenedIdeology = nationSys.tmplIdeologyTemplateList.resolve().tmplRefs[3].resolve();
+							break;
+					}
+				}
+				while(weakenedIdeology.equals(nation.tmplIdeology));
+				
+				GActIdeologyShift.execute({
+					"objGame": game,
+					"objNation": nation,
+					"tmplIdeology": weakenedIdeology,
+					"nPointShift": nPointChange,
+					"bPositive": true
+					});
+			}
+			
+        ]]></script>
+	</objectDef>
+	
+	<objectDef type="PuppetRevoltData" class="CMLObject">
+		<propertyDef name="nBasePercentChance" type="int" default="5" desc="percent chance per turn"/>
+		<propertyDef name="nPowerPointsPoint" type="int" default="50" desc="the PERCENTAGE of the master nation's power points over which a puppet might rebel"/>
+		<propertyDef name="fPowerPointsSlope" type="float" default=".5"/>
+	</objectDef>
+	
+	<objectDef type="IPUChangeData" class="CMLObject">
+		<propertyDef name="nBasePercentChance" type="int" default="5" desc="percent chance per turn"/>
+		<propertyDef name="nFoodPercentPoint" type="int" default="75"/>
+		<propertyDef name="fFoodPercentSlope" type="float" default=".5"/>
+		<propertyDef name="nMinPoints" type="int" default="20"/>
+		<propertyDef name="nMaxPoints" type="int" default="50"/>
+	</objectDef>
+	
+	<objectDef type="PoliticalActivityData" class="CMLObject">
+		<propertyDef name="nBasePercentChance" type="int" default="0"/>
+		<propertyDef name="nStabilityPoint" type="int" default="75"/>
+		<propertyDef name="fStabilitySlope" type="float" default="1"/>
+        <propertyDef name="nMinPoints" type="int" default="5"/>
+        <propertyDef name="nMaxPoints" type="int" default="10"/>
+	</objectDef>
+	
+	<objectDef type="FactoryStrikeData" class="CMLObject">
+		<propertyDef name="nBasePercentChance" type="int" default="0"/>
+		<propertyDef name="nStabilityPoint" type="int" default="75"/>
+		<propertyDef name="fStabilitySlope" type="float" default="1"/>
+        <propertyDef name="nMinPoints" type="int" default="5"/>
+        <propertyDef name="nMaxPoints" type="int" default="15"/>
+	</objectDef>
+	
+	<objectDef type="TriggerCityLevelEvents" superType="Trigger">
+		<propertyDef name="objResearchChangeData" type="ResearchChangeData" storesChildren="true"/>
+		<propertyDef name="objFactoryStrikeData" type="FactoryStrikeData" storesChildren="true"/>
+		
+		<script type="application/javascript"><![CDATA[ 
+			function handleTurnStarted(game)
+			{
+				var randGen = getGameSysTrigger(game).randGen;
+				var cities = getGameSysCity(game).objCities;
+				
+				for(var i in cities)
+				{
+					city = cities[i]
+					
+					if(self.objFactoryStrikeData != null)
+					{
+						nation = city.objController
+						var roll = randGen.getRandomIntInRange(1,100);
+						if(nation.nStability < self.objFactoryStrikeData.nStabilityPoint)
+						{
+							var threshold = self.objFactoryStrikeData.nBasePercentChance + (self.objFactoryStrikeData.fStabilitySlope * (nation.nStability - self.objFactoryStrikeData.nStabilityPoint));
+							if(roll < threshold)
+							{
+								var amount = randGen.getRandomIntInRange(self.objFactoryStrikeData.nMinPoints, self.objFactoryStrikeData.nMaxPoints);
+								self.handleFactoryStrike(game, city, amount)
+							}
+						}
+					}
+					
+					if(self.objResearchChangeData != null && city.refResearchCenter.resolve(game).refResearchProject != null)
+					{
+						var roll = randGen.getRandomIntInRange(1,100);
+						var isBreakthrough = false;
+						var breakthroughRoll = randGen.getRandomIntInRange(1,100);
+						if(breakthroughRoll <= self.objResearchChangeData.nChanceToBeBreakthrough)
+							isBreakthrough = true;
+						
+						var threshold = self.objResearchChangeData.nBasePercentChance
+						
+						if(roll <= threshold && isBreakthrough)
+							self.handleResearchBreakthrough(game, city,city.refResearchCenter.resolve(game).refResearchProject.resolve(game));
+							
+						if(roll <= threshold && !isBreakthrough)
+							self.handleResearchSetback(game, city, city.refResearchCenter.resolve(game).refResearchProject.resolve(game));
+						
+					}
+				}
+				return true;
+			}
+			
+			function handleFactoryStrike(game, city, amount)
+			{
+				if (city.objWorkOrders.size > 0)
+				{
+					GActLowStabilityIPUPenalty.execute({
+						"objGame": game,
+						"objCity": city,
+						"nIPUPenalty": amount
+						});
+				}
+			}
+			function handleResearchBreakthrough(game, city, project)
+			{
+				var randGen = getGameSysTrigger(game).randGen;
+				var nPointChange = randGen.getRandomIntInRange(self.objResearchChangeData.nMinPoints, self.objResearchChangeData.nMaxPoints)
+				GActResearchBreakthrough.execute({
+					"objGame": game,
+					"objCity": city,
+					"objResearchProject": project,
+					"nPointsToAdd": nPointChange
+					});
+			}
+			
+			function handleResearchSetback(game, city, project)
+			{
+				var randGen = getGameSysTrigger(game).randGen;
+				var nPointChange = randGen.getRandomIntInRange(self.objResearchChangeData.nMinPoints, self.objResearchChangeData.nMaxPoints)
+				if(project.nPoints - nPointChange > 0)
+				{
+					GActResearchSetback.execute({
+						"objGame": game,
+						"objCity": city,
+						"objResearchProject": project,
+						"nPointsToSubtract": nPointChange
+						});
+				}
+			}
+        ]]></script>
+	</objectDef>
+	
+	<objectDef type="ResearchChangeData" class="CMLObject">
+        <propertyDef name="nBasePercentChance" type="int" default="2"/>
+		<propertyDef name="nChanceToBeBreakthrough" type="int" default="50"/>
+        <propertyDef name="nMinPoints" type="int" default="20"/>
+        <propertyDef name="nMaxPoints" type="int" default="50"/>
+	</objectDef>
+		
+	<objectDef type="TriggerRegionLevelEvents" superType="Trigger">
+		<propertyDef type="ResourceProductionChangeData" name="objResourceProductionChangeData" storesChildren="true" variable="true"/>
+		<propertyDef type="FamineData" name="objFamineData" storesChildren="true"/>
+		<propertyDef type="Object" name="objEndEffects" storesChildren="true" variable="true"/>
+		
+		<script type="application/javascript"><![CDATA[ 
+			function handleTurnStarted(game)
+			{
+				var randGen = getGameSysTrigger(game).randGen;
+				var regions = getGameSysRegion(game).objRegions;
+
+				for (var i in regions)
+				{
+					var region = regions[i];
+					if(region.refController == null)
+						continue;
+						
+//					Check for any resource production change events
+					if(self.objResourceProductionChangeData.size > 0)
+					{
+//						There can be more than one, so check for all of them
+						for(var d in self.objResourceProductionChangeData)
+						{
+							if(!region.bProducedResource(game, self.objResourceProductionChangeData[d].tmplResource))
+								continue;
+							
+							var roll = randGen.getRandomIntInRange(1,1000);
+							var template = getGameSysNationRelations(game).getRegionStabilityTemplate(region.nRegionStability);
+							
+//							Can be either positive or negative, depending on the region's revolt risk
+							if(template.nRevoltRisk == 0)
+							{
+								var threshold = template.nHighMoraleChance + self.objResourceProductionChangeData[d].fBasePercentChance;
+								if (roll < threshold)
+								{
+									var amount = randGen.getRandomIntInRange(self.objResourceProductionChangeData[d].nMinPoints, self.objResourceProductionChangeData[d].nMaxPoints)
+									var duration = self.objResourceProductionChangeData[d].nTurnDuration
+									self.handleResourceProductionIncrease(game, region, self.objResourceProductionChangeData[d].tmplResource.resolve(), amount, duration)
+								}
+							}
+							else
+							{
+								var threshold = template.nRevoltRisk + self.objResourceProductionChangeData[d].fBasePercentChance;;
+								if (roll < threshold)
+								{
+									var amount = randGen.getRandomIntInRange(self.objResourceProductionChangeData[d].nMinPoints, self.objResourceProductionChangeData[d].nMaxPoints)
+									var duration = self.objResourceProductionChangeData[d].nTurnDuration
+									self.handleResourceProductionDecrease(game, region, self.objResourceProductionChangeData[d].tmplResource.resolve(), amount, duration)
+								}
+							}
+						}
+					}
+					
+					if(self.objFamineData != null && region.nFoodDemand > 0)
+					{
+						var foodPercent = (region.nFoodConsumption / region.nFoodDemand) * 100
+						if(foodPercent < self.objFamineData.nFoodPercentPoint)
+						{
+							var roll = randGen.getRandomIntInRange(1,100);
+							var threshold = self.objFamineData.nBasePercentChance + (self.objFamineData.fFoodPercentSlope * (self.objFamineData.nFoodPercentPoint - foodPercent))
+							if(roll < threshold)
+							{
+								var amount = randGen.getRandomIntInRange(self.objFamineData.nMinPoints, self.objFamineData.nMaxPoints)
+								self.handleFamine(game, region, amount)
+							}
+						}
+					}
+				}
+				return true;
+			}
+			
+//			Outcomes of the events
+			function handleResourceProductionIncrease(game, region, resource, amount, duration)
+			{
+				GActResourceProductionIncrease.execute({
+					"objGame": game,
+					"objRegion": region,
+					"tmplResource": resource,
+					"nPointsToAdd": amount
+					});
+			}
+			function handleResourceProductionDecrease(game, region, resource, amount, duration)
+			{
+				GActResourceProductionDecrease.execute({
+					"objGame": game,
+					"objRegion": region,
+					"tmplResource": resource,
+					"nPointsToSubtract": amount
+					});
+			}
+			function handleFamine(game, region, amount)
+			{
+				if((region.nUnemployedMPUs - (region.nUnemployedMPUs * amount / 100)) > 0)
+				{
+					GActMPUDecrease.execute({
+						"objGame": game,
+						"objRegion": region,
+						"nPercent": amount
+						});
+				}
+			}
+        ]]></script>
+	</objectDef>
+	
+	<objectDef type="ResourceProductionChangeData" class="CMLObject">
+		<propertyDef name="fBasePercentChance" type="float" default="0"/>
+        <propertyDef name="nMinPoints" type="int" default="20"/>
+        <propertyDef name="nMaxPoints" type="int" default="40"/>
+		<propertyDef name="nTurnDuration" type="int" default="5"/>
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+	</objectDef>
+	
+	<objectDef type="FamineData" class="CMLObject">
+		<propertyDef name="nBasePercentChance" type="int" default="5"/>
+		<propertyDef name="nFoodPercentPoint" type="int" default="50"/>
+		<propertyDef name="fFoodPercentSlope" type="float" default="1"/>
+		<propertyDef name="nMinPoints" type="int" default="20"/>
+        <propertyDef name="nMaxPoints" type="int" default="40"/>
+	</objectDef>
+	
+	<objectDef type="ResourceIncreaseEndEffect" superType="EndEffect">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="nAmount" type="int"/>
+		
+		<script type="application/javascript"><![CDATA[ 
+            function endEffect(game)
+            {
+				GActResourceProductionIncreaseEnd.execute({
+					"objGame": game,
+					"objRegion": self.objRegion,
+					"tmplResource": self.tmplResource,
+					"nPointsToSubtract": self.nAmount
+					});
+            }
+        ]]></script>
+	</objectDef>
+	<objectDef type="ResourceDecreaseEndEffect" superType="EndEffect">
+		<propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="nAmount" type="int"/>
+		
+		<script type="application/javascript"><![CDATA[ 
+            function endEffect(game)
+            {
+				GActResourceProductionDecreaseEnd.execute({
+					"objGame": game,
+					"objRegion": self.objRegion,
+					"tmplResource": self.tmplResource,
+					"nPointsToAdd": self.nAmount
+					});
+            }
+        ]]></script>
+	</objectDef>
+
+
+	<objectDef type="TriggerModular" superType="Trigger" desc="A trigger with modular conditions and effects">
+		<propertyDef name="objConditions" type="TriggerCondition" variable="true" storesChildren="true"/>
+		<propertyDef name="objEffects" type="TriggerEffect" variable="true" storesChildren="true"/>
+		<propertyDef name="bOneTime" type="bool" default="true"/>
+		<script type="application/javascript"><![CDATA[ 
+            function handleTurnStarted(game)
+            {
+				// all conditions must be satisfied
+				for (var i in self.objConditions)
+				{
+					var condition = self.objConditions[i];
+					if (!condition.isSatisfied(game))
+						return false;
+				}
+
+				// execute all effects
+				for (var i in self.objEffects)
+				{
+					var effect = self.objEffects[i];
+					effect.executeEffect(game,self);
+				}
+
+				if (self.bOneTime)
+					self.bActive = false;
+
+                return true; 
+            }
+        ]]></script>
+	</objectDef><!-- TriggerModular -->
+
+</locust>

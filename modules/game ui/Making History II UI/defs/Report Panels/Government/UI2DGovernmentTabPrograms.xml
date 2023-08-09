@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DGovernmentTabPrograms" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.GovernmentPrograms"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objTopBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+	<!-- Column Labels -->
+		<object type="mlui.UI2DText" name="objProgramLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Program"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="240"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTargetLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Target"/>
+			<property name="nX" from="def.objProgramLabel.nX + def.objProgramLabel.nWidth"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSuccessLabel1">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Success"/>
+			<property name="nX" from="def.objTargetLabel.nX + def.objTargetLabel.nWidth"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		<object type="mlui.UI2DText" name="objSuccessLabel2">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Rate"/>
+			<property name="nX" from="def.objTargetLabel.nX + def.objTargetLabel.nWidth"/>
+			<property name="nY" value="174"/>
+			<property name="nWidth" value="40"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<!--<object type="mlui.UI2DText" name="objTurnCostLabel">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Center"/>-->
+		<!--	<property name="strText" from="locale.SID.UI.PerTurnCost"/>-->
+		<!--	<property name="nX" from="def.objSuccessLabel1.nX + def.objSuccessLabel1.nWidth"/>-->
+		<!--	<property name="nY" value="169"/>-->
+		<!--	<property name="nWidth" value="90"/>-->
+		<!--	<property name="nHeight" value="10"/>-->
+		<!--</object>-->
+
+		<object type="mlui.UI2DText" name="objTotalCostLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.TotalCost"/>
+			<property name="nX" from="def.objSuccessLabel1.nX + def.objSuccessLabel1.nWidth"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+
+		<object type="mlui.UI2DText" name="objDurationLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Duration"/>
+			<property name="nX" from="def.objTotalCostLabel.nX + def.objTotalCostLabel.nWidth"/>
+			<property name="nY" value="169"/>
+			<property name="nWidth" value="135"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+	<!-- World Nations List -->
+		<object type="UI2DGovernmentPrograms" name="objSubordinateNations">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="495"/>
+		</object>
+	</objectDef>
+	
+	
+	<objectDef type="UI2DGovernmentPrograms" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="873"/>
+		<property name="nHeight" value="495"/>
+
+		<object type="UI2DGovernmentProgramsList" name="objNationList">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DGovernmentProgramsList" superType="common_ui.UI2DList">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<property name="nWidth" from="self.objList.nWidth"/>
+		<property name="nHeight" from="self.objList.nHeight"/>
+		
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="495"/>
+			<property name="listItems">
+				sortAscending(?{program: program.nCost}, 
+					find(?{programSet: programSet.refNation == def.objNation}, 
+						gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar).objNationalProgramSets).objNationalPrograms)
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DNationalProgramRowBubble"/>
+			<property name="strPropForItem" value="objNationalProgram"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DNationalProgramRowBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objNationalProgram" type="gs_tbg.NationalProgram"/>
+        
+		<propertyDef name="bRegion" type="bool" >
+			self.objNationalProgram.instanceOf(gs_tbg.SabotageRegion) OR 	self.objNationalProgram.instanceOf(gs_tbg.RegionSurveillance)
+		</propertyDef>
+		
+		<propertyDef name="objTargetNation" type="gs_tbg.Nation" >
+			if(self.bRegion,
+				self.objNationalProgram.refTargetRegion.resolve(mh2data.objAvatar).refOwner.resolve(mh2data.objAvatar) ,
+					if(self.objNationalProgram.instanceOf(gs_tbg.InternalSupport),
+						mh2data.objNation, self.objNationalProgram.refTargetNation.resolve(mh2data.objAvatar)
+					)
+			)
+		</propertyDef>
+		<propertyDef name="nRow" type="int" default="0"/>
+
+		<property name="nHeight" value="30"/>
+	
+		<object type="mlui.UI2DImage" name="objProgramBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nWidth" from="240"/>
+			<property name="nX" value="0"/>
+			<property name="nY" from="0" />
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objTargetBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nWidth" from="200"/>
+			<property name="nX" from="def.objProgramBG.nX + def.objProgramBG.nWidth + 1"/>
+			<property name="nY" from="0" />
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objSuccessBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nWidth" from="40"/>
+			<property name="nX" from="def.objTargetBG.nX + def.objTargetBG.nWidth + 1"/>
+			<property name="nY" from="0" />
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		<!--<object type="mlui.UI2DImage" name="objPTCostBG">-->
+		<!--	<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>-->
+		<!--	<property name="nWidth" from="90"/>-->
+		<!--	<property name="nX" from="def.objSuccessBG.nX + def.objSuccessBG.nWidth"/>-->
+		<!--	<property name="nY" from="0" />-->
+		<!--	<property name="nHeight" from="def.nHeight"/>-->
+		<!--	<property name="nDepth" value="-100"/>-->
+		<!--</object>-->
+		<object type="mlui.UI2DImage" name="objTotalCostBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nWidth" from="180"/>
+			<property name="nX" from="def.objSuccessBG.nX + def.objSuccessBG.nWidth + 1"/>
+			<property name="nY" from="0" />
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objProgressDurationBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nWidth" from="135"/>
+			<property name="nX" from="def.objTotalCostBG.nX + def.objTotalCostBG.nWidth + 1"/>
+			<property name="nY" from="0" />
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objCancelBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nWidth" from="58"/>
+			<property name="nX" from="def.objProgressDurationBG.nX + def.objProgressDurationBG.nWidth + 1"/>
+			<property name="nY" from="0" />
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objProgramTypeImage">
+			<property name="tmplImage">
+				switch{
+					case def.objNationalProgram.instanceOf(gs_tbg.RegionSurveillance):
+						'skin.ImgEspionageSpy'
+					case def.objNationalProgram.instanceOf(gs_tbg.DeploymentSurveillance):
+						'skin.ImgEspionageSpy'
+					case def.objNationalProgram.instanceOf(gs_tbg.StealResearch):
+						'skin.ImgEspionageStealResearch'
+					case def.objNationalProgram.instanceOf(gs_tbg.SabotageRegion):
+						'skin.ImgEspionageSabotage'
+					case def.objNationalProgram.instanceOf(gs_tbg.PoliticalSupport):
+						'skin.ImgEspionageFund'
+					case def.objNationalProgram.instanceOf(gs_tbg.OppositionSupport):
+						'skin.ImgEspionageFund'
+					case def.objNationalProgram.instanceOf(gs_tbg.InternalSupport):
+						'skin.ImgEspionageFund'     
+          default:
+						'skin.ImgEspionageSpy'
+				}
+			</property>
+			<property name="nX" value="2"/>
+			<property name="nY" value="1"/>
+			<property name="nHeight" value="62"/>
+			<property name="nWidth" from="62"/>
+		</object>
+		<object type="mlui.UI2DText" name="objProgramTypeName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText">
+                switch{
+                case def.objNationalProgram.instanceOf(gs_tbg.RegionSurveillance):
+                locale.SID.UI.ConductSurveillance
+                case def.objNationalProgram.instanceOf(gs_tbg.DeploymentSurveillance):
+                locale.SID.UI.ConductSurveillance
+                case def.objNationalProgram.instanceOf(gs_tbg.StealResearch):
+                locale.SID.UI.StealResearch
+                case def.objNationalProgram.instanceOf(gs_tbg.SabotageRegion):
+                switch
+                {
+                case def.objNationalProgram.eSabotageRegionParam == gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_CITY:
+                locale.SID.UI.SabotageACity
+                default:
+                locale.SID.UI.SabotageARegion
+                }
+                case def.objNationalProgram.instanceOf(gs_tbg.PoliticalSupport):
+                locale.SID.UI.SupportRuling + ' ' + def.objNationalProgram.tmplIdeology.resolve().strDisplayName + ' ' + locale.SID.UI.Party
+                case def.objNationalProgram.instanceOf(gs_tbg.OppositionSupport):
+                locale.SID.UI.Support + ' ' + def.objNationalProgram.tmplIdeology.resolve().strDisplayName + ' ' + locale.SID.UI.Opposition
+                case def.objNationalProgram.instanceOf(gs_tbg.InternalSupport):
+                locale.SID.UI.ConductInternalPropaganda
+                default:
+                'default'
+                }
+            </property>
+			<property name="nX" value="32"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="240"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objTargetNationFlag">
+			<property name="objNation" from="def.objTargetNation"/>
+			<property name="nX" from="def.objProgramBG.nX + def.objProgramBG.nWidth +4"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objTargetName" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText">
+				def.objTargetNation.strDisplayName
+			</property>
+			<property name="nX" from="def.objTargetNationFlag.nX + def.objTargetNationFlag.nWidth + 5" />
+			<!--<property name="nY" from="if(def.bRegion, 2, 8)"/>-->
+      <property name="nY" value="4"/>
+			<property name="nHeight" value="14"/>
+			<property name="nWidth" from="145"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objTargetRegionName"  existsWhile="def.bRegion" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialRed12Left"/>
+			<property name="strText">				
+                switch
+                {
+                    case def.objNationalProgram.instanceOf(gs_tbg.SabotageRegion) AND def.objNationalProgram.eSabotageRegionParam == gs_tbg.SabotageRegionParam.SABOTAGE_REGION_PARAM_CITY:
+                        'Cities in ' + def.objNationalProgram.refTargetRegion.resolve(mh2data.objAvatar).strDisplayName    
+					default:
+                        def.objNationalProgram.refTargetRegion.resolve(mh2data.objAvatar).strDisplayName                        
+                }
+			</property>
+			<property name="nX" from="def.objTargetNationFlag.nX + def.objTargetNationFlag.nWidth + 5" />
+			<property name="nY" value="16"/>
+			<property name="nHeight" value="12"/>
+			<property name="nWidth" from="150"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objSuccessRateText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText">
+				switch{
+					case def.objNationalProgram.instanceOf(gs_tbg.RegionSurveillance):
+						gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar).nDeploymentSurveillancePercent.formatNumber(0, true) + '%'
+					case def.objNationalProgram.instanceOf(gs_tbg.DeploymentSurveillance):
+						gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar).nDeploymentSurveillancePercent.formatNumber(0, true) + '%'
+					case def.objNationalProgram.instanceOf(gs_tbg.StealResearch):
+						gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar).nCompletedStealPercent.formatNumber(0, true) + '%'
+					case def.objNationalProgram.instanceOf(gs_tbg.SabotageRegion):
+						gs_tbg.getGameSysNationalPrograms(mh2data.objAvatar).nSabotagePercent.formatNumber(0, true) + '%'
+					case def.objNationalProgram.instanceOf(gs_tbg.PoliticalSupport):
+						def.objNationalProgram.nSuccessPercent.formatNumber(0, true) + '%'
+					case def.objNationalProgram.instanceOf(gs_tbg.OppositionSupport):
+						def.objNationalProgram.nSuccessPercent.formatNumber(0, true) + '%'
+					default:
+						'100%'
+				}
+			</property>
+			<property name="nWidth" from="40"/>
+			<property name="nX" from="def.objTargetBG.nX + def.objTargetBG.nWidth"/>
+			<property name="nY" from="10"/>
+			<property name="nHeight" value="11"/>
+		</object>
+		
+		<!--<object type="mlui.UI2DText" name="objPTCostText" >-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialRed12Center"/>-->
+		<!--	<property name="strText">-->
+		<!--		'$' + def.objNationalProgram.nCost.formatNumber(0, true)-->
+		<!--	</property>-->
+		<!--	<property name="nWidth" from="90"/>-->
+		<!--	<property name="nX" from="def.objSuccessBG.nX + def.objSuccessBG.nWidth"/>-->
+		<!--	<property name="nY" from="8"/>-->
+		<!--	<property name="nHeight" value="11"/>-->
+		<!--</object>-->
+		
+		<object type="mlui.UI2DText" name="objTotalCostText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialRed12Center"/>
+			<property name="strText">
+				'$' + def.objNationalProgram.nCost.formatNumber(0, true)
+			</property>
+			<property name="nWidth" from="180"/>
+			<property name="nX" from="def.objSuccessBG.nX + def.objSuccessBG.nWidth"/>
+			<property name="nY" from="10"/>
+			<property name="nHeight" value="11"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objDurationText" >
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText">
+				def.objNationalProgram.nTimeRemaining + ' ' + locale.SID.UI.Turns
+			</property>
+			<property name="nWidth" from="135"/>
+			<property name="nX" from="def.objTotalCostBG.nX + def.objTotalCostBG.nWidth"/>
+			<property name="nY" from="10"/>
+			<property name="nHeight" value="11"/>
+		</object>
+		
+		
+		<object type="mlui.UI2DButton" name="objCancelNationalProgram">
+			<property name="tmplButtonStyle" value="skin.BtnStyleTradeButtonCancel"/>
+			<property name="nX" from="def.objProgressDurationBG.nX + def.objProgressDurationBG.nWidth +2 "/>
+			<property name="nY" value="2"/>
+			<property name="nDefaultWidth" from="def.nHeight"/>
+			<property name="nDefaultHeight" from="def.nHeight"/>
+			<property name="nDepth" value="150"/>
+	
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.objAvatar.sendAction(gs_tbg.GActCancelNationalProgram.create({
+								"refNation" : mh2data.objNation,
+								"objNationalProgram" : def.objNationalProgram
+							}));
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		
+
+	</objectDef>
+
+
+	
+
+</locust>

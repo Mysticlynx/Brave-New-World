@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <object type="mapui.UnitModelTable" name="UnitModelTableDefault">
+        <property name="fileXML" value="UnitModelTableData.xml"/>
+        <property name="objUnitModelDirsTemplate" value="unit_models.UnitModelDirs"/>
+		<property name="tmplSelectionMapModel" value="uidata.MapModelDefaultUnitGroupSelected"/>
+		<property name="tmplStackIndicatorMapModel" value="uidata.MapModelStackIndicator"/>
+		<property name="tmplDecalMapModel" value="uidata.MapModelDefaultUnitGroupDecal"/>
+	</object>
+
+</locust>

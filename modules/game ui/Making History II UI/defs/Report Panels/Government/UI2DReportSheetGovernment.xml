@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DReportSheetGovernment" superType="UI2DReportPanel">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<object type="mlui.UI2DImage" name="objPanelCrest">
+			<property name="tmplImage" value="skin.ImgPanelCrest"/>
+			<property name="nX" value="9"/>
+			<property name="nY" from="636"/>
+			<property name="nWidth" value="338"/>
+			<property name="nHeight" value="22"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	
+		<object type="mlui.UI2DImage" name="objPanelCrestIcon">
+			<property name="tmplImage" value="skin.ImgPanelCrestIconNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="62"/>
+			<property name="nHeight" value="56"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>
+		
+		<object type="UI2DNationFlag46x24" name="objNationFlag">
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nX" value="22"/>
+			<property name="nY" value="635"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>			
+		</object>		
+
+		<object type="mlui.UI2DImage" name="objPanelCrestIconFG">
+			<property name="tmplImage" value="skin.ImgPanelCrestNationFlagFG"/>
+			<property name="nX" value="11"/>
+			<property name="nY" value="636"/>
+			<property name="nWidth" value="68"/>
+			<property name="nHeight" value="30"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>	
+		
+	<!-- Header and Background -->
+
+    <object type="mlui.UI2DImage" name="objGovernmentPolicyIcon">
+      <property name="tmplImage" value="skin.ImgUIInfoIconGovernment"/>
+      <property name="nX" value="1"/>
+      <property name="nY" value="58"/>
+      <property name="nWidth" value="23"/>
+      <property name="nHeight" value="26"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objMilitaryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite18Left"/>
+			<property name="strText" from="locale.SID.UI.Government"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="66"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+	
+		<object type="common_ui.UI2DListHorz" name="objBasesIcons">
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nSpacing" value="2"/>
+			
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage" value="skin.ImgNationCrestWar"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="nDepth" value="50"/>
+				<property name="bVisible" from="gs_tbg.getNationEnemies(mh2data.objAvatar, def.objNation).size GT 0"/>
+				<property name="strToolTip" from="locale.SID.UI.AtWar"/>
+			</object>
+			
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="strToolTip" from="def.objNation.objStatus.strDisplayName"/>
+				<property name="tmplImage">
+						if(def.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet),
+							'skin.ImgNationCrestPuppet',
+								'skin.ImgNationCrestIndependant')
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+        <property name="strToolTip">
+          if(def.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet),
+          locale.SID.UI.Puppet,
+          locale.SID.UI.Independent + " " + locale.SID.UI.Nation)
+        </property>
+			</object>
+			
+			<object type="mlui.UI2DImage" name="objElements">
+				<property name="tmplImage">
+						if(def.objNation.tmplIdeology.resolve().strName == 'Democratic',
+						'skin.ImgNationCrestDemocratic',
+							if(def.objNation.tmplIdeology.resolve().strName == 'Communist',
+							'skin.ImgNationCrestCommunist',
+								if(def.objNation.tmplIdeology.resolve().strName == 'Fascist',
+								'skin.ImgNationCrestFascist', 'skin.ImgNationCrestAuthoritarian'
+								)
+							)
+						)
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="28"/>
+				<property name="nHeight" value="28"/>
+				<property name="nDepth" value="50"/>
+				<property name="strToolTip" from="def.objNation.getIdeologyTemplate().strDisplayName"/>
+			</object>
+			
+			<object type="UI2DLargeCloseButton" name="objElements">
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+					<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+						<property name="otEventType" value="mlui.EventButtonClicked"/>
+						<script type="application/javascript"><![CDATA[
+							function handle(event, owner)
+							{
+								reportdata.closeReportPanel();
+							}
+						]]></script>
+					</object>
+				</object>
+			</object>
+			
+		</object>	
+
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="8"/>
+			<property name="nY" value="136"/>
+			<property name="nWidth" value="878"/>
+			<property name="nHeight" value="548"/>
+		</object>		
+		
+	<!-- Content -->	
+		<object type="UI2DGovernmentTabs" name="objTabs">
+			<property name="objNation" from="def.objNation"/>
+			
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objButtonsShadow">
+			<property name="tmplImage" value="skin.ImgReportPanelShadow16x16"/>
+			<property name="nX" value="755"/>
+			<property name="nY" value="101"/>
+			<property name="nWidth" value="131"/>
+			<property name="nHeight" value="48"/> 
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="UI2DGovernmentButtons" name="objGovernmentButtons">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="14"/>
+			<property name="nY" value="102"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nHeight" value="40"/>
+		</object>		
+	</objectDef>		
+</locust>

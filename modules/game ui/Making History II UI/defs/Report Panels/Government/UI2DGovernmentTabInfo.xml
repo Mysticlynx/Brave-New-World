@@ -1,0 +1,2073 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="UI2DNationName" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="bChangeName" type="bool" default="false"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="tmplTextStyleEdit" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objName" existsWhile="def.bChangeName == false">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objNation.strDisplayName"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth-50"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>			
+		</object>
+		
+		<object type="mlui.UI2DEditableText" name="objEditableText" existsWhile="def.bChangeName == true">
+			<property name="tmplTextStyle" from="def.tmplTextStyleEdit"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth-50"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="50"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_ESCAPE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_RETURN"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_GRAVE"/>
+			<property name="eIgnoreKeys" value="KEY_CODE_TAB"/>
+			
+			<object type="mlui.KeyBindList" name="objKeyBindList">
+				<object type="mlui.KeyBindMethod" name="objKeyBinds">
+					<property name="otEventType" value="mlui.EventKeyPressed"/>
+					<property name="eKey" value="KEY_CODE_RETURN"/>
+					<script type="application/javascript"><![CDATA[
+						function notifyTriggered(owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object><!-- objEditableText -->
+		
+		<object type="UI2DElementMask" name="objNationPopupMask" existsWhile="def.bChangeName == false">
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth-50"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="95"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventMouseButtonDown"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if (event.eButton.equals(mlui.MouseButton.MOUSE_BUTTON_RIGHT))
+							{
+                                def.bChangeName = true;
+                                def.objEditableText.strText = '';							
+                                mlui.ActSetKeyboardFocus.execute({"objElement": def.objEditableText});
+							}
+						}
+					]]></script>
+				</object>				
+			</object>			
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objSumbitRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleNationRename"/>
+			<property name="nX" value="203"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="55"/>
+			<property name="strToolTip" from="locale.SID.UI.Submit"/>
+			
+				<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						    def.executeRename();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objCancelRename" existsWhile="def.bChangeName == true">
+			<property name="tmplButtonStyle" value="skin.BtnStyleNationRenameCancel"/>
+			<property name="nX" value="227"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="18"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="nDepth" value="95"/>
+			<property name="strToolTip" from="locale.SID.UI.Cancel"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.bChangeName = false;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<script type="application/javascript"><![CDATA[
+			function executeRename()
+			{
+                if(mh2data.objNation.equals(self.objNation))
+                {
+                    if(self.objEditableText.strText != '')
+                    {
+                        var action = gs_tbg.GActRenameNation.create({
+                            "refNation": self.objNation, 
+                            "strNewName": self.objEditableText.strText
+                            });
+                        mh2data.objAvatar.sendAction(action);
+                    }
+                }
+                self.objEditableText.strText = '';
+                self.bChangeName = false;
+			}
+		]]></script>
+		
+	</objectDef> <!-- UI2DNationName -->
+
+
+	<objectDef type="UI2DGovernmentTabInfo" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+        <object type="UI2DNationName" name="objNationName">
+			<property name="objNation" from="def.objNation"/>        
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="tmplTextStyleEdit" value="locale.TxtStyleArialGold16Left"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="143"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="16"/>
+        </object>
+
+		<object type="mlui.UI2DImage" name="objLeftPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="291"/>
+			<property name="nHeight" value="521"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objLeftPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="12"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="287"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="UI2DNationalStatus" name="objStatus">
+			<property name="objNation" from="def.objNation"/>
+			<property name="bShowStability" value="false"/>
+			<property name="nY" value="-27"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="150"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DNationalRanking" name="objRanking">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="225"/>
+			<property name="nY" value="165"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+	<!-- Demographics -->
+		<object type="mlui.UI2DImage" name="objMiddlePaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBSq"/>
+			<property name="nX" value="300"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="292"/>
+			<property name="nHeight" value="521"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMiddlePaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="302"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="UI2DNationalDemographics" name="objDemographics">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+	<!-- Diplomacy -->
+		<object type="mlui.UI2DImage" name="objRightPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBLSq"/>
+			<property name="nX" value="591"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="292"/>
+			<property name="nHeight" value="521"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="593"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objDiplomacySliderBG">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="869"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="517"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="593"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="289"/>
+			<property name="nHeight" value="517"/>
+
+			<object type="mlui.SliderInfo" name="objHorizInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleHighlight"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="11"/>
+				<property name="nLength" value="285"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="16"/>
+				<property name="nMaxKnobLength" value="16"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="mlui.SliderInfo" name="objVertInfo">
+				<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+				<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+				<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+
+				<property name="nThickness" value="12"/>
+				<property name="nLength" value="517"/>
+
+				<property name="nButtonLength" value="0"/>
+				<property name="nMinKnobLength" value="37"/>
+				<property name="nMaxKnobLength" value="37"/>
+
+				<property name="fMinorIncrement" value="1.0"/>
+				<property name="fMajorIncrement" value="5.0"/>
+			</object>
+
+			<object type="UI2DNationalDiplomacy" name="objScrollable">
+				<property name="objNation" from="def.objNation"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="275"/>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DNationalRanking" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<propertyDef name="objNationRank" type="gs_tbg.NationRank"/>
+			<property name="objNationRank">
+				find(?{
+					rank: rank.refNation == self.objNation},
+						gs_tbg.getNationRanks(mh2data.objAvatar)
+					)
+			</property>
+		
+	<!-- Ranking Section -->
+		<!-- Power Points -->
+		<object type="mlui.UI2DImage" name="objWPPIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconPointsSm"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="20"/>
+			<property name="strToolTip" from="locale.SID.UI.WorldPowerPoints"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationalStatusLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Rank"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objWPP">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="locale.formatNumberRank(def.objNationRank.nTotalRank)"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="13"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<!-- IPUs -->
+		<object type="mlui.UI2DImage" name="objIPUsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconIPUSm"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="34"/>
+			<property name="nWidth" value="20"/>
+			<property name="nHeight" value="26"/>
+			<property name="strToolTip" from="locale.SID.UI.IPUs"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objIPUsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.IPUs"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objIPUs">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="locale.formatNumberRank(def.objNationRank.nIPURank)"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="46"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<!-- MPUs -->
+		<object type="mlui.UI2DImage" name="objMPUsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMPU21x21"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="69"/>
+			<property name="nWidth" value="21"/>
+			<property name="nHeight" value="21"/>
+			<property name="strToolTip" from="locale.SID.UI.MPUs"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMPUsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.MPUs"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="68"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMPUs">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="locale.formatNumberRank(def.objNationRank.nMPURank)"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="79"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<!-- Tech -->
+		<object type="mlui.UI2DImage" name="objTechIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="102"/>
+			<property name="nWidth" value="17"/>
+			<property name="nHeight" value="20"/>
+			<property name="strToolTip" from="locale.SID.UI.Tech"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTechLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Tech"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="101"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTech">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="locale.formatNumberRank(def.objNationRank.nTechRank)"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="112"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<!-- Wealth -->
+		<object type="mlui.UI2DImage" name="objWealthIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconFinancialSm"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="134"/>
+			<property name="nWidth" value="17"/>
+			<property name="nHeight" value="24"/>
+			<property name="strToolTip" from="locale.SID.UI.Wealth"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objWealthLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Wealth"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="134"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objWealth">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="locale.formatNumberRank(def.objNationRank.nWealthRank)"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="145"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DNationalStatus" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="bShowStability" type="bool"/>
+
+		<!-- Nation Flag -->
+		<object type="mlui.UI2DImage" name="objFlagShadow">
+			<property name="tmplImage" value="skin.ImgReportPanelShadow4x4"/>
+			<property name="nX" value="14"/>
+			<property name="nY" value="192"/>
+			<property name="nWidth" value="208"/>
+			<property name="nHeight" value="107"/>
+		</object>
+
+		<object type="UI2DNationFlag256x128" name="objNationFlagLg">
+			<property name="tmplNation" from="def.objNation.tmplNation"/>
+			<property name="tmplIdeology" from="def.objNation.tmplIdeology"/>
+			<property name="strToolTip" from="def.objNation.strDisplayName"/>
+			<property name="nX" value="17"/>
+			<property name="nY" value="195"/>
+			<property name="nWidth" value="202"/>
+			<property name="nHeight" value="101"/>
+		</object>
+
+	<!-- National Status Section -->
+		<object type="mlui.UI2DImage" name="objNationalStatusIcon">
+			<property name="tmplImage">
+				switch {
+                case def.objNation.objStatus.instanceOf(gs_tbg.NationStatusIndependent):
+                    'skin.ImgWNIndependant'
+                case def.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet):
+                    'skin.ImgGovPuppet'
+                }
+			</property>
+			<property name="nX" value="13"/>
+			<property name="nY" value="302"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="27"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationalStatusLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.NationalStatus"/>
+			<property name="nX" value="44"/>
+			<property name="nY" value="302"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationalStatus">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText">
+                switch {
+                    case def.objNation.objStatus.instanceOf(gs_tbg.NationStatusIndependent):
+                        locale.SID.UI.Independent
+                    case def.objNation.objStatus.instanceOf(gs_tbg.NationStatusPuppet):
+                        locale.SID.UI.Puppet
+                    default:
+                        locale.SID.UI.None
+                }
+            </property>
+			<property name="nX" value="44"/>
+			<property name="nY" value="314"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<!-- Controller -->
+		<object type="mlui.UI2DText" name="objLabel" existsWhile="self.objNation.getMasterNation(mh2data.objAvatar) != self.objNation">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.ControllingNation"/>
+			<property name="nX" value="91"/>
+			<property name="nY" value="333"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="UI2DNationFlag46x24" name="objNationFlag" existsWhile="self.objNation.getMasterNation(mh2data.objAvatar) != self.objNation">
+			<property name="objNation" from="def.objNation.getMasterNation(mh2data.objAvatar)"/>
+			<property name="nX" value="42"/>
+			<property name="nY" value="333"/>
+			<property name="nWidth" value="46"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objControllingNation" existsWhile="self.objNation.getMasterNation(mh2data.objAvatar) != self.objNation">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.objNation.getMasterNation(mh2data.objAvatar).strDisplayName"/>
+			<property name="nX" value="91"/>
+			<property name="nY" value="346"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	<!-- Government System Section -->
+		<!-- placeholder --><object type="mlui.UI2DImage" name="objGovernmentSystemIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconGovernmentSm"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="373"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="27"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objGovernmentSystemLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.GovernmentSystem"/>
+			<property name="nX" value="44"/>
+			<property name="nY" value="374"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objGovernmentSystem">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.objNation.getIdeologyTemplate().strDisplayName"/>
+			<property name="nX" value="44"/>
+			<property name="nY" value="386"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<!-- Political Balance -->
+		<object type="mlui.UI2DText" name="objPoliticalBalanceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.PoliticalBalance"/>
+			<property name="nX" value="44"/>
+			<property name="nY" value="409"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPoliticalBalanceBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="44"/>
+			<property name="nY" value="420"/>
+			<property name="nWidth" value="243"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="IdeologyDisplayTable" name="objIdeologyTable">
+		</object>
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="0"/>
+			<property name="nX" value="44"/>
+			<property name="nY" value="421"/>
+			
+			<object type="UI2DIdeologyPerc" name="objElements" tiedTo="def.objNation.objIdeologies">
+				<property name="strValue" from="String(tiedTo.nLevel) + '%'"/>
+				<property name="bYourIdeology" from="tiedTo.tmplIdeology == def.objNation.tmplIdeology"/>
+				<property name="strToolTip" from="tiedTo.tmplIdeology.resolve().strDisplayName"/>
+				
+				<property name="nX" value="44"/>
+				<property name="nY" value="421"/>
+				
+				<object type="mlui.UI2DImage" name="objIcon">
+					<property name="tmplImage" from="def.objIdeologyTable.getEntry(tiedTo.tmplIdeology).tmplIcon"/>
+					<property name="nX" value="3"/>
+					<property name="nY" value="0"/>
+					<property name="nWidth" value="25"/>
+					<property name="nHeight" value="25"/>
+				</object>
+			</object>
+		</object>
+		
+		<object type="UI2DNationDemands" name="objUI2DNationDemands" existsWhile="!self.bShowStability">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="300"/>
+			<property name="nY" value="374"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="80"/>
+		</object>
+		
+		<object type="UI2DInternalAffairs" name="objUI2DInternalAffairs" existsWhile="!self.bShowStability">
+			<property name="nX" value="300"/>
+			<property name="nY" value="430"/>
+			<property name="nWidth" value="243"/>
+			<property name="nHeight" value="80"/>
+		</object>
+		
+		<object type="UI2DInternalActionsPopups" name="objInternalActions" existsWhile="mh2data.otInternalActionsPopup != null">
+			<property name="nX" value="591"/>
+			<property name="nY" value="188"/>
+			<property name="nWidth" value="292"/>
+			<property name="nHeight" value="521"/>
+			<property name="nDepth" value="350"/>
+		</object>
+		
+	</objectDef>
+
+    <objectDef type="UI2DNationDemands" superType="mlui.UI2DElement">
+        <propertyDef name="objNation" type="gs_tbg.Nation"/>
+        <propertyDef name="objNationFood" type="gs_tbg.NationResource">
+            gs_tbg.getGameSysNation(mh2data.objAvatar).getNationResource(self.objNation, gs_tbg.getGameSysResource(mh2data.objAvatar).tmplFood)
+        </propertyDef>
+
+        <object type="mlui.UI2DImage" name="objFoodDemandIcon">
+            <property name="tmplImage" value="skin.ImgInfoIconFood"/>
+            <property name="nX" value="5"/>
+            <property name="nY" value="0"/>
+            <property name="nWidth" value="18"/>
+            <property name="nHeight" value="24"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objFoodDemandLabel">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+            <property name="strText" from="locale.SID.UI.FoodDemand"/>
+            <property name="nX" value="33"/>
+            <property name="nY" value="0"/>
+            <property name="nWidth" value="150"/>
+            <property name="nHeight" value="12"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objFoodDemand">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialBlue20LeftFIT"/>
+            <property name="strText" from="def.objNationFood.nDemand.formatNumber(0, true)"/>
+            <property name="nX" value="33"/>
+            <property name="nY" value="13"/>
+            <property name="nHeight" value="20"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objFoodDemandRate">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+            <property name="strText" from="locale.SID.UI.PerTurn"/>
+            <property name="nX" from="def.objFoodDemand.nX + def.objFoodDemand.nWidth + 4"/>
+            <property name="nY" value="21"/>
+            <property name="nWidth" value="100"/>
+            <property name="nHeight" value="10"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objFilledLabel">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+            <property name="strText" from="locale.SID.UI.Filled"/>
+            <property name="nX" value="145"/>
+            <property name="nY" value="2"/>
+            <property name="nWidth" value="150"/>
+            <property name="nHeight" value="10"/>
+        </object>
+
+ 
+        <object type="mlui.UI2DText" name="objFoodDemandFilled">         
+          <property name="tmplTextStyle">
+            if(def.objNationFood.nConsumed * 100 / def.objNationFood.nDemand == 100, "locale.TxtStyleArialBlue16Left", "locale.TxtStyleArialRed16Left")
+          </property>
+          
+          <property name="strText">
+              if(def.objNationFood.nDemand GT 0, def.objNationFood.nConsumed * 100 / def.objNationFood.nDemand, 100) + '%'
+          </property>
+          <property name="nX" value="145"/>
+          <property name="nY" value="16"/>
+          <property name="nWidth" value="150"/>
+          <property name="nHeight" value="18"/>
+          <property name="nDepth" value="500"/>
+        </object>
+
+      <object type="mlui.UI2DText" name="objShortageLabel">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+        <property name="strText" from="locale.SID.UI.SupplyShortage"/>
+        <property name="nX" value="200"/>
+        <property name="nY" value="2"/>
+        <property name="nWidth" value="150"/>
+        <property name="nHeight" value="10"/>
+      </object>
+      
+      <propertyDef name="nFoodDeficit" type="int">
+        self.objNationFood.nConsumed - self.objNationFood.nDemand
+      </propertyDef>
+
+      <object type="mlui.UI2DText" name="objFoodDeficit">
+        <property name="tmplTextStyle">
+          if(def.nFoodDeficit LT 0, "locale.TxtStyleArialRed16Left", "locale.TxtStyleArialBlue16Left")
+        </property>
+        <property name="strText" from="def.nFoodDeficit.formatNumber(0, true)"/>
+        <property name="nX" value="200"/>
+        <property name="nY" value="16"/>
+        <property name="nWidth" value="150"/>
+        <property name="nHeight" value="18"/>
+        <property name="nDepth" value="500"/>
+        <property name="strToolTip" from="'Food Supply Deficit: ' + def.nFoodDeficit.formatNumber(0, true)"/>
+      </object>
+      
+    </objectDef>
+	
+	<objectDef type="UI2DInternalAffairs" superType="mlui.UI2DElement">
+		
+		<object type="UI2DDiplomaticActionTitle" name="objDomesticActionTitle">
+			<property name="tmplIcon" value="skin.ImgInfoIconHat"/>
+      <property name="strTitle" from="locale.SID.UI.GovernmentPrograms"/>
+      <property name="strDesc" from="locale.SID.UI.InternalAffairs"/>
+		</object>
+		
+		<object type="mlui.UI2DTextButton" name="objSupportButton">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue13LeftHighlight"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="28"/>
+			<property name="nDefaultWidth" value="250"/>
+			<property name="nDefaultHeight" value="14"/>
+			<property name="strText" from="locale.SID.UI.ConductInternalPropaganda"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openInternalAction(UI2DPropaganda);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+	</objectDef>
+	
+	<objectDef type="UI2DPropaganda" superType="mlui.UI2DElement">
+		
+		<object type="mlui.UI2DImage" name="objPaneBG">
+      <property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="292"/>
+			<property name="nHeight" value="521"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objPanelGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objPanelblock">
+      <property name="tmplImage" value="skin.ImgWhite"/>
+      <property name="nX" value="2"/>
+      <property name="nY" value="179"/>
+      <property name="nWidth" value="288"/>
+      <property name="nHeight" value="357"/>
+      <property name="nDepth" value="-100"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" value="skin.ImgEspionageFund"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="27"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.Propaganda"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objDescription">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10LeftWrap"/>
+			<property name="strText" from="locale.SID.UI.PropagandaBlurb"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="240"/>
+			<property name="nHeight" value="20"/>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeInternalActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>		
+		
+		<object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="61"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objActionButton">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="locale.SID.UI.LaunchPropaganda"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="72"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							var action = gs_tbg.GActStartInternalSupport.create({
+								"refNation": mh2data.objNation,
+							});
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeInternalActionsPopup();
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+	</objectDef>
+		
+	<objectDef type="UI2DIdeologyPerc" superType="mlui.UI2DElement">
+		<propertyDef name="objIcon" type="mlui.UI2DImage" storesChildren="true"/>
+		<propertyDef name="strValue" type="String"/>
+		<propertyDef name="bYourIdeology" type="bool"/>
+		
+		<property name="nWidth" value="60"/>
+		<property name="nHeight" value="25"/>
+		
+		<object type="mlui.UI2DText" name="objDemocracyAmount">
+			<property name="tmplTextStyle">
+				if(def.bYourIdeology, 'locale.TxtStyleArialBlue12Left', 'locale.TxtStyleArialRed12Left')
+			</property>
+
+      <property name="strText" from="def.strValue"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="50"/>
+			<property name="nHeight" value="12"/>
+		</object>
+	</objectDef>
+	
+	<!-- Internal Affairs Panel -->
+  <!--CURRENTLY NOT IN USE-->
+	<objectDef type="UI2DInternalAffairsList" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<object type="mlui.UI2DImage" name="objInternalAffairsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconInternalAffairs"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="30"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objInternalAffairsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.InternalAffairs"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objDomesticPoliticalActionsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.DomesticPoliticalActions"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="21"/>
+			<property name="nWidth" value="175"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<!-- Purge Political Opposition Action -->
+		<!-- placeholder --><object type="mlui.UI2DText" name="objPurgePoliticalOppositionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="locale.SID.UI.PurgePoliticalOpposition"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="38"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<!-- Instigate a Coup Action -->
+		<!-- placeholder --><object type="mlui.UI2DText" name="objInstigateaCoupLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="locale.SID.UI.InstigateaCoup"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="58"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<!-- Move Capital Action -->
+		<object type="mlui.UI2DText" name="objMoveCapitalLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="locale.SID.UI.MoveCapital"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="78"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	</objectDef>
+
+
+
+	<objectDef type="UI2DNationalDemographics" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+	<!-- State Nationality Section -->
+		<object type="UI2DNationIcon" name="objStateNationalityIcon">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="305"/>
+			<property name="nY" value="166"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objStateNationalityLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.StateNationality"/>
+			<property name="nX" value="334"/>
+			<property name="nY" value="167"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objStateNationality">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.objNation.getNationalityTemplate().strDisplayName"/>
+			<property name="nX" value="334"/>
+			<property name="nY" value="180"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+    <object type="mlui.UI2DText" name="objPopulationLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.TotalPopulation"/>
+      <property name="nX" value="477"/>
+      <property name="nY" value="167"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objPopulation">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+      <property name="strText" from="def.objNation.n64Population.formatNumber(0, true)"/>
+      <property name="nX" value="477"/>
+      <property name="nY" value="180"/>
+      <property name="nWidth" value="100"/>
+      <property name="nHeight" value="14"/>
+    </object>
+
+    <!-- National Culture -->
+		<!-- placeholder --><object type="mlui.UI2DImage" name="objNationalCultureIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconCultureLatin"/>
+			<property name="nX" value="332"/>
+			<property name="nY" value="204"/>
+			<property name="nWidth" value="24"/>
+			<property name="nHeight" value="30"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationalCultureLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.StateCulture"/>
+			<property name="nX" value="361"/>
+			<property name="nY" value="208"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationalCulture">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="def.objNation.getCultureTemplate().strDisplayName"/>
+			<property name="nX" value="361"/>
+			<property name="nY" value="220"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<!-- Religion -->
+		<object type="mlui.UI2DImage" name="objReligionIcon">
+			<property name="tmplImage" from="mh2data.objReligionDisplayTable.getEntry(def.objNation.getNationTemplate().tmplReligion).tmplImage"/>
+			<property name="nX" value="474"/>
+			<property name="nY" value="206"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="23"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objReligionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.StateReligion"/>
+			<property name="nX" value="500"/>
+			<property name="nY" value="208"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objReligion">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="def.objNation.getReligionTemplate().strDisplayName"/>
+			<property name="nX" value="500"/>
+			<property name="nY" value="220"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<!-- Ethnic Groups -->
+		<!-- placeholder --><object type="mlui.UI2DImage" name="objEthnicGroupsIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconEthnicityMestizo"/>
+			<property name="nX" value="330"/>
+			<property name="nY" value="239"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="29"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objEthnicGroupsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.EthnicGroups"/>
+			<property name="nX" value="361"/>
+			<property name="nY" value="243"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objEthnicGroups">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="def.objNation.getNationalityTemplate().strDisplayName"/>
+			<property name="nX" value="361"/>
+			<property name="nY" value="255"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	<!-- Population Section -->
+		<object type="mlui.UI2DImage" name="objPopulationGrowthRateIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconPopulationSm"/>
+			<property name="nX" value="305"/>
+			<property name="nY" value="290"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="31"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMPUGrowthRateLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.MPUGrowthRate"/>
+			<property name="nX" value="334"/>
+			<property name="nY" value="291"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMPUGrowthRate">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18LeftFIT"/>
+			<property name="strText" from="def.objNation.fMPUGrowth.formatNumber(2, true)"/>
+			<property name="nX" value="334"/>
+			<property name="nY" value="305"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMPUGrowthPerTurn">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.PerTurn"/>
+			<property name="nX" from="def.objMPUGrowthRate.nWidth + 338"/>
+			<property name="nY" value="311"/>
+			<property name="nWidth" value="70"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<!--<object type="mlui.UI2DText" name="objGrowthRateModifiersLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.GrowthRateModifiers"/>
+			<property name="nX" value="334"/>
+			<property name="nY" value="334"/>
+			<property name="nWidth" value="110"/>
+			<property name="nHeight" value="10"/>
+		</object>-->
+
+		<!--<object type="mlui.UI2DImage" name="objGrowthRateBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="334"/>
+			<property name="nY" value="344"/>
+			<property name="nWidth" value="115"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-50"/>
+		</object>-->
+
+		<!--<object type="mlui.UI2DImage" name="objStabilityIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconStabilitySm"/>
+			<property name="strToolTip" from="locale.SID.UI.Stability"/>
+			<property name="nX" value="338"/>
+			<property name="nY" value="347"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="27"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objStabilityGrowthModifier">
+			<property name="tmplTextStyle">
+				if(gs_tbg.getGameSysNation(mh2data.objAvatar).getNationsStability(def.objNation.nStability).nMPUGrowthModifier LT 0,
+				'locale.TxtStyleArialRed12Left' ,'locale.TxtStyleArialBlue12Left')
+			</property>
+			<property name="strToolTip" from="locale.SID.UI.Stability"/>
+
+			<property name="strText" from="gs_tbg.getGameSysNation(mh2data.objAvatar).getNationsStability(def.objNation.nStability).nMPUGrowthModifier + '%'"/>
+			<property name="nX" value="365"/>
+			<property name="nY" value="354"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objFoodGrowthIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconFoodSm"/>
+			<property name="strToolTip" from="locale.SID.UI.Food"/>
+			<property name="nX" value="395"/>
+			<property name="nY" value="347"/>
+			<property name="nWidth" value="19"/>
+			<property name="nHeight" value="26"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objFoodGrowthModifier">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" value="0%"/>
+			<property name="nX" value="411"/>
+			<property name="nY" value="354"/>
+			<property name="nWidth" value="30"/>
+			<property name="nHeight" value="10"/>
+		</object>-->
+
+
+	<!-- National Stability Section -->
+		<object type="UI2DNationalStability" name="objNationalStability">
+			<property name="objNation" from="def.objNation"/>
+      <property name="nX" value="10"/>
+      <property name="nY" value="437"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DNationalStability" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<propertyDef name="objStability" type="Object">
+			gs_tbg.getGameSysNation(mh2data.objAvatar).getNationsStability(self.objNation.nStability)
+		</propertyDef>
+
+		<object type="mlui.UI2DImage" name="objNationalStabilityIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconStabilitySm"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationalStabilityLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.NationalStability"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationalStability">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" from="def.objNation.nStability + '%'"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="16"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objRevoltRiskIcon">
+			<property name="tmplImage">
+				if(def.objNation.nStability GTE 80, 'skin.ImgInfoIconRevoltRiskNone',
+					if(def.objNation.nStability LTE 30, 'skin.ImgInfoIconRevoltRiskHigh',
+					'skin.ImgInfoIconRevoltRiskLow'
+					)
+				)
+			</property>
+			<property name="nX" value="148"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="30"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objRevoltRiskLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.RevoltRisk"/>
+			<property name="nX" value="176"/>
+			<property name="nY" value="3"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objRevoltRisk">
+			<property name="tmplTextStyle">
+				if(def.objNation.nStability LTE 30, 'locale.TxtStyleArialRed16Left', 'locale.TxtStyleArialBlue16Left')
+			</property>
+			<property name="strText">
+              ?{template:
+              switch{
+                  case template == sd.getTemplateRef(gs_tbg.StabilityTemplate, 'ExtremelyStable'):
+                    locale.SID.UI.None
+                  case template == sd.getTemplateRef(gs_tbg.StabilityTemplate, 'VeryStable'):
+                    locale.SID.UI.Low
+                  case template == sd.getTemplateRef(gs_tbg.StabilityTemplate, 'Stable'):
+                    locale.SID.UI.Elevated
+                  case template == sd.getTemplateRef(gs_tbg.StabilityTemplate, 'Unstable'):
+                    locale.SID.UI.High
+                  case template == sd.getTemplateRef(gs_tbg.StabilityTemplate, 'HighlyUnstable'):
+                    locale.SID.UI.Severe
+              }
+              }(gs_tbg.getGameSysNation(mh2data.objAvatar).getNationsStability(def.objNation.nStability))                
+			</property>
+			<property name="nX" value="176"/>
+			<property name="nY" value="15"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<!-- Stability Modifiers -->
+		<object type="mlui.UI2DText" name="objStabilityModifiersLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.StabilityModifiers"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="39"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPoliticalBalanceBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="34"/>
+			<property name="nY" value="50"/>
+			<property name="nWidth" value="190"/> 
+			<property name="nHeight" value="64"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objFinancialIcon">
+      <property name="tmplImage" value="skin.ImgInfoIconFinancialSm"/>
+      <property name="nX" value="40"/>
+      <property name="nY" value="54"/>
+      <property name="nWidth" value="25"/>
+      <property name="nHeight" value="31"/>
+        <property name="strToolTip" from="locale.SID.UI.NationalTreasuryModifier
+            + '&#010;' + if (def.objNation.nNationalDebtPercent LT 0, locale.SID.UI.NationalDebt, locale.SID.UI.NationalSurplus) + ': ' + def.objNation.nNationalDebtPercent + '% ' + locale.SID.UI.ofAnnualExpenses"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objFinancialAmount">
+      <property name="tmplTextStyle">
+        if(def.objNation.nDebtStabilityModifier LT 0,
+        'locale.TxtStyleArialRed12Left','locale.TxtStyleArialBlue12Left')
+      </property>
+      <property name="strText" from="def.objNation.nDebtStabilityModifier"/>
+      <property name="nX" value="67"/>
+      <property name="nY" value="60"/>
+      <property name="nWidth" value="50"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objIdeologyIcon">
+      <property name="tmplImage" value="skin.ImgInfoIconGovernmentSm"/>
+      <property name="nX" value="99"/>
+      <property name="nY" value="55"/>
+      <property name="nWidth" value="25"/>
+      <property name="nHeight" value="33"/>
+      <property name="strToolTip" from="locale.SID.UI.NonStateIdeologyPenalty
+                      + '&#010;' + locale.SID.UI.OppositionStrength + ': ' + (def.objNation.getIdeoOppositionPct()) + '%'"/>
+    </object>
+    
+    <object type="mlui.UI2DText" name="objNonStateIdeologyModifier">
+      <property name="tmplTextStyle">
+        if(def.objNation.tmplIdeologyStrength.resolve().nStabilityModifier LT 0,
+        'locale.TxtStyleArialRed12Left','locale.TxtStyleArialBlue12Left')
+      </property>
+      <property name="strText" from="def.objNation.tmplIdeologyStrength.resolve().nStabilityModifier"/>
+      <property name="nX" value="132"/>
+      <property name="nY" value="60"/>
+      <property name="nWidth" value="50"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objUnemployedMPUIcon">
+      <property name="tmplImage" value="skin.ImgInfoIconMPU32x32"/>
+      <property name="nX" value="158"/>
+      <property name="nY" value="50"/>
+      <property name="nWidth" value="25"/>
+      <property name="nHeight" value="31"/>
+      <property name="strToolTip" from="locale.SID.UI.UnemployedMPUPenalty
+                      + '&#010;' + locale.SID.UI.NationalUnemploymentRate + ': ' + ((float(def.objNation.nMPUs)) / ((float(def.objNation.nMPUs) + (float(def.objNation.nWorkingMPUs))))* 100).formatNumber(0, true) + '%'
+                      + '&#010;' + locale.SID.UI.EmployedMPUs + ': ' + def.objNation.nWorkingMPUs.formatNumber(0, true)"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objUnemploymentModifier">
+      <property name="tmplTextStyle">
+        if(def.objNation.tmplUnemploymentLevel.resolve().nStabilityModifier LT 0,
+        'locale.TxtStyleArialRed12Left','locale.TxtStyleArialBlue12Left')
+      </property>
+      <property name="strText" from="def.objNation.tmplUnemploymentLevel.resolve().nStabilityModifier"/>
+      <property name="nX" value="192"/>
+      <property name="nY" value="60"/>
+      <property name="nWidth" value="50"/>
+      <property name="nHeight" value="12"/>
+    </object>
+    
+    <object type="mlui.UI2DImage" name="objNonNationalIcon">
+      <property name="tmplImage" value="skin.ImgInfoIconPopulationSm"/>
+      <property name="nX" value="37"/>
+      <property name="nY" value="80"/>
+      <property name="nWidth" value="25"/>
+      <property name="nHeight" value="31"/>
+      <property name="strToolTip">
+      switch{
+						case def.objNation.n64CorePopulation == 0:
+                locale.SID.UI.NonNationalPenalty
+                      + '&#010;' + locale.SID.UI.PercentageOfTotalPopulation + ': ' + '0%'
+						default:
+
+                locale.SID.UI.NonNationalPenalty
+                      + '&#010;' + locale.SID.UI.PercentageOfTotalPopulation + ': ' + ((float(def.objNation.n64NonNationalPopulation) / float(def.objNation.n64CorePopulation)) * 100).formatNumber(0, true) + '%'
+					}
+     </property>
+      
+    </object>
+
+    <object type="mlui.UI2DText" name="objNonNationalModifier">
+      <property name="tmplTextStyle">
+        if(def.objNation.tmplNonNational.resolve().nStabilityModifier LT 0,
+        'locale.TxtStyleArialRed12Left','locale.TxtStyleArialBlue12Left')
+      </property>
+      <property name="strText" from="def.objNation.tmplNonNational.resolve().nStabilityModifier"/>
+      <property name="nX" value="67"/>
+      <property name="nY" value="92"/>
+      <property name="nWidth" value="50"/>
+      <property name="nHeight" value="12"/>
+    </object>
+    
+    <object type="mlui.UI2DImage" name="objReligionIcon">
+      <property name="tmplImage" from="mh2data.objReligionDisplayTable.getEntry(def.objNation.getNationTemplate().tmplReligion).tmplImage"/>
+			<property name="nX" value="101"/>
+			<property name="nY" value="86"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="33"/>
+      <property name="strToolTip" from="locale.SID.UI.NonStateReligionPenalty
+                      + '&#010;' + locale.SID.UI.PercentageOfTotalPopulation + ': ' + ((float(def.objNation.n64NonReligionPopulation) / float(def.objNation.n64CorePopulation)) * 100).formatNumber(0, true) + '%'"/>
+    </object>
+    
+		<object type="mlui.UI2DText" name="objNonStateReligionModifier">
+      <property name="tmplTextStyle">
+        if(def.objNation.tmplNonReligion.resolve().nStabilityModifier LT 0,
+        'locale.TxtStyleArialRed12Left','locale.TxtStyleArialBlue12Left')
+      </property>
+      <property name="strText" from="def.objNation.tmplNonReligion.resolve().nStabilityModifier"/>
+      <property name="nX" value="132"/>
+			<property name="nY" value="92"/>
+			<property name="nWidth" value="50"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+    <object type="mlui.UI2DImage" name="objCultureIcon">
+      <property name="tmplImage" value="skin.ImgInfoIconCultureLatin"/>
+      <property name="nX" value="163"/>
+      <property name="nY" value="82"/>
+      <property name="nWidth" value="25"/>
+      <property name="nHeight" value="31"/>
+      <property name="strToolTip" from="locale.SID.UI.NonStateCulturePenalty
+                      + '&#010;' + locale.SID.UI.PercentageOfTotalPopulation + ': ' + ((float(def.objNation.n64NonCulturePopulation) / float(def.objNation.n64CorePopulation)) * 100).formatNumber(0, true) + '%'"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objNonStateCultureModifier">
+      <property name="tmplTextStyle">
+        if(def.objNation.tmplNonCulture.resolve().nStabilityModifier LT 0,
+        'locale.TxtStyleArialRed12Left','locale.TxtStyleArialBlue12Left')
+      </property>
+      <property name="strText" from="def.objNation.tmplNonCulture.resolve().nStabilityModifier"/>
+      <property name="nX" value="192"/>
+      <property name="nY" value="92"/>
+      <property name="nWidth" value="50"/>
+      <property name="nHeight" value="12"/>
+    </object>
+  </objectDef>    
+  
+  <!--**************************-->
+  <!--Diplomacy partition-->
+
+	<objectDef type="UI2DNationalDiplomacy" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+    <propertyDef name="bDiplomaticPanel" type="bool" default="false"/>
+    <propertyDef name="vertOffset" type="int" default="0"/>
+    
+		<property name="nHeight" from="self.objResourceTradeAgreements.nHeight + self.objResourceTradeAgreements.nY"/>
+
+    <object type="mlui.UI2DText" name="objDiplomaticRelationsHeader" existsWhile="self.bDiplomaticPanel == true">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+      <property name="strText" from="locale.SID.UI.DiplomaticRelations"/>
+      <property name="nX" value="3"/>
+      <property name="nY" value="6"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="14"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objDiplomaticRelationsIcon" existsWhile="self.bDiplomaticPanel == true">
+      <property name="tmplImage" value="skin.ImgInfoIconRelationsSm"/>
+      <property name="nX" value="5"/>
+      <property name="nY" value="20"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objDiplomaticStatusLabel" existsWhile="self.bDiplomaticPanel == true">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.CurrentStatus"/>
+      <property name="nX" value="32"/>
+      <property name="nY" value="21"/>
+      <property name="nWidth" value="150"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objDiplomaticRelationsValue" existsWhile="self.bDiplomaticPanel == true">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftSizeToFit"/>
+      <property name="strText">
+        ?{relation:
+        relation.tmplDiplomaticRelations.resolve().strDisplayName
+        }(gs_tbg.getDiplomaticRelation(mh2data.objAvatar, def.objNation, mh2data.objNation))
+      </property>
+
+      <property name="nX" value="32"/>
+      <property name="nY" value="32"/>
+      <property name="nWidth" value="80"/>
+      <property name="nHeight" value="14"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objDiplomaticRelationsAmount" existsWhile="self.bDiplomaticPanel == true">
+      	<property name="tmplTextStyle">
+                switch {
+                          case ?{relation:
+                               relation.tmplDiplomaticRelations.resolve().strDisplayName
+                               }(gs_tbg.getDiplomaticRelation(mh2data.objAvatar, def.objNation, mh2data.objNation)) == "Close":
+                               "locale.TxtStyleArialGreen14Left"
+                           case ?{relation:
+                               relation.tmplDiplomaticRelations.resolve().strDisplayName
+                               }(gs_tbg.getDiplomaticRelation(mh2data.objAvatar, def.objNation, mh2data.objNation)) == "Strong":
+                               "locale.TxtStyleArialBlue14Left"
+                           case ?{relation:
+                               relation.tmplDiplomaticRelations.resolve().strDisplayName
+                               }(gs_tbg.getDiplomaticRelation(mh2data.objAvatar, def.objNation, mh2data.objNation)) == "Stable":
+                               "locale.TxtStyleArialDarkBrown14Left"
+                           case ?{relation:
+                               relation.tmplDiplomaticRelations.resolve().strDisplayName
+                               }(gs_tbg.getDiplomaticRelation(mh2data.objAvatar, def.objNation, mh2data.objNation)) == "Strained":
+                               "locale.TxtStyleArialDarkOrange14Left"
+                          default:
+                              "locale.TxtStyleArialRed14Left"
+                      }
+      			</property>
+      <property name="strText">
+        ?{relation:
+        relation.nDiplomaticRelations
+        }(gs_tbg.getDiplomaticRelation(mh2data.objAvatar, def.objNation, mh2data.objNation))
+      </property>
+
+      <property name="nX" value="103"/>
+      <property name="nY" value="32"/>
+      <property name="nWidth" value="80"/>
+      <property name="nHeight" value="14"/>
+    </object>
+
+    <!-- Trade Balance Section -->
+    <object type="mlui.UI2DImage" name="objTradeBalanceIcon" existsWhile="self.bDiplomaticPanel == true">
+      <property name="tmplImage" value="skin.ImgInfoIconTrade"/>
+      <property name="nX" value="1"/>
+      <property name="nY" value="56"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="22"/>
+    </object>
+
+    <propertyDef name="objDirectExports" type="gs_tbg.TradeAgreement" variable="true">
+      filter(?{agreement: agreement.bAid == false AND agreement.nDuration == -1},
+      filter(?
+      {exportta: exportta.refSourceNation == mh2data.objNation
+      AND exportta.refDestNation == self.objNation},
+      gs_tbg.getAllTradeAgreements(mh2data.objAvatar)))
+    </propertyDef>
+
+    <propertyDef name="objDirectImports" type="gs_tbg.TradeAgreement" variable="true">
+      filter(?{agreement: agreement.bAid == false AND agreement.nDuration == -1},
+      filter(?
+      {importta: importta.refDestNation == mh2data.objNation
+      AND importta.refSourceNation == self.objNation},
+      gs_tbg.getAllTradeAgreements(mh2data.objAvatar)))
+    </propertyDef>
+
+    <propertyDef name="nTradeBalance" type="int">
+      sum(map(?{export: (export.tmplResource.resolve().nPrice * export.nAmount)}, self.objDirectExports)) -
+      sum(map(?{import: (import.tmplResource.resolve().nPrice * import.nAmount)}, self.objDirectImports))
+    </propertyDef>
+
+    <object type="mlui.UI2DText" name="objTradeBalanceLabel" existsWhile="self.bDiplomaticPanel == true">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.TradeBalance"/>
+      <property name="nX" value="32"/>
+      <property name="nY" value="58"/>
+      <property name="nWidth" value="150"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objTradeBalanceAmount" existsWhile="self.bDiplomaticPanel == true">
+      <property name="tmplTextStyle">
+        if(def.nTradeBalance LT 0,
+        'locale.TxtStyleArialRed14Left','locale.TxtStyleArialBlue14Left')
+      </property>
+      <!--<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>-->
+      <property name="strText" from="'$' + def.nTradeBalance.formatNumber(0, true)"/>
+      <property name="nX" value="32"/>
+      <property name="nY" value="70"/>
+      <property name="nWidth" value="150"/>
+      <property name="nHeight" value="14"/>
+    </object>
+    
+<!--**************************************************************************-->
+    <!-- Header Label -->
+    <object type="mlui.UI2DText" name="objNameLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+      <property name="strText" from="locale.SID.UI.InternationalRelations"/>
+      <property name="nX" value="3"/>
+      <property name="nY" from="6 + def.vertOffset"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="14"/>
+    </object>
+
+	<!-- Diplomatic Status Section -->
+		<!-- Alliances -->
+		<object type="UI2DNationAlliances" name="objNationAlliances">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+      <property name="nY" from="23 + def.vertOffset"/>
+		</object>
+
+		<!-- Enemies -->
+		<object type="UI2DNationEnemies" name="objNationEnemies">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" from="def.objNationAlliances.nY + def.objNationAlliances.nHeight + 10"/>
+		</object>
+
+		<!-- Military Access -->
+		<object type="UI2DNationMilitaryAccessRecieved" name="objNationMilitaryAccessRecieved">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" from="def.objNationEnemies.nY + def.objNationEnemies.nHeight + 12"/>
+		</object>
+		
+		<object type="UI2DNationMilitaryAccessGranted" name="objNationMilitaryAccessGranted">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" from="def.objNationMilitaryAccessRecieved.nY + def.objNationMilitaryAccessRecieved.nHeight + 10"/>
+		</object>
+		
+		<!-- Embargoes -->
+		<object type="UI2DEmbargoList" name="objEmbargos">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" from="def.objNationMilitaryAccessGranted.nY + def.objNationMilitaryAccessGranted.nHeight + 12"/>
+			<property name="nWidth" value="290"/>
+		</object>
+
+        <object type="UI2DWithEmbargoesList" name="objWithEmbargoes">
+          <property name="objNation" from="def.objNation"/>
+          <property name="nX" value="3"/>
+          <property name="nY" from="def.objEmbargos.nY + def.objEmbargos.nHeight + 10"/>
+        </object>
+
+		<!-- Resource Trade Agreements -->
+		<object type="UI2DTradeAgreementsList" name="objResourceTradeAgreements">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+            <property name="nY" from="def.objWithEmbargoes.nY+ def.objWithEmbargoes.nHeight + 12"/>
+			<property name="nWidth" value="290"/>
+		</object>
+	</objectDef>
+	<!-- End Diplomatic Status Section -->
+
+	<!-- Trade agreements list -->
+	<objectDef type="UI2DTradeAgreementsList" superType="common_ui.UI2DList">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nTopSpacing" value="0"/>
+		<property name="nBottomSpacing" value="0"/>
+		<property name="nSpacing" value="11"/>
+
+			<object type="LookupTradeAgreementbyResource" name="objLookupArmsAgreementList">
+				<property name="strResource" value="Arms"/>
+				<property name="objNation" from="def.objNation"/>
+			</object>
+    
+			<object type="LookupTradeAgreementbyResource" name="objLookupMetalsAgreementList">
+				<property name="strResource" value="Metals"/>
+				<property name="objNation" from="def.objNation"/>
+			</object>
+
+			<object type="LookupTradeAgreementbyResource" name="objLookupCoalAgreementList">
+				<property name="strResource" value="Coal"/>
+				<property name="objNation" from="def.objNation"/>
+			</object>
+
+			<object type="LookupTradeAgreementbyResource" name="objLookupOilAgreementList">
+				<property name="strResource" value="Oil"/>
+				<property name="objNation" from="def.objNation"/>
+			</object>
+
+			<object type="LookupTradeAgreementbyResource" name="objLookupFoodAgreementList">
+				<property name="strResource" value="Food"/>
+				<property name="objNation" from="def.objNation"/>
+			</object>
+
+		<!-- Arms Trade Agreement -->
+		<object type="UI2DDiplomacyAgreement" name="objElements" existsWhile="self.objLookupArmsAgreementList.objAgreements.size GT 0">
+			<property name="objNation" from="def.objNation"/>
+			<property name="strTitle" from="locale.SID.UI.ArmsTradeAgreements"/>
+			<property name="objResourceIcon" value="skin.ImgInfoIconArms"/>
+			<property name="objTradeAgreements" from="def.objLookupArmsAgreementList"/>
+			<property name="nWidth" value="260"/>
+		</object>
+
+		<!-- Metals Trade Agreement -->
+		<object type="UI2DDiplomacyAgreement" name="objElements" existsWhile="self.objLookupMetalsAgreementList.objAgreements.size GT 0">
+			<property name="objNation" from="def.objNation"/>
+			<property name="strTitle" from="locale.SID.UI.MetalsTradeAgreements"/>
+			<property name="objResourceIcon" value="skin.ImgInfoIconMetals32x32"/>
+			<property name="objTradeAgreements" from="def.objLookupMetalsAgreementList"/>
+			<property name="nWidth" value="260"/>
+		</object>
+
+		<!-- Coal Trade Agreement -->
+		<object type="UI2DDiplomacyAgreement" name="objElements" existsWhile="self.objLookupCoalAgreementList.objAgreements.size GT 0">
+			<property name="objNation" from="def.objNation"/>
+			<property name="strTitle" from="locale.SID.UI.CoalTradeAgreements"/>
+			<property name="objResourceIcon" value="skin.ImgInfoIconCoal32x32"/>
+			<property name="objTradeAgreements" from="def.objLookupCoalAgreementList"/>
+			<property name="nWidth" value="260"/>
+		</object>
+
+		<!-- Oil Trade Agreement -->
+		<object type="UI2DDiplomacyAgreement" name="objElements" existsWhile="self.objLookupOilAgreementList.objAgreements.size GT 0">
+			<property name="objNation" from="def.objNation"/>
+			<property name="strTitle" from="locale.SID.UI.OilTradeAgreements"/>
+			<property name="objResourceIcon" value="skin.ImgInfoIconOil32x32"/>
+			<property name="objTradeAgreements" from="def.objLookupOilAgreementList"/>
+			<property name="nWidth" value="260"/>
+		</object>
+
+		<!-- Food Trade Agreement -->
+		<object type="UI2DDiplomacyAgreement" name="objElements" existsWhile="self.objLookupFoodAgreementList.objAgreements.size GT 0">
+			<property name="objNation" from="def.objNation"/>
+			<property name="strTitle" from="locale.SID.UI.FoodTradeAgreements"/>
+			<property name="objResourceIcon" value="skin.ImgInfoIconFood"/>
+			<property name="objTradeAgreements" from="def.objLookupFoodAgreementList"/>
+			<property name="nWidth" value="260"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DDiplomacyAgreement" superType="mlui.UI2DElement">
+		<propertyDef name="strTitle" type="String"/>
+		<propertyDef name="objResourceIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<propertyDef name="objTradeAgreements" type="LookupTradeAgreementbyResource"/>
+		<propertyDef name="nHeight" type="int"/>
+		
+    <property name="nHeight" from="self.objTradeAgreementFlags.nHeight + 25"/>
+		
+    <propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objResourceIcon"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="32"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objResourceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="def.strTitle"/>
+			<property name="nX" value="29"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="common_ui.UI2DFancyFlow" name="objTradeAgreementFlags">
+			<property name="nX" value="28"/>
+			<property name="nY" value="13"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nMaxEltsPerRow" value="5"/>
+
+			<object type="UI2DNationFlag46x24" name="objElements" tiedTo="def.objTradeAgreements.objAgreements">
+				<property name="objNation">
+					if(def.objNation == tiedTo.refSourceNation.resolve(mh2data.objAvatar),
+						tiedTo.refDestNation.resolve(mh2data.objAvatar),
+						tiedTo.refSourceNation.resolve(mh2data.objAvatar)
+					)
+				</property>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" from="46"/>
+				<property name="nHeight" from="24"/>
+			</object>
+		</object>
+
+	</objectDef>
+	<!-- End Trade Agreements list -->
+
+	<!-- Alliances list -->
+	<objectDef type="UI2DNationAlliances" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<property name="nWidth">
+			30 + if(self.objAlliesList.nWidth GT self.objAllianceLeaderLabel.nWidth, self.objAlliesList.nWidth, self.objAllianceLeaderLabel.nWidth)
+		</property>
+		<property name="nHeight" from="self.objAlliesList.nHeight + 66"/>
+
+
+    <propertyDef name="objAllianceMembership" type="gs_tbg.AllianceMembership"/>
+    <property name="objAllianceMembership">
+      find(?{membership: membership.refNation == self.objNation}, gs_tbg.getAllAllianceMemberships(mh2data.objAvatar))
+    </property>
+
+    <propertyDef name="objAlliance" type="gs_tbg.Alliance"/>
+    <property name="objAlliance" from="self.objAllianceMembership.refAlliance.resolve(mh2data.objAvatar)"/>
+    
+    <propertyDef name="objLeadNation" type="gs_tbg.Nation"/>
+    <property name="objLeadNation" from="self.objAlliance.refLeadNation.resolve(mh2data.objAvatar)"/>
+    
+    
+    <object type="mlui.UI2DImage" name="objAllianceLeaderIcon">
+    <property name="tmplImage" value="skin.ImgInfoIconAllianceLeaderSm"/>
+    <property name="nX" value="0"/>
+    <property name="nY" value="0"/>
+    <property name="nWidth" value="25"/>
+    <property name="nHeight" value="25"/>
+  </object>
+
+		<object type="mlui.UI2DText" name="objAlliesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.Allies"/>
+			<property name="nX" value="29"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+    
+    <object type="mlui.UI2DText" name="objAllianceLeaderLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <!--<property name="strText">
+        if(self.objAlliesList.nWidth > 0, locale.SID.UI.AllianceLeader, locale.SID.UI.None)
+      </property>-->
+      <property name="strText" from="locale.SID.UI.AllianceLeader"/>
+      <property name="nX" value="29"/>
+      <property name="nY" value="12"/>
+      <property name="nWidth" value="100"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="UI2DNationFlag46x24" name="objNationFlag">
+      <property name="objNation" from="def.objLeadNation"/>
+      <property name="nX" value="28"/>
+      <property name="nY" value="23"/>
+      <property name="nWidth" value="46"/>
+      <property name="nHeight" value="24"/>
+      <property name="strToolTip" from="def.objLeadNation.strDisplayName"/>
+    </object>
+    
+    <object type="mlui.UI2DText" name="objAllianceMembersLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.AllianceMembers"/>
+      <property name="nX" value="29"/>
+      <property name="nY" value="54"/>
+      <property name="nWidth" value="100"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="common_ui.UI2DFancyFlow" name="objAlliesList">
+			<property name="nX" value="28"/>
+			<property name="nY" value="65"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nMaxEltsPerRow" value="5"/>
+
+			<object type="UI2DNationFlag46x24" name="objElements" tiedTo="gs_tbg.getNationAllies(mh2data.objAvatar, def.objNation)">
+				<property name="objNation" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="46"/>
+				<property name="nHeight" value="24"/>
+			</object>
+		</object>
+	</objectDef>
+
+	<!-- Wars list -->
+	<objectDef type="UI2DNationEnemies" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<property name="nWidth">
+			30 + if(self.objNationalEnemies.nWidth > self.objNationalEnemiesLabel.nWidth, self.objNationalEnemies.nWidth, self.objNationalEnemiesLabel.nWidth)
+		</property>
+		<property name="nHeight" from="self.objNationalEnemies.nHeight + 33"/>
+
+		<object type="mlui.UI2DImage" name="objNationalEnemiesIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconWarState"/>
+			<property name="nX" value="-1"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="26"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+    <object type="mlui.UI2DText" name="objWarsLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.Wars"/>
+			<property name="nX" value="29"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objNationalEnemiesLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.NationalEnemies"/>
+      <property name="nX" value="29"/>
+      <property name="nY" value="12"/>
+      <property name="nWidth" value="100"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+		<object type="common_ui.UI2DFancyFlow" name="objNationalEnemies">
+      <property name="nX" value="28"/>
+      <property name="nY" value="23"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nMaxEltsPerRow" value="5"/>
+
+			<object type="UI2DNationFlag46x24" name="objElements" tiedTo="gs_tbg.getNationEnemies(mh2data.objAvatar, def.objNation)">
+				<property name="objNation" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="46"/>
+				<property name="nHeight" value="24"/>
+			</object>
+		</object>
+	</objectDef>
+
+	<!-- Military Access list -->
+	<objectDef type="UI2DNationMilitaryAccessRecieved" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<property name="nWidth">
+			30 + if(self.objMilitaryAccessAgreements.nWidth > self.objMilitaryAccessTreatiesLabel.nWidth, self.objMilitaryAccessAgreements.nWidth, self.objMilitaryAccessTreatiesLabel.nWidth)
+		</property>
+		<property name="nHeight" from="self.objMilitaryAccessAgreements.nHeight + 44"/>
+
+		<object type="mlui.UI2DImage" name="objMilitaryAccessTreatiesIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMilitaryAccess"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" value="28"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMilitaryAccessTreatiesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.MilitaryAccessTreaties"/>
+			<property name="nX" value="29"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+    <object type="mlui.UI2DText" name="objGrantMilitaryAccessLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.NationsGrantingMilitaryAccess"/>
+      <property name="nX" value="29"/>
+      <property name="nY" value="12"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="12"/>
+    </object>
+    
+		<object type="common_ui.UI2DFancyFlow" name="objMilitaryAccessAgreements">
+      <property name="nX" value="28"/>
+      <property name="nY" value="23"/>
+      <property name="nEltSpacing" value="2"/>
+      <property name="nRowSpacing" value="1"/>
+      <property name="nMaxEltsPerRow" value="5"/>
+
+			<object type="UI2DNationFlag46x24" name="objElements" tiedTo="gs_tbg.getAccessNationsReceived(mh2data.objAvatar, def.objNation)">
+				<property name="objNation" from="tiedTo"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="46"/>
+        <property name="nHeight" value="24"/>
+			</object>
+		</object>
+	</objectDef>
+
+  <objectDef type="UI2DNationMilitaryAccessGranted" superType="mlui.UI2DElement">
+    <propertyDef name="objNation" type="gs_tbg.Nation"/>
+    <property name="nWidth">
+      30 + if(self.objMilitaryAccessAgreements.nWidth > self.objMilitaryAccessTreatiesLabel.nWidth, self.objMilitaryAccessAgreements.nWidth, self.objMilitaryAccessTreatiesLabel.nWidth)
+    </property>
+    <property name="nHeight" from="self.objMilitaryAccessAgreements.nHeight + 21"/>
+
+    <object type="mlui.UI2DText" name="objMilitaryAccessTreatiesLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.NationWithMilitaryAccess"/>
+      <property name="nX" value="29"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="common_ui.UI2DFancyFlow" name="objMilitaryAccessAgreements">
+      <property name="nX" value="28"/>
+      <property name="nY" value="11"/>
+      <property name="nEltSpacing" value="2"/>
+      <property name="nRowSpacing" value="1"/>
+      <property name="nMaxEltsPerRow" value="5"/>
+
+      <object type="UI2DNationFlag46x24" name="objElements" tiedTo="gs_tbg.getAccessNationsGranted(mh2data.objAvatar, def.objNation)">
+        <property name="objNation" from="tiedTo"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="46"/>
+        <property name="nHeight" value="24"/>
+      </object>
+    </object>
+  </objectDef>
+  
+	<!-- Embargo list -->
+	<objectDef type="UI2DEmbargoList" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<property name="nWidth">
+			30 + if(self.objEmbargos.nWidth > self.objEmbargosLabel.nWidth, self.objEmbargos.nWidth, self.objEmbargosLabel.nWidth)
+		</property>
+		<property name="nHeight" from="self.objEmbargos.nHeight + 24"/>
+
+		<object type="mlui.UI2DImage" name="objEmbargosIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconEmbargo"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="21"/>
+			<property name="nHeight" value="24"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objEmbargosLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.TradeEmbargoes"/>
+      <property name="nX" value="29"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="12"/>
+		</object>
+
+    <object type="mlui.UI2DText" name="objUnderEmbargoLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.NationsUnderEmbargo"/>
+      <property name="nX" value="29"/>
+      <property name="nY" value="12"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <object type="common_ui.UI2DFancyFlow" name="objEmbargos">
+      <property name="nX" value="28"/>
+      <property name="nY" value="23"/>
+      <property name="nEltSpacing" value="2"/>
+      <property name="nRowSpacing" value="1"/>
+      <property name="nMaxEltsPerRow" value="5"/>
+
+      <object type="UI2DNationFlag46x24" name="objElements" tiedTo="gs_tbg.getNationEmbargoes(mh2data.objAvatar, def.objNation)">
+		<property name="objNation" from="tiedTo.refEmbargoedNation.resolve(mh2data.objAvatar)"/>
+		<property name="nX" value="0"/>
+		<property name="nY" value="0"/>
+		<property name="nWidth" value="46"/>
+		<property name="nHeight" value="24"/>
+	  </object>
+	</object>
+  </objectDef>
+
+  <objectDef type="UI2DWithEmbargoesList" superType="mlui.UI2DElement">
+    <propertyDef name="objNation" type="gs_tbg.Nation"/>
+    <property name="nWidth">
+      30 + if(self.objWithEmbargoes.nWidth > self.objWithEmbargoLabel.nWidth, self.objWithEmbargoes.nWidth, self.objWithEmbargoLabel.nWidth)
+    </property>
+    <property name="nHeight" from="self.objWithEmbargoes.nHeight + 21"/>
+
+    <object type="mlui.UI2DText" name="objWithEmbargoLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.NationsWithEmbargoes"/>
+      <property name="nX" value="29"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="12"/>
+    </object>
+    
+    <object type="common_ui.UI2DFancyFlow" name="objWithEmbargoes">
+      <property name="nX" value="28"/>
+      <property name="nY" value="12"/>
+      <property name="nEltSpacing" value="2"/>
+      <property name="nRowSpacing" value="1"/>
+      <property name="nMaxEltsPerRow" value="5"/>
+
+      <object type="UI2DNationFlag46x24" name="objElements" tiedTo="gs_tbg.getEmbargosAgainstNation(mh2data.objAvatar, def.objNation)">
+        <property name="objNation" from="tiedTo.refInitiatingNation.resolve(mh2data.objAvatar)"/>
+        <property name="nX" value="0"/>
+        <property name="nY" value="0"/>
+        <property name="nWidth" value="46"/>
+        <property name="nHeight" value="24"/>
+      </object>
+    </object>
+  </objectDef>
+	
+</locust>

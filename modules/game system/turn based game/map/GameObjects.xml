@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- Map Region -->
+    <objectDef type="MapRegion" class="CMLOMapRegion">
+		<goDef gameSystem="GameSysMap" storageProperty="objMapRegions">
+			<keyProperty name="refRegion"/>
+		</goDef>
+	    <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+	    <propertyDef name="tmplDisplayModel" type="TemplateRef" restriction="mlmedia.ModelTemplate"/>
+	    <propertyDef name="tmplClickModel" type="TemplateRef" restriction="mlmedia.ModelTemplate"/>
+        <propertyDef name="eRegionType" type="Enum" restriction="RegionType"/>
+        <propertyDef name="vecCenter" type="Vec3D"/>
+    </objectDef>
+	
+    <!-- Map River -->
+    <objectDef type="MapRiver" class="CMLObject">
+		<goDef gameSystem="GameSysMap" storageProperty="objMapRivers">
+			<keyProperty name="strName"/>
+		</goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="tmplDisplayModel" type="TemplateRef" restriction="mlmedia.ModelTemplate"/>
+        <property name="strDisplayName" from="self.strName"/>
+    </objectDef>
+    
+    <!-- Map Road -->
+    <objectDef type="MapRoad" class="CMLObject">
+		<goDef gameSystem="GameSysMap" storageProperty="objMapRoads">
+			<keyProperty name="refRegion"/>
+		</goDef>
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+	    <propertyDef name="tmplDisplayModel" type="TemplateRef" restriction="mlmedia.ModelTemplate"/>
+        
+    </objectDef>
+
+    <objectDef type="MapLake" class="CMLObject">
+	    <propertyDef name="tmplDisplayModel" type="TemplateRef" restriction="mlmedia.ModelTemplate"/>
+    </objectDef>
+    
+    <!-- Map Edge -->
+    <objectDef type="MapEdge" class="CMLOMapEdge">
+        <propertyDef name="refRegionA" type="GORef" restriction="Region"/>
+        <propertyDef name="refRegionB" type="GORef" restriction="Region"/>
+        <propertyDef name="refRiver" type="GORef" restriction="MapRiver"/>
+		<propertyDef name="nWeight" type="int"/>
+	</objectDef>
+
+</locust>

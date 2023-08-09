@@ -1,0 +1,3017 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <enumDef name="EncyclopediaCategories">
+        <value name="REGION"/>
+        <value name="UNIT"/>
+        <value name="CITY_BUILDINGS"/>
+        <value name="RESEARCH_BUILDINGS"/>
+        <value name="RESEARCH_TOPICS"/>
+        <value name="COMBAT_MODIFIERS"/>
+    </enumDef>
+	
+	<enumDef name="CombatModCategories">
+<!--		<value name="COMMAND_EXP"/> -->
+		<value name="MORALE"/>
+		<value name="EXPERIENCE"/>
+		<value name="TERRAIN"/>
+	</enumDef>
+	
+	<objectDef type="CombatModEntry" class="CMLObject">
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="eCombatModType" type="Enum" restriction="CombatModCategories"/>
+	</objectDef>
+        
+    <objectDef type="EncyclopediaData" class="CMLObject">
+        <propertyDef name="eTab" type="Enum" restriction="EncyclopediaCategories" default="RESEARCH_TOPICS"/>
+        <propertyDef name="objSelected" type="Object" from="if(self.objEntries.size GT 0, self.objEntries[0].objEntry, null)"/>
+        <propertyDef name="objSelectedClass" type="Object" variable="true">
+			switch{
+				case self.objSelected.instanceOf(gs_tbg.UnitTemplate):
+					filter(?{template: template.resolve().strBaseUnitClass == self.objSelected.strBaseUnitClass AND template.resolve().strBaseUnitClass != ''}, sd.getTemplate(TemplateList, 'UnitTemplateList').tmplRefs)
+			}
+		</propertyDef>
+        
+        <propertyDef name="objEntries" variable="true" storesChildren="true">
+			
+            map(
+                ?{entry:
+                    if(entry.instanceOf(TemplateRef),
+					<object type="EncyclopediaEntry">
+                        <property name="objEntry" from="entry.resolve()"/>
+                        <property name="strDisplayName" from="entry.resolve().strDisplayName"/>
+                    </object>,
+					<object type="EncyclopediaEntry">
+                        <property name="objEntry" from="entry"/>
+                        <property name="strDisplayName" from="entry.strDisplayName"/>
+                    </object>
+					)
+                },
+                switch{
+                    case encydata.objEncyclopediaData.eTab == EncyclopediaCategories.UNIT:
+                        sd.getTemplate(TemplateList, 'UnitTemplateList').tmplRefs
+                    case encydata.objEncyclopediaData.eTab == EncyclopediaCategories.REGION:
+                        sd.getTemplate(TemplateList, 'RegionOutputTemplateList').tmplRefs
+                    case encydata.objEncyclopediaData.eTab == EncyclopediaCategories.CITY_BUILDINGS:
+                        sd.getTemplate(TemplateList, 'CityBuildingTemplateList').tmplRefs
+                    case encydata.objEncyclopediaData.eTab == EncyclopediaCategories.RESEARCH_BUILDINGS:
+                        sd.getTemplate(TemplateList, 'ResearchCenterBuildingTemplateList').tmplRefs
+                    case encydata.objEncyclopediaData.eTab == EncyclopediaCategories.RESEARCH_TOPICS:
+                        sd.getTemplate(TemplateList, 'ResearchTopicTemplateList').tmplRefs
+                    case encydata.objEncyclopediaData.eTab == EncyclopediaCategories.COMBAT_MODIFIERS:
+                        [<!-- <object type="CombatModEntry">
+							<property name="strDisplayName" from="locale.SID.UI.encCommandExperience"/>
+							<property name="eCombatModType" from="CombatModCategories.COMMAND_EXP"/>
+						</object>, -->
+						<object type="CombatModEntry">
+							<property name="strDisplayName" from="locale.SID.UI.encExperience"/>
+							<property name="eCombatModType" from="CombatModCategories.EXPERIENCE"/>
+						</object>,
+						<object type="CombatModEntry">
+							<property name="strDisplayName" from="locale.SID.UI.encMorale"/>
+							<property name="eCombatModType" from="CombatModCategories.MORALE"/>
+						</object>,
+						<object type="CombatModEntry">
+							<property name="strDisplayName" from="locale.SID.UI.encTerrain"/>
+							<property name="eCombatModType" from="CombatModCategories.TERRAIN"/>
+						</object>]
+                }
+                
+            )
+        </propertyDef>
+        
+		<script type="application/x-locust-query"> <![CDATA[
+		
+		getEntry = ?{template:
+			find(?{entry: entry.objEntry == template}, self.objEntries)
+		}
+		
+		]]>
+		</script>
+    </objectDef>
+    
+    <objectDef type="EncyclopediaEntry" class="CMLObject">
+        <propertyDef name="objEntry" type="Object"/>
+        <propertyDef name="strDisplayName" type="String"/>
+    </objectDef>
+	<objectDef type="EncyclopediaEntryClass" class="CMLObject">
+		<propertyDef name="strBaseUnitClass" type="String"/>
+		<propertyDef name="objTemplates" type="gs_tbg.UnitTemplate" variable="true">
+			map(?{template: template.resolve()}, filter(?{template: template.resolve().strBaseUnitClass == self.strBaseUnitClass}, sd.getTemplate(TemplateList, 'UnitTemplateList').tmplRefs))
+		</propertyDef>
+		<propertyDef name="strDisplayName" type="String" from="self.strBaseUnitClass"/>
+	</objectDef>
+    
+    <objectDef type="UI2DEncyclopedia" superType="UI2DReportPanel">
+
+      <object type="mlui.UI2DImage" name="objEncyclopediaPolicyIcon">
+        <property name="tmplImage" value="skin.ImgUIInfoIconEncyclopedia"/>
+        <property name="nX" value="1"/>
+        <property name="nY" value="58"/>
+        <property name="nWidth" value="23"/>
+        <property name="nHeight" value="26"/>
+      </object>
+
+      <object type="mlui.UI2DText" name="objMilitaryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite18Left"/>
+			<property name="strText" from="locale.SID.UI.Encyclopedia"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="66"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="UI2DLargeCloseButton" name="objClose">
+			<property name="nX" value="4"/>
+			<property name="nY" value="59"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							encydata.closeEncy();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objBG">
+            <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+            <property name="nX" value="8"/>
+            <property name="nY" value="136"/>
+            <property name="nWidth" value="878"/>
+            <property name="nHeight" value="548"/>
+        </object> 
+        
+        <object type="common_ui.UI2DListHorz" name="objBubbles">
+            <property name="nX" value="14"/>
+            <property name="nY" value="102"/>
+            <property name="haXAlign" value="RIGHT"/>
+			<property name="nSpacing" value="1"/>
+            
+            <object type="UI2DReportTab" name="objElements">
+                <property name="strText" from="locale.SID.UI.CombatProps"/>
+				<property name="tmplIcon" value="skin.ImgMedalIcon"/>
+				<property name="bSelected">
+                    encydata.objEncyclopediaData.eTab == EncyclopediaCategories.COMBAT_MODIFIERS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript"><![CDATA[
+                            function handle(event, owner)
+                            {
+                                encydata.objEncyclopediaData.showCombatModifiers();
+                            }
+                        ]]></script>
+                    </object>	
+                </object>
+            </object>
+			
+            <object type="UI2DReportTab" name="objElements">
+				<property name="strText" from="locale.SID.UI.Units"/>
+				<property name="tmplIcon" value="skin.ImgStarsIcon"/>
+                <property name="bSelected">
+			        encydata.objEncyclopediaData.eTab == EncyclopediaCategories.UNIT
+				</property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript"><![CDATA[
+                            function handle(event, owner)
+                            {
+                                encydata.objEncyclopediaData.showUnits();
+                            }
+                        ]]></script>
+                    </object>	
+                </object>
+            </object> 
+            
+            <object type="UI2DReportTab" name="objElements">
+				<property name="strText" from="locale.SID.UI.RegionProjects"/>
+				<property name="tmplIcon" value="skin.ImgPickaxPersonIcon"/>
+                <property name="bSelected">
+                    encydata.objEncyclopediaData.eTab == EncyclopediaCategories.REGION
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript"><![CDATA[
+                            function handle(event, owner)
+                            {
+                                encydata.objEncyclopediaData.showRegions();
+                            }
+                        ]]></script>
+                    </object>	
+                </object>
+            </object>
+            
+            <object type="UI2DReportTab" name="objElements">
+				<property name="strText" from="locale.SID.UI.CityBuildings"/>
+				<property name="tmplIcon" value="skin.ImgFactoryIcon"/>
+                <property name="bSelected">
+                    encydata.objEncyclopediaData.eTab == EncyclopediaCategories.CITY_BUILDINGS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript"><![CDATA[
+                            function handle(event, owner)
+                            {
+                               encydata.objEncyclopediaData.showCityBuildings();
+                            }
+                        ]]></script>
+                    </object>	
+                </object>
+            </object>
+            
+            <object type="UI2DReportTab" name="objElements">
+				<property name="strText" from="locale.SID.UI.ResearchBuildings"/>
+				<property name="tmplIcon" value="skin.ImgResearchBuildingIcon"/>
+                <property name="bSelected">
+                    encydata.objEncyclopediaData.eTab == EncyclopediaCategories.RESEARCH_BUILDINGS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript"><![CDATA[
+                            function handle(event, owner)
+                            {
+                                encydata.objEncyclopediaData.showResearchBuildings();
+                            }
+                        ]]></script>
+                    </object>	
+                </object>
+            </object>
+            
+            <object type="UI2DReportTab" name="objElements">
+				<property name="strText" from="locale.SID.UI.ResearchTopics"/>
+				<property name="tmplIcon" value="skin.ImgResearchIcon"/>
+				<property name="bSelected">
+                    encydata.objEncyclopediaData.eTab == EncyclopediaCategories.RESEARCH_TOPICS
+                </property>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript"><![CDATA[
+                            function handle(event, owner)
+                            {
+                                encydata.objEncyclopediaData.showResearchTopics();
+                            }
+                        ]]></script>
+                    </object>	
+                </object>
+            </object> 
+        </object>
+        
+        
+                
+        <object type="UI2DEncyclopediaLeft" name="objLeft">
+            <property name="nX" value="11"/>
+            <property name="nY" value="161"/>        
+           
+        </object>
+        
+        <object type="UI2DEncyclopediaRight" name="objRight">
+            <property name="nX" value="257"/>
+            <property name="nY" value="161"/>
+        </object> 
+        
+    </objectDef>
+    
+    <objectDef type="SortEncyclopediaEntries" class="CMLObject" >
+        <propertyDef name="strDisplayName" type="String" />
+        <propertyDef name="tmplCategory" type="TemplateRef" />
+    </objectDef>    
+	    
+    <objectDef type="UI2DEncyclopediaLeft" superType="mlui.UI2DElement">
+        <property name="nWidth" value="243"/>
+        <property name="nHeight" value="521"/>
+        
+        <propertyDef name="objSorter" storesChildren="true" variable="true" >
+             switch{
+                case (encydata.objEncyclopediaData.eTab == EncyclopediaCategories.RESEARCH_TOPICS):
+                    [
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.All" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Advanced" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Advanced')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Rocketry" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Rocketry')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Nuclear" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Nuclear')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Chemical" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Chemical')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Industrial" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Industrial')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Agriculture" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Agriculture')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.TankWarfare" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'TankWarfare')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.VehicleLogistics" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'VehicleLogistics')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Infantry" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Infantry')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Special" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Special')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Artillery" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Artillery')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.AerialEngineering" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'AerialEngineering')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.AerialTactics" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'AerialTactics')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.NavalEngineering" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'NavalEngineering')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Infrastructure" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Infrastructure')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Resources" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.ResearchCategoryTemplate, 'Resources')" />
+                    </object>
+                    ]
+                case (encydata.objEncyclopediaData.eTab == EncyclopediaCategories.UNIT):
+                    [
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.All" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.AirForce" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Navy" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Army" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Submarines" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Submarine')" />
+                    </object>
+                    ]
+                case (encydata.objEncyclopediaData.eTab == EncyclopediaCategories.REGION):
+                    [
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.All" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Food" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Resources" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Transportation" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Transportation')" />
+                    </object>
+                    ,
+                    <object type="SortEncyclopediaEntries" >
+                        <property name="strDisplayName" from="locale.SID.UI.Military" />
+                        <property name="tmplCategory" from="sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Military')" />
+                    </object>
+                    ]
+                default:
+                []                
+            }
+        </propertyDef>
+        
+		<propertyDef name="strClasses" type="String" variable="true">
+			uniqueSet(map(?{
+				entry: entry.objEntry.strBaseUnitClass
+			},
+				filter(?{
+					entry: entry.objEntry.instanceOf(gs_tbg.UnitTemplate) AND entry.objEntry.strBaseUnitClass != ""
+				}, encydata.objEncyclopediaData.objEntries)))
+		</propertyDef>
+		<propertyDef name="objNonClassEntries" type="EncyclopediaEntry" variable="true">
+			filter(?{entry: !entry.objEntry.instanceOf(gs_tbg.UnitTemplate) OR entry.objEntry.strBaseUnitClass == ""}, encydata.objEncyclopediaData.objEntries)
+		</propertyDef>
+		
+		<object name="objClassEntries" type="EncyclopediaEntryClass" tiedTo="self.strClasses">
+			<property name="strBaseUnitClass" from="tiedTo"/>
+		</object>
+		<propertyDef name="objEntries" type="Object" variable="true"/>
+		<property name="objEntries" from="self.objClassEntries"/>
+		<property name="objEntries" from="self.objNonClassEntries"/>
+		
+        <propertyDef name="bSort" type="bool" >
+            self.objSorter != null AND self.objSorter.length GT 0
+        </propertyDef>
+        
+        <object name="objCategoryHeader" type="mlui.UI2DText" existsWhile="def.bSort" >
+            <property name="tmplTextStyle" value="locale.TxtStyleArialBrown12Left" />
+			<property name="strText" from="locale.SID.UI.Category"/>
+            <property name="nWidth" from="239"/>
+            <property name="nHeight" from="14"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="1"/>
+        </object>
+        
+        <object name="objCategoryButton" type="UI2DEncyclopediaSortButton" existsWhile="def.bSort" >
+			<property name="nX" value="3"/>
+			<property name="nY" value="14"/>
+            <property name="objSorter">
+                def.objSorter[0]
+            </property>
+        </object>     
+        
+        <object type="common_ui.UI2DList" name="objSorterButtons" existsWhile="def.bSort">
+			<property name="nSpacing" value="0"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="14"/>
+            <property name="nDepth" value="10" />
+            <property name="bVisible" from="def.objCategoryButton.bPopupMenu" />		
+			<object type="UI2DEncyclopediaSortButton" name="objElements" tiedTo="def.objSorter">
+				<property name="objSorter" from="tiedTo"/>
+                <property name="objElement" from="def.objCategoryButton" />
+			</object>
+		</object>
+
+        <object type="mlui.UI2DImage" name="objBG">
+            <property name="tmplImage" value="skin.ImgEncyclopediaLeft"/>
+            <property name="nX" value="0"/>
+            <property name="nY" from="def.objEntriesList.nY - 3"/>
+        </object>                
+        
+		<object type="UI2DDynamicList" name="objEntriesList">
+            <property name="nX" value="0"/>
+            <property name="nY" from="if(def.bSort, 47, 0)"/>
+            <property name="nHeight"  from="if(def.bSort, 467, 517)"/>
+            <property name="nWidth" value="239"/>
+			<property name="listItems">
+				if(def.bSort AND def.objCategoryButton.objSorter !=  def.objSorter[0],
+                    sortAscending(?{entry: entry.strDisplayName}, 
+                        if(encydata.objEncyclopediaData.eTab != EncyclopediaCategories.UNIT
+                            ,
+                            filter(?{entries:  
+                                entries.objEntry.tmplCategory == def.objCategoryButton.objSorter.tmplCategory}, def.objEntries)
+                            ,
+                            filter(?{entries:
+                                if(entries.instanceOf(EncyclopediaEntry),
+                                    entries.objEntry.tmplUnitSubBranch.resolve().tmplUnitBranch == def.objCategoryButton.objSorter.tmplCategory
+                                    ,
+                                    find(?{template: template.tmplUnitSubBranch.resolve().tmplUnitBranch == def.objCategoryButton.objSorter.tmplCategory}, entries.objTemplates) != null
+                                )   
+                            }, def.objEntries)
+                        )
+                    )
+                    ,
+                    sortAscending(?{entry: entry.strDisplayName}, def.objEntries)
+                )
+			</property>
+			<property name="nRowWidth" value="225"/>
+			<property name="nRowHeight" value="24"/>
+			<property name="nRowSpacing" value="0"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DEncyclopediaEntryButton"/>
+			<property name="strPropForItem" value="objEntry"/>
+		</object>
+    </objectDef>
+    
+	<objectDef type="UI2DEncyclopediaSortButton" superType="mlui.UI2DButton">
+        <propertyDef name="objSorter" type="SortEncyclopediaEntries"/>
+        <propertyDef name="bPopupMenu" type="bool" default="false" />
+        <propertyDef name="objElement" type="mlui.UI2DElement" />
+        
+        <property name="tmplButtonStyle" value="skin.BtnStyleReportBubbleTanWhite"/>
+        <property name="nWidth" from="239"/>
+        <property name="nHeight" value="30"/>
+        
+        <object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown16CenterMiddle" />
+			<property name="strText" from="def.objSorter.strDisplayName"/>
+            <property name="nWidth" from="def.nWidth"/>
+            <property name="nHeight" from="def.nHeight"/>
+            <property name="nDepth" value="50"/>
+		</object>
+        
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                <property name="otEventType" value="mlui.EventButtonClicked"/>
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+                        log(" " + def);
+                        if(def.objElement != null)
+                        {
+                            def.objElement.bPopupMenu = false;
+                            def.objElement.objSorter = def.objSorter;
+                        }
+                        else
+                        {
+                            def.bPopupMenu = true;
+                        }
+                    }
+                ]]></script>
+            </object>					
+        </object>
+        
+    </objectDef>
+    
+	<objectDef type="UI2DEncyclopediaEntryButton" superType="mlui.UI2DButton">
+        <propertyDef name="objEntry" type="Object"/>
+        <propertyDef name="bSelected" type="bool">
+			if(self.objEntry.instanceOf(EncyclopediaEntryClass),
+            encydata.objEncyclopediaData.objSelected.strBaseUnitClass != null AND self.objEntry.strBaseUnitClass == encydata.objEncyclopediaData.objSelected.strBaseUnitClass,
+            self.objEntry.objEntry == encydata.objEncyclopediaData.objSelected)
+		</propertyDef>
+        
+        <property name="tmplButtonStyle" value="skin.BtnStyleInvisible"/>
+        <property name="nWidth" value="225"/>
+        <property name="nHeight" value="22"/>
+        
+        <object type="mlui.UI2DImage" name="objBG">
+            <property name="tmplImage">
+                if(def.bSelected, 'skin.ImgEncyclopediaEntrySelected', 'skin.ImgEncyclopediaEntry')
+            </property>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="nWidth" from="def.nWidth"/>
+            <property name="nHeight" from="def.nHeight"/>
+        </object>
+        
+        <object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle">
+				if(def.bSelected, 'locale.TxtStyleArialWhite14LeftWrap', 'locale.TxtStyleArialBrown14LeftWrap')
+			</property>
+			<property name="strText" from="def.objEntry.strDisplayName"/>
+            <property name="nWidth" from="def.nWidth - 10"/>
+			<property name="nX" value="5"/>
+			<property name="nY" value="7"/>
+		</object>
+        
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                <property name="otEventType" value="mlui.EventButtonClicked"/>
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+						if(def.objEntry.instanceOf(EncyclopediaEntryClass))
+						{
+							encydata.objEncyclopediaData.objSelected = def.objEntry.objTemplates[0];
+						}
+						else
+						{
+							encydata.objEncyclopediaData.objSelected = def.objEntry.objEntry;
+						}
+                    }
+                ]]></script>
+            </object>					
+        </object>
+        
+    </objectDef>
+     
+    <objectDef type="UI2DEncyclopediaRight" superType="mlui.UI2DElement">
+        <property name="nWidth" value="626"/>
+        <property name="nHeight" value="521"/>
+        
+        <object type="mlui.UI2DImage" name="objBG">
+            <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+			<property name="nDepth" value="-101"/>
+        </object>
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nWidth" value="626"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+        
+        <propertyDef name="objPanel" storesChildren="true">
+            switch{
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.UnitTemplate) AND encydata.objEncyclopediaData.objSelectedClass.size != 0:
+                    <object type="UI2DEncyclopediaEntryUnitClass">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="objClassEntries" from="encydata.objEncyclopediaData.objSelectedClass"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.UnitTemplate):
+                    <object type="UI2DEncyclopediaEntryUnit">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.ResourceProspectingOutputTemplate):
+                    <object type="UI2DEncyclopediaEntryResourceProspecting">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.CoastalDefenseOutputTemplate):
+                    <object type="UI2DEncyclopediaEntryCoastalDefense">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.AADefenseOutputTemplate):
+                    <object type="UI2DEncyclopediaEntryAADefense">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.FortificationOutputTemplate):
+                    <object type="UI2DEncyclopediaEntryFortification">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.TransportationOutputTemplate):
+                    <object type="UI2DEncyclopediaEntryTransportation">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.ResourceProducerOutputTemplate):
+                    <object type="UI2DEncyclopediaEntryResourceProducer">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.AirbaseOutputTemplate):
+                    <object type="UI2DEncyclopediaEntryAirbase">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.NavalBaseOutputTemplate):
+                    <object type="UI2DEncyclopediaEntryNavalBase">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.CityBuildingTemplate):
+                    <object type="UI2DEncyclopediaEntryCity">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.ResearchCenterBuildingTemplate):
+                    <object type="UI2DEncyclopediaEntryResearchBuildings">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(gs_tbg.ResearchTopicTemplate):
+                    <object type="UI2DEncyclopediaEntryResearch">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object> 
+                case encydata.objEncyclopediaData.objSelected.instanceOf(CombatModEntry) AND encydata.objEncyclopediaData.objSelected.eCombatModType != CombatModCategories.TERRAIN:
+                    <object type="UI2DEncyclopediaEntryCombatMod">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+                case encydata.objEncyclopediaData.objSelected.instanceOf(CombatModEntry):
+                    <object type="UI2DEncyclopediaEntryTerrainMod">
+                        <property name="nX" value="4"/>
+                        <property name="nY" value="4"/>
+                        <property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+                        <property name="nDepth" value="10000"/>
+                    </object>
+            }
+        </propertyDef>        
+    </objectDef>
+	
+	<objectDef type="UI2DEncyclopediaEntryUnitClass" superType="mlui.UI2DElement">
+        <property name="nWidth" value="618"/>
+        <property name="nHeight" value="513"/>
+        <propertyDef name="objEntry" type="gs_tbg.UnitTemplate" from="encydata.objEncyclopediaData.objSelected"/>
+		<propertyDef name="objClassEntries" type="gs_tbg.UnitTemplate" variable="true"/>
+				
+		<object type="mlui.UI2DText" name="objClassNameLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown18Left"/>
+			<property name="strText" from="def.objEntry.strBaseUnitClass"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objUnitShortDescription">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+			<property name="strText">
+				if(def.objEntry.strShortDescription == 'XXXXXX',
+					' ',
+						def.objEntry.strShortDescription)
+			</property>	
+			<property name="nX" value="2"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="15"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objClassNameLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12LeftWrap"/>
+			<property name="strText" from="def.objEntry.strEncyclopediaDescription"/>
+			<property name="nX" value="2"/>
+			<property name="nY">
+				if(def.objEntry.strShortDescription == 'XXXXXX',
+					22, 41)
+			</property>
+			<property name="nWidth" value="600"/>
+			<property name="nHeight" value="110"/>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objBottomBG">
+            <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="144"/>
+			<property name="nWidth" value="618"/>
+			<property name="nHeight" value="369"/>
+        </object>
+        
+        <object type="UI2DEncyclopediaEntryUnitClassBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+		
+		<propertyDef name="objRank1Unit" type="gs_tbg.UnitTemplate">
+			find(?{template: template.nClassRank == 1}, self.objClassEntries)
+		</propertyDef>
+		<object type="mlui.UI2DTextButton" name="objTab1" existsWhile="self.objRank1Unit != null">
+			<property name="nX" value="5"/>
+			<property name="nY" value="120"/>
+			<property name="strText" from="def.objRank1Unit.strDisplayName"/>
+			<property name="tmplTextButtonStyle">
+					if(encydata.objEncyclopediaData.objSelected == def.objRank1Unit,
+                            'skin.TxtBtnStyleReportTabButtonSubTabC',
+                            'skin.TxtBtnStyleReportTabButtonSubTab'
+                        )
+			</property>
+			<property name="nDefaultWidth" value="95"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="strToolTip" from="locale.SID.UI.Subordinates"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							encydata.objEncyclopediaData.objSelected = def.objRank1Unit;
+						}
+					]]></script>
+				</object>	
+			</object>
+		</object>
+		
+		<propertyDef name="objRank2Unit" type="gs_tbg.UnitTemplate">
+			find(?{template: template.nClassRank == 2}, self.objClassEntries)
+		</propertyDef>
+		<object type="mlui.UI2DTextButton" name="objTab2" existsWhile="self.objRank2Unit != null">
+			<property name="nX" value="105"/>
+			<property name="nY" value="120"/>
+			<property name="strText" from="def.objRank2Unit.strDisplayName"/>
+			<property name="tmplTextButtonStyle">
+					if(encydata.objEncyclopediaData.objSelected == def.objRank2Unit,
+                            'skin.TxtBtnStyleReportTabButtonSubTabC',
+                            'skin.TxtBtnStyleReportTabButtonSubTab'
+                        )
+			</property>
+			<property name="nDefaultWidth" value="95"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="strToolTip" from="locale.SID.UI.Subordinates"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							encydata.objEncyclopediaData.objSelected = def.objRank2Unit;
+						}
+					]]></script>
+				</object>	
+			</object>
+		</object> 
+        
+		<propertyDef name="objRank3Unit" type="gs_tbg.UnitTemplate">
+			find(?{template: template.nClassRank == 3}, self.objClassEntries)
+		</propertyDef>
+		<object type="mlui.UI2DTextButton" name="objTab3" existsWhile="self.objRank3Unit != null">
+			<property name="nX" value="205"/>
+			<property name="nY" value="120"/>
+			<property name="strText" from="def.objRank3Unit.strDisplayName"/>
+			<property name="tmplTextButtonStyle">
+					if(encydata.objEncyclopediaData.objSelected == def.objRank3Unit,
+                            'skin.TxtBtnStyleReportTabButtonSubTabC',
+                            'skin.TxtBtnStyleReportTabButtonSubTab'
+                        )
+			</property>
+			<property name="nDefaultWidth" value="95"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="strToolTip" from="locale.SID.UI.Subordinates"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							encydata.objEncyclopediaData.objSelected = def.objRank3Unit;
+						}
+					]]></script>
+				</object>	
+			</object>
+		</object>
+		
+		<propertyDef name="objRank4Unit" type="gs_tbg.UnitTemplate">
+			find(?{template: template.nClassRank == 4}, self.objClassEntries)
+		</propertyDef>
+		<object type="mlui.UI2DTextButton" name="objTab4" existsWhile="self.objRank4Unit != null">
+			<property name="nX" value="305"/>
+			<property name="nY" value="120"/>
+			<property name="strText" from="def.objRank4Unit.strDisplayName"/>
+			<property name="tmplTextButtonStyle">
+					if(encydata.objEncyclopediaData.objSelected == def.objRank4Unit,
+                            'skin.TxtBtnStyleReportTabButtonSubTabC',
+                            'skin.TxtBtnStyleReportTabButtonSubTab'
+                        )
+			</property>
+			<property name="nDefaultWidth" value="95"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="strToolTip" from="locale.SID.UI.Subordinates"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							encydata.objEncyclopediaData.objSelected = def.objRank4Unit;
+						}
+					]]></script>
+				</object>	
+			</object>
+		</object>
+		
+		<propertyDef name="objRank5Unit" type="gs_tbg.UnitTemplate">
+			find(?{template: template.nClassRank == 5}, self.objClassEntries)
+		</propertyDef>
+		<object type="mlui.UI2DTextButton" name="objTab5" existsWhile="self.objRank5Unit != null">
+			<property name="nX" value="405"/>
+			<property name="nY" value="120"/>
+			<property name="strText" from="def.objRank5Unit.strDisplayName"/>
+			<property name="tmplTextButtonStyle">
+					if(encydata.objEncyclopediaData.objSelected == def.objRank5Unit,
+                            'skin.TxtBtnStyleReportTabButtonSubTabC',
+                            'skin.TxtBtnStyleReportTabButtonSubTab'
+                        )
+			</property>
+			<property name="nDefaultWidth" value="95"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="strToolTip" from="locale.SID.UI.Subordinates"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							encydata.objEncyclopediaData.objSelected = def.objRank5Unit;
+						}
+					]]></script>
+				</object>	
+			</object>
+		</object>
+		
+		<propertyDef name="objRank6Unit" type="gs_tbg.UnitTemplate">
+			find(?{template: template.nClassRank == 6}, self.objClassEntries)
+		</propertyDef>
+		<object type="mlui.UI2DTextButton" name="objTab6" existsWhile="self.objRank6Unit != null">
+			<property name="nX" value="505"/>
+			<property name="nY" value="120"/>
+			<property name="strText" from="def.objRank6Unit.strDisplayName"/>
+			<property name="tmplTextButtonStyle">
+					if(encydata.objEncyclopediaData.objSelected == def.objRank6Unit,
+                            'skin.TxtBtnStyleReportTabButtonSubTabC',
+                            'skin.TxtBtnStyleReportTabButtonSubTab'
+                        )
+			</property>
+			<property name="nDefaultWidth" value="95"/>
+			<property name="nDefaultHeight" value="25"/>
+			<property name="strToolTip" from="locale.SID.UI.Subordinates"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							encydata.objEncyclopediaData.objSelected = def.objRank6Unit;
+						}
+					]]></script>
+				</object>	
+			</object>
+		</object>
+    </objectDef>
+	
+    <objectDef type="UI2DEncyclopediaEntryUnit" superType="mlui.UI2DElement">
+        <propertyDef name="objEntry" type="gs_tbg.UnitTemplate" from="encydata.objEncyclopediaData.objSelected"/>
+        <property name="nWidth" value="618"/>
+        <property name="nHeight" value="513"/>
+        
+        <object type="mlui.UI2DText" name="objUnitLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown18Left"/>
+			<property name="strText" from="def.objEntry.strDisplayName"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objUnitShortDescription">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+			<property name="strText">
+				if(def.objEntry.strShortDescription == 'XXXXXX',
+					' ',
+						def.objEntry.strShortDescription)
+			</property>	
+			<property name="nX" value="2"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="15"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objUnitDescription">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12LeftWrap"/>
+			<property name="strText" from="def.objEntry.strEncyclopediaDescription"/>
+			<property name="nX" value="2"/>
+			<property name="nY">
+				if(def.objEntry.strShortDescription == 'XXXXXX',
+					22, 41)
+			</property>
+			<property name="nWidth" value="550"/>
+			<property name="nHeight" value="110"/>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objBottomBG">
+            <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="144"/>
+			<property name="nWidth" value="618"/>
+			<property name="nHeight" value="369"/>
+        </object>
+        
+        <object type="UI2DEncyclopediaEntryUnitClassBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+	
+	<objectDef type="UI2DEncyclopediaEntryUnitClassBottom" superType="mlui.UI2DElement">
+        <propertyDef name="objEntry" type="gs_tbg.UnitTemplate"/>
+		<propertyDef name="objFactoryOutputTemplate" type="gs_tbg.FactoryOutputTemplate">
+			sd.getTemplate(gs_tbg.FactoryOutputTemplate, self.objEntry.strName)
+		</propertyDef>
+		
+		<object type="mlui.UI2DImage" name="objOrderIconBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+        <object type="mlui.UI2DImage" name="objIcon">
+            <property name="tmplImage" from="mh2data.objUnitDisplayTable.getEntry(def.objEntry).tmplImage"/>
+            <property name="nX" value="2"/>
+            <property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+        </object>
+		
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.UnitProperties"/>
+			<property name="nX" value="91"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<!--<object type="mlui.UI2DText" name="objUnitShortDescription">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12Left"/>-->
+		<!--	<property name="strText">-->
+		<!--		if(def.objFactoryOutputTemplate.strShortDescription == 'XXXXXX',-->
+		<!--			' ',-->
+		<!--				def.objFactoryOutputTemplate.strShortDescription)-->
+		<!--	</property>	-->
+		<!--	<property name="nX" value="89"/>-->
+		<!--	<property name="nY" from="def.objElements.nHeight + 24"/>-->
+		<!--	<property name="nWidth" value="400"/>-->
+		<!--	<property name="nHeight" value="15"/>-->
+		<!--</object>-->
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.IPUsRequired"/>
+                <property name="nValue" from="def.objFactoryOutputTemplate.nIPUs"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MPUsRequired"/>
+				<property name="nValue" from="def.objEntry.nMPUs"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.HitPoints"/>
+				<property name="nValue" from="def.objEntry.nHitPoints"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MaintenanceCost"/>
+				<property name="nValue" from="def.objEntry.nMaintenanceCost.formatNumber(0, true)"/>
+				<property name="bMoney" value="true"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nLandAttackHitPercent != 0">
+				<property name="strProperty" from="locale.SID.UI.LandAttackHitPercent"/>
+				<property name="nValue" from="def.objEntry.nLandAttackHitPercent"/>
+				<property name="bPercent" value="true"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nLandDefenseHitPercent != 0">
+				<property name="strProperty" from="locale.SID.UI.LandDefenseHitPercent"/>
+				<property name="nValue" from="def.objEntry.nLandDefenseHitPercent"/>
+				<property name="bPercent" value="true"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nAirHitPercent != 0">
+				<property name="strProperty" from="locale.SID.UI.AirHitPercent"/>
+				<property name="nValue" from="def.objEntry.nAirHitPercent"/>
+				<property name="bPercent" value="true"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nSeaSurfaceHitPercent != 0">
+				<property name="strProperty" from="locale.SID.UI.SeaSurfaceHitPercent"/>
+				<property name="nValue" from="def.objEntry.nSeaSurfaceHitPercent"/>
+				<property name="bPercent" value="true"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nSeaSubmergedHitPercent != 0">
+				<property name="strProperty" from="locale.SID.UI.SeaSubmergedHitPercent"/>
+				<property name="nValue" from="def.objEntry.nSeaSubmergedHitPercent"/>
+				<property name="bPercent" value="true"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nInfrastructureHitPercent != 0">
+				<property name="strProperty" from="locale.SID.UI.InfrastructureHitPercent"/>
+				<property name="nValue" from="def.objEntry.nInfrastructureHitPercent"/>
+				<property name="bPercent" value="true"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nResistPercent != 0">
+				<property name="strProperty" from="locale.SID.UI.ResistPercent"/>
+				<property name="nValue" from="def.objEntry.nResistPercent"/>
+				<property name="bPercent" value="true"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.AttackDamage"/>
+				<property name="nValue" from="def.objEntry.nAttackDamage"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+
+            <object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nRestArmsCost != 0">
+                <property name="strProperty" from="locale.SID.UI.RestArmsCost"/>
+                <property name="nValue" from="def.objEntry.nRestArmsCost"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.ActiveArmsCost"/>
+                <property name="nValue" from="def.objEntry.nArmsCost"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.ArmsCarry"/>
+                <property name="nValue" from="def.objEntry.nArmsCarry"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nRestOilCost != 0">
+                <property name="strProperty" from="locale.SID.UI.RestOilCost"/>
+                <property name="nValue" from="def.objEntry.nRestOilCost"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nOilCost != 0">
+                <property name="strProperty" from="locale.SID.UI.ActiveOilCost"/>
+                <property name="nValue" from="def.objEntry.nOilCost"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nOilCarry != 0">
+                <property name="strProperty" from="locale.SID.UI.OilCarry"/>
+                <property name="nValue" from="def.objEntry.nOilCarry"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.RepairArms"/>
+				<property name="nValue" from="def.objEntry.nRepairArms"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+
+            <object type="UI2DPropertyBox" name="objElements"  existsWhile="def.objEntry.nSpeed != 0">
+				<property name="strProperty" from="locale.SID.UI.Speed"/>
+				<property name="nValue" from="def.objEntry.nSpeed"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+		</object>
+		
+		<object type="UI2DResourceRequirementsBubble" name="objRequirementsBubble">
+			<property name="objOutputTemplate" from="def.objFactoryOutputTemplate"/>
+			<property name="nX" value="377"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="228"/>
+			<property name="nHeight" value="70"/>
+		</object>
+		
+		<object type="UI2DResearchRequirements" name="objResearchRequirements">
+			<property name="objFactoryOutputTemplate" from="def.objFactoryOutputTemplate"/>
+			<property name="nX" value="377"/>
+			<property name="nY" value="82"/>
+			<property name="nWidth" value="228"/>
+		</object>
+		<object type="UI2DBuildingRequirements" name="objBuildingRequirements">
+			<property name="objFactoryOutputTemplate" from="def.objFactoryOutputTemplate"/>
+			<property name="nX" value="377"/>
+			<property name="nY" from="def.objResearchRequirements.nY + def.objResearchRequirements.nHeight + 5"/>
+			<property name="nWidth" value="228"/>
+		</object>
+	</objectDef>
+        	
+	<objectDef type="UI2DEncyclopediaEntryBase" superType="mlui.UI2DElement">
+		<propertyDef name="objEntry"/>
+		<property name="nWidth" value="619"/>
+        <property name="nHeight" value="515"/>
+        
+        <object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown18Left"/>
+			<property name="strText" from="def.objEntry.strDisplayName"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objShortDescription">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown12Left"/>
+			<property name="strText">
+				if(def.objEntry.strShortDescription == '',
+					' ',
+						def.objEntry.strShortDescription)
+			</property>	
+			<property name="nX" value="2"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="400"/>
+			<property name="nHeight" value="15"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objDescription">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12LeftWrap"/>
+			<property name="strText" from="def.objEntry.strEncyclopediaDescription"/>
+			<property name="nX" value="2"/>
+			<property name="nY">
+				if(def.objEntry.strShortDescription == '',
+					22, 41)
+			</property>
+			<property name="nWidth" value="550"/>
+			<property name="nHeight" value="110"/>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objBottomBG">
+            <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="144"/>
+			<property name="nWidth" value="618"/>
+			<property name="nHeight" value="369"/>
+        </object>
+	</objectDef>
+	
+    <objectDef type="UI2DEncyclopediaEntryRegionBaseBottom" superType="mlui.UI2DElement">
+        <propertyDef name="objEntry"/>
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		
+		<object type="mlui.UI2DImage" name="objOrderIconBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.Properties"/>
+			<property name="nX" value="91"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objIcon">
+            <property name="tmplImage" from="def.tmplImage"/>
+            <property name="nX" value="2"/>
+            <property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+        </object> 
+		
+		<object type="UI2DResourceRequirementsBubble" name="objRequirementsBubble">
+			<property name="objOutputTemplate" from="def.objEntry"/>
+			<property name="nX" value="377"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="228"/>
+			<property name="nHeight" value="70"/>
+		</object>
+		
+		<object type="UI2DRegionResearchRequirements" name="objResearchRequirements">
+			<property name="objRegionOutputTemplate" from="def.objEntry"/>
+			<property name="nX" value="377"/>
+			<property name="nY" value="82"/>
+			<property name="nWidth" value="228"/>
+		</object>
+	</objectDef>
+	
+    <objectDef type="UI2DEncyclopediaEntryResourceProspecting" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.ResourceProspectingOutputTemplate"/>
+        
+        <object type="UI2DEncyclopediaEntryResourceProspectingBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+    
+	<objectDef type="UI2DEncyclopediaEntryResourceProspectingBottom" superType="UI2DEncyclopediaEntryRegionBaseBottom">
+        <propertyDef name="objEntry" type="gs_tbg.ResourceProspectingOutputTemplate"/>
+        <property name="tmplImage">
+			switch {
+				case self.objEntry.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Food'):
+					mh2data.objResourceProducerOutputDisplayTable.getEntry(self.objEntry).tmplImage
+				case self.objEntry.tmplCategory == sd.getTemplateRef(gs_tbg.RegionOutputCategoryTemplate, 'Resources'):
+					mh2data.objResourceProducerOutputDisplayTable.getEntry(self.objEntry).tmplImage
+			}
+		</property>
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.BuildTurns"/>
+                <property name="nValue" from="def.objEntry.nTurns"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MPUsRequired"/>
+				<property name="nValue" from="def.objEntry.nMPURequirement"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.ResourceAffected"/>
+				<property name="nValue" from="def.objEntry.tmplResource.resolve().strDisplayName"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.IncreasedReserves"/>
+				<property name="nValue" from="def.objEntry.nAmount"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+		</object>
+	</objectDef>
+	
+    <objectDef type="UI2DEncyclopediaEntryCoastalDefense" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.CoastalDefenseOutputTemplate"/>
+        
+        <object type="UI2DEncyclopediaEntryCoastalDefenseBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+    
+    <objectDef type="UI2DEncyclopediaEntryCoastalDefenseBottom" superType="UI2DEncyclopediaEntryRegionBaseBottom">
+        <propertyDef name="objEntry" type="gs_tbg.CoastalDefenseOutputTemplate"/>
+		<property name="tmplImage" from="mh2data.objCoastalDefenseDisplayTable.getEntry(self.objEntry.tmplCoastalDefenseImprovement).tmplImage"/>
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.BuildTurns"/>
+				<property name="nValue" from="def.objEntry.nTurns"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.MPUsRequired"/>
+                <property name="nValue" from="def.objEntry.tmplCoastalDefenseImprovement.resolve().nMPUs"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MaintenanceCost"/>
+				<property name="nValue" from="'$' + def.objEntry.tmplCoastalDefenseImprovement.resolve().nMaintenanceCost.formatNumber(0, true)"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.HitPoints"/>
+				<property name="nValue" from="def.objEntry.tmplCoastalDefenseImprovement.resolve().nHitPoints"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.CombatPropLandDefense"/>
+				<property name="nValue" from="def.objEntry.tmplCoastalDefenseImprovement.resolve().objCombatModifiers[0].nModifierValue"/>
+				<property name="bBonus" value="true"/>
+				<property name="bPercent" value="true"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+		</object>
+	</objectDef>
+    
+    <objectDef type="UI2DEncyclopediaEntryAADefense" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.AADefenseOutputTemplate"/>
+        <object type="UI2DEncyclopediaEntryAADefenseBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+    
+    <objectDef type="UI2DEncyclopediaEntryAADefenseBottom" superType="UI2DEncyclopediaEntryRegionBaseBottom">
+        <propertyDef name="objEntry" type="gs_tbg.AADefenseOutputTemplate"/>
+		<property name="tmplImage" from="mh2data.objAADefenseDisplayTable.getEntry(self.objEntry.tmplAADefenseImprovement).tmplImage"/>
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.BuildTurns"/>
+				<property name="nValue" from="def.objEntry.nTurns"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.MPUsRequired"/>
+                <property name="nValue" from="def.objEntry.tmplAADefenseImprovement.resolve().nMPUs"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MaintenanceCost"/>
+				<property name="nValue" from="'$' + def.objEntry.tmplAADefenseImprovement.resolve().nMaintenanceCost.formatNumber(0, true)"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.HitPoints"/>
+				<property name="nValue" from="def.objEntry.tmplAADefenseImprovement.resolve().nHitPoints"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.Shots"/>
+				<property name="nValue" from="def.objEntry.tmplAADefenseImprovement.resolve().nShots"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.AirHitPercent"/>
+				<property name="nValue" from="def.objEntry.tmplAADefenseImprovement.resolve().nPercentHit"/>
+				<property name="bPercent" value="true"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+		</object>
+	</objectDef>
+	    
+    <objectDef type="UI2DEncyclopediaEntryFortification" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.FortificationOutputTemplate"/>
+        
+        <object type="UI2DEncyclopediaEntryFortificationBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+    
+    <objectDef type="UI2DEncyclopediaEntryFortificationBottom" superType="UI2DEncyclopediaEntryRegionBaseBottom">
+        <propertyDef name="objEntry" type="gs_tbg.FortificationOutputTemplate"/>
+		<property name="tmplImage" from="mh2data.objFortificationDisplayTable.getEntry(self.objEntry.tmplFortificationImprovement).tmplImage"/>
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.BuildTurns"/>
+				<property name="nValue" from="def.objEntry.nTurns"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.MPUsRequired"/>
+                <property name="nValue" from="def.objEntry.tmplFortificationImprovement.resolve().nMPUs"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MaintenanceCost"/>
+				<property name="nValue" from="'$' + def.objEntry.tmplFortificationImprovement.resolve().nMaintenanceCost.formatNumber(0, true)"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.HitPoints"/>
+				<property name="nValue" from="def.objEntry.tmplFortificationImprovement.resolve().nHitPoints"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.CombatPropLandDefense"/>
+				<property name="nValue" from="def.objEntry.tmplFortificationImprovement.resolve().objCombatModifiers[0].nModifierValue"/>
+				<property name="bBonus" value="true"/>
+				<property name="bPercent" value="true"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+		</object>
+	</objectDef>
+	        
+    <objectDef type="UI2DEncyclopediaEntryTransportation" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.TransportationOutputTemplate"/>
+		
+        <object type="UI2DEncyclopediaEntryTransportationBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+
+    <objectDef type="UI2DEncyclopediaEntryTransportationBottom" superType="UI2DEncyclopediaEntryRegionBaseBottom">
+        <propertyDef name="objEntry" type="gs_tbg.TransportationOutputTemplate"/>
+		<property name="tmplImage" from="mh2data.objTransportationProdDisplayTable.getEntry(self.objEntry.tmplTransportationImprovement).tmplImage"/>
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.BuildTurns"/>
+				<property name="nValue" from="def.objEntry.nTurns"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.MPUsRequired"/>
+                <property name="nValue" from="def.objEntry.tmplTransportationImprovement.resolve().nMPUs"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MaintenanceCost"/>
+				<property name="nValue" from="'$' + def.objEntry.tmplTransportationImprovement.resolve().nMaintenanceCost.formatNumber(0, true)"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.HitPoints"/>
+				<property name="nValue" from="def.objEntry.tmplTransportationImprovement.resolve().nHitPoints"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.TransportationSpeed"/>
+				<property name="nValue" from="def.objEntry.tmplTransportationImprovement.resolve().nModifierValue"/>
+				<property name="bBonus" value="true"/>
+				<property name="bPercent" value="true"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+		</object>
+	</objectDef>
+	
+    <objectDef type="UI2DEncyclopediaEntryResourceProducer" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.ResourceProducerOutputTemplate"/>
+        
+        <object type="UI2DEncyclopediaEntryResourceProducerBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+	
+    <objectDef type="UI2DEncyclopediaEntryResourceProducerBottom" superType="UI2DEncyclopediaEntryRegionBaseBottom">
+        <propertyDef name="objEntry" type="gs_tbg.ResourceProducerOutputTemplate"/>
+		<propertyDef name="tmplImage" from="mh2data.objResourceProducerOutputDisplayTable.getEntry(self.objEntry).tmplImage"/>
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.BuildTurns"/>
+                <property name="nValue" from="def.objEntry.nTurns"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MPUsRequired"/>
+				<property name="nValue" from="def.objEntry.tmplResourceImprovement.resolve().nMPUs"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MaintenanceCost"/>
+				<property name="nValue" from="'$' + def.objEntry.tmplResourceImprovement.resolve().nMaintenanceCost.formatNumber(0, true)"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.ResourceProduced"/>
+				<property name="nValue" from="def.objEntry.tmplResourceImprovement.resolve().tmplResource.resolve().strDisplayName"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.ProductionIncrease"/>
+				<property name="nValue" from="def.objEntry.tmplResourceImprovement.resolve().nAmount"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+		</object>
+	</objectDef>
+    
+    <objectDef type="UI2DEncyclopediaEntryAirbase" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.AirbaseOutputTemplate"/>
+        
+        <object type="UI2DEncyclopediaEntryAirbaseBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+
+    <objectDef type="UI2DEncyclopediaEntryAirbaseBottom" superType="UI2DEncyclopediaEntryRegionBaseBottom">
+        <propertyDef name="objEntry" type="gs_tbg.AirbaseOutputTemplate"/>
+		<property name="tmplImage" value="skin.ImgRegionAirBaseLG"/>
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.BuildTurns"/>
+                <property name="nValue" from="def.objEntry.nTurns"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MPUsRequired"/>
+				<property name="nValue" from="def.objEntry.tmplUnitBase.resolve().nMPUs"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MaintenanceCost"/>
+				<property name="nValue" from="'$' + def.objEntry.tmplUnitBase.resolve().nMaintenanceCost.formatNumber(0, true)"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.HitPoints"/>
+				<property name="nValue" from="def.objEntry.tmplUnitBase.resolve().nHitPoints"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+		</object>
+	</objectDef>
+	
+    <objectDef type="UI2DEncyclopediaEntryNavalBase" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.NavalBaseOutputTemplate"/>
+        
+        <object type="UI2DEncyclopediaEntryNavalBaseBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+
+    <objectDef type="UI2DEncyclopediaEntryNavalBaseBottom" superType="UI2DEncyclopediaEntryRegionBaseBottom">
+        <propertyDef name="objEntry" type="gs_tbg.NavalBaseOutputTemplate"/>
+		<property name="tmplImage" value="skin.ImgRegionNavalBaseLG"/>
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+		
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.BuildTurns"/>
+				<property name="nValue" from="def.objEntry.nTurns"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+		</object>
+	</objectDef>
+    
+    <objectDef type="UI2DEncyclopediaEntryCity" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.CityBuildingTemplate"/>
+		
+        <object type="UI2DEncyclopediaEntryCityBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+    
+    <objectDef type="UI2DEncyclopediaEntryCityBottom" superType="mlui.UI2DElement">
+        <propertyDef name="objEntry" type="gs_tbg.CityBuildingTemplate"/>
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="tmplImage" from="mh2data.objCityBuildingDisplayTable.getEntry(self.objEntry).tmplImage"/>
+				  <!--"mh2data.objResearchCenterBuildingDisplayTable.getEntry(def.objResearchCenterBuildingTemplate).tmplImage"/>-->
+        <propertyDef name="objFactoryOutputTemplate" type="TemplateRef" restriction="gs_tbg.FactoryOutputTemplate">
+			sd.getTemplate(gs_tbg.FactoryOutputTemplate, self.objEntry.strName)
+		</propertyDef>
+			
+		
+		<object type="mlui.UI2DImage" name="objOrderIconBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.Properties"/>
+			<property name="nX" value="91"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objIcon">
+            <property name="tmplImage" from="def.tmplImage"/>
+            <property name="nX" value="2"/>
+            <property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+        </object> 
+		
+		<object type="UI2DResourceRequirementsBubble" name="objRequirementsBubble">
+			<property name="objOutputTemplate" from="def.objFactoryOutputTemplate.resolve()"/>
+			<property name="nX" value="377"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="228"/>
+			<property name="nHeight" value="70"/>
+		</object>
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+		
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.IPUsRequired"/>
+				<property name="nValue" from="def.objFactoryOutputTemplate.resolve().nIPUs"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nIPUs != 0">
+				<property name="strProperty" from="locale.SID.UI.IPUsProduced"/>
+				<property name="nValue" from="def.objEntry.nIPUs"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MPUsRequired"/>
+				<property name="nValue" from="def.objEntry.nMPUs"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.MaintenanceCost"/>
+                <property name="nValue" from="'$' + def.objEntry.nMaintenanceCost.formatNumber(0, true)"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.HitPoints"/>
+                <property name="nValue" from="def.objEntry.nHitPoints"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+        </object>
+		
+		<object type="UI2DResearchRequirements" name="objResearchRequirements">
+			<property name="objFactoryOutputTemplate" from="def.objFactoryOutputTemplate"/>
+			<property name="nX" value="377"/>
+			<property name="nY" value="82"/>
+			<property name="nWidth" value="228"/>
+		</object>
+		<object type="UI2DBuildingRequirements" name="objBuildingRequirements">
+			<property name="objFactoryOutputTemplate" from="def.objFactoryOutputTemplate"/>
+			<property name="nX" value="377"/>
+			<property name="nY" from="def.objResearchRequirements.nY + def.objResearchRequirements.nHeight + 5"/>
+			<property name="nWidth" value="228"/>
+		</object>
+	</objectDef>
+	
+    <objectDef type="UI2DEncyclopediaEntryResearchBuildings" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+		
+        <object type="UI2DEncyclopediaEntryResearchBuildingsBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+    
+    <objectDef type="UI2DEncyclopediaEntryResearchBuildingsBottom" superType="mlui.UI2DElement">
+        <propertyDef name="objEntry" type="gs_tbg.ResearchCenterBuildingTemplate"/>
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<property name="tmplImage" from="mh2data.objResearchCenterBuildingDisplayTable.getEntry(self.objEntry).tmplImage"/>
+        <propertyDef name="objFactoryOutputTemplate" type="TemplateRef" restriction="gs_tbg.FactoryOutputTemplate">
+			sd.getTemplate(gs_tbg.FactoryOutputTemplate, self.objEntry.strName)
+		</propertyDef>
+			
+		<object type="mlui.UI2DImage" name="objOrderIconBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.Properties"/>
+			<property name="nX" value="91"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objIcon">
+            <property name="tmplImage" from="def.tmplImage"/>
+            <property name="nX" value="2"/>
+            <property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+        </object> 
+		
+		<object type="UI2DResourceRequirementsBubble" name="objRequirementsBubble">
+			<property name="objOutputTemplate" from="def.objFactoryOutputTemplate.resolve()"/>
+			<property name="nX" value="377"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="228"/>
+			<property name="nHeight" value="70"/>
+		</object>
+		
+		<object type="common_ui.UI2DList" name="objElements">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+		
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.IPUsRequired"/>
+				<property name="nValue" from="def.objFactoryOutputTemplate.resolve().nIPUs"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+						
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.MPUsRequired"/>
+				<property name="nValue" from="def.objEntry.nMPUs"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+ 
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.MaintenanceCost"/>
+                <property name="nValue" from="'$' + def.objEntry.nMaintenanceCost.formatNumber(0, true)"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+			
+			<object type="UI2DPropertyBox" name="objElements" existsWhile="def.objEntry.nRPUs != 0">
+				<property name="strProperty" from="locale.SID.UI.RPUsProduced"/>
+				<property name="nValue" from="def.objEntry.nRPUs"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+
+            <object type="UI2DPropertyBox" name="objElements">
+                <property name="strProperty" from="locale.SID.UI.HitPoints"/>
+                <property name="nValue" from="def.objEntry.nHitPoints"/>
+                <property name="nX" value="0"/>
+                <property name="nY" value="0"/>
+                <property name="nWidth" value="350"/>
+                <property name="nHeight" value="22"/>
+            </object>
+
+        </object>
+		
+		<object type="UI2DResearchRequirements" name="objResearchRequirements">
+			<property name="objFactoryOutputTemplate" from="def.objFactoryOutputTemplate.resolve()"/>
+			<property name="nX" value="377"/>
+			<property name="nY" value="82"/>
+			<property name="nWidth" value="228"/>
+		</object>
+		<object type="UI2DBuildingRequirements" name="objBuildingRequirements">
+			<property name="objFactoryOutputTemplate" from="def.objFactoryOutputTemplate.resolve()"/>
+			<property name="nX" value="377"/>
+			<property name="nY" from="def.objResearchRequirements.nY + def.objResearchRequirements.nHeight + 5"/>
+			<property name="nWidth" value="228"/>
+		</object>
+	</objectDef>
+	
+    <objectDef type="UI2DEncyclopediaEntryResearch" superType="UI2DEncyclopediaEntryBase">
+        <propertyDef name="objEntry" type="gs_tbg.ResearchTopicTemplate"/>
+
+        <object type="UI2DEncyclopediaEntryResearchBottom" name="objBottomContent">
+			<property name="objEntry" from="encydata.objEncyclopediaData.objSelected"/>
+            <property name="nX" value="4"/>
+            <property name="nY" value="148"/>
+			<property name="nWidth" value="610"/>
+			<property name="nHeight" value="361"/>
+        </object>
+    </objectDef>
+	    
+    <objectDef type="UI2DEncyclopediaEntryResearchBottom" superType="mlui.UI2DElement">
+        <propertyDef name="objEntry" type="gs_tbg.ResearchTopicTemplate"/>
+		<propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+		<!--<property name="tmplImage" from="mh2data.objResearchCenterBuildingDisplayTable.getEntry(self.objEntry).tmplImage"/>-->
+			
+		<object type="mlui.UI2DImage" name="objOrderIconBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTan"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.Properties"/>
+			<property name="nX" value="91"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objIcon">
+            <property name="tmplImage">
+				mh2data.objResearchCategoryIconTable.getEntry(def.objEntry.tmplCategory).tmplImage
+			</property>	
+            <property name="nX" value="2"/>
+            <property name="nY" value="2"/>
+			<property name="nWidth" value="78"/>
+			<property name="nHeight" value="77"/>
+        </object> 
+		
+		<object type="common_ui.UI2DList" name="objCostsList">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="20"/>
+			<property name="nX" value="87"/>
+		
+			<object type="UI2DPropertyBox" name="objElements">
+				<property name="strProperty" from="locale.SID.UI.PointsRequired"/>
+				<property name="nValue" from="def.objEntry.nPointsRequired"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="22"/>
+			</object>
+			
+			<!--<object type="UI2DPropertyBox" name="objElements">-->
+			<!--	<property name="strProperty" from="locale.SID.UI.PerTurnCost"/>-->
+			<!--	<property name="nValue" from="def.objEntry.nPerTurnCost.formatNumber(0, true)"/>-->
+			<!--	<property name="nX" value="0"/>-->
+			<!--	<property name="nY" value="0"/>-->
+			<!--	<property name="nWidth" value="350"/>-->
+			<!--	<property name="nHeight" value="22"/>-->
+			<!--</object>-->
+		</object>
+		
+		<propertyDef name="objFactoryOutputUnlocks" type="ResearchFactoryOutput" variable="true">
+			filter(?{unlock: unlock.tmplResearchTopic == self.objEntry}, encydata.objResearchFactoryOutputs)
+		</propertyDef>
+		<propertyDef name="objRegionOutputUnlocks" type="ResearchRegionOutput" variable="true">
+			filter(?{unlock: unlock.tmplResearchTopic == self.objEntry}, encydata.objResearchRegionOutputs)
+		</propertyDef>
+		<propertyDef name="objResearchProjectUnlocks" type="ResearchRequiredFor" variable="true">
+			filter(?{unlock: unlock.tmplResearchTopic == self.objEntry}, encydata.objResearchRequiredFors)
+		</propertyDef>
+		
+		<object type="mlui.UI2DText" name="objRequiredForLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.RequiredFor"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="144"/>
+			<property name="nWidth" value="210"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		<object type="mlui.UI2DText" name="objCityLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.City"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="210"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		<object type="common_ui.UI2DList" name="objCityUnlocksList">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="182"/>
+			<property name="nX" value="2"/>
+		
+			<object type="UI2DEncyclopediaText" name="objElements" tiedTo="def.objFactoryOutputUnlocks">
+				<property name="objTemplate" from="tiedTo.objFactoryOutput"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+				<property name="strText" from="tiedTo.objFactoryOutput.strDisplayName"/>
+				<property name="nWidth" value="210"/>
+				<property name="nHeight" value="21"/>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objRegionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.Region"/>
+			<property name="nX" value="402"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		<object type="common_ui.UI2DList" name="objRegionUnlocksList">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="182"/>
+			<property name="nX" value="402"/>
+		
+			<object type="UI2DEncyclopediaText" name="objElements" tiedTo="def.objRegionOutputUnlocks">
+				<property name="objTemplate" from="tiedTo.objRegionOutput"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+				<property name="strText" from="tiedTo.objRegionOutput.strDisplayName"/>
+				<property name="nWidth" value="205"/>
+				<property name="nHeight" value="21"/>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objResearchLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.Research"/>
+			<property name="nX" value="202"/>
+			<property name="nY" value="164"/>
+			<property name="nWidth" value="210"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		<object type="common_ui.UI2DList" name="objResearchUnlocksList">
+			<property name="nSpacing" value="-1"/>
+			<property name="nY" value="182"/>
+			<property name="nX" value="202"/>
+		
+			<object type="UI2DEncyclopediaText" name="objElements" tiedTo="def.objResearchProjectUnlocks">
+				<property name="objTemplate" from="tiedTo.tmplRequiredForTopic"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+				<property name="strText" from="tiedTo.tmplRequiredForTopic.resolve().strDisplayName"/>
+				<property name="nWidth" value="210"/>
+				<property name="nHeight" value="21"/>
+			</object>
+		</object>
+		
+		<object type="UI2DResearchRequirementsResearch" name="objResearchRequirements">
+			<property name="objResearchTopicTemplate" from="def.objEntry"/>
+			<property name="nX" value="377"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="228"/>
+		</object>
+		<object type="UI2DBuildingRequirementsResearch" name="objBuildingRequirements">
+			<property name="objResearchTopicTemplate" from="def.objEntry"/>
+			<property name="nX" value="377"/>
+			<property name="nY" from="def.objResearchRequirements.nY + def.objResearchRequirements.nHeight + 5"/>
+			<property name="nWidth" value="228"/>
+		</object>
+	</objectDef>
+	
+    <objectDef type="UI2DEncyclopediaEntryTerrainMod" superType="mlui.UI2DElement">
+        <propertyDef name="objEntry"/>
+        <property name="nWidth" value="619"/>
+        <property name="nHeight" value="515"/>
+        
+        <object type="mlui.UI2DText" name="objEntryTitleLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown18Left"/>
+			<property name="strText" from="locale.SID.UI.encTerrainModifiers"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+        <object type="mlui.UI2DImage" name="objMovementImg" >
+            <property name="tmplImage" value="skin.ImgIDMovementIconFoot"/>
+            <property name="nX" value="172"/>
+			<property name="nY" value="8"/>
+            <property name="nWidth" value="28"/>
+            <property name="nHeight" value="28"/>
+            <property name="strToolTip" from="def.tmplFoot.strDisplayName" />
+        </object>      
+        <object type="mlui.UI2DImage" name="objMovementImg" >
+            <property name="tmplImage" value="skin.ImgIDMovementIconHoof"/>
+            <property name="nX" value="248"/>
+			<property name="nY" value="10"/>
+            <property name="nWidth" value="28"/>
+            <property name="nHeight" value="28"/>
+            <property name="strToolTip" from="def.tmplHorse.strDisplayName" />
+        </object>      
+        <object type="mlui.UI2DImage" name="objMovementImg" >
+            <property name="tmplImage" value="skin.ImgIDMovementIconTire"/>
+            <property name="nX" value="329"/>
+			<property name="nY" value="8"/>
+            <property name="nWidth" value="28"/>
+            <property name="nHeight" value="28"/>
+            <property name="strToolTip" from="def.tmplWheeled.strDisplayName" />
+        </object>   
+        <object type="mlui.UI2DImage" name="objMovementImg" >
+            <property name="tmplImage" value="skin.ImgIDMovementIconTrack"/>
+            <property name="nX" value="404"/>
+			<property name="nY" value="6"/>
+            <property name="nWidth" value="28"/>
+            <property name="nHeight" value="28"/>
+            <property name="strToolTip" from="def.tmplTracked.strDisplayName" />
+        </object>        
+
+        
+        <propertyDef name="tmplFoot" type="Template" restriction="gs_tbg.UnitSubBranchTemplate" >
+            sd.getTemplate(gs_tbg.UnitSubBranchTemplate, 'Foot')
+        </propertyDef>        
+        <propertyDef name="tmplHorse" type="Template" restriction="gs_tbg.UnitSubBranchTemplate" >
+            sd.getTemplate(gs_tbg.UnitSubBranchTemplate, 'Horse')
+        </propertyDef>        
+        <propertyDef name="tmplWheeled" type="Template" restriction="gs_tbg.UnitSubBranchTemplate" >
+            sd.getTemplate(gs_tbg.UnitSubBranchTemplate, 'Wheeled')
+        </propertyDef>         
+        <propertyDef name="tmplTracked" type="Template" restriction="gs_tbg.UnitSubBranchTemplate" >
+            sd.getTemplate(gs_tbg.UnitSubBranchTemplate, 'Tracked')
+        </propertyDef>        
+        
+        <propertyDef name="nTest" type="int" default="60" />
+                
+		<object type="common_ui.UI2DList" name="objTerrainList">
+			<property name="nY" value="30"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="0"/>
+			<object name="objElements" type="UI2DEncyclopediaEntryTerrainTemplate" tiedTo="mh2data.objTerrainDisplayTable.objEntries">
+				<property name="tmplTerrain" from="tiedTo.tmplTerrain.resolve()"/>
+				<property name="imgIcon" from="tiedTo.tmplIcon22x22"/>
+				<property name="nWidth" from="def.nWidth"/>
+				<property name="nHeight" from="def.nTest" />
+				<property name="tmplFoot" from="def.tmplFoot"/>
+				<property name="tmplHorse" from="def.tmplHorse"/>
+				<property name="tmplWheeled" from="def.tmplWheeled"/>
+				<property name="tmplTracked" from="def.tmplTracked"/>
+			</object>
+		</object>
+        
+    </objectDef>
+    
+    
+	<objectDef type="UI2DEncyclopediaEntryTerrainTemplate" superType="mlui.UI2DElement">
+		<propertyDef name="tmplTerrain" type="Template" restriction="gs_tbg.TerrainTemplate"/>
+		<propertyDef name="imgIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        
+        <propertyDef name="tmplFoot" type="Template" restriction="gs_tbg.UnitSubBranchTemplate" />
+        <propertyDef name="tmplHorse" type="Template" restriction="gs_tbg.UnitSubBranchTemplate" />
+        <propertyDef name="tmplWheeled" type="Template" restriction="gs_tbg.UnitSubBranchTemplate" />
+        <propertyDef name="tmplTracked" type="Template" restriction="gs_tbg.UnitSubBranchTemplate" />
+        
+        <object type="mlui.UI2DText" name="objEntryTitleLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="def.tmplTerrain.strDisplayName"/>
+			<property name="nX" value="18"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+        <object type="mlui.UI2DImage" name="objTerrainImg">
+            <property name="tmplImage" from="def.imgIcon"/>
+            <property name="nX" value="18"/>
+            <property name="nY" value="20"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="22"/>
+        </object>
+        
+        <object type="mlui.UI2DImage" name="objMovementImg" >
+            <property name="tmplImage" value="skin.ImgUnitIconSpeedTny"/>
+            <property name="nX" value="112"/>
+			<property name="nY" value="9"/>
+            <property name="nWidth" value="28"/>
+            <property name="nHeight" value="28"/>
+            <property name="strToolTip" from="locale.SID.UI.MovementModifiers" />
+        </object>
+            
+		<object type="common_ui.UI2DListHorz" name="objFootList">
+			<property name="nX" value="140"/>
+			<property name="nY" value="8"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="0"/>
+			<object name="objElements" type="UI2DEncyclopediaEntryTerrainBubble" >
+                <property name="nValue" from="def.getMovementMod(def.tmplFoot)" />
+			</object>
+			<object name="objElements" type="UI2DEncyclopediaEntryTerrainBubble" >
+                <property name="nValue" from="def.getMovementMod(def.tmplHorse)" />
+			</object>
+			<object name="objElements" type="UI2DEncyclopediaEntryTerrainBubble" >
+                <property name="nValue" from="def.getMovementMod(def.tmplWheeled)" />
+			</object>
+			<object name="objElements" type="UI2DEncyclopediaEntryTerrainBubble" >
+                <property name="nValue" from="def.getMovementMod(def.tmplTracked)" />
+			</object>
+		</object>
+        
+        
+        <object type="mlui.UI2DImage" name="objDefenseImg">
+            <property name="tmplImage" value="skin.ImgInfoIconDefenseSm"/>
+            <property name="nX" value="112"/>
+            <property name="nY" value="29"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="32"/>
+            <property name="strToolTip" from="locale.SID.UI.GroundDefenseModifiers" />
+        </object>
+        
+		<object type="common_ui.UI2DListHorz" name="objShieldList">
+			<property name="nX" value="140"/>
+			<property name="nY" value="30"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="0"/>
+			<object name="objElements" type="UI2DEncyclopediaEntryTerrainBubble" >
+                <property name="nValue" from="def.getDefMod(def.tmplFoot)" />
+			</object>
+			<object name="objElements" type="UI2DEncyclopediaEntryTerrainBubble" >
+                <property name="nValue" from="def.getDefMod(def.tmplHorse)" />
+			</object>
+			<object name="objElements" type="UI2DEncyclopediaEntryTerrainBubble" >
+                <property name="nValue" from="def.getDefMod(def.tmplWheeled)" />
+			</object>
+			<object name="objElements" type="UI2DEncyclopediaEntryTerrainBubble" >
+                <property name="nValue" from="def.getDefMod(def.tmplTracked)" />
+			</object>
+		</object>
+        
+        <object type="mlui.UI2DText" name="objValue">
+			<property name="tmplTextStyle" from="if(def.tmplTerrain.nFoodProductionModifier LT 0, 'locale.TxtStyleArialRed12Right' , 'locale.TxtStyleArialBlue12Right')" />
+			<property name="strText" from="def.formatNumWithSign(def.tmplTerrain.nFoodProductionModifier)"/>
+            <property name="nX" value="470"/>
+            <property name="nY" value="14"/>
+			<property name="nWidth" from="50"/>
+			<property name="nHeight" from="80"/>
+		</object>    
+        
+        
+		<object type="UI2DResourceIcon" name="objFoodIcon">
+			<property name="tmplResource" value="sd.Food"/>
+            <property name="nX" value="520"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="32"/>
+			<property name="strToolTip" from="locale.SID.UI.FoodProductionModifier"/>
+		</object>
+        
+		<script type="application/x-locust-query"> <![CDATA[
+            getMovementMod = ?{tmplUnitSub:
+                sum(map(?{item: if(item != null, item.nModifierValue, 0) }, [find(?{entry: entry.tmplTerrain == self.tmplTerrain}, tmplUnitSub.objTerrainMovementModifier)]))
+            }
+            getDefMod = ?{tmplUnitSub:
+                sum(map(?{item: if(item != null, item.objCombatModifiers[0].nModifierValue , 0)}, [find(?{entry: entry.tmplTerrain == self.tmplTerrain}, tmplUnitSub.objTerrainCombatModifiers)]))
+            }
+            formatNumWithSign = ?{number:
+                if(number GT 0, '+' + number.formatNumber(0, true) + '%', number.formatNumber(0, true) + '%')
+            }
+		]]></script>
+	</objectDef>
+    
+    
+    
+    <objectDef type="UI2DEncyclopediaEntryTerrainBubble" superType="mlui.UI2DElement">
+        <propertyDef name="nValue" type="int"/>
+        <property name="nWidth" value="80"/>
+        <property name="nHeight" value="22"/>        
+        <object type="mlui.UI2DImage" name="objBubble">
+            <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+        </object>
+        <object type="mlui.UI2DText" name="objValue">
+			<property name="tmplTextStyle" from="if(def.nValue LT 0, 'locale.TxtStyleArialRed12CenterMiddleFit' , 'locale.TxtStyleArialBlue12CenterMiddleFIT')" />
+			<property name="strText" from="def.formatNumWithSign(def.nValue)"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="1"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+		</object>
+        
+		<script type="application/x-locust-query"> <![CDATA[
+            formatNumWithSign = ?{number:
+                if(number GT 0, '+' + number.formatNumber(0, true) + '%', number.formatNumber(0, true) + '%')
+            }
+		]]></script>
+        
+    </objectDef>
+	
+    
+    <objectDef type="UI2DEncyclopediaEntryCombatMod" superType="mlui.UI2DElement">
+        <propertyDef name="objEntry"/>
+        
+		<propertyDef name="objRangedList" type="mh2_common.RangedTemplateList">
+			switch{
+<!--				case self.objEntry.eCombatModType == CombatModCategories.COMMAND_EXP:
+					sd.getTemplate(mh2_common.RangedTemplateList, 'UnitGroupCommandRangedTemplateList') -->
+				case self.objEntry.eCombatModType == CombatModCategories.EXPERIENCE:
+					sd.getTemplate(mh2_common.RangedTemplateList, 'UnitExperienceTemplateList')
+				case self.objEntry.eCombatModType == CombatModCategories.MORALE:
+					sd.getTemplate(mh2_common.RangedTemplateList, 'UnitMoraleTemplateList')
+			}
+		</propertyDef>
+        <property name="nWidth" value="619"/>
+        <property name="nHeight" value="515"/>
+        
+        <object type="mlui.UI2DText" name="objEntryTitleLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown18Left"/>
+			<property name="strText" from="def.objEntry.strDisplayName"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="18"/>
+		</object>
+        
+		<object type="common_ui.UI2DList" name="objScrollable">
+			<property name="nTopSpacing" value="25"/>
+			<property name="nBottomSpacing" value="5"/>
+			<property name="nSpacing" value="5"/>
+
+			<object name="objElements" type="UI2DEncyclopediaEntryRangedTemplate" tiedTo="def.objRangedList.rangedTemplates">
+				<property name="tmplRef" from="tiedTo.tmplRef"/>
+				<property name="nLowerBound" from="tiedTo.nLowerBound"/>
+				<property name="nUpperBound" from="tiedTo.nUpperBound"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="80"/>
+			</object>
+		</object>
+    </objectDef>
+	
+	<objectDef type="UI2DEncyclopediaEntryRangedTemplate" superType="mlui.UI2DElement">
+		<propertyDef name="tmplRef" type="TemplateRef"/>
+		<propertyDef name="nLowerBound" type="int"/>
+		<propertyDef name="nUpperBound" type="int"/>
+        <object type="mlui.UI2DText" name="objEntryTitleLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="def.tmplRef.resolve().strDisplayName"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objValueText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown14LeftFit"/>
+			<property name="strText" from="locale.FSID.UI.encValueRange.format(locale.SID.UI.Low, def.nLowerBound, locale.SID.UI.High, def.nUpperBound)"/>
+			<property name="nX" from="0"/>
+			<property name="nY" value="20"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<propertyDef name="objFilteredModifiers" type="gs_tbg.CombatModifier" variable="true">
+			filter(?{mod: mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK OR
+					mod.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_ATTACK_DAMAGE},
+				self.tmplRef.resolve().objCombatModifiers)
+		</propertyDef>
+		<object name="objElements" type="UI2DEncyclopediaEntryCombatModDisplay" tiedTo="self.objFilteredModifiers">
+			<property name="eCombatProperty" from="tiedTo.eCombatProperty"/>
+			<property name="nValue" from="tiedTo.nModifierValue"/>
+			<property name="nY">
+				def.objFilteredModifiers.indexOf(tiedTo) * 16 + 36
+			</property>
+			<property name="nWidth" value="350"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DEncyclopediaEntryCombatModDisplay" superType="mlui.UI2DElement">
+		<propertyDef name="eCombatProperty" type="Enum" restriction="gs_tbg.CombatProperty"/>
+		<propertyDef name="nValue" type="int"/>
+		<object type="mlui.UI2DText" name="objCombatPropertyText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown14LeftFit"/>
+			<property name="strText">
+				switch{
+					case def.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK:
+						locale.locale.SID.UI.CombatPropAttack
+					case def.eCombatProperty == gs_tbg.CombatProperty.COMBAT_PROPERTY_ATTACK_DAMAGE:
+						locale.locale.SID.UI.CombatPropAttackDmg
+				}
+				+ ": "
+			</property>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objValueText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown14LeftFit"/>
+			<property name="strText" from="def.nValue"/>
+			<property name="nX" from="def.objCombatPropertyText.nWidth + 5"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" value="14"/>
+		</object>
+                
+	</objectDef>
+    
+    <objectDef type="EncyclopediaTableEntry" class="CMLObject">
+        <propertyDef name="eCategory" type="Enum" restriction="EncyclopediaCategories"/>
+        <propertyDef name="strDisplayName" type="String"/>
+        <propertyDef name="tmplIcon" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    </objectDef>
+	
+	<objectDef type="EncyclopediaTable" class="CMLObject">
+            
+		<object type="EncyclopediaTableEntry" name="objEntries">
+			<property name="eCategory" from="EncyclopediaCategories.REGION"/>
+			<property name="strDisplayName" from="locale.SID.UI.Region" />
+		</object>
+        
+        <object type="EncyclopediaTableEntry" name="objEntries">
+			<property name="eCategory" from="EncyclopediaCategories.UNIT"/>
+			<property name="strDisplayName" from="locale.SID.UI.Units"/>
+		</object>
+        
+        <object type="EncyclopediaTableEntry" name="objEntries">
+			<property name="eCategory" from="EncyclopediaCategories.CITY_BUILDINGS"/>
+			<property name="strDisplayName" from="locale.SID.UI.CityBuildings"/>
+		</object>
+        
+        <object type="EncyclopediaTableEntry" name="objEntries">
+			<property name="eCategory" from="EncyclopediaCategories.RESEARCH_BUILDINGS"/>
+			<property name="strDisplayName" from="locale.SID.UI.ResearchBuildings"/>
+		</object>
+        
+        <object type="EncyclopediaTableEntry" name="objEntries">
+			<property name="eCategory" from="EncyclopediaCategories.RESEARCH_TOPICS"/>
+			<property name="strDisplayName" from="locale.SID.UI.ResearchTopics"/>
+		</object>
+		
+		<script type="application/x-locust-query"> <![CDATA[
+		
+		getEntry = ?{enum:
+			find(?{entry: entry.tmplIdeology == enum}, self.objEntries)
+		}
+		
+		]]>
+		</script>
+            
+    </objectDef>
+    
+	<objectDef type="UI2DInfoButton" superType="mlui.UI2DButton">
+		<propertyDef name="objTmpl" type="Object"/>
+		<propertyDef name="tmplButtonStyle" value="skin.BtnStyleCityQueueButtonInfo"/>
+		<property name="nDefaultWidth" value="27"/>
+		<property name="nDefaultHeight" value="26"/>
+		<property name="strToolTip" from="locale.SID.UI.Encyclopedia"/>
+	
+		
+		<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventButtonClicked"/>
+				<script type="application/javascript"><![CDATA[
+					function handle(event, owner)
+					{
+						var template = def.objTmpl;
+						if(template.instanceOf(gs_tbg.FactoryOutputUnitTemplate) || template.instanceOf(gs_tbg.UnitTemplate))
+						{
+							outtemp = sd.getTemplateRef(gs_tbg.UnitTemplate, template.strName);
+							encydata.objEncyclopediaData.showUnits();
+						}
+						else if(template.instanceOf(gs_tbg.RegionOutputTemplate))
+						{
+							outtemp = template
+							encydata.objEncyclopediaData.showRegions();
+						}
+						else if(template.instanceOf(gs_tbg.FactoryOutputCityBuildingTemplate) || template.instanceOf(gs_tbg.CityBuildingTemplate))
+						{
+							outtemp = sd.getTemplateRef(gs_tbg.CityBuildingTemplate, template.strName);
+							encydata.objEncyclopediaData.showCityBuildings();
+						}
+						else if(template.instanceOf(gs_tbg.FactoryOutputResearchCenterBuildingTemplate) || template.instanceOf(gs_tbg.ResearchCenterBuildingTemplate))
+						{
+							outtemp = sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, template.strName);
+							encydata.objEncyclopediaData.showResearchBuildings();
+						}
+						else if(template.instanceOf(gs_tbg.ResearchTopicTemplate))
+						{
+							outtemp = sd.getTemplateRef(gs_tbg.ResearchTopicTemplate, template.strName);
+							encydata.objEncyclopediaData.showResearchTopics();
+						}
+						else if(template.instanceOf(CombatModEntry))
+						{
+							encydata.objEncyclopediaData.showCombatModifiers();
+						}
+						else
+						{
+							log("unable to open encyclopedia for entry " + template );
+						}
+						var entry = encydata.objEncyclopediaData.getEntry(outtemp);
+						encydata.objEncyclopediaData.objSelected = entry.objEntry
+					}
+				]]></script>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DRegionResearchRequirements" superType="mlui.UI2DElement">
+		<propertyDef name="objRegionOutputTemplate" type="gs_tbg.RegionOutputTemplate"/>
+		<propertyDef name="objResearchReqs" type="gs_tbg.RegionRequirementResearchProject" variable="true">
+			filter(?{req: req.instanceOf(gs_tbg.RegionRequirementResearchProject)}, self.objRegionOutputTemplate.objRegionRequirements)
+		</propertyDef>
+		<property name="nHeight">
+			self.objRequirementsLabel.nHeight + self.objRequirementsList.nHeight + 15
+		</property>
+		
+		<object type="mlui.UI2DText" name="objRequirementsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchRequirements"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object name="objRequirementsList" type="common_ui.UI2DList">
+			<property name="nY" value="20"/>
+			<property name="nX" value="3"/>
+			<property name="nSpacing" value="4"/>
+			
+			<object type="UI2DEncyclopediaText" name="objElements" tiedTo="def.objResearchReqs">
+				<property name="objTemplate" from="tiedTo.tmplResearchTopic.resolve()"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+				<property name="strText" from="tiedTo.tmplResearchTopic.resolve().strDisplayName"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="14"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DPropertyBox" superType="mlui.UI2DElement">
+		<propertyDef name="strProperty" type="String"/>
+		<propertyDef name="nValue" type="String"/>
+		<propertyDef name="bPercent" type="bool" default="false"/>
+		<propertyDef name="bBonus" type="bool" default="false"/>
+		<propertyDef name="bMoney" type="bool" default="false"/>
+		
+        <object type="mlui.UI2DImage" name="objLabelBubble">
+            <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+			<property name="nWidth" value="201"/>
+			<property name="nHeight" value="22"/>
+        </object>
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText" >
+				def.strProperty + if(def.bPercent == true, " %", "")
+			</property>
+			<property name="nX" value="5"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="14"/>
+		</object>
+        <object type="mlui.UI2DImage" name="objValueBubble">
+            <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+            <property name="nX" value="200"/>
+            <property name="nY" value="0"/>
+			<property name="nWidth" value="80"/>
+			<property name="nHeight" value="22"/>
+        </object>
+		<object type="mlui.UI2DText" name="objValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Center"/>
+			<property name="strText">
+				if(def.bBonus == true, "+", "") + if(def.bMoney == true, "$", "") + def.nValue + if(def.bPercent == true, "%", "")
+			</property>
+			<property name="nX" value="200"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="80"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DResearchRequirements" superType="mlui.UI2DElement">
+		<propertyDef name="objFactoryOutputTemplate" type="gs_tbg.FactoryOutputTemplate"/>
+		<propertyDef name="objResearchReqs" type="gs_tbg.FactoryRequirementResearchProject" variable="true">
+			filter(?{req: req.instanceOf(gs_tbg.FactoryRequirementResearchProject)}, self.objFactoryOutputTemplate.objFactoryRequirements)
+		</propertyDef>
+		<property name="nHeight">
+			self.objRequirementsLabel.nHeight + self.objRequirementsList.nHeight + 15
+		</property>
+		
+		<object type="mlui.UI2DText" name="objRequirementsLabel" existsWhile="self.objResearchReqs.size GT 0">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchRequirements"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object name="objRequirementsList" type="common_ui.UI2DList" existsWhile="self.objResearchReqs.size GT 0">
+			<property name="nY" value="20"/>
+			<property name="nX" value="3"/>
+			<property name="nSpacing" value="4"/>
+			
+			<object type="UI2DEncyclopediaText" name="objElements" tiedTo="def.objResearchReqs">
+				<property name="objTemplate" from="tiedTo.tmplResearchTopic.resolve()"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+				<property name="strText" from="tiedTo.tmplResearchTopic.resolve().strDisplayName"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="14"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DBuildingRequirements" superType="mlui.UI2DElement">
+		<propertyDef name="objFactoryOutputTemplate" type="gs_tbg.FactoryOutputTemplate"/>
+		<propertyDef name="objBuildingReqs" type="gs_tbg.FactoryRequirementCityBuilding" variable="true">
+			filter(?{req: req.instanceOf(gs_tbg.FactoryRequirementCityBuilding)}, self.objFactoryOutputTemplate.objFactoryRequirements)
+		</propertyDef>
+		<propertyDef name="objResearchBuildingReqs" type="gs_tbg.FactoryRequirementResearchCenterBuilding" variable="true">
+			filter(?{req: req.instanceOf(gs_tbg.FactoryRequirementResearchCenterBuilding)}, self.objFactoryOutputTemplate.objFactoryRequirements)
+		</propertyDef>
+		<property name="nHeight">
+			self.objRequirementsLabel.nHeight + self.objRequirementsList.nHeight + 15
+		</property>
+		
+		<object type="mlui.UI2DText" name="objRequirementsLabel" existsWhile="self.objBuildingReqs.size GT 0 OR self.objResearchBuildingReqs.size GT 0">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.BuildingRequirements"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object name="objRequirementsList" type="common_ui.UI2DList" existsWhile="self.objBuildingReqs.size GT 0 OR self.objResearchBuildingReqs.size GT 0">
+			<property name="nY" value="20"/>
+			<property name="nX" value="3"/>
+			<property name="nSpacing" value="4"/>
+			
+			<object type="UI2DEncyclopediaText" name="objElements" tiedTo="def.objBuildingReqs">
+				<property name="objTemplate" from="tiedTo.tmplCityBuilding.resolve()"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+				<property name="strText" from="tiedTo.tmplCityBuilding.resolve().strDisplayName"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="14"/>
+			</object>
+			<object type="UI2DEncyclopediaText" name="objElements" tiedTo="def.objResearchBuildingReqs">
+				<property name="objTemplate" from="tiedTo.tmplResearchCenterBuilding.resolve()"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+				<property name="strText" from="tiedTo.tmplResearchCenterBuilding.resolve().strDisplayName"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="14"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DResourceRequirementsBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objOutputTemplate"/>
+		
+		<object type="mlui.UI2DText" name="objRequirementsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.ResourceRequirements"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objBubble">
+            <property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+            <property name="nX" value="0"/>
+            <property name="nY" value="18"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="50"/>
+        </object>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objReqs">
+			<property name="nX" value="0"/>
+			<property name="nY" value="18"/>
+			<property name="nEltSpacing" value="2"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="nMaxEltsPerRow" value="3"/>
+			
+			<object type="UI2DResourceRequirements" name="objElements" tiedTo="def.objOutputTemplate.objResourceRequirements">
+				<property name="objMH2Data" from="mh2data"/>
+				<property name="objResourceRequirement" from="tiedTo"/>
+				<property name="nWidth" value="50"/>
+				<property name="nHeight" value="20"/>
+				<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DBuildingRequirementsResearch" superType="mlui.UI2DElement">
+		<propertyDef name="objResearchTopicTemplate" type="gs_tbg.ResearchTopicTemplate"/>
+		<propertyDef name="objBuildingReqs" type="gs_tbg.ResearchCenterBuildingTemplate" variable="true" from="self.objResearchTopicTemplate.tmplRequiredBuildings"/>
+		<property name="nHeight">
+			self.objRequirementsLabel.nHeight + self.objRequirementsList.nHeight + 15
+		</property>
+		
+		<object type="mlui.UI2DText" name="objRequirementsLabel" existsWhile="self.objBuildingReqs.size GT 0">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.BuildingRequirements"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object name="objRequirementsList" type="common_ui.UI2DList" existsWhile="self.objBuildingReqs.size GT 0">
+			<property name="nY" value="20"/>
+			<property name="nX" value="3"/>
+			<property name="nSpacing" value="4"/>
+			
+			<object type="UI2DEncyclopediaText" name="objElements" tiedTo="def.objBuildingReqs">
+				<property name="objTemplate" from="tiedTo"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+				<property name="strText" from="tiedTo.strDisplayName"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="14"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DResearchRequirementsResearch" superType="mlui.UI2DElement">
+		<propertyDef name="objResearchTopicTemplate" type="gs_tbg.ResearchTopicTemplate"/>
+		<propertyDef name="objResearchReqs" type="gs_tbg.ResearchTopicTemplate" variable="true" from="self.objResearchTopicTemplate.tmplPreReqs"/>
+		<property name="nHeight">
+			self.objRequirementsLabel.nHeight + self.objRequirementsList.nHeight + 15
+		</property>
+		
+		<object type="mlui.UI2DText" name="objRequirementsLabel" existsWhile="self.objResearchReqs.size GT 0">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown16Left"/>
+			<property name="strText" from="locale.SID.UI.ResearchRequirements"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+		
+		<object name="objRequirementsList" type="common_ui.UI2DList" existsWhile="self.objResearchReqs.size GT 0">
+			<property name="nY" value="20"/>
+			<property name="nX" value="3"/>
+			<property name="nSpacing" value="4"/>
+			
+			<object type="UI2DEncyclopediaText" name="objElements" tiedTo="def.objResearchReqs">
+				<property name="objTemplate" from="tiedTo"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+				<property name="strText" from="tiedTo.strDisplayName"/>
+				<property name="nWidth" value="350"/>
+				<property name="nHeight" value="14"/>
+			</object>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DEncyclopediaText" superType="mlui.UI2DText">
+		<propertyDef name="objTemplate" type="Object"/>
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                <property name="otEventType" value="mlui.EventMouseButtonDown"/>
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+						var template = def.objTemplate;
+						if(template.instanceOf(gs_tbg.FactoryOutputUnitTemplate) || template.instanceOf(gs_tbg.UnitTemplate))
+						{
+							outtemp = sd.getTemplateRef(gs_tbg.UnitTemplate, template.strName);
+							encydata.objEncyclopediaData.showUnits();
+						}
+						else if(template.instanceOf(gs_tbg.RegionOutputTemplate))
+						{
+							outtemp = template
+							encydata.objEncyclopediaData.showRegions();
+						}
+						else if(template.instanceOf(gs_tbg.FactoryOutputCityBuildingTemplate) || template.instanceOf(gs_tbg.CityBuildingTemplate))
+						{
+							outtemp = sd.getTemplateRef(gs_tbg.CityBuildingTemplate, template.strName);
+							encydata.objEncyclopediaData.showCityBuildings();
+						}
+						else if(template.instanceOf(gs_tbg.FactoryOutputResearchCenterBuildingTemplate) || template.instanceOf(gs_tbg.ResearchCenterBuildingTemplate))
+						{
+							outtemp = sd.getTemplateRef(gs_tbg.ResearchCenterBuildingTemplate, template.strName);
+							encydata.objEncyclopediaData.showResearchBuildings();
+						}
+						else if(template.instanceOf(gs_tbg.ResearchTopicTemplate))
+						{
+							outtemp = sd.getTemplateRef(gs_tbg.ResearchTopicTemplate, template.strName);
+							encydata.objEncyclopediaData.showResearchTopics();
+						}
+						else if(template.instanceOf(CombatModEntry))
+						{
+							encydata.objEncyclopediaData.showCombatModifiers();
+						}
+						var entry = encydata.objEncyclopediaData.getEntry(outtemp);
+						encydata.objEncyclopediaData.objSelected = entry.objEntry
+                    }
+                ]]></script>
+            </object>					
+        </object>
+	</objectDef>
+		
+</locust>

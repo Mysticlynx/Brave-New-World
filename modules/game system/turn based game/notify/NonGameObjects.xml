@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<enumDef name="NotificationType">     <!-- Deprecated -->
+		<value name="Default"/>
+		<value name="Engagement"/>
+		<value name="Diplomatic"/>
+		<value name="Government"/>
+		<value name="Combat"/>
+		<value name="Trade"/>
+		<value name="Region"/>
+		<value name="City"/>
+		<value name="Research"/>
+		<value name="Supply"/>
+		<value name="Stability"/>
+	</enumDef>
+    
+	<objectDef type="CategoryTemplate" class="CMLOCategoryTemplate" superType="Template" templateBase="true">  <!-- Deprecated -->
+		<propertyDef name="strDisplayName" type="String"/>
+	</objectDef>
+    
+	<objectDef type="Notification" class="CMLONotification" desc="A notification">
+        <propertyDef name="nTurn" type="int"/>
+        <propertyDef name="strMessage" type="String"/>
+		<propertyDef name="tmplNotification" type="TemplateRef" storesChildren="true" />
+		<propertyDef name="bAlert" type="bool" default="false"/>
+		<propertyDef name="refJumpTarget" type="GORef"/>
+        
+		<propertyDef name="tmplCategories" type="TemplateRef" restriction="CategoryTemplate" variable="true" storesChildren="true" desc="deprecated" />
+		<propertyDef name="eNotificationType" type="Enum" restriction="NotificationType" desc="deprecated" />
+	</objectDef>
+
+	<objectDef type="NotificationTemplate" class="CMLONotificationTemplate" superType="Template" templateBase="true">
+        <propertyDef name="strDisplayName" type="String" />
+	</objectDef>
+    
+	<objectDef type="NotificationTemplateEngagement" superType="NotificationTemplate" >
+	</objectDef>
+	<objectDef type="NotificationTemplateDiplomatic" superType="NotificationTemplate" >
+	</objectDef>
+	<objectDef type="NotificationTemplateGovernment" superType="NotificationTemplate" >
+	</objectDef>
+	<objectDef type="NotificationTemplateTrade" superType="NotificationTemplate" >
+	</objectDef>
+	<objectDef type="NotificationTemplateRegion" superType="NotificationTemplate" >
+	</objectDef>
+	<objectDef type="NotificationTemplateCity" superType="NotificationTemplate" >
+	</objectDef>
+	<objectDef type="NotificationTemplateResearch" superType="NotificationTemplate" >
+	</objectDef>
+	<objectDef type="NotificationTemplateStability" superType="NotificationTemplate" >
+	</objectDef>
+
+    <objectDef type="NotificationGenerator" class="CMLONotificationGenerator" desc="A notification generator">
+        <propertyDef name="otEvents" type="ObjectType" variable="true"/>
+    </objectDef>
+
+    <objectDef type="NoteGenFormatString" class="CMLONoteGenFormatString" superType="NotificationGenerator" desc="A notification generator that uses a format string">
+        <propertyDef name="fstrMessage" type="FormatString"/>"
+    </objectDef>
+
+    <objectDef type="NoteGenMethod" class="CMLONoteGenMethod" superType="NotificationGenerator" desc="A notification generator that uses a method">
+       	<!-- Expected methods:
+		    	handleGameEvent(gameroot, event)
+		-->
+    </objectDef>
+
+</locust>

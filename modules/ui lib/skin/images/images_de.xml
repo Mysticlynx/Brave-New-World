@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagAmerican-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagAmerican-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagAmerican-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagAmerican-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagAmerican-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagAmerican-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagCanadian-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagCanadian-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagCanadian-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagCanadian-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagCanadian-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagCanadian-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagCaucasian-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagCaucasian-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagCaucasian-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagCaucasian-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagCaucasian-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagCaucasian-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagChinese-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagChinese-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagChinese-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagChinese-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagChinese-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagChinese-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagCzech-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagCzech-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagCzech-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagCzech-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagCzech-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagCzech-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagDanish-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagDanish-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagDanish-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagDanish-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagDanish-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagDanish-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagDanziger-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagDanziger-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagDanziger-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagDanziger-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagDanziger-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagDanziger-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagDutch-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagDutch-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagDutch-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagDutch-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagDutch-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagDutch-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagEquatorialGuinean-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagEquatorialGuinean-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagEquatorialGuinean-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagEquatorialGuinean-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagEquatorialGuinean-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagEquatorialGuinean-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagFinnish-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagFinnish-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagFinnish-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagFinnish-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagFinnish-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagFinnish-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagGerman-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagGerman-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagGerman-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagGerman-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagGerman-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagGerman-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagGreenlandic-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagGreenlandic-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagGreenlandic-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagGreenlandic-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagGreenlandic-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagGreenlandic-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagHungarian-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagHungarian-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagHungarian-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagHungarian-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagHungarian-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagHungarian-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagKazak-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagKazak-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagKazak-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagKazak-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagKazak-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagKazak-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagLatvian-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagLatvian-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagLatvian-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagLatvian-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagLatvian-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagLatvian-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagMalagasy-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagMalagasy-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagMalagasy-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagMalagasy-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagMalagasy-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagMalagasy-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagNewZealander-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagNewZealander-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagNewZealander-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagNewZealander-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagNewZealander-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagNewZealander-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagQuebecois-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagQuebecois-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagQuebecois-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagQuebecois-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagQuebecois-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagQuebecois-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagRussian-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagRussian-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagRussian-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagRussian-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagRussian-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagRussian-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagSoviet-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagSoviet-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagSoviet-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagSoviet-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagSoviet-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagSoviet-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagSurinamese-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagSurinamese-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagSurinamese-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagSurinamese-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagSurinamese-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagSurinamese-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagSwedish-Fascist-Decal-deIcon">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagSwedish-Fascist-Decal-deIcon"/> 
+        <property name="nImageWidth" value="28" /> 
+        <property name="nImageHeight" value="28" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagSwedish-Fascist-deLarge">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagSwedish-Fascist-deLarge"/> 
+        <property name="nImageWidth" value="202" /> 
+        <property name="nImageHeight" value="101" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+    <template type="mlmedia.ImageTemplateSingleTexture" name="ImgFlagSwedish-Fascist-deSmall">
+        <property name="colColor" value="#FFFFFFFF" /> 
+        <property name="amApplyMode" value="MODULATE" /> 
+        <property name="tmplTexture" value="TextureFlagSwedish-Fascist-deSmall"/> 
+        <property name="nImageWidth" value="46" /> 
+        <property name="nImageHeight" value="24" /> 
+        <property name="fmUFillMode" value="FIXED" /> 
+        <property name="fmVFillMode" value="FIXED" /> 
+    </template>
+	
+</locust>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="UnitGroupStack" class="CMLOUnitGroupStack">
+		<propertyDef name="objRegion" type="gs_tbg.Region"/>
+		<propertyDef name="nPosIndex" type="int"/>
+		<propertyDef name="objTarget" type="Object"/>
+		<propertyDef name="nTargetPosIndex" type="int"/>
+		<propertyDef name="objUnitGroups" type="gs_tbg.UnitGroup" variable="true"/>
+		<propertyDef name="objHeadUnitGroup" type="gs_tbg.UnitGroup"/>
+		<propertyDef name="objDisplayUnit" type="gs_tbg.Unit"/>
+		<propertyDef name="vecPosition" type="Vec3D"/><!-- position of all the unitgroups in this stack -->
+		<propertyDef name="vecCurPosition" type="Vec3D"/><!-- where the unit groups should be displayed (depends on their orders) -->
+		<propertyDef name="fFacingAngle" type="float"/>
+		
+		<script type="application/javascript"><![CDATA[
+            function advanceHeadUnitGroup()
+            {
+                self.parent.advanceHeadUnitGroup(self);
+            }
+        ]]></script>
+		
+    </objectDef>
+
+    <objectDef type="UIGroupStackLayer" class="CUIGroupStackLayer" superType="mlui.UI3DElement">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objGroupStacks" type="UnitGroupStack" variable="true" storesChildren="true"/>
+		<propertyDef name="objSelectedUnitGroup" type="gs_tbg.UnitGroup">
+            if(self.objMapData.objSelectedObject.instanceOf(gs_tbg.UnitGroup), self.objMapData.objSelectedObject, null)
+		</propertyDef>
+		<propertyDef name="bEditMode" type="bool" default="false"/>
+        
+        <!-- queries -->
+        <script type="application/x-locust-query">
+            getPositionOfUnitGroup = ?{unitGroup:
+                switch {
+                    case unitGroup.refLocation.goDef == gs_tbg.Region:
+                        // If the UnitGroup is in a region, then get the stack for
+                        // that unit group and return its position
+                        let stack = self.getStackForUnitGroup(unitGroup)
+                        {
+                            if (stack != null, stack.vecPosition, unitGroup.refLocation.resolve(self.objGameRoot).vecPositions[2] )
+                        }
+                    case unitGroup.refLocation.goDef == gs_tbg.UnitGroup:
+                        // If the UnitGroup is in another UnitGroup, then get the
+                        // position of that other UnitGroup
+                        self.getPositionOfUnitGroup(unitGroup.refLocation.resolve(self.objGameRoot))
+                    case unitGroup.refLocation.goDef == gs_tbg.Unit:
+                        // If the UnitGroup is in a Unit, then get the UnitGroup
+                        // of that Unit, and find the position of that other UnitGroup
+                        self.getPositionOfUnitGroup(unitGroup.refLocation.resolve(self.objGameRoot).refUnitGroup.resolve(self.objGameRoot))
+                    case unitGroup.refLocation.goDef == gs_tbg.City:
+                        // If the UnitGroup is in a City, then get the position of the City
+                        unitGroup.refLocation.resolve(self.objGameRoot).vecPosition
+                    case unitGroup.refLocation.goDef == gs_tbg.NavalBase:
+                        // If the UnitGroup is in a NavalBase, then it needs to be
+                        // shown somewhere, but right now naval bases aren't shown,
+                        // so just return [0, 0, 0] and improve this later
+                        Vec3D(0, 0, 0)
+                    default:
+                        // By default, use [0, 0, 0] so that's it's really obvious
+                        // when this case hits (move arrows will be drawn sort of across
+                        // the entire world)
+                        Vec3D(0, 0, 0)
+                }
+            }
+        </script>
+        
+		<!-- Methods -->
+		<script type="application/javascript"><![CDATA[
+
+            // this function can change the head unit
+            function selectAndDisplaySpecificUnitGroup(unitGroup)
+            {
+                stack = self.getStackForUnitGroup(unitGroup);
+                if(stack != null)
+                {
+                    self.setHeadUnitGroup(stack,unitGroup);
+                    self.parent.objMapData.selectUnitGroup(unitGroup);
+                }
+            }
+        ]]></script>
+        <!-- 
+            builtin methods:
+                advanceHeadUnitGroup(stack)
+                setHeadUnitGroup(stack,unitGroup)
+                setDisplayUnit(stack,unitGroup,unit)
+                
+            builtin queries:
+                getStackForUnitGroup(unitGroup)
+        -->
+    </objectDef>
+    
+</locust>

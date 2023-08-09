@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DGrantMilitaryAccessTreaty" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+
+		<object type="mlui.UI2DImage" name="objRightPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconMilitaryAccess"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="40"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.GrantMilitaryAccessTreaty"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objBlurb">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10LeftWrap"/>
+			<property name="strText" from="locale.FSID.UI.GrantMilitaryAccessBlurb.format('Nation', def.objNation.strDisplayName)"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="230"/>
+			<property name="nHeight" value="40"/>
+		</object>
+	
+		<object type="mlui.UI2DButton" name="objClose">
+			<property name="tmplButtonStyle" value="skin.BtnStyleReportButtonTradeClose"/>
+			<property name="nX" value="269"/>
+			<property name="nY" value="4"/>
+			<property name="nDefaultWidth" value="15"/>
+			<property name="nDefaultHeight" value="15"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+    <object type="mlui.UI2DText" name="objTreatyTermsLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.TreatyTerms"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="58"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+    <propertyDef name="bPortAccess" type="bool" default="false"/>
+    <propertyDef name="bTotalMilitary" type="bool" default="true"/>
+
+    <object type="common_ui.UI2DList" name="objOptions">
+      <property name="nSpacing" value="1"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="70"/>
+
+      <object type="UI2DPoliticalSystemSelectionButton" name="objElements" >
+        <property name="strDisplayName" from="locale.SID.UI.TotalMilitaryAccess"/>
+        <property name="bSelected" value="true" />
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+          <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+            <property name="otEventType" value="mlui.EventButtonClicked"/>
+            <script type="application/javascript">
+              <![CDATA[
+							function handle(event, owner)
+              {
+                  def.objOptions.reset(self.parent.parent);
+                  def.bTotalMilitary = true;
+							}
+						]]>
+            </script>
+          </object>
+        </object>
+      </object>
+
+      <object type="UI2DPoliticalSystemSelectionButton" name="objElements" >
+        <property name="strDisplayName" from="locale.SID.UI.PortAccess"/>
+        <property name="bSelectable" value="true" />
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+          <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+            <property name="otEventType" value="mlui.EventButtonClicked"/>
+            <script type="application/javascript">
+              <![CDATA[
+							function handle(event, owner)
+							{
+                  def.objOptions.reset(self.parent.parent);
+                  def.bTotalMilitary = false;
+							}
+						]]>
+            </script>
+          </object>
+        </object>
+      </object>
+      <script type="application/javascript">
+        <![CDATA[
+                function reset(object)
+                {
+                    objects = def.objOptions.objElements;
+                    for(i = 0; i<objects.length; i++)
+                    {
+                        objects[i].bSelected = false;
+                    }
+                    object.bSelected = true;
+                }
+            ]]>
+      </script>
+    </object>
+
+    <object type="mlui.UI2DText" name="objTreatyDescriptionLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+      <property name="strText" from="locale.SID.UI.TreatyEffects"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="150"/>
+      <property name="nWidth" value="200"/>
+      <property name="nHeight" value="12"/>
+    </object>
+
+
+    <object type="mlui.UI2DText" name="objTreatyDescription">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue10LeftWrap"/>
+      <property name="strText">
+        if(def.bTotalMilitary == true, locale.FSID.UI.TotalMilitaryAccessBlurb.format('Nation', def.objNation.strDisplayName),
+        locale.FSID.UI.PortAccessBlurb.format('Nation', def.objNation.strDisplayName)
+        )
+      </property>
+      <property name="nX" value="33"/>
+      <property name="nY" value="165"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="96"/>
+    </object>
+
+
+    <object type="mlui.UI2DText" name="objActionLabel">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+      <property name="strText" from="locale.SID.UI.Action"/>
+      <property name="nX" value="33"/>
+      <property name="nY" value="246"/>
+      <property name="nWidth" value="250"/>
+      <property name="nHeight" value="10"/>
+    </object>
+
+    <object type="mlui.UI2DTextButton" name="objAction">
+      <property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+      <property name="strText" from="if(def.bTotalMilitary, locale.SID.UI.GrantMilitaryAccessTreaty, locale.SID.UI.GrantPortAccessTreaty)"/>
+      <property name="nX" value="31"/>
+      <property name="nY" value="257"/>
+      <property name="nDefaultWidth" value="228"/>
+      <property name="nDefaultHeight" value="26"/>
+      <property name="nDepth" value="50"/>
+
+      <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+        <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+          <property name="otEventType" value="mlui.EventButtonClicked"/>
+          <script type="application/javascript">
+            <![CDATA[
+						function handle(event, owner)
+						{
+							var action = null
+							if(def.bTotalMilitary)
+							{
+								action = gs_tbg.GActGrantMilitaryAccess.create({
+									"refGrantingNation": mh2data.objNation,
+									"refReceivingNation": def.objNation
+									});
+							}
+							else
+							{
+								action = gs_tbg.GActGrantPortAccess.create({
+									"refGrantingNation": mh2data.objNation,
+									"refReceivingNation": def.objNation
+									});
+							}
+							mh2data.objAvatar.sendAction(action);
+							mh2data.closeDiplomaticActionsPopup();
+						}
+					]]>
+          </script>
+        </object>
+      </object>
+    </object>
+  </objectDef>
+	
+</locust>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DTradeAgreementButtons" superType="mlui.UI2DElement">
+		
+		<object type="mlui.UI2DButton" name="objMoney">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+			    if(mh2data.strTradeAgreementTab != 'Money',
+					'BtnStyleTradeButtonMoney', 'BtnStyleTradeButtonMoneyC'))
+			"/>
+			<property name="strToolTip" from="locale.SID.UI.Money"/>
+			<property name="nX" value="25"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="25"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openTradeAgreementTab('Money');
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objArms">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+			    if(mh2data.strTradeAgreementTab != 'Arms',
+					'BtnStyleTradeButtonArms', 'BtnStyleTradeButtonArmsC'))
+			"/>
+			<property name="strToolTip" from="locale.SID.UI.Arms"/>
+			<property name="nX" value="51"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="25"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openTradeAgreementTab('Arms');
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objMetals">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+			    if(mh2data.strTradeAgreementTab != 'Metals',
+					'BtnStyleTradeButtonMetals', 'BtnStyleTradeButtonMetalsC'))
+			"/>
+			<property name="strToolTip" from="locale.SID.UI.Metals"/>
+			<property name="nX" value="78"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="25"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openTradeAgreementTab('Metals');
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objCoal">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+			    if(mh2data.strTradeAgreementTab != 'Coal',
+					'BtnStyleTradeButtonCoal', 'BtnStyleTradeButtonCoalC'))
+			"/>
+			<property name="strToolTip" from="locale.SID.UI.Coal"/>
+			<property name="nX" value="104"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="25"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openTradeAgreementTab('Coal');
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objOil">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+			    if(mh2data.strTradeAgreementTab != 'Oil',
+					'BtnStyleTradeButtonOil', 'BtnStyleTradeButtonOilC'))
+			"/>
+			<property name="strToolTip" from="locale.SID.UI.Oil"/>
+			<property name="nX" value="130"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="25"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openTradeAgreementTab('Oil');
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DButton" name="objFood">
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+			    if(mh2data.strTradeAgreementTab != 'Food',
+					'BtnStyleTradeButtonFood', 'BtnStyleTradeButtonFoodC'))
+			"/>
+			<property name="strToolTip" from="locale.SID.UI.Food"/>
+			<property name="nX" value="156"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="25"/>
+			<property name="nDefaultHeight" value="25"/>
+			
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							mh2data.openTradeAgreementTab('Food');
+						}
+					]]></script>
+				</object>					
+			</object>
+		</object>		
+	</objectDef>
+</locust>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="EventGameStarted" class="CMLOEventGameStarted" superType="mlevent.Event" desc="Event for when a game starts">
+        <propertyDef name="nSeed" type="int"/>
+        <propertyDef name="nTurn" type="int"/>
+		<propertyDef name="dateCurrentDate" type="Date"/>
+    </objectDef>
+
+    <objectDef type="EventTurnStarted" class="CMLOEventTurnStarted" superType="mlevent.Event" desc="Event for when a turn starts">
+        <propertyDef name="nTurn" type="int"/>
+		<propertyDef name="dateCurrentDate" type="Date"/>
+    </objectDef>
+
+    <objectDef type="EventAfterTurnStarted" class="CMLOEventAfterTurnStarted" superType="mlevent.Event" desc="Event which occurs after turn started">
+        <propertyDef name="nPhase" type="int"/>
+    </objectDef>
+
+</locust>

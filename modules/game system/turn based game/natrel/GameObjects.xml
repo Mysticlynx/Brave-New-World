@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="DiplomaticRelations" class="CMLODiplomaticRelations" desc="Diplomatic relations between two nations">
+		<goDef gameSystem="GameSysNationRelations" storageProperty="objDiplomaticRelations">
+			<keyProperty name="refNationA"/>
+			<keyProperty name="refNationB"/>
+		</goDef>
+		<propertyDef name="refNationA" type="GORef" restriction="Nation"/>
+		<propertyDef name="refNationB" type="GORef" restriction="Nation"/>
+		<propertyDef name="nDiplomaticRelations" type="int" default="500"/>
+		<propertyDef name="tmplDiplomaticRelations" type="TemplateRef" restriction="DiplomaticRelationsTemplate"/>
+		<propertyDef name="bContactOpen" type="bool" default="true"/>
+	</objectDef>
+
+	<objectDef type="Embargo" class="CMLOEmbargo" desc="Embargo one nation lays on another">
+		<goDef gameSystem="GameSysNationRelations" storageProperty="objEmbargos">
+			<keyProperty name="refInitiatingNation"/>
+			<keyProperty name="refEmbargoedNation"/>
+		</goDef>
+		<propertyDef name="refInitiatingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refEmbargoedNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="dateExpiration" type="Date"/>
+	</objectDef>
+
+	<objectDef type="Treaty" class="CMLOTreaty" desc="Treaty between two nations">
+		<goDef gameSystem="GameSysNationRelations" storageProperty="objTreaties">
+			<keyProperty name="strName"/>
+		</goDef>
+		<propertyDef name="strName" type="String"/>
+		<propertyDef name="eType" type="Enum" restriction="TreatyType"/>
+		<propertyDef name="refProposingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="eStatus" type="Enum" restriction="TreatyStatus"/>
+		<propertyDef name="objTerms" type="TreatyTerm" variable="true" storesChildren="true" desc="for peace treaty only"/>
+		<propertyDef name="bDemand" type="bool" default="false"/>
+		<propertyDef name="refProposedCommonEnemyNation" type="GORef" restriction="Nation" desc="for alliance or military access treaties. Can be null"/>
+        <propertyDef name="strMessage" type="String"/>
+
+		<script type="application/javascript"><![CDATA[
+			function getCommonEnemy(gameroot)
+			{
+				if (self.refProposedCommonEnemyNation != null)
+				{
+					return self.refProposedCommonEnemyNation.resolve(gameroot);
+				}
+				return null;
+			}
+		]]></script>
+	</objectDef>
+
+	<objectDef type="AllianceMembership" class="CMLOAllianceMembership" desc="What alliance a nation is in">
+		<goDef gameSystem="GameSysNationRelations" storageProperty="objAllianceMemberships">
+			<keyProperty name="refNation"/>
+		</goDef>
+		<propertyDef name="refNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refAlliance" type="GORef" restriction="Alliance"/>
+	</objectDef>
+
+	<objectDef type="Alliance" class="CMLOAlliance" desc="An alliance">
+		<goDef gameSystem="GameSysNationRelations" storageProperty="objAlliances">
+			<keyProperty name="strName"/>
+		</goDef>
+		<propertyDef name="strName" type="String"/>
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="refLeadNation" type="GORef" restriction="Nation"/>
+
+		<script type="application/x-locust-query">
+			getMemberships = ?{gameroot:
+				filter(?{membership: membership.refAlliance == self}, getAllAllianceMemberships(gameroot))
+			}
+
+			getNations = ?{gameroot:
+				map(?{membership: membership.refNation.resolve(gameroot)}, self.getMemberships(gameroot))
+			}
+			
+			getNation = ?{gameroot, nation:
+				find(?{membership: membership.refNation==nation}, self.getMemberships(gameroot))
+			}
+			// TODO: Check that the following 3 queries are working right
+			getWars = ?{gameroot:
+				flattenSet(?{nation:
+					filter(?{war: war.refNationA == nation OR war.refNationB == nation}, getAllWars(gameroot))},
+					self.getNations(gameroot))
+			}
+
+			getResources = ?{gameroot:
+				flattenSet(?{nation:
+					filter(?{nationResource: nationResource.refNation == nation}, getNationResources(gameroot, nation))},
+					self.getNations(gameroot))
+			}
+
+			getCities = ?{gameroot:
+				flattenSet(?{nation: getNationCities(gameroot, nation)}, self.getNations(gameroot))
+			}
+		</script>
+	</objectDef>
+
+	<objectDef type="AccessAgreement" class="CMLOAccessAgreement" desc="Access agreement between nations">
+		<goDef gameSystem="GameSysNationRelations" storageProperty="objAccessAgreements">
+			<keyProperty name="refGrantingNation"/>
+			<keyProperty name="refReceivingNation"/>
+		</goDef>
+		<propertyDef name="refGrantingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="bLandAccess" type="bool" default="false"/>
+		<propertyDef name="bSeaAccess" type="bool" default="false"/>
+		<propertyDef name="bAirAccess" type="bool" default="false"/>
+		<propertyDef name="bPortAccess" type="bool" default="false"/>
+	</objectDef>
+
+	<objectDef type="HistoricNation" class="CMLOHistoricNation" desc="A claim on a region by a nation">
+		<goDef gameSystem="GameSysNationRelations" storageProperty="objHistoricNations">
+			<keyProperty name="tmplNation"/>
+		</goDef>
+		<propertyDef name="tmplNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refRegions" type="GORef" restriction="Region" variable="true" storesChildren="true"/>
+		<propertyDef name="refCity" type="GORef" restriction="City"/>
+	</objectDef>
+
+
+</locust>

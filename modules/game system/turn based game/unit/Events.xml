@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="EventUnitGroupEnteredRegion" class="CMLOEventUnitGroupEnteredRegion" superType="mlevent.Event" desc="Event for when a unit group enters a region">
+		<propertyDef name="objUnitGroup" type="UnitGroup"/>
+        <propertyDef name="objRegion" type="Region"/>
+		<propertyDef name="objOldRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventUnitGroupLocationChanged" class="CMLOEventUnitGroupLocationChanged" superType="mlevent.Event" desc="Event for when a unit group changes its location.">
+		<propertyDef name="objUnitGroup" type="UnitGroup"/>
+        <propertyDef name="objOldLocation" type="Object"/>
+        <propertyDef name="objNewLocation" type="Object"/>
+        <propertyDef name="nOldPosIndex" type="int"/>
+        <propertyDef name="nNewPosIndex" type="int"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDamaged" class="CMLOEventUnitDamaged" superType="mlevent.Event" desc="Event for when a unit is damaged">
+		<propertyDef name="objUnit" type="Unit"/>
+        <propertyDef name="nDamage" type="int"/>
+		<propertyDef name="objNation" type="Nation"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDestroyed" class="CMLOEventUnitDestroyed" superType="mlevent.Event" desc="Event for when a unit is destroyed">
+		<propertyDef name="objUnit" type="Unit" storesChildren="true"/>
+        <propertyDef name="objNation" type="Nation"/>
+    </objectDef>
+
+	<objectDef type="EventUnitRepaired" class="CMLOEventUnitRepaired" superType="mlevent.Event" desc="Event for when a unit is Repaired">
+		<propertyDef name="objUnit" type="Unit" storesChildren="true"/>
+	</objectDef>
+
+	<objectDef type="EventUnitProduced" class="CMLOEventUnitProduced" superType="mlevent.Event" desc="Event for when a unit is produced">
+		<propertyDef name="objCity" type="City"/>
+		<propertyDef name="objUnit" type="Unit"/>
+	</objectDef>
+
+	<objectDef type="EventUnitMoraleChanged" class="CMLOEventUnitMoraleChanged" superType="mlevent.Event" desc="Event for when a unit's morale changes">
+		<propertyDef name="objUnit" type="Unit"/>
+		<propertyDef name="tmplNewMorale" type="TemplateRef" restriction="UnitMoraleTemplate"/>
+		<propertyDef name="tmplOldMorale" type="TemplateRef" restriction="UnitMoraleTemplate"/>
+	</objectDef>
+
+	<objectDef type="EventUnitExperienceChanged" class="CMLOEventUnitExperienceChanged" superType="mlevent.Event" desc="Event for when a unit's experience changes">
+		<propertyDef name="objUnit" type="Unit"/>
+		<propertyDef name="tmplNewExperience" type="TemplateRef" restriction="UnitExperienceTemplate"/>
+		<propertyDef name="tmplOldExperience" type="TemplateRef" restriction="UnitExperienceTemplate"/>
+	</objectDef>
+
+	<objectDef type="EventUnitGroupCommandChanged" class="CMLOEventUnitGroupCommandChanged" superType="mlevent.Event" desc="Event for when a unit group's command changes">
+		<propertyDef name="objUnitGroup" type="UnitGroup"/>
+		<propertyDef name="tmplNewCommand" type="TemplateRef" restriction="UnitGroupCommandTemplate"/>
+		<propertyDef name="tmplOldCommand" type="TemplateRef" restriction="UnitGroupCommandTemplate"/>
+	</objectDef>
+
+	<objectDef type="EventUnitGroupRemoved" class="CMLOEventUnitGroupRemoved" superType="mlevent.Event" desc="Event for when a unit group is removed">
+		<propertyDef name="objUnitGroup" type="UnitGroup"/>
+	</objectDef>
+
+	<objectDef type="EventUnitGroupChangedController" class="CMLOEventUnitGroupChangedController" superType="mlevent.Event" desc="Event for when a unit group changes controller">
+		<propertyDef name="objUnitGroup" type="UnitGroup"/>
+        <propertyDef name="objOldController" type="Nation"/>
+        <propertyDef name="objNewController" type="Nation"/>
+	</objectDef>
+
+	<objectDef type="EventUnitGroupLoadedOnTransports" class="CMLOEventUnitGroupLoadedOnTransports" superType="mlevent.Event" desc="Event for when a unit group loads on transports">
+		<propertyDef name="objUnitGroup" type="UnitGroup"/>
+        <propertyDef name="objTransportsGroup" type="UnitGroup"/>
+		<propertyDef name="objOldRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventUnitGroupEnteredPort" class="CMLOEventUnitGroupEnteredPort" superType="mlevent.Event" desc="Event for when a unit group enters a port">
+		<propertyDef name="objUnitGroup" type="UnitGroup"/>
+        <propertyDef name="objPort" type="Object"/>
+		<propertyDef name="objOldRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventBombing" class="CMLOEventBombing" superType="mlevent.Event" desc="Event for a bombing">
+		<propertyDef name="objUnitGroup" type="UnitGroup"/>
+        <propertyDef name="objUnitOrderBomb" type="UnitOrderBomb"/>
+	</objectDef>
+
+    <objectDef type="EventSubAttackSet" class="CMLOEventSubAttackSet" superType="mlevent.Event" desc="Event for when sub attack is set on a unit group">
+        <propertyDef name="objUnitGroup" type="UnitGroup"/>
+    </objectDef>
+
+	<objectDef type="EventUnitDamagedByAA" class="CMLOEventUnitDamagedByAA" superType="mlevent.Event" desc="Event for when a unit is damaged by AAA">
+		<propertyDef name="objUnit" type="Unit"/>
+        <propertyDef name="nDamage" type="int"/>
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="objRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDestroyedByAA" class="CMLOEventUnitDestroyedByAA" superType="mlevent.Event" desc="Event for when a unit is destroyed by AAA">
+		<propertyDef name="objUnit" type="Unit"/>
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="objRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDamagedByAerialCombat" class="CMLOEventUnitDamagedByAerialCombat" superType="mlevent.Event" desc="Event for when a unit is damaged during aerial combat">
+		<propertyDef name="objUnit" type="Unit"/>
+        <propertyDef name="nDamage" type="int"/>
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="objOtherNation" type="Nation"/>
+        <propertyDef name="objRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDestroyedByAerialCombat" class="CMLOEventUnitDestroyedByAerialCombat" superType="mlevent.Event" desc="Event for when a unit is destroyed during aerial combat">
+		<propertyDef name="objUnit" type="Unit"/>
+        <propertyDef name="objNation" type="Nation"/>
+        <propertyDef name="objOtherNation" type="Nation"/>
+        <propertyDef name="objRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDamagedByCoastalDefenses" class="CMLOEventUnitDamagedByCoastalDefenses" superType="mlevent.Event" desc="Event for when a unit is damaged by coastal defenses">
+		<propertyDef name="objUnit" type="Unit"/>
+        <propertyDef name="nDamage" type="int"/>
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="objRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDestroyedByCoastalDefenses" class="CMLOEventUnitDestroyedByCoastalDefenses" superType="mlevent.Event" desc="Event for when a unit is destroyed by coastal defenses">
+		<propertyDef name="objUnit" type="Unit"/>
+		<propertyDef name="objNation" type="Nation"/>
+		<propertyDef name="objRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDamagedByBombing" class="CMLOEventUnitDamagedByBombing" superType="mlevent.Event" desc="Event for when a unit is damaged by bombing">
+		<propertyDef name="objUnit" type="Unit"/>
+        <propertyDef name="nDamage" type="int"/>
+		<propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objBomberGroup" type="UnitGroup"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDestroyedByBombing" class="CMLOEventUnitDestroyedByBombing" superType="mlevent.Event" desc="Event for when a unit is destroyed by bombing">
+		<propertyDef name="objUnit" type="Unit"/>
+		<propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objBomberGroup" type="UnitGroup"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDamagedByGroundFire" class="CMLOEventUnitDamagedByGroundFire" superType="mlevent.Event" desc="Event for when a unit is damaged by ground fire">
+		<propertyDef name="objUnit" type="Unit"/>
+        <propertyDef name="nDamage" type="int"/>
+		<propertyDef name="objRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDestroyedByGroundFire" class="CMLOEventUnitDestroyedByGroundFire" superType="mlevent.Event" desc="Event for when a unit is destroyed by ground fire">
+		<propertyDef name="objUnit" type="Unit"/>
+		<propertyDef name="objRegion" type="Region"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDamagedByShoreBombardment" class="CMLOEventUnitDamagedByShoreBombardment" superType="mlevent.Event" desc="Event for when a unit is damaged by shore bombardment">
+		<propertyDef name="objUnit" type="Unit"/>
+        <propertyDef name="nDamage" type="int"/>
+		<propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objBombardingGroup" type="UnitGroup"/>
+	</objectDef>
+
+	<objectDef type="EventUnitDestroyedByShoreBombardment" class="CMLOEventUnitDestroyedByShoreBombardment" superType="mlevent.Event" desc="Event for when a unit is destroyed by shore bombardment">
+		<propertyDef name="objUnit" type="Unit"/>
+		<propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objBombardingGroup" type="UnitGroup"/>
+	</objectDef>
+
+    <objectDef type="EventRegionDamagedByBombing" class="CMLOEventRegionDamagedByBombing" superType="mlevent.Event" desc="Event for when a region is damaged by bombing">
+        <propertyDef name="objRegion" type="Region"/>
+        <propertyDef name="objTarget" type="Object"/>
+        <propertyDef name="nDamage" type="int"/>
+        <propertyDef name="objUnitGroup" type="UnitGroup"/>
+    </objectDef>
+
+    <objectDef type="EventCityDamagedByBombing" class="CMLOEventCityDamagedByBombing" superType="mlevent.Event" desc="Event for when a city is damaged by bombing">
+        <propertyDef name="objCity" type="City"/>
+        <propertyDef name="eBombCityParam" type="Enum" restriction="BombCityParam"/>
+        <propertyDef name="nDamage" type="int"/>
+        <propertyDef name="objUnitGroup" type="UnitGroup"/>
+    </objectDef>
+
+    <objectDef type="EventResourceImprovementsDamagedByBombing" class="CMLOEventResourceImprovementsDamagedByBombing" superType="mlevent.Event" desc="Event for when resource improvements are damaged by bombing">
+        <propertyDef name="objResourceCapacity" type="ResourceCapacity"/>
+        <propertyDef name="nDamage" type="int"/>
+        <propertyDef name="objUnitGroup" type="UnitGroup"/>
+    </objectDef>
+
+</locust>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="TradeAgreement" class="CMLOTradeAgreement" desc="A trade agreement">
+		<goDef gameSystem="GameSysTrade" storageProperty="objTradeAgreements">
+			<keyProperty name="refSourceNation"/>
+			<keyProperty name="refDestNation"/>
+			<keyProperty name="tmplResource"/>
+		</goDef>
+		<propertyDef name="refSourceNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refDestNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="refProposingNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="strMessage" type="String"/>
+		<propertyDef name="eStatus" type="Enum" restriction="TradeAgreementStatus"/>
+		<propertyDef name="nAmount" type="int" default="10"/>
+        <propertyDef name="nDuration" type="int" default="-1"/>
+        <propertyDef name="bAid" type="bool" default="false"/>
+        <propertyDef name="nPrice" type="int" default="0"/>
+	</objectDef>
+
+	<objectDef type="MoneyTransfer" class="CMLOMoneyTransfer" desc="A money transfer">
+		<goDef gameSystem="GameSysTrade" storageProperty="objMoneyTransfers">
+			<keyProperty name="refSourceNation"/>
+			<keyProperty name="refDestNation"/>
+		</goDef>
+		<propertyDef name="refSourceNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refDestNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refProposingNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refReceivingNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="strMessage" type="String"/>
+		<propertyDef name="eStatus" type="Enum" restriction="MoneyTransferStatus"/>
+		<propertyDef name="n64Amount" type="int64" default="0"/>
+		<propertyDef name="bOneTime" type="bool" default="false"/>
+	</objectDef>
+
+	<objectDef type="SupplyAndDemand" class="CMLOSupplyAndDemand" desc="Resource supply and demand">
+		<goDef gameSystem="GameSysTrade" storageProperty="objSupplyAndDemand">
+			<keyProperty name="tmplResource"/>
+		</goDef>
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+		<propertyDef name="nSupply" type="int" default="0"/>
+		<propertyDef name="nDemand" type="int" default="0"/>
+		<propertyDef name="tmplPriceAdjust" type="TemplateRef" restriction="PriceAdjustTemplate"/>
+		<propertyDef name="nPreviousSupply" type="int" default="0"/>
+		<propertyDef name="nPreviousDemand" type="int" default="0"/>
+		<propertyDef name="fRunningAvgSupply" type="float" default="0"/>
+		<propertyDef name="fRunningAvgDemand" type="float" default="0"/>
+	</objectDef>
+
+</locust>

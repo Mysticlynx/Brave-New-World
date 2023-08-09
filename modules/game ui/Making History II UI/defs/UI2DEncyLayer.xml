@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    
+    <enumDef name="EncySelection">
+		<value name="NONE"/>
+		<value name="ENCY"/>
+    </enumDef>
+    
+    <objectDef type="EncyData" class="CMLObject">
+        <propertyDef name="ePanel" type="Enum" restriction="EncySelection"/>
+        <propertyDef name="objFactoryOutputs" type="gs_tbg.FactoryOutputTemplate" variable="true">
+            map(
+				?{required: required.resolve()}, sd.getTemplate(TemplateList, 'FactoryOutputTemplateList').tmplRefs
+			)
+        </propertyDef>
+		<propertyDef name="objRegionOutputs" type="gs_tbg.RegionOutputTemplate" variable="true">
+            map(
+				?{required: required.resolve()}, sd.getTemplate(TemplateList, 'RegionOutputTemplateList').tmplRefs
+			)
+        </propertyDef>
+		
+		<propertyDef name="objResearchFactoryOutputs" type="ResearchFactoryOutput" variable="true" storesChildren="true">
+			flattenSet(
+				map(
+					?{output:
+						map(
+							?{req:
+								<object type="ResearchFactoryOutput">
+									<property name="tmplResearchTopic" from="req.tmplResearchTopic"/>
+									<property name="objFactoryOutput" from="output"/>
+								</object>
+							},
+							filter(
+								?{req:
+									req.instanceOf(gs_tbg.FactoryRequirementResearchProject)
+								}, output.objFactoryRequirements
+							)
+						)
+					},
+					self.objFactoryOutputs
+				)
+			)
+		</propertyDef>
+		
+		<propertyDef name="objResearchRegionOutputs" type="ResearchRegionOutput" variable="true" storesChildren="true">
+			flattenSet(
+				map(
+					?{output:
+						map(
+							?{req:
+								<object type="ResearchRegionOutput">
+									<property name="tmplResearchTopic" from="req.tmplResearchTopic"/>
+									<property name="objRegionOutput" from="output"/>
+								</object>
+							},
+							filter(
+								?{req:
+									req.instanceOf(gs_tbg.RegionRequirementResearchProject)
+								}, output.objRegionRequirements
+							)
+						)
+					},
+					self.objRegionOutputs
+				)
+			)
+		</propertyDef>
+		
+		<propertyDef name="objResearchRequiredFors" type="ResearchRequiredFor" variable="true" storesChildren="true">
+			flattenSet(
+				map(
+					?{project:
+						map(
+							?{req:
+								<object type="ResearchRequiredFor">
+									<property name="tmplResearchTopic" from="req"/>
+									<property name="tmplRequiredForTopic" from="project.resolve()"/>
+								</object>
+							},
+							project.resolve().tmplPreReqs
+						)
+					},
+					sd.getTemplate(TemplateList, 'ResearchTopicTemplateList').tmplRefs
+				)
+			)
+		</propertyDef>
+		
+        <object type="EncyclopediaData" name="objEncyclopediaData">
+            <script type="application/javascript"><![CDATA[
+				function showEncyclopedia() {
+                    def.ePanel = EncySelection.ENCY;
+				}
+                function showRegions() {
+                    def.ePanel = EncySelection.ENCY;
+                    self.eTab = EncyclopediaCategories.REGION;
+					self.objSelected = self.objEntries[0].objEntry
+                }
+                function showUnits() {
+                    def.ePanel = EncySelection.ENCY;
+                    self.eTab = EncyclopediaCategories.UNIT;
+					self.objSelected = self.objEntries[0].objEntry
+                }
+                function showCityBuildings() {
+                    def.ePanel = EncySelection.ENCY;
+                    self.eTab = EncyclopediaCategories.CITY_BUILDINGS;
+					self.objSelected = self.objEntries[0].objEntry
+                }
+                function showResearchBuildings() {
+                    def.ePanel = EncySelection.ENCY;
+                    self.eTab = EncyclopediaCategories.RESEARCH_BUILDINGS;
+					self.objSelected = self.objEntries[0].objEntry
+                }
+                function showResearchTopics() {
+                    def.ePanel = EncySelection.ENCY;
+                    self.eTab = EncyclopediaCategories.RESEARCH_TOPICS;
+					self.objSelected = self.objEntries[0].objEntry
+                }
+                function showCombatModifiers() {
+                    def.ePanel = EncySelection.ENCY;
+                    self.eTab = EncyclopediaCategories.COMBAT_MODIFIERS;
+					self.objSelected = self.objEntries[0].objEntry
+                }
+            ]]></script>
+		</object>
+        
+        <script type="application/javascript"><![CDATA[
+			function openEncy()
+			{
+				self.ePanel = EncySelection.ENCY
+			}
+            function closeEncy()
+			{
+				self.ePanel = EncySelection.NONE
+			}
+		]]></script>
+		
+		<script type="application/x-locust-query">
+			showLowerLayers = ?{:
+				self.ePanel == EncySelection.NONE
+			}
+		</script>
+    </objectDef>
+    
+    <objectDef type="UI2DEncyLayer" superType="mlui.UI2DElement">
+        <property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+        
+        <propertyDef name="objPanel" storesChildren="true">
+            switch{
+                case encydata.ePanel == EncySelection.ENCY:
+                    <object type="UI2DEncyclopedia">
+                        <property name="nDepth" value="100"/>
+                    </object>
+            }
+        </propertyDef>
+        
+    </objectDef>
+    
+</locust>

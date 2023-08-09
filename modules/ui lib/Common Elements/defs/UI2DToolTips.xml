@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="UI2DRegionProductionCostToolTip" superType="mlui.UI2DToolTip">
+		<propertyDef name="nHorizPadding" type="int" default="14"/>
+		<propertyDef name="nVertPadding" type="int" default="4"/>        
+		<property name="nWidth" from="160"/>
+		<property name="nHeight" from="self.objRequirements.nHeight + self.objRequirements.nY + self.nVertPadding"/>
+		<property name="nOffsetX" value="32"/>
+		<property name="nOffsetY" value="32"/>
+        
+		<object type="mlui.UI2DImage" name="objBorder">
+			<property name="tmplImage" value="default_media.ImgToolTipBorder"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="0"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="default_media.ImgToolTipBackground"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth"  from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nDepth" value="1"/>
+		</object>        
+        <object type="mlui.UI2DText" name="objRequirementsTitle">
+            <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+            <property name="strText">
+                locale.SID.UI.ProductionRequirements + ':'
+            </property>
+            <property name="haXAlign" value="LEFT"/>
+			<property name="nX" value="2"/>
+            <property name="nY" value="0"/>
+            <property name="nHeight" value="16"/>
+            <property name="nDepth" value="2"/>
+        </object>            
+        <object type="common_ui.UI2DList" name="objRequirements">
+			<property name="nX" value="3"/>
+			<property name="nY" value="16"/>
+			<property name="nWidth" from="def.nWidth" />
+			<property name="nDepth" value="10"/>          
+        
+            <object type="mlui.UI2DText" name="objElements" tiedTo="def.objElement.objMenuItem.objExecuteObject.objOutput.objResourceRequirements">
+                <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                <property name="strText">
+                    tiedTo.tmplResource.resolve().strDisplayName + ':  ' + tiedTo.nAmount
+                </property>
+                <property name="nY" value="0"/>
+				<property name="nX" value="5"/>
+                <property name="nHeight" value="10"/>
+                <property name="nDepth" value="2"/>
+            </object>
+            <object type="mlui.UI2DText" name="objElements" >
+                <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                <property name="strText">
+                    locale.SID.UI.MPUsRequired + ':  ' + def.objElement.objMenuItem.objExecuteObject.objOutput.nMPURequirement
+                </property>
+                <property name="nY" value="0"/>
+				<property name="nX" value="5"/>
+                <property name="nHeight" value="10"/>
+                <property name="nDepth" value="2"/>
+            </object>
+            <object type="mlui.UI2DText" name="objElements" >
+                <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                <property name="strText">
+                    locale.SID.UI.BuildTurns + ':  ' + def.objElement.objMenuItem.objExecuteObject.objOutput.nTurns
+                </property>
+                <property name="nY" value="0"/>
+				<property name="nX" value="5"/>
+                <property name="nHeight" value="12"/>
+                <property name="nDepth" value="2"/>
+            </object>
+    	</object>        
+	</objectDef>
+    
+    <objectDef type="UI2DCityProductionCostToolTip" superType="mlui.UI2DToolTip">
+		<propertyDef name="nHorizPadding" type="int" default="14"/>
+		<propertyDef name="nVertPadding" type="int" default="4"/>        
+		<property name="nWidth" from="160"/>
+		<property name="nHeight" from="self.objRequirements.nHeight + self.objRequirements.nY + self.nVertPadding"/>
+		<property name="nOffsetX" value="32"/>
+		<property name="nOffsetY" value="32"/>
+        
+		<object type="mlui.UI2DImage" name="objBorder">
+			<property name="tmplImage" value="default_media.ImgToolTipBorder"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="0"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="default_media.ImgToolTipBackground"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth"  from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nDepth" value="1"/>
+		</object>        
+        <object type="mlui.UI2DText" name="objRequirementsTitle">
+            <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+            <property name="strText">
+                locale.SID.UI.ProductionRequirements + ':'
+            </property>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="nY" value="0"/>
+            <property name="nHeight" value="16"/>
+            <property name="nDepth" value="2"/>
+        </object>            
+        <object type="common_ui.UI2DList" name="objRequirements">
+			<property name="nX" value="3"/>
+			<property name="nY" value="16"/>
+			<property name="nWidth" from="def.nWidth" />
+			<property name="nDepth" value="10"/>          
+        
+            <object type="mlui.UI2DText" name="objElements" tiedTo="def.objElement.objMenuItem.objExecuteObject.objOutput.objResourceRequirements">
+                <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                <property name="strText">
+                    tiedTo.tmplResource.resolve().strDisplayName + ' :  ' + tiedTo.nAmount
+                </property>
+                <property name="nY" value="0"/>
+                <property name="nHeight" value="14"/>
+                <property name="nDepth" value="2"/>
+            </object>
+            <object type="mlui.UI2DText" name="objElements" >
+                <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                <property name="strText">
+                    locale.SID.UI.MPUsRequired + ' :  ' + def.objElement.objMenuItem.objExecuteObject.objOutput.nMPURequirement
+                </property>
+                <property name="nY" value="0"/>
+                <property name="nHeight" value="14"/>
+                <property name="nDepth" value="2"/>
+            </object>
+            <object type="mlui.UI2DText" name="objElements" >
+                <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+                <property name="strText">
+                    locale.SID.UI.IPUsRequired + ' :  ' + def.objElement.objMenuItem.objExecuteObject.objOutput.nIPUs
+                </property>
+                <property name="nY" value="0"/>
+                <property name="nHeight" value="14"/>
+                <property name="nDepth" value="2"/>
+            </object>
+    	</object>        
+	</objectDef>
+    
+    <objectDef type="UI2DCityResearchCostToolTip" superType="mlui.UI2DToolTip">
+		<propertyDef name="nHorizPadding" type="int" default="14"/>
+		<propertyDef name="nVertPadding" type="int" default="4"/>        
+		<property name="nWidth" from="self.objRequirementsTitle.nWidth + self.nHorizPadding"/>
+		<property name="nHeight" from="self.objRequirementsTitle.nHeight + self.objRequirementsTitle.nY + self.nVertPadding"/>
+		<property name="nOffsetX" value="32"/>
+		<property name="nOffsetY" value="32"/>
+        
+		<object type="mlui.UI2DImage" name="objBorder">
+			<property name="tmplImage" value="default_media.ImgToolTipBorder"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="0"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objBackground">
+			<property name="tmplImage" value="default_media.ImgToolTipBackground"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth"  from="def.nWidth - 2"/>
+			<property name="nHeight" from="def.nHeight - 2"/>
+			<property name="nDepth" value="1"/>
+		</object>        
+        <object type="mlui.UI2DText" name="objRequirementsTitle">
+            <property name="tmplTextStyle" value="default_media.TxtStyleToolTip"/>
+            <property name="strText">
+                if(def.objElement.objMenuItem.objExecuteObject.objResearchProject == null,                    
+                   locale.SID.UI.RPUs + ' 0 / ' + 
+                        def.objElement.objMenuItem.objExecuteObject.objProject.nPointsRequired
+                    ,
+                    def.objElement.objMenuItem.objExecuteObject.objResearchProject.nPoints + ' / ' + 
+                        def.objElement.objMenuItem.objExecuteObject.objResearchProject.tmplResearchTopic.resolve().nPointsRequired
+                )
+            </property>
+            <property name="haXAlign" value="LEFT"/>
+            <property name="nY" value="0"/>
+            <property name="nX" from="def.nHorizPadding/2"/>
+            <property name="nHeight" value="16"/>
+            <property name="nDepth" value="2"/>
+        </object>       
+	</objectDef>
+
+</locust>
+

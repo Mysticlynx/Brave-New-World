@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DTradeAgreementTabResource" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupTradeAgreementData" type="LookupTradeAgreementData"/>
+		<propertyDef name="tmplResource" type="gs_tbg.ResourceTemplate"/>
+
+		<object type="LookupResourceAgreementData" name="objLookupResourceAgreementData">
+			<property name="objMH2Data" from="mh2data"/>
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="tmplResource" from="def.tmplResource"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objLookupResourceAgreementData.tmplIcon"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="4"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" value="29"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="def.tmplResource.strDisplayName"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objDescription">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10Left"/>
+			<property name="strText">
+				switch{
+					case def.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Arms'):
+						locale.SID.UI.MilitaryHardwareAndSupplies
+					case def.tmplResource == sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Food'):
+						locale.SID.UI.CropsAndConsumableSupplies
+					default:
+						locale.SID.UI.IndustrialSupplies
+				}
+			</property>
+			<property name="nX" value="35"/>
+			<property name="nY" value="18"/>
+			<property name="nWidth" value="240"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<!-- Offer/Request -->
+		<object type="mlui.UI2DTextButton" name="objOfferButton">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleTanSand"/>
+			<property name="strText" from="def.objLookupResourceAgreementData.strOfferText"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="36"/>
+			<property name="nDefaultWidth" value="197"/>
+			<property name="nDefaultHeight" value="24"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							switch(def.objLookupResourceAgreementData.eTradeOffer.index)
+							{
+								case 0:
+									def.objLookupResourceAgreementData.eTradeOffer = TradeOffer.SELL;
+									break;
+								case 1:
+									def.objLookupResourceAgreementData.eTradeOffer = TradeOffer.GIVE;
+									break;
+								case 2:
+									def.objLookupResourceAgreementData.eTradeOffer = TradeOffer.REQUEST;
+									break;
+								case 3:
+									def.objLookupResourceAgreementData.eTradeOffer = TradeOffer.BUY;
+									break;
+								default:
+									log("Error: Not a valid trade offer");
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<!-- Market -->
+		<object type="mlui.UI2DText" name="objMarketPriceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.CurrentMarketPrice"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="64"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMarketPrice">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="'$' + def.objLookupResourceAgreementData.nMarketPrice.formatNumber(0, true)"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="75"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMarketDemandLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialLightBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.MarketDemand"/>
+			<property name="nX" value="144"/>
+			<property name="nY" value="64"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objMarketDemand">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="def.objLookupResourceAgreementData.nMarketDemand.formatNumber(0, true)"/>
+			<property name="nX" value="144"/>
+			<property name="nY" value="75"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objOfferButton">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleTanSand"/>
+			<property name="strText">
+					if(def.objLookupResourceAgreementData.nDuration == 1,
+						locale.SID.UI.SingleTransaction, locale.SID.UI.EveryTurn)
+			</property>
+			<property name="nX" value="30"/>
+			<property name="nY" value="104"/>
+			<property name="nDefaultWidth" value="197"/>
+			<property name="nDefaultHeight" value="24"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupResourceAgreementData.nDuration == 1)
+								{
+									def.objLookupResourceAgreementData.nDuration = -1
+								}
+							else
+								{
+									def.objLookupResourceAgreementData.nDuration = 1
+								}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<!-- Offer -->
+		<!--<object type="mlui.UI2DText" name="objOurOfferLabel">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown11Left"/>-->
+		<!--	<property name="strText" from="locale.SID.UI.OurPriceOffer"/>-->
+		<!--	<property name="nX" value="32"/>-->
+		<!--	<property name="nY" value="104"/>-->
+		<!--	<property name="nWidth" value="250"/>-->
+		<!--	<property name="nHeight" value="11"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="mlui.UI2DText" name="objOurOffer">-->
+		<!--	<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18Left"/>-->
+		<!--	<property name="strText" from="'$' + def.objLookupResourceAgreementData.nOurOffer.formatNumber(0, true)"/>-->
+		<!--	<property name="nX" value="32"/>-->
+		<!--	<property name="nY" value="115"/>-->
+		<!--	<property name="nWidth" value="150"/>-->
+		<!--	<property name="nHeight" value="18"/>-->
+		<!--</object>-->
+		<!---->
+		<!--<object type="UI2DOurOfferButtons" name="objOurOfferButtons">-->
+		<!--	<property name="objLookupResourceAgreementData" from="def.objLookupResourceAgreementData"/>-->
+		<!--	<property name="nX" value="85"/>-->
+		<!--	<property name="nY" value="118"/>-->
+		<!--	<property name="nWidth" value="62"/>-->
+		<!--	<property name="nHeight" value="13"/>-->
+		<!--	<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>-->
+		<!--</object>-->
+
+		<!-- Trade Amount -->
+		<object type="mlui.UI2DText" name="objTradeAmountLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown11Left"/>
+			<property name="strText" from="locale.SID.UI.TradeAmount"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="146"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="11"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" from="def.objLookupResourceAgreementData.tmplIconSm"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="156"/>
+			<property name="nWidth" value="21"/>
+			<property name="nHeight" value="21"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTradeAmount">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue18Left"/>
+			<property name="strText" from="def.objLookupResourceAgreementData.nTradeAmount.formatNumber(0, true)"/>
+			<property name="nX" value="51"/>
+			<property name="nY" value="157"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<object type="UI2DTradeAmountButtons" name="objTradeAmountButtons">
+			<property name="objLookupResourceAgreementData" from="def.objLookupResourceAgreementData"/>
+			<property name="nX" value="31"/>
+			<property name="nY" value="182"/>
+			<property name="nWidth" value="136"/>
+			<property name="nHeight" value="28"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+
+		<!-- Trade Value -->
+		<object type="mlui.UI2DText" name="objTradeValueLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown11Left"/>
+			<property name="strText" from="locale.SID.UI.TradeValue"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="225"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="11"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTradeValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGreen18Left"/>
+			<property name="strText" from="'$' + def.objLookupResourceAgreementData.n64TradeValue.formatNumber(0, true)"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="236"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="18"/>
+		</object>
+
+		<!-- Action -->
+		<object type="mlui.UI2DText" name="objActionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.Action"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="274"/>
+			<property name="nWidth" value="250"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objAction">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleReportBubbleBrownBlue"/>
+			<property name="strText" from="def.objLookupResourceAgreementData.strActionText"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="285"/>
+			<property name="nDefaultWidth" value="228"/>
+			<property name="nDefaultHeight" value="26"/>
+			<property name="nDepth" value="50"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+
+					<!-- eTradeOffer values
+								0-BUY
+								1-SELL
+								2-GIVE
+								3-REQUEST --> 
+
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+						switch(def.objLookupResourceAgreementData.eTradeOffer.index)
+						{
+							case 0:
+								var action = gs_tbg.GActProposeTradeAgreement.create({
+									"refProposingNation": mh2data.objNation,
+									"refSourceNation": mh2data.objSelectedObject,
+									"refDestNation": mh2data.objNation,
+									"tmplResource": def.tmplResource,
+									"nAmount": def.objLookupResourceAgreementData.nTradeAmount,
+									"nDuration": def.objLookupResourceAgreementData.nDuration
+								});
+								break;
+							case 1:
+								var action = gs_tbg.GActProposeTradeAgreement.create({
+									"refProposingNation": mh2data.objNation,
+									"refSourceNation": mh2data.objNation,
+									"refDestNation": mh2data.objSelectedObject,
+									"tmplResource": def.tmplResource,
+									"nAmount": def.objLookupResourceAgreementData.nTradeAmount,
+									"nDuration": def.objLookupResourceAgreementData.nDuration
+								});
+								break;
+							case 2:
+								var action = gs_tbg.GActProposeTradeAgreement.create({
+									"refProposingNation": mh2data.objNation,
+									"refSourceNation": mh2data.objNation,
+									"refDestNation": mh2data.objSelectedObject,
+									"tmplResource": def.tmplResource,
+									"nAmount": def.objLookupResourceAgreementData.nTradeAmount,
+									"nDuration": def.objLookupResourceAgreementData.nDuration,
+									"bAid": true
+								});
+								break;
+							case 3:
+								var action = gs_tbg.GActProposeTradeAgreement.create({
+									"refProposingNation": mh2data.objNation,
+									"refSourceNation": mh2data.objSelectedObject,
+									"refDestNation": mh2data.objNation,
+									"tmplResource": def.tmplResource,
+									"nAmount": def.objLookupResourceAgreementData.nTradeAmount,
+									"nDuration": def.objLookupResourceAgreementData.nDuration,
+									"bAid": true
+								});
+								break;
+							}
+							mh2data.objAvatar.sendAction(action);
+							if(mh2data.bRegnegotiateTrade)
+							{
+								mh2data.bRegnegotiateTrade = false;
+								mh2data.objTheirTradeProposal = null;
+							}
+							mh2data.closeDiplomaticActionsPopup();						
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DOurOfferButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupResourceAgreementData" type="LookupResourceAgreementData"/>
+
+		<object type="mlui.UI2DTextButton" name="objPlusOne">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue10CenterHighlight"/>
+			<property name="strText" value="+"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="29"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objLookupResourceAgreementData.nOurOffer += 1;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objMinusOne">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue10CenterHighlight"/>
+			<property name="strText" value="-"/>
+			<property name="nX" value="33"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="29"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objLookupResourceAgreementData.nOurOffer -= 1;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DTradeAmountButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupResourceAgreementData" type="LookupResourceAgreementData"/>
+
+		<object type="mlui.UI2DTextButton" name="objPlusOne">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue10CenterHighlight"/>
+			<property name="strText" value="1"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="42"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objLookupResourceAgreementData.nTradeAmount += 1;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objPlusTen">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue10CenterHighlight"/>
+			<property name="strText" value="10"/>
+			<property name="nX" value="47"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="42"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objLookupResourceAgreementData.nTradeAmount += 10;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objPlusHundred">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleBlue10CenterHighlight"/>
+			<property name="strText" value="100"/>
+			<property name="nX" value="94"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="42"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objLookupResourceAgreementData.nTradeAmount += 100;
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objMinusOne">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleRed10CenterHighlight"/>
+			<property name="strText" value="-1"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="15"/>
+			<property name="nDefaultWidth" value="42"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupResourceAgreementData.nTradeAmount <= 1)
+								{
+									def.objLookupResourceAgreementData.nTradeAmount = 0;
+								}
+							else
+								{
+									def.objLookupResourceAgreementData.nTradeAmount -= 1;
+								}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objMinusTen">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleRed10CenterHighlight"/>
+			<property name="strText" value="-10"/>
+			<property name="nX" value="47"/>
+			<property name="nY" value="15"/>
+			<property name="nDefaultWidth" value="42"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupResourceAgreementData.nTradeAmount <= 10)
+								{
+									def.objLookupResourceAgreementData.nTradeAmount = 0;
+								}
+							else
+								{
+									def.objLookupResourceAgreementData.nTradeAmount -= 10;
+								}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DTextButton" name="objMinusHundred">
+			<property name="tmplTextButtonStyle" value="skin.TxtBtnStyleRed10CenterHighlight"/>
+			<property name="strText" value="-100"/>
+			<property name="nX" value="94"/>
+			<property name="nY" value="15"/>
+			<property name="nDefaultWidth" value="42"/>
+			<property name="nDefaultHeight" value="13"/>
+			<property name="nDepth" value="50"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.objLookupResourceAgreementData.nTradeAmount <= 100)
+								{
+									def.objLookupResourceAgreementData.nTradeAmount = 0;
+								}
+							else
+								{
+									def.objLookupResourceAgreementData.nTradeAmount -= 100;
+								}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+</locust>

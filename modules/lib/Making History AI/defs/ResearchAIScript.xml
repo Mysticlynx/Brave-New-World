@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="ResearchAIScript" class="CMLObject">
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <property name="objGameSysTurnBasedGame" from="self.objParentAI.objGameSysTurnBasedGame"/>
+        
+        <propertyDef name="objGameSysUnit" type="gs_tbg.GameSysUnit"/>
+        <property name="objGameSysUnit" from="self.objParentAI.objGameSysUnit"/>
+
+        <script type="application/javascript"><![CDATA[
+                
+// temporary object for research AI
+function ResearchAITempData(avatar)
+{
+    this.avatar = avatar;
+    this.pad = getPAD(avatar,PADMakingHistoryAI);
+    this.nation = this.pad.objNation;
+    this.turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;		 
+    
+    // start research projects depending on science policy
+    this.update = function()
+    {
+        var diplomacyAI = self.objGameSysAIUtility.getDiplomacyAI(this.avatar,this.nation); // to get science policy
+            
+        if (this.pad.bWantResearchAILog)
+        {
+            log("DEBUG: " + this.nation.strName + " research update");
+        }
+
+        var researchAI = self.objGameSysAIUtility.getResearchAI(this.avatar,this.nation);
+                
+        var nNumActiveProjects = researchAI.updateCities(this.avatar, this.pad.bWantResearchAILog);
+        if (nNumActiveProjects > 0)
+        {
+            if (this.pad.bWantResearchAILog)
+            {
+                log("DEBUG: " + nNumActiveProjects + " active research projects.");
+            }
+            this.pad.nResearchTurns++;
+        }
+            
+        // tell production AI about any research buildings we may need
+        researchAI.updateProductionNeeds(this.avatar,this.pad.bWantResearchAILog);
+        
+        // see if there are any specific region items that got researched
+        for (var i in researchAI.objSpecificRegionItems)
+        {
+            var regionItem = researchAI.objSpecificRegionItems[i];
+            if (regionItem.bResearched == true)
+            {
+                if (this.pad.bWantResearchAILog)
+                {
+                    var regionOutput = regionItem.objRegionOutputTemplate;
+                    log("DEBUG: " + this.nation.strName + " region item " + regionOutput.strName + " is researched.");
+                    // regionOutput.instanceOf(gs_tbg.AADefenseOutputTemplate)
+                }
+                this.pad.bUpdateRegionExclusions = true; // tells production AI to re-evaluate production of airbases, defense etc
+                delete researchAI.objSpecificRegionItems[i]; // we don't need this one any more
+            }
+        }
+        
+        if (this.pad.bWantResearchAILog)
+        {
+            log("DEBUG: nSciencePolicy = " + diplomacyAI.nSciencePolicy);
+        }
+        
+        researchAI.updateResearchCapability(this.avatar, diplomacyAI.nSciencePolicy, this.pad.bWantResearchAILog);
+
+    } // update
+    
+    // examine units belonging to otherNation in region and see
+    // if there is anything we should research.
+    this.investigateTechnology = function(otherNation,region)
+    {
+        //if (this.pad.bWantResearchAILog)
+        //    log("DEBUG: " + this.nation.strName + " investigating " + otherNation.strName + " groups in " + region.strName);
+    
+        var researchAI = self.objGameSysAIUtility.getResearchAI(this.avatar,this.nation);
+        var militaryAI = self.objGameSysAIUtility.getMilitaryAI(this.avatar,this.nation);
+        var city = militaryAI.getNearestReachableControlledCity(this.avatar,region);
+        if (city == null)
+        {
+            city = self.objParentAI.getNationHomeCity(this.avatar,this.nation);
+            if (city == null)
+                return; // we can't research without a city
+        }
+        
+        var unknownFactoryOutputs = new Array();
+        
+        var groups = new Array();
+        self.objGameSysUnit.getUnitGroupsAtLocation(this.avatar,region,groups);
+        for (var g in groups)
+        {
+            var group = groups[g];
+            if (!otherNation.equals(group.refController))
+                continue;
+                
+            //if (this.pad.bWantResearchAILog)
+            //{
+            //    log("DEBUG: " + this.nation.strName + " investigating " + group.strName);
+            //    self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar, group, true);
+            //}
+                
+            researchAI.investigateUnitGroup(this.avatar,group,city,unknownFactoryOutputs);
+        }
+        
+        if (unknownFactoryOutputs.length > 0)
+        {
+            var nWeight = 1;
+            for (var i in unknownFactoryOutputs)
+            {
+                var objFactoryOutputTemplate = unknownFactoryOutputs[i];
+                var item = researchAI.getOrCreateSpecificFactoryOutput(avatar,objFactoryOutputTemplate,city,false,nWeight);
+                if (item == null)
+                {
+                    var item = researchAI.getOrCreateSpecificFactoryOutput(avatar,objFactoryOutputTemplate,city,true,nWeight);
+                    if (this.pad.bWantResearchAILog)
+                    {
+                        log("DEBUG: " + this.nation.strName + " decided to consider researching " + objFactoryOutputTemplate.strName);
+                    }
+                }
+                else
+                {
+                    // increase weight
+                    item.nWeight = (item.nWeight + 1);
+                    if (this.pad.bWantResearchAILog)
+                    {
+                        log("DEBUG: " + this.nation.strName + " increasing weight for research into " + objFactoryOutputTemplate.strName + " to " + item.nWeight);
+                    }
+                }
+            }
+        }
+        else
+        {
+            //if (this.pad.bWantResearchAILog)
+            //    log("DEBUG: " + this.nation.strName + " didn't find anything to research from " + otherNation.strName + " groups in " + region.strName);
+        }
+    }
+
+
+} // ResearchAITempData
+
+function update(avatar)
+{
+    var context = new ResearchAITempData(avatar);
+    context.update();
+}
+
+function investigateTechnology(avatar,otherNation,region)
+{
+    var context = new ResearchAITempData(avatar);
+    context.investigateTechnology(otherNation,region);
+}
+
+                
+            
+        ]]></script>
+        
+    </objectDef>
+
+</locust>

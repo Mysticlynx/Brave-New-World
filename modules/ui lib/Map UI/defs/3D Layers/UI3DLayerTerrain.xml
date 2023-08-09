@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<!-- Terrain base -->
+	<objectDef type="UI3DLayerTerrainBase" superType="mlui.UI3DLayer">
+		<propertyDef name="objAvatar" type="mlgame.Avatar"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objMap" type="gs_tbg.GameSysMap" from="gs_tbg.getGameSysMap(self.objMapData.objGameRoot)"/>	
+        <propertyDef name="nNumMapTilesAddedToUI" type="int" default="0"/>
+        <propertyDef name="bAllTilesAdded" type="bool" default="false"/>
+        <property name="bAllTilesAdded" from="self.nNumMapTilesAddedToUI == self.objMap.nNumTileRows * self.objMap.nNumTileCols"/>
+        
+        <script type="application/x-locust-query">
+			getLandPosition = ?{ pos : 
+			        if ( self.objMap.bFlat, 
+                         Vec3D(pos.x,pos.y,self.objMap.fLandLevel),
+                            ?{  pos, intersection : if(intersection!=null,intersection,Vec3D(pos.x, pos.y, self.objMap.fLandLevel)) 
+                             } ( pos, if(self.bAllTilesAdded, self.getRayIntersect(Vec3D(pos.x,pos.y,1000),Vec3D(0,0,-1)), null) ) 
+                       )
+            }
+		</script>
+	</objectDef>
+	
+	<!-- Terrain tile -->
+	<objectDef type="UI3DMapTileTerrain" superType="UI3DMapTile">
+    	<propertyDef name="objTerrain" type="UI3DLayerTerrainBase"/>
+	    <script type="application/javascript"><![CDATA[	                
+            function notifyDataLoaded()
+            {
+                self.objTerrain.nNumMapTilesAddedToUI++;
+            }
+	    ]]></script>
+    </objectDef>
+	
+	<!-- layer for showing 3d terrain geometry with objFlatMapSampler projected on it. -->
+	<objectDef type="UI3DLayerTerrain" superType="UI3DLayerTerrainBase">
+		<!--<propertyDef name="objFlatMapSampler" type="mlmedia.Sampler"/>-->
+		<propertyDef name="nMapUIWidth" type="int"/>
+		<propertyDef name="nMapUIHeight" type="int"/>
+		<propertyDef name="bHaveBlendTextures" type="bool"/>
+		<propertyDef name="bHaveTileDirs" type="bool"/>
+		<propertyDef name="bReloadBlend" type="bool"/>
+		<propertyDef name="bUseLuminanceEffect" type="bool" from="self.objMap.tmplTileDirs.resolve().eTileTextureFormat == gs_tbg.TileTextureFormat.L"/>        
+		<propertyDef name="bUsePreCombinedEffect" type="bool" from="self.objMap.tmplTileDirs.resolve().eTileTextureFormat != gs_tbg.TileTextureFormat.L"/>     
+		<propertyDef name="bReadyForEffect" type="bool" from="if(self.bUseLuminanceEffect,self.bHaveBlendTextures, self.bHaveTileDirs)"/>
+        <propertyDef name="bShadows" type="bool" default="false"/>
+        <propertyDef name="bCompressedTerrainTextures" type="bool" default="true"/>
+		<propertyDef name="tmplBlankTexture" type="TemplateRef" restriction="mlmedia.TextureTemplate"/>
+
+        <!--<property name="tmplAvailableEffects" value="TerrainEffect"/>-->
+        <property name="tmplAvailableEffects" value="PreCombinedTerrainEffect"/>
+        <property name="tmplAvailableEffects" value="PreCombinedTerrainEffectWithShadows"/>
+        
+		<property name="bHaveBlendTextures" from="self.objMap.tmplBlendTexture1.resolve() != null AND self.objMap.tmplBlendTexture2.resolve() != null"/>
+		<property name="bHaveTileDirs" from="self.objMap.tmplTileDirs.resolve() != null"/>
+		<property name="tmplBlankTexture" value="TextureWater"/>
+		
+		<!-- Lights -->
+		<object type="UI3DMapLight" name="objMapLight">
+		</object>
+
+        <!-- specify filtering and wrapping values for map tiles -->
+        <object type="mlmedia.Sampler" name="objSamplerProto">
+            <property name="eMinFilter" value="FILTER_LINEAR"/>
+            <property name="eMagFilter" value="FILTER_LINEAR"/>
+            <property name="eMipFilter" value="FILTER_NONE"/>
+			<property name="eWrapS" value="WRAP_CLAMP_TO_EDGE"/>
+			<property name="eWrapT" value="WRAP_CLAMP_TO_EDGE"/>
+		</object>
+        
+		
+		<!--<object type="mlui.UIDataRenderState" name="objTerrainZBias">
+		    <property name="fDepthBias" value="0.005"/>
+		</object>-->
+		
+		<object type="mlui.UIDataFXParamSet" name="objParamSet">
+			<!--<object type="ml3dworld.FXParamSampler" name="objParams">
+				<property name="strName" value="regionAndBorderOverlay"/>
+				<property name="objSampler" from="def.objFlatMapSampler"/>
+			</object>
+			<object type="ml3dworld.FXParamFloat" name="objParams">
+				<property name="strName" value="fOffScreenCamLeft"/>
+				<property name="fValue" from="def.objFlatMapSampler.objRoot.fCamLeft"/>
+			</object>
+			<object type="ml3dworld.FXParamFloat" name="objParams">
+				<property name="strName" value="fOffScreenCamRight"/>
+				<property name="fValue" from="def.objFlatMapSampler.objRoot.fCamRight"/>
+			</object>
+			<object type="ml3dworld.FXParamFloat" name="objParams">
+				<property name="strName" value="fOffScreenCamTop"/>
+				<property name="fValue" from="def.objFlatMapSampler.objRoot.fCamTop"/>
+			</object>
+			<object type="ml3dworld.FXParamFloat" name="objParams">
+				<property name="strName" value="fOffScreenCamBottom"/>
+				<property name="fValue" from="def.objFlatMapSampler.objRoot.fCamBottom"/>
+			</object>-->
+			<object type="ml3dworld.FXParamFloat" name="objParams">
+				<property name="strName" value="fSeaLevel"/>
+				<property name="fValue" from="def.objMap.fSeaLevel"/>
+			</object>
+			
+			<object type="ml3dworld.FXParamSampler" name="objParams" existsWhile="def.bUseLuminanceEffect">
+				<property name="strName" value="terrainBlend1"/>
+				<object type="mlmedia.SamplerFromTexture" name="objSampler">
+					<property name="tmplTexture">
+						if(def.bReloadBlend,def.tmplBlankTexture,def.objMap.tmplBlendTexture1)
+					</property>
+					<property name="eWrapS" value="WRAP_TILE"/>
+					<property name="eWrapT" value="WRAP_TILE"/>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>
+					<property name="eMipFilter" value="FILTER_LINEAR"/>
+					<property name="colBorderColor" value="#000000FF"/>
+				</object>
+			</object>
+
+			<object type="ml3dworld.FXParamSampler" name="objParams" existsWhile="def.bUseLuminanceEffect">
+				<property name="strName" value="terrainBlend2"/>
+				<object type="mlmedia.SamplerFromTexture" name="objSampler">
+					<property name="tmplTexture">
+						if(def.bReloadBlend,def.tmplBlankTexture,def.objMap.tmplBlendTexture2)
+					</property>
+					<property name="eWrapS" value="WRAP_TILE"/>
+					<property name="eWrapT" value="WRAP_TILE"/>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>
+					<property name="eMipFilter" value="FILTER_LINEAR"/>
+					<property name="colBorderColor" value="#000000FF"/>
+				</object>
+			</object>
+
+			<object type="ml3dworld.FXParamSampler" name="objParams">
+				<property name="strName" value="terrainDetailChannels"/>
+				<object type="mlmedia.SamplerFromTexture" name="objSampler">
+					<property name="tmplTexture">
+						if(def.bReloadBlend, def.tmplBlankTexture, getTemplateRef(mlmedia.TextureTemplate, 'DetailChannels'))
+					</property>
+					<property name="eWrapS" value="WRAP_TILE"/>
+					<property name="eWrapT" value="WRAP_TILE"/>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>
+					<property name="eMipFilter" value="FILTER_LINEAR"/>
+					<property name="colBorderColor" value="#000000FF"/>
+					<!--<property name="nMaxMipMapLevel" value="10"/>-->
+					<!--<property name="fMipMapBias" value="-2.0"/>-->
+				</object>
+			</object>
+
+			<object type="ml3dworld.FXParamSampler" name="objParams" existsWhile="def.bUseLuminanceEffect">
+				<property name="strName" value="terrainDiffuse5"/>
+				<object type="mlmedia.SamplerFromTexture" name="objSampler">
+					<property name="tmplTexture">
+						if(def.bReloadBlend, def.tmplBlankTexture, getTemplateRef(mlmedia.TextureTemplate, 'MountainTerrain'))
+					</property>
+					<property name="eWrapS" value="WRAP_TILE"/>
+					<property name="eWrapT" value="WRAP_TILE"/>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>
+					<property name="eMipFilter" value="FILTER_LINEAR"/>
+					<property name="colBorderColor" value="#000000FF"/>
+					<!--<property name="nMaxMipMapLevel" value="9"/>-->
+					<property name="fMipMapBias" value="0.0"/>
+				</object>
+			</object>
+
+			<object type="ml3dworld.FXParamFloat" name="objParams" existsWhile="def.bUseLuminanceEffect">
+				<property name="strName" value="fDetailMultiplierX"/>
+				<property name="fValue" from="def.objMap.fTerrainDetailMultiplierX"/>
+			</object>
+
+			<object type="ml3dworld.FXParamFloat" name="objParams" existsWhile="def.bUseLuminanceEffect">
+				<property name="strName" value="fDetailMultiplierY"/>
+				<property name="fValue" from="def.objMap.fTerrainDetailMultiplierY"/>
+			</object>
+
+			<object type="ml3dworld.FXParamVec3" name="objParams">
+				<property name="strName" value="mapMin"/>
+				<property name="vecValue" from="def.objMap.vecMin"/>
+			</object>
+
+			<object type="ml3dworld.FXParamVec3" name="objParams">
+				<property name="strName" value="mapMax"/>
+				<property name="vecValue" from="def.objMap.vecMax"/>
+			</object>
+		</object>
+		
+		<object type="mlui.UIDataEffect" name="objEffect" existsWhile="self.bReadyForEffect">                    
+            <property name="tmplEffect">
+                getTemplate(ml3dworld.EffectTemplate,
+                    switch { 
+                        case def.bUsePreCombinedEffect: if (def.bShadows,'PreCombinedTerrainEffectWithShadows','PreCombinedTerrainEffect')                    
+                        default:'TerrainEffect'
+                    })
+            </property>
+		</object>
+
+		<!-- material to use if no effect shader is selected -->
+		<object type="mlui.UIDataMaterial" name="objMaterial">
+			<object type="mlmedia.Material" name="objMaterial">
+				<property name="colDiffuse" value="#FFFFFFFF"/> 
+			</object>
+		</object>
+
+        <propertyDef name="objMapTiles" type="UI3DMapTileTerrain" variable="true" storesChildren="true">
+            map(?{tileNum: 
+                <object type="UI3DMapTileTerrain">
+                	<property name="objTerrain" from="def"/>
+                    <property name="objMap" from="def.objMap"/>
+                    <property name="vecPointOfInterest" from="def.objMapData.objCameraTransform.vecLookAt"/>
+                    <property name="nTile" from="tileNum"/>
+                    <property name="objSamplerProto" from="def.objSamplerProto"/>
+                    <property name="bUseCompressedTextures" from="def.bCompressedTerrainTextures"/>
+                    <!--<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT_AND_CHILDREN"/>-->
+                </object>
+            }, range(0, self.objMap.nNumTileRows * self.objMap.nNumTileCols))
+        </propertyDef>		        
+	</objectDef>
+	
+</locust>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="UI3DLayerRoads" superType="mlui.UI3DLayer">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>    
+		<object type="ml3dworld.TransformTranslate" name="objTransform">
+			<property name="vecTranslation">
+				Vec3D(0, 0, 0.27)
+			</property>
+		</object>                
+    
+		<propertyDef name="objVisibleRoads" type="gs_tbg.MapRoad" variable="true">
+			filter(
+				?{road: road.refRegion.resolve(self.objGameRoot).objTransportationImprovement != null},
+				self.objMap.objMapRoads
+			)
+		</propertyDef>
+	
+		<object type="UI3DRoad" name="objRoads" tiedTo="self.objVisibleRoads">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objRoad" from="tiedTo"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI3DRoad" superType="mlui.UI3DModel">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<propertyDef name="objRoad" type="gs_tbg.MapRoad"/>
+		<propertyDef name="objRegion" type="gs_tbg.Region" from="self.objRoad.refRegion.resolve(self.objGameRoot)"/>
+		
+		<property name="tmplModel" from="self.objRoad.tmplDisplayModel"/>
+        
+        <propertyDef name="objTemplateTansportationImprovement" type="TransImprovementEntry"/>
+        <property name="objTemplateTansportationImprovement">
+			find(
+				?{transportationImprovement:
+					transportationImprovement.tmplTransportationImprovement ==
+					self.objRegion.objTransportationImprovement.tmplTransportationImprovement
+				},
+				self.objMapData.objTransportationImprovementTable
+			)
+        </property>
+        
+		<object type="mlui.UIDataMaterial" name="objMaterial">
+			<object type="mlmedia.Material" name="objMaterial">
+				<property name="colEmission" from="self.objTemplateTansportationImprovement.colColor"/>
+			</object>
+		</object>
+	</objectDef>
+
+</locust>

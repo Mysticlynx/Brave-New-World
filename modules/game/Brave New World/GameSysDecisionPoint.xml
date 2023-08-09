@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<object type="gs_tbg.GameSysDecisionPoint" name="objGameSysDecisionPoint">
+
+		<object type="gs_tbg.DecisionPointStrings" name="objDecisionPointStrings">
+			<property name="fstrTextDeclareWarAndMove" from="locale.FSID.DecisionPoint.Text.DeclareWarAndMove"/>
+			<property name="fstrTextDeclareWarAndBombTarget" from="locale.FSID.DecisionPoint.Text.DeclareWarAndBombTarget"/>
+			<property name="fstrTextDeclareWarAndBombNavalBase" from="locale.FSID.DecisionPoint.Text.DeclareWarAndBombNavalBase"/>
+			<property name="fstrTextDeclareWarAndDropNuke" from="locale.FSID.DecisionPoint.Text.DeclareWarAndDropNuke"/>
+			<property name="fstrTextDeclareWarAndDropTroops" from="locale.FSID.DecisionPoint.Text.DeclareWarAndDropTroops"/>
+			<property name="fstrTextDeclareWarAndUnload" from="locale.FSID.DecisionPoint.Text.DeclareWarAndUnload"/>
+            <property name="fstrTextDeclareWarAndShoreBombard" from="locale.FSID.DecisionPoint.Text.DeclareWarAndShoreBombard"/>
+            <property name="fstrTextDeclareWarAndRangedAttack" from="locale.FSID.DecisionPoint.Text.DeclareWarAndRangedAttack"/>
+            <property name="fstrTextDeclareWarAndSubAttackGroup" from="locale.FSID.DecisionPoint.Text.DeclareWarAndSubAttackGroup"/>
+			<property name="fstrTextDisband" from="locale.FSID.DecisionPoint.Text.Disband"/>
+			<property name="strTextChooseFate" from="locale.SID.DecisionPoint.Text.ChooseFate"/>
+			<property name="fstrAnswerDeclareWarAndMove" from="locale.FSID.DecisionPoint.Answer.DeclareWarAndMove"/>
+			<property name="fstTextDestroyImprovement" from="locale.FSID.DecisionPoint.Text.DestroyImprovement"/>
+			<property name="fstAnswerDestroyImprovement" from="locale.FSID.DecisionPoint.Answer.Destroy"/>
+			<property name="fstrAnswerDeclareWar" from="locale.FSID.DecisionPoint.Answer.DeclareWar"/>
+			<property name="fstrAnswerDisband" from="locale.FSID.DecisionPoint.Answer.Disband"/>
+			<property name="strAnswerAnnexTerritory" from="locale.SID.DecisionPoint.Answer.AnnexTerritory"/>
+			<property name="strAnswerMakeColony" from="locale.SID.DecisionPoint.Answer.MakeColony"/>
+			<property name="strAnswerMakePuppet" from="locale.SID.DecisionPoint.Answer.MakePuppet"/>
+			<property name="strAnswerCancel" from="locale.SID.DecisionPoint.Answer.Cancel"/>
+			<property name="fstrTextRegionRevolt" from="locale.FSID.DecisionPoint.Text.RegionRevolt"/>	
+            <property name="fstrAnswerRegionRevoltAccept" from="locale.FSID.DecisionPoint.Answer.RegionRevoltAccept"/>
+            <property name="fstrAnswerRegionRevoltDecline" from="locale.FSID.DecisionPoint.Answer.RegionRevoltDecline"/>
+		</object>
+
+	</object>
+</locust>

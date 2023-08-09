@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="UnitModelDirsTemplate" class="CMLOUnitModelDirsTemplate" superType="Template" templateBase="true">
+        <propertyDef name="fileUnitModelsDir" type="File"/>
+    </objectDef>   
+
+    <objectDef type="UnitModelTable" class="CMLOUnitModelTable" desc="Contains tables for looking up unit models and animations">
+        <propertyDef name="fileXML" type="File"/>
+        <propertyDef name="otUnitOrders" type="ObjectType" restriction="gs_tbg.UnitOrder" variable="true"/>
+        <propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+        <propertyDef name="strUnitModelSetResolution" type="String"/><!-- MinimumModelSet, SingleModelSet, MajorsModelSet, FullModelSet -->
+        <propertyDef name="objUnitModelDirsTemplate" type="UnitModelDirsTemplate"/>
+        <propertyDef name="eEngagementGenericAnimation" type="Enum" restriction ="gs_tbg.GenericAnimation" default="Shoot"/>
+        <propertyDef name="eUnitCategoryMobileInfantry" type="Enum" restriction ="gs_tbg.UnitCategory" default="MobileInfantry"/>
+        <propertyDef name="fKeepAroundTime" type="float" default="600.0" desc="How long we keep resource sets loaded (in seconds) after they aren't being used"/>
+
+        <!-- from old UnitGroupModelTable" -->
+		<propertyDef name="tmplStackIndicatorMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplSelectionMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplDecalMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderMove"/>
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderBomb"/>
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderBombRegion"/>
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderBombCity"/>
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderBombNavalBase"/>
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderBombResource"/>
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderAirPatrol"/>
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderSeaPatrol"/>
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderRebase"/>
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderDropParatrooper"/>
+        <property name="otUnitOrders" value="gs_tbg.UnitOrderDropAtomicBomb"/>
+        
+		<script type="application/javascript"><![CDATA[
+
+			function getAnimCategoryEnumDef()
+			{
+				return gs_tbg.AnimationCategory;
+			}
+			
+			function getGenericAnimationEnumDef()
+			{
+    			return gs_tbg.GenericAnimation;
+    	    }
+            
+            function getCountrySetEnumDef()
+            {
+                return gs_tbg.CountrySet;
+            }
+            
+            // this function is used to substitute an infantry unit template
+            // (used when eUnitCategory is eUnitCategoryMobileInfantry)
+            function getInfantryTemplateFromClassRank(nClassRank)
+            {
+                return self.objMapData.getInfantryTemplateFromClassRank(nClassRank);
+            }       
+            
+            function getUnitTemplate(strUnitTemplate)
+            {
+                return self.objMapData.getUnitTemplate(strUnitTemplate);
+            }
+			
+		]]></script>
+        
+    </objectDef>
+    
+</locust>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="UI2DReportPanelPopups" superType="mlui.UI2DElement">
+        <propertyDef name="objMH2Data" type="MH2Data"/>
+			
+		<object type="UI2DReportPanel" name="objReport" existsWhile="self.objMH2Data.otReportPanelPopup == UI2DReportPanel">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="haXAlign" value="LEFT"/>
+			<property name="vaYAlign" value="BOTTOM"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+    </objectDef>
+</locust>

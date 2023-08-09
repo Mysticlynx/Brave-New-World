@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="ResearchProgram" class="CMLOResearchProgram">
+        <goDef gameSystem="GameSysResearch" storageProperty="objResearchPrograms">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="tmplResearchTopicList" type="TemplateRef" restriction="TemplateList"/>
+	</objectDef>
+
+    <!-- ResearchProjectStatus enum possible values:
+            STATUS_IN_PROGRESS,
+            STATUS_PAUSED,
+            STATUS_COMPLETE
+    -->
+
+    <objectDef type="ResearchProject" class="CMLOResearchProject">
+        <goDef gameSystem="GameSysResearch" storageProperty="objResearchProjects">
+            <keyProperty name="refResearchProgram"/>
+            <keyProperty name="tmplResearchTopic"/>
+        </goDef>
+        <propertyDef name="refResearchProgram" type="GORef" restriction="ResearchProgram"/>
+        <propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="ResearchTopicTemplate"/>
+        <propertyDef name="eStatus" type="Enum" restriction="ResearchProjectStatus" default="STATUS_IN_PROGRESS"/>
+        <propertyDef name="nPoints" type="int" default="0"/>
+    </objectDef>
+
+	<objectDef type="ResearchCenter" class="CMLOResearchCenter">
+        <goDef gameSystem="GameSysResearch" storageProperty="objResearchCenters">
+            <keyProperty name="strName"/>
+        </goDef>
+        <propertyDef name="strName" type="String"/>
+        <propertyDef name="refResearchProject" type="GORef" restriction="ResearchProject"/>
+        <propertyDef name="objBuildings" type="ResearchCenterBuilding" variable="true" storesChildren="true"/>
+        <propertyDef name="bHasMedicalCenter" type="bool" default="false"/>
+        <propertyDef name="bHasPublicSchool" type="bool" default="false"/>
+    </objectDef>
+
+    <objectDef type="ResearchTopicHierarchyPosition" class="CMLOResearchTopicHierarchyPosition">
+        <goDef gameSystem="GameSysResearch" storageProperty="objResearchTopicHierarchyPositions">
+            <keyProperty name="tmplResearchTopic"/>
+        </goDef>
+        <propertyDef name="tmplResearchTopic" type="TemplateRef" restriction="ResearchTopicTemplate"/>
+        <propertyDef name="nColumn" type="int" desc="Corresponds to nTopLevel"/>
+        <propertyDef name="nRow" type="int" desc="Starts at 0 with the top level topic of the column"/>
+        <propertyDef name="nIndentation" type="int" desc="Starts at 0"/>
+        <propertyDef name="nPreviousSiblingRow" type="int" desc="nRow of previous sibling, or -1 for first child"/>
+        <propertyDef name="nTopicIndex" type="int" desc="topic index, starting at 0"/>
+    </objectDef>
+
+</locust>

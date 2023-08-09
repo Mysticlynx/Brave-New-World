@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DTradeAgreementTabs" superType="mlui.UI2DElement">
+		<propertyDef name="objLookupTradeAgreementData" type="LookupTradeAgreementData"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgOffWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="290"/>
+			<property name="nHeight" value="456"/>
+		</object>
+
+		<object type="UI2DTradeAgreementTabMoney" name="objMoney" existsWhile="mh2data.strTradeAgreementTab == 'Money'">
+			<property name="objLookupTradeAgreementData" from="def.objLookupTradeAgreementData"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DTradeAgreementTabResource" name="objArms" existsWhile="mh2data.strTradeAgreementTab == 'Arms'">
+			<property name="objLookupTradeAgreementData" from="def.objLookupTradeAgreementData"/>
+			<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Arms')"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DTradeAgreementTabResource" name="objMetals" existsWhile="mh2data.strTradeAgreementTab == 'Metals'">
+			<property name="objLookupTradeAgreementData" from="def.objLookupTradeAgreementData"/>
+			<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Metals')"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DTradeAgreementTabResource" name="objCoal" existsWhile="mh2data.strTradeAgreementTab == 'Coal'">
+			<property name="objLookupTradeAgreementData" from="def.objLookupTradeAgreementData"/>
+			<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Coal')"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DTradeAgreementTabResource" name="objOil" existsWhile="mh2data.strTradeAgreementTab == 'Oil'">
+			<property name="objLookupTradeAgreementData" from="def.objLookupTradeAgreementData"/>
+			<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Oil')"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DTradeAgreementTabResource" name="objFood" existsWhile="mh2data.strTradeAgreementTab == 'Food'">
+			<property name="objLookupTradeAgreementData" from="def.objLookupTradeAgreementData"/>
+			<property name="tmplResource" from="sd.getTemplateRef(gs_tbg.ResourceTemplate, 'Food')"/>
+
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>				
+	</objectDef>
+</locust>

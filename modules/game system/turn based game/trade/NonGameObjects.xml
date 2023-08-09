@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="PriceAdjustTemplate" class="CMLOPriceAdjustTemplate" superType="Template" templateBase="true">
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="fSupplyPerDemand" type="float"/>
+		<propertyDef name="fPriceAdjust" type="float"/>
+		<propertyDef name="nIndex" type="int"/>
+	</objectDef>
+
+    <objectDef type="TradeRecord" class="CMLOTradeRecord" desc="A trade record">
+		<propertyDef name="refSourceNation" type="GORef" restriction="Nation"/>
+		<propertyDef name="refDestNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objTradeRegions" type="TradeRegion" variable="true" storesChildren="true"/>
+        <propertyDef name="objTradeResourceRecords" type="TradeResourceRecord" variable="true" storesChildren="true"/>
+    </objectDef>
+
+    <objectDef type="TradeRegion" class="CMLOTradeRegion" desc="A region in a trade path">
+        <propertyDef name="refRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="nInterdiction" type="int" default="0"/>
+        <propertyDef name="nOrder" type="int" default="0"/>
+        <propertyDef name="refInterdictors" type="GORef" restriction="Nation" variable="true"/>
+        <propertyDef name="objInterdictors" type="Object" restriction="Nation" variable="true" desc="deprecated"/>       
+    </objectDef>
+
+    <objectDef type="TradeResourceRecord" class="CMLOTradeResourceRecord" desc="A record of a resource trade">
+		<propertyDef name="tmplResource" type="TemplateRef" restriction="ResourceTemplate"/>
+        <propertyDef name="nPromisedAmount" type="int" default="0"/>
+		<propertyDef name="nTradeAmount" type="int" default="0"/>
+        <propertyDef name="nDeliveredAmount" type="int" default="0"/>
+        <propertyDef name="bDirect" type="bool" default="false"/>
+    </objectDef>
+
+</locust>

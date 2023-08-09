@@ -1,0 +1,1136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- Unit Upgrade Track Templates -->
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EarlyAntiAirGuns">
+        <property name="tmplUnit" value="EarlyAntiAirGuns"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="SAMs"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="GroundBasedAirDefence"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="200"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Militia1">
+        <property name="tmplUnit" value="Militia1"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Militia2"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="BasicTraining"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="20"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Militia2">
+        <property name="tmplUnit" value="Militia2"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Militia3"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="StandardIssuedRifles"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Coal"/>
+            <property name="nAmount" value="20"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Infantry1">
+        <property name="tmplUnit" value="Infantry1"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Infantry2"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="StandardIssuedRifles"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="10"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Infantry2">
+        <property name="tmplUnit" value="Infantry2"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Infantry3"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="GrenadesAndSidearms"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="15"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Infantry3">
+        <property name="tmplUnit" value="Infantry3"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Infantry4"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="SemiAutomaticWeapons"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="20"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Infantry4">
+        <property name="tmplUnit" value="Infantry4"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Infantry5"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="InfantryAntiTankWeapons"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="25"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Infantry5">
+        <property name="tmplUnit" value="Infantry5"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Infantry6"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="FullyAutomaticInfantryWeapons"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="30"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MountedInfantry1">
+        <property name="tmplUnit" value="MountedInfantry1"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MountedInfantry2"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="StandardIssuedRifles"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="10"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MountedInfantry2">
+        <property name="tmplUnit" value="MountedInfantry2"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MountedInfantry3"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="GrenadesAndSidearms"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="15"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Engineers1">
+        <property name="tmplUnit" value="Engineers1"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Engineers2"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="GroundAssaultTraining"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="10"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Engineers2">
+        <property name="tmplUnit" value="Engineers2"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Engineers3"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="DeepOperations"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="15"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Engineers3">
+        <property name="tmplUnit" value="Engineers3"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Engineers4"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="GuerillaTactics"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="20"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Engineers4">
+        <property name="tmplUnit" value="Engineers4"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Engineers5"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="FieldRadios"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="25"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Engineers5">
+        <property name="tmplUnit" value="Engineers5"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Engineers6"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="DeepDefense"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="30"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Marines1">
+        <property name="tmplUnit" value="Marines1"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Marines2"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="GroundAssaultTraining"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="10"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Marines2">
+        <property name="tmplUnit" value="Marines2"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Marines3"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="DeepOperations"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="15"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Marines3">
+        <property name="tmplUnit" value="Marines3"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Marines4"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="GuerillaTactics"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="20"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Marines4">
+        <property name="tmplUnit" value="Marines4"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Marines5"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="FieldRadios"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="25"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Marines5">
+        <property name="tmplUnit" value="Marines5"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Marines6"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="DeepDefense"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="30"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MountainInfantry1">
+        <property name="tmplUnit" value="MountainInfantry1"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MountainInfantry2"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="GroundAssaultTraining"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="10"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MountainInfantry2">
+        <property name="tmplUnit" value="MountainInfantry2"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MountainInfantry3"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="DeepOperations"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="15"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MountainInfantry3">
+        <property name="tmplUnit" value="MountainInfantry3"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MountainInfantry4"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="GuerillaTactics"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="20"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MountainInfantry4">
+        <property name="tmplUnit" value="MountainInfantry4"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MountainInfantry5"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="FieldRadios"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="25"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MountainInfantry5">
+        <property name="tmplUnit" value="MountainInfantry5"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MountainInfantry6"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="DeepDefense"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="30"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Airborne4">
+        <property name="tmplUnit" value="Airborne4"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Airborne5"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="Infiltration"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="30"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Airborne5">
+        <property name="tmplUnit" value="Airborne5"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Airborne6"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="SpecialForces"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="35"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MechanizedInfantry3">
+        <property name="tmplUnit" value="MechanizedInfantry3"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MechanizedInfantry4"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="VehicleRadios"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="40"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MechanizedInfantry4">
+        <property name="tmplUnit" value="MechanizedInfantry4"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MechanizedInfantry5"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="MotorizedSupplyChain"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="50"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MechanizedInfantry5">
+        <property name="tmplUnit" value="MechanizedInfantry5"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MechanizedInfantry6"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="AdvancedLogistics"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="60"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MotorizedInfantry3">
+        <property name="tmplUnit" value="MotorizedInfantry3"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MotorizedInfantry4"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="VehicleRadios"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="30"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MotorizedInfantry4">
+        <property name="tmplUnit" value="MotorizedInfantry4"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MotorizedInfantry5"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="MotorizedSupplyChain"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="40"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MotorizedInfantry5">
+        <property name="tmplUnit" value="MotorizedInfantry5"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MotorizedInfantry6"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="AdvancedLogistics"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="50"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EarlyTanks">
+        <property name="tmplUnit" value="EarlyTanks"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="LightTanks1"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="LightTankDevelopment"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="55"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="LightTanks1">
+        <property name="tmplUnit" value="LightTanks1"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="LightTanks2"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="MediumClassTanks"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="70"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MediumTanks1">
+        <property name="tmplUnit" value="MediumTanks1"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MediumTanks2"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="HeavyArmoredPlating"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="95"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MediumTanks2">
+        <property name="tmplUnit" value="MediumTanks2"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MainBatttleTank1"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="ExplosiveReactiveArmour"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="450"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MainBatttleTank1">
+        <property name="tmplUnit" value="MainBatttleTank1"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MainBatttleTank2"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="ModernTankSystems"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="165"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="HeavyTanks1">
+        <property name="tmplUnit" value="HeavyTanks1"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="HeavyTanks2"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="AssaultTankWeaponry"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="125"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="HeavyTanks2">
+        <property name="tmplUnit" value="HeavyTanks2"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="SuperheavyTanks"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="ExplosiveReactiveArmour"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="225"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="HorseArtillery">
+        <property name="tmplUnit" value="HorseArtillery"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="GunHowitzer"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="HowitzerBatteries"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="65"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="GunHowitzer">
+        <property name="tmplUnit" value="GunHowitzer"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="HeavyArtillery"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="MeteoballisticSummator"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="85"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="BiPlaneFighters">
+        <property name="tmplUnit" value="BiPlaneFighters"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="EarlyFighters"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="EarlyAirForces"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="45"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EarlyFighters">
+        <property name="tmplUnit" value="EarlyFighters"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="BasicFighters"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="FullMetalAircraft"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="65"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="BasicFighters">
+        <property name="tmplUnit" value="BasicFighters"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="ImprovedFighters"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="ImprovedAircraftEngines"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="85"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="ImprovedFighters">
+        <property name="tmplUnit" value="ImprovedFighters"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="AdvancedFighters"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="AirSuperiority"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="105"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EarlyJetFighters">
+        <property name="tmplUnit" value="EarlyJetFighters"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="BasicJetFighters"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="Air2AirMissiles"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="95"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="BasicJetFighters">
+        <property name="tmplUnit" value="BasicJetFighters"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="ImprovedJetFighters"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="TransonicFlight"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="130"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="ImprovedJetFighters">
+        <property name="tmplUnit" value="ImprovedJetFighters"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="AdvancedJetFighters"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="SupersonicAerodynamics"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="165"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EarlyCarrierFighters">
+        <property name="tmplUnit" value="EarlyCarrierFighters"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="BasicCarrierFighters"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="CloseAirSupport"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="75"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="BasicCarrierFighters">
+        <property name="tmplUnit" value="BasicCarrierFighters"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="ImprovedCarrierFighters"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="NavalAirCommand"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="115"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="BomberAirships">
+        <property name="tmplUnit" value="BomberAirships"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="BiPlaneBombers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="FundamentalAirForce"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="55"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="BiPlaneBombers">
+        <property name="tmplUnit" value="BiPlaneBombers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="EarlyBombers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="EarlyAirForces"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="75"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EarlyBombers">
+        <property name="tmplUnit" value="EarlyBombers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="LightBombers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="FullMetalAircraft"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="95"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="LightBombers">
+        <property name="tmplUnit" value="LightBombers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="MediumBomber"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="LargeHulledAircraft"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="140"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="MediumBomber">
+        <property name="tmplUnit" value="MediumBomber"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="HeavyBombers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="PrecisionBombing"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="185"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="HeavyBombers">
+        <property name="tmplUnit" value="HeavyBombers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="StrategicBombers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="CabinPressurization"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="230"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="StrategicBombers">
+        <property name="tmplUnit" value="StrategicBombers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="JetBombers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="TransonicFlight"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="275"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EarlyNavalBombers">
+        <property name="tmplUnit" value="EarlyNavalBombers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="BasicNavalBombers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="CloseAirSupport"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="105"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="BasicNavalBombers">
+        <property name="tmplUnit" value="BasicNavalBombers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="ImprovedNavalBombers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="NavalAirCommand"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="150"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="ImprovedNavalBombers">
+        <property name="tmplUnit" value="ImprovedNavalBombers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="TorpedoDiveBombers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="NavalAirCommand"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="140"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="StandardBattleship">
+        <property name="tmplUnit" value="StandardBattleship"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="FastBattleships"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="FireControlSystems"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="220"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="FastBattleships">
+        <property name="tmplUnit" value="FastBattleships"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="AdvancedBattleship"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="NavalRadarPicket"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="340"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EarlySubmarines">
+        <property name="tmplUnit" value="EarlySubmarines"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="ShortRangeSubmarines"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="Sonar"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="55"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="ShortRangeSubmarines">
+        <property name="tmplUnit" value="ShortRangeSubmarines"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="LongRangeSubmarines"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="Snorkels"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="85"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="LongRangeSubmarines">
+        <property name="tmplUnit" value="LongRangeSubmarines"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="AttackSubmarines"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="AcousticTorpedos"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="125"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EscortCarrier">
+        <property name="tmplUnit" value="EscortCarrier"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="LightCarrier"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="ArrestingGear"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="225"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="LightCarrier">
+        <property name="tmplUnit" value="LightCarrier"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="FleetCarrier"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="ArmoredDecks"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="350"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="FleetCarrier">
+        <property name="tmplUnit" value="FleetCarrier"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="SuperCarriers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="MilitaryIndustrialComplex"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="500"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="IroncladFrigate">
+        <property name="tmplUnit" value="IroncladFrigate"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Frigate"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="EscortConvoys"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="160"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EarlyDestroyers">
+        <property name="tmplUnit" value="EarlyDestroyers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="Destroyers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="SupportVessels"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="60"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Destroyers">
+        <property name="tmplUnit" value="Destroyers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="EscortDestroyers"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="EscortConvoys"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="100"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="EscortDestroyers">
+        <property name="tmplUnit" value="EscortDestroyers"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="AdvancedDestroyer"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="AntiSubmarineWarfare"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="140"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="Battlecruiser">
+        <property name="tmplUnit" value="Battlecruiser"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="HeavyCruiser"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="BattleshipHullDesign"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="160"/>
+          </object>
+        </object>
+    </template>
+    <template type="gs_tbg.UnitUpgradeTrackTemplate" name="HeavyCruiser">
+        <property name="tmplUnit" value="HeavyCruiser"/>
+        <object type="gs_tbg.UnitUpgradeTrack" name="objUnitUpgradeTracks">
+            <property name="tmplUpgradeUnit" value="LargeCruiser"/>
+            <property name="nTrackOrder" value="1"/>
+            <object type="gs_tbg.UnitUpgradeTrackResearchRequirement" name="objUpgradeRequirements">
+                <property name="tmplResearchTopic" value="AdvancedNavalArchitecture"/>
+            </object>
+          <object type="gs_tbg.ResourceRequirement" name="objResourceRequirements">
+            <property name="tmplResource" value="Arms"/>
+            <property name="nAmount" value="215"/>
+          </object>
+        </object>
+    </template>
+
+    <!-- Unit Upgrade Track Template List -->
+    <template type="TemplateList" name="UnitUpgradeTrackTemplateList">
+        <property name="otTemplateType" value="gs_tbg.UnitUpgradeTrackTemplate"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EarlyAntiAirGuns"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Militia1"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Militia2"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Infantry1"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Infantry2"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Infantry3"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Infantry4"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Infantry5"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MountedInfantry1"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MountedInfantry2"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Engineers1"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Engineers2"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Engineers3"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Engineers4"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Engineers5"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Marines1"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Marines2"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Marines3"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Marines4"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Marines5"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MountainInfantry1"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MountainInfantry2"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MountainInfantry3"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MountainInfantry4"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MountainInfantry5"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Airborne4"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Airborne5"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MechanizedInfantry3"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MechanizedInfantry4"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MechanizedInfantry5"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MotorizedInfantry3"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MotorizedInfantry4"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MotorizedInfantry5"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EarlyTanks"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::LightTanks1"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MediumTanks1"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MediumTanks2"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MainBatttleTank1"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::HeavyTanks1"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::HeavyTanks2"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::HorseArtillery"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::GunHowitzer"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::BiPlaneFighters"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EarlyFighters"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::BasicFighters"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::ImprovedFighters"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EarlyJetFighters"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::BasicJetFighters"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::ImprovedJetFighters"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EarlyCarrierFighters"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::BasicCarrierFighters"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::BomberAirships"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::BiPlaneBombers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EarlyBombers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::LightBombers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::MediumBomber"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::HeavyBombers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::StrategicBombers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EarlyNavalBombers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::BasicNavalBombers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::ImprovedNavalBombers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::StandardBattleship"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::FastBattleships"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EarlySubmarines"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::ShortRangeSubmarines"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::LongRangeSubmarines"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EscortCarrier"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::LightCarrier"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::FleetCarrier"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::IroncladFrigate"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EarlyDestroyers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Destroyers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::EscortDestroyers"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::Battlecruiser"/>
+        <property name="tmplRefs" value="gs_tbg.UnitUpgradeTrackTemplate::HeavyCruiser"/>
+    </template>
+
+</locust>

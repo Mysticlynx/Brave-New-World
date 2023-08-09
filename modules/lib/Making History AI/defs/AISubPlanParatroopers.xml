@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- subplan intented to be used as part of a larger invasion -->
+    <objectDef type="AISubPlanParatroopers" superType="gs_tbg.AIMilitaryPlan">
+        <propertyDef name="objParentAI" type="MHAISysScript"/>
+        <propertyDef name="objParentPlan" type="gs_tbg.AIMilitaryPlan"/>
+        <propertyDef name="objMilitaryAI" type="gs_tbg.NationMilitaryAI"/>
+        <propertyDef name="nPhase" type="int" default="0"/>
+        <propertyDef name="strLandComposition" type="String" default="DefaultArmy"/>
+        
+        <propertyDef name="bOkToAssemble" type="bool" default="false"/>
+        <propertyDef name="bCanDrop" type="bool" default="false"/>
+        <propertyDef name="bParatroopersAssembled" type="bool" default="false"/>
+        <propertyDef name="bParatroopersDropped" type="bool" default="false"/>
+        <propertyDef name="bDetachedFromParentPlan" type="bool" default="false"/>
+        <propertyDef name="objBaseRegion" type="gs_tbg.Region"/>
+        <propertyDef name="objDropRegion" type="gs_tbg.Region"/>
+
+        <propertyDef name="objGameSysAIUtility" type="gs_tbg.GameSysAIUtility"/>
+        <propertyDef name="objGameSysTurnBasedGame" type="gs_tbg.GameSysTurnBasedGame"/>
+        <propertyDef name="objGameSysCity" type="gs_tbg.GameSysCity"/>
+        <propertyDef name="objGameSysRegion" type="gs_tbg.GameSysRegion"/>
+        <propertyDef name="objGameSysNation" type="gs_tbg.GameSysNation"/>
+        <propertyDef name="objGameSysNationRelations" type="gs_tbg.GameSysNationRelations"/>
+        <propertyDef name="objGameSysUnit" type="gs_tbg.GameSysUnit"/>
+
+        <property name="objGameSysAIUtility" from="self.objParentAI.objGameSysAIUtility"/>
+        <property name="objGameSysTurnBasedGame" from="self.objParentAI.objGameSysTurnBasedGame"/>
+        <property name="objGameSysCity" from="self.objParentAI.objGameSysCity"/>
+        <property name="objGameSysRegion" from="self.objParentAI.objGameSysRegion"/>
+        <property name="objGameSysNation" from="self.objParentAI.objGameSysNation"/>
+        <property name="objGameSysNationRelations" from="self.objParentAI.objGameSysNationRelations"/>
+        <property name="objGameSysUnit" from="self.objParentAI.objGameSysUnit"/>
+
+        <property name="strComposition" value="ParatrooperGroup"/>
+
+        <!-- expected methods (called by parent plan):
+            cancel
+            haveForces(avatar)
+            setCanAssemble(avatar)
+            setCanDrop(avatar)
+        -->
+
+        <object type="gs_tbg.RegionPathResult" name="objInvasionPath"/>
+
+        <script type="application/javascript"><![CDATA[
+        
+        // enum for phases
+        var AttackPhase =
+        {
+            Start:0,
+            Buildup:1,
+            Drop:2,
+            Advance:3,
+            WaitForAirBase:4,
+            WaitForNewMission:5,
+            Success:6,
+            Failure:7,
+        }
+
+        function RegionRating(data, region, allocatedLandAttackStrength)
+        {
+            // see what's in this region
+            var groups = self.objGameSysUnit.objUnitGroups.filter({"refLocation": GORef(gs_tbg.Region, region)});
+            var totalFriendlyStrength = 0;
+            var totalEnemyStrength = 0;
+            
+            var regionController = region.refController.resolve(data.avatar);
+            var nationRelationType = data.determineNationRelationType(regionController);
+            this.bControlledByUs = nationRelationType.isAlly;
+            
+            for (var i in groups)
+            {
+                var unitGroup = groups[i];
+                var groupNation = unitGroup.refController.resolve(data.avatar);
+                nationRelationType = data.determineNationRelationType(groupNation);
+
+                if ((nationRelationType.isAlly == false) && (nationRelationType.isEnemy == false))
+                    continue;
+                
+                var attackStrength = unitGroup.getEffectiveCombatStrength(data.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK);
+                var defenseStrength = unitGroup.getEffectiveCombatStrength(data.avatar, gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_DEFENSE);
+                var avgStrength = ( attackStrength + defenseStrength ) / 2;
+                
+                if (nationRelationType.isAlly)
+                {
+                    totalFriendlyStrength += avgStrength;
+                }
+                else if (nationRelationType.isEnemy)
+                {
+                    totalEnemyStrength += avgStrength;
+                }
+            } // for groups in region
+
+            this.netOpposition = totalEnemyStrength - totalFriendlyStrength;
+            this.bUndefended = (totalEnemyStrength == 0);
+            this.bWeakerThanOurForce = ( this.nNetOpposition < allocatedLandAttackStrength );
+            this.bHasCity = ( self.objGameSysCity.objCities.find({"refRegion":region}) != null );
+            this.bHasResources = (region.objResourceCapacities.length > 0);
+            
+            // is this better than otherRating ?
+            this.isBetterThan = function(other)
+            {
+                if (this.bControlledByUs != other.bControlledByUs) 
+                {
+                    // special case so that we leave troops in cities unless we have a chance of gaining more cities
+                    if (this.bControlledByUs)
+                    {
+                        // we own this region, but not the other
+                        if (this.bHasCity)
+                            return true; // keeping this city is better than anything else
+                            
+                        return false; // taking the other region is better
+                    }
+                    else
+                    {
+                        // we own the other region, but not this one
+                        if (other.bHasCity)
+                            return false; // don't leave a city undefended
+                        
+                        return true; // change is good
+                    }
+                }
+                
+                if (this.bUndefended != other.bUndefended)
+                    return this.bUndefended;
+                    
+                if (this.bWeakerThanOurForce != other.bWeakerThanOurForce)
+                    return this.bWeakerThanOurForce;
+
+                if (this.bHasCity != other.bHasCity)
+                    return this.bHasCity;
+                    
+                if (this.bHasResources != other.bHasResources)
+                    return this.bHasResource;
+                    
+                if (this.nNetOpposition < other.nNetOpposition)
+                    return true;
+                    
+                return false;
+            } // this.isBetterThan
+            
+        } // RegionRating
+
+        // javascript object which contains commonly used
+        // cached variables and local functions
+        function TempContext(avatar)
+        {
+            this.avatar = avatar;
+            this.turn = self.objGameSysTurnBasedGame.objTurnBasedGame.nTurn;
+            this.nation = self.refNation.resolve(avatar);
+            this.pad = getPAD(avatar,PADMakingHistoryAI);
+
+            this.setStatus = function(status,reason)
+            {
+                this.avatar.sendAction(
+                    gs_tbg.GActSetAIMilitaryPlanStatus.create({
+                        "objPlan": self,
+                        "eStatus": status,
+                        "strReason": reason,
+                        "nTurn": this.turn
+                        }) );
+            }
+
+            this.setPhase = function(phase,reason)
+            {
+                if (self.nPhase != phase)
+                {
+					if (this.pad.bWantMilitaryAILog)
+						log("DEBUG: " + self + " changing to phase " + phase);
+
+					self.nPhase = phase;
+
+                    // set plan status if applicable
+                    switch(self.nPhase)
+                    {
+                        case AttackPhase.Success:
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_SUCCEEDED,reason);
+                            break;
+
+                        case AttackPhase.Failure:
+                            log("SeaInvasion failed: " + reason);
+                            this.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_FAILED, reason);
+                            break;
+                    }
+                }
+            }
+            
+            this.determineNationRelationType = function(otherNation)
+            {
+                var result = new Object;
+                result.isAlly = false;
+                result.isEnemy = false;
+                
+                if (otherNation == null)
+                {
+                    // neither ally nor enemy
+                }
+                else if (otherNation.equals(this.nation))
+                {
+                    result.isAlly = true;
+                }
+                else
+                {
+                    if (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation,true))
+                    {
+                        result.isEnemy = true;
+                    }
+                    else if (self.objGameSysNationRelations.areAllies(this.avatar,this.nation,otherNation,true))
+                    {
+                        result.isAlly = true;
+                    }
+                    else if (self.objGameSysNationRelations.areAlliedWithEnemy(this.avatar,this.nation,otherNation,true))
+                    {
+                        result.isEnemy = true;
+                    }
+                    // else neutral
+                }
+                return result;
+            } // this.determineNationRelationType
+
+            this.updateParatrooperRequirements = function()
+            {
+                switch(self.nPhase)
+                {
+                    case AttackPhase.Start:
+                    case AttackPhase.WaitForAirBase:
+                        // log("paratrooper subgoal: no requirements for this phase.");
+                        break;
+                        
+                    case AttackPhase.WaitForNewMission:
+                        this.setPhase(AttackPhase.Success,"No new mission.");               
+                        break;                        
+                        
+                    case AttackPhase.Buildup:
+                    case AttackPhase.Drop:
+                        if (self.bParatroopersDropped)
+                        {
+			                // maintain paratrooper group composition
+                            var reqs = self.getOrCreateUnitRegionRequirements(self.objBaseRegion,self.strComposition);
+                            reqs.nLastUpdateTurn = this.turn;
+                            log("maintaining paratrooper group for " + self.objBaseRegion.strName);
+                        }
+                        else if (self.bParatroopersAssembled)
+                        {
+			                // maintain paratrooper group composition
+                            var reqs = self.getOrCreateUnitRegionRequirements(self.objBaseRegion,self.strComposition);
+                            reqs.nLastUpdateTurn = this.turn;
+                            log("maintaining paratrooper group for " + self.objBaseRegion.strName);
+                        }
+                        else
+                        {
+                            // build paratrooper group
+                            var reqs = self.getOrCreateUnitRegionRequirements(self.objBaseRegion, self.strComposition);
+							reqs.strPreferredComposition = ""; // self.strPreferredComposition;
+                            reqs.setCombatStrengthNeeded(this.avatar,self,50); // tweak point
+                            reqs.nLastUpdateTurn = this.turn;
+                            reqs.fKeepPriority = 1.0;
+                            reqs.fAddPriority = reqs.fKeepPriority;
+							reqs.nTurnsUntilNeeded = 5;
+                        }
+                        break;
+                        
+                    case AttackPhase.Advance:
+                        // maintain land group
+                        var reqs = self.getOrCreateUnitRegionRequirements(self.objDropRegion, self.strLandComposition);
+                        reqs.setCombatStrengthNeeded(this.avatar,self,1);
+                        reqs.nLastUpdateTurn = this.turn;
+                        reqs.fKeepPriority = 1.0;
+                        reqs.fAddPriority = 0.01;
+						reqs.nTurnsUntilNeeded = 10;
+                        break;
+                        
+                    default:
+                        throw "Bad nPhase value";
+                        break;
+                }
+            } // this.updateParatrooperRequirements
+
+            this.advanceDropPhase = function()
+            {
+                if (!self.bParatroopersAssembled)
+                {
+                    if (self.bOkToAssemble)
+                        this.prepareToDropParatroopers();
+                    return;
+                }
+                
+                if (!self.bParatroopersDropped)
+                {
+                    if (self.bCanDrop)
+                        this.dropParatroopers();
+                    return;
+                }
+            
+                // see if we can reacquire surviving units
+			    var paratrooperGroup = self.getCompleteComposition(this.avatar, self.objBaseRegion, self.strComposition);
+			    var childGroups = new Array();
+			    self.getCompleteCompositionChildGroups(this.avatar, self.objBaseRegion, self.strComposition, childGroups );
+			    if (childGroups.length == 0)
+			    {
+			        this.setPhase(AttackPhase.WaitForNewMission,"no child groups");
+			        return;
+			    }
+			    
+		        // see if they're on the ground
+		        var landGroups = new Array();
+		        for (var g in childGroups)
+		        {
+		            var group = childGroups[g];
+		            if (notEqual(group.eStatus,gs_tbg.UnitGroupStatus.STATUS_ON_TRANSPORT))
+		            {
+		                var region = group.getRegion(this.avatar);
+		                if (self.objDropRegion.equals(region))
+		                {
+		                    landGroups.push(group);
+		                }
+		                else
+		                {
+		                    log("ERROR(4) - where is this group? refLocation=" + group.refLocation);
+		                }
+		            }
+		        }
+		        if (landGroups.length == 0)
+		            return;
+		            
+	            // merge these and create a new composition
+                var firstGroup = null;
+                
+                // merge land groups together
+                if (landGroups.length > 1)
+                {
+                    var mergeOrder = gs_tbg.GActMergeUnitGroups.create();
+                    for (var i in landGroups)
+                    {
+                        var group = landGroups[i];
+                        if (firstGroup == null)
+                        {
+                            firstGroup = group;
+                            mergeOrder.refUnitGroupToMergeInto = firstGroup;
+                        }
+                        else
+                        {
+                            mergeOrder.refUnitGroupsToMerge.add(group);
+                        }
+                    }
+                    this.avatar.sendAction(mergeOrder);
+                }
+                else
+                {
+                    firstGroup = landGroups[0];
+                }
+                
+                self.setCompleteComposition(this.avatar,self.objDropRegion, self.strLandComposition, firstGroup);
+                log("regrouped landed paratroopers into " + firstGroup.strName);
+                self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar,firstGroup, true);
+								
+                this.setPhase(AttackPhase.Advance);
+            } // this.advanceDropPhase
+            
+            this.advanceAdvancePhase = function()
+            {
+                var landGroup = self.getCompleteComposition(this.avatar,self.objDropRegion, self.strLandComposition);
+                if (landGroup == null)
+                {
+			        this.setPhase(AttackPhase.WaitForNewMission,"no landGroup");
+			        return;
+                }
+                
+                // see if we're in combat
+                if (landGroup.eStatus.equals(gs_tbg.UnitGroupStatus.STATUS_IN_COMBAT))
+                {
+                    return;
+                }
+
+                // see if we're doing anything
+	            if (landGroup.objUnitOrder != null)
+	             {
+	                return;
+                }                
+                
+		        var reqs = self.getOrCreateUnitRegionRequirements(self.objBaseRegion,self.strComposition);
+                var objAllocatedStrength = reqs.getCombatStrengthAllocated();
+                var allocatedLandAttackStrength = objAllocatedStrength.getCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK);
+		        
+		        var currentRegion = landGroup.getRegion(this.avatar);
+	            var bestRegionRating = new RegionRating(this,currentRegion,allocatedLandAttackStrength);
+	            
+		        var bestRegion = null;
+
+                // see if any adjacent regions are better	            
+                var adjRegions = new Array();
+				self.objGameSysMap.getAdjacentRegions(currentRegion,adjRegions);
+                for (var r in adjRegions)
+                {
+                    var region = adjRegions[r];
+                    if (!self.objParentPlan.objRegionsToConquer.contains(region))
+                        continue;
+		                
+		            var regionRating = new RegionRating(this,region,allocatedLandAttackStrength);
+		            
+	                if (bestRegionRating != null)
+	                {
+	                    if (!regionRating.isBetterThan(bestRegionRating))
+	                        continue;
+	                }
+	                
+		            bestRegion = region;
+		            bestRegionRating = regionRating;
+                }
+                
+                if (bestRegion != null)
+                {
+                    self.objParentAI.objMilitaryAIScript.orderUnitGroup_moveToRegion(this.avatar,landGroup,bestRegion);
+                }
+            } // this.advanceAdvancePhase
+            
+            
+            this.advanceParatroopers = function()
+            {
+                if (!self.bDetachedFromParentPlan)
+                {
+                    if (self.objParentPlan == null)
+                    {
+                        cancel();
+                        return;
+                    }
+                    
+                    if (notEqual(self.objParentPlan.eStatus,gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_ACTIVE))
+                    {
+                        return;
+                    }
+                }
+                
+                switch(self.nPhase)
+                {
+                    case AttackPhase.Start:
+                        var airbaseRegions = self.objMilitaryAI.getExistingAirbaseRegions(this.avatar);
+                        for (var r in airbaseRegions)
+                        {
+                            var region = airbaseRegions[r];
+                            
+                            // could check distance to enemy here...
+                            
+                            log("choosing base region " + region.strName);
+                            self.objBaseRegion = region;
+                            break;
+                        }
+                        
+                        if (self.objBaseRegion == null)
+                        {
+                            this.setPhase(AttackPhase.WaitForAirBase);
+                        }
+                        else
+                        {
+                            this.setPhase(AttackPhase.Buildup);
+                        }
+                        break;
+                        
+                    case AttackPhase.WaitForAirBase:
+                        // tweak point - could wait for more than 1 turn
+                        this.setPhase(AttackPhase.Start);
+                        break;
+                        
+                    case AttackPhase.WaitForNewMission:
+                        // This is where we could start another buildup if parent goal requests it
+                        break;
+                        
+                    case AttackPhase.Buildup:
+                        if ( (self.bOkToAssemble==true) || (self.bCanDrop==true) )
+                        {
+                            this.setPhase(AttackPhase.Drop);
+                        }
+                        break;
+                        
+                    case AttackPhase.Drop:
+                        this.advanceDropPhase();
+                        break;
+
+                    case AttackPhase.Advance:
+                        this.advanceAdvancePhase();
+                        break;
+                        
+                    default:
+                        throw "Bad nPhase value";
+                        break;
+                }
+            } // this.advanceParatroopers
+            
+            this.haveForces = function()
+            {
+                var arrivedGroups = new Array();
+                var enRouteGroups = new Array();
+                var percentArrivedPower = self.getAssignedUnitGroups(this.avatar, self.objBaseRegion, self.strComposition, arrivedGroups, enRouteGroups);
+                if (percentArrivedPower > 95)
+                {
+				    return self.canCombineIntoAirGroup(this.avatar,arrivedGroups);
+				}
+				return false;
+            }
+            
+            // assemble the paratrooper group and find the best drop region
+            this.prepareToDropParatroopers = function()
+            {
+                var arrivedGroups = new Array();
+                var enRouteGroups = new Array();
+                var percentArrivedPower = self.getAssignedUnitGroups(this.avatar, self.objBaseRegion, self.strComposition, arrivedGroups, enRouteGroups);
+                // log("paratrooper percentArrivedPower=" + percentArrivedPower);
+                if (percentArrivedPower > 95)
+                {
+				    if (self.canCombineIntoAirGroup(this.avatar,arrivedGroups))
+				    {
+					    var paratrooperGroup = self.combineIntoAirGroup(this.avatar, arrivedGroups);
+				        self.setCompleteComposition(this.avatar, self.objBaseRegion, self.strComposition, paratrooperGroup);
+				        self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar,paratrooperGroup, true);
+                        self.bParatroopersAssembled = true;
+				        log("created paratrooperGroup " + paratrooperGroup.strName);
+				    }
+				    else
+				    {
+				        log("Cannot create AirGroup for paratroopers.");
+				        log("arrived groups:");
+				        for (var r in arrivedGroups)
+				        {
+				            var group = arrivedGroups[r];
+				            self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar,group, true);
+				        }
+				        log("enRoute groups:");
+				        for (var r in enRouteGroups)
+				        {
+				            var group = enRouteGroups[r];
+				            self.objParentAI.objMilitaryAIScript.logUnitsInGroup(this.avatar,group, true);
+				        }
+				    }
+				}
+				else
+				{
+				    log("percentArrivedPower=" + percentArrivedPower);
+				}
+            } // this.prepareToDropParatroopers
+            
+            this.dropParatroopers = function()
+            {
+			    var paratrooperGroup = self.getCompleteComposition(this.avatar, self.objBaseRegion, self.strComposition);
+			    if (paratrooperGroup != null)
+			    {
+			        // see how much attack power we have from the reqs object
+			        var reqs = self.getOrCreateUnitRegionRequirements(self.objBaseRegion,self.strComposition);
+                    var objAllocatedStrength = reqs.getCombatStrengthAllocated();
+                    var allocatedLandAttackStrength = objAllocatedStrength.getCombatStrength(gs_tbg.CombatProperty.COMBAT_PROPERTY_LAND_ATTACK);
+			        
+			        // find the best drop region
+			        var bestRegion = null;
+			        var bestRegionRating = null;
+			        
+		            log("Looking for a good drop region from " + self.objBaseRegion.strName);
+			        
+			        for (var r in self.objParentPlan.objRegionsToConquer)
+			        {
+			            var region = self.objParentPlan.objRegionsToConquer[r];
+			            var regionController = region.refController.resolve(this.avatar);
+			            if (regionController == null)
+			                continue;
+			                
+			            if (regionController.equals(this.nation))
+			                continue;
+			                
+			            if (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,regionController,true) == null)
+			                continue;
+			                
+			            var regionRating = new RegionRating(this,region,allocatedLandAttackStrength);
+			            
+			            if (bestRegionRating != null)
+			            {
+			                if (!regionRating.isBetterThan(bestRegionRating))
+			                    continue;
+			            }
+			            
+			            // see if it's possible to reach
+			            var dropAction = null;
+			            var result = paratrooperGroup.getValidActionsForTarget(this.avatar,region);
+			            if (result == null)
+			            {
+			                log("no valid actions for region " + region.strName);
+			                continue;
+			            }
+			                
+			            var actions = result.objUnitGroupActions;
+			            for (var a in actions)
+			            {
+			                var action = actions[a];
+			                if (action.otAction.equals(gs_tbg.GActSetDropParatrooperOrder))
+			                {
+			                    dropAction = action;
+			                    break;
+			                }
+			            }
+			            if (dropAction == null)
+			            {
+			                log("no drop action for our paratroopers into region " + region.strName);
+			                continue;
+			            }
+			            
+			            log("best region so far = " + region.strName);
+
+			            bestRegion = region;
+			            bestRegionRating = regionRating;
+			        } // for regions
+			        
+			        self.objDropRegion = bestRegion;
+			        if (bestRegion != null)
+			        {
+			            log("dropping paratroopers into " + bestRegion.strName);
+			            
+	                    if (paratrooperGroup.objUnitOrder != null)
+	                    {
+		                    log("cancelling paratrooperGroup order: " + paratrooperGroup.objUnitOrder);
+		                    var cancelOrder = gs_tbg.GActCancelUnitOrder.create({"refUnitGroup": paratrooperGroup});
+		                    this.avatar.sendAction(cancelOrder);
+			            }
+			            
+                        var actualAction = gs_tbg.GActSetDropParatrooperOrder.create({
+                            "refUnitGroup": paratrooperGroup,
+                            "objTarget": bestRegion
+                            });
+                            
+                        this.avatar.sendAction(actualAction);
+			            
+			            self.bParatroopersDropped = true;
+			        }
+			        else
+			        {
+			            log("failed to find a good drop region for paratroopers.");
+			        }
+			        
+			    } // if we have a paratrooperGroup
+			    else
+			    {
+			        log("Didn't get a paratrooperGroup together.");
+			    }
+			    
+            } // this.dropParatroopers
+
+            // is otherNation a nation we're at war with?
+            this.isEnemy = function(otherNation)
+            {
+                if (otherNation == null)
+                    return false;
+                    
+                if (otherNation.equals(this.nation))
+                    return false;
+                    
+                if (self.objGameSysNationRelations.getWarEx(this.avatar,this.nation,otherNation, true))
+                    return true;
+                
+                return false;
+            }
+        } // TempContext
+
+        // expected methods
+        function advance(avatar)
+        {
+            //log("advance for " + self);
+            var data = new TempContext(avatar);
+            data.advanceParatroopers();
+        }
+
+        // expected method
+        function updateUnitRequirements(avatar)
+        {
+            //log("updateUnitRequirements for " + self);
+            var data = new TempContext(avatar);
+            data.updateParatrooperRequirements();
+        }
+        
+        // expected method
+        function cancel(avatar)
+        {
+            var data = new TempContext(avatar);
+            data.setStatus(gs_tbg.MilitaryPlanStatus.MILITARY_PLAN_STATUS_CANCELLED,"cancelled");
+            self.objParentPlan = null;
+			self.objMilitaryAI = null;
+        }
+        
+        // expected method
+        function detachFromParent(avatar)
+        {
+            self.bDetachedFromParentPlan = true;
+        }
+
+        // expected method - returns true if we have forces that can be assembled into an air group
+        function haveForces(avatar)
+        {
+            var data = new TempContext(avatar);
+            return data.haveForces();
+        }
+        
+        // expected method - allows paratrooper group to be assembled into single air
+        function setCanAssemble(avatar,bCanAssemble)
+        {
+            log("notified ok to assemble paratrooper group");
+            self.bOkToAssemble = bCanAssemble;
+            if (!bCanAssemble)
+                self.bCanDrop = false; // implied
+        }
+        
+        // expected method - called by parent when the invasion is started 
+        // (war has been declared at this point)
+        function setCanDrop(avatar,bCanDrop)
+        {
+            log("notified ok to drop paratroopers");
+            self.bCanDrop = bCanDrop;
+            if (bCanDrop)
+                self.bOkToAssemble = true; // implied
+        }
+        
+        function cleanup()
+        {
+            self.objParentAI = null;
+            self.objParentPlan = null;
+            self.objMilitaryAI = null;
+        }
+
+        ]]></script>
+    </objectDef>
+    
+</locust>

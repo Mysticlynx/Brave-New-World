@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="RangedTemplate" class="CMLORangedTemplate" desc="Integer range referring to a template">
+		<propertyDef name="nLowerBound" type="int"/>
+		<propertyDef name="nUpperBound" type="int"/>
+		<propertyDef name="tmplRef" type="TemplateRef" />
+	</objectDef>
+
+	<objectDef type="RangedTemplateList" class="CMLORangedTemplateList" superType="Template" templateBase="true">
+		<propertyDef name="otTemplateType" type="ObjectType"/>
+		<propertyDef name="rangedTemplates" type="RangedTemplate" variable="true" storesChildren="true"/>
+		<!-- builtin method signatures:
+			Template getTemplate(int)
+		-->
+	</objectDef>
+	
+	<objectDef type="StructureDamageTemplate" class="CMLOStructureDamageTemplate" superType="Template" templateBase="true">
+		<propertyDef name="strDisplayName" type="String"/>
+		<propertyDef name="nProductionPercent" type="int"/>
+		<propertyDef name="bDisabled" type="bool"/>
+	</objectDef>
+	
+	<!-- Structure Templates -->
+    <template type="StructureDamageTemplate" name="NoDamage">
+        <property name="strDisplayName" value="No Damage"/>
+		<property name="nProductionPercent" value="100"/>
+		<property name="bDisabled" value="false"/>
+    </template>
+	
+	<template type="StructureDamageTemplate" name="LightDamage">
+        <property name="strDisplayName" value="Light Damage"/>
+		<property name="nProductionPercent" value="90"/>
+		<property name="bDisabled" value="false"/>
+    </template>
+	
+	<template type="StructureDamageTemplate" name="ModerateDamage">
+        <property name="strDisplayName" value="Moderate Damage"/>
+		<property name="nProductionPercent" value="80"/>
+		<property name="bDisabled" value="false"/>
+    </template>
+	
+	<template type="StructureDamageTemplate" name="HeavyDamage">
+        <property name="strDisplayName" value="Heavy Damage"/>
+		<property name="nProductionPercent" value="70"/>
+		<property name="bDisabled" value="false"/>
+    </template>
+	
+	<template type="StructureDamageTemplate" name="CriticalDamage">
+        <property name="strDisplayName" value="Critical Damage"/>
+		<property name="nProductionPercent" value="60"/>
+		<property name="bDisabled" value="false"/>
+    </template>
+	
+	<template type="StructureDamageTemplate" name="Disabled">
+        <property name="strDisplayName" value="Disabled"/>
+		<property name="nProductionPercent" value="0"/>
+		<property name="bDisabled" value="true"/>
+    </template>
+
+	<!-- Building Damage Ranges -->
+	<template type="RangedTemplateList" name="StructureDamageRangedTemplateList">
+		<property name="otTemplateType" value="StructureDamageTemplate"/>
+		<object type="RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="0"/>
+            <property name="nUpperBound" value="50"/>
+            <property name="tmplRef" value="StructureDamageTemplate::Disabled"/>
+        </object>
+		<object type="RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="51"/>
+            <property name="nUpperBound" value="60"/>
+            <property name="tmplRef" value="StructureDamageTemplate::CriticalDamage"/>
+        </object>
+		<object type="RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="61"/>
+            <property name="nUpperBound" value="70"/>
+            <property name="tmplRef" value="StructureDamageTemplate::HeavyDamage"/>
+        </object>
+		<object type="RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="71"/>
+            <property name="nUpperBound" value="80"/>
+            <property name="tmplRef" value="StructureDamageTemplate::ModerateDamage"/>
+        </object>
+		<object type="RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="81"/>
+            <property name="nUpperBound" value="90"/>
+            <property name="tmplRef" value="StructureDamageTemplate::LightDamage"/>
+        </object>
+        <object type="RangedTemplate" name="rangedTemplates" >
+            <property name="nLowerBound" value="91"/>
+            <property name="nUpperBound" value="100"/>
+            <property name="tmplRef" value="StructureDamageTemplate::NoDamage"/>
+        </object>
+	</template>
+
+</locust>

@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DGroupButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objUnitGroupSelections" type="UnitGroupSelections"/>
+		
+		<propertyDef name="objButtons" storesChildren="true">
+			switch{
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.INFO OR
+					spdata.objUnitGroupData.eSection == UnitGroupSection.LIST:
+					<object type="UI2DMainButtons">
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="nWidth" value="339"/>
+						<property name="nHeight" value="21"/>
+					</object>
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.MERGE:
+					<object type="UI2DMergeButtons">
+						<property name="objUnitGroupSelections" from="def.objUnitGroupSelections"/>
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="nWidth" value="339"/>
+						<property name="nHeight" value="22"/>
+					</object>
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.SPLIT:
+					<object type="UI2DSplitButtons">
+						<property name="objUnitGroupSelections" from="def.objUnitGroupSelections"/>
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="nWidth" value="339"/>
+						<property name="nHeight" value="22"/>
+					</object>
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.CARRIERS:
+					<object type="UI2DCarriersButtons">
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="nWidth" value="339"/>
+						<property name="nHeight" value="22"/>
+					</object>
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.TRANSPORTS:
+					<object type="UI2DGroupsOnTransportsButtons">
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="nWidth" value="339"/>
+						<property name="nHeight" value="22"/>
+					</object>
+				case spdata.objUnitGroupData.eSection == UnitGroupSection.PARATROOPERS:
+					<object type="UI2DParatroopersButtons">
+						<property name="nX" value="0"/>
+						<property name="nY" value="0"/>
+						<property name="nWidth" value="339"/>
+						<property name="nHeight" value="22"/>
+					</object>
+			}
+		</propertyDef>
+		
+	</objectDef>
+
+	<objectDef type="UI2DGroupButton" superType="mlui.UI2DButton">
+		<propertyDef name="nOrder" type="int"/>
+		<propertyDef name="bDisabled" type="bool" />
+	</objectDef>
+  
+	<objectDef type="UI2DGroupDecal" superType="mlui.UI2DImage">
+		<propertyDef name="nOrder" type="int"/>
+	</objectDef>
+
+	<objectDef type="UI2DMainButtons" superType="mlui.UI2DElement">
+
+		<propertyDef name="objButtons" type="mlui.UI2DElement" variable="true" storesChildren="true"/>
+		<propertyDef name="bCanCommand" type="bool">
+			spdata.objUnitGroupData.objUnitGroup.canCommand(mh2data.objAvatar, mh2data.objNation)
+		</propertyDef>
+				
+		<object type="mlui.UILMFlow" name="objFlow">
+			<property name="listElements">
+					sortAscending(?{button: button.nOrder}, def.objButtons)
+			</property>
+			<property name="orientAtion" value="HORIZONTAL" />
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="0"/>
+		</object>
+		
+		
+		<object type="UI2DGroupButton" name="objButtons">
+			<property name="strToolTip" from="locale.SID.UI.Units"/>
+			<property name="tmplButtonStyle">
+					if(
+						spdata.objUnitGroupData.eSection == UnitGroupSection.INFO,
+						'skin.BtnStyleGroupButtonOpen',
+						'skin.BtnStyleGroupButtonClose'
+					)
+			</property>
+			<property name="nOrder" value="0" />
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(spdata.objUnitGroupData.eSection.equals(UnitGroupSection.INFO)){
+								spdata.objUnitGroupData.showUnitGroupList(spdata.objUnitGroupData.objUnitGroup)
+							}
+							else{
+								spdata.objUnitGroupData.showUnitGroupInfo(spdata.objUnitGroupData.objUnitGroup)
+							};
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons"
+				existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')">
+			<property name="strToolTip" from="locale.SID.UI.AirTransports"/>
+			<property name="tmplButtonStyle"> 
+					if(
+						self.bDisabled,
+						'skin.BtnStyleGroupButtonAirTransportDisabled',
+						'skin.BtnStyleGroupButtonAirTransport'
+					)
+			</property>
+			<property name="nOrder" value="1" />
+			<property name="bDisabled" from="spdata.objUnitGroupData.objUnitGroup.getGroupsOnTransports(mh2data.objAvatar).size LTE 0" />
+			<property name="nDefaultWidth" value="39"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							
+							if(owner.bDisabled)
+							{
+								return;
+							}
+							
+							spdata.objUnitGroupData.showUnitGroupTransports(spdata.objUnitGroupData.objUnitGroup);
+							
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch ==
+			sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')">
+			<property name="strToolTip" from="locale.SID.UI.Transports"/>
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+					if(self.bDisabled,
+					'BtnStyleGroupButtonNavalTransportDisabled', 'BtnStyleGroupButtonNavalTransport'))
+			"/>
+			<property name="nOrder" value="2" />
+			<property name="bDisabled" from="spdata.objUnitGroupData.objUnitGroup.getGroupsOnTransports(mh2data.objAvatar).size LTE 0" />
+			<property name="nDefaultWidth" value="39"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							
+							if(owner.bDisabled)
+							{
+								return;
+							}
+							
+							spdata.objUnitGroupData.showUnitGroupTransports(spdata.objUnitGroupData.objUnitGroup);
+
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch ==
+			sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')">
+			<property name="strToolTip" from="locale.SID.UI.Carriers"/>
+			<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,
+					if(self.bDisabled,
+					'BtnStyleGroupButtonNavalAirDisabled', 'BtnStyleGroupButtonNavalAir'))
+			"/>
+			<property name="nOrder" value="3" />
+			<property name="bDisabled" from="spdata.objUnitGroupData.objUnitGroup.getCarrierUnits(mh2data.objAvatar).size LTE 0" />
+			<property name="nDefaultWidth" value="39"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							
+							if(owner.bDisabled)
+							{
+								return;
+							}
+							
+							spdata.objUnitGroupData.showUnitGroupCarriers(spdata.objUnitGroupData.objUnitGroup)
+							
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons">
+			<property name="strToolTip" from="locale.SID.UI.Merge"/>
+			<property name="tmplButtonStyle">
+					if(self.bDisabled,
+						'skin.BtnStyleGroupButtonMergeDisabled', 'skin.BtnStyleGroupButtonMerge'
+					)
+			</property>
+			<property name="nOrder" value="4" />
+			<property name="bDisabled">
+				spdata.objUnitGroupData.objUnitGroup.getMergeGroups(mh2data.objAvatar, mh2data.objNation).size LTE 0 OR
+				!def.bCanCommand
+			</property>
+			<property name="nDefaultWidth" value="39"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(owner.bDisabled)
+							{
+								return;
+							}
+							
+							spdata.objUnitGroupData.showUnitGroupMerge(spdata.objUnitGroupData.objUnitGroup)
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons">
+			<property name="strToolTip" from="locale.SID.UI.Split"/>
+			<property name="tmplButtonStyle">
+					if(self.bDisabled,
+						'skin.BtnStyleGroupButtonSplitDisabled',
+						'skin.BtnStyleGroupButtonSplit'
+					)
+			</property>
+			<property name="nOrder" value="5" />
+			<property name="bDisabled">
+				spdata.objUnitGroupData.objUnitGroup.getUnits(mh2data.objAvatar).size LTE 1 OR
+				!def.bCanCommand
+			</property>
+			<property name="nDefaultWidth" value="39"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							
+							if(owner.bDisabled)
+							{
+								return;
+							}
+							
+							spdata.objUnitGroupData.showUnitGroupSplit(spdata.objUnitGroupData.objUnitGroup)
+
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons" existsWhile="spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')
+				OR spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')">
+
+      <property name="strToolTip">
+        if(spdata.objUnitGroupData.objUnitGroup.bRepairing,
+        locale.SID.UI.RepairingGroup + ' ' + locale.SID.UI.On,
+        locale.SID.UI.RepairingGroup + ' ' + locale.SID.UI.Off
+        )
+      </property>
+			<property name="tmplButtonStyle">
+						if(
+							def.bCanCommand,
+								if(spdata.objUnitGroupData.objUnitGroup.bRepairing,
+									'skin.BtnStyleGroupButtonHealing', 'skin.BtnStyleGroupButtonReinforce'
+								),
+							'skin.BtnStyleGroupButtonReinforceDisabled'
+						)
+			</property>
+			<property name="nOrder" value="6" />
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.bCanCommand)
+							{
+								var group = spdata.objUnitGroupData.objUnitGroup;
+								var action = gs_tbg.GActSetUnitGroupRepairing.create({
+									"refUnitGroup": group,
+									"bRepairing": !group.bRepairing
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons" existsWhile="(spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch ==
+			sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Submarine')
+				OR spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy'))
+					AND spdata.objUnitGroupData.objUnitGroup.eStatus == gs_tbg.UnitGroupStatus.STATUS_IN_PORT" >
+			<property name="strToolTip" from="locale.SID.UI.RepairAll"/>
+			<property name="tmplButtonStyle">
+						if(
+							def.bCanCommand,
+								if(spdata.objUnitGroupData.objUnitGroup.bRepairing,
+									'skin.BtnStyleGroupButtonRepairing', 'skin.BtnStyleGroupButtonRepair'
+								),
+							'skin.BtnStyleGroupButtonRepairDisabled'
+						)
+			</property>
+			<property name="nOrder" value="7" />
+			<property name="nDefaultWidth" value="39"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.bCanCommand)
+							{
+								var group = spdata.objUnitGroupData.objUnitGroup;
+								var action = gs_tbg.GActSetUnitGroupRepairing.create({
+									"refUnitGroup": group,
+									"bRepairing": !group.bRepairing
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons">
+			<property name="strToolTip">
+        if(spdata.objUnitGroupData.objUnitGroup.bAcceptingNewlyProducedUnits,
+        locale.SID.UI.AcceptUnits  + ' ' + locale.SID.UI.On,
+        locale.SID.UI.AcceptUnits + ' ' + locale.SID.UI.Off
+        )
+      </property>
+			<property name="tmplButtonStyle">
+				if(spdata.objUnitGroupData.objUnitGroup.bAcceptingNewlyProducedUnits,
+					'skin.BtnStyleGroupButtonAccept',
+					'skin.BtnStyleGroupButtonReject'
+				)
+			</property>
+			<property name="nOrder" value="8" />
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.bCanCommand)
+							{
+								var bAcceptNewUnits
+								
+								if(spdata.objUnitGroupData.objUnitGroup.bAcceptingNewlyProducedUnits)
+									bAcceptNewUnits = false;
+								else
+									bAcceptNewUnits = true;
+									
+								mh2data.objAvatar.sendAction(gs_tbg.GActSetAcceptNewUnits.create(
+									{"objGroup": spdata.objUnitGroupData.objUnitGroup, "bAcceptNewUnits": bAcceptNewUnits}))
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="UI2DGroupButton" name="objButtons">
+			<property name="strToolTip" from="locale.SID.UI.DisbandAll"/>
+			<property name="tmplButtonStyle">
+				if(def.bCanCommand,
+					'skin.BtnStyleGroupButtonDisband',
+					'skin.BtnStyleGroupButtonDisbandDisabled'
+				)
+			</property>
+			<property name="nOrder" value="9" />
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							if(def.bCanCommand)
+							{
+								var action = gs_tbg.GActDisbandUnitGroup.create({
+									"refUnitGroup": spdata.objUnitGroupData.objUnitGroup
+								});
+								mh2data.objAvatar.sendAction(action);
+							}
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons" >
+			<property name="strToolTip" from="locale.SID.UI.CancelOrders"/>
+			<property name="tmplButtonStyle">
+				if(spdata.objUnitGroupData.objUnitGroup.objUnitOrder != null AND
+					def.bCanCommand,
+					'skin.BtnStyleGroupButtonCancelOrder',
+					'skin.BtnStyleGroupButtonCancelOrderDisabled'
+				)
+			</property>
+			<property name="nOrder" value="10" />
+			<property name="nDefaultWidth" value="27"/>
+			<property name="nDefaultHeight" value="26"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+                            if(spdata.objUnitGroupData.objUnitGroup.objUnitOrder != null && def.bCanCommand)
+                            {
+                                var action = gs_tbg.GActCancelUnitOrder.create({
+                                    "refUnitGroup": spdata.objUnitGroupData.objUnitGroup
+                                    });
+                                mh2data.objAvatar.sendAction(action);
+                            }
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DMergeButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objUnitGroupSelections" type="UnitGroupSelections"/>
+
+		<propertyDef name="objButtons" type="mlui.UI2DElement" variable="true" storesChildren="true"/>
+
+		<object type="mlui.UILMFlow" name="objFlow">
+			<property name="listElements">
+					sortAscending(?{button: button.nOrder}, def.objButtons)
+			</property>
+			<property name="orientAtion" value="HORIZONTAL" />
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="0"/>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons">
+			<property name="tmplButtonStyle" value="skin.BtnStyleGroupButtonCancel"/>
+			<property name="nOrder" value="0" />
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							spdata.objUnitGroupData.showUnitGroupInfo(spdata.objUnitGroupData.objUnitGroup);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons">
+			<property name="tmplButtonStyle">
+				if(self.bDisabled,
+					'skin.BtnStyleGroupButtonMergeDisabled',
+					'skin.BtnStyleGroupButtonMerge'
+				)
+			</property>
+			
+			<property name="nOrder" value="1" />
+			<property name="bDisabled" from="def.objUnitGroupSelections.objGroupsToMerge.size LTE 0" />
+			<property name="nDefaultWidth" value="39"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							
+							if(owner.bDisabled)
+							{
+								return
+							}
+							
+							var action = gs_tbg.GActMergeUnitGroups.create({
+								"refUnitGroupToMergeInto": spdata.objUnitGroupData.objUnitGroup,
+								"refUnitGroupsToMerge": def.objUnitGroupSelections.objGroupsToMerge
+							});
+							mh2data.objAvatar.sendAction(action);
+							spdata.objUnitGroupData.showUnitGroupInfo(spdata.objUnitGroupData.objUnitGroup);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+	</objectDef>
+
+	<objectDef type="UI2DSplitButtons" superType="mlui.UI2DElement">
+		<propertyDef name="objUnitGroupSelections" type="UnitGroupSelections"/>
+
+		<propertyDef name="objButtons" type="mlui.UI2DElement" variable="true" storesChildren="true"/>
+
+		<object type="mlui.UILMFlow" name="objFlow">
+			<property name="listElements">
+					sortAscending(?{button: button.nOrder}, def.objButtons)
+			</property>
+			<property name="orientAtion" value="HORIZONTAL" />
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="0"/>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons">
+			<property name="tmplButtonStyle" value="skin.BtnStyleGroupButtonCancel"/>
+			<property name="nOrder" value="0" />
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							spdata.objUnitGroupData.showUnitGroupInfo(spdata.objUnitGroupData.objUnitGroup);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupButton" name="objButtons">
+			<property name="tmplButtonStyle">
+			        if(self.bDisabled,
+						'skin.BtnStyleGroupButtonSplitDisabled',
+						'skin.BtnStyleGroupButtonSplit'
+					)
+			</property>
+			<property name="nOrder" value="1" />
+			<property name="bDisabled">
+				!def.objUnitGroupSelections.bValidSplit
+			</property>
+			<property name="nDefaultWidth" value="38"/>
+			<property name="nDefaultHeight" value="21"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							
+							if(owner.bDisabled)
+							{
+								return;
+							}
+							
+							var action = gs_tbg.GActSplitUnitGroup.create({
+								"refUnitGroup": spdata.objUnitGroupData.objUnitGroup,
+								"refUnits": def.objUnitGroupSelections.objUnitsToSplit,
+								"refTransportedUnitGroups": def.objUnitGroupSelections.objTransportedUnitsToSplit
+							});
+							mh2data.objAvatar.sendAction(action);
+							spdata.objUnitGroupData.showUnitGroupInfo(spdata.objUnitGroupData.objUnitGroup);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+	</objectDef>
+
+	<objectDef type="UI2DCarriersButtons" superType="mlui.UI2DElement">
+
+		<propertyDef name="objElements" type="mlui.UI2DElement" variable="true" storesChildren="true"/>
+
+		<object type="mlui.UILMFlow" name="objFlow">
+			<property name="listElements">
+					sortAscending(?{element: element.nOrder}, def.objElements)
+			</property>
+			<property name="orientAtion" value="HORIZONTAL" />
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="0"/>
+		</object>
+
+		<object type="UI2DGroupButton" name="objElements">
+			<property name="tmplButtonStyle" value="skin.BtnStyleGroupButtonCancel"/>
+			<property name="nOrder" value="0" />
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							spdata.objUnitGroupData.showUnitGroupInfo(spdata.objUnitGroupData.objUnitGroup);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupDecal" name="objElements">
+			<property name="tmplImage" value="skin.ImgGroupButtonNavalCarriersOpen"/>
+			<property name="nOrder" value="1" />
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="21"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DGroupsOnTransportsButtons" superType="mlui.UI2DElement">
+
+		<propertyDef name="objElements" type="mlui.UI2DElement" variable="true" storesChildren="true"/>
+
+		<object type="mlui.UILMFlow" name="objFlow">
+			<property name="listElements">
+					sortAscending(?{element: element.nOrder}, def.objElements)
+			</property>
+			<property name="orientAtion" value="HORIZONTAL" />
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="0"/>
+		</object>
+
+		<object type="UI2DGroupButton" name="objElements">
+			<property name="tmplButtonStyle" value="skin.BtnStyleGroupButtonCancel"/>
+			<property name="nOrder" value="0" />
+			<property name="nDefaultWidth" value="31"/>
+			<property name="nDefaultHeight" value="22"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							spdata.objUnitGroupData.showUnitGroupInfo(spdata.objUnitGroupData.objUnitGroup);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="UI2DGroupDecal" name="objElements">
+			<property name="tmplImage" from="skin.getTemplateRef(mlmedia.ImageTemplate,
+				if(spdata.objUnitGroupData.objUnitGroup.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce'),
+				'ImgGroupButtonAirTransportOpen', 'ImgGroupButtonNavalTransportOpen'))
+			"/>
+			<property name="nOrder" value="1" />
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="21"/>
+		</object>
+
+		<!--<object type="UI2DGroupButton" name="objElements">-->
+		<!--	<property name="tmplButtonStyle" from="skin.getTemplateRef(mlmedia.ButtonStyleTemplate,-->
+		<!--	        if(self.bDisabled,-->
+		<!--			'BtnStyleGroupButtonUnloadDisabled', 'BtnStyleGroupButtonUnload'))-->
+		<!--	"/>-->
+		<!--	<property name="nOrder" value="2" />-->
+		<!--	<property name="bDisabled" from="!spdata.objUnitGroupData.objUnitGroup.isInPort(mh2data.objAvatar)" />-->
+		<!--	<property name="nDefaultWidth" value="31"/>-->
+		<!--	<property name="nDefaultHeight" value="22"/>-->
+		<!---->
+		<!--	<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">-->
+		<!--		<object type="mlevent.EvtHdlrMethod" name="objHandlers">-->
+		<!--			<property name="otEventType" value="mlui.EventButtonClicked"/>-->
+		<!--			<script type="application/javascript"><![CDATA[-->
+		<!--				function handle(event, owner)-->
+		<!--				{-->
+		<!--					-->
+		<!--					if(owner.bDisabled)-->
+		<!--					{-->
+		<!--						return;-->
+		<!--					}-->
+		<!--					-->
+		<!--					var action = gs_tbg.GActSetOrdersToUnloadAllTransports.create({-->
+		<!--						"refUnitGroup": spdata.objUnitGroupData.objUnitGroup,-->
+		<!--						"objTarget": spdata.objUnitGroupData.objUnitGroup.refLocation.resolve(mh2data.objAvatar).refRegion.resolve(mh2data.objAvatar)-->
+		<!--					});-->
+		<!--					mh2data.objAvatar.sendAction(action);-->
+		<!--					mh2data.closeGroupTab();-->
+		<!--				}-->
+		<!--			]]></script>-->
+		<!--		</object>-->
+		<!--	</object>-->
+		<!--</object>-->
+
+	</objectDef>
+
+	<objectDef type="UI2DParatroopersButtons" superType="mlui.UI2DElement">
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage" value="skin.ImgGroupButtonParatrooperOpen"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="21"/>
+		</object>
+
+		<object type="mlui.UI2DButton" name="objCancel">
+			<property name="tmplButtonStyle" value="skin.BtnStyleGroupButtonCancel"/>
+			<property name="nX" value="301"/>
+			<property name="nY" value="0"/>
+			<property name="nDefaultWidth" value="38"/>
+			<property name="nDefaultHeight" value="21"/>
+
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							spdata.objUnitGroupData.showUnitGroupInfo(spdata.objUnitGroupData.objUnitGroup);
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+</locust>

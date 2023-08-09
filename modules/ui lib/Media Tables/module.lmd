@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="ui lib"
+	name="Media Tables"
+	version="1.0"
+	locustVersion="2.11"
+>
+	<import module="mlcore" default="true"/>
+	<import module="ml:lib:media:1.0" as="mlmedia"/>
+	<import module="game system:turn based game" as="gs_tbg"/>
+
+	<include>
+		defs/MediaTables.xml
+	</include>
+</locustModule>

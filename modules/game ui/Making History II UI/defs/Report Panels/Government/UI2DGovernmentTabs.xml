@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DGovernmentTabs" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		
+		<object type="UI2DGovernmentTabNationalities" name="objNationalities" existsWhile="mh2data.otGovernmentTab == UI2DGovernmentTabNationalities">
+			<property name="objNation" from="def.objNation"/>
+			
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>			
+			
+		<object type="UI2DGovernmentTabSubordinates" name="objSubordinates" existsWhile="mh2data.otGovernmentTab == UI2DGovernmentTabSubordinates">
+			<property name="objNation" from="def.objNation"/>
+			
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="UI2DGovernmentTabInfo" name="objInfo" existsWhile="mh2data.otGovernmentTab == UI2DGovernmentTabInfo">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>	
+		
+		<object type="UI2DGovernmentTabPrograms" name="objPrograms" existsWhile="mh2data.otGovernmentTab == UI2DGovernmentTabPrograms">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nWidth" from="def.nWidth"/>			
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>		
+	</objectDef>
+</locust>

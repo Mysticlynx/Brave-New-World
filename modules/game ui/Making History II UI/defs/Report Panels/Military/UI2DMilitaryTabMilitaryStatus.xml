@@ -1,0 +1,1263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DMilitaryTabMilitaryStatus" superType="mlui.UI2DElement">
+		
+		<object type="LookupEngagements" name="objLookupEngagements">
+			<property name="objMH2Data" from="mh2data"/>
+			<property name="objNation" from="mh2data.objNation"/>
+		</object>
+
+	<!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objGeneralStaffReportLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.GeneralStaffReport"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objLeftPaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBRSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="160"/>
+			<property name="nWidth" value="291"/>
+			<property name="nHeight" value="521"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objLeftPaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="12"/>
+			<property name="nY" value="162"/>
+			<property name="nWidth" value="287"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="UI2DMilitaryStatusStaff" name="objMilitaryStatusStaff">
+			<property name="nX" value="12"/>
+			<property name="nY" value="130"/>
+			<property name="nWidth" value="287"/>
+			<property name="nHeight" value="600"/>
+			<property name="objNation" from="mh2data.objNation"/>
+			<property name="nDepth" value="10" />
+		</object>
+
+    <object type="UI2DMilitaryManpowerList" name="objMilitaryManpowerList">
+      <property name="nX" value="603"/>
+      <property name="nY" value="130"/>
+      <property name="nWidth" value="287"/>
+      <property name="nHeight" value="600"/>
+      <property name="objNation" from="mh2data.objNation"/>
+      <property name="nDepth" value="10" />
+    </object>
+		
+		<object type="mlui.UI2DText" name="objCurrentBattlesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.MilitaryForces"/>
+			<property name="nX" value="303"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMiddlePaneBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClearBSq"/>
+			<property name="nX" value="300"/>
+			<property name="nY" value="160"/>
+			<property name="nWidth" value="584"/>
+			<property name="nHeight" value="521"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objMiddlePaneGradient">
+			<property name="tmplImage" value="skin.ImgGradientGray"/>
+			<property name="nX" value="302"/>
+			<property name="nY" value="162"/>
+			<property name="nWidth" value="580"/>
+			<property name="nHeight" value="177"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="UI2DMilitaryStatusArms" name="objMilitaryStatusArms">
+			<property name="nX" value="12"/>
+			<property name="nY" value="162"/>
+			<property name="nWidth" value="288"/>
+			<property name="nHeight" value="517"/>
+		</object>
+				
+		<object type="UI2DMilitaryStatusDivisionReport" name="objUI2DMilitaryStatusDivisionReport" >
+			<property name="nX" value="310" />
+			<property name="nY" value="130"/>
+			<property name="nWidth" value="287"/>
+			<property name="nHeight" value="600"/>
+		</object>
+	</objectDef>
+
+	<enumDef name="ReadinessLevel">
+        <value name="LOW"/>
+        <value name="MED"/>
+		<value name="FULL"/>
+    </enumDef>
+	
+	<objectDef type="UI2DMilitaryStatusStaff" superType="mlui.UI2DElement">
+		<propertyDef name="objNation" type="gs_tbg.Nation" />
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		<property name="objMH2Data" from="mh2data"/>
+
+    <object type="mlui.UI2DText" name="objReadinessLevelLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.ReadinessLevel"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="95"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<propertyDef name="eReadinessLevel" type="Enum" restriction="ReadinessLevel" >
+			switch
+			{
+				case self.objNation.nMilitaryMaintenanceLevel LTE 25:
+					ReadinessLevel.LOW
+				case self.objNation.nMilitaryMaintenanceLevel LTE 75:
+					ReadinessLevel.MED
+				default:
+					ReadinessLevel.FULL
+			}
+		</propertyDef>
+    
+    <object type="mlui.UI2DImage" name="objReadinessIcon">
+      <property name="tmplImage" >
+                switch
+                {
+                case def.eReadinessLevel == ReadinessLevel.LOW:
+                    'skin.ImgInfoIconRevoltRiskSevere'
+                case def.eReadinessLevel == ReadinessLevel.MED:
+                    'skin.ImgInfoIconRevoltRiskElevated'
+                case def.eReadinessLevel == ReadinessLevel.FULL:
+                    'skin.ImgInfoIconRevoltRiskNone'
+                default:
+                'skin.ImgInfoIconRevoltRiskNone'
+                }
+            </property>
+      <property name="nX" value="2"/>
+      <property name="nY" value="95"/>
+      <property name="nWidth" value="23"/>
+      <property name="nHeight" value="26"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objReadinessLevel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+      <property name="strText" from="def.objNation.nMilitaryMaintenanceLevel + '%'"/>
+      <property name="nX" value="30"/>
+			<property name="nY" value="110"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objStateOfReadinessLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.NationMoraleModifier"/>
+			<property name="nX" value="155"/>
+			<property name="nY" value="95"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objStateOfReadiness">
+			<property name="tmplTextStyle">
+				if(def.objNation.nNationMoraleModifier LT 0, 'locale.TxtStyleArialRed16Left', 'locale.TxtStyleArialBlue16Left')
+			</property>
+			<property name="strText" >
+				if(def.objNation.nNationMoraleModifier LTE 0, def.objNation.nNationMoraleModifier,
+					'+' + def.objNation.nNationMoraleModifier)
+			</property>
+			<property name="nX" value="155"/>
+			<property name="nY" value="110"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="18"/>
+		</object>
+				
+		<object type="mlui.UI2DText" name="objSetReadinessLevelLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.SetReadinessLevel"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="135"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		
+		<object type="mlui.UI2DTextButton" name="objReadinessLow">
+			<property name="tmplTextButtonStyle" from="if(def.eReadinessLevel == ReadinessLevel.LOW, 'skin.TxtBtnStyleReportButtonOn', 'skin.TxtBtnStyleReportBubbleBrownBlue')"/>
+			<property name="strText" from="locale.SID.UI.Low" />
+			<property name="nX" value="29"/>
+			<property name="nY" value="145"/>
+			<property name="nDefaultWidth" value="54"/>
+			<property name="nDefaultHeight" value="19"/>
+			<property name="nDepth" value="10"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							//def.eReadinessLevel = 	ReadinessLevel.LOW;
+							def.objMH2Data.objAvatar.sendAction(gs_tbg.GActSetMilitaryMaintenanceLevel.create({
+								"refNation": def.objNation,
+								"nMaintenanceLevel": 25
+							}));
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DTextButton" name="objReadinessMedium">
+			<property name="tmplTextButtonStyle" from="if(def.eReadinessLevel == ReadinessLevel.MED, 'skin.TxtBtnStyleReportButtonOn', 'skin.TxtBtnStyleReportBubbleBrownBlue')"/>
+			<property name="strText" from="locale.SID.UI.Med" />
+			<property name="nX" from="def.objReadinessLow.nX + def.objReadinessLow.nWidth + 2"/>
+			<property name="nY" value="145"/>
+			<property name="nDefaultWidth" value="54"/>
+			<property name="nDefaultHeight" value="19"/>
+			<property name="nDepth" value="10"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							//def.eReadinessLevel = ReadinessLevel.MED;
+							def.objMH2Data.objAvatar.sendAction(gs_tbg.GActSetMilitaryMaintenanceLevel.create({
+								"refNation": def.objNation,
+								"nMaintenanceLevel": 75
+							}));
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+		
+		<object type="mlui.UI2DTextButton" name="objReadinessHigh">
+			<property name="tmplTextButtonStyle" from="if(def.eReadinessLevel == ReadinessLevel.FULL, 'skin.TxtBtnStyleReportButtonOn', 'skin.TxtBtnStyleReportBubbleBrownBlue')"/>
+			<property name="strText" from="locale.SID.UI.Full" />
+			<property name="nX" from="def.objReadinessMedium.nX + def.objReadinessMedium.nWidth + 2"/>
+			<property name="nY" value="145"/>
+			<property name="nDefaultWidth" value="54"/>
+			<property name="nDefaultHeight" value="19"/>
+			<property name="nDepth" value="10"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							//def.eReadinessLevel = 	ReadinessLevel.FULL;
+							def.objMH2Data.objAvatar.sendAction(gs_tbg.GActSetMilitaryMaintenanceLevel.create({
+								"refNation": def.objNation,
+								"nMaintenanceLevel": 100
+							}));
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objHealthIcon" >
+      <property name="tmplImage" from="if(def.objMH2Data.objNation.bRepairAll, 'skin.ImgInfoIconHealthOnSm', 'skin.ImgUnitHealthIconBG')"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="240"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="26"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objsetAutoReinforceRepairLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.AutoReinforceRepair"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="240"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="12"/>
+		</object>
+       
+		<object type="mlui.UI2DTextButton" name="objAutoRepairOn">
+			<property name="tmplTextButtonStyle" from="if(def.objMH2Data.objNation.bRepairAll, 'skin.TxtBtnStyleReportButtonOn', 'skin.TxtBtnStyleReportBubbleBrownBlue')"/>
+			<property name="strText" from="locale.SID.UI.On" />
+			<property name="nX" value="29"/>
+			<property name="nY" value="254"/>
+			<property name="nDefaultWidth" value="54"/>
+			<property name="nDefaultHeight" value="19"/>
+			<property name="nDepth" value="10"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.objAvatar.sendAction(gs_tbg.GActSetRepairAll.create({
+								"refNation": def.objMH2Data.objNation,
+								"bRepairAll": true
+							}));
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+        
+		<object type="mlui.UI2DTextButton" name="objAutoRepairOff">
+			<property name="tmplTextButtonStyle" from="if(!def.objMH2Data.objNation.bRepairAll, 'skin.TxtBtnStyleReportButtonOn', 'skin.TxtBtnStyleReportBubbleBrownBlue')"/>
+			<property name="strText" from="locale.SID.UI.Off" />
+			<property name="nX" from="def.objAutoRepairOn.nX + def.objAutoRepairOn.nWidth + 2"/>
+			<property name="nY" value="254"/>
+			<property name="nDefaultWidth" value="54"/>
+			<property name="nDefaultHeight" value="19"/>
+			<property name="nDepth" value="10"/>
+			<object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+				<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+					<property name="otEventType" value="mlui.EventButtonClicked"/>
+					<script type="application/javascript"><![CDATA[
+						function handle(event, owner)
+						{
+							def.objMH2Data.objAvatar.sendAction(gs_tbg.GActSetRepairAll.create({
+								"refNation": def.objMH2Data.objNation,
+								"bRepairAll": false
+							}));
+						}
+					]]></script>
+				</object>
+			</object>
+		</object>
+	</objectDef>
+
+	<objectDef type="UI2DMilitaryStatusArms" superType="mlui.UI2DElement">
+		
+		<propertyDef name="objAllGroups" type="gs_tbg.UnitGroup" variable="true">
+		    gs_tbg.getNationGroups(mh2data.objAvatar,mh2data.objNation)
+		</propertyDef>
+
+		<propertyDef name="nMilitaryArms" type="int">
+			sum(map(?{group: group.nArms}, self.objAllGroups))
+		</propertyDef>
+		
+		<propertyDef name="nMilitaryArmsCarry" type="int">
+			sum(map(?{group: group.nArmsCarry}, self.objAllGroups))
+		</propertyDef>
+		
+		<propertyDef name="nMilitaryOil" type="int">
+			sum(map(?{group: group.nOil}, self.objAllGroups))
+		</propertyDef>
+		
+		<propertyDef name="nMilitaryOilCarry" type="int">
+			sum(map(?{group: group.nOilCarry}, self.objAllGroups))
+		</propertyDef>
+		
+		<propertyDef name="n64ArmyCost" type="int64">
+			(sum(map(?{group: group.nMaintenanceCost},
+				filter(?{group: group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')
+					}, self.objAllGroups)))/100 * mh2data.objNation.nMilitaryMaintenanceLevel)
+		</propertyDef>
+		
+		<propertyDef name="nAirCost" type="int">
+			(sum(map(?{group: group.nMaintenanceCost},
+				filter(?{group: group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')
+					},self.objAllGroups)))/100 * mh2data.objNation.nMilitaryMaintenanceLevel)
+		</propertyDef>
+
+		<propertyDef name="nNavalCost" type="int">
+			(sum(map(?{group: group.nMaintenanceCost},
+				filter(?{group: group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')
+					}, self.objAllGroups)))/100 * mh2data.objNation.nMilitaryMaintenanceLevel)
+		</propertyDef>
+		
+		<object type="mlui.UI2DImage" name="objArmsIcon">
+			<property name="tmplImage" value="skin.ImgGroupIconArms"/>
+            <property name="nX" value="1"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" value="29"/>
+        </object>
+
+		<object type="mlui.UI2DText" name="objArmsDemandLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.ArmsSupply"/>
+			<property name="nX" value="28"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objArmsDemandLabel2">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+            <property name="strText" from="'Current/Max'"/>
+            <property name="nX" value="28"/>
+            <property name="nY" value="21"/>
+            <property name="nWidth" value="100"/>
+            <property name="nHeight" value="12"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objArmsDemand">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText">
+                (def.nMilitaryArms.formatNumber(0, true)) + ' / ' + (def.nMilitaryArmsCarry.formatNumber(0, true))
+            </property>
+			<property name="nX" value="28"/>
+			<property name="nY" value="34"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objFuelIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconFuelSupply"/>
+			<property name="nX" value="130"/>
+			<property name="nY" value="5"/>
+			<property name="nWidth" value="22"/>
+			<property name="nHeight" value="30"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objFuelLevelLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.OilSupply"/>
+			<property name="nX" value="155"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+        <object type="mlui.UI2DText" name="objFuelLevelLabel2">
+            <property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+            <property name="strText" from="'Current/Max'"/>
+            <property name="nX" value="155"/>
+            <property name="nY" value="21"/>
+            <property name="nWidth" value="100"/>
+            <property name="nHeight" value="12"/>
+        </object>
+
+        <object type="mlui.UI2DText" name="objFuelLevel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14Left"/>
+			<property name="strText">
+                (def.nMilitaryOil.formatNumber(0, true)) + ' / ' + (def.nMilitaryOilCarry.formatNumber(0, true))
+            </property>
+			<property name="nX" value="155"/>
+			<property name="nY" value="34"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objSupplyConsumptionLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+			<property name="strText" from="locale.SID.UI.MaintenanceCosts"/>
+			<property name="nX" value="28"/>
+			<property name="nY" value="147"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSupplyConsumptionBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nX" value="26"/>
+			<property name="nY" value="158"/>
+			<property name="nWidth" value="243"/>
+			<property name="nHeight" value="30"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objAirIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconArmySm"/>
+			<property name="nX" value="34"/>
+			<property name="nY" value="163"/>
+			<property name="nWidth" value="16"/>
+			<property name="nHeight" value="20"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objArmy">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText">
+				switch
+				{
+					case def.n64ArmyCost GTE 1000000000000i64:
+						'$' + (def.n64ArmyCost/1000000000000i64).formatNumber(0, true) + 'T'
+					case def.n64ArmyCost GTE 1000000000:
+						'$' + (def.n64ArmyCost/1000000000).formatNumber(0, true) + 'B'
+					case def.n64ArmyCost GTE 1000000:
+						'$' + (def.n64ArmyCost/1000000).formatNumber(0, true) + 'M'
+					default:
+						'$' + (def.n64ArmyCost/1000).formatNumber(0, true) + 'K'
+				}
+			</property>	
+			<property name="nX" value="55"/>
+			<property name="nY" value="168"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objAirIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconAirSm"/>
+			<property name="nX" value="111"/>
+			<property name="nY" value="162"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="23"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objAir">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText">
+				switch
+				{
+					case def.nAirCost GTE 1000000000000i64:
+						'$' + (def.nAirCost/1000000000000i64).formatNumber(0, true) + 'T'
+					case def.nAirCost GTE 1000000000:
+						'$' + (def.nAirCost/1000000000).formatNumber(0, true) + 'B'
+					case def.nAirCost GTE 1000000:
+						'$' + (def.nAirCost/1000000).formatNumber(0, true) + 'M'
+					default:
+						'$' + (def.nAirCost/1000).formatNumber(0, true) + 'K'
+				}
+			</property>	
+			<property name="nX" value="138"/>
+			<property name="nY" value="168"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objNavalIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconNavalSm"/>
+			<property name="nX" value="191"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="20"/>
+			<property name="nHeight" value="25"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNaval">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText">
+				switch
+				{
+					case def.nNavalCost GTE 1000000000000i64:
+						'$' + (def.nNavalCost/1000000000000i64).formatNumber(0, true) + 'T'
+					case def.nNavalCost GTE 1000000000:
+						'$' + (def.nNavalCost/1000000000).formatNumber(0, true) + 'B'
+					case def.nNavalCost GTE 1000000:
+						'$' + (def.nNavalCost/1000000).formatNumber(0, true) + 'M'
+					default:
+						'$' + (def.nNavalCost/1000).formatNumber(0, true) + 'K'
+				}
+			</property>	
+			<property name="nX" value="215"/>
+			<property name="nY" value="168"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+
+	</objectDef>
+	
+	<objectDef type="UI2DMilitaryStatusDivisionReport" superType="mlui.UI2DElement">
+		
+		<propertyDef name="objAllGroups" type="gs_tbg.UnitGroup" variable="true">
+		    gs_tbg.getNationGroups(mh2data.objAvatar,mh2data.objNation)
+		</propertyDef>
+
+		<propertyDef name="objArmyGroups" type="gs_tbg.UnitGroup" variable="true">
+			filter(?{group: group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Army')}, self.objAllGroups)
+		</propertyDef>
+
+		<propertyDef name="objAirForceGroups" type="gs_tbg.UnitGroup" variable="true">
+			filter(?{group:	group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'AirForce')}, self.objAllGroups)
+		</propertyDef>
+
+		<propertyDef name="objNavyGroups" type="gs_tbg.UnitGroup" variable="true">
+			filter(?{group:	group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Navy')},	self.objAllGroups)
+		</propertyDef>
+		
+		<propertyDef name="objSubGroups" type="gs_tbg.UnitGroup" variable="true">
+			filter(?{group:	group.tmplUnitBranch == sd.getTemplateRef(gs_tbg.UnitBranchTemplate, 'Submarine')},	self.objAllGroups)
+		</propertyDef>
+		
+<!-- Army -->
+		<object type="mlui.UI2DImage" name="objArmyIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconArmySm"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="40"/>
+			<property name="nWidth" value="16"/>
+			<property name="nHeight" value="20"/>
+		</object>		
+		<object type="mlui.UI2DText" name="objArmyText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="locale.SID.UI.Army"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="40"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		<object type="mlui.UI2DText" name="objArmyDivisions">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftFIT"/>
+			<property name="strText" >
+				sum(map(?{group: (group.nUnitCount) }, def.objArmyGroups ))
+			</property>	
+			<property name="nX" value="32"/>
+			<property name="nY" value="56"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		<object type="mlui.UI2DText" name="objArmyDivisionsText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.Divisions"/>
+			<property name="nX" from="def.objArmyDivisions.nWidth + 36"/>
+			<property name="nY" value="60"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>		
+		<object type="mlui.UI2DImage" name="objArmyBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="72"/>
+			<property name="nWidth" value="247"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>		
+		<object type="mlui.UI2DText" name="objUnitTypeLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.UnitType"/>
+			<property name="nY" value="79"/>
+			<property name="nX" value="29"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="10"/>
+		</object>	
+		<object type="mlui.UI2DText" name="objUnitTypeLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Divisions"/>
+			<property name="nX" value="210"/>
+			<property name="nY" value="79"/>
+			<property name="nWidth" value="60"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<!-- Infantry -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objInfantry" >
+			<property name="nY" value="97" />
+			<property name="strName" from="locale.SID.UI.Infantry" />
+			<property name="nItems" >
+				sum( 
+						map(? {group: 
+							((group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Infantry )).length 
+							+ (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.MobileInfantry)).length 
+						)
+					}, def.objArmyGroups )
+				)
+			</property>			
+		</object>
+		<!-- Armored -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objArmored" >
+			<property name="nY" value="119"/>
+			<property name="strName" from="locale.SID.UI.Armored" />
+			<property name="nItems" >
+				sum(map(?{group: ( group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Armored )).length }, def.objArmyGroups ))
+			</property>	
+		</object>
+		<!-- Artillery -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objArtillery" >
+			<property name="nY" value="141"/>
+			<property name="strName" from="locale.SID.UI.Artillery" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Artillery )).length }, def.objArmyGroups ))
+			</property>	
+		</object>
+		<!-- Missles -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objMissiles" >
+			<property name="nY" value="163"/>
+			<property name="strName" from="locale.SID.UI.Missiles" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.MissileLaunchers )).length }, def.objArmyGroups ))
+			</property>	
+		</object>
+
+
+<!-- Air Force -->
+		<object type="mlui.UI2DImage" name="objAirIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconAirSm"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="195"/>
+			<property name="nWidth" value="25"/>
+			<property name="nHeight" value="23"/>
+		</object>
+		<object type="mlui.UI2DText" name="objAirForceText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="locale.SID.UI.AirForce"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="195"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		<object type="mlui.UI2DText" name="objAirSquadrons">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftFIT"/>
+			<property name="strText" >
+				sum(map(?{group: (group.nUnitCount) }, def.objAirForceGroups ))
+			</property>	
+			<property name="nX" value="32"/>
+			<property name="nY" value="211"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		<object type="mlui.UI2DText" name="objAirSquadronsText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.Squadrons"/>
+			<property name="nX" from="def.objAirSquadrons.nWidth + 36"/>
+			<property name="nY" value="215"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objAirBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="29"/>
+			<property name="nY" value="227"/>
+			<property name="nWidth" value="247"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>			
+		<object type="mlui.UI2DText" name="objUnitTypeLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.UnitType"/>
+			<property name="nY" value="234"/>
+			<property name="nX" value="29"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="10"/>
+		</object>	
+		<object type="mlui.UI2DText" name="objUnitTypeLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Squadrons"/>
+			<property name="nX" value="210"/>
+			<property name="nY" value="234"/>
+			<property name="nWidth" value="60"/>
+			<property name="nHeight" value="10"/>
+		</object>		
+		
+		<!-- Fighters -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objFighters" >
+			<property name="nY" value="252"/>
+			<property name="strName" from="locale.SID.UI.Fighters" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Fighters )).length }, def.objAirForceGroups ))
+			</property>	
+		</object>
+		<!-- Bombers -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objBombers" >
+			<property name="nY" value="274"/>
+			<property name="strName" from="locale.SID.UI.Bombers" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Bombers )).length }, def.objAirForceGroups ))
+			</property>	
+		</object>
+		<!-- Transports -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objTransports" >
+			<property name="nY" value="296"/>
+			<property name="strName" from="locale.SID.UI.Transports" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.AirTransport )).length }, def.objAirForceGroups ))
+			</property>	
+		</object>
+
+
+<!-- Naval -->		
+		<object type="mlui.UI2DImage" name="objNavalIcon">
+			<property name="tmplImage" value="skin.ImgInfoIconNavalSm"/>
+			<property name="nX" value="1"/>
+			<property name="nY" value="330"/>
+			<property name="nWidth" value="20"/>
+			<property name="nHeight" value="25"/>
+		</object>
+		<object type="mlui.UI2DText" name="objNavalText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16Left"/>
+			<property name="strText" from="locale.SID.UI.Navy"/>
+			<property name="nX" value="32"/>
+			<property name="nY" value="330"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="18"/>
+		</object>
+		<object type="mlui.UI2DText" name="objNavalShips">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue14LeftFIT"/>
+			<property name="strText" >
+				sum(map(?{group: (group.nUnitCount) }, def.objNavyGroups ))
+			</property>	
+			<property name="nX" value="32"/>
+			<property name="nY" value="346"/>
+			<property name="nHeight" value="12"/>
+		</object>
+		<object type="mlui.UI2DText" name="objNavalShipsText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue10Left"/>
+			<property name="strText" from="locale.SID.UI.Ships"/>
+			<property name="nX" from="def.objNavalShips.nWidth + 36"/>
+			<property name="nY" value="350"/>
+			<property name="nWidth" value="100"/>
+			<property name="nHeight" value="12"/>
+		</object>		
+		<object type="mlui.UI2DImage" name="objNavalBGTop">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="29"/>
+			<property name="nY" value="360"/>
+			<property name="nWidth" value="247"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>	
+		<object type="mlui.UI2DText" name="objUnitTypeLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.UnitType"/>
+			<property name="nY" value="367"/>
+			<property name="nX" value="29"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="10"/>
+		</object>	
+		<object type="mlui.UI2DText" name="objUnitTypeLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Ships"/>
+			<property name="nX" value="210"/>
+			<property name="nY" value="367"/>
+			<property name="nWidth" value="60"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		<!-- Battleships -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objBattleships" >
+			<property name="nY" value="385"/>
+			<property name="strName" from="locale.SID.UI.Battleships" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Battleships )).length }, def.objNavyGroups ))
+			</property>	
+		</object>
+		<!-- Carriers -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objCarriers" >
+			<property name="nY" value="407"/>
+			<property name="strName" from="locale.SID.UI.Carriers" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Carriers )).length }, def.objNavyGroups ))
+			</property>	
+		</object>
+		<!-- Cruisers -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objCruisers" >
+			<property name="nY" value="429"/>
+			<property name="strName" from="locale.SID.UI.Cruisers" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Cruisers )).length }, def.objNavyGroups ))
+			</property>	
+		</object>
+		<!-- Destroyers -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objDestroyers" >
+			<property name="nY" value="451"/>
+			<property name="strName" from="locale.SID.UI.Destroyers" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Destroyers )).length }, def.objNavyGroups ))
+			</property>	
+		</object>
+		<!-- Patrol/Escorts -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objPatrolEscorts" >
+			<property name="nY" value="473"/>
+			<property name="strName" from="locale.SID.UI.PatrolEscorts" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Patrols )).length }, def.objNavyGroups ))
+			</property>	
+		</object>
+		<!-- Submarines -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objSubmarines" >
+			<property name="nY" value="495"/>
+			<property name="strName" from="locale.SID.UI.Submarines" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Submarines)).length }, def.objSubGroups ))
+			</property>	
+		</object>
+		<!-- Transports -->
+		<object type="UI2DMilitaryUnitTypeBubble" name="objTransports2" >
+			<property name="nY" value="517"/>
+			<property name="strName" from="locale.SID.UI.Transports" />
+			<property name="nItems" >
+				sum(map(?{group: (group.getUnitsByUnitCategory(mh2data.objAvatar, gs_tbg.UnitCategory.Transport )).length }, def.objNavyGroups ))
+			</property>	
+		</object>
+		
+	</objectDef>
+  
+
+	<objectDef type="UI2DMilitaryUnitTypeBubble" superType="mlui.UI2DElement" >
+		<propertyDef name="strName" type="String" default="blank" />
+		<propertyDef name="nItems" type="int" default="0" />		
+		<property name="nX" value="29"/>
+		<property name="nWidth" value="247"/>
+		<property name="nHeight" value="22"/>
+		<property name="nDepth" value="-100"/>
+		
+		<object type="mlui.UI2DImage" name="objTransportsBG1">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nWidth" from="180"/>
+			<property name="nX" value="0"/>
+			<property name="nY" from="0" />
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+		<object type="mlui.UI2DText" name="objTransportsText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="def.strName"/>
+			<property name="nWidth" from="180"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="6" />
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		<object type="mlui.UI2DImage" name="objTransportsBG2">
+			<property name="tmplImage" value="skin.ImgReportBubbleTanWhite"/>
+			<property name="nY" from="0" />
+			<property name="nWidth" from="67"/>
+			<property name="nX" value="180"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		<object type="mlui.UI2DText" name="objTransportsValue">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+			<property name="strText" from="def.nItems"/>
+			<property name="nY" value="6" />
+			<property name="nWidth" from="67"/>
+			<property name="nX" value="180"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+  </objectDef>
+
+  <!-- Available Manpower List -->
+    <objectDef type="UI2DMilitaryManpowerList" superType="mlui.UI2DElement">
+      <propertyDef name="objNation" type="gs_tbg.Nation" />
+      <propertyDef name="objMH2Data" type="MH2Data"/>
+      <property name="objMH2Data" from="mh2data"/>
+      
+    <object type="mlui.UI2DText" name="objMilitaryManpowerLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown12Left"/>
+			<property name="strText" from="locale.SID.UI.AvailableManpower"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="40"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="15"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objMilitaryManPowerMPUs">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue16LeftFIT"/>
+			<property name="strText" from="def.objNation.nMPUs.formatNumber(0, true)"/>
+			<property name="nX" value="30"/>
+			<property name="nY" value="52"/>
+			<property name="nHeight" value="14"/>
+			<property name="nWidth" value="25"/>
+		</object>
+		<object type="mlui.UI2DText" name="objMilitaryManPowerMPUsLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+			<property name="strText" from="locale.SID.UI.MPUs"/>
+			<property name="nX" from="def.objMilitaryManPowerMPUs.nWidth + def.objMilitaryManPowerMPUs.nX + 4"/>
+			<property name="nY" value="55"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+      <object type="mlui.UI2DImage" name="objManpowerIcon">
+        <property name="tmplImage" value="skin.ImgInfoIconMilitaryMPUs"/>
+        <property name="nX" value="1"/>
+        <property name="nY" value="40"/>
+        <property name="nWidth" value="29"/>
+        <property name="nHeight" value="29"/>
+      </object>
+
+      <object type="mlui.UI2DImage" name="objMilitaryManpowerBGTop">
+        <property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+        <property name="nX" value="29"/>
+        <property name="nY" value="74"/>
+        <property name="nWidth" value="247"/>
+        <property name="nHeight" value="25"/>
+        <property name="nDepth" value="-100"/>
+      </object>
+
+      <object type="mlui.UI2DText" name="objNationalityLabel">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+        <property name="strText" from="locale.SID.UI.Nationality"/>
+        <property name="nX" value="35"/>
+        <property name="nY" value="82"/>
+        <property name="nWidth" value="100"/>
+        <property name="nHeight" value="10"/>
+      </object>
+
+      <object type="mlui.UI2DText" name="objActiveLabel">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+        <property name="strText" from="locale.SID.UI.Military"/>
+        <property name="nY" value="77"/>
+        <property name="nX" value="116"/>
+        <property name="nWidth" value="50"/>
+        <property name="nHeight" value="10"/>
+      </object>
+
+      <object type="mlui.UI2DText" name="objMPUsLabel">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+        <property name="strText" from="locale.SID.UI.MPUs"/>
+        <property name="nY" value="87"/>
+        <property name="nX" value="118"/>
+        <property name="nWidth" value="50"/>
+        <property name="nHeight" value="10"/>
+      </object>
+
+      <object type="mlui.UI2DText" name="objAvailableLabel">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+        <property name="strText" from="locale.SID.UI.Available"/>
+        <property name="nY" value="77"/>
+        <property name="nX" value="194"/>
+        <property name="nWidth" value="50"/>
+        <property name="nHeight" value="10"/>
+      </object>
+
+      <object type="mlui.UI2DText" name="objMPUsLabel">
+        <property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown10Left"/>
+        <property name="strText" from="locale.SID.UI.MPUs"/>
+        <property name="nY" value="87"/>
+        <property name="nX" value="200"/>
+        <property name="nWidth" value="50"/>
+        <property name="nHeight" value="10"/>
+      </object>
+
+      <propertyDef name="objColonyNationalities" type="TemplateRef" restriction="gs_tbg.NationTemplate" variable="true" >
+        filter(?{nationality: nationality != null},
+        map(?{region:
+        if(region.refColony != null,
+          if(!self.objColonyNationalities.contains(region.tmplNation),
+            if(mh2data.objNation.tmplNation != region.tmplNation,
+                region.tmplNation,
+                null
+             ),
+             null
+          ),
+        null
+        )
+        },
+        gs_tbg.getControlledRegions(mh2data.objAvatar, mh2data.objNation))	)
+      </propertyDef>
+
+      <object type="UI2DHomeMilitaryManpowerBubble" name="objHomeInfo">
+        <property name="nX" value="29"/>
+        <property name="nY" value="102"/>
+      </object>
+
+      <object type="UI2DDynamicList" name="objList">
+        <property name="nX" value="29"/>
+        <property name="nY" value="133"/>
+        <property name="nTopSpacing" value="0"/>
+        <property name="nBottomSpacing" value="0"/>
+        <property name="nWidth" value="247"/>
+        <property name="nHeight" value="412"/>
+        <property name="listItems">
+          sortAscending(?{nationality: nationality.resolve().strDisplayName }, def.objColonyNationalities)
+        </property>
+        <property name="nRowWidth" value="858"/>
+        <property name="nRowHeight" value="30"/>
+        <property name="nRowSpacing" value="1"/>
+        <property name="otRowType" value="UI2DMilitaryManpowerBubble"/>
+        <property name="strPropForItem" value="objNationalities"/>
+        <property name="strPropForRowNumber" value="nRow"/>
+      </object>
+    </objectDef>
+
+  <objectDef type="UI2DHomeMilitaryManpowerBubble" superType="mlui.UI2DElement">
+    <property name="nWidth" value="233"/>
+    <property name="nHeight" value="30"/>
+
+    <propertyDef name="objNationalities" type="TemplateRef" restriction="gs_tbg.NationTemplate">
+      mh2data.objNation.tmplNation
+    </propertyDef>
+
+    <propertyDef name="objRegions" type="gs_tbg.Region" variable="true" >
+      filter(?{region: region.refColony == null},
+      gs_tbg.getControlledRegions(mh2data.objAvatar, mh2data.objNation))
+    </propertyDef>
+
+    <propertyDef name="objUnits" type="gs_tbg.Unit" variable="true" >
+      filter(?{unit: (unit.objNationTemplate == mh2data.objNation.tmplNation)}, gs_tbg.getNationUnits(mh2data.objAvatar,mh2data.objNation))
+    </propertyDef>
+
+    <propertyDef name="nRow" type="int" default="2"/>
+    <!-- Nationality -->
+    <object type="UI2DRegionStatsRowBubble" name="objNationalityBG1">
+      <property name="nRow" from="def.nRow" />
+      <property name="nX" value="0"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="30"/>
+      <property name="nHeight" value="30"/>
+      <property name="nDepth" value="-100"/>
+    </object>
+
+    <object type="UI2DRegionStatsRowBubble" name="objNationalityBG2">
+      <property name="nRow" from="def.nRow" />
+      <property name="nX" value="30"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="30"/>
+      <property name="nHeight" value="30"/>
+      <property name="nDepth" value="-100"/>
+    </object>
+
+    <object type="UI2DRegionStatsRowBubble" name="objBGMilitaryMPUs">
+      <property name="nRow" from="def.nRow" />
+      <property name="nX" value="60"/>
+      <property name="nWidth" value="86"/>
+      <property name="nY" value="0"/>
+      <property name="nHeight" value="30"/>
+      <property name="nDepth" value="-100"/>
+    </object>
+
+    <object type="UI2DRegionStatsRowBubble" name="objBGAvailableMPUs">
+      <property name="nRow" from="def.nRow" />
+      <property name="nY" value="0"/>
+      <property name="nX" value="146"/>
+      <property name="nWidth" value="87"/>
+      <property name="nHeight" value="30"/>
+      <property name="nDepth" value="-100"/>
+    </object>
+
+    <object type="LookupNationIcons" name="objLookupNationIcons">
+      <property name="tmplNation" from="def.objNationalities"/>
+      <property name="tmplIdeology" from="mh2data.objNation.tmplIdeology"/>   
+    </object>
+    
+    <object type="mlui.UI2DImage" name="objMasterVsColonyIcon">
+      <property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28" />
+      <property name="nX" value="1"/>
+      <property name="nY" value="1"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+      <property name="strToolTip" from= "mh2data.objNation.tmplNationality.resolve().strDisplayName + ' ' + locale.SID.UI.Nationality"/>
+    </object>
+
+    <object type="mlui.UI2DImage" name="objMasterIcon">
+      <property name="tmplImage" value="skin.ImgGovMasterNation"/>
+      <property name="nX" value="28"/>
+      <property name="nY" value="-2"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+      <property name="strToolTip" from="locale.SID.UI.NationalManpower"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objMilitaryMPUs">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+      <property name="strText" >
+          sum(map(?{units: units.objUnitTemplate.nMPUs }, def.objUnits)).formatNumber(0, true)
+      </property>
+      <property name="nX" value="60"/>
+      <property name="nY" value="9"/>
+      <property name="nWidth" value="86"/>
+      <property name="nHeight" value="30"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objAvailableMPUs">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+      <property name="strText" >
+        sum(map(?{region: region.nUnemployedMPUs }, def.objRegions)).formatNumber(0, true)
+      </property>
+      <property name="nX" value="146"/>
+      <property name="nY" value="9"/>
+      <property name="nWidth" value="86"/>
+      <property name="nHeight" value="30"/>
+    </object>
+  </objectDef>
+ 
+  <!--**********************************-->
+  <objectDef type="UI2DMilitaryManpowerBubble" superType="mlui.UI2DElement">
+
+    <propertyDef name="objNationalities" type="TemplateRef" restriction="gs_tbg.NationTemplate" />
+
+    <propertyDef name="objRegions" type="gs_tbg.Region" variable="true" >
+      filter(?{region: region.tmplNation == self.objNationalities},
+      gs_tbg.getControlledRegions(mh2data.objAvatar, mh2data.objNation))
+    </propertyDef>
+
+    <propertyDef name="objUnits" type="gs_tbg.Unit" variable="true" >
+      filter(?{unit: unit.objNationTemplate == self.objNationalities}, gs_tbg.getNationUnits(mh2data.objAvatar,mh2data.objNation))
+    </propertyDef>
+
+    <propertyDef name="nRow" type="int"/>
+    
+    <!-- Nationality -->
+      <object type="UI2DRegionStatsRowBubble" name="objNationalityBG1">
+      <property name="nRow" from="def.nRow" />
+      <property name="nX" value="0"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="30"/>
+      <property name="nHeight" value="30"/>
+      <property name="nDepth" value="-100"/>
+    </object>
+
+    <object type="UI2DRegionStatsRowBubble" name="objNationalityBG2">
+      <property name="nRow" from="def.nRow" />
+      <property name="nX" value="30"/>
+      <property name="nY" value="0"/>
+      <property name="nWidth" value="30"/>
+      <property name="nHeight" value="30"/>
+      <property name="nDepth" value="-100"/>
+    </object>
+
+    <object type="UI2DRegionStatsRowBubble" name="objBGMilitaryMPUs">
+      <property name="nRow" from="def.nRow" />
+      <property name="nX" value="60"/>
+      <property name="nWidth" value="86"/>
+      <property name="nY" value="0"/>
+      <property name="nHeight" value="30"/>
+      <property name="nDepth" value="-100"/>
+    </object>
+
+    <object type="UI2DRegionStatsRowBubble" name="objBGAvailableMPUs">
+      <property name="nRow" from="def.nRow" />
+      <property name="nY" value="0"/>
+      <property name="nX" value="146"/>
+      <property name="nWidth" value="86"/>
+      <property name="nHeight" value="30"/>
+      <property name="nDepth" value="-100"/>
+    </object>
+
+
+    <object type="LookupNationIcons" name="objLookupNationIcons">
+      <property name="tmplNation" from="def.objNationalities"/>
+      <property name="tmplIdeology" from="mh2data.objNation.tmplIdeology"/>
+    </object>
+    
+    <object type="mlui.UI2DImage" name="objMasterVsColonyIcon">
+      <property name="tmplImage" from="def.objLookupNationIcons.tmplIcon28x28" />
+      <property name="nX" value="1"/>
+      <property name="nY" value="1"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+      <property name="strToolTip">
+        def.objNationalities.resolve().tmplDefaultNationality.resolve().strDisplayName  + ' ' + locale.SID.UI.Nationality
+      </property>
+    </object>
+
+    <propertyDef name="tmplMaster" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    <property name="tmplMaster" value="skin.ImgGovMasterNation"/>
+    <propertyDef name="tmplColony" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+    <property name="tmplColony" value="skin.ImgGovColony"/>
+
+    <object type="mlui.UI2DImage" name="objMasterVsColonyIcon" >
+      <property name="tmplImage" >
+        if(def.objNationalities.resolve() == mh2data.objNation.tmplNation.resolve(), def.tmplMaster, def.tmplColony)
+      </property>
+      <property name="nX" value="28"/>
+      <property name="nY" value="-1"/>
+      <property name="nWidth" value="28"/>
+      <property name="nHeight" value="28"/>
+      <property name="strToolTip" >
+        if(def.objNationalities.resolve() == mh2data.objNation.tmplNation.resolve(), locale.SID.UI.NationalManpower, locale.SID.UI.ColonialManpower)
+      </property>
+    </object>
+
+    <object type="mlui.UI2DText" name="objMilitaryMPUs">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+      <property name="strText" >
+          sum(map(?{units: units.objUnitTemplate.nMPUs }, def.objUnits)).formatNumber(0, true)
+      </property>
+      <property name="nX" value="60"/>
+      <property name="nY" value="8"/>
+      <property name="nWidth" value="86"/>
+      <property name="nHeight" value="30"/>
+    </object>
+
+    <object type="mlui.UI2DText" name="objAvailableMPUs">
+      <property name="tmplTextStyle" value="locale.TxtStyleArialBlue13Center"/>
+      <property name="strText" >
+        sum(map(?{region: region.nUnemployedMPUs }, def.objRegions)).formatNumber(0, true)
+      </property>
+      <property name="nX" value="146"/>
+      <property name="nY" value="8"/>
+      <property name="nWidth" value="86"/>
+      <property name="nHeight" value="30"/>
+    </object>
+  </objectDef>
+
+
+</locust>

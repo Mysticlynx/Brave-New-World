@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<!-- Model -->
+	<objectDef type="UI3DLayerModel" superType="mlui.UI3DLayer">
+    
+        <property name="tmplAvailableEffects" value="SkinnedEffect"/>
+        <property name="tmplAvailableEffects" value="SkinnedShadowEffect"/>
+    
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+		<object type="LookupVisibleRegions" name="objLookupVisibleRegions">
+			<property name="objMapData" from="def.objMapData"/>
+		</object>                
+		
+		<property name="bVisible">
+			self.objMapData.objCameraTransform.fDistance LTE self.objMapData.fDropAllDistance
+		</property>
+
+        <!-- Internal -->
+        
+		<!-- Selection -->
+		<propertyDef name="objSelectedGroupStack" type="UnitGroupStack">
+			if(
+                self.objMapData.objSelectedObject != null AND
+                    self.objMapData.objSelectedObject.instanceOf(gs_tbg.UnitGroup),
+                self.objMapData.objStacks.getStackForUnitGroup(self.objMapData.objSelectedObject),
+				null
+            )
+		</propertyDef>
+		<object type="UI3DGroupStackSelect" name="objGroupSelect" existsWhile="
+            self.objSelectedGroupStack != null
+        ">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objGroupStack" from="def.objSelectedGroupStack"/>
+		</object>
+		
+		<object type="UI3DCitySelect" name="objCitySelect" existsWhile="
+			self.objMapData.objSelectedObject.instanceOf(gs_tbg.City)
+		">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objCity" from="def.objMapData.objSelectedObject"/>
+		</object>
+		
+		<!-- Region Improvements -->
+		<propertyDef name="objRegionsWithImprovements" type="gs_tbg.Region" variable="true">
+			filter(?{region: region.objCoastalDefenseImprovement != null OR region.objFortificationImprovement != null OR region.objAADefenseImprovement != null}, gs_tbg.getAllRegions(self.objGameRoot))
+		</propertyDef>
+		<object type="UI3DRegionImprovement" name="objRegionImprovements" tiedTo="self.objRegionsWithImprovements">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objRegion" from="tiedTo"/>
+		</object>
+		
+		<!-- Construction Projects -->
+		<propertyDef name="objRegionsWithProjects" type="gs_tbg.Region" variable="true">
+			filter(?{region: region.objRegionProjects.size GT 0}, self.objLookupVisibleRegions.objRegions)
+		</propertyDef>
+		<propertyDef name="objNoRegions" type="gs_tbg.Region" variable="true"/>
+		
+		<object type="UI3DConstructionProject" name="objRegionConstructionProjects" tiedTo="if (def.objMapData.objAvatar.getAttribValue('WorkerAnimations'),self.objRegionsWithProjects,self.objNoRegions)">
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objRegion" from="tiedTo"/>
+		</object>
+		
+        <!-- Cities -->
+		<object type="UI3DCityComposite" name="objCities" tiedTo="
+            gs_tbg.getAllCities(self.objGameRoot)
+        ">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objCity" from="tiedTo"/>
+		</object>
+		
+		<!-- Flags -->
+		<object type="UI3DCityFlag" name="objCityFlags" tiedTo="
+            map(?{nation: gs_tbg.getCapitalCity(self.objGameRoot, nation)}, gs_tbg.getAllNations(self.objGameRoot))
+        ">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objCity" from="tiedTo"/>
+		</object>
+		
+        <!-- Non-Engagement Unit Groups -->       
+        <object type="UIGroupStackLayer" name="objStackLayer">
+            <property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="bEditMode" from="def.objMapData.bEditMode"/>
+            <script type="application/x-locust-query">
+			    getLandPosition = ?{ pos : self.objMapData.objRoot.objMap.obj3DViewPort.objTerrain.getLandPosition(pos) }
+		    </script>
+        </object>
+        
+        <object type="UI3DUnitGroup" name="objUnitGroups" tiedTo="def.objStackLayer.objGroupStacks">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objUnitGroup" from="tiedTo.objHeadUnitGroup"/>
+			<property name="objGroupStack" from="tiedTo"/>
+			<property name="objDisplayUnit" from="tiedTo.objDisplayUnit"/>
+			<property name="vecPosition" from="tiedTo.vecPosition"/>
+			<property name="vecCurPosition" from="tiedTo.vecCurPosition"/>
+			<property name="fFacingAngle" from="tiedTo.fFacingAngle"/>
+		</object>
+		
+		<!-- Indicators -->
+        <object type="UI3DStackIndicators" name="objStackIndicators">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+        </object>
+        
+        <!-- Engagements -->
+		<object type="UI3DEngagementModel" name="objEngagements" tiedTo="gs_tbg.getAllEngagements(self.objGameRoot)">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objEngagement" from="tiedTo"/>
+		</object>
+
+        <!-- Region Resources -->
+		<object type="UI3DRegionResources" name="objRegionResources" tiedTo="
+            filter(?{region: region.objResourceCapacities.size GT 0}, gs_tbg.getAllRegions(self.objGameRoot))
+        ">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objRegion" from="tiedTo"/>
+		</object>
+
+        <!-- Air Bases -->
+		<object type="UI3DAirbase" name="objAirBases" tiedTo="
+            filter(?{region: region.objAirbaseImprovement != null}, gs_tbg.getAllRegions(self.objGameRoot))
+        ">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objRegion" from="tiedTo"/>
+		</object>
+
+		<!-- Lights -->
+		<object type="UI3DModelLight" name="objMapLight">
+		</object>
+	</objectDef>
+    
+    <objectDef type="UI3DStackIndicators" superType="mlui.UI3DElement">
+        <!-- Inputs -->
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+       
+        <!-- Indicators -->
+        <object type="UI3DStackIndicator" name="objIndicators" tiedTo="
+            filter(?{stack: stack.objUnitGroups.size GT 1}, self.objMapData.objStacks.objGroupStacks)
+        ">
+			<property name="objGameRoot" from="def.objGameRoot"/>
+			<property name="objMapData" from="def.objMapData"/>
+			<property name="objStack" from="tiedTo"/>
+        </object>
+    </objectDef>
+    
+	<objectDef type="UI3DStackIndicator" superType="UI3DMapModelGO">
+		<propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objMapData" type="MapData"/>
+        <propertyDef name="objStack" type="UnitGroupStack"/>
+		<propertyDef name="objHeadUnitGroup" type="gs_tbg.UnitGroup" from="self.objStack.objHeadUnitGroup"/>
+		
+        <!-- Internal -->
+		<propertyDef name="objMapModel" type="MapModelTemplate">
+			self.objMapData.objUnitModelTable.tmplStackIndicatorMapModel.resolve()
+        </propertyDef>
+		<property name="objGO" from="self"/>
+		
+		<property name="tmplModel" from="self.objMapModel.tmplModel"/>
+		
+		<!-- UI3DMapModel properties -->
+		<property name="objMap" from="self.objMapData.objMap" />
+		<property name="vecPointOfInterest" from="self.objMapData.objCameraTransform.vecLookAt" />
+		<property name="vecPosition">self.objStack.vecCurPosition + Vec3D(0.145, -0.14, 0.0)</property>
+		
+		<object type="ml3dworld.TransformList" name="objLocalTransforms">
+			<object type="ml3dworld.TransformList" name="objTransforms">
+				<property name="objTransforms" from="def.objMapModel.objTransform"/>
+			</object>
+		</object>
+		
+        <!-- Texture replacements -->
+		<object type="mlui.UIDataMaterial" name="objMaterial" existsWhile="self.objHeadUnitGroup.tmplUnitBranch == def.objMapData.objUnitBranchTemplateAirForce">
+            <property name="strOverride" value="lambert2-fx"/>
+            <object type="mlmedia.Material" name="objMaterial">
+                <property name="nEmissionTexCoordSet" value="0"/>
+                <object type="mlmedia.SamplerFromTexture" name="objEmissionSampler">
+                    <property name="tmplTexture" value="skin.UnselectedStackIndicatorAirForce"/>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>                    
+                    <property name="eMipFilter" value="FILTER_NONE"/>
+                </object>
+            </object>
+        </object>
+		<object type="mlui.UIDataMaterial" name="objMaterial" existsWhile="self.objHeadUnitGroup.tmplUnitBranch == def.objMapData.objUnitBranchTemplateNavy OR
+																			self.objHeadUnitGroup.tmplUnitBranch == def.objMapData.objUnitBranchTemplateSubmarine">
+            <property name="strOverride" value="lambert2-fx"/>
+            <object type="mlmedia.Material" name="objMaterial">
+                <property name="nEmissionTexCoordSet" value="0"/>
+                <object type="mlmedia.SamplerFromTexture" name="objEmissionSampler">
+                    <property name="tmplTexture" value="skin.UnselectedStackIndicatorNavy"/>
+					<property name="eMinFilter" value="FILTER_LINEAR"/>
+					<property name="eMagFilter" value="FILTER_LINEAR"/>                    
+                    <property name="eMipFilter" value="FILTER_NONE"/>
+                </object>
+            </object>
+        </object>
+	</objectDef>
+</locust>

@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+        
+    <objectDef type="UI2DGameEnd" superType="mlui.UI2DElement">
+       
+        <object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgBlack"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+        
+        
+        <object type="mlui.UI2DImage" name="objNationBG">
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+            <property name="tmplImage" value="skin.ImgMainBG"/>
+        </object>
+        
+		<propertyDef name="objFirstTeamRank" type="gs_tbg.TeamRank">
+            sortAscending(?{teamRank: teamRank.nTotalRank},
+							gs_tbg.getTeamRanks(mh2data.objAvatar)).first
+        </propertyDef>
+        
+        <propertyDef name="objMyTeamID" type="gs_tbg.Nation"/>
+        <property name="objMyTeamID" from="gs_tbg.getNationTeamID(mh2data.objAvatar,mh2data.objNation)"/>
+        
+        <propertyDef name="objPanel" storesChildren="true">
+            switch{
+				case gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).bUseNationSpecificVCs == true AND self.objVictoryCondition.bConditionMet == true:
+                    <object type="UI2DGameEndVictory">
+                        <property name="nDepth" value="100"/>
+                        <property name="nWidth" from="1000"/>
+                        <property name="nHeight" from="580"/>		
+						<property name="haXAlign" value="CENTER"/>
+						<property name="vaYAlign" value="MIDDLE"/>
+                    </object>
+				case self.objFirstTeamRank.objTeamID == gs_tbg.getNationTeamID(mh2data.objAvatar,mh2data.objNation):
+                    <object type="UI2DGameEndVictory">
+                        <property name="nDepth" value="100"/>
+                        <property name="nWidth" from="1000"/>
+                        <property name="nHeight" from="580"/>		
+						<property name="haXAlign" value="CENTER"/>
+						<property name="vaYAlign" value="MIDDLE"/>
+                    </object>
+                default:
+                    <object type="UI2DGameEndDefeated">
+                        <property name="nDepth" value="100"/>
+                        <property name="nWidth" from="1000"/>
+                        <property name="nHeight" from="580"/>											
+						<property name="haXAlign" value="CENTER"/>
+						<property name="vaYAlign" value="MIDDLE"/>
+                    </object>
+            }
+        </propertyDef>
+		
+		<propertyDef name="objVictoryCondition" type="Object">
+			find(?{condition: condition.instanceOf(gs_tbg.VictoryConditionCities) AND condition.refNation.resolve(mh2data.objAvatar) == mh2data.objNation},
+				gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).objVictoryConditions)
+		</propertyDef>
+        
+        <object type="common_ui.UI2DList" name="objList">
+            <property name="nDepth" value="200"/>
+            <property name="nY" value="315" />
+            <property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+            <object type="UI2DEndGameButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.ContinuePlaying"/>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript"><![CDATA[
+                            function handle(event, owner)
+                            {
+                                def.bVisible = false;
+                            }
+                        ]]></script>
+                    </object>					
+                </object>
+                
+            </object>
+            
+            <object type="UI2DEndGameButton" name="objElements">
+                <property name="strText" from="locale.SID.UI.ExitGame"/>
+                
+                <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                    <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                        <property name="otEventType" value="mlui.EventButtonClicked"/>
+                        <script type="application/javascript"><![CDATA[
+                            function handle(event, owner)
+                            {
+                                quick_exit();
+                            }
+                        ]]></script>
+                    </object>					
+                </object>
+                
+            </object>
+        </object>
+        
+    </objectDef>
+    
+    <objectDef type="UI2DGameEndBase" superType="mlui.UI2DElement">
+        <propertyDef name="eScoringMode" type="Enum" restriction="gs_tbg.ScoringMode"/>
+        <property name="eScoringMode" from="gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).eScoringMode"/>
+        
+        <propertyDef name="tmplImage" type="TemplateRef" restriction="mlmedia.ImageTemplate"/>
+        <propertyDef name="strGameEndTitle" type="String"/>
+        <propertyDef name="strGameEndDescription" type="String"/>
+        
+        <object type="mlui.UI2DImage" name="objVictoryImg">
+			<property name="tmplImage" from="def.tmplImage"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="113"/>
+			<property name="nWidth" value="313"/>
+			<property name="nHeight" value="450"/>
+            <property name="haXAlign" value="LEFT"/>
+		</object>
+
+        <object type="mlui.UI2DText" name="objTitleText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite30Center"/>
+			<property name="strText" from="def.strGameEndTitle"/>
+			<property name="nX" from="def.objVictoryImg.nX + def.objVictoryImg.nWidth + 10"/>
+			<property name="nY" value="113"/>
+			<property name="nHeight" value="30"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+        
+        <object type="mlui.UI2DText" name="objDescriptionText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite30Center"/>
+			<property name="strText" from="def.strGameEndDescription"/>
+			<property name="nX" from="def.objVictoryImg.nX + def.objVictoryImg.nWidth + 10"/>
+			<property name="nY" value="150"/>
+			<property name="nHeight" value="30"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+        
+		<object type="mlui.UI2DImage" name="objTitle">
+			<property name="tmplImage" value="skin.ImgEndGameTitle"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="33"/>
+			<property name="nWidth" value="420"/>
+			<property name="nHeight" value="65"/>
+            <property name="haXAlign" value="CENTER"/>
+		</object>
+		
+        <object type="common_ui.UI2DListHorz" name="objHeaderList">
+			<property name="nSpacing" value="-1"/>
+            <property name="nY" value="230" />
+			<property name="nX" from="def.objVictoryImg.nX + def.objVictoryImg.nWidth + 10"/>
+			
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+				<property name="strText">
+				    switch
+				    {
+				        case def.eScoringMode == gs_tbg.ScoringMode.CONQUEST:
+    				        locale.SID.UI.Country
+				        case def.eScoringMode == gs_tbg.ScoringMode.NATION:
+    				        locale.SID.UI.Country
+				        case def.eScoringMode == gs_tbg.ScoringMode.ALLIANCE:
+    				        locale.SID.UI.Alliance
+				        case def.eScoringMode == gs_tbg.ScoringMode.IDEOLOGY:
+    				        locale.SID.UI.Ideology
+				    }				
+				</property>
+				<property name="nWidth" value="228"/>
+				<property name="nHeight" value="14"/>
+			</object>
+            <object type="mlui.UI2DText" name="objElements">
+                <property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+                <property name="strText" from="locale.SID.UI.IPUs"/>
+                <property name="nWidth" value="64"/>
+                <property name="nHeight" value="14"/>
+                <property name="strToolTip" from="locale.SID.UI.IPUPoints"/>
+            </object>
+            <object type="mlui.UI2DText" name="objElements">
+                <property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+                <property name="strText" from="locale.SID.UI.Res"/>
+                <property name="nWidth" value="64"/>
+                <property name="nHeight" value="14"/>
+                <property name="strToolTip" from="locale.SID.UI.ResourceProducerPoints"/>
+            </object>
+            <object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+				<property name="strText" from="locale.SID.UI.MPUs"/>
+				<property name="nWidth" value="64"/>
+				<property name="nHeight" value="14"/>
+                <property name="strToolTip" from="locale.SID.UI.EmployedMPUPoints"/>
+            </object>		
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+				<property name="strText" from="locale.SID.UI.RPUs"/>
+				<property name="nWidth" value="64"/>
+				<property name="nHeight" value="14"/>
+                <property name="strToolTip" from="locale.SID.UI.RPUPoints"/>
+            </object>		
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+				<property name="strText" from="locale.SID.UI.Wealth"/>
+				<property name="nWidth" value="64"/>
+				<property name="nHeight" value="14"/>
+                <property name="strToolTip" from="locale.SID.UI.WealthPoints"/>
+            </object>		
+			<object type="mlui.UI2DText" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialWhite14Left"/>
+				<property name="strText" from="locale.SID.UI.Total"/>
+				<property name="nWidth" value="80"/>
+				<property name="nHeight" value="14"/>
+                <property name="strToolTip" from="locale.SID.UI.TotalPoints"/>
+            </object>
+		</object><!-- objHeaderList-->
+        
+		<object type="UI2DDynamicList" name="objList">
+			<property name="nX" from="def.objVictoryImg.nX + def.objVictoryImg.nWidth + 10"/>
+			<property name="nY" value="250"/>
+			<property name="nWidth" from="650"/>
+			<property name="nHeight" from="def.nHeight - (self.nY + 20)"/>
+			<property name="listItems">						
+				sortAscending(
+					?{
+						data:
+						data.nTotalRank
+					},
+					gs_tbg.getTeamRanks(mh2data.objAvatar)
+				)
+			</property>
+			<property name="nRowWidth" value="858"/>
+			<property name="nRowHeight" value="30"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nTopSpacing" value="1"/>
+			<property name="nBottomSpacing" value="1"/>
+			<property name="otRowType" value="UI2DEndGameTeamsBubble"/>
+			<property name="strPropForItem" value="objData"/>
+			<property name="strPropForRowNumber" value="nRow"/>
+		</object>
+        
+    </objectDef><!-- UI2DGameEndBase -->
+    
+    <objectDef type="UI2DGameEndDefeated" superType="UI2DGameEndBase">
+        <property name="tmplImage" value="skin.ImgEndGameDefeated"/>
+        <property name="strGameEndTitle" from="locale.SID.UI.Defeat"/>
+        <property name="strGameEndDescription" from="locale.SID.UI.DefeatFailedToLeadNationToVictory"/>
+    </objectDef>
+    
+    <objectDef type="UI2DGameEndVictory" superType="UI2DGameEndBase">
+        <property name="tmplImage" value="skin.ImgEndGameVictory"/>
+        <property name="strGameEndTitle" from="locale.SID.UI.Victory"/>
+        <property name="strGameEndDescription">
+		    switch
+		    {
+		        case self.eScoringMode == gs_tbg.ScoringMode.CONQUEST:
+                    locale.SID.UI.VictoryConquest
+		        case self.eScoringMode == gs_tbg.ScoringMode.NATION:
+                    locale.SID.UI.VictoryNation
+		        case self.eScoringMode == gs_tbg.ScoringMode.ALLIANCE:
+                    locale.SID.UI.VictoryAlliance
+		        case self.eScoringMode == gs_tbg.ScoringMode.IDEOLOGY:
+                    locale.SID.UI.VictoryIdeology
+		    }				
+        </property>
+    </objectDef>
+    
+   <objectDef type="UI2DGameEndDemoMode" superType="mlui.UI2DElement">
+      <propertyDef name="strVendor" type="String"/>
+          
+          <object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgBlack"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+        
+        
+        <object type="mlui.UI2DImage" name="objNationBG">
+            <property name="nX" value="0"/>
+            <property name="nY" value="0"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+            <property name="tmplImage" value="skin.ImgMainBG"/>
+        </object>
+        
+        
+        <object type="mlui.UI2DImage" name="objTitle" existsWhile="def.strVendor != 'Matrix'">
+			<property name="tmplImage" value="skin.ImgEndGameTitle"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="-220"/>
+			<property name="nWidth" value="420"/>
+			<property name="nHeight" value="65"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+		</object>
+        
+        <!-- Temp purchase image. This should be replaced with dynamic text when possible-->
+        <object type="mlui.UI2DImage" name="objTitle" existsWhile="def.strVendor != 'Matrix'">
+			<property name="tmplImage" value="skin.ImgEndGameDemoPurchaseMatrix"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="50"/>
+			<property name="nWidth" value="420"/>
+			<property name="nHeight" value="65"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+		</object>
+		
+        <object type="mlui.UI2DImage" name="objTitle" existsWhile="def.strVendor == 'Matrix'">
+			<property name="tmplImage" value="skin.ImgEndGameDemoPurchaseMatrix"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="1024"/>
+			<property name="nHeight" value="768"/>
+            <property name="haXAlign" value="CENTER"/>
+            <property name="vaYAlign" value="MIDDLE"/>
+		</object>
+
+         <object type="UI2DEndGameButton" name="objExit">
+            <property name="nDepth" value="200"/>
+            <property name="nY" value="325" />
+            <property name="haXAlign" value="CENTER"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+            <property name="strText" from="locale.SID.UI.ExitGame"/>
+            
+            <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+                <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                    <property name="otEventType" value="mlui.EventButtonClicked"/>
+                    <script type="application/javascript"><![CDATA[
+                        function handle(event, owner)
+                        {
+                            quick_exit();
+                        }
+                    ]]></script>
+                </object>					
+            </object>
+            
+        </object>
+        
+    </objectDef>
+    
+    <objectDef type="UI2DEndGameButton" superType="mlui.UI2DButton">
+        <propertyDef name="strText" type="String"/>
+        
+        <property name="nWidth" value="168"/>
+        <property name="nHeight" value="25"/>
+        
+        <property name="tmplButtonStyle" value="skin.BtnEndGame"/>
+        
+        <object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialWhite16Center"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="5"/>
+			<property name="nHeight" value="25"/>
+            <property name="nWidth" from="def.nWidth"/>
+            <property name="haXAlign" value="CENTER"/>
+		</object>
+    </objectDef>
+	
+	<objectDef type="UI2DEndGameTeamsBubble" superType="mlui.UI2DElement">
+		<propertyDef name="objData" type="gs_tbg.TeamRank"/>
+		<propertyDef name="nRow" type="int"/>
+
+        <object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+			
+			<!--Name/Flag-->
+			<object type="UI2DEndGameRowBubbleTeam" name="objElements">
+				<property name="objTeamRank" from="def.objData"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="228"/>
+			</object>
+
+            <!--IPUs-->
+            <object type="UI2DEndGameRowBubble" name="objElements">
+                <property name="strText">
+                    def.objData.nIPUPoints.formatNumber(0, true)
+                </property>
+                <property name="nRow" from="def.nRow"/>
+                <property name="nWidth" value="64"/>
+            </object>
+
+            <!--Resources-->
+            <object type="UI2DEndGameRowBubble" name="objElements">
+                <property name="strText">
+                    def.objData.nResourcePoints.formatNumber(0, true)
+                </property>
+                <property name="nRow" from="def.nRow"/>
+                <property name="nWidth" value="64"/>
+            </object>
+
+            <!--MPUs-->
+			<object type="UI2DEndGameRowBubble" name="objElements">
+				<property name="strText">
+                    def.objData.nMPUPoints.formatNumber(0, true)
+                </property>						
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="64"/>
+			</object>	
+			
+			<!--Tech-->
+			<object type="UI2DEndGameRowBubble" name="objElements">
+				<property name="strText">
+                    def.objData.nTechPoints.formatNumber(0, true)
+                </property>						
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="64"/>
+			</object>	
+			
+			<!--Wealth-->
+			<object type="UI2DEndGameRowBubble" name="objElements">
+				<property name="strText">
+                    def.objData.nWealthPoints.formatNumber(0, true)
+                </property>						
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="64"/>
+			</object>	
+			
+			<!--Total Points-->
+			<object type="UI2DEndGameRowBubble" name="objElements">
+				<property name="strText">
+                    def.objData.nTotalPoints.formatNumber(0, true)
+                </property>						
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="75"/>
+			</object>	
+		</object>		
+	</objectDef>    
+	
+	<objectDef type="UI2DEndGameRowBubble" superType="UI2DWorldNationsRowBubble">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate" >
+			'locale.TxtStyleArialBlack14Left'
+		</propertyDef>
+
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+	</objectDef>
+	
+	<objectDef type="UI2DEndGameRowBubbleTeam" superType="UI2DWorldNationsRowBubble"><!-- Note: UI2DWorldNationsRowBubble doesn't have anything Nation specific -->
+        <propertyDef name="eScoringMode" type="Enum" restriction="gs_tbg.ScoringMode"/>
+        <property name="eScoringMode" from="gs_tbg.getGameSysVictoryCondition(mh2data.objAvatar).eScoringMode"/>
+        
+		<propertyDef name="objTeamRank" type="gs_tbg.TeamRank"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate">
+			'locale.TxtStyleArialBlack14Left'
+		</propertyDef>
+
+		<propertyDef name="objNation" type="gs_tbg.Nation"/>
+		<property name="objNation">
+			switch
+				{
+				case self.eScoringMode == gs_tbg.ScoringMode.CONQUEST:
+					self.objTeamRank.objTeamID
+				case self.eScoringMode == gs_tbg.ScoringMode.NATION:
+					self.objTeamRank.objTeamID
+				case self.eScoringMode == gs_tbg.ScoringMode.ALLIANCE:
+					if (self.objTeamRank.objTeamID.instanceOf(gs_tbg.Nation), self.objTeamRank.objTeamID, self.objTeamRank.objTeamID.refLeadNation.resolve(mh2data.objAvatar) )
+				case self.eScoringMode == gs_tbg.ScoringMode.IDEOLOGY:
+					null
+				}
+		</property>
+
+		<property name="nWidth" value="858"/>
+		<property name="nHeight" value="30"/>
+
+		<object type="UI2DNationIcon" name="objNationIcon" existsWhile="(def.eScoringMode == gs_tbg.ScoringMode.CONQUEST) OR (def.eScoringMode == gs_tbg.ScoringMode.NATION)">
+			<property name="objNation" from="def.objNation"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>	
+		
+		<object type="UI2DAllianceIcon" name="objAllianceFlag" existsWhile="def.eScoringMode == gs_tbg.ScoringMode.ALLIANCE">
+			<property name="objNation" from="def.objNation"/>
+			<property name="objTeamID" from="def.objTeamRank.objTeamID"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object type="UI2DIdeologyFlag28x28" name="objIdeologyFlag" existsWhile="def.eScoringMode == gs_tbg.ScoringMode.IDEOLOGY">
+			<property name="objIdeology" from="def.objTeamRank.objTeamID"/>
+			<property name="nX" value="3"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="28"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objTeamName">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objTeamRank.objTeamID.strDisplayName"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="8"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+	</objectDef>
+	
+</locust>

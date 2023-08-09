@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+<!-- utility queries -->
+<script type="application/x-locust-query">
+	equals = ?{objectA,objectB: objectA == objectB}
+	notEqual = ?{objectA,objectB: objectA != objectB}
+</script>
+
+<!-- Utility javascript functions -->
+<script type="application/javascript"><![CDATA[
+        
+// utility function
+// get per avatar data of specified type, ie
+// tbgPAD = getPAD(avatar,gs_tbg.PADTurnBasedGame);
+function getPAD(avatar,otType)
+{
+    return avatar.getPerSessionData(otType);
+}
+        
+// helper function to calculate a rating from 0 to 1
+// given a haveAmount and a wantAmount.  0 = worst, 1=best
+function rateHaveVsWant(haveAmount,wantAmount)
+{
+    var adjustedHave = Math.max(0,haveAmount); // make sure it's >= 0
+    var adjustedWant = Math.max(0,wantAmount);
+    var stockpileDelta = adjustedHave - adjustedWant;
+
+    var severity = 0;
+    if (adjustedWant > 0) // do we want any of this item?
+    {
+        if (stockpileDelta < 0) // we don't have enough.
+        {
+            severity = 1 - adjustedHave / adjustedWant;
+        }
+        else if (stockpileDelta > 0) // we have too much
+        {
+            if (adjustedHave > 0)
+                severity = 1 - adjustedWant / adjustedHave;
+            else
+                severity = 0;
+        }
+    }
+    else // stockpile level of 0
+    {
+        if (adjustedHave > 0)
+            severity = 1 - 1 / adjustedHave;
+        else
+            severity = 0;
+    }
+
+    // convert severity of problem to positive rating
+    return 1 - severity;
+}
+
+// rate an excess amount from 0 to 1
+function rateExcess(haveAmount,wantAmount)
+{
+    if ((haveAmount <= wantAmount) || (haveAmount <= 0))
+        return 0;
+    if (wantAmount <= 0)
+        return 1 - 1/haveAmount;
+    return 1 - wantAmount/haveAmount;
+}
+
+// rate a negative value of something.
+// rating ranges from 0 (for negative infinity) to 1 (for 0)
+function rateNegative(haveAmount,wantAmount)
+{
+    if (haveAmount >= 0)
+        return 1;
+    if (wantAmount <= 0)
+        return -1/haveAmount;
+    return wantAmount/(wantAmount-haveAmount);
+}
+
+]]></script>
+
+</locust>

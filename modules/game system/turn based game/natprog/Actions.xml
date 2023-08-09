@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+	<objectDef type="GActCancelNationalProgram" class="CMLOGActCancelNationalProgram" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="objNationalProgram" type="Object" restriction="NationalProgram"/>
+	</objectDef>
+
+	<objectDef type="GActStartDeploymentSurveillance" class="CMLOGActStartDeploymentSurveillance" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="nCost" type="int" default="20000000"/>
+        <propertyDef name="nTime" type="int" default="20"/>
+	</objectDef>
+
+	<objectDef type="GActStartRegionSurveillance" class="CMLOGActStartRegionSurveillance" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTargetRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="nCost" type="int" default="20000000"/>
+        <propertyDef name="nTime" type="int" default="20"/>
+	</objectDef>
+
+	<objectDef type="GActStartStealResearch" class="CMLOGActStartStealResearch" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="nCost" type="int" default="30000000"/>
+        <propertyDef name="nTime" type="int" default="15"/>
+        <propertyDef name="nRPUs" type="int" default="40"/>
+	</objectDef>
+
+	<objectDef type="GActStartSabotageRegion" class="CMLOGActStartSabotageRegion" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTargetRegion" type="GORef" restriction="Region"/>
+        <propertyDef name="eSabotageRegionParam" type="Enum" restriction="SabotageRegionParam"/>
+        <propertyDef name="nCost" type="int" default="20000000"/>
+        <propertyDef name="nTime" type="int" default="15"/>
+	</objectDef>
+
+	<objectDef type="GActStartPoliticalSupport" class="CMLOGActStartPoliticalSupport" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="nSuccessPercent" type="int" default="0"/>
+        <propertyDef name="nCost" type="int" default="15000000"/>
+        <propertyDef name="nTime" type="int" default="20"/>
+	</objectDef>
+
+	<objectDef type="GActStartOppositionSupport" class="CMLOGActStartOppositionSupport" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="refTargetNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="tmplIdeology" type="TemplateRef" restriction="IdeologyTemplate"/>
+        <propertyDef name="nSuccessPercent" type="int" default="0"/>
+        <propertyDef name="nCost" type="int" default="30000000"/>
+        <propertyDef name="nTime" type="int" default="20"/>
+	</objectDef>
+
+	<objectDef type="GActStartInternalSupport" class="CMLOGActStartInternalSupport" superType="mlgame.GameAction">
+        <propertyDef name="refNation" type="GORef" restriction="Nation"/>
+        <propertyDef name="nCost" type="int" default="30000000"/>
+        <propertyDef name="nTime" type="int" default="15"/>
+	</objectDef>
+
+</locust>

@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="UI2DPopUpMenuLayer" superType="mlui.UI2DElement">
+        <propertyDef name="objMenuData" type="MenuData"/>
+		<propertyDef name="objSubMenuData" type="MenuData"/>
+
+        <propertyDef name="objRoot" type="mlui.UI2DElement"/>
+        <property name="objRoot" from="mlui.objUI.objRoot"/>
+
+        <propertyDef name="eLeftMouseButton" type="Enum" restriction="mlui.MouseButton"/>
+        <property name="eLeftMouseButton" value="MOUSE_BUTTON_LEFT"/>
+		
+        <object type="UI2DPopUpMenu" name="objMenu" existsWhile="self.objMenuData != null">
+            <property name="objMenuData" from="def.objMenuData"/>
+			<property name="nDefaultItemWidth" from="self.objMenuData.nDefaultItemWidth"/>
+			<property name="nDefaultItemHeight" from="self.objMenuData.nDefaultItemHeight"/>
+			<property name="nVertPadding" from="def.objMenuData.nVertPadding"/>
+			<property name="nHorizPadding" from="def.objMenuData.nHorizPadding"/>			
+			<property name="tmplItemButtonStyle" from="self.objMenuData.tmplItemButtonStyle"/>
+			<property name="tmplTitleStyle" from="self.objMenuData.tmplTitleStyle"/>
+			<property name="tmplBGStyle" from="def.objMenuData.tmplBGStyle"/>
+			<property name="strTitle" from="def.objMenuData.objTitle.strTableTitle"/>
+			<property name="strOwner" from="def.objMenuData.objTitle.strOwnerTag"/>
+			<property name="bHasTitle" from="def.objMenuData.objTitle.strTableTitle != ''"/>
+
+			
+            <property name="nX">
+				if(def.objMenuData.vecPosition.x + self.nWidth LT mlui.objUI.nWidth,
+					def.objMenuData.vecPosition.x,
+					mlui.objUI.nWidth - self.nWidth)
+			</property>
+            <property name="nY">
+				if(def.objMenuData.vecPosition.y + self.nHeight LT mlui.objUI.nHeight,
+					def.objMenuData.vecPosition.y,
+					mlui.objUI.nHeight - self.nHeight)
+			</property>
+        </object>
+		
+		<object type="UI2DPopUpMenu" name="objSubMenu" existsWhile="self.objSubMenuData != null">
+            <property name="objMenuData" from="def.objSubMenuData"/>
+			<property name="strTitle" from="self.objMenuData.objTitle.strTableTitle"/>
+			<property name="nDefaultItemWidth" from="def.objMenuData.nDefaultItemWidth"/>
+			<property name="nDefaultItemHeight" from="def.objMenuData.nDefaultItemHeight"/>
+			<property name="nVertPadding" from="def.objMenuData.nVertPadding"/>
+			<property name="nHorizPadding" from="def.objMenuData.nHorizPadding"/>			
+			<property name="tmplItemButtonStyle" from="def.objMenuData.tmplItemButtonStyle"/>
+			<property name="tmplTitleStyle" from="def.objMenuData.tmplTitleStyle"/>
+			<property name="tmplBGStyle" from="def.objMenuData.tmplBGStyle"/>
+			<property name="bIsSubMenu" value="true"/>
+			<property name="bHasTitle" from="def.objMenuData.objTitle.strTableTitle != ''"/>
+
+            <property name="nX">
+				if(def.objMenu.nX - 4 + def.objMenu.nWidth + self.nWidth LT mlui.objUI.nWidth,
+					def.objMenu.nX - 4 + def.objMenu.nWidth,
+					def.objMenu.nX + 4 - self.nWidth)
+			</property>
+            <property name="nY" from="def.objMenu.nY"/>
+        </object>
+
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                <property name="otEventType" value="mlui.EventMouseButtonUp"/>
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+						if (event.eButton.equals(owner.eLeftMouseButton))
+                        {
+                            log("up button");
+                            mlui.ActSendEventToUIElement.execute({
+                                "objElement": def.objRoot,
+                                "objEvent": EventDismissPopUpMenu.create()
+                            });
+                        }
+                    }
+                ]]></script>
+            </object>
+        </object>
+	</objectDef>
+
+    <objectDef type="UI2DPopUpMenu" superType="mlui.UI2DElement">
+        <propertyDef name="objMenuData" type="MenuData"/>
+
+		<propertyDef name="nDefaultItemWidth" type="int"/>
+		<propertyDef name="nDefaultItemHeight" type="int"/>
+		<propertyDef name="nHorizPadding" type="int"/>
+		<propertyDef name="nVertPadding" type="int"/>
+		<propertyDef name="tmplItemButtonStyle" type="TemplateRef" restriction="mlmedia.TextButtonStyleTemplate"/>
+		<propertyDef name="tmplTitleStyle" type="TemplateRef" restriction="mlmedia.ImageTemplate" />
+		<propertyDef name="tmplBGStyle" type="TemplateRef" restriction="mlmedia.ImageTemplate" />
+		<propertyDef name="strTitle" type="String"/>
+		<propertyDef name="strOwner" type="String"/>
+		<propertyDef name="bIsSubMenu" type="bool" default="false"/>
+		<propertyDef name="bHasTitle" type="bool" default="false"/>
+		
+		<propertyDef name="bNeedsScroll" type="bool">
+			self.objMenuData.objItems.size * (self.nDefaultItemHeight + 2) GTE self.objMenuData.nMaxHeight OR
+				self.nY + self.nHeight GT mlui.objUI.nHeight
+		</propertyDef>
+		<property name="nWidth" from="self.nDefaultItemWidth + self.nHorizPadding + if(self.bNeedsScroll, 12, 0)"/>
+        <property name="nHeight">
+			if(self.objTitle != null,
+				if(!self.bNeedsScroll,
+					(self.objMenuData.objItems.size * (self.nDefaultItemHeight + 2)) + self.objTitle.nHeight + self.nVertPadding,
+					self.objMenuData.nMaxHeight + self.nVertPadding),
+				if(!self.bNeedsScroll,
+					(self.objMenuData.objItems.size * (self.nDefaultItemHeight + 2)) + self.nVertPadding,
+					self.objMenuData.nMaxHeight + self.nVertPadding)
+				)
+		</property>
+		
+		<object type="UI2DPopUpMenuTitle" name="objTitle" existsWhile="self.bHasTitle == true">
+			<property name="strTitle" from="def.strTitle"/>
+			<property name="strOwner" from="def.strOwner"/>
+			<property name="tmplImage" from="def.tmplTitleStyle"/>
+			<property name="tmplTitleTextStyle" from="def.tmplItemButtonStyle.resolve().tmplUpTextStyle"/>
+			<property name="nWidth" from="def.nWidth - 6"/>
+			
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" value="2"/>
+            <property name="nHeight" from="def.nDefaultItemHeight + (def.nVertPadding / 2) - 4"/>
+			<property name="nDepth" value="-10"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objPanelHL" existsWhile="self.bHasTitle == true">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nY" from="def.objTitle.nHeight - 4"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="8"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+			<property name="nDepth" value="-1"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" from="def.tmplBGStyle"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nDepth" value="-15"/>
+		</object>
+		
+		<object type="ItemFormatData" name="objItemFormatData">
+			<property name="bIsSubItem" from="def.bIsSubMenu"/>
+			<property name="bNeedsScroll" from="def.bNeedsScroll"/>
+			<property name="tmplItemButtonStyle" from="def.tmplItemButtonStyle"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nDefaultItemWidth" from="def.nDefaultItemWidth"/>
+			<property name="nDefaultItemHeight" from="def.nDefaultItemHeight"/>
+		</object>
+		
+		<object type="UI2DDynamicList" name="objUI2DPopUpMenuItems">
+			<property name="bNeedsScroll" from="def.bNeedsScroll"/>
+			<property name="nY" >
+				if(def.objTitle != null, def.objTitle.nHeight, 0)
+				+ (def.nVertPadding / 2)
+			</property>
+			<property name="nHeight">
+				if(!def.bNeedsScroll,
+					def.objMenuData.objItems.size * (def.nDefaultItemHeight + 2),
+					def.objMenuData.nMaxHeight)
+			</property>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="listItems">
+				LinkedList(def.objMenuData.objItems)
+			</property>
+			<property name="nRowHeight" from="def.nDefaultItemHeight"/>
+			<property name="nRowWidth" from="def.nDefaultItemWidth"/>
+			<property name="nRowSpacing" value="2"/>
+			<property name="otRowType" value="UI2DPopUpMenuItem"/>
+			<property name="strPropForItem" value="objMenuItem"/>
+			<property name="strPropForData" value="objItemFormatData"/>
+			<property name="data" from="def.objItemFormatData"/>
+		</object>
+    </objectDef>
+	
+	<objectDef type="UI2DPopUpMenuTitle" superType="mlui.UI2DImage">
+		<propertyDef name="strTitle" type="String"/>
+		<propertyDef name="strOwner" type="String"/>
+		<propertyDef name="tmplTitleTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		
+		<property name="nWidth">
+			if(self.strOwner != '', self.objTitleText.nWidth + self.objOwnerText.nWidth + 4,
+				self.objTitleText.nWidth)
+		</property>	
+		
+		<object name="objTitleText" type="mlui.UI2DText">
+			<property name="tmplTextStyle" from="def.tmplTitleTextStyle" />
+			<property name="strText" from="def.strTitle"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nX" from="-(def.objOwnerText.nWidth / 2) - 2"/>
+			<property name="nY" value="0"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object name="objOwnerText" type="mlui.UI2DText" existsWhile="def.strOwner != ''">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialPeach12LeftFIT" />
+			<property name="strText" from="'(' + def.strOwner + ')'"/>
+			<property name="haXAlign" value="CENTER"/>
+			<property name="nX" from="(def.objTitleText.nWidth / 2) + 2"/>
+			<property name="nY" value="6"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+	</objectDef>
+		
+	<objectDef type="ItemFormatData" class="CMLObject">
+		<propertyDef name="bIsSubItem" type="bool"/>
+		<propertyDef name="bNeedsScroll" type="bool"/>
+		<propertyDef name="tmplItemButtonStyle" type="TemplateRef" restriction="mlmedia.TextButtonStyleTemplate"/>
+		<propertyDef name="haXAlign" type="Enum" restriction="mlmedia.HAlign"/>
+		<propertyDef name="nDefaultItemWidth" type="int"/>
+		<propertyDef name="nDefaultItemHeight" type="int"/>
+	</objectDef>
+	
+	<objectDef type="MenuItemContent" superType="mlui.UI2DElement">
+        <propertyDef name="objMenuItem" type="MenuItem"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+		<propertyDef name="strText" type="String"/>
+		<property name="nWidth" from="if(self.objIcon != null, self.objIcon.nWidth + 5 + self.objText.nWidth, self.objText.nWidth)"/>
+		
+		<object type="mlui.UI2DImage" name="objIcon" existsWhile="def.objMenuItem.tmplIconImage != null">
+			<property name="tmplImage" from="def.objMenuItem.tmplIconImage"/>
+			<property name="nWidth" from="def.objMenuItem.tmplIconImage.resolve().nImageWidth"/>
+			<property name="nHeight" from="def.objMenuItem.tmplIconImage.resolve().nImageHeight"/>
+			<property name="vaYAlign" value="MIDDLE"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objText">
+			<property name="strText" from="def.strText"/>
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nX" from="if(def.objIcon != null ,def.objIcon.nWidth + 5, 0)"/>
+		</object>
+	</objectDef>
+	
+    <objectDef type="UI2DPopUpMenuItem" superType="mlui.UI2DButton">
+        <propertyDef name="objMenuItem" type="MenuItem"/>
+		<propertyDef name="objItemFormatData"/>
+		<propertyDef name="bIsSubItem" type="bool" from="self.objItemFormatData.bIsSubItem"/>
+		<propertyDef name="tmplBubbleStyle" type="TemplateRef" restriction="mlmedia.ImageTemplate" from="self.objItemFormatData.tmplItemButtonStyle.resolve().tmplButtonStyle.resolve().tmplUpImage"/>	
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate" from="self.objItemFormatData.tmplItemButtonStyle.resolve().tmplUpTextStyle"/>
+		<property name="haXAlign" from="self.objItemFormatData.haXAlign"/>
+		<property name="nDefaultWidth" from="self.objItemFormatData.nDefaultItemWidth + if(self.objItemFormatData.bNeedsScroll, 8, 0)"/>
+		<property name="nDefaultHeight" from="self.objItemFormatData.nDefaultItemHeight"/>
+		<property name="tmplButtonStyle" value="skin.BtnStyleHighlight"/>
+
+		<object type="mlui.UI2DImage" name="objBubble">
+			<property name="tmplImage" from="def.tmplBubbleStyle"/>
+			<property name="nWidth" from="def.nWidth - if(def.objItemFormatData.bNeedsScroll, 8, 0)"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+		
+		<object name="objMenuItemContent" type="MenuItemContent">
+			<property name="haXAlign" value="CENTER"/>
+			<property name="objMenuItem" from="def.objMenuItem"/>
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="self.objMenuItem.strDisplayName"/>
+			<property name="nHeight" from="def.nHeight"/>
+		</object>
+
+        <propertyDef name="objRoot" type="mlui.UI2DElement"/>
+        <property name="objRoot" from="mlui.objUI.objRoot"/>
+
+        <property name="strToolTip" from="self.objMenuItem.otToolTip" />
+        
+        <object type="mlevent.EventHandlerMap" name="objEventHandlerMap">
+            <object type="mlevent.EvtHdlrMethod" name="objHandlers">
+                <property name="otEventType" value="mlui.EventButtonClicked"/>
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+                        if(def.objMenuItem.objHoverExecuteObject == null)
+						{	
+							if(def.objMenuItem.objExecuteObject != null) {
+								def.objMenuItem.objExecuteObject.execute();
+							}
+	
+							mlui.ActSendEventToUIElement.execute({
+								"objElement": def.objRoot,
+								"objEvent": EventDismissPopUpMenu.create()
+							});
+						}
+                    }
+                ]]></script>
+				
+            </object>
+			<object type="mlevent.EvtHdlrMethod" name="objHandlers">
+				<property name="otEventType" value="mlui.EventMouseFocusGained"/>
+                <script type="application/javascript"><![CDATA[
+                    function handle(event, owner)
+                    {
+						if(!def.bIsSubItem)
+						{
+							mlui.ActSendEventToUIElement.execute({
+							"objElement": def.objRoot,
+							"objEvent": EventDismissPopUpSubMenu.create()
+							});
+							if(def.objMenuItem.objHoverExecuteObject != null)
+							{
+								def.objMenuItem.objHoverExecuteObject.execute();
+							}
+						}
+					}
+                ]]></script>
+			</object>
+        </object>
+    </objectDef>
+	
+	<objectDef type="EventRequestPopUpMenu" superType="mlevent.Event">
+        <propertyDef name="objMenuData" type="MenuData" />
+	</objectDef>
+
+	<objectDef type="EventDismissPopUpMenu" superType="mlevent.Event">
+	</objectDef>
+	
+	<objectDef type="EventRequestPopUpSubMenu" superType="mlevent.Event">
+        <propertyDef name="objMenuData" type="MenuData" />
+	</objectDef>
+
+	<objectDef type="EventDismissPopUpSubMenu" superType="mlevent.Event">
+	</objectDef>
+	
+	<objectDef type="UI2DDynamicList" superType="mlui.UI2DDynamicList" >
+		<propertyDef name="bNeedsScroll" type="bool"/>
+		<object type="mlui.UI2DImage" name="objPanelSliderBG" existsWhile="self.bNeedsScroll">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="haXAlign" value="RIGHT"/>
+		</object>
+		
+		<object type="mlui.SliderInfo" name="objScrollBarInfo">
+			<property name="tmplMinusButtonStyle" value="skin.BtnStyleInvisible"/>
+			<property name="tmplMinusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+			<property name="tmplKnobButtonStyle" value="skin.BtnStylePanelSlider"/>
+			<property name="tmplPlusTrackButtonStyle" value="skin.BtnStyleInvisible"/>
+			<property name="tmplPlusButtonStyle" value="skin.BtnStyleInvisible"/>
+			
+			<property name="nThickness" value="12"/>
+			<property name="nLength" from="def.nHeight"/>				
+			
+			<property name="nButtonLength" value="1"/>
+			<property name="nMinKnobLength" value="37"/>
+			<property name="nMaxKnobLength" value="37"/>				
+			
+			<property name="fMinorIncrement" value="1.0"/>
+			<property name="fMajorIncrement" value="5.0"/>				
+		</object>
+		
+		<object type="mlui.UI2DVerticalSlider" name="objScrollBar">
+			<property name="nX" value="5"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="nY" value="0"/>
+			<property name="nDepth" value="10"/>
+			<property name="objInfo" from="def.objScrollBarInfo"/>
+		</object>
+	</objectDef>
+</locust>

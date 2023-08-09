@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+	xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+	owner="ml"
+	type="lib"
+	name="mh2 common"
+	version="1.0"
+	locustVersion="2.11"
+	dll="mh2-mh2common-1_30.dll"
+>
+	<import module="mlcore" default="true"/>
+	<import module="ml:lib:mlevent:1.0" as="mlevent"/>
+
+	<include>
+		defs/mh2 commonDefs.xml
+		defs/Templates.xml
+		defs/NonGameObjects.xml
+		defs/Events.xml
+	</include>
+</locustModule>

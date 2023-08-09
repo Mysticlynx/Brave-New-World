@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <objectDef type="UI2DFinanceTabInfrastructure" superType="UI2DFinancePanel">
+		<propertyDef name="objNationFinance" type="gs_tbg.NationFinance"/>
+		
+		<object type="mlui.UI2DText" name="objGoodsRevenueLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.MaintenanceCosts"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="7"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+        
+		<object type="mlui.UI2DText" name="objLastTurnSummaryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.dateCurrentDate - gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.durTurnDuration"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="22"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="UI2DFinanceMaintenanceCosts" name="objMaintenanceCosts">
+			<property name="objNationFinance" from="mh2data.objNation.objFinance"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="40"/>
+			<property name="nWidth" from="500"/>
+			<property name="nHeight" from="300"/>
+			<property name="nTotalMoney" from="def.nTotalMoney"/>
+		</object>
+        
+		
+		<object type="mlui.UI2DText" name="objFoodRevenueLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkerBrown14Left"/>
+			<property name="strText" from="locale.SID.UI.AdtlGovSpending"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="277"/>
+			<property name="nWidth" value="260"/>
+			<property name="nHeight" value="14"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objTurnSummaryLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown12Left"/>
+			<property name="strText" from="gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.dateCurrentDate - gs_tbg.getGameSysTurnBasedGame(mh2data.objAvatar).objTurnBasedGame.durTurnDuration"/>
+			<property name="nX" value="9"/>
+			<property name="nY" value="290"/>
+			<property name="nWidth" value="150"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="UI2DFinanceAdditGovSpending" name="objAdditGovSpending">
+			<property name="objNationFinance" from="mh2data.objNation.objFinance"/>
+			<property name="nX" value="15"/>
+			<property name="nY" value="308"/>
+			<property name="nWidth" from="500"/>
+			<property name="nHeight" from="230"/>
+			<property name="nTotalMoney" from="def.nTotalMoney"/>
+		</object>
+        
+        
+		<object type="mlui.UI2DImage" name="objBGSource">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="35"/>
+			<property name="nY" value="450"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="30"/>
+		</object>	
+        
+		<object type="mlui.UI2DImage" name="objBGMoney">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="214"/>
+			<property name="nY" value="450"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		<object type="mlui.UI2DText" name="objSourceName">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialDarkBrown16Left"/>
+            <property name="strText" from="locale.SID.UI.TotalSpending"/>
+			<property name="nX" value="44"/>
+			<property name="nY" value="457"/>
+			<property name="nWidth" value="147"/>
+			<property name="nHeight" value="30"/>
+		</object>
+		<object type="mlui.UI2DText" name="objMoneyAmount">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialRed14Right"/>
+			<property name="strText" from="'$' + String((def.nTotalMoney).formatNumber(0, true))"/>
+			<property name="nX" value="214"/>
+			<property name="nY" value="458"/>
+			<property name="nWidth" value="118"/>
+			<property name="nHeight" value="30"/>
+		</object>
+        
+		<object type="mlui.UI2DText" name="objPieChartLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Spending"/>	
+			<property name="nX" value="415"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="10"/>
+		</object>
+        
+        <object name="objPieChart" type="mlchart.UI2DChart" >		
+			<property name="nX" value="455"/>
+			<property name="nY" value="47"/>
+            <property name="nWidth" value="142" />
+            <property name="nHeight" value="142" />
+            <object name="objChartSource" type="mlchart.ChartSourcePie" >
+                <object name="objOptions" type="mlchart.ChartOptionBackground" >
+                    <property name="colColor" value="#FFFFFFFF" />
+                </object>
+                <object name="objPieOptions" type="mlchart.PieChartOptionPieSize" >
+                    <property name="nX" value="71" />
+                    <property name="nY" value="71"/>
+                    <property name="nRadius" value="70"/>
+                </object>
+                <object name="objPieOptions" type="mlchart.PieChartOptionLabelStyle" >
+                    <property name="colColor" value="#FFFFFFFF" />
+                </object>
+                <object name="objSectors" type="mlchart.PieChartSector" tiedTo="union(def.objAdditGovSpending.objFinanceItemsList.objElements, def.objMaintenanceCosts.objFinanceItemsList.objElements)" >
+                    <property name="fValue" >
+                        (
+                            (float) (tiedTo.nMoney)
+                        )
+                        / 
+                        (
+                            (float) 
+                            (
+                                if( (def.nTotalMoney GT 0) , 
+                                    def.nTotalMoney , 
+                                    1
+                                )
+                            )
+                        )
+                    </property>
+                    <property name="colColor" from="tiedTo.colColor"/>
+                </object>
+            </object>
+        </object>
+		
+		<object type="mlui.UI2DImage" name="objPieChartBG">
+			<property name="tmplImage" value="skin.ImgPieChartBG"/>
+			<property name="nX" value="449"/>
+			<property name="nY" value="41"/>
+			<property name="nWidth" value="155"/>
+			<property name="nHeight" value="155"/>
+			<property name="nDepth" value="1"/>
+		</object>
+        
+		
+        <propertyDef name="nTotalMoney" type="int64" >
+            self.getMoney(self.objAdditGovSpending) +
+            self.getMoney(self.objMaintenanceCosts)
+        </propertyDef>
+        
+        <script type="application/x-locust-query"> <![CDATA[
+            getMoney = ?{object:
+                  sum(map(?{elm: elm.nMoney}, object.objFinanceItemsList.objElements))
+            }
+        ]]></script>    
+        
+        
+    </objectDef>
+    
+    
+    <objectDef type="UI2DFinanceMaintenanceCosts" superType="mlui.UI2DElement">
+		<propertyDef name="objNationFinance" type="gs_tbg.NationFinance"/>
+        <propertyDef name="nTotalMoney" type="int64" />
+		
+		<object type="mlui.UI2DText" name="objSourceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Source"/>
+			<property name="nX" value="21"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objRevenueLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.SpendingLastTurn"/>
+			<property name="nX" value="200"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="10"/>
+		</object>		
+        
+		<object type="mlui.UI2DText" name="objPercentageLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" value="%"/>
+			<property name="nX" value="320"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="39"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+       <object type="common_ui.UI2DList" name="objFinanceItemsList">			
+			<property name="nX" value="20"/>
+			<property name="nY" value="12"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="1"/>		
+			
+		<!-- industrial infra -->
+			<object type="UI2DFinanceTabBubble" name="objElements">
+                <property name="tmplImage" value="skin.ImgInfoIconProductionOrders"/>
+                <property name="strText" from="locale.SID.UI.CityIndustry"/>
+                <property name="nMoney" from="def.objNationFinance.n64CityMaintenanceExpense"/>
+                <property name="fPercent" from="def.getPercentage(self)"/>
+                <property name="bPercent" value="true" />
+                <property name="colColor" value="#516E83FF" />
+			</object>
+		<!-- research facilities -->
+			<object type="UI2DFinanceTabBubble" name="objElements">
+				<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+				<property name="strText" from="locale.SID.UI.ResearchFacilities"/>
+                <property name="nMoney" from="def.objNationFinance.n64ResearchMaintenanceExpense"/>
+                <property name="fPercent" from="def.getPercentage(self)"/>
+                <property name="bPercent" value="true" />
+                <property name="colColor" value="#B6AF4CFF" />
+			</object>
+		<!-- resource producers -->
+			<object type="UI2DFinanceTabBubble" name="objElements">
+                <property name="tmplImage" value="skin.ImgInfoIconPickaxe"/>
+                <property name="strText" from="locale.SID.UI.ResourceProducers"/>
+                <property name="nMoney" from="def.objNationFinance.n64ResProdMaintenanceExpense"/>
+                <property name="fPercent" from="def.getPercentage(self)"/>
+                <property name="bPercent" value="true" />
+                <property name="colColor" value="#824646FF" />
+			</object>
+		<!-- transportation -->
+			<object type="UI2DFinanceTabBubble" name="objElements">
+                <property name="tmplImage" value="skin.ImgTransportRoadIcon"/>
+                <property name="strText" from="locale.SID.UI.Transportation"/>
+                <property name="nMoney" from="def.objNationFinance.n64TransportationMaintenanceExpense"/>
+                <property name="fPercent" from="def.getPercentage(self)"/>
+                <property name="bPercent" value="true" />
+                <property name="colColor" value="#4E7855FF" />
+			</object>
+		<!-- military -->
+			<object type="UI2DFinanceTabBubble" name="objElements">
+                <property name="tmplImage" value="skin.ImgInfoIconMilitaryMPUs"/>
+                <property name="strText" from="locale.SID.UI.Military"/>
+                <property name="nMoney" >
+                    def.objNationFinance.n64AirForceMaintenanceExpense + def.objNationFinance.n64ArmyMaintenanceExpense + def.objNationFinance.n64NavyMaintenanceExpense 
+                </property>
+                <property name="fPercent" from="def.getPercentage(self)"/>
+                <property name="bPercent" value="true" />
+                <property name="colColor" value="#784E77FF" />
+			</object>
+		<!-- regional defenses -->
+			<object type="UI2DFinanceTabBubble" name="objElements">
+                <property name="tmplImage" value="skin.ImgInfoIconDefenseSm"/>
+				<property name="strText" from="locale.SID.UI.RegionalDefenses"/>
+                <property name="nMoney" from="def.objNationFinance.n64RegionMaintenanceExpense"/>
+                <property name="fPercent" from="def.getPercentage(self)"/>
+                <property name="bPercent" value="true" />
+                <property name="colColor" value="#504682FF" />
+			</object>
+        </object>
+                
+        <script type="application/x-locust-query"> <![CDATA[
+            getPercentage = ?{object:
+                (float) (((float) (object.nMoney)) /  ((float) (if(self.nTotalMoney LTE 0, 1, self.nTotalMoney))) )* 100
+            }
+        ]]></script>  
+
+        
+		
+	</objectDef>
+    
+    <objectDef type="UI2DFinanceAdditGovSpending" superType="mlui.UI2DElement">
+		<propertyDef name="objNationFinance" type="gs_tbg.NationFinance"/>
+        <propertyDef name="nTotalMoney" type="int64" />
+		
+		<object type="mlui.UI2DText" name="objSourceLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.Source"/>
+			<property name="nX" value="21"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="180"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+		<object type="mlui.UI2DText" name="objRevenueLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" from="locale.SID.UI.SpendingLastTurn"/>
+			<property name="nX" value="200"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="121"/>
+			<property name="nHeight" value="10"/>
+		</object>		
+        
+		<object type="mlui.UI2DText" name="objPercentageLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialBrown10Center"/>
+			<property name="strText" value="%"/>
+			<property name="nX" value="320"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="39"/>
+			<property name="nHeight" value="10"/>
+		</object>
+		
+       <object type="common_ui.UI2DList" name="objFinanceItemsList">			
+			<property name="nX" value="20"/>
+			<property name="nY" value="12"/>
+			<property name="nTopSpacing" value="0"/>
+			<property name="nBottomSpacing" value="0"/>
+			<property name="nSpacing" value="1"/>	
+            <!-- Covert Activity -->
+			<object type="UI2DFinanceTabBubble" name="objElements">
+                <property name="tmplImage" value="skin.ImgInfoIconInternalAffairs"/>
+                <property name="strText" from="locale.SID.UI.NationalPrograms"/>
+                <property name="nMoney" from="def.objNationFinance.n64EspionageExpense"/>
+                <property name="fPercent" from="def.getPercentage(self)"/>
+                <property name="bPercent" value="true" />
+                <property name="colColor" value="#303030FF" />
+			</object>	
+            <!-- Imports -->
+			<object type="UI2DFinanceTabBubble" name="objElements">
+                <property name="tmplImage" value="skin.ImgInfoIconImports"/>
+                <property name="strText" from="locale.SID.UI.ImportAgreements"/>
+                <property name="nMoney" from="def.objNationFinance.n64ImportExpense"/>
+                <property name="fPercent" from="def.getPercentage(self)"/>
+                <property name="bPercent" value="true" />
+                <property name="colColor" value="#7B492AFF" />
+			</object>
+            <!-- World Market Imports -->
+			<object type="UI2DFinanceTabBubble" name="objElements">
+                <property name="tmplImage" value="skin.ImgInfoIconWorldMarket"/>
+                <property name="strText" from="locale.SID.UI.WorldMarketImports"/>
+                <property name="nMoney" from="(def.objNationFinance.n64WMImportExpense)"/>
+                <property name="fPercent" from="def.getPercentage(self)"/>
+                <property name="bPercent" value="true" />
+                <property name="colColor" value="#677798FF" />
+			</object>
+        </object>
+        
+        <script type="application/x-locust-query"> <![CDATA[
+            getPercentage = ?{object:
+                (float) (((float) (object.nMoney)) /  ((float) (if(self.nTotalMoney LTE 0, 1, self.nTotalMoney))) )* 100
+            }
+        ]]></script>    
+		
+	</objectDef>
+    
+    
+    
+</locust>

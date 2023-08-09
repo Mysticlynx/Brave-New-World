@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="UI2DSummaryPanelMinLayout" superType="mlui.UI2DElement">
+		<propertyDef name="objMH2Data" type="MH2Data"/>
+		
+		<property name="nX" value="3"/>
+		<property name="nWidth" value="38"/>
+		<property name="nHeight" value="368"/>
+		<property name="haXAlign" value="RIGHT"/>
+		<property name="vaYAlign" value="TOP"/>	
+
+	<!-- Background -->
+		<object type="mlui.UI2DImage" name="objSummaryPanelMinBGTop">
+			<property name="tmplImage" value="skin.ImgSummaryPanelMinBGTop"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="1"/>
+			<property name="nWidth" value="34"/>
+			<property name="nHeight" value="33"/>
+		</object>		
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelMinBackground">
+			<property name="tmplImage" value="skin.ImgPanel"/>
+			<property name="nX" value="2"/>
+			<property name="nY" value="35"/>
+			<property name="nWidth" value="34"/>
+			<property name="nHeight" value="361"/>
+		</object>
+
+	<!-- Content -->
+	
+		<object type="mlui.UI2DImage" name="objSummaryIcon">
+			<property name="tmplImage" value="skin.ImgSummaryIcon"/>
+			<property name="nX" value="6"/>
+			<property name="nY" value="6"/>
+			<property name="nWidth" value="23"/>
+			<property name="nHeight" value="24"/>
+		</object>
+	
+		<object type="UI2DSummaryPanelButtons" name="objSummaryPanelButtons">
+			<property name="objMH2Data" from="def.objMH2Data"/>
+			
+			<property name="nX" value="6"/>
+			<property name="nY" value="37"/>
+			<property name="nWidth" value="27"/>
+			<property name="nHeight" value="450"/>
+			<property name="haXAlign" value="RIGHT"/>
+			<property name="vaYAlign" value="TOP"/>			
+		</object>
+
+	<!-- Foreground -->
+		<object type="mlui.UI2DImage" name="objSummaryPanelMinForeground">
+			<property name="tmplImage" value="skin.ImgPanelBorder"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="398"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>
+		
+		<object type="mlui.UI2DImage" name="objSummaryPanelMinHL">
+			<property name="tmplImage" value="skin.ImgPanelHL"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="30"/>
+			<property name="nWidth" value="38"/>
+			<property name="nHeight" value="8"/>
+			<property name="eMouseBehavior" value="MOUSE_BHVR_IGNORE_THIS_ELEMENT"/>
+		</object>		
+	</objectDef>
+</locust>

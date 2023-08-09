@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <!-- AI Research Track Templates -->
+	<template type="gs_tbg.ResearchAITrackTemplate" name="TankTrack">
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="1"/>
+            <property name="objFactoryOutputTemplate" value="LightTanks1"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="2"/>
+            <property name="objFactoryOutputTemplate" value="MediumTanks1"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="3"/>
+            <property name="objFactoryOutputTemplate" value="HeavyTanks1"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="4"/>
+            <property name="objFactoryOutputTemplate" value="HeavyTanks2"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="5"/>
+            <property name="objFactoryOutputTemplate" value="MainBatttleTank1"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="6"/>
+            <property name="objFactoryOutputTemplate" value="MainBatttleTank2"/>
+        </object>
+    </template>
+
+	<template type="gs_tbg.ResearchAITrackTemplate" name="BomberGroupTrack">
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="1"/>
+            <property name="objFactoryOutputTemplate" value="EarlyBombers"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="2"/>
+            <property name="objFactoryOutputTemplate" value="LightBombers"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="3"/>
+            <property name="objFactoryOutputTemplate" value="MediumBomber"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="4"/>
+            <property name="objFactoryOutputTemplate" value="HeavyBombers"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="5"/>
+            <property name="objFactoryOutputTemplate" value="StrategicBombers"/>
+        </object>
+    </template>
+
+	<template type="gs_tbg.ResearchAITrackTemplate" name="ParatrooperTrack">
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="1"/>
+            <property name="objFactoryOutputTemplate" value="MediumBomber"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="2"/>
+            <property name="objFactoryOutputTemplate" value="Airborne4"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="3"/>
+            <property name="objFactoryOutputTemplate" value="AirTransport1"/>
+        </object>
+    </template>
+
+	<template type="gs_tbg.ResearchAITrackTemplate" name="DefensiveLineTrack">
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="1"/>
+            <property name="objRegionOutputTemplate" value="Earthworks"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="2"/>
+            <property name="objRegionOutputTemplate" value="ConcreteFortifications"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="3"/>
+            <property name="objRegionOutputTemplate" value="FortifiedDefenseLine"/>
+        </object>
+    </template>
+
+	<template type="gs_tbg.ResearchAITrackTemplate" name="CorporateFarmTrack">
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="1"/>
+            <property name="objRegionOutputTemplate" value="MechanizedFarm"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="2"/>
+            <property name="objRegionOutputTemplate" value="FactoryFarm"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="3"/>
+            <property name="objRegionOutputTemplate" value="CorporateFarm"/>
+        </object>
+    </template>
+
+	<template type="gs_tbg.ResearchAITrackTemplate" name="CollectiveFarmTrack">
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="1"/>
+            <property name="objRegionOutputTemplate" value="CollectiveFarms"/>
+        </object>
+    </template>
+
+	<template type="gs_tbg.ResearchAITrackTemplate" name="JetFighterTrack">
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="1"/>
+            <property name="objFactoryOutputTemplate" value="EarlyJetFighters"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="2"/>
+            <property name="objFactoryOutputTemplate" value="BasicJetFighters"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="3"/>
+            <property name="objFactoryOutputTemplate" value="ImprovedJetFighters"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="4"/>
+            <property name="objFactoryOutputTemplate" value="AdvancedJetFighters"/>
+        </object>
+    </template>
+
+	<template type="gs_tbg.ResearchAITrackTemplate" name="MediumMilitaryTrack">
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="1"/>
+            <property name="objFactoryOutputTemplate" value="EarlyTanks"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="2"/>
+            <property name="objFactoryOutputTemplate" value="BiPlaneBombers"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="3"/>
+            <property name="objFactoryOutputTemplate" value="EarlyBombers"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="4"/>
+            <property name="objFactoryOutputTemplate" value="LightTanks1"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="5"/>
+            <property name="objFactoryOutputTemplate" value="LightBombers"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="6"/>
+            <property name="objFactoryOutputTemplate" value="MediumTanks1"/>
+        </object>
+        <object name="objTrackItems" type="gs_tbg.ResearchAITrackItem">
+            <property name="nSequence" value="7"/>
+            <property name="objFactoryOutputTemplate" value="MediumBomber"/>
+        </object>
+    </template>
+
+    
+</locust>

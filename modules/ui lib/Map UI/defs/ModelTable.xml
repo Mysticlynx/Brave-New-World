@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	<objectDef type="MapModelTemplate" superType="Template" templateBase="true">
+		<propertyDef name="tmplModel" type="TemplateRef" restriction="mlmedia.ModelTemplate"/>
+		<propertyDef name="objTransform" type="ml3dworld.Transform" storesChildren="true"/>
+        <propertyDef name="tmplAnimation" type="TemplateRef" restriction="mlmedia.AnimationTemplate"/>
+        <propertyDef name="tmplAltAnimation" type="TemplateRef" restriction="mlmedia.AnimationTemplate"/>
+		<propertyDef name="strOverrideEffect" type="String"/>
+	</objectDef>
+
+	<!-- Cities -->
+
+	<objectDef type="CityModelTable" class="CMLObject">
+		<propertyDef name="objMapData" type="MapData"/>	
+		<propertyDef name="tmplCityConstructionGroundModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplNukedCityModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplSmoke" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="objDefaultEntry" type="CoreModelTableEntry" storesChildren="true"/>
+		<propertyDef name="objCoreEntries" type="CoreModelTableEntry" variable="true" storesChildren="true"/>
+		<propertyDef name="objReligiousEntries" type="ReligiousModelTableEntry" variable="true" storesChildren="true"/>
+		<propertyDef name="objBuildingEntries" variable="true" storesChildren="true"/>
+		<propertyDef name="tmplSelectionMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<script type="application/x-locust-query">
+			getMapModelForCity = ?{gameroot, city:
+				?{entry:
+					switch {
+						case entry != null:
+							entry.tmplMapModel.resolve()
+						case self.objDefaultEntry != null:
+							self.objDefaultEntry.tmplMapModel.resolve()
+						default:
+							null
+					}
+				}(self.getEntryForCityCore(gameroot, city))
+			}
+
+			getEntryForCityCore = ?{gameroot, city:
+				find(?{entry: entry.eArchitecture == city.refRegion.resolve(gameroot).eArchitecture},
+                        self.objCoreEntries)
+			}
+
+			getReligiousModelForCity = ?{gameroot, city:
+				?{entry:
+					switch {
+						case entry != null:
+							entry.tmplMapModel.resolve()
+						case self.objDefaultEntry != null:
+							self.objDefaultEntry.tmplMapModel.resolve()
+						default:
+							null
+					}
+				}(find(?{entry: entry.tmplReligion == city.refRegion.resolve(gameroot).tmplReligion.resolve()},
+					self.objReligiousEntries))
+			}
+
+			getModelForBuilding = ?{gameroot, building:
+				?{entry:
+					switch {
+						case entry != null:
+							entry.tmplMapModel.resolve().tmplModel
+						case self.objDefaultEntry != null:
+							self.objDefaultEntry.tmplMapModel.resolve()
+						default:
+							null
+					}
+				}(self.getEntryForBuilding(gameroot, building))
+			}
+			getGroundModelForBuilding = ?{gameroot, building:
+				?{entry:
+					switch {
+						case entry != null:
+							entry.tmplGroundModel.resolve().tmplModel
+						case self.objDefaultEntry != null:
+							self.objDefaultEntry.tmplMapModel.resolve()
+						default:
+							null
+					}
+				}(self.getEntryForBuilding(gameroot, building))
+			}
+
+			getEntryForBuilding = ?{gameroot, building:
+				find(?{entry: entry.tmplBuilding.resolve() == building},
+					self.objBuildingEntries)
+			}
+		</script>
+	</objectDef>
+
+	<objectDef type="CoreModelTableEntry" class="CMLObject">
+		<propertyDef name="tmplMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplGroundModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="eArchitecture" type="Enum" restriction="gs_tbg.ArchitectureType"/>
+	</objectDef>
+	<objectDef type="ReligiousModelTableEntry" class="CMLObject">
+		<propertyDef name="tmplMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplGroundModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplReligion" type="TemplateRef" restriction="gs_tbg.ReligionTemplate"/>
+	</objectDef>
+	<objectDef type="ResearchBuildingModelTableEntry" class="CMLObject">
+		<propertyDef name="tmplMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplGroundModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplBuilding" type="TemplateRef" restriction="gs_tbg.ResearchCenterBuildingTemplate"/>
+	</objectDef>
+	<objectDef type="CityBuildingModelTableEntry" class="CMLObject">
+		<propertyDef name="tmplMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplGroundModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplBuilding" type="TemplateRef" restriction="gs_tbg.CityBuildingTemplate"/>
+	</objectDef>
+
+    <!-- Resource Capacities -->
+
+    <objectDef type="ResourceCapacityModelTable" class="CMLObject">
+		<propertyDef name="objMapData" type="MapData"/>	
+		<propertyDef name="objDefaultEntry" type="ResourceCapacityModelTableEntry" storesChildren="true"/>
+		<propertyDef name="objEntries" type="ResourceCapacityModelTableEntry" variable="true" storesChildren="true"/>
+
+		<script type="application/x-locust-query">
+			getMapModelForResourceCapacity = ?{resourceCapacity:
+				?{entry:
+					switch{
+						case find(?{improvement: improvement.nLevel == 3}, resourceCapacity.objImprovements) != null:
+							entry.tmplL3MapModel.resolve()
+						case find(?{improvement: improvement.nLevel == 2}, resourceCapacity.objImprovements) != null:
+							entry.tmplL2MapModel.resolve()
+						case find(?{improvement: improvement.nLevel == 1}, resourceCapacity.objImprovements) != null:
+							entry.tmplL1MapModel.resolve()
+						default:
+							entry.tmplRawMapModel.resolve()
+					}
+				}(self.getEntryForResourceCapacity(resourceCapacity))
+			}
+			
+			getEntryForResourceCapacity = ?{resourceCapacity:
+				find(
+                    ?{entry:
+                        entry.tmplResource == resourceCapacity.tmplResource
+                    },
+                self.objEntries)
+			}
+		</script>
+    </objectDef>
+
+    <objectDef type="ResourceCapacityModelTableEntry" class="CMLObject">
+        <propertyDef name="tmplResource" type="TemplateRef" restriction="gs_tbg.ResourceTemplate"/>
+		<propertyDef name="tmplRawMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplL1MapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplL2MapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplL3MapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+    </objectDef>
+	
+	<objectDef type="RegionImprovementModelTable" class="CMLObject">
+		<propertyDef name="objMapData" type="MapData"/>	
+		<propertyDef name="objDefaultEntry" type="RegionImprovementModelTableEntry" storesChildren="true"/>
+		<propertyDef name="objEntries" type="RegionImprovementModelTableEntry" variable="true" storesChildren="true"/>
+
+		<script type="application/x-locust-query">
+			getEntryForRegion = ?{region:
+				?{entry:
+					switch {
+						case entry != null:
+							entry
+						case self.objDefaultEntry != null:
+							self.objDefaultEntry
+						default:
+							null
+					}
+				}(find(
+                    ?{entry:
+						switch
+						{
+							case region.objFortificationImprovement != null:
+								if(region.objAADefenseImprovement != null,
+									entry.tmplFortification == region.objFortificationImprovement.tmplFortificationImprovement AND
+									entry.tmplAADefense == region.objAADefenseImprovement.tmplAADefenseImprovement,
+									entry.tmplFortification == region.objFortificationImprovement.tmplFortificationImprovement AND
+									entry.tmplAADefense == null
+								)
+							case region.objAADefenseImprovement != null:
+								entry.tmplFortification == null AND
+								entry.tmplAADefense == region.objAADefenseImprovement.tmplAADefenseImprovement
+						}
+                        
+                    },
+                    self.objEntries
+                ))
+			}
+		</script>
+    </objectDef>
+
+    <objectDef type="RegionImprovementModelTableEntry" class="CMLObject">
+        <propertyDef name="tmplFortification" type="TemplateRef" restriction="gs_tbg.FortificationImprovementTemplate"/>
+        <propertyDef name="tmplAADefense" type="TemplateRef" restriction="gs_tbg.AADefenseImprovementTemplate"/>
+		<propertyDef name="tmplFortMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplAAMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplRadarMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+		<propertyDef name="tmplGroundMapModel" type="TemplateRef" restriction="MapModelTemplate"/>
+    </objectDef>
+</locust>

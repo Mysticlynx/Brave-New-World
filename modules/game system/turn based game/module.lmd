@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locustModule
+    xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust"
+    owner="ml"
+    type="game system"
+    name="turn based game"
+    version="1.0"
+    locustVersion="2.11"
+    dll="mh2-gamesys_turnbasedgame-1_30.dll"
+>
+    <import module="mlcore" default="true"/>
+    <import module="lib:mlgame" as="mlgame"/>
+    <import module="lib:mlevent" as="mlevent"/>
+	<import module="lib:media" as="mlmedia"/>
+	<import module="script:javascript" as="mljs"/>
+    <import module="lib:mh2 common" as="mh2_common"/>
+
+    <include>
+		resource/GameSystem.xml
+		resource/NonGameObjects.xml
+		research/Events.xml
+		research/GameObjects.xml
+		research/GameSystem.xml
+		research/NonGameObjects.xml
+		nation/Actions.xml
+		nation/Events.xml
+		nation/GameObjects.xml
+		nation/GameSystem.xml
+		nation/GOExtensions.xml
+		nation/NonGameObjects.xml    
+		dp/Actions.xml
+		dp/Events.xml
+		dp/GameObjects.xml
+		dp/GameSystem.xml
+		dp/NonGameObjects.xml
+		region/Actions.xml
+		region/Events.xml
+		region/GameObjects.xml
+		region/GameSystem.xml
+		region/Lookups.xml
+		region/NonGameObjects.xml		
+		map/GameObjects.xml
+		map/GameSystem.xml
+		map/NonGameObjects.xml
+		viccon/GameObjects.xml
+		viccon/GameSystem.xml
+		city/Actions.xml
+		city/Events.xml
+		city/GameObjects.xml
+		city/GameSystem.xml
+		city/Lookups.xml
+		city/NonGameObjects.xml
+		weather/Events.xml
+		weather/GameObjects.xml
+		weather/GameSystem.xml
+		weather/GOExtensions.xml
+		natrel/Actions.xml
+		natrel/Events.xml
+		natrel/GameObjects.xml
+		natrel/GameSystem.xml
+		natrel/NonGameObjects.xml
+		unit/Actions.xml
+		unit/Events.xml
+		unit/GameObjects.xml
+		unit/GameSystem.xml
+		unit/GOExtensions.xml
+		unit/NonGameObjects.xml
+        fogging/GameObjects.xml
+        fogging/GameSystem.xml
+        combat/Events.xml
+        combat/GameObjects.xml
+        combat/GameSystem.xml
+        combat/NonGameObjects.xml
+        regcon/Events.xml
+        regcon/GameObjects.xml
+        regcon/GameSystem.xml
+		regcon/NonGameObjects.xml       
+        trade/Actions.xml
+        trade/Events.xml
+        trade/GameObjects.xml
+        trade/GameSystem.xml
+        trade/NonGameObjects.xml
+        natprog/Actions.xml
+        natprog/Events.xml
+        natprog/GameSystem.xml
+        natprog/GameObjects.xml
+        natprog/NonGameObjects.xml
+        defs/Accessors.xml
+        defs/Actions.xml
+        defs/Events.xml
+        defs/GameConditions.xml
+        defs/GameSystem.xml
+        defs/GameObjects.xml
+        defs/GOExtensions.xml
+        defs/Lookups.xml
+        defs/NonGameObjects.xml
+        defs/PerAvatarData.xml
+		trigger/GameObjects.xml
+		trigger/GameSystem.xml
+		trigger/NonGameObjects.xml
+		notify/Actions.xml
+		notify/GameSystem.xml		
+		notify/NonGameObjects.xml
+		notify/PerAvatarData.xml
+		aiutil/Actions.xml
+		aiutil/Enums.xml
+		aiutil/Events.xml
+		aiutil/GameObjects.xml
+		aiutil/GameSystem.xml
+		aiutil/NonGameObjects.xml
+		aiutil/PerAvatarData.xml
+    </include>
+</locustModule>

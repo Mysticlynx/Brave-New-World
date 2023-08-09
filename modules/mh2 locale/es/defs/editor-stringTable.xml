@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+    <string id="SID.Editor.File" value="Archivo"/>
+    <string id="SID.Editor.Save" value="Guardar"/>
+    <string id="SID.Editor.Apply" value="Aplicar"/>
+    <string id="SID.Editor.Revert" value="revertir"/>
+    <string id="SID.Editor.ApplyChanges" value="¿Aplicar  los cambios?"/>
+    <string id="SID.Editor.Edit" value="editar"/>
+    <string id="SID.Editor.EthnicityTemplate" value="Planilla de etnicidad"/>
+    <string id="SID.Editor.GlobalData" value="Datos Mundiales"/>
+    <string id="SID.Editor.EditNation" value="Editar Nacion"/>
+    <string id="SID.Editor.EditNationTemplate" value="Editar planilla de Nación"/>
+    <string id="SID.Editor.EditNationalityTemplate" value="Editar planilla de nacionalidad"/>
+    <string id="SID.Editor.EditLandRegion" value="Editar Region terrestre"/>
+    <string id="SID.Editor.EditCity" value="Eitar ciudad"/>
+    <string id="SID.Editor.EditUnitGroup" value="Editar grupo de unidad"/>
+    <string id="SID.Editor.EditAlliance" value="Editar Alianza"/>
+    <string id="SID.Editor.EditWar" value="Editar guerra"/>
+    <string id="SID.Editor.EditTradeAgreement" value="Editar tratado de comercio"/>
+    <string id="SID.Editor.EditAccessAgreement" value="Editar acuerdo de acceso"/>
+    <string id="SID.Editor.EditUnitTemplate" value="Editar planilla de unidades"/>
+    <string id="SID.Editor.EditFactoryOutputTemplate" value="Editar planilla de rendimiento de fábrica"/>
+    <string id="SID.Editor.EditRegionOutputTemplate" value="Editar planilla de rendimiento regional "/>
+    <string id="SID.Editor.EditResearchTopicTemplate" value="Editar materia de investigación"/>
+    <string id="SID.Editor.DisplayName" value="Nombre expuesto"/>
+    <string id="SID.Editor.Color" value="Color"/>
+    <string id="SID.Editor.Red" value="Rojo"/>
+    <string id="SID.Editor.Green" value="inmaduro"/>
+    <string id="SID.Editor.Blue" value="Azul"/>
+    <string id="SID.Editor.Alpha" value="Alfa"/>
+    <string id="SID.Editor.ScenarioAbbreviation" value="Escenario abreviado"/>
+    <string id="SID.Editor.StartDate" value="Fecha de Inicio"/>
+    <string id="SID.Editor.EndDate" value="Fecha de terminacion"/>
+    <string id="SID.Editor.Duration" value="duración"/>
+    <string id="SID.Editor.NationTemplates" value="Plantillas de Nación"/>
+    <string id="SID.Editor.NationalityTemplates" value="Planilla de Nacionalidad "/>
+    <string id="SID.Editor.LandRegions" value="Regiones terrestres"/>
+    <string id="SID.Editor.AccessAgreements" value="Acuerdos de acceso"/>
+    <string id="SID.Editor.UnitTemplates" value="Planillas de unidades"/>
+    <string id="SID.Editor.UnitTemplate" value="Planilla de unidad"/>
+    <string id="SID.Editor.CityBuildingTemplate" value="Plantilla de edificios para ciudades"/>
+    <string id="SID.Editor.ResearchBuildingTemplate" value="Planilla de edificios de investigación"/>
+    <string id="SID.Editor.NamedAutomatically" value="(nombrado automaticamente)"/>
+    <string id="SID.Editor.FactoryOutputTemplates" value="Planilla de Producción de Fabrica"/>
+    <string id="SID.Editor.RegionOutputTemplates" value="Planillas de producción regional"/>
+    <string id="SID.Editor.ResearchTopicTemplates" value="Planillas de materia de Investigación"/>
+    <string id="SID.Editor.SelectNation" value=" Seleccionar país"/>
+    <string id="SID.Editor.SelectNationTemplate" value="Seleccionar planilla de nación"/>
+    <string id="SID.Editor.SelectNationalityTemplate" value="Seleccionar Planilla de nacionalidad"/>
+    <string id="SID.Editor.FactoryOutputCategory" value="Tipo de Producción de Fabrica"/>
+    <string id="SID.Editor.SelectFactoryOutputCategory" value="Seleccionar Categoría de producción de fabrica"/>
+    <string id="SID.Editor.AddAttacker" value="Añadir Unidad de Ataque"/>
+    <string id="SID.Editor.RemoveAttacker" value="Remover atacante"/>
+    <string id="SID.Editor.AddDefender" value="Añadir Unidad Defensiva"/>
+    <string id="SID.Editor.RemoveDefender" value="Remover defensor"/>
+    <string id="SID.Editor.AddNationTemplate" value="Añadir plantilla de Nación"/>
+    <string id="SID.Editor.AddNationalityTemplate" value="Añadir plantilla de Nacionalidad"/>
+    <string id="SID.Editor.NationTemplate" value="Plantilla de Nación"/>
+    <string id="SID.Editor.NationalityTemplate" value="Planilla de Nacionalidad "/>
+    <string id="SID.Editor.EncyclopediaEntry" value="entrada en enciclopedia"/>
+    <string id="SID.Editor.ShortDescription" value="Descripción corta"/>
+    <string id="SID.Editor.NoControllerErrorMessage" value="Debe seleccionar controlador"/>
+    <string id="SID.Editor.NoRegionErrorMessage" value="Debe seleccionar ubicación"/>
+    <string id="SID.Editor.Owner" value="dueño"/>
+    <string id="SID.Editor.NoNationTemplateErrorMessage" value="Debe seleccionar planilla de nación."/>
+    <string id="SID.Editor.NoIdeologyTemplateErrorMessage" value="Debe seleccionar un ideología."/>
+    <string id="SID.Editor.ClearRegionsAlert" value="No se pueden quitar naciones que poseen o controlan regiones"/>
+    <string id="SID.Editor.InitialCompletedResearch" value="Investigacion completa inicial"/>
+    <string id="SID.Editor.ResearchTopicTemplate" value="Planilla de materia de Investigación"/>
+    <string id="SID.Editor.Colonies" value="Colonias"/>
+    <string id="SID.Editor.EditColony" value="Editar colonia"/>
+    <string id="SID.Editor.NoNationErrorMessage" value="Debe seleccionar nación"/>
+    <string id="SID.Editor.Templates" value="Planillas"/>
+    <string id="SID.Editor.Scenario" value="Escenario"/>
+    <string id="SID.Editor.EditAI" value="Editar inteligencia artificial"/>
+    <string id="SID.Editor.EditData" value="Editar data"/>
+    <string id="SID.Editor.InternationalInvolvement" value="Participación Internacional"/>
+    <string id="SID.Editor.AggressiveNature" value="Naturaleza Agresiva"/>
+    <string id="SID.Editor.MilitaryDoctrine" value="Doctrina militar"/>
+    <string id="SID.Editor.SciencePolicy" value="Política Científica"/>
+    <string id="SID.Editor.ArmyPercentile" value="Percentil de Ejército"/>
+    <string id="SID.Editor.NavyPercentile" value="Percentil de Marina"/>
+    <string id="SID.Editor.AirForcePercentile" value="percentil de fuerza aérea"/>
+    <string id="SID.Editor.SubPercentile" value="Percentil de submarinos"/>
+    <string id="SID.Editor.InternationalPosition" value="Posición Internacional"/>
+    <string id="SID.Editor.Personality" value="Personalidad"/>
+    <string id="SID.Editor.EnthicityTemplate" value="Pranilla de etnicidad"/>
+    <string id="SID.Editor.WarPlans" value="Planes de guerra"/>
+    <string id="SID.Editor.Weight" value="Peso"/>
+    <string id="SID.Editor.Aggression" value="agresión"/>
+    <string id="SID.Editor.MissionRange" value="Rango de Misión"/>
+    <string id="SID.Editor.RebaseRange" value="Rango de rebasar"/>
+    <string id="SID.Editor.LandAttackHitPercent" value="Porcentaje de tino de ataque"/>
+    <string id="SID.Editor.LandDefenseHitPercent" value="Porcentaje de golpe defensivo"/>
+    <string id="SID.Editor.AirHitPercent" value="Eficiencia de Golpe Aéreo"/>
+    <string id="SID.Editor.SeaSurfaceHitPercent" value="Porcentaje de golpe marino"/>
+    <string id="SID.Editor.SeaSubmergedHitPercent" value="Porcentaje de golpe de submarino"/>
+    <string id="SID.Editor.InfrastructureHitPercent" value="Porcentaje de golpe de infraestructura"/>
+    <string id="SID.Editor.RepairMPUs" value="Reparar MPUs"/>
+    <string id="SID.Editor.Architecture" value="arquitectura"/>
+    <string id="SID.Editor.LowResCountrySet" value="LowResCountrySet"/>
+    <string id="SID.Editor.MediumResCountrySet" value="MediumResCountrySet"/>
+    <string id="SID.Editor.MajorResCountrySet" value="MajorResCountrySet"/>
+    <string id="SID.Editor.HighResCountrySet" value="Juego de Pais de Alta Resolucion "/>
+    <string id="SID.Editor.Impassable" value="intransitable"/>
+    <string id="SID.Editor.Water" value="Agua"/>
+    <string id="SID.Editor.FoodCapacityModifier" value="Modificador de capacidad de alimentos"/>
+    <string id="SID.Editor.FoodProductionModifier" value="Modificador de producción de alimento"/>
+    <string id="SID.Editor.DefenseBonus" value="Defensa"/>
+    <string id="SID.Editor.MovementBonus" value="Movimiento"/>
+    <formatString id="FSID.Editor.WarManyVsMany" value="@attacker@ y @numAdditionalAttackers@ más contra @defender@  y @numAdditionalDefenders@ más."/>
+    <formatString id="FSID.Editor.WarManyVsOne" value="@attacker@ y @numAdditionalAttackers@ más contra @defender@"/>
+    <formatString id="FSID.Editor.WarOneVsMany" value="@attacker@ contra @defender@ y@numAdditionalDefenders@ más"/>
+    <formatString id="FSID.Editor.WarOneVsOne" value="@attacker@ contra @defender@"/>
+    <formatString id="FSID.Editor.WarManyVsNone" value="@attacker@ y @numAdditionalAttackers@ más contra nadie (invalido)"/>
+    <formatString id="FSID.Editor.WarNoneVsMany" value="Nadie contra @defender@ y @numAdditionalDefenders@ mas (invalido)"/>
+    <formatString id="FSID.Editor.WarOneVsNone" value="@attacker@ contra nadie (invalido)"/>
+    <formatString id="FSID.Editor.WarNoneVsOne" value="Nadie contra @defender@ (invalido)"/>
+    <formatString id="FSID.Editor.WarNoneVsNone" value="Nadie contra nadie (invalido)"/>
+    <formatString id="FSID.Editor.TradeAgreement" value="@sourceNation@ exportando @resource@ a @destNation@"/>
+    <formatString id="FSID.Editor.AccessAgreement" value="@grantingNation@ otorgando acceso a  @receivingNation@"/>
+    <formatString id="FSID.Editor.NameAlreadyExists" value="@name@ ya existe."/>
+    <formatString id="FSID.Editor.NameContainsInvalidCharacters" value="@name@ contiene caracteres inválidos !"/>
+    <formatString id="FSID.Editor.SelectLabel" value=" Seleccionar @label@"/>
+    <formatString id="FSID.Editor.ApplyChangesToObject" value="¿Aplicar  los cambios realizados en @object@?"/>
+</locust>

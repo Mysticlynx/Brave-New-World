@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+	
+	<objectDef type="IdeologyRowData" class="CMLObject">
+		<propertyDef name="objIdeologyTemplate" type="Template"/>
+		<propertyDef name="objNations" type="gs_tbg.Nation" variable="true">
+			filter(
+				?{nation:
+					nation.tmplIdeology == self.objIdeologyTemplate
+				}, gs_tbg.getAllNations(mh2data.objAvatar)
+			)
+		</propertyDef>
+		
+		<propertyDef name="nTotalPowerPoints" type="int">
+			sum(map(?{nation: nation.objPowerPoints.nTotalPoints}, self.objNations))
+		</propertyDef>
+		<propertyDef name="nIPUs" type="int">
+			sum(
+				map(
+					?{nation:
+						nation.nIPUs
+					},
+					self.objNations
+				)
+			)
+		</propertyDef>
+		<propertyDef name="nMPUs" type="int">
+			sum(map(?{nation: nation.nMPUs}, self.objNations))
+		</propertyDef>
+		<propertyDef name="nResearchPoints" type="int">
+			sum(map(?{nation: nation.objPowerPoints.nResearchPoints},self.objNations))
+		</propertyDef>
+		<propertyDef name="nMoney" type="int64">
+			sum(map(?{nation: nation.objFinance.n64Money}, self.objNations))
+		</propertyDef>
+		
+	</objectDef>
+		
+	<enumDef name="IdeologySort">
+        <value name="LEADER"/>
+        <value name="TOTAL"/>
+		<value name="IPUS"/>
+		<value name="MPUS"/>
+		<value name="RESEARCH"/>
+		<value name="MONEY"/>
+		<value name="MEMBERS"/>
+    </enumDef>
+	
+	<objectDef type="UI2DDiplomacyTabIdeologies" superType="UI2DDiplomacyTab">
+		<propertyDef name="objIdeologyTemplates" type="Template" variable="true">
+			map(
+				?{required: required.resolve()},
+				gs_tbg.getGameSysNation(mh2data.objAvatar).tmplIdeologyTemplateList.resolve().tmplRefs
+			)
+		</propertyDef>
+		
+		<!-- <object type="TableData" name="objTableData">
+			<property name="eColm" from="IdeologySort.LEADER"/>
+		</object> -->
+		
+		<object type="IdeologyRowData" name="objRowDatas" tiedTo="def.objIdeologyTemplates">
+			<property name="objIdeologyTemplate" from="tiedTo"/>
+		</object>
+		
+	<!-- Header and Background -->
+		<object type="mlui.UI2DText" name="objIdeologiesLabel">
+			<property name="tmplTextStyle" value="locale.TxtStyleArialGold16Left"/>
+			<property name="strText" from="locale.SID.UI.Ideologies"/>
+			<property name="nX" value="13"/>
+			<property name="nY" value="141"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="16"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objTopBG">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayPeachBSq"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="161"/>
+			<property name="nWidth" value="873"/>
+			<property name="nHeight" value="25"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSliderBGBubble">
+			<property name="tmplImage" value="skin.ImgReportBubbleGrayClear"/>
+			<property name="nX" value="867"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="16"/>
+			<property name="nHeight" value="495"/>
+		</object>
+
+		<object type="mlui.UI2DImage" name="objSliderBG">
+			<property name="tmplImage" value="skin.ImgReportPanelSliderBGGray"/>
+			<property name="nX" value="869"/>
+			<property name="nY" value="189"/>
+			<property name="nWidth" value="12"/>
+			<property name="nHeight" value="491"/>
+		</object>
+
+	<!-- Column Labels -->
+		<object type="common_ui.UI2DListHorz" name="objBubbles">			
+			<property name="nSpacing" value="-1"/>
+			<property name="nX" value="10"/>
+			<property name="nY" value="162"/>
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Ideology"/>
+				<property name="objData" from="mh2data.objIdeologySortTableData"/>
+				<property name="eSortBy" from="IdeologySort.LEADER"/>
+				<property name="nWidth" value="182"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIdeologySortTableData"/>
+				<property name="eSortBy" from="IdeologySort.TOTAL"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconPointsSm"/>
+					<property name="strToolTip" from="locale.SID.UI.WorldPowerPoints"/>
+					<property name="nWidth" value="22"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIdeologySortTableData"/>
+				<property name="eSortBy" from="IdeologySort.IPUS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="42"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconIndustrySm"/>
+                    <property name="strToolTip" from="locale.SID.UI.IPUs"/>
+					<property name="nWidth" value="16"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIdeologySortTableData"/>
+				<property name="eSortBy" from="IdeologySort.MPUS"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="41"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconSkilledLaborSm"/>
+					<property name="strToolTip" from="locale.SID.UI.MPUs"/>
+					<property name="nWidth" value="23"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>
+			
+			<object type="UI2DTableHeaderGenericButton" name="objElements">
+				<property name="objData" from="mh2data.objIdeologySortTableData"/>
+				<property name="eSortBy" from="IdeologySort.RESEARCH"/>
+				<property name="bAsc" value="false"/>
+				<property name="nWidth" value="41"/>
+				<property name="nHeight" value="23"/>
+				
+				<object type="mlui.UI2DImage" name="objElement">
+					<property name="tmplImage" value="skin.ImgInfoIconTechSm"/>
+					<property name="strToolTip" from="locale.SID.UI.RPUs"/>
+					<property name="nWidth" value="16"/>
+					<property name="nHeight" value="20"/>
+					<property name="haXAlign" value="CENTER"/>
+					<property name="vaYAlign" value="MIDDLE"/>
+					<property name="nDepth" value="50"/>
+				</object>
+				
+			</object>			
+			
+			<object type="UI2DTableHeaderTextButton" name="objElements">
+				<property name="strText" from="locale.SID.UI.Nations"/>
+				<property name="objData" from="mh2data.objIdeologySortTableData"/>
+				<property name="eSortBy" from="IdeologySort.MEMBERS"/>
+				<property name="bAsc" value="true"/>
+				<property name="nWidth" value="508"/>
+				<property name="nHeight" value="23"/>
+			</object>
+			
+		</object>
+		
+		<object type="UI2DScrollPane" name="objScrollpane">
+			<property name="nX" value="10"/>
+			<property name="nY" value="187"/>
+			<property name="nWidth" value="872"/>
+			<property name="nHeight" value="495"/>
+
+			<object type="common_ui.UI2DList" name="objScrollable">
+				<object type="UI2DWorldIdeologiesBubble" name="objElements" tiedTo="def.objRowDatas">
+					<property name="objData" from="tiedTo"/>
+					<property name="nWidth" value="858"/>
+				</object>
+				
+				<property name="listElements">
+					switch{
+						case mh2data.objIdeologySortTableData.eColm == IdeologySort.LEADER:
+							if(mh2data.objIdeologySortTableData.bAsc,
+								sortAscending(?{row: row.objData.objIdeologyTemplate.strDisplayName}, self.objElements),
+								sortDescending(?{row: row.objData.objIdeologyTemplate.strDisplayName}, self.objElements)
+							)
+						case mh2data.objIdeologySortTableData.eColm == IdeologySort.TOTAL:
+							if(mh2data.objIdeologySortTableData.bAsc,
+								sortAscending(?{row: row.objData.nTotalPowerPoints}, self.objElements),
+								sortDescending(?{row: row.objData.nTotalPowerPoints}, self.objElements)
+							)
+						case mh2data.objIdeologySortTableData.eColm == IdeologySort.IPUS:
+							if(mh2data.objIdeologySortTableData.bAsc,
+								sortAscending(?{row: row.objData.nIPUs}, self.objElements),
+								sortDescending(?{row: row.objData.nIPUs}, self.objElements)
+							)
+						case mh2data.objIdeologySortTableData.eColm == IdeologySort.MPUS:
+							if(mh2data.objIdeologySortTableData.bAsc,
+								sortAscending(?{row: row.objData.nMPUs}, self.objElements),
+								sortDescending(?{row: row.objData.nMPUs}, self.objElements)
+							)
+						case mh2data.objIdeologySortTableData.eColm == IdeologySort.RESEARCH:
+							if(mh2data.objIdeologySortTableData.bAsc,
+								sortAscending(?{row: row.objData.nResearchPoints}, self.objElements),
+								sortDescending(?{row: row.objData.nResearchPoints}, self.objElements)
+							)
+						case mh2data.objIdeologySortTableData.eColm == IdeologySort.MEMBERS:
+							if(mh2data.objIdeologySortTableData.bAsc,
+								sortAscending(?{row: row.objData.objIdeologyTemplate.strDisplayName}, self.objElements),
+								sortDescending(?{row: row.objData.objIdeologyTemplate.strDisplayName}, self.objElements)
+							)
+					}
+				</property>
+				
+			</object>
+		</object>
+		
+	</objectDef>
+
+	<!--Bubble Definitions-->
+	<objectDef type="UI2DIdeologyRowBubble" superType="mlui.UI2DElement">
+		<propertyDef name="nRow" type="int" default="0"/>
+
+		<property name="nHeight" value="30"/>
+
+		<object type="mlui.UI2DImage" name="objBG">
+			<property name="tmplImage" value="skin.ImgRowBubbleWhite"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="0"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" from="def.nHeight"/>
+			<property name="nDepth" value="-100"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DIdeologyowBubbleIdeology" superType="UI2DIdeologyRowBubble">
+		<propertyDef name="objData" type="IdeologyRowData"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<property name="nHeight" value="30"/>
+
+		<object type="mlui.UI2DImage" name="objIcon">
+			<property name="tmplImage">
+				if(def.objData.objIdeologyTemplate.strName == 'Democratic',
+				'skin.ImgInfoIconDemocracySm',
+					if(def.objData.objIdeologyTemplate.strName == 'Communist',
+					'skin.ImgInfoIconCommunistSm',
+						if(def.objData.objIdeologyTemplate.strName == 'Fascist',
+						'skin.ImgInfoIconFascistSm', 'skin.ImgInfoIconAuthoritarianSm'
+						)
+					)
+				)
+			</property>
+			<property name="nX" value="4"/>
+			<property name="nY" value="2"/>
+			<property name="nWidth" value="32"/>
+			<property name="nHeight" value="30"/>
+			<property name="strToolTip" from="def.objData.objIdeologyTemplate.strDisplayName"/>
+		</object>
+
+		<object type="mlui.UI2DText" name="objNationName">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.objData.objIdeologyTemplate.strDisplayName"/>
+			<property name="nX" value="36"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" value="200"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	</objectDef>
+
+	<objectDef type="UI2DIdeologyRowBubbleFlags" superType="UI2DIdeologyRowBubble">
+		<propertyDef name="objData" type="IdeologyRowData"/>
+		<property name="nWidth" from="self.objList.nWidth + 4"/>
+		<property name="nHeight">
+			if(self.objList.nHeight + 4 LT 30, 30, self.objList.nHeight + 4)
+		</property>
+		
+		<object type="common_ui.UI2DFancyFlow" name="objList">
+			<property name="nX" value="2"/>
+			<property name="nY" value="2"/>
+			<property name="nEltSpacing" value="1"/>
+			<property name="nRowSpacing" value="1"/>
+			<property name="nMaxEltsPerRow" value="10"/>
+
+			<object type="UI2DNationFlag46x24" name="objElements" tiedTo="def.objData.objNations">
+				<property name="objNation" from="tiedTo"/>
+				<property name="nX" value="0"/>
+				<property name="nY" value="0"/>
+				<property name="nWidth" value="46"/>
+				<property name="nHeight" value="24"/>
+			</object>
+		</object>
+			
+	</objectDef>
+
+	<objectDef type="UI2DIdeologyRowBubbleTextCenter" superType="UI2DIdeologyRowBubble">
+		<propertyDef name="strText" type="String"/>
+		<propertyDef name="tmplTextStyle" type="TemplateRef" restriction="mlmedia.TextStyleTemplate"/>
+
+		<object type="mlui.UI2DText" name="objText">
+			<property name="tmplTextStyle" from="def.tmplTextStyle"/>
+			<property name="strText" from="def.strText"/>
+			<property name="nX" value="0"/>
+			<property name="nY" value="10"/>
+			<property name="nWidth" from="def.nWidth"/>
+			<property name="nHeight" value="14"/>
+		</object>
+
+	</objectDef>
+	
+	<!--End Bubble Defs-->
+
+	<objectDef type="UI2DWorldIdeologiesBubble" superType="mlui.UI2DElement">
+		<property name="nWidth" value="871"/>
+		<property name="nHeight" from="self.objBubbles.nHeight"/>
+		
+		<propertyDef name="objData" type="IdeologyRowData"/>
+		<!--<propertyDef name="objAlliance" type="gs_tbg.Alliance"/>-->
+		<!--<propertyDef name="objLeadNation" type="gs_tbg.Nation"/>-->
+		<!--<property name="objLeadNation" from="self.objAlliance.refLeadNation.resolve(mh2data.objAvatar)"/>-->
+		<propertyDef name="nRow" type="int"/>
+		<!--<propertyDef name="objWarStatus" type="gs_tbg.War">-->
+		<!--	find(?{war:(war.refNationA == self.objLeadNation AND war.refNationB == mh2data.objNation)-->
+		<!--		OR (war.refNationB == self.objLeadNation AND war.refNationA == mh2data.objNation)},-->
+		<!--		gs_tbg.getAllWars(mh2data.objAvatar))-->
+		<!--</propertyDef>-->
+		<!---->
+		<!--<propertyDef name="objAllianceMemberships" type="gs_tbg.AllianceMembership" variable="true"/>-->
+		<!--<property name="objAllianceMemberships" from="self.objAlliance.getMemberships(mh2data.objAvatar)"/>-->
+		<!---->
+		<!--<propertyDef name="objNations" type="gs_tbg.Nation" variable="true"/>-->
+		<!--<property name="objNations" from="self.objAlliance.getNations(mh2data.objAvatar)"/>-->
+		
+		<object type="common_ui.UI2DListHorz" name="objBubbles">
+			<property name="nSpacing" value="-1"/>
+
+			<!--Alliance Leader Name/Flag-->
+			<!--<object type="UI2DIdeologyRowBubbleLeadNation" name="objElements">
+				<property name="objAlliance" from="def.objData.objAlliance"/>
+        <property name="objLeadNation" from="def.objData.objLeadNation"/>
+				<property name="nRow" from="def.nRow"/>
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+				<property name="nWidth" value="182"/>
+			</object>-->
+			<object type="UI2DIdeologyowBubbleIdeology" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Left"/>
+				<property name="objData">
+					def.objData
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="182"/>
+			</object>
+			
+			<!--Points-->
+			<object type="UI2DIdeologyRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText">
+					def.objData.nTotalPowerPoints.formatNumber(0, true)
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="42"/>
+			</object>
+
+			<!--IPUs-->
+			<object type="UI2DIdeologyRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText">
+					def.objData.nIPUs.formatNumber(0, true)
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="42"/>
+			</object>
+
+			<!--MPUs-->
+			<object type="UI2DIdeologyRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText">
+					def.objData.nMPUs.formatNumber(0, true)
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="41"/>
+			</object>
+
+			<!--Tech-->
+			<object type="UI2DIdeologyRowBubbleTextCenter" name="objElements">
+				<property name="tmplTextStyle" value="locale.TxtStyleArialBlue12Center"/>
+				<property name="strText">
+					def.objData.nResearchPoints.formatNumber(0, true)
+				</property>
+				<property name="nRow" from="def.nRow"/>
+				<property name="nWidth" value="41"/>
+			</object>
+
+			<!--Nations list-->
+			<object type="UI2DIdeologyRowBubbleFlags" name="objElements">
+				<property name="objData" from="def.objData"/>
+				<property name="nWidth" value="508"/>
+				<property name="nRow" from="def.nRow"/>
+			</object>
+
+		</object>
+
+	</objectDef>
+
+</locust>

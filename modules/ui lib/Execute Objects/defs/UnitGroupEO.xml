@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locust xmlns="http://www.muzzylane.com/ml/schema/2009/04/locust">
+
+    <objectDef type="ExecuteObjectUnitGroupWithTarget" class="CMLObject">
+        <propertyDef name="otAction" type="ObjectType"/>
+        <propertyDef name="objGameRoot" type="Object"/>
+        <propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+        <propertyDef name="vecPosition" type="Vec3D"/>
+
+
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                var objShortcutAction;
+                if (self.otAction.equals(gs_tbg.GActSetUnitGroupPosition))
+                {
+                    objShortcutAction = self.otAction.create({
+                        "refUnitGroup": self.objUnitGroup,
+                        "objTarget": self.objTarget,
+                        "vecPosition": self.vecPosition
+                    });
+                }
+                else if (self.otAction.equals(gs_tbg.GActSetSubAttack)) // doesn't use objTarget (which can only be its own region anyway)
+                {
+                    objShortcutAction = self.otAction.create({"refUnitGroup": self.objUnitGroup});
+                }
+                else
+                {
+                    objShortcutAction = self.otAction.create({
+                        "refUnitGroup": self.objUnitGroup,
+                        "objTarget": self.objTarget
+                    });
+                }
+                self.objGameRoot.sendAction(objShortcutAction);
+            }
+
+        ]]></script>
+    </objectDef>
+
+    <objectDef type="ExecuteObjectUnitGroupCancelOrder" class="CMLObject">
+        <propertyDef name="objGameRoot" type="Object"/>
+		<propertyDef name="objRoot" type="Object"/>
+        <propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                var objCancelAction = gs_tbg.GActCancelUnitOrder.create({
+                    "refUnitGroup": self.objUnitGroup
+                });
+                self.objGameRoot.sendAction(objCancelAction);
+                var stack = self.objRoot.objMH2Data.objMapData.objStacks.getStackForUnitGroup(self.objUnitGroup)
+                if(stack != null)
+                {
+                    stack.advanceHeadUnitGroup();
+                }
+            }
+
+        ]]></script>
+    </objectDef>
+
+    <objectDef type="ExecuteObjectUnitGroupOverrideOrder" class="CMLObject">
+        <propertyDef name="otAction" type="ObjectType"/>
+        <propertyDef name="objGameRoot" type="Object"/>
+        <propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+        <propertyDef name="objTarget" type="Object"/>
+
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                if(self.objUnitGroup.objUnitOrder != null)
+                {
+                    var objCancelAction = gs_tbg.GActCancelUnitOrder.create({
+                        "refUnitGroup": self.objUnitGroup
+                    });
+                    self.objGameRoot.sendAction(objCancelAction);
+                }
+                
+                var objShortcutAction;
+                if (self.otAction.equals(gs_tbg.GActSetUnitGroupPosition))
+                {
+                    objShortcutAction = self.otAction.create({
+                        "refUnitGroup": self.objUnitGroup,
+                        "objTarget": self.objTarget,
+                        "vecPosition": self.vecPosition
+                    });
+                }
+                else if (self.otAction.equals(gs_tbg.GActSetSubAttack)) // doesn't use objTarget (which can only be its own region anyway)
+                {
+                    objShortcutAction = self.otAction.create({"refUnitGroup": self.objUnitGroup});
+                }
+                else
+                {
+                    objShortcutAction = self.otAction.create({
+                        "refUnitGroup": self.objUnitGroup,
+                        "objTarget": self.objTarget
+                    });
+                }
+                self.objGameRoot.sendAction(objShortcutAction);
+            }
+
+        ]]></script>
+    </objectDef>
+	
+	<objectDef type="HEOUnitGroupMergeMenu" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+		<propertyDef name="objUnitGroup" type="gs_tbg.UnitGroup"/>
+		<propertyDef name="objStack" type="mapui.UnitGroupStack"/>
+		<propertyDef name="objRoot" type="mlui.UI2DElement"/>
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+				log("creating merge group submenu");
+				var menudata = common_elements.MenuData.create({
+					});
+
+				for(var i in self.objStack.objUnitGroups)
+				{
+					unitgroup = self.objStack.objUnitGroups[i];
+					if(unitgroup != self.objUnitGroup)
+					{
+						var menuitem = common_elements.MenuItem.create({
+							"strDisplayName": unitgroup.strDisplayName,
+							"objExecuteObject": EOUnitGroupMerge.create({
+								"objMapData": self.objMapData,
+								"objUnitGroupToMergeInto": unitgroup,
+								"objUnitGroupsToMerge": self.objUnitGroup
+							})
+						});
+						menudata.objItems.add(menuitem);
+					}
+				}
+
+				mlui.ActSendEventToUIElement.execute({
+					"objElement": self.objRoot,
+					"objEvent": common_elements.EventRequestPopUpSubMenu.create({
+							"objMenuData": menudata
+					})
+				});
+            }
+
+        ]]></script>
+    </objectDef>
+	
+	<objectDef type="EOUnitGroupMerge" superType="ExecuteObjectMapData">
+		<propertyDef name="objMapData" type="mapui.MapData"/>
+        <propertyDef name="objUnitGroupToMergeInto" type="gs_tbg.UnitGroup"/>
+        <propertyDef name="objUnitGroupsToMerge" type="gs_tbg.UnitGroup" variable="true"/>
+        <script type="application/javascript"><![CDATA[
+
+            function execute()
+            {
+                var action = gs_tbg.GActMergeUnitGroups.create({
+                    "refUnitGroupToMergeInto": self.objUnitGroupToMergeInto,
+					"refUnitGroupsToMerge": self.objUnitGroupsToMerge
+                });
+                self.objMapData.objAvatar.sendAction(action);
+            }
+
+        ]]></script>
+    </objectDef>
+</locust>
